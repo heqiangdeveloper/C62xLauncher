@@ -1,5 +1,6 @@
 package com.chinatsp.apppanel.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -10,11 +11,13 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 
+import com.anarchy.classifyview.ClassifyView;
 import com.chinatsp.apppanel.R;
 import com.chinatsp.apppanel.adapter.AppInfoAdapter;
+import com.chinatsp.apppanel.adapter.MyAppInfoAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,10 +36,12 @@ public class MyAppFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private GridView appInfoGridView;
+    private ClassifyView appInfoClassifyView;
     private AppInfoAdapter adapter;
-    public MyAppFragment() {
+    private Context context;
+    public MyAppFragment(Context context) {
         // Required empty public constructor
+        this.context = context;
     }
 
     /**
@@ -49,12 +54,13 @@ public class MyAppFragment extends Fragment {
      */
     // TODO: Rename and change types and number of parameters
     public static MyAppFragment newInstance(String param1, String param2) {
-        MyAppFragment fragment = new MyAppFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+//        MyAppFragment fragment = new MyAppFragment();
+//        Bundle args = new Bundle();
+//        args.putString(ARG_PARAM1, param1);
+//        args.putString(ARG_PARAM2, param2);
+//        fragment.setArguments(args);
+//        return fragment;
+        return null;
     }
 
     @Override
@@ -70,9 +76,17 @@ public class MyAppFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_app, container, false);
-        appInfoGridView = (GridView) view.findViewById(R.id.app_in_gridview);
-        adapter = new AppInfoAdapter(getContext(),getApps());
-        appInfoGridView.setAdapter(adapter);
+        appInfoClassifyView = (ClassifyView) view.findViewById(R.id.classify_view);
+        //adapter = new AppInfoAdapter(getContext(),getApps());
+        List<List<ResolveInfo>> data = new ArrayList<>();
+
+        List<ResolveInfo> allApps = getApps();
+        for(ResolveInfo info : allApps){
+            List<ResolveInfo> inner = new ArrayList<>();
+            inner.add(info);
+            data.add(inner);
+        }
+        appInfoClassifyView.setAdapter(new MyAppInfoAdapter(context,data));
         return view;
     }
 

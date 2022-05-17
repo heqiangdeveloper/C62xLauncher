@@ -3,3 +3,4 @@ rootProject.name = "C62xLauncher"
 include ':app'
 include ':widgetcards'
 include ':apppanel'
+include ':classifyView'

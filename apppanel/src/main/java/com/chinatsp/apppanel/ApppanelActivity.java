@@ -62,7 +62,7 @@ public class ApppanelActivity extends AppCompatActivity implements View.OnClickL
 //                }
 //            }
 
-            myAppFragment = new MyAppFragment();
+            myAppFragment = new MyAppFragment(this);
             FragmentTransaction ft = fm.beginTransaction();
             ft.replace(R.id.fragment_container, myAppFragment);
             ft.commit();
