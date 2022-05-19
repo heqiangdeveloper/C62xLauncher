@@ -1,0 +1,4 @@
+def product = getProperty('product')
+
+
+include ':appC62X',':carlib'

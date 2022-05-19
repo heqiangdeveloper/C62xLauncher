@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="dimen_20px">20.0px</dimen>
+    <dimen name="dimen_30px">30.0px</dimen>
+    <dimen name="dimen_40px">40.0px</dimen>
+    <dimen name="dimen_50px">50.0px</dimen>
+    <dimen name="dimen_36px">36.0px</dimen>
+    <dimen name="activity_setting_text">42.0px</dimen>
+    <dimen name="fragment_setting_wlandialog">36.0px</dimen>
+    <dimen name="fragment_setting_Feedback">36.0px</dimen>
+    <dimen name="fragment_setting_audio">36.0px</dimen>
+    <dimen name="radio_group_height">72px</dimen>
+    <dimen name="tab_margin_start">40px</dimen>
+
+
+</resources>

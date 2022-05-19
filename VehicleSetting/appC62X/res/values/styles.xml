@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="WallpaperTheme" parent="@android:style/Theme.Wallpaper.NoTitleBar" />
+    <style name="AppBaseTheme" parent="@android:style/Theme.NoTitleBar" />
+
+    <!--<style name="AppTheme" parent="@android:style/Theme.Wallpaper.NoTitleBar">-->
+    <style name="AppTheme" parent="WallpaperTheme">
+
+    </style>
+
+    <style name="tdialog_net_theme"  parent="android:Theme.Holo.Dialog">
+        <item name="android:textSize">@dimen/activity_setting_text</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.6</item>
+    </style>
+</resources>

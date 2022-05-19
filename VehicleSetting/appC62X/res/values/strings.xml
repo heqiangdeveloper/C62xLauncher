@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">Settings</string>
+    <string name="setting_system_language">Language</string>
+    <string name="setting_wifi_security">Security</string>
+    <string name="setting_wifi_connect">Connect</string>
+    <string name="setting_wifi_forget">Cancel save</string>
+    <string name="setting_wifi_cancel">Cancel</string>
+    <string name="string_mainlist_system">System</string>
+    <string name="string_mainlist_show">Display</string>
+    <string name="string_mainlist_audio">Audio</string>
+    <string name="string_mainlist_inter">Network</string>
+    <string name="string_mainlist_bd">Bluetooth</string>
+    <string name="string_mainlist_individuation">Personalise</string>
+    <string name="string_mainlist_update">System upgrade</string>
+    <string name="string_mainlist_about">About</string>
+    <string name="string_mainlist_recover">Resetting</string>
+    <string name="setting_system_languageC">中文</string>
+    <string name="setting_system_languageE">English</string>
+    <string name="setting_system_timestyle">Time format</string>
+    <string name="setting_system_time12hour">12 Hours</string>
+    <string name="setting_system_time24hour">24 Hours</string>
+    <string name="setting_system_buttonvolume">Touch-tone</string>
+    <string name="setting_system_off">Off</string>
+    <string name="setting_system_on">On</string>
+    <string name="setting_system_low">Low</string>
+    <string name="setting_system_mid">Mid</string>
+    <string name="setting_system_high">High</string>
+    <string name="setting_system_sound_inout">Sound come in and out</string>
+    <string name="setting_system_systemvolume">TTS</string>
+    <string name="setting_system_speedvolume">Volume adjustment with speed</string>
+    <string name="setting_system_promptvolume">Media</string>
+    <string name="setting_system_navigationvolume">Navigation</string>
+    <string name="setting_system_phonevolume">The phone</string>
+    <string name="setting_audio">Audio</string>
+    <string name="setting_audio_audiotype">AudioType</string>
+    <string name="string_audio_field">Sound field</string>
+    <string name="string_audio_reset">Reset</string>
+    <string name="string_audio_standard">Standard</string>
+    <string name="string_audio_prevalent">Popular</string>
+    <string name="string_audio_rock">Rock</string>
+    <string name="string_audio_jazz">Jazz</string>
+    <string name="string_audio_classical">Classical</string>
+    <string name="string_audio_custom">Custom</string>
+    <string name="string_audio_people">People</string>
+    <string name="string_audio_3D">AM3D audio</string>
+    <string name="string_audio_high">High：</string>
+    <string name="string_audio_center">Mid：</string>
+    <string name="string_audio_low">low：</string>
+    <string name="setting_show_bycarplay">Driving video</string>
+    <string name="setting_show_offScreenstyle">Off screen effect</string>
+    <string name="setting_display_duibi">Contrast ratio</string>
+    <string name="setting_show_numClock">Digital</string>
+    <string name="setting_show_imitateClock">Analog</string>
+    <string name="setting_show_blackScreen">Black</string>
+    <string name="setting_show_offScreen">Turn off screen</string>
+    <string name="setting_show_luminance">Brightness：</string>
+    <string name="setting_show_day">Day </string>
+    <string name="setting_show_night">Night </string>
+    <string name="string_internet_wlan">WLAN</string>
+    <string name="string_internet_ydwl">Mobile Network</string>
+    <string name="string_internet_available">Available network</string>
+    <string name="string_internet_mobileInterner">Mobile network</string>
+    <string name="string_internet_hotspot">Hot</string>
+    <string name="hotspot_connected">{0} device is connected</string>
+    <string name="string_internet_lanname">Hot Name</string>
+    <string name="string_internet_lanpwd">Wifi Password</string>
+    <string name="setting_dialog_ok">Confirm</string>
+    <string name="setting_idv_theme">Theme</string>
+    <string name="setting_idv_wallpaper">Wallpaper</string>
+    <string name="setting_idv_font">Font</string>
+    <string name="setting_idv_system">System</string>
+    <string name="setting_idv_online">Online</string>
+    <string name="setting_idv_usb">USB</string>
+    <string name="setting_idv_usb2">USB2</string>
+    <string name="setting_idv_local">Local</string>
+    <string name="setting_idv_wallpaper_apply">Application</string>
+    <string name="setting_idv_wallpaper_close">Close</string>
+    <string name="setting_idv_wallpaper_load">Loading...</string>
+    <string name="setting_idv_wallpaper_none">No Picture Resourse</string>
+    <string name="setting_idv_system_theme1">Classics</string>
+    <string name="setting_idv_system_theme2">Sports</string>
+    <string name="setting_idv_system_theme3">Technology</string>
+    <string name="device_name">Local Name</string>
+    <string name="bt_set_opean_blutooth">Open bluetooth to use the fuction</string>
+    <string name="bt_please_turn_on_power_desc">Can search it in phone:</string>
+    <string name="bt_set_sync_playtts">Incoming call announcer</string>
+    <string name="bt_tittle_of_paired_devices">Paired devices</string>
+    <string name="paring">Pairing...</string>
+    <string name="bt_usable_device">Add New Device</string>
+    <string name="yes">Confirm</string>
+    <string name="no">Cancel</string>
+    <string name="bt_switch">BT power</string>
+    <string name="bt_contacts_sync">Sync Contacts</string>
+    <string name="setting_about_incall">Smart System About</string>
+    <string name="setting_about_systemconfig">System Configuration</string>
+    <string name="setting_about_id">Equipment ID</string>
+    <string name="setting_about_cpu">C P U: Freescale</string>
+    <string name="setting_about_ram">Memory：</string>
+    <string name="setting_about_systemrl">System Capacity：{0} G</string>
+    <string name="setting_about_incallabout">China tsp smart system to provide users with n express of bluetooth hands-free phones, navigation, control, multimedia language online music video broadcast n on line service system upgrades, and other functions.</string>
+    <string name="setting_resetting_title">Reset Setting</string>
+    <string name="setting_resetting_point">This will restore all system settings to factory settings</string>
+    <string name="setting_resetting_button">Reset setting</string>
+    <string name="setting_settings_Restore_not_poweroff">Data recovering, please do not power off or do other operations...</string>
+    <string name="setting_dialog_text_setting">Are you sure you want to restore factory settings?</string>
+    <string name="setting_dialog_cancel">Cancel</string>
+    <string name="string_usb_update">USB Update</string>
+    <string name="update_usbnodata">No Data</string>
+    <string name="update_data">Upgrade</string>
+    <string name="update_instrument_data">Upgrade instrument</string>
+    <string name="update_version_name">New version:</string>
+    <string name="update_nousb">Need to insert the USB</string>
+    <string name="update_dialog_hint">Hint</string>
+    <string name="update_dialog_title">Do not need to restart the upgrade, upgrade process to machine for power and related operations</string>
+    <string name="update_dialog_downloading">Download system package</string>
+    <string name="update_os_version">System version:</string>
+    <string name="update_mcu_version">MCU version:</string>
+    <string name="update_blue_version">BT version:</string>
+    <string name="update_voice_version">Voice version:</string>
+    <string name="update_voicedata_version">Voice data version:</string>
+    <string name="update_version">Version</string>
+    <string name="update_if_force_lower_equal_version">Lower or equal version, confirm update？</string>
+    <string name="update_check_md5">Checking package</string>
+    <string name="update_check_md5_fail">Check package fail</string>
+    <string name="i_see">I see</string>
+    <string name="string_wifi_update">WLAN Update</string>
+    <string name="mobile_connect_num">%1$d devices connected</string>
+    <string name="mobile_connect_devices">devices connected</string>
+    <string name="theme_auto_switch">Theme automatic switching</string>
+    <string name="empty"></string>
+
+    <string name="format_time_12">hh:mm</string>
+    <string name="format_time">HH:mm</string>
+    <string name="format_date">yyyy-MM-dd</string>
+    <string name="format_date_nl">Lunar</string>
+    <string name="clock_am">AM</string>
+    <string name="clock_pm">PM</string>
+    <string-array name="clock_week">
+        <item>Sunday</item>
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+    </string-array>
+
+    <string-array name="month_of_year">
+        <item>Jan.</item>
+        <item>Feb.</item>
+        <item>Mar.</item>
+        <item>Apr.</item>
+        <item>May</item>
+        <item>Jun.</item>
+        <item>Jul.</item>
+        <item>Aug.</item>
+        <item>Sep.</item>
+        <item>Oct.</item>
+        <item>Nov.</item>
+        <item>Dec.</item>
+    </string-array>
+
+    <string name="bt_conn_status_connecting">Connecting...</string>
+    <string name="bt_conn_status_connected">Connected</string>
+    <string name="bt_conn_status_disconnecting">Disconnecting...</string>
+    <string name="bt_conn_status_disconnected">Disconnected</string>
+
+    <string name="bt_msg_confirm_del_paired_device">Delete %1$s ？</string>
+    <string name="bt_msg_confirm_disconnect_device">Disconnect from %1$s ？</string>
+    <string name="bt_msg_confirm_connect_device">Disconnect %1$s to connect %2$s ? </string>
+    <string name="bt_msg_bt_connected">BT is connected</string>
+    <string name="bt_msg_bt_connected_and_sync_contacts">BT is connected, will sync contacts</string>
+    <string name="bt_msg_device_is_full">Device is full, please delete some first</string>
+
+    <string name="wifi_enablling">Openning WLAN&#8230;</string>
+    <string name="wifi_scanning">Scanning WLAN&#8230;</string>
+    <string name="wifi_disablling">Closing WLAN&#8230;</string>
+    <string name="mac_address">MAC addr：<xliff:g>%1$s</xliff:g></string>
+    <string name="wifi_fail_to_scan">Can\'t scan for networks</string>
+    <string name="wifi_failed_connect_message">Failed to connect to network</string>
+    <string name="wifi_failed_forget_message">Failed to forget network</string>
+
+    <string name="wifi_disabled_password_failure">Authentication problem</string>
+    <string name="wifi_disabled_network_failure">Avoided poor Internet connection</string>
+    <string name="wifi_disabled_generic">Disabled</string>
+    <string name="wifi_not_in_range">Not in range</string>
+
+    <string name="wifi_wps_available_first_item">WPS available</string>
+    <string name="wifi_wps_available_second_item">\u0020(WPS available)</string>
+    <string name="wifi_remembered">Saved</string>
+    <string name="wifi_secured_first_item">Secured with <xliff:g id="wifi_security_short">%1$s</xliff:g></string>
+    <string name="wifi_secured_second_item">, secured with <xliff:g id="wifi_security_short">%1$s</xliff:g></string>
+
+    <string name="wifi_security_none">None</string>
+    <string name="wifi_signal">WI-FI Signal</string>
+    <string name="do_disconnect">Disconnect?</string>
+
+    <!-- Do not translate.  Concise terminology for wifi with WEP security -->
+    <string name="wifi_security_short_wep">WEP</string>
+    <!-- Do not translate.  Concise terminology for wifi with WPA security -->
+    <string name="wifi_security_short_wpa">WPA</string>
+    <!-- Do not translate.  Concise terminology for wifi with WPA2 security -->
+    <string name="wifi_security_short_wpa2">WPA2</string>
+    <!-- Do not translate.  Concise terminology for wifi with both WPA/WPA2 security -->
+    <string name="wifi_security_short_wpa_wpa2">WPA/WPA2</string>
+    <!-- Do not translate.  Concise terminology for wifi with unknown PSK type -->
+    <string name="wifi_security_short_psk_generic">@string/wifi_security_short_wpa_wpa2</string>
+    <!-- Do not translate.  Concise terminology for wifi with 802.1x EAP security -->
+    <string name="wifi_security_short_eap">802.1x</string>
+    <!-- Do not translate.  Terminology for wifi with WEP security -->
+    <string name="wifi_security_wep">WEP</string>
+    <!-- Do not translate.  Terminology for wifi with WPA security -->
+    <string name="wifi_security_wpa">WPA PSK</string>
+    <!-- Do not translate.  Terminology for wifi with WPA2 security -->
+    <string name="wifi_security_wpa2">WPA2 PSK</string>
+    <!-- Do not translate.  Terminology for wifi with both WPA/WPA2 security, or unknown -->
+    <string name="wifi_security_wpa_wpa2">WPA/WPA2 PSK</string>
+    <!-- Do not translate.  Terminology for wifi with unknown PSK type -->
+    <string name="wifi_security_psk_generic">@string/wifi_security_wpa_wpa2</string>
+    <!-- Do not translate.  Concise terminology for wifi with 802.1x EAP security -->
+    <string name="wifi_security_eap">802.1x EAP</string>
+
+    <string-array name="wifi_signal">
+        <item>Poor</item>
+        <item>Fair</item>
+        <item>Good</item>
+        <item>Excellent</item>
+    </string-array>
+    <string name="string_mainlist_privacy">Privacy</string>
+    <string name="string_mainlist_mapupdate">Map Upgrade</string>
+    <string name="string_mapupdate_mode">Please select Upgrade mode</string>
+    <string name="setting_display_daynight_mode">Day Night Mode</string>
+    <string name="setting_display_day">Day</string>
+    <string name="setting_display_night">Night</string>
+    <string name="setting_display_auto">Auto</string>
+    <string name="setting_show_car">Car</string>
+    <string name="setting_idv_system_yb_theme1">Classic</string>
+    <string name="setting_idv_system_yb_theme2">Sport</string>
+    <string name="setting_idv_system_yb_theme3">Technology</string>
+    <string name="car_number">License plate number</string>
+    <string name="show_car_number">Home display license plate number</string>
+    <string name="show_position">Allow phone to view vehicle location</string>
+    <string name="use_mic">Microphone</string>
+    <string name="carmera">Camera indoor</string>
+    <string name="string_internet_music">Music Net</string>
+    <string name="string_internet_radio">Radio Net</string>
+    <string name="setting_add_network">Add other Network</string>
+    <string name="add_net">Add Network</string>
+    <string name="input_pwd">Input password</string>
+    <string name="input_pwd_error">Password error</string>
+    <string name="net_pwd">Net password</string>
+    <string name="net_ssid">Net SSID</string>
+    <string name="input_ssid">Input SSID</string>
+    <string name="input_not_null">Can not be empty</string>
+
+    <string name="wifi_connect">WIFI connected</string>
+    <string name="wifi_disconnect">WIFI disconnect</string>
+    <string name="blue_connect">bluetooth connected</string>
+    <string name="blue_disconnect">bluetooth disconnect</string>
+    <string name="set_theme_info">Change theme now，waiting</string>
+</resources>

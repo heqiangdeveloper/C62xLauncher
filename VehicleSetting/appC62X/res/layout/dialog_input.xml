@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80px"
+        android:layout_marginTop="0px"
+        android:layout_centerHorizontal="true"
+        android:focusable="false">
+
+        <Button
+            android:id="@+id/buttonCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="0dp"
+            android:text="@string/setting_dialog_cancel" />
+
+        <EditText
+            android:id="@+id/editTextInput"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="30px"
+            android:layout_marginEnd="30px"
+            android:layout_toEndOf="@+id/buttonCancel"
+            android:layout_toStartOf="@+id/buttonConfirm"
+            android:cursorVisible="true"
+            android:maxLength="32"
+            android:paddingStart="30px"
+            android:textColor="@color/white_8"
+            android:singleLine="true"
+            android:textCursorDrawable="@null"
+            android:textSize="38.0px" />
+
+        <ImageView
+            android:id="@+id/dialog_input_delate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/editTextInput"
+            android:layout_centerVertical="true"
+            android:padding="10.0px" />
+
+        <Button
+            android:id="@+id/buttonConfirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:text="@string/yes" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

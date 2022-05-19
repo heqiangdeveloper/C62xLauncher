@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="70px"
+    android:paddingStart="110px"
+    android:paddingEnd="110px"
+    android:paddingBottom="110px"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvDlgTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_gravity="center_horizontal" />
+
+    <LinearLayout
+        android:id="@+id/layout_message"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+         <TextView
+             android:id="@+id/tvDlgMsg"
+             android:gravity="center"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:textSize="@dimen/dimen_40px"
+             android:text="sss" />
+ 
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/layoutButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:visibility="visible"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btnDlgYes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/setting_dialog_ok" />
+
+        <Button
+            android:id="@+id/btnDlgCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50px"
+            android:text="@string/setting_dialog_cancel"
+            android:visibility="visible" />
+
+        <Button
+            android:id="@+id/btnDlgNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50px"
+            android:text="@string/no"
+            android:visibility="visible" />
+    </LinearLayout>
+
+</LinearLayout>

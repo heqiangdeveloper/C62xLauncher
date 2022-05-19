@@ -1,0 +1,16 @@
+ext {
+
+    compileSdkVersion = 28
+    //buildToolsVersion = "27.0.3"
+    minSdkVersion = 19
+    targetSdkVersion = 28
+    supportV7 = "27.1.0"
+    //product = "chinatsp"
+}
+
+gradle.projectsEvaluated {
+    println "The sub project: ${name}"
+    tasks.withType(JavaCompile) {
+        options.compilerArgs.add('-Xbootclasspath/p:Settings2\\libs\\classes-full-debug.jar')
+    }
+}

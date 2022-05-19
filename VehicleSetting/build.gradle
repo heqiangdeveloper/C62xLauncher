@@ -1,0 +1,60 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+ext {
+    product = getProperty('product')
+}
+buildscript {
+    ext.kotlin_version = '1.4.31'
+
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.2.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        //com.android.tools.build:gradle:3.4.2
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+//    gradle.projectsEvaluated {
+//        println "The all project: ${name}"
+//
+//        tasks.withType(JavaCompile) {
+////            Iterator<Project> iterator = this.getSubprojects().iterator()
+////            def name=this.getAllprojects()
+////            while (iterator.hasNext()){
+////                def d=iterator.next().name
+////            }
+//            //println "The project: ${name}"
+////            if(product.equals('S111')){
+////                options.compilerArgs.add('-Xbootclasspath/p:SettingsBq\\libs\\classes-haima.jar')
+////            }else{
+////                options.compilerArgs.add('-Xbootclasspath/p:Settings2\\libs\\classes-full-debug.jar')
+////            }
+//            //options.compilerArgs.add('-Xbootclasspath/p:Settings2\\libs\\classes-full-debug.jar;Settings2\\libs\\classes-haima.jar')
+//            //options.compilerArgs.add('-Xbootclasspath/p:Settings\\libs\\classes-haima.jar')
+//            //options.compilerArgs.add('-Xbootclasspath/p:Settings2\\libs\\classes-full-debug.jar')
+//        }
+//    }
+}
+
+//subprojects{
+//    gradle.projectsEvaluated {
+//        println "The project: ${name}"
+////        tasks.withType(JavaCompile) {
+////            println "The project: ${name}"
+////        }
+//    }
+//}
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

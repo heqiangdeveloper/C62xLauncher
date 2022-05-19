@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">系统设置</string>
+    <string name="setting_system_language">语言设置</string>
+    <string name="setting_wifi_security">安全性</string>
+    <string name="setting_wifi_connect">连接</string>
+    <string name="setting_wifi_forget">取消保存</string>
+    <string name="setting_wifi_cancel">取消</string>
+    <string name="string_mainlist_system">系统设置</string>
+    <string name="string_mainlist_show">显示设置</string>
+    <string name="string_mainlist_audio">音效设置</string>
+    <string name="string_mainlist_inter">网络设置</string>
+    <string name="string_mainlist_bd">蓝牙设置</string>
+    <string name="string_mainlist_individuation">个性化</string>
+    <string name="string_mainlist_update">系统升级</string>
+    <string name="string_mainlist_privacy">隐私设置</string>
+    <string name="string_mainlist_mapupdate">升级地图</string>
+    <string name="string_mapupdate_mode">请选择升级方式</string>
+    <string name="string_mainlist_about">关于本机</string>
+    <string name="string_mainlist_recover">恢复出厂</string>
+    <string name="setting_system_languageC">中文</string>
+    <string name="setting_system_languageE">English</string>
+    <string name="setting_system_timestyle">时间格式</string>
+    <string name="setting_system_time12hour">12小时</string>
+    <string name="setting_system_time24hour">24小时</string>
+    <string name="setting_system_buttonvolume">按键音</string>
+    <string name="setting_system_off">关闭</string>
+    <string name="setting_system_on">开启</string>
+    <string name="setting_system_low">低</string>
+    <string name="setting_system_mid">中</string>
+    <string name="setting_system_high">高</string>
+    <string name="setting_system_sound_inout">声音渐入渐出</string>
+    <string name="setting_system_systemvolume">提示音音量</string>
+    <string name="setting_system_speedvolume">音量随速</string>
+    <string name="setting_system_promptvolume">媒体音量</string>
+    <string name="setting_system_navigationvolume">导航音量</string>
+    <string name="setting_system_phonevolume">电话音量</string>
+
+    <string name="setting_audio_audiotype">音效选择</string>
+    <string name="setting_audio">音效</string>
+    <string name="string_audio_field">声场</string>
+    <string name="string_audio_reset">复位</string>
+    <string name="string_audio_standard">标准</string>
+    <string name="string_audio_prevalent">流行</string>
+    <string name="string_audio_rock">摇滚</string>
+    <string name="string_audio_jazz">爵士</string>
+    <string name="string_audio_classical">古典</string>
+    <string name="string_audio_custom">自定义</string>
+    <string name="string_audio_people">人声</string>
+    <string name="string_audio_3D">AM3D音效</string>
+    <string name="string_audio_high">高音：</string>
+    <string name="string_audio_center">中音：</string>
+    <string name="string_audio_low">低音：</string>
+    <string name="setting_show_bycarplay">行车播放视频</string>
+    <string name="setting_display_duibi">对比度</string>
+    <string name="setting_display_daynight_mode">白天夜晚模式</string>
+    <string name="setting_display_day">白天</string>
+    <string name="setting_display_night">黑夜</string>
+    <string name="setting_display_auto">自动</string>
+    <string name="setting_show_offScreenstyle">关屏效果</string>
+    <string name="setting_show_numClock">数字时钟</string>
+    <string name="setting_show_imitateClock">模拟时钟</string>
+    <string name="setting_show_blackScreen">黑屏</string>
+    <string name="setting_show_car">车道偏移</string>
+    <string name="setting_show_offScreen">关闭屏幕</string>
+    <string name="setting_show_luminance">亮度：</string>
+    <string name="setting_show_day">白天</string>
+    <string name="setting_show_night">夜间</string>
+    <string name="string_internet_wlan">WLAN</string>
+    <string name="string_internet_ydwl">移动数据</string>
+    <string name="string_internet_music">音乐网络</string>
+    <string name="string_internet_radio">电台网络</string>
+    <string name="string_internet_available">可用网络</string>
+    <string name="setting_add_network">添加其他网络</string>
+    <string name="string_internet_mobileInterner">移动网络</string>
+    <string name="string_internet_hotspot">WLAN热点</string>
+    <string name="hotspot_connected">{0}台设备已连接</string>
+    <string name="string_internet_lanname">热点名称</string>
+    <string name="string_internet_lanpwd">密码</string>
+    <string name="setting_dialog_ok">确定</string>
+    <string name="setting_idv_theme">主题</string>
+    <string name="setting_idv_wallpaper">壁纸</string>
+    <string name="setting_idv_font">字体</string>
+    <string name="setting_idv_system">系统</string>
+    <string name="setting_idv_online">在线</string>
+    <string name="setting_idv_usb">USB1</string>
+    <string name="setting_idv_usb2">USB2</string>
+    <string name="setting_idv_local">本地</string>
+    <string name="setting_idv_wallpaper_apply">应用</string>
+    <string name="setting_idv_wallpaper_close">取消</string>
+    <string name="setting_idv_wallpaper_load">正在读取...</string>
+    <string name="setting_idv_wallpaper_none">没有图片资源</string>
+    <string name="setting_idv_system_theme1">中控-经典</string>
+    <string name="setting_idv_system_theme2">中控-运动</string>
+    <string name="setting_idv_system_theme3">中控-科技</string>
+    <string name="setting_idv_system_yb_theme1">仪表-经典</string>
+    <string name="setting_idv_system_yb_theme2">仪表-运动</string>
+    <string name="setting_idv_system_yb_theme3">仪表-科技</string>
+    <string name="car_number">车牌号码</string>
+    <string name="show_car_number">首页显示车牌号码</string>
+    <string name="show_position">手机查看车辆位置</string>
+    <string name="carmera">室内拍照摄像头</string>
+    <string name="use_mic">麦克风开关</string>
+    <string name="device_name">本机名称</string>
+    <string name="bt_set_opean_blutooth">使用电话功能请先开启 “蓝牙”</string>
+    <string name="bt_please_turn_on_power_desc">可在手机中搜索:</string>
+    <string name="bt_set_sync_playtts">来电语音播报</string>
+    <string name="bt_tittle_of_paired_devices">已配对的设备</string>
+    <string name="bt_usable_device">可用设备</string>
+    <string name="yes">确认</string>
+    <string name="no">取消</string>
+    <string name="bt_switch">蓝牙</string>
+    <string name="bt_contacts_sync">同步联系人</string>
+    <string name="paring">正在配对...</string>
+    <string name="setting_about_incall">智能车机介绍</string>
+    <string name="setting_about_systemconfig">系统配置</string>
+    <string name="setting_about_id">设备ID</string>
+    <string name="setting_about_cpu">处理器：飞思卡尔</string>
+    <string name="setting_about_ram">内存：</string>
+    <string name="setting_about_systemrl">系统容量：{0} G</string>
+    <string name="setting_about_incallabout">"远特智能车载娱乐系统为用户提供便
+捷的蓝牙免提电话、在线导航、语言控制、多媒体音乐视频播
+放在线系统升级等功能服务。"</string>
+    <string name="setting_resetting_title">恢复系统出厂设置</string>
+    <string name="setting_resetting_point">此操作将所有系统设置项恢复出厂设置</string>
+    <string name="setting_resetting_button">恢复出厂设置</string>
+    <string name="setting_settings_Restore_not_poweroff">数据恢复中，请不要断电或做其他操作...</string>
+    <string name="setting_dialog_text_setting">是否恢复出厂设置？</string>
+    <string name="setting_dialog_cancel">取消</string>
+    <string name="string_usb_update">USB升级</string>
+    <string name="string_wifi_update">远程升级</string>
+    <string name="update_usbnodata">无升级包</string>
+    <string name="update_data">开始升级</string>
+    <string name="update_instrument_data">开始仪表升级</string>
+    <string name="update_version_name">新版本：</string>
+    <string name="update_nousb">未插入U盘</string>
+    <string name="update_dialog_hint">提示</string>
+    <string name="update_dialog_title">升级需要重新启动，升级过程中请勿对车机进行断电等相关操作</string>
+    <string name="update_dialog_downloading">系统升级包下载中</string>
+    <string name="update_os_version">系统版本：</string>
+    <string name="update_mcu_version">MCU版本：</string>
+    <string name="update_blue_version">蓝牙版本：</string>
+    <string name="update_voice_version">语音版本：</string>
+    <string name="update_voicedata_version">语音数据版本：</string>
+    <string name="update_version">版本信息</string>
+    <string name="update_if_force_lower_equal_version">升级版本过低或相同，是否确认升级？</string>
+    <string name="update_check_md5">正在校验升级包</string>
+    <string name="update_check_md5_fail">升级包校验失败</string>
+    <string name="i_see">知道了</string>
+
+    <string name="mobile_connect_num">已连接 %1$d 台设备</string>
+    <string name="mobile_connect_devices">已连接设备</string>
+    <string name="theme_auto_switch">主题自动切换</string>
+    <string name="empty"> </string>
+
+    <string name="format_time_12">hh:mm</string>
+    <string name="format_time">HH:mm</string>
+    <string name="format_date">yyyy年MM月dd日</string>
+    <string name="format_date_nl">农历</string>
+    <string name="clock_am">上午</string>
+    <string name="clock_pm">下午</string>
+    <string-array name="clock_week">
+        <item>星期日</item>
+        <item>星期一</item>
+        <item>星期二</item>
+        <item>星期三</item>
+        <item>星期四</item>
+        <item>星期五</item>
+        <item>星期六</item>
+    </string-array>
+    <string name="bt_conn_status_connecting">正在连接...</string>
+    <string name="bt_conn_status_connected">已连接</string>
+    <string name="bt_conn_status_disconnecting">正在断开...</string>
+    <string name="bt_conn_status_disconnected">未连接</string>
+
+    <string name="bt_msg_confirm_del_paired_device">是否删除：%1$s ？</string>
+    <string name="bt_msg_confirm_disconnect_device">是否断开与 %1$s 的连接？</string>
+    <string name="bt_msg_confirm_connect_device">是否断开 %1$s 并连接 %2$s ? </string>
+    <string name="bt_msg_bt_connected">蓝牙已连接</string>
+    <string name="bt_msg_bt_connected_and_sync_contacts">蓝牙已连接，即将为您同步联系人</string>
+    <string name="bt_msg_device_is_full">设备已满\n\n请删除后再连接新设备\n</string>
+
+    <string name="wifi_enablling">正在打开WLAN&#8230;</string>
+    <string name="wifi_scanning">正在搜索WLAN&#8230;</string>
+    <string name="wifi_disablling">正在关闭WLAN&#8230;</string>
+    <string name="mac_address">MAC地址：<xliff:g>%1$s</xliff:g></string>
+    <string name="wifi_fail_to_scan">"扫描不到网络"</string>
+    <string name="wifi_failed_connect_message">"无法连接网络"</string>
+    <string name="wifi_failed_forget_message">"无法取消保存网络"</string>
+    <string name="wifi_disabled_password_failure">"身份验证出现问题"</string>
+    <string name="wifi_disabled_network_failure">"已停用（互联网连接状况不佳）"</string>
+    <string name="wifi_disabled_generic">"未启用"</string>
+    <string name="wifi_not_in_range">"不在范围内"</string>
+    <string name="wifi_remembered">"已保存"</string>
+    <string name="wifi_wps_available_first_item">"可使用 WPS"</string>
+    <string name="wifi_wps_available_second_item">" （可使用 WPS）"</string>
+    <string name="wifi_secured_first_item">"通过 <xliff:g id="WIFI_SECURITY_SHORT">%1$s</xliff:g> 进行保护"</string>
+    <string name="wifi_secured_second_item">"，通过 <xliff:g id="WIFI_SECURITY_SHORT">%1$s</xliff:g> 进行保护"</string>
+    <string name="wifi_security_none">"无"</string>
+    <string name="wifi_signal">信号强度</string>
+    <string name="do_disconnect">是否断开连接？</string>
+
+    <!-- Do not translate.  Concise terminology for wifi with WEP security -->
+    <string name="wifi_security_short_wep">WEP</string>
+    <!-- Do not translate.  Concise terminology for wifi with WPA security -->
+    <string name="wifi_security_short_wpa">WPA</string>
+    <!-- Do not translate.  Concise terminology for wifi with WPA2 security -->
+    <string name="wifi_security_short_wpa2">WPA2</string>
+    <!-- Do not translate.  Concise terminology for wifi with both WPA/WPA2 security -->
+    <string name="wifi_security_short_wpa_wpa2">WPA/WPA2</string>
+    <!-- Do not translate.  Concise terminology for wifi with unknown PSK type -->
+    <string name="wifi_security_short_psk_generic">@string/wifi_security_short_wpa_wpa2</string>
+    <!-- Do not translate.  Concise terminology for wifi with 802.1x EAP security -->
+    <string name="wifi_security_short_eap">802.1x</string>
+    <!-- Do not translate.  Terminology for wifi with WEP security -->
+    <string name="wifi_security_wep">WEP</string>
+    <!-- Do not translate.  Terminology for wifi with WPA security -->
+    <string name="wifi_security_wpa">WPA PSK</string>
+    <!-- Do not translate.  Terminology for wifi with WPA2 security -->
+    <string name="wifi_security_wpa2">WPA2 PSK</string>
+    <!-- Do not translate.  Terminology for wifi with both WPA/WPA2 security, or unknown -->
+    <string name="wifi_security_wpa_wpa2">WPA/WPA2 PSK</string>
+    <!-- Do not translate.  Terminology for wifi with unknown PSK type -->
+    <string name="wifi_security_psk_generic">@string/wifi_security_wpa_wpa2</string>
+    <!-- Do not translate.  Concise terminology for wifi with 802.1x EAP security -->
+    <string name="wifi_security_eap">802.1x EAP</string>
+    <string name="add_net">添加网络</string>
+    <string name="input_pwd">输入密码</string>
+    <string name="input_pwd_error">密码验证错误</string>
+    <string name="net_pwd">网络密码</string>
+    <string name="net_ssid">网络SSID</string>
+    <string name="input_ssid">输入SSID</string>
+    <string name="input_not_null">不能为空</string>
+
+    <string-array name="wifi_signal">
+        <item>"弱"</item>
+        <item>"一般"</item>
+        <item>"较强"</item>
+        <item>"强"</item>
+    </string-array>
+
+    <string name="wifi_connect">WIFI 已连接</string>
+    <string name="wifi_disconnect">WIFI 已断开</string>
+    <string name="blue_connect">蓝牙已连接</string>
+    <string name="blue_disconnect">蓝牙已断开</string>
+    <string name="set_theme_info">正在切换主题，请稍后</string>
+
+</resources>
