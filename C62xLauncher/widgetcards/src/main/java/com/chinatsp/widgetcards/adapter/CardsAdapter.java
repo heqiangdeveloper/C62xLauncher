@@ -50,6 +50,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardFrameViewHolder> {
 
     public void setCardEntityList(List<BaseCardEntity> cardList) {
         if (cardList != null) {
+            mCardEntityList.clear();
             mCardEntityList.addAll(cardList);
         }
     }
