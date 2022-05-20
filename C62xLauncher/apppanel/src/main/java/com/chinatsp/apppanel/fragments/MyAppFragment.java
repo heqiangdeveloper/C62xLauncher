@@ -12,9 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
+import com.anarchy.classifyview.ClassifyView;
 import com.chinatsp.apppanel.R;
 import com.chinatsp.apppanel.adapter.AppInfoAdapter;
+import com.chinatsp.apppanel.adapter.MyAppInfoAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,7 +36,7 @@ public class MyAppFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private GridView appInfoGridView;
+    private ClassifyView appInfoClassifyView;
     private AppInfoAdapter adapter;
     public MyAppFragment() {
         // Required empty public constructor
@@ -70,9 +73,17 @@ public class MyAppFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_app, container, false);
-        appInfoGridView = (GridView) view.findViewById(R.id.app_in_gridview);
-        adapter = new AppInfoAdapter(getContext(),getApps());
-        appInfoGridView.setAdapter(adapter);
+        appInfoClassifyView = (ClassifyView) view.findViewById(R.id.classify_view);
+        //adapter = new AppInfoAdapter(getContext(),getApps());
+        List<List<ResolveInfo>> data = new ArrayList<>();
+
+        List<ResolveInfo> allApps = getApps();
+        for(ResolveInfo info : allApps){
+            List<ResolveInfo> inner = new ArrayList<>();
+            inner.add(info);
+            data.add(inner);
+        }
+        appInfoClassifyView.setAdapter(new MyAppInfoAdapter(view.getContext(),data));
         return view;
     }
 
