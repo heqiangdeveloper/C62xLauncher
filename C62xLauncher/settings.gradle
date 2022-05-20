@@ -1,0 +1,9 @@
+
+rootProject.name = "C62xLauncher"
+include ':app'
+include ':widgetcards'
+include ':apppanel'
+include ':card_weaher'
+include ':cardbase'
+include ':card_navigation'
+include ':card_douyin'

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="card_weather_location">#ABD3E1</color>
+    <color name="card_weather_pm">#E5DC33</color>
+</resources>
