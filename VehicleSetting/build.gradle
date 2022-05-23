@@ -9,6 +9,7 @@ buildscript {
         google()
         mavenCentral()
         maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+        maven { url 'https://maven.aliyun.com/repository/public/' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.2.0'
@@ -23,6 +24,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://maven.aliyun.com/repository/public/' }
     }
 
 //    gradle.projectsEvaluated {

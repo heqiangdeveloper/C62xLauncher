@@ -14,9 +14,9 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0.1"
-        buildConfigField "String", "PRODUCT", "\""+product+"\""
+        buildConfigField "String", "PRODUCT", "\"" + product + "\""
         //testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        //applicationId 'com.chinatsp.settings'
+        //applicationId 'com.chinatsp.settings'B
     }
 
     signingConfigs {
@@ -28,6 +28,9 @@ android {
         }
     }
 
+    viewBinding {
+        enabled = true
+    }
 
     sourceSets {
         main {
@@ -96,5 +99,9 @@ dependencies {
     compileOnly files('libs/classes-full-debug.jar')
     implementation project(':carlib')
     implementation 'androidx.fragment:fragment:1.3.6'
-
+    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:2.0.4'
+    //垂直的tablayout
+    implementation 'q.rorbin:VerticalTabLayout:1.2.5'
 }
