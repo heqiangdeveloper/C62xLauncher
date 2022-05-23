@@ -16,6 +16,7 @@ public class AppLists {
     private static final String subscriber = "com.google.android.car.vms.subscriber";//VmsSubscriberClientSample
     private static final String avmDemo = "com.mediatek.avm";//AVMDemo
     private static final String carcorderdemo = "com.mediatek.carcorderdemo";//Carcorder Demo
+    private static final String b561Radio = "com.oushang.radio";//b561 Radio
     public static List<String> blackListApps = Arrays.asList(
             aospSettings,
             launcher,
@@ -25,6 +26,7 @@ public class AppLists {
             tfactory,
             subscriber,
             avmDemo,
-            carcorderdemo
+            carcorderdemo,
+            b561Radio
     );
 }
