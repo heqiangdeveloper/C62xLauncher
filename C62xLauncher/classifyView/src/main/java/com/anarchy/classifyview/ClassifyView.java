@@ -181,6 +181,8 @@ public class ClassifyView extends FrameLayout {
             public void onClick(View v) {
                 if (mHideSubAnim != null && mHideSubAnim.isRunning()) return;
                 hideSubContainer();
+                //刷新桌面中sub的显示
+                mSubCallBack.removeItem(mSubRecyclerView.getChildCount() - 1);
             }
         });
         mMainShadowView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
@@ -590,7 +592,7 @@ public class ClassifyView extends FrameLayout {
                 //隐藏弹出的文件夹框
                 mSubContainer.setVisibility(GONE);
                 //隐藏文件夹弹窗后，清除掉之前添加的添加按钮
-                mSubCallBack.removeItem(mSubRecyclerView.getChildCount() - 1);
+                //mSubCallBack.removeItem(mSubRecyclerView.getChildCount() - 1);
                 mMainShadowView.setVisibility(VISIBLE);
             }
         });
@@ -771,13 +773,17 @@ public class ClassifyView extends FrameLayout {
                     }
                     releaseVelocityTracker();
                     addView.setVisibility(View.VISIBLE);
+                    int addViewIndex = mSubRecyclerView.indexOfChild(addView);
                     break;
-                case DragEvent.ACTION_DRAG_EXITED:
+                case DragEvent.ACTION_DRAG_EXITED://拖拽到main
                     if (mSubCallBack.canDragOut(mSelectedPosition)) {
                         inSubRegion = false;
                         inMainRegion = true;
+                        //重新刷新sub及main
+                        mSubCallBack.removeItem(mSubRecyclerView.getChildCount() - 1);
                         hideSubContainer();
                         mSelectedPosition = mMainCallBack.onLeaveSubRegion(mSelectedPosition, new SubAdapterReference(mSubCallBack));
+                        L.d("mSelectedPosition = " + mSelectedPosition);
                         mMainCallBack.setDragPosition(mSelectedPosition);
                         mSubCallBack.setDragPosition(-1);
                     }

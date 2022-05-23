@@ -137,5 +137,15 @@ public abstract class BaseMainAdapter<VH extends RecyclerView.ViewHolder, Sub ex
     public void moved(int selectedPosition, int targetPosition) {
 
     }
+
+    @Override
+    public void addItem(int position) {
+
+    }
+
+    @Override
+    public void removeItem(int position) {
+
+    }
 }
 

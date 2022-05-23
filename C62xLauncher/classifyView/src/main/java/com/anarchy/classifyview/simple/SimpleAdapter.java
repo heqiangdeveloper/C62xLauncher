@@ -242,6 +242,17 @@ public abstract class SimpleAdapter<T, VH extends SimpleAdapter.ViewHolder> impl
                 return mData.get(position);
             return null;
         }
+
+        @Override
+        public void addItem(int position) {
+            super.addItem(position);
+        }
+
+        @Override
+        public void removeItem(int position) {
+            mData.remove(position);
+            notifyDataSetChanged();
+        }
     }
 
     class SimpleSubAdapter extends BaseSubAdapter<VH> {
@@ -317,7 +328,14 @@ public abstract class SimpleAdapter<T, VH extends SimpleAdapter.ViewHolder> impl
 
         @Override
         public void removeItem(int position) {
-            mData.remove(position);
+            if(position < mData.size()){
+                mData.remove(position);
+            }
+
+            //刷新
+            if(parentIndex != -1) {
+                mSimpleMainAdapter.notifyItemChanged(parentIndex);
+            }
             notifyDataSetChanged();
         }
     }

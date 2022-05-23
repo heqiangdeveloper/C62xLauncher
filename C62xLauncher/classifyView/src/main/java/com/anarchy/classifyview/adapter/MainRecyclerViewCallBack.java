@@ -71,4 +71,16 @@ public interface MainRecyclerViewCallBack<Sub extends SubRecyclerViewCallBack> {
      * 通知这是一个点击item的事件,其他情况会根据返回的List 通知 subAdapter 进行数据更新并打开显示subview的窗口
      */
     List explodeItem(int position, View pressedView);
+
+    /*
+     *增加条目
+     * @param position位置
+     */
+    void addItem(int position);
+
+    /*
+     *删除条目
+     * @param position位置
+     */
+    void removeItem(int position);
 }
