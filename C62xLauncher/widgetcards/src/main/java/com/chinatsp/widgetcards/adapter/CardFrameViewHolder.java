@@ -13,7 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chinatsp.widgetcards.R;
+import com.chinatsp.widgetcards.editor.CardEditorActivity;
 
+import launcher.base.routine.ActivityBus;
 import launcher.base.utils.EasyLog;
 
 public class CardFrameViewHolder extends RecyclerView.ViewHolder {
@@ -40,6 +42,19 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
         }
         mIvCardZoom.setOnClickListener(mOnClickListener);
         EasyLog.d(TAG, "bind position:"+position+", "+cardEntity.getName());
+        itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (!mExpandState) {
+                    return false;
+                }
+                EasyLog.d(TAG, "onLongClick " + cardEntity.getName());
+                ActivityBus.newInstance(itemView.getContext())
+                        .withClass(CardEditorActivity.class)
+                        .go();
+                return false;
+            }
+        });
     }
 
     private View.OnClickListener mOnClickListener;
