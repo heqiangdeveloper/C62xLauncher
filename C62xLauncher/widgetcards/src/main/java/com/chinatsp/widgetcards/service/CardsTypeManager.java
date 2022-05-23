@@ -44,6 +44,7 @@ public class CardsTypeManager {
     private final List<BaseCardEntity> mCardEntityList = new LinkedList<>();
 
     public List<BaseCardEntity> createInitCards(){
+        mCardEntityList.clear();
         addCard(new NavigationCardEntity().setName("导航").setType(CardType.NAVIGATION));
         addCard(new DefaultCardEntity().setName("爱趣听").setType(CardType.RADIO));
         addCard(new DouyinCardEntity().setName("火山车娱").setType(CardType.VIDEO));

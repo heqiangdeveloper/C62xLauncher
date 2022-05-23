@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.View;
 
 import com.chinatsp.widgetcards.adapter.ExpandStateManager;
@@ -13,6 +14,7 @@ import com.chinatsp.widgetcards.service.CardsTypeManager;
 import com.chinatsp.widgetcards.adapter.CardsAdapter;
 
 import card.base.recyclerview.SimpleRcvDecoration;
+import launcher.base.utils.EasyLog;
 
 public class CardsFragment extends BaseFragment {
 
@@ -47,6 +49,7 @@ public class CardsFragment extends BaseFragment {
         }
     };
     private void initCardsRcv(View rootView) {
+        EasyLog.d(TAG, "initCardsRcv");
         CardsTypeManager cardsTypeManager = CardsTypeManager.getInstance();
         mRcvCards = rootView.findViewById(R.id.rcvCards);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity()){
