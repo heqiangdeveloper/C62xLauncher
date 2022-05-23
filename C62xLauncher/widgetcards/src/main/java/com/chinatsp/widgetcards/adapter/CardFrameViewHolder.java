@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.chinatsp.widgetcards.R;
 
+import launcher.base.utils.EasyLog;
+
 public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     private static final String TAG = "CardFrameViewHolder";
     private RecyclerView mRecyclerView;
@@ -37,6 +39,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
             mOnClickListener = createListener(cardEntity);
         }
         mIvCardZoom.setOnClickListener(mOnClickListener);
+        EasyLog.d(TAG, "bind position:"+position+", "+cardEntity.getName());
     }
 
     private View.OnClickListener mOnClickListener;
@@ -77,7 +80,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
         // 3个卡片的位置: 0, 605, 1210
         if (itemView.getX() > 700) {
             // 位于第三个位置时, recyclerView需要左移
-            Log.d(TAG, "expand x: " + itemView.getX() + ", position:" + position);
+            EasyLog.d(TAG, "expand x: " + itemView.getX() + ", position:" + position);
             mRecyclerView.scrollToPosition(position);
             LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
             if (layoutManager != null) {

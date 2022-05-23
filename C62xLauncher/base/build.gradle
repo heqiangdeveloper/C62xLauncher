@@ -24,16 +24,8 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
 }
 
 dependencies {
-    implementation rootProject.ext.dependencies.appcompat
-    implementation rootProject.ext.dependencies.material
-    implementation rootProject.ext.dependencies.constraintlayout
-    implementation project(path: ':card_weaher')
-    implementation project(path: ':cardbase')
-    implementation project(path: ':card_navigation')
-    implementation project(path: ':card_douyin')
-    implementation project(path: ':base')
+
 }

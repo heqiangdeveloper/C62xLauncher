@@ -1,6 +1,7 @@
 package com.chinatsp.widgetcards.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +17,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import launcher.base.utils.EasyLog;
+
 public class CardsAdapter extends RecyclerView.Adapter<CardFrameViewHolder> {
 
+    private static final String TAG = "CardsAdapter";
     private final Context mContext;
     private final LayoutInflater mLayoutInflater;
     private final List<BaseCardEntity> mCardEntityList = new LinkedList<>();
@@ -52,6 +56,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardFrameViewHolder> {
         if (cardList != null) {
             mCardEntityList.clear();
             mCardEntityList.addAll(cardList);
+            EasyLog.d(TAG, "setCardEntityList: "+cardList.size());
         }
     }
 
