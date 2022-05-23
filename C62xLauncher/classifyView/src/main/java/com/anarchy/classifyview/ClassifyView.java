@@ -729,7 +729,8 @@ public class ClassifyView extends FrameLayout {
             float marginLeft = mSubContainer.getWidth();
             //获取添加按钮
             addView = mSubRecyclerView.getChildAt(mSubRecyclerView.getChildCount() - 1);
-            if(v == addView){
+            if(mSelectedPosition == mSubRecyclerView.getChildCount() - 1){
+                L.d("Long press addView");
                 return true;
             }
             switch (action) {
@@ -772,7 +773,7 @@ public class ClassifyView extends FrameLayout {
                         doRecoverAnimation();
                     }
                     releaseVelocityTracker();
-                    addView.setVisibility(View.VISIBLE);
+
                     int addViewIndex = mSubRecyclerView.indexOfChild(addView);
                     break;
                 case DragEvent.ACTION_DRAG_EXITED://拖拽到main
@@ -835,6 +836,8 @@ public class ClassifyView extends FrameLayout {
         @Override
         public void onAnimationEnd(Animator animation) {
             restoreToInitial();
+            //显示添加按钮
+            if(addView != null) addView.setVisibility(View.VISIBLE);
         }
     };
 

@@ -8,6 +8,7 @@ import android.view.View;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anarchy.classifyview.ClassifyView;
+import com.anarchy.classifyview.util.L;
 
 import java.util.List;
 
@@ -53,6 +54,10 @@ public abstract class BaseSubAdapter<VH extends RecyclerView.ViewHolder> extends
 
     @Override
     public boolean canDropOver(int selectedPosition, int targetPosition) {
+        //解决sub中，拖动应用图标时可以拖动到添加按钮的位置
+        if(targetPosition == getItemCount() - 1){
+            return false;
+        }
         return true;
     }
 
