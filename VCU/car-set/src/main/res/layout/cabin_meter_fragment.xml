@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="30px"
+        android:paddingEnd="30px">
+
+        <LinearLayout
+            android:id="@+id/linearLayout3"
+            android:layout_width="match_parent"
+            android:layout_height="190px"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="29px"
+                android:layout_marginBottom="19px"
+                android:text="@string/cabin_ac_auto_comfort"
+                android:textColor="@color/tab_option_title_text_color"
+                android:textSize="@dimen/tab_option_title_text_size" />
+
+            <com.common.xui.widget.tabbar.TabControlView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/radio_option_height"
+                android:background="@drawable/vcu_bg_tab_shape"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tcv_defaultSelection="1"
+                app:tcv_equalWidth="true"
+                app:tcv_items="@array/cabin_meter_system_options"
+                app:tcv_left_option="@drawable/tcv_left_option2"
+                app:tcv_left_option_selected="@drawable/tcv_left_option_selected2"
+                app:tcv_meddle_option="@drawable/tcv_middle_option2"
+                app:tcv_meddle_option_selected="@drawable/tcv_middle_option_selected2"
+                app:tcv_radius="@dimen/radio_option_height"
+                app:tcv_right_option="@drawable/tcv_right_option2"
+                app:tcv_right_option_selected="@drawable/tcv_right_option_selected2"
+                app:tcv_selectedColor="@color/tcv_onselected_color"
+                app:tcv_selectedTextColor="@color/select_text_color"
+                app:tcv_stretch="true"
+                app:tcv_strokeWidth="0dp"
+                app:tcv_textSize="@dimen/tcv_radio_option_text_size"
+                app:tcv_unselectedTextColor="@color/normal_text_color" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

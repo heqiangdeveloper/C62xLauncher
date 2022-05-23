@@ -1,0 +1,39 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="XUITheme.Tablet.Big">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:listDivider">@drawable/list_divider</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+
+    <style name="onClick">
+        <item name="android:clickable">true</item>
+        <item name="android:onClick">onClick</item>
+    </style>
+
+    <style name="switch_row_option_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/h2_text_size</item>
+        <item name="android:textColor">@color/tab_option_title_text_color</item>
+    </style>
+
+    <style name="switch_button_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="swb_animationDuration">200</item>
+        <item name="swb_backDrawable">@drawable/switch_track_selector</item>
+        <item name="swb_thumbDrawable">@drawable/switch_thumb_selector</item>
+    </style>
+
+</resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <dimen name="actionbar_height">80dp</dimen>
+    <dimen name="layout_tab_width">380px</dimen>
+    <dimen name="layout_tab_height">100px</dimen>
+    <dimen name="title_text_size">36px</dimen>
+    <dimen name="h2_text_size">32px</dimen>
+
+    <dimen name="radio_option_height" >64px</dimen>
+    <dimen name="radio_option_radius">32px</dimen>
+
+    <dimen name="tab_option_title_text_size">@dimen/h2_text_size</dimen>
+    <dimen name="tcv_radio_option_text_size">28px</dimen>
+    <dimen name="switch_item_option_height">106px</dimen>
+
+    <dimen name="seek_bar_inside_width">64px</dimen>
+    <dimen name="seek_bar_outside_width">64px</dimen>
+
+</resources>

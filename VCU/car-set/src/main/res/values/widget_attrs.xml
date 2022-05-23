@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--ActionBar  TitleBar-->
+    <declare-styleable name="TabRadio">
+        <attr name="TabBackground" format="reference|color" />
+        <attr name="tabSrc" format="reference|color" />
+        <attr name="tabText" format="string" localization="suggested" />
+    </declare-styleable>
+</resources>

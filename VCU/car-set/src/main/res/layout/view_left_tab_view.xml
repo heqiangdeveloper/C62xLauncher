@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/layout_tab_width"
+    android:layout_height="@dimen/layout_tab_height"
+    android:background="@drawable/vcu_bg_layout_tab_selector"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="27px"
+        android:layout_marginEnd="23px"
+        android:duplicateParentState="true"
+        android:enabled="false"
+        android:src="@drawable/vcu_ic_car_door_selector" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:duplicateParentState="true"
+        android:enabled="false"
+        android:text="小欧推荐"
+        android:textColor="@color/vcu_textcolor_tab_selector"
+        android:textSize="@dimen/title_text_size" />
+
+</LinearLayout>

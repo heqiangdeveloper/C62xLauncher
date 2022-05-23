@@ -3,6 +3,7 @@ package com.chinatsp.settinglib;
 import static android.car.VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL;
 import static android.hardware.automotive.vehicle.V2_0.VehicleProperty.VENDOR_AMPLIFIER_SWITCH_STATUS;
 
+import android.annotation.SuppressLint;
 import android.car.Car;
 import android.car.CarNotConnectedException;
 import android.car.VehicleAreaSeat;
@@ -38,6 +39,10 @@ import android.provider.Settings;
 import android.text.format.DateFormat;
 
 import com.android.internal.app.LocalePicker;
+import com.chinatsp.settinglib.optios.ACOption;
+import com.chinatsp.settinglib.optios.Area;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,8 +51,12 @@ import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * @author
+ */
 public class SettingManager {
     public static final String TAG = "SettingManager";
+    @SuppressLint("StaticFieldLeak")
     private static volatile SettingManager settingManager;
     private AudioManager mAudioManager;
     private CarAudioManager mCarAudioManager;
@@ -192,12 +201,14 @@ public class SettingManager {
     private boolean isAVMOn = false, isAPAOn = false;
 
     private void setCarDYBinCallback() {
-        try {
-            mCarCabinManager.registerCallback(mCarCabinEventCallback,new int[]{
-
-            });
-        } catch (CarNotConnectedException e) {
-            e.printStackTrace();
+        if (null != mCarCabinManager) {
+            try {
+                List<Integer> acConcernIdList = ACManager.getConcernIdList();
+                int[] acConcernArray = acConcernIdList.stream().mapToInt(it -> it).toArray();
+                mCarCabinManager.registerCallback(mCarCabinEventCallback, acConcernArray);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -213,24 +224,28 @@ public class SettingManager {
     private final CarCabinManager.CarCabinEventCallback mCarCabinEventCallback = new CarCabinManager.CarCabinEventCallback() {
         @Override
         public void onChangeEvent(CarPropertyValue carPropertyValue) {
-            //LogUtils.d(TAG, "CarCabinManager onChangeEvent id = " + carPropertyValue.getPropertyId());
-            switch (carPropertyValue.getPropertyId()) {
-                case CarCabinManager.ID_AVM_DISPLAY_SWITCH:
-                    int avm_switch = (Integer) carPropertyValue.getValue();
-                    LogUtils.d(TAG, "ID_AVM_DISPLAY_SWITCH = " + avm_switch);
-                    if (avm_switch == VEHICLE.ACK_ON) {
-                        isAVMOn = true;
-                        for (int i = 0; i < mCarAdapterList.size(); i++) {
-                            mCarAdapterList.get(i).onAvmStatusChange(true);
-                        }
-                    } else if (avm_switch == VEHICLE.ACK_OFF) {
-                        isAVMOn = false;
-                        for (int i = 0; i < mCarAdapterList.size(); i++) {
-                            mCarAdapterList.get(i).onAvmStatusChange(false);
-                        }
-                    }
-                    break;
+            int propertyId = carPropertyValue.getPropertyId();
+            if (ACManager.getConcernIdList().contains(propertyId)) {
+                ACManager.Companion.getInstance().onPropertyChanged(carPropertyValue);
             }
+
+//            switch (carPropertyValue.getPropertyId()) {
+//                case CarCabinManager.ID_AVM_DISPLAY_SWITCH:
+//                    int avm_switch = (Integer) carPropertyValue.getValue();
+//                    LogUtils.d(TAG, "ID_AVM_DISPLAY_SWITCH = " + avm_switch);
+//                    if (avm_switch == VEHICLE.ON) {
+//                        isAVMOn = true;
+//                        for (int i = 0; i < mCarAdapterList.size(); i++) {
+//                            mCarAdapterList.get(i).onAvmStatusChange(true);
+//                        }
+//                    } else if (avm_switch == VEHICLE.OFF) {
+//                        isAVMOn = false;
+//                        for (int i = 0; i < mCarAdapterList.size(); i++) {
+//                            mCarAdapterList.get(i).onAvmStatusChange(false);
+//                        }
+//                    }
+//                    break;
+//            }
         }
 
         @Override
@@ -353,7 +368,7 @@ public class SettingManager {
     //下发关 -- 5，下发开 -- 6， 上报关 -- 7， 上报开 -- 8
     public void setAvmOff() {
         LogUtils.d(TAG, "3Y1 setAvmOff");
-        setDYCarbinProperty(CarCabinManager.ID_AVM_DISPLAY_SWITCH, VEHICLE.SEND_OFF);
+        setDYCarbinProperty(CarCabinManager.ID_AVM_DISPLAY_SWITCH, VEHICLE.OFF);
     }
 
     //是否打开了自动泊车
@@ -511,6 +526,29 @@ public class SettingManager {
                 });
             }
         });
+    }
+
+    public boolean doCabinPropertyIntent(int id, int value, @NotNull Area area) {
+        try {
+            if (null != mCarCabinManager) {
+                mCarCabinManager.setIntProperty(id, area.getId(), value);
+                return true;
+            }
+        } catch (CarNotConnectedException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public int getIntValueByProperty(int id, Area area) {
+        if (null != mCarCabinManager) {
+            try {
+                mCarCabinManager.getIntProperty(id, area.getId());
+            } catch (CarNotConnectedException e) {
+                e.printStackTrace();
+            }
+        }
+        return -1;
     }
 
     public interface IMobileState {

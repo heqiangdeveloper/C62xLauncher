@@ -1,0 +1,109 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+//apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
+
+android {
+    compileSdkVersion build_versions.compileSdk
+    buildToolsVersion build_versions.buildTools
+    defaultConfig {
+        applicationId "com.chinatsp.vehicle.settings"
+        minSdkVersion build_versions.minSdk
+        targetSdkVersion build_versions.targetSdk
+        versionCode app_version.versionCode
+        versionName app_version.versionName
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+
+    }
+
+    signingConfigs {
+        config {
+            keyAlias app_signing.keyAlias
+            keyPassword app_signing.keyPassword
+            storeFile file(app_signing.storeFile)
+            storePassword app_signing.storePassword
+        }
+    }
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.config
+            zipAlignEnabled true//是否对APK包执行ZIP对齐优化，减小zip体积，增加运行效率 release和debug默认都为true
+            debuggable true//是否支持断点调试
+            jniDebuggable false//是否可以调试NDK代码
+        }
+        release {
+            signingConfig signingConfigs.config
+            minifyEnabled false
+            zipAlignEnabled true//是否对APK包执行ZIP对齐优化，减小zip体积，增加运行效率 release和debug默认都为true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+//    android.applicationVariants.all { variant ->
+//        variant.outputs.all { output ->
+//            variant.getPackageApplication().outputDirectory = new File(project.rootDir.absolutePath + File.separator + "outputs")
+//            def newName = "${CAR_SET_NAME}-${versionCode}-${versionName}.apk"
+//            output.outputFileName = newName
+//        }
+//    }
+
+    buildFeatures {
+        dataBinding = true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    testImplementation deps.test.junit
+    androidTestImplementation deps.test.android_junit
+    androidTestImplementation deps.test.test
+    androidTestImplementation deps.test.espresso
+
+    implementation deps.material
+    implementation deps.appcompat
+    implementation deps.swiperefreshlayout
+    implementation deps.recyclerview
+    implementation deps.constraintlayout
+
+    implementation deps.kotlin
+    implementation deps.corektx
+
+    implementation deps.kotlinx_coroutines_core
+    implementation deps.kotlinx_coroutines_android
+    implementation deps.lifecycle_runtime_ktx
+    implementation deps.lifecycle_viewmodel_ktx
+
+    implementation deps.constraintlayout
+
+    implementation deps.jenly.base_util
+    implementation deps.jenly.base_adapter
+
+    implementation deps.logger
+
+    //lifecycle
+    kapt deps.lifecycle.compiler
+    //room
+    kapt deps.room.compiler
+    //hilt
+    implementation deps.dagger.hilt_android
+    kapt deps.dagger.hilt_compiler
+    implementation project(':frame')
+    implementation project(':Reslib')
+    implementation project(':xui_lib')
+    implementation project(':carlib')
+//    implementation project(':uiwidget')
+
+
+}

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- MaterialProgressBar -->
+    <style name="Widget.MaterialProgressBar.ProgressBar.Horizontal" parent="android:Widget.ProgressBar.Horizontal">
+        <!--
+        Disabled for correct behavior on Android 4.x, see
+        https://github.com/android/platform_frameworks_base/commit/911743652b597057a1bd7ef8a921e9ff8dce0f4a#diff-149f45c5ff2d3185bb79688ba17bc432L536
+        <item name="android:progressDrawable">@null</item>
+        -->
+        <item name="android:indeterminateDrawable">@null</item>
+        <item name="android:minHeight">16dp</item>
+        <item name="android:maxHeight">16dp</item>
+    </style>
+
+    <style name="Widget.MaterialProgressBar.ProgressBar.Horizontal.NoPadding">
+        <item name="android:minHeight">4dp</item>
+        <item name="android:maxHeight">4dp</item>
+    </style>
+
+    <style name="Widget.MaterialProgressBar.ProgressBar" parent="android:Widget.ProgressBar">
+        <item name="android:indeterminateDrawable">@null</item>
+        <!-- We have support for determinate circular progress drawable. -->
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:minWidth">48dp</item>
+        <item name="android:maxWidth">48dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:maxHeight">48dp</item>
+    </style>
+
+    <style name="Widget.MaterialProgressBar.ProgressBar.NoPadding">
+        <item name="android:minWidth">42dp</item>
+        <item name="android:maxWidth">42dp</item>
+        <item name="android:minHeight">42dp</item>
+        <item name="android:maxHeight">42dp</item>
+    </style>
+
+    <style name="Widget.MaterialProgressBar.ProgressBar.Large">
+        <item name="android:minWidth">76dp</item>
+        <item name="android:maxWidth">76dp</item>
+        <item name="android:minHeight">76dp</item>
+        <item name="android:maxHeight">76dp</item>
+    </style>
+
+    <style name="Widget.MaterialProgressBar.ProgressBar.Large.NoPadding">
+        <item name="android:minWidth">66.5dp</item>
+        <item name="android:maxWidth">66.5dp</item>
+        <item name="android:minHeight">66.5dp</item>
+        <item name="android:maxHeight">66.5dp</item>
+    </style>
+
+    <style name="Widget.MaterialProgressBar.ProgressBar.Small">
+        <item name="android:minWidth">16dp</item>
+        <item name="android:maxWidth">16dp</item>
+        <item name="android:minHeight">16dp</item>
+        <item name="android:maxHeight">16dp</item>
+    </style>
+
+    <style name="Widget.MaterialProgressBar.ProgressBar.Small.NoPadding">
+        <item name="android:minWidth">14dp</item>
+        <item name="android:maxWidth">14dp</item>
+        <item name="android:minHeight">14dp</item>
+        <item name="android:maxHeight">14dp</item>
+    </style>
+
+    <!--TabLayout-->
+    <style name="TabText" parent="TextAppearance.Design.Tab">
+        <item name="android:textColor">@color/selector_tab_text_color</item>
+        <item name="android:textSize">36px</item>
+    </style>
+
+    <style name="TabText.Explain">
+        <item name="android:textColor">@color/selector_tab_text_color</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="TabLayoutStyle" parent="Base.Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">#00000000</item>
+        <item name="tabIndicatorHeight">@dimen/main_tab_height</item>
+        <item name="tabPaddingStart">0dp</item>
+        <item name="tabPaddingEnd">0dp</item>
+        <item name="tabTextAppearance">@style/TabText</item>
+        <item name="tabSelectedTextColor">@color/select_text_color</item>
+        <item name="tabTextColor">@color/normal_text_color</item>
+    </style>
+
+    <style name="ScrollViewStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:overScrollMode">never</item>
+    </style>
+
+    <style name="tdv_common_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/radio_option_height</item>
+        <item name="android:background">@drawable/vcu_bg_tab_shape</item>
+        <item name="tcv_defaultSelection">0</item>
+        <item name="tcv_equalWidth">true</item>
+        <item name="tcv_left_option">@drawable/tcv_left_option2</item>
+        <item name="tcv_left_option_selected">@drawable/tcv_left_option_selected2</item>
+        <item name="tcv_meddle_option">@drawable/tcv_middle_option2</item>
+        <item name="tcv_meddle_option_selected">@drawable/tcv_middle_option_selected2</item>
+        <item name="tcv_right_option">@drawable/tcv_right_option2</item>
+        <item name="tcv_right_option_selected">@drawable/tcv_right_option_selected2</item>
+        <item name="tcv_selectedColor">@color/tcv_onselected_color</item>
+        <item name="tcv_selectedTextColor">@color/select_text_color</item>
+        <item name="tcv_stretch">true</item>
+        <item name="tcv_strokeWidth">0px</item>
+        <item name="tcv_radius">@dimen/radio_option_radius</item>
+        <item name="tcv_textSize">@dimen/tcv_radio_option_text_size</item>
+        <item name="tcv_unselectedTextColor">@color/normal_text_color</item>
+    </style>
+
+</resources>

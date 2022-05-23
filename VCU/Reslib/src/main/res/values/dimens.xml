@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <dimen name="actionbar_height">80dp</dimen>
+    <dimen name="main_tab_width" tools:ignore="MissingDefaultResource">228px</dimen>
+    <dimen name="main_tab_height" tools:ignore="MissingDefaultResource">90px</dimen>
+</resources>
