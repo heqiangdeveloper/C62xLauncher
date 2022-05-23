@@ -13,6 +13,9 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 
 import com.anarchy.classifyview.ClassifyView;
+import com.anarchy.classifyview.util.L;
+import com.anarchy.classifyview.util.MyConfigs;
+import com.chinatsp.apppanel.AppConfigs.AppLists;
 import com.chinatsp.apppanel.R;
 import com.chinatsp.apppanel.adapter.AppInfoAdapter;
 import com.chinatsp.apppanel.adapter.MyAppInfoAdapter;
@@ -76,9 +79,10 @@ public class MyAppFragment extends Fragment {
         appInfoClassifyView = (ClassifyView) view.findViewById(R.id.classify_view);
         //adapter = new AppInfoAdapter(getContext(),getApps());
         List<List<ResolveInfo>> data = new ArrayList<>();
-
         List<ResolveInfo> allApps = getApps();
+        allApps = getAvailabelApps(allApps);
         for(ResolveInfo info : allApps){
+            L.d("name: " + info.activityInfo.loadLabel(getContext().getPackageManager()) + "," + info.activityInfo.packageName);
             List<ResolveInfo> inner = new ArrayList<>();
             inner.add(info);
             data.add(inner);
@@ -87,10 +91,29 @@ public class MyAppFragment extends Fragment {
         return view;
     }
 
+    /**
+     * 获取系统中所有的APP
+     * @return
+     */
     private List<ResolveInfo> getApps(){
         PackageManager packageManager = getContext().getPackageManager();
         Intent i = new Intent(Intent.ACTION_MAIN,null);
         i.addCategory(Intent.CATEGORY_LAUNCHER);
         return packageManager.queryIntentActivities(i,0);
+    }
+
+    /*
+    *  剔除黑名单中的APP
+     */
+    private List<ResolveInfo> getAvailabelApps(List<ResolveInfo> allApps){
+        for (String packages:AppLists.blackListApps) {
+            A:for (int i = 0; i < allApps.size(); i++){
+                if(packages.equals(allApps.get(i).activityInfo.packageName)){
+                    allApps.remove(i);
+                    break A;
+                }
+            }
+        }
+        return allApps;
     }
 }
