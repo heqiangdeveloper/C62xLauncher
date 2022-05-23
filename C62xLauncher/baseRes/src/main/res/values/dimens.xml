@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="card_height_selected">214px</dimen>
+    <dimen name="card_width_selected">220px</dimen>
     <dimen name="card_height">540px</dimen>
     <dimen name="card_width">575px</dimen>
     <dimen name="card_width_large">1180px</dimen>
@@ -16,4 +18,6 @@
 
     <dimen name="card_icon_size_weather_sun">138px</dimen>
     <dimen name="card_weather_temperature_width">46px</dimen>
+    <dimen name="card_edit_btn_width">228px</dimen>
+    <dimen name="card_edit_btn_height">74px</dimen>
 </resources>

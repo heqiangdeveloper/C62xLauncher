@@ -2,4 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.chinatsp.widgetcards">
 
+    <application>
+        <activity
+            android:name=".editor.CardEditorActivity"
+            android:exported="false" />
+    </application>
+
 </manifest>
