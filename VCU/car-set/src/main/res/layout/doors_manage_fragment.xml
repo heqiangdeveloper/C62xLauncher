@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingDefaultResource">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.common.xui.widget.XUIWrapContentScrollView
+            android:id="@+id/cabin_manager_ScrollView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@id/cabin_manager_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:id="@+id/cabin_manager_left_tab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.chinatsp.vehicle.settings.widget.TabRadio
+                    android:id="@+id/car_doors"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    app:tabSrc="@drawable/vcu_ic_car_door_selector"
+                    app:tabText="@string/car_door" />
+
+                <com.chinatsp.vehicle.settings.widget.TabRadio
+                    android:id="@+id/car_window"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    app:tabSrc="@drawable/vcu_ic_car_trunk_selector"
+                    app:tabText="@string/car_window" />
+
+                <com.chinatsp.vehicle.settings.widget.TabRadio
+                    android:id="@+id/car_trunk"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    app:tabSrc="@drawable/vcu_ic_car_window_selector"
+                    app:tabText="@string/car_trunk" />
+
+            </LinearLayout>
+        </com.common.xui.widget.XUIWrapContentScrollView>
+
+        <FrameLayout
+            android:id="@+id/cabin_manager_layout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/cabin_manager_ScrollView"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

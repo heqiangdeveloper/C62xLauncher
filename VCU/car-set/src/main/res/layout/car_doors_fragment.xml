@@ -26,16 +26,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="29px"
                 android:layout_marginBottom="19px"
-                android:text="@string/cabin_wheel_electronic_mode"
+                android:text="@string/drive_auto_lock"
                 android:textColor="@color/tab_option_title_text_color"
                 android:textSize="@dimen/tab_option_title_text_size" />
 
             <com.common.xui.widget.tabbar.TabControlView
-                android:id="@+id/cabin_ac_comfort_option"
+                android:id="@+id/car_doors_option"
                 style="@style/tdv_common_style"
                 app:layout_constraintTop_toTopOf="parent"
                 app:tcv_defaultSelection="1"
-                app:tcv_items="@array/cabin_wheel_mode_options" />
+                app:tcv_items="@array/three_state_option" />
         </LinearLayout>
 
         <View
@@ -46,43 +46,30 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/linearLayout" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cabin_whell_press_key"
+        <LinearLayout
+            android:id="@+id/acc_off_unlock"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/switch_item_option_height"
-            android:orientation="horizontal"
+            android:layout_height="190px"
+            android:orientation="vertical"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/line1">
 
             <TextView
-                style="@style/switch_row_option_style"
-                android:text="@string/cabin_wheel_press_key"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:layout_marginTop="29px"
+                android:layout_marginBottom="19px"
+                android:text="@string/acc_off_auto_unlock"
+                android:textColor="@color/tab_option_title_text_color"
+                android:textSize="@dimen/tab_option_title_text_size" />
 
-                <TextView
-                    android:id="@+id/cabin_whell_click_tv"
-                    style="@style/click_row_option_style"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/cabin_wheel_press_key_tv" />
-
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@drawable/list_item_right_selector" />
-            </LinearLayout>
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.common.xui.widget.tabbar.TabControlView
+                android:id="@+id/auto_unlock_door_options"
+                style="@style/tdv_common_style"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tcv_defaultSelection="1"
+                app:tcv_items="@array/auto_unlock_door_options" />
+        </LinearLayout>
 
         <View
             android:id="@+id/line2"
@@ -90,7 +77,7 @@
             android:layout_height="0.5dp"
             android:background="@drawable/list_divider_line"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cabin_whell_press_key" />
+            app:layout_constraintTop_toBottomOf="@id/acc_off_unlock" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cabin_whell_automatic_heating"
@@ -102,31 +89,18 @@
 
             <TextView
                 style="@style/switch_row_option_style"
-                android:text="@string/cabin_wheel_automatic_heating"
+                android:text="@string/car_door_smart"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
+            <com.common.xui.widget.button.switchbutton.SwitchButton
+                android:id="@+id/cabin_ac_auto_demist_swb"
+                style="@style/switch_button_style"
+                android:checked="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <TextView
-                    android:id="@+id/cabin_whell_automatic_heating_tv"
-                    style="@style/click_row_option_style"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/cabin_wheel_automatic_heating_tv" />
-
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@drawable/list_item_right_selector" />
-            </LinearLayout>
-
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

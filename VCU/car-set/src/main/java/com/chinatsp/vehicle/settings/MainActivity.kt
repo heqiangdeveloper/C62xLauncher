@@ -11,6 +11,7 @@ import com.chinatsp.vehicle.settings.databinding.MainActivityTablayoutBinding
 import com.chinatsp.vehicle.settings.fragment.AccessFragment
 import com.chinatsp.vehicle.settings.fragment.cabin.CabinManagerFragment
 import com.chinatsp.vehicle.settings.fragment.SimpleTabFragment
+import com.chinatsp.vehicle.settings.fragment.doors.DoorsManageFragment
 import com.chinatsp.vehicle.settings.vm.MainViewModel
 import com.common.library.frame.base.BaseActivity
 import com.google.android.material.tabs.TabLayout
@@ -20,9 +21,14 @@ import com.common.xui.utils.ViewUtils
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>(), OnTabSelectedListener {
+class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>(),
+    OnTabSelectedListener {
 
-    private val mAdapter: FragmentStateViewPager2Adapter by lazy { FragmentStateViewPager2Adapter(this) }
+    private val mAdapter: FragmentStateViewPager2Adapter by lazy {
+        FragmentStateViewPager2Adapter(
+            this
+        )
+    }
 
     override fun getLayoutId(): Int {
         return R.layout.main_activity_tablayout
@@ -102,12 +108,13 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
                     val fragment = AccessFragment()
                     fragment.userVisibleHint = true
                     mAdapter.addFragment(fragment, title)
-                }
-                else if (position == 5) {
+                } else if (position == 1) {
+                    val fragment = DoorsManageFragment();
+                    mAdapter.addFragment(fragment, title)
+                } else if (position == 5) {
                     val fragment = CabinManagerFragment()
                     mAdapter.addFragment(fragment, title)
-                }
-                else {
+                } else {
                     mAdapter.addFragment(SimpleTabFragment.newInstance(title), title)
                 }
             }
@@ -122,7 +129,8 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
     fun onClick(view: View) {
         when (view.id) {
             R.id.back -> this.onBackPressed()
-            else -> {}
+            else -> {
+            }
         }
     }
 
