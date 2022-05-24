@@ -31,35 +31,40 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
-                    app:tabText="@string/vcu_cabin_wheel" />
+                    app:tabText="@string/vcu_cabin_wheel"
+                    app:tabSrc="@drawable/cabin_wheel_selector"/>
 
                 <com.chinatsp.vehicle.settings.widget.TabRadio
                     android:id="@+id/cabin_seat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
-                    app:tabText="@string/vcu_cabin_seat" />
+                    app:tabText="@string/vcu_cabin_seat"
+                    app:tabSrc="@drawable/cabin_seat_selector"/>
 
                 <com.chinatsp.vehicle.settings.widget.TabRadio
                     android:id="@+id/cabin_air_conditioner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
-                    app:tabText="@string/vcu_cabin_air_conditioner" />
+                    app:tabText="@string/vcu_cabin_air_conditioner"
+                    app:tabSrc="@drawable/cabin_ac_selector"/>
 
                 <com.chinatsp.vehicle.settings.widget.TabRadio
                     android:id="@+id/cabin_safety"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
-                    app:tabText="@string/vcu_cabin_safety" />
+                    app:tabText="@string/vcu_cabin_safety"
+                    app:tabSrc="@drawable/cabin_safe_selector"/>
 
                 <com.chinatsp.vehicle.settings.widget.TabRadio
                     android:id="@+id/cabin_instrument"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
-                    app:tabText="@string/vcu_cabin_instrument" />
+                    app:tabText="@string/vcu_cabin_instrument"
+                    app:tabSrc="@drawable/cabin_meter_selector"/>
 
             </LinearLayout>
         </com.common.xui.widget.XUIWrapContentScrollView>
