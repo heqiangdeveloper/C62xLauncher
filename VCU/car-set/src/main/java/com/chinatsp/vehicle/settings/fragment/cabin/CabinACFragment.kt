@@ -1,7 +1,8 @@
 package com.chinatsp.vehicle.settings.fragment.cabin
 
 import android.os.Bundle
-import com.chinatsp.settinglib.ACManager
+import com.chinatsp.settinglib.LogManager
+import com.chinatsp.settinglib.manager.ACManager
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CabinAcFragmentBinding
 import com.chinatsp.vehicle.settings.vm.CabinACViewModel
@@ -30,13 +31,34 @@ class CabinACFragment : BaseFragment<CabinACViewModel, CabinAcFragmentBinding>()
         monitorRadioOption()
         monitorSwitchLiveData()
         setCheckedChangeListener()
+        setTabSelectionChangedListener()
+    }
+
+    private fun setTabSelectionChangedListener() {
+        binding.cabinAcComfortOption.setOnTabSelectionChangedListener { title, value ->
+            val stringArray = ResUtils.getStringArray(R.array.cabin_ac_comfort_options)
+            stringArray.forEachIndexed { index, name ->
+                if (name == value) {
+                    val signalValue = index + 1;
+                    val oldValue = viewModel.comfortLiveData.value;
+                    val result = ACManager.instance.doUpdateACComfort(signalValue)
+                    viewModel.comfortLiveData.value = signalValue
+                    if (!result) {
+                        viewModel.comfortLiveData.value = oldValue
+                    } else {
+                        val obtainAutoComfortOption = ACManager.instance.obtainAutoComfortOption()
+                        LogManager.d("CabinACFragment", "obtainAutoComfortOption: $obtainAutoComfortOption")
+                    }
+                }
+            }
+        }
     }
 
     private fun monitorRadioOption() {
         val stringArray = ResUtils.getStringArray(R.array.cabin_ac_comfort_options)
         viewModel.comfortLiveData.let {
             val defIndex = it.value?.let { value ->
-                return@let if (value >= 0 && value < stringArray.size)  value else 0x01
+                if (value >= 0 && value < stringArray.size) value else 0x01
             } ?: 0x01
             updateComfortOption(defIndex, stringArray)
             it.observe(this) { value ->
@@ -46,37 +68,49 @@ class CabinACFragment : BaseFragment<CabinACViewModel, CabinAcFragmentBinding>()
     }
 
     private fun updateComfortOption(value: Int, stringArray: Array<String>) {
-        when (value) {
+        var title: String =  when (value) {
             0x01 -> {
-                binding.cabinAcComfortOption.setSelection(stringArray[0])
+                stringArray[0]
+//                binding.cabinAcComfortOption.setSelection(stringArray[0])
             }
             0x02 -> {
-                binding.cabinAcComfortOption.setSelection(stringArray[1])
+                stringArray[1]
+//                binding.cabinAcComfortOption.setSelection(stringArray[1])
             }
             0x03 -> {
-                binding.cabinAcComfortOption.setSelection(stringArray[2])
+                stringArray[2]
+//                binding.cabinAcComfortOption.setSelection(stringArray[2])
             }
             else -> {
-                binding.cabinAcComfortOption.setSelection(stringArray[0])
+                stringArray[0]
+//                binding.cabinAcComfortOption.setSelection(stringArray[0])
             }
+        }
+        updateComfortOption(title, stringArray)
+    }
+
+    private fun updateComfortOption(value: String, stringArray: Array<String>) {
+        val any = stringArray.any { it == value }
+        if (any) {
+            binding.cabinAcComfortOption.setSelection(value, true)
         }
     }
 
     private fun monitorSwitchLiveData() {
         viewModel.aridLiveData.let {
-            binding.cabinAcAutoAridSwb.isChecked = it.value == true
+            binding.cabinAcAutoAridSwb.setCheckedNoEvent(it.value == true)
             it.observe(this) { checked ->
                 binding.cabinAcAutoAridSwb.setCheckedNoEvent(checked)
             }
         }
         viewModel.demistLiveData.let {
-            binding.cabinAcAutoDemistSwb.isChecked = it.value == true
+            binding.cabinAcAutoDemistSwb.setCheckedNoEvent(it.value == true)
             it.observe(this) { checked ->
                 binding.cabinAcAutoDemistSwb.setCheckedNoEvent(checked)
             }
         }
         viewModel.windLiveData.let {
-            binding.cabinAcAdvanceWindSwb.isChecked = it.value == true
+            binding.cabinAcAdvanceWindSwb.setCheckedNoEvent(it.value == true)
             it.observe(this) { checked ->
                 binding.cabinAcAdvanceWindSwb.setCheckedNoEvent(checked)
             }
@@ -90,7 +124,7 @@ class CabinACFragment : BaseFragment<CabinACViewModel, CabinAcFragmentBinding>()
             if (!result) {
                 binding.cabinAcAutoAridSwb.setCheckedNoEvent(!isChecked)
             }
-            Timber.d("doSwitchACOption arid result:$result")
+            Timber.d("doSwitchACOption arid result:$result, isChecked:$isChecked")
         }
         binding.cabinAcAutoDemistSwb.setOnCheckedChangeListener { buttonView, isChecked ->
             val result =
@@ -98,7 +132,7 @@ class CabinACFragment : BaseFragment<CabinACViewModel, CabinAcFragmentBinding>()
             if (!result) {
                 binding.cabinAcAutoDemistSwb.setCheckedNoEvent(!isChecked)
             }
-            Timber.d("doSwitchACOption demist result:$result")
+            Timber.d("doSwitchACOption demist result:$result, isChecked:$isChecked")
         }
         binding.cabinAcAdvanceWindSwb.setOnCheckedChangeListener { buttonView, isChecked ->
             val result =
@@ -106,7 +140,7 @@ class CabinACFragment : BaseFragment<CabinACViewModel, CabinAcFragmentBinding>()
             if (!result) {
                 binding.cabinAcAdvanceWindSwb.setCheckedNoEvent(!isChecked)
             }
-            Timber.d("doSwitchACOption wind result:$result")
+            Timber.d("doSwitchACOption wind result:$result, isChecked:$isChecked")
         }
 
     }

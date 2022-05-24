@@ -160,7 +160,7 @@
 
     <!--ListView\GridView color-->
     <!--背景颜色-->
-    <color name="xui_config_color_background_tablet">#EAEDEF</color>
+    <color name="xui_config_color_background_tablet">#00000000</color>
     <color name="xui_config_color_background_phone">#EEF3F7</color>
     <!-- 小的分割块使用浅色的分割线-->
     <color name="xui_config_color_separator_light_tablet">#F0F2F4</color>

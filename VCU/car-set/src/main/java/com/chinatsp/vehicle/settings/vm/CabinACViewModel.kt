@@ -2,7 +2,7 @@ package com.chinatsp.vehicle.settings.vm
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
-import com.chinatsp.settinglib.ACManager
+import com.chinatsp.settinglib.manager.ACManager
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.common.library.frame.base.BaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,19 +22,19 @@ class CabinACViewModel @Inject constructor(app: Application, model: BaseModel): 
 
     val aridLiveData: MutableLiveData<Boolean> by lazy {
         val mutableLiveData = MutableLiveData<Boolean>()
-        mutableLiveData.value = acManager.obtainAutoAridStatus()
+        mutableLiveData.value = acManager.aridStatus.get()
         mutableLiveData
     }
 
     val demistLiveData: MutableLiveData<Boolean> by lazy {
         val mutableLiveData = MutableLiveData<Boolean>()
-        mutableLiveData.value = acManager.obtainAutoDemistStatus()
+        mutableLiveData.value = acManager.demistStatus.get()
         mutableLiveData
     }
 
     val windLiveData: MutableLiveData<Boolean> by lazy {
         val mutableLiveData = MutableLiveData<Boolean>()
-        mutableLiveData.value = acManager.obtainAutoWindStatus()
+        mutableLiveData.value = acManager.windStatus.get()
         mutableLiveData
     }
 

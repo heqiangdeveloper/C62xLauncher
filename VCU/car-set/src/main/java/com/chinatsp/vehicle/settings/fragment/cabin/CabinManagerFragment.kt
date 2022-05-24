@@ -23,16 +23,7 @@ class CabinManagerFragment : BaseFragment<CabinViewModel, CabinFragmentBinding>(
 
     var selectOption: View? = null
 
-    private val tabOptions: List<View> by lazy {
-        val tabOptionLayout = binding.cabinManagerLeftTab
-        val range = 0 until tabOptionLayout.childCount
-        return@lazy range.map {
-            val child = tabOptionLayout.getChildAt(it)
-            child.isEnabled = true
-            child.setOnClickListener { it -> onClick(it) }
-            child
-        }.toList()
-    }
+    private lateinit var tabOptions: List<View>
 
     override fun getLayoutId(): Int {
         return R.layout.cabin_fragment
@@ -47,6 +38,8 @@ class CabinManagerFragment : BaseFragment<CabinViewModel, CabinFragmentBinding>(
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+        initTabOptions()
+
         viewModel.tabLocationLiveData.observe(this) {
             updateSelectTabOption(it)
         }
@@ -57,18 +50,28 @@ class CabinManagerFragment : BaseFragment<CabinViewModel, CabinFragmentBinding>(
         }
     }
 
+    private fun initTabOptions() {
+        val tabOptionLayout = binding.cabinManagerLeftTab
+        val range = 0 until tabOptionLayout.childCount
+        tabOptions = range.map {
+            val child = tabOptionLayout.getChildAt(it)
+            child.apply { setOnClickListener {onClick(this)} }
+            child
+        }.toList()
+    }
+
     private fun updateSelectTabOption(viewId: Int) {
         if (viewId != selectOption?.id) {
-            selectOption?.isEnabled = true
+            selectOption?.isSelected = false
             selectOption = tabOptions.first { it.id == viewId }
-            selectOption?.isEnabled = false
+            selectOption?.isSelected = true
             updateDisplayFragment(viewId)
         }
     }
 
 
-    fun updateDisplayFragment(serial: Int) {
-        var fragment: Fragment? = checkOutFragment(serial)
+    private fun updateDisplayFragment(serial: Int) {
+        val fragment: Fragment? = checkOutFragment(serial)
         fragment?.let {
             val manager: FragmentManager = childFragmentManager
             val transaction: FragmentTransaction = manager.beginTransaction()
@@ -77,7 +80,7 @@ class CabinManagerFragment : BaseFragment<CabinViewModel, CabinFragmentBinding>(
         }
     }
 
-    fun checkOutFragment(serial: Int): Fragment?{
+    private fun checkOutFragment(serial: Int): Fragment?{
         var fragment: Fragment? = null
         when (serial) {
             R.id.cabin_wheel -> {
