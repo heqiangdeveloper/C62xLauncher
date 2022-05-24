@@ -6,6 +6,8 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.annotation.TargetApi;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -24,12 +26,14 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.core.view.MotionEventCompat;
 import androidx.core.view.ViewCompat;
@@ -390,6 +394,7 @@ public class ClassifyView extends FrameLayout {
             public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
                 mMainGestureDetector.onTouchEvent(e);
                 int action = MotionEventCompat.getActionMasked(e);
+
                 switch (action) {
                     case MotionEvent.ACTION_MOVE:
                         L.d("onInterceptTouchEvent ACTION_MOVE");
@@ -604,6 +609,9 @@ public class ClassifyView extends FrameLayout {
     private boolean mergeSuccess = false;
 
     long startTime = 0;
+    float lastX = 0f;
+    float lastY = 0f;
+    Dialog dialog = null;
     class MainDragListener implements View.OnDragListener {
         @Override
         public boolean onDrag(View v, DragEvent event) {
@@ -615,6 +623,7 @@ public class ClassifyView extends FrameLayout {
             float y = event.getY();
             float centerX = x - width / 2;
             float centerY = y - height / 2;
+
             switch (action) {
                 case DragEvent.ACTION_DRAG_STARTED:
                     if (inMainRegion) {
@@ -628,10 +637,67 @@ public class ClassifyView extends FrameLayout {
                         mDragView.setY(mInitialTouchY - height / 2);
                         mDragView.bringToFront();
                         mElevationHelper.floatView(mMainRecyclerView, mDragView);
+
+                        final List list = mMainCallBack.explodeItem(mSelectedPosition, mDragView);
+                        if (list == null || list.size() < 2) {//非文件夹
+
+                        } else {//文件夹
+                            dialog = new Dialog(getContext(),R.style.mydialog);
+                            dialog.setContentView(R.layout.file_edit_item);
+                            WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+                            //L.d("getX " + e.getX(0) + "," + e.getX() + "," + e.getRawX() + ",");
+
+                            if((mSelectedPosition + 1) % mMainSpanCount == 0){
+                                params.x = (int) (mInitialTouchX - width / 2 - 300 / 2);//300是params.width
+                            }else{
+                                params.x = (int) (mInitialTouchX + 20);
+                            }
+                            params.y = (int) (mInitialTouchY);
+                            params.width = 300;
+                            params.height = 200;
+                            dialog.getWindow().setGravity(Gravity.LEFT | Gravity.TOP);
+                            dialog.getWindow().setAttributes(params);
+                            TextView renameTv = (TextView) dialog.getWindow().findViewById(R.id.rename_tv);
+                            TextView editTv = (TextView) dialog.getWindow().findViewById(R.id.edit_tv);
+                            renameTv.setOnClickListener(new OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    dialog.dismiss();
+                                    //如果没有添加按钮，则新增一个添加按钮
+                                    for(int i = 0; i < list.size(); i++){
+                                        if(((ResolveInfo)list.get(i)).activityInfo == null){
+                                            list.remove(i);
+                                            break;
+                                        }
+                                    }
+                                    list.add(new ResolveInfo());
+                                    mSubCallBack.initData(mSelectedPosition, list);
+                                    showSubContainer();
+                                }
+                            });
+                            editTv.setOnClickListener(new OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            dialog.show();
+                        }
+
+                        lastX = x;
+                        lastY = y;
                     }
                     break;
                 case DragEvent.ACTION_DRAG_LOCATION:
                     L.d("ACTION_DRAG_LOCATION x = " + x + ",y = " + y);
+                    L.d("ACTION_DRAG_LOCATION lastX = " + lastX + ",lastY = " + lastY);
+                    if(Math.abs(x - lastX) >= 5 || Math.abs(y - lastY) > 5){
+                        if(dialog != null && dialog.isShowing()) {
+                            dialog.dismiss();
+                        }else {
+                            L.d("dialog is null");
+                        }
+                    }
                     mVelocityTracker.addMovement(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(),
                             MotionEvent.ACTION_MOVE, x, y, 0));
                     mDragView.setX(centerX);
@@ -729,6 +795,7 @@ public class ClassifyView extends FrameLayout {
             float marginLeft = mSubContainer.getWidth();
             //获取添加按钮
             addView = mSubRecyclerView.getChildAt(mSubRecyclerView.getChildCount() - 1);
+            //添加按钮不可拖动
             if(mSelectedPosition == mSubRecyclerView.getChildCount() - 1){
                 L.d("Long press addView");
                 return true;

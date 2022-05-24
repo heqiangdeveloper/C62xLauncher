@@ -328,7 +328,7 @@ public abstract class SimpleAdapter<T, VH extends SimpleAdapter.ViewHolder> impl
 
         @Override
         public void removeItem(int position) {
-            if(position < mData.size()){
+            if(position != -1 && position < mData.size()){
                 mData.remove(position);
             }
 
