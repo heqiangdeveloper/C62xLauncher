@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 
+import com.chinatsp.vehiclesetting.MainActivity;
 import com.chinatsp.vehiclesetting.R;
 import com.chinatsp.vehiclesetting.adapter.FragmentPagerAdapter;
 import com.chinatsp.vehiclesetting.base.BaseFragment;
@@ -17,6 +18,9 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import q.rorbin.verticaltablayout.adapter.TabAdapter;
+import q.rorbin.verticaltablayout.widget.QTabView;
 
 public class CokpitFragmentPage extends BaseFragment<FragmentCockpitPageBinding> {
     /*设置Tab集合*/
@@ -61,6 +65,38 @@ public class CokpitFragmentPage extends BaseFragment<FragmentCockpitPageBinding>
         mFragmentList.add(new CockpitAcFragment());
         mFragmentList.add(new CockpitSafeFragment());
         mFragmentList.add(new CockpitXunhFragment());
+    }
+
+    private void initData() {
+        binding.tabLayout.setTabAdapter(new TabAdapter() {
+            @Override
+            public int getCount() {
+                return mFragmentList.size();
+            }
+
+            @Override
+            public int getBadge(int position) {
+                return position;
+            }
+
+            @Override
+            public QTabView.TabIcon getIcon(int position) {
+                return null;
+            }
+
+            @Override
+            public QTabView.TabTitle getTitle(int position) {
+                QTabView.TabTitle title = new QTabView.TabTitle.Builder(MainActivity.this)
+                        .setContent(mTitlesList.get(position))//设置数据   也有设置字体颜色的方法
+                        .build();
+                return title;
+            }
+
+            @Override
+            public int getBackground(int position) {
+                return R.drawable.tab_selector;//选中的背景颜色
+            }
+        });
     }
 
     /*关联tab与fragment视图*/

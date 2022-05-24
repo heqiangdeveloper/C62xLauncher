@@ -5,6 +5,7 @@
     <dimen name="layout_tab_height">100px</dimen>
     <dimen name="title_text_size">36px</dimen>
     <dimen name="h2_text_size">32px</dimen>
+    <dimen name="h3_text_size">24px</dimen>
 
     <dimen name="radio_option_height" >64px</dimen>
     <dimen name="radio_option_radius">32px</dimen>

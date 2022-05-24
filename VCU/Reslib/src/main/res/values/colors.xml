@@ -28,4 +28,6 @@
 
     <color name="tab_option_title_text_color">@android:color/white</color>
 
+    <color name="click_text_color">#ABD3E1</color>
+
 </resources>

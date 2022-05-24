@@ -47,5 +47,10 @@
     <string name="cabin_safe_fortify_failure_tone">设防失败提示音</string>
     <string name="cabin_safe_video_safe_mode">视频安全模式</string>
 
+    <string name="cabin_wheel_electronic_mode">电子助力转向模式</string>
+    <string name="cabin_wheel_press_key">方向盘自定义按键</string>
+    <string name="cabin_wheel_press_key_tv">隐私模式</string>
+    <string name="cabin_wheel_automatic_heating">方向盘自动加热</string>
+    <string name="cabin_wheel_automatic_heating_tv">已关闭</string>
 
 </resources>

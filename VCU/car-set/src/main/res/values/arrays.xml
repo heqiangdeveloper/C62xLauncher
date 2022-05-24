@@ -24,4 +24,10 @@
         <item>公制</item>
         <item>英制</item>
     </string-array>
+
+    <string-array name="cabin_wheel_mode_options">
+        <item>标准</item>
+        <item>运动</item>
+        <item>关联驾驶模式</item>
+    </string-array>
 </resources>

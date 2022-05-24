@@ -3,6 +3,7 @@ package com.chinatsp.vehicle.settings.fragment.cabin
 import android.os.Bundle
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CabinAcFragmentBinding
+import com.chinatsp.vehicle.settings.databinding.CabinWhellFragmentBinding
 import com.chinatsp.vehicle.settings.vm.CabinACViewModel
 import com.common.library.frame.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -15,9 +16,9 @@ import dagger.hilt.android.AndroidEntryPoint
  * @version: 1.0
  */
 @AndroidEntryPoint
-class CabinWheelFragment: BaseFragment<CabinACViewModel, CabinAcFragmentBinding>() {
+class CabinWheelFragment: BaseFragment<CabinACViewModel, CabinWhellFragmentBinding>() {
     override fun getLayoutId(): Int {
-        return R.layout.cabin_ac_fragment
+        return R.layout.cabin_whell_fragment
     }
 
     override fun initData(savedInstanceState: Bundle?) {

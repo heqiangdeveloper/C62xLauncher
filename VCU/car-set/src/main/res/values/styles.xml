@@ -36,4 +36,10 @@
         <item name="swb_thumbDrawable">@drawable/switch_thumb_selector</item>
     </style>
 
+    <style name="click_row_option_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/h3_text_size</item>
+        <item name="android:textColor">@color/click_text_color</item>
+    </style>
 </resources>
