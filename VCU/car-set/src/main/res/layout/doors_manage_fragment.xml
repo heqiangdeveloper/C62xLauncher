@@ -39,7 +39,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
-                    app:tabSrc="@drawable/vcu_ic_car_trunk_selector"
+                    app:tabSrc="@drawable/vcu_ic_car_window_selector"
                     app:tabText="@string/car_window" />
 
                 <com.chinatsp.vehicle.settings.widget.TabRadio
@@ -47,7 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
-                    app:tabSrc="@drawable/vcu_ic_car_window_selector"
+                    app:tabSrc="@drawable/vcu_ic_car_trunk_selector"
                     app:tabText="@string/car_trunk" />
 
             </LinearLayout>

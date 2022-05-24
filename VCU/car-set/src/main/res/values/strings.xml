@@ -53,4 +53,9 @@
     <string name="cabin_wheel_automatic_heating">方向盘自动加热</string>
     <string name="cabin_wheel_automatic_heating_tv">已关闭</string>
 
+    <string name="car_window_remote_control">遥控升窗/降窗</string>
+    <string name="car_window_lock_car">锁车自动关窗</string>
+    <string name="car_window_rainy_day">雨天自动关窗</string>
+    <string name="car_window_wiper">雨刮维修</string>
+
 </resources>
