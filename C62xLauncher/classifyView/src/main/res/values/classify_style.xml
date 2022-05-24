@@ -18,4 +18,9 @@
         <item name="OutlineColor">#d6a25e</item>
         <item name="InnerPadding">6dp</item>
     </style>
+    <style name="mydialog" parent="android:style/Theme.Dialog">
+<!--        <item name="android:windowBackground">@android:color/transparent</item>-->
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
 </resources>
