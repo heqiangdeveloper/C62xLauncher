@@ -8,7 +8,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+        android:layout_width="730dp"
         android:layout_height="match_parent"
         android:paddingStart="30px"
         android:paddingEnd="30px">
@@ -37,13 +37,21 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <View
+            android:id="@+id/line1"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@drawable/list_divider_line"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cabin_ac_auto_dry_layout" />
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cabin_ac_auto_demist_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/switch_item_option_height"
             android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cabin_ac_auto_dry_layout">
+            app:layout_constraintTop_toBottomOf="@id/line1">
 
             <TextView
                 style="@style/switch_row_option_style"
@@ -61,13 +69,21 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <View
+            android:id="@+id/line2"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@drawable/list_divider_line"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cabin_ac_auto_demist_layout" />
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cabin_ac_auto_wind_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/switch_item_option_height"
             android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cabin_ac_auto_demist_layout">
+            app:layout_constraintTop_toBottomOf="@id/line2">
 
             <TextView
                 style="@style/switch_row_option_style"
@@ -84,13 +100,21 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <View
+            android:id="@+id/line3"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@drawable/list_divider_line"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cabin_ac_auto_wind_layout" />
+
         <LinearLayout
             android:id="@+id/linearLayout3"
             android:layout_width="match_parent"
             android:layout_height="190px"
             android:orientation="vertical"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cabin_ac_auto_wind_layout">
+            app:layout_constraintTop_toBottomOf="@+id/line3">
 
             <TextView
                 android:id="@+id/textView3"
@@ -105,11 +129,18 @@
             <com.common.xui.widget.tabbar.TabControlView
                 android:id="@+id/cabin_ac_comfort_option"
                 style="@style/tdv_common_style"
-                app:tcv_defaultSelection="2"
                 app:layout_constraintTop_toTopOf="parent"
+                app:tcv_defaultSelection="2"
                 app:tcv_items="@array/cabin_ac_comfort_options" />
 
         </LinearLayout>
 
+        <View
+            android:id="@+id/line4"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@drawable/list_divider_line"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/linearLayout3" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

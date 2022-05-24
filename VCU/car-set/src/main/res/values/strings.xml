@@ -37,6 +37,7 @@
     <string name="vcu_cabin_air_conditioner">空调</string>
     <string name="vcu_cabin_safety">安全</string>
     <string name="vcu_cabin_instrument">仪表</string>
+    <string name="vcu_cabin_instrument_title">仪表主题随驾驶模式联动</string>
 
     <string name="cabin_ac_auto_arid">空调自干燥</string>
     <string name="cabin_ac_auto_demist">自动除雾</string>
