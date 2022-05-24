@@ -8,7 +8,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+        android:layout_width="730dp"
         android:layout_height="match_parent"
         android:paddingStart="30px"
         android:paddingEnd="30px">
@@ -18,16 +18,16 @@
             android:layout_width="match_parent"
             android:layout_height="190px"
             android:orientation="vertical"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="29px"
                 android:layout_marginBottom="19px"
-                android:text="@string/cabin_ac_auto_comfort"
+                android:text="@string/vcu_cabin_instrument"
                 android:textColor="@color/tab_option_title_text_color"
                 android:textSize="@dimen/tab_option_title_text_size" />
 
@@ -54,5 +54,57 @@
                 app:tcv_unselectedTextColor="@color/normal_text_color" />
         </LinearLayout>
 
+        <View
+            android:id="@+id/line1"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@drawable/list_divider_line"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/linearLayout3" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cabin_instrument_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/switch_item_option_height"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/line1">
+
+            <TextView
+                style="@style/switch_row_option_style"
+                android:text="@string/vcu_cabin_instrument_title"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.common.xui.widget.button.switchbutton.SwitchButton
+                android:id="@+id/cabin_ac_advance_wind_swb"
+                style="@style/switch_button_style"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/line2"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@drawable/list_divider_line"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cabin_instrument_layout" />
+
+        <com.common.xui.widget.picker.VSeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/line2"
+            app:xsb_insideRangeLineStrokeWidth="40px"
+            app:xsb_outsideRangeLineStrokeWidth="40px"
+            app:xsb_sliderIcon="@null"
+            app:xsb_verticalPadding="20px" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

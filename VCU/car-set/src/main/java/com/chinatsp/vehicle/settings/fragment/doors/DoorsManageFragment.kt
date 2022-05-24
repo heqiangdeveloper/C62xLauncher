@@ -16,7 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class DoorsManageFragment : BaseFragment<DoorsViewModel, DoorsManageFragmentBinding>() {
     var selectOption: View? = null
     private val tabOptions: List<View> by lazy {
-        val tabOptionLayout = binding.cabinManagerLeftTab
+        val tabOptionLayout = binding.doorsManagerLeftTab
         val range = 0 until tabOptionLayout.childCount
         return@lazy range.map {
             val child = tabOptionLayout.getChildAt(it)
@@ -58,17 +58,17 @@ class DoorsManageFragment : BaseFragment<DoorsViewModel, DoorsManageFragmentBind
         }
     }
 
-    fun updateDisplayFragment(serial: Int) {
+    private fun updateDisplayFragment(serial: Int) {
         var fragment: Fragment? = checkOutFragment(serial)
         fragment?.let {
             val manager: FragmentManager = childFragmentManager
             val transaction: FragmentTransaction = manager.beginTransaction()
-            transaction.replace(R.id.cabin_manager_layout, it, it::class.simpleName)
+            transaction.replace(R.id.doors_manager_layout, it, it::class.simpleName)
             transaction.commitAllowingStateLoss()
         }
     }
 
-    fun checkOutFragment(serial: Int): Fragment? {
+    private fun checkOutFragment(serial: Int): Fragment? {
         var fragment: Fragment? = null
         when (serial) {
             R.id.car_doors -> {
