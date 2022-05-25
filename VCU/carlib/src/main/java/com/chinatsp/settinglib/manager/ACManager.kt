@@ -1,14 +1,18 @@
-package com.chinatsp.settinglib
+package com.chinatsp.settinglib.manager
 
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
-import android.util.Log
+import com.chinatsp.settinglib.IConcernChanged
+import com.chinatsp.settinglib.LogManager
+import com.chinatsp.settinglib.SettingManager
 import com.chinatsp.settinglib.bean.Status1
 import com.chinatsp.settinglib.listener.IACListener
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.cabin.IAcManager
 import com.chinatsp.settinglib.optios.Area
 import java.lang.ref.WeakReference
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author : luohong
@@ -18,7 +22,7 @@ import java.lang.ref.WeakReference
  * @version: 1.0
  */
 
-val TAG = ACManager::class.simpleName
+val TAG = ACManager::class.java.simpleName
 
 class ACManager private constructor() : IConcernChanged, IAcManager {
 
@@ -32,27 +36,43 @@ class ACManager private constructor() : IConcernChanged, IAcManager {
 
     private val selfSerial by lazy { System.identityHashCode(this) }
 
-    private val listenerMap by lazy {
-        HashMap<Int, WeakReference<IBaseListener>>()
+    private val listenerMap by lazy { HashMap<Int, WeakReference<IBaseListener>>() }
+
+    val aridStatus: AtomicBoolean by lazy {
+        val entity = AtomicBoolean(false)
+        entity.set(obtainAutoAridStatus())
+        entity
     }
 
-    var autoDrySwitchStatus: Boolean = false
-
-    var advanceHairSwitchStatus: Boolean = false
-
-    init {
-        val value =
-            SettingManager.getInstance().obtainCabinIntProperty(autoAridProperty, Area.GLOBAL)
-        autoDrySwitchStatus = Status1.ON.value == value
+    val demistStatus: AtomicBoolean by lazy {
+        val entity = AtomicBoolean(false)
+        entity.set(obtainAutoDemistStatus())
+        entity
     }
+
+    val windStatus: AtomicBoolean by lazy {
+        val entity = AtomicBoolean(false)
+        entity.set(obtainAutoWindStatus())
+        entity
+    }
+
+    val version:AtomicInteger by lazy { AtomicInteger(0) }
+
+//    init {
+//        val value =
+//            SettingManager.getInstance().obtainCabinIntProperty(autoAridProperty, Area.GLOBAL)
+//        autoDrySwitchStatus = Status1.ON.value == value
+//    }
 
     override fun obtainAutoAridStatus(): Boolean {
         val value = SettingManager.getInstance().obtainCabinIntProperty(autoAridProperty, Area.GLOBAL)
+        LogManager.d("obtainAutoAridStatus value:$value")
         return Status1.ON.value == value
     }
 
     override fun obtainAutoWindStatus(): Boolean {
         val value = SettingManager.getInstance().obtainCabinIntProperty(autoWindAdvanceProperty, Area.GLOBAL)
+        LogManager.d("obtainAutoWindStatus value:$value")
         return Status1.ON.value == value
     }
 
@@ -67,7 +87,7 @@ class ACManager private constructor() : IConcernChanged, IAcManager {
 
 
     override fun unRegisterVcuListener(serial: Int, callSerial: Int): Boolean {
-        Log.d(TAG, "unRegisterVcuListener serial:$serial, callSerial:$callSerial")
+        LogManager.d(TAG, "unRegisterVcuListener serial:$serial, callSerial:$callSerial")
         synchronized(listenerMap) {
             val contains = listenerMap.containsKey(serial)
             if (contains) listenerMap.remove(serial)
@@ -151,23 +171,23 @@ class ACManager private constructor() : IConcernChanged, IAcManager {
     }
 
     private fun onAutoDryStatusChanged(value: Any?) {
-        Log.d("luohong", "onAutoDryStatusChanged value:$value")
+        LogManager.Companion.d(TAG, "onAutoDryStatusChanged value:$value")
         if (value is Int) {
             val status = value == Status1.ON.value
-            if (autoDrySwitchStatus xor status) {
-                autoDrySwitchStatus = status
-                notifySwitchStatus(autoDrySwitchStatus, SwitchNape.AC_AUTO_ARID)
+            if (aridStatus.get() xor status) {
+                aridStatus.set(status)
+                notifySwitchStatus(aridStatus.get(), SwitchNape.AC_AUTO_ARID)
             }
         }
     }
 
     private fun onAdvanceHairStatusChanged(value: Any?) {
-        Log.d("luohong", "onAdvanceHairStatusChanged value:$value")
+        LogManager.Companion.d(TAG, "onAdvanceHairStatusChanged value:$value")
         if (value is Int) {
             val status = value == Status1.ON.value
-            if (advanceHairSwitchStatus xor status) {
-                advanceHairSwitchStatus = status
-                notifySwitchStatus(advanceHairSwitchStatus, SwitchNape.AC_ADVANCE_WIND)
+            if (windStatus.get() xor status) {
+                windStatus.set(status)
+                notifySwitchStatus(windStatus.get(), SwitchNape.AC_ADVANCE_WIND)
             }
         }
     }
@@ -185,28 +205,10 @@ class ACManager private constructor() : IConcernChanged, IAcManager {
     }
 
     companion object {
-
         val instance: ACManager by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
             ACManager()
         }
 
-        @JvmStatic
-        val concernIdList: List<Int> by lazy {
-            val list = ArrayList<Int>()
-            list.add(CarCabinManager.ID_ACSELFSTSDISP)
-            list.add(CarCabinManager.ID_ACPREVENTNDISP)
-            list.add(CarCabinManager.ID_ACC_DISTANCE_LEVEL)
-            list.add(CarCabinManager.ID_AC_DIS_AC_MAX)
-            list.add(CarCabinManager.ID_AC_DIS_API_INSIDE)
-            list.add(CarCabinManager.ID_AC_DIS_INSIDE_PM2_5_DATA)
-            list.add(CarCabinManager.ID_AC_DIS_OUTSIDE_PM2_5_DATA)
-            list.add(CarCabinManager.ID_AC_DIS_IN_CAR_TEMPERATURE)
-            list.add(CarCabinManager.ID_AC_DIS_AMBIENT_TEMPERATURE)
-            list.add(CarCabinManager.ID_AC_REFRESH_MODE_ACT_STS)
-            list.add(CarCabinManager.ID_AC_REFRESH_MODE_SET_STATUS)
-            list.add(CarCabinManager.ID_AC_AUTOMATICDE_FOGGING_STATUS)
-            return@lazy list
-        }
     }
 
 

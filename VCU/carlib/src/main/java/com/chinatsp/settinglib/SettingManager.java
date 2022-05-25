@@ -40,7 +40,9 @@ import android.text.format.DateFormat;
 import android.util.Log;
 
 import com.android.internal.app.LocalePicker;
+import com.chinatsp.settinglib.manager.ACManager;
 import com.chinatsp.settinglib.optios.Area;
+import com.chinatsp.settinglib.sign.Cabin;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -57,7 +59,7 @@ import java.util.concurrent.Executors;
  * @author
  */
 public class SettingManager {
-    public static final String TAG = "SettingManager";
+    public static final String TAG = "CarCabinManager";
     @SuppressLint("StaticFieldLeak")
     private static volatile SettingManager settingManager;
     private AudioManager mAudioManager;
@@ -78,14 +80,14 @@ public class SettingManager {
 
     private SettingManager() {
         if (mContext == null) {
-            LogUtils.e(TAG, "context==null");
+            LogManager.Companion.e(TAG, "context==null");
             return;
         }
         mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         productName = SystemProperties.get("ro.product.name");//判断是3y1还是f202
-        LogUtils.w(TAG, "productName:" + productName + " " + getOsVersion());
+        LogManager.Companion.w(TAG, "productName:" + productName + " " + getOsVersion());
         if (null != mCarApi && mCarApi.isConnected()) {
-            LogUtils.d(TAG, "mCarApi.isConnected:" + true);
+            LogManager.Companion.d(TAG, "mCarApi.isConnected:" + true);
             return;
         }
         onBindCarService();
@@ -106,13 +108,13 @@ public class SettingManager {
                 e.printStackTrace();
             }
         }
-        LogUtils.d(TAG, "unbind car service");
+        LogManager.Companion.d(TAG, "unbind car service");
     }
 
     private void onBindCarService() {
         mCarApi = Car.createCar(mContext, new CarServiceConnection());
         Optional.ofNullable(mCarApi).ifPresent(Car::connect);
-        LogUtils.d(TAG, "bind car service carApi:" + mCarApi);
+        LogManager.Companion.d(TAG, "bind car service carApi:" + mCarApi);
     }
 
     private final Runnable reConnectCarRunnable = () -> {
@@ -157,7 +159,7 @@ public class SettingManager {
                             CarMcuManager.ID_NIGHT_MODE,
                             CarMcuManager.ID_VENDOR_PHOTO_REQ
                     });
-                    LogUtils.d(TAG, "registerCallback ok");
+                    LogManager.Companion.d(TAG, "registerCallback ok");
                 }
             }
         } catch (Exception e) {
@@ -174,9 +176,10 @@ public class SettingManager {
                     mCarCabinManager = (CarCabinManager) mCarApi.getCarManager(Car.CABIN_SERVICE);
                 }
                 if (null != mCarCabinManager) {
-                    List<Integer> acConcernIdList = ACManager.getConcernIdList();
-                    int[] acConcernArray = acConcernIdList.stream().mapToInt(it -> it).toArray();
-                    mCarCabinManager.registerCallback(mCarCabinEventCallback, acConcernArray);
+                    int[] signalArray = Arrays.stream(Cabin.values())
+                            .flatMapToInt(cabin -> Arrays.stream(cabin.getSignals())).distinct().toArray();
+//                    Arrays.stream(signalArray).forEach(it -> LogManager.Companion.d(TAG, "value:0x" + Integer.toHexString(it).toUpperCase()));
+                    mCarCabinManager.registerCallback(mCarCabinEventCallback, signalArray);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -197,28 +200,10 @@ public class SettingManager {
         @Override
         public void onChangeEvent(CarPropertyValue carPropertyValue) {
             int propertyId = carPropertyValue.getPropertyId();
-            Log.d("luohong", "onChangeEvent:CarPropertyValue propertyId:" + propertyId);
-            if (ACManager.getConcernIdList().contains(propertyId)) {
+            LogManager.Companion.d(TAG, "onChangeEvent:CarPropertyValue propertyId:" + propertyId);
+            if (Cabin.AIR_CONDITIONER.contains(propertyId)) {
                 ACManager.Companion.getInstance().onPropertyChanged(carPropertyValue);
             }
-
-//            switch (carPropertyValue.getPropertyId()) {
-//                case CarCabinManager.ID_AVM_DISPLAY_SWITCH:
-//                    int avm_switch = (Integer) carPropertyValue.getValue();
-//                    LogUtils.d(TAG, "ID_AVM_DISPLAY_SWITCH = " + avm_switch);
-//                    if (avm_switch == VEHICLE.ON) {
-//                        isAVMOn = true;
-//                        for (int i = 0; i < mCarAdapterList.size(); i++) {
-//                            mCarAdapterList.get(i).onAvmStatusChange(true);
-//                        }
-//                    } else if (avm_switch == VEHICLE.OFF) {
-//                        isAVMOn = false;
-//                        for (int i = 0; i < mCarAdapterList.size(); i++) {
-//                            mCarAdapterList.get(i).onAvmStatusChange(false);
-//                        }
-//                    }
-//                    break;
-//            }
         }
 
         @Override
@@ -234,7 +219,7 @@ public class SettingManager {
             switch (carPropertyValue.getPropertyId()) {
                 case CarMcuManager.ID_VENDOR_MCU_POWER_MODE://电源状态
                     int powerStatus = (Integer) carPropertyValue.getValue();
-                    LogUtils.d(TAG, "powerStatus= " + powerStatus);//6 8 4
+                    LogManager.Companion.d(TAG, "powerStatus= " + powerStatus);//6 8 4
                     if (powerStatus == MCU.POWER_ON) {//6
                         for (int i = 0; i < mCarAdapterList.size(); i++) {
                             mCarAdapterList.get(i).onAccStatusChange(true);
@@ -248,7 +233,7 @@ public class SettingManager {
                     break;
                 case CarMcuManager.ID_REVERSE_SIGNAL://倒车状态
                     int reverseStatus = (Integer) carPropertyValue.getValue();
-                    LogUtils.d(TAG, "ID_REVERSE_SIGNAL= " + reverseStatus);
+                    LogManager.Companion.d(TAG, "ID_REVERSE_SIGNAL= " + reverseStatus);
                     if (reverseStatus == VEHICLE.ON) {
                         for (int i = 0; i < mCarAdapterList.size(); i++) {
                             mCarAdapterList.get(i).onReverseStatusChange(true);
@@ -263,7 +248,7 @@ public class SettingManager {
                     break;
                 case CarMcuManager.ID_MCU_ACC_STATE:
                     int mcu_acc_state = (Integer) carPropertyValue.getValue();
-                    LogUtils.d(TAG, "ID_MCU_ACC_STATE= " + mcu_acc_state);
+                    LogManager.Companion.d(TAG, "ID_MCU_ACC_STATE= " + mcu_acc_state);
                     if (mcu_acc_state == CarSensorEvent.IGNITION_STATE_ACC ||
                             mcu_acc_state == CarSensorEvent.IGNITION_STATE_ON ||
                             mcu_acc_state == CarSensorEvent.IGNITION_STATE_START) {
@@ -274,11 +259,11 @@ public class SettingManager {
                     break;
                 case CarMcuManager.ID_MCU_LOST_CANID:
                     Integer[] lostCanidStatus = (Integer[]) carPropertyValue.getValue();//CAN节点丢失 0x00-正常 0x01-丢失
-                    LogUtils.d(TAG, "ID_MCU_LOST_CANID= " + Arrays.toString(lostCanidStatus));
+                    LogManager.Companion.d(TAG, "ID_MCU_LOST_CANID= " + Arrays.toString(lostCanidStatus));
                     break;
                 case CarMcuManager.ID_VENDOR_PHOTO_REQ:
                     if (carPropertyValue.getAreaId() == VehicleAreaSeat.SEAT_ROW_1_CENTER) {
-                        LogUtils.d("ID_VENDOR_PHOTO_REQ " + carPropertyValue.getValue());
+                        LogManager.Companion.d("ID_VENDOR_PHOTO_REQ " + carPropertyValue.getValue());
                         for (int i = 0; i < mCarAdapterList.size(); i++) {
                             mCarAdapterList.get(i).onPhotoReqChange(true);
                         }
@@ -313,7 +298,7 @@ public class SettingManager {
                     break;
                 case CarSensorManager.SENSOR_TYPE_NIGHT:
                     boolean isNight = carSensorEvent.getNightData(null).isNightMode; //小灯，白天黑夜
-                    LogUtils.d(TAG, "littleLight change,isNight state=" + isNight);
+                    LogManager.Companion.d(TAG, "littleLight change,isNight state=" + isNight);
                     for (int i = 0; i < mCarAdapterList.size(); i++) {
                         mCarAdapterList.get(i).onLittleLightStatusChange(isNight);
                     }
@@ -340,7 +325,7 @@ public class SettingManager {
 
     //下发关 -- 5，下发开 -- 6， 上报关 -- 7， 上报开 -- 8
     public void setAvmOff() {
-        LogUtils.d(TAG, "3Y1 setAvmOff");
+        LogManager.Companion.d(TAG, "3Y1 setAvmOff");
         setDYCarbinProperty(CarCabinManager.ID_AVM_DISPLAY_SWITCH, VEHICLE.OFF);
     }
 
@@ -391,7 +376,7 @@ public class SettingManager {
 
     public boolean isCarServiceRunning() {
         boolean rel = mCarApi != null && mCarApi.isConnected();
-        LogUtils.d(TAG, "isCarServiceRunning =" + rel);
+        LogManager.Companion.d(TAG, "isCarServiceRunning =" + rel);
         if (!rel) {
             onBindCarService();
         }
@@ -399,14 +384,14 @@ public class SettingManager {
     }
 
     public void unInit() {
-        LogUtils.d(TAG, "unInit");
+        LogManager.Companion.d(TAG, "unInit");
         mCarApi.disconnect();
         mContext = null;
         settingManager = null;
     }
 
     public static void init(Context context) {
-        LogUtils.d(TAG, "init");
+        LogManager.Companion.d(TAG, "init");
         mContext = context;
     }
 
@@ -428,11 +413,11 @@ public class SettingManager {
     public void registerVolumeChangeObserver(ContentObserver observer) {
         //mContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor("android.car.VOLUME_GROUP/"), true, observer);
         mCarAudioManager.registerVolumeChangeObserver(observer);
-        LogUtils.d(TAG, "registerVolumeChangeObserver");
+        LogManager.Companion.d(TAG, "registerVolumeChangeObserver");
     }
 
     public void unregisterVolumeChangeObserver(ContentObserver observer) {
-        LogUtils.d(TAG, "unregisterVolumeChangeObserver");
+        LogManager.Companion.d(TAG, "unregisterVolumeChangeObserver");
         mCarAudioManager.unregisterVolumeChangeObserver(observer);
         //mContext.getContentResolver().unregisterContentObserver(observer);
     }
@@ -472,7 +457,7 @@ public class SettingManager {
                 mBoxManager.setMobileState(on, new INetworkCallBack() {
                     @Override
                     public synchronized void onCompleted(final int i, String s) {
-                        LogUtils.d(TAG, "setMobileState onCompleted " + i + " " + s);
+                        LogManager.Companion.d(TAG, "setMobileState onCompleted " + i + " " + s);
                         if (i == 1) {
                             isMobileON = on;
                         }
@@ -488,7 +473,7 @@ public class SettingManager {
 
                     @Override
                     public synchronized void onException(int i, String s) {
-                        LogUtils.d(TAG, "setMobileState onException " + i + " " + s);
+                        LogManager.Companion.d(TAG, "setMobileState onException " + i + " " + s);
                         mHandler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -502,9 +487,11 @@ public class SettingManager {
     }
 
     public boolean issueCabinIntProperty(int id, int value, @NotNull Area area) {
-        if (null != mCarCabinManager) {
+        if (connectService && null != mCarCabinManager) {
             try {
+                LogManager.Companion.e(TAG, "issueCabinIntProperty before id:0x" + Integer.toHexString(id) + ", value:"+ value);
                 mCarCabinManager.setIntProperty(id, area.getId(), value);
+                LogManager.Companion.e(TAG, "issueCabinIntProperty after id:" + id + ", value:"+ value);
                 return true;
             } catch (CarNotConnectedException e) {
                 e.printStackTrace();
@@ -514,14 +501,16 @@ public class SettingManager {
     }
 
     public int obtainCabinIntProperty(int id, @NotNull Area area) {
-        if (null != mCarCabinManager) {
+        int result = -1;
+        if (connectService && null != mCarCabinManager) {
             try {
-                mCarCabinManager.getIntProperty(id, area.getId());
+                result =  mCarCabinManager.getIntProperty(id, area.getId());
             } catch (CarNotConnectedException e) {
                 e.printStackTrace();
             }
         }
-        return -1;
+        LogManager.Companion.d("obtainCabinIntProperty id:" + id + ", connectService:" + connectService + ", result:" + result + ", mCarCabinManager:" + mCarCabinManager);
+        return result;
     }
 
     public interface IMobileState {
@@ -545,7 +534,7 @@ public class SettingManager {
 
             @Override
             public void onTboxMobileSwitchStateChanged(int i) {
-                LogUtils.d(TAG, "onTboxMobileSwitchStateChanged " + i);
+                LogManager.Companion.d(TAG, "onTboxMobileSwitchStateChanged " + i);
                 if (iMobileState != null) {
                     iMobileState.onMobileStateChange(i == 1);
                 }
@@ -553,7 +542,7 @@ public class SettingManager {
 
             @Override
             public void onWifiStateChanged(String s, int i, String s1) {
-                LogUtils.d(TAG, "onWifiStateChanged " + s + " " + i + " " + s1);
+                LogManager.Companion.d(TAG, "onWifiStateChanged " + s + " " + i + " " + s1);
             }
         };
         mBoxManager.addTBoxChangedListener(boxChangedListener);
@@ -566,14 +555,14 @@ public class SettingManager {
     }
 
     public void getMobileNetSwitch(final IMobileState iMobileState) {
-        LogUtils.d(TAG, "getMobileState");
+        LogManager.Companion.d(TAG, "getMobileState");
         mExecutorService.submit(new Runnable() {
             @Override
             public void run() {
                 mBoxManager.getMobileState(new INetworkCallBack() {
                     @Override
                     public void onCompleted(final int i, String s) {
-                        LogUtils.d(TAG, "getMobileState onCompleted " + i + " " + s);
+                        LogManager.Companion.d(TAG, "getMobileState onCompleted " + i + " " + s);
                         isMobileON = (i == 1);
                         mHandler.post(new Runnable() {
                             @Override
@@ -587,7 +576,7 @@ public class SettingManager {
 
                     @Override
                     public void onException(int i, String s) {
-                        LogUtils.d(TAG, "getMobileState onException " + i + " " + s);
+                        LogManager.Companion.d(TAG, "getMobileState onException " + i + " " + s);
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
@@ -748,7 +737,7 @@ public class SettingManager {
         @Override
         public void onChange(boolean selfChange, Uri uri) {
             super.onChange(selfChange, uri);
-            LogUtils.d(TAG, "onChange getBrightness");
+            LogManager.Companion.d(TAG, "onChange getBrightness");
             for (int i = 0; i < mCarAdapterList.size(); i++) {
                 mCarAdapterList.get(i).onBrightnessChange(getBrightness());
             }
@@ -767,7 +756,7 @@ public class SettingManager {
 
     public void setBrightness(int brigness) {
         try {
-            LogUtils.d(TAG, "setBrightness = " + brigness);
+            LogManager.Companion.d(TAG, "setBrightness = " + brigness);
             mCarPowerManager.setBrightness(brigness);
             //mCarMcuManager.setIntProperty(CarMcuManager.ID_DISPLAY_BRIGHTNESS, VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL, brigness);
         } catch (Exception e) {
@@ -785,7 +774,7 @@ public class SettingManager {
             e.printStackTrace();
         }
         //ret= Settings.System.getInt(mContext.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS,0);
-        LogUtils.d(TAG, "getBrightness = " + ret);
+        LogManager.Companion.d(TAG, "getBrightness = " + ret);
         return ret;
     }
 
@@ -793,10 +782,10 @@ public class SettingManager {
     public void setScreenOn(boolean on) {
         try {
             if (on) {
-                LogUtils.d(TAG, "sendDisplayOn");
+                LogManager.Companion.d(TAG, "sendDisplayOn");
                 mCarPowerManager.sendDisplayOn();
             } else {
-                LogUtils.d(TAG, "sendDisplayOff");
+                LogManager.Companion.d(TAG, "sendDisplayOff");
                 mCarPowerManager.sendDisplayOff();
             }
         } catch (Exception e) {
@@ -807,7 +796,7 @@ public class SettingManager {
     public String getTUID() {
         try {
             String tuid = Settings.System.getString(mContext.getContentResolver(), "TUID");
-            LogUtils.d(TAG, "" + tuid);
+            LogManager.Companion.d(TAG, "" + tuid);
             return tuid;
             //return SystemProperties.get("persist.sys.tuid", "");
         } catch (Exception e) {
@@ -819,7 +808,7 @@ public class SettingManager {
     public String getVIN() {
         try {
             String vin = Settings.System.getString(mContext.getContentResolver(), "VIN");
-            LogUtils.d(TAG, "" + vin);
+            LogManager.Companion.d(TAG, "" + vin);
             return vin;
             //return SystemProperties.get("persist.sys.tuid", "");
         } catch (Exception e) {
@@ -901,7 +890,7 @@ public class SettingManager {
         int index = -1;
         try {
             int level = mCarAudioManager.getBeepLevel();
-            LogUtils.d(TAG, "getBeepLevel:" + level);
+            LogManager.Companion.d(TAG, "getBeepLevel:" + level);
             switch (level) {
                 case CarAudioManager.BEEP_VOLUME_LEVEL_CLOSE:
                     index = CarAdapter.Constants.BEEP_VOLUME_LEVEL_CLOSE;
@@ -955,7 +944,7 @@ public class SettingManager {
         int result = -1;
         try {
             int level = mCarAudioManager.getAvcLevel();
-            LogUtils.d(TAG, "getAvcLevel:" + level);
+            LogManager.Companion.d(TAG, "getAvcLevel:" + level);
             switch (level) {
                 case CarAudioManager.AVC_LEVEL_CLOSE:
                     result = 0;
@@ -997,7 +986,7 @@ public class SettingManager {
                 level = CarAudioManager.AVC_LEVEL_HIGH;
                 break;
         }
-        LogUtils.d(TAG, "setAvcLevel:" + level);
+        LogManager.Companion.d(TAG, "setAvcLevel:" + level);
         try {
             mCarAudioManager.setAvcLevel(level);
         } catch (Exception e) {
@@ -1024,12 +1013,12 @@ public class SettingManager {
             if (uiBalanceLevelValue != mBalanceLevelValue) {
                 mCarAudioManager.setBalanceTowardRight(uiBalanceLevelValue);
                 mBalanceLevelValue = uiBalanceLevelValue;
-                LogUtils.d(TAG, "setAudio Balance " + uiBalanceLevelValue);
+                LogManager.Companion.d(TAG, "setAudio Balance " + uiBalanceLevelValue);
             }
             if (uiFadeLevelValue != mFadeLevelValue) {
                 mCarAudioManager.setFadeTowardFront(uiFadeLevelValue);
                 mFadeLevelValue = uiFadeLevelValue;
-                LogUtils.d(TAG, "setAudio Fade " + uiFadeLevelValue);
+                LogManager.Companion.d(TAG, "setAudio Fade " + uiFadeLevelValue);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1094,7 +1083,7 @@ public class SettingManager {
                     result = EQ_MODE_CUSTOM;
                     break;
             }
-            LogUtils.d(TAG, "getEqMode:" + result);
+            LogManager.Companion.d(TAG, "getEqMode:" + result);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1103,7 +1092,7 @@ public class SettingManager {
 
     public void setAudioCustomHML(int high, int mid, int low) {
         setAudioEQ(EQ_MODE_CUSTOM);
-        LogUtils.d(TAG, "setAudioCustomHML:" + high + " " + mid + " " + low);
+        LogManager.Companion.d(TAG, "setAudioCustomHML:" + high + " " + mid + " " + low);
         setAudioHighVoice(high);
         setAudioMidVoice(mid);
         setAudioLowVoice(low);
@@ -1136,7 +1125,7 @@ public class SettingManager {
         }
         try {
             mCarAudioManager.setEqMode(m);
-            LogUtils.d(TAG, "setEqMode:" + mode);
+            LogManager.Companion.d(TAG, "setEqMode:" + mode);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1165,7 +1154,7 @@ public class SettingManager {
                 break;
             case EQ_MODE_CUSTOM:
                 m = CarAudioManager.EQ_MODE_CUSTOM;
-                LogUtils.d(TAG, "setAudioVoice:" + high + " " + mid + " " + low);
+                LogManager.Companion.d(TAG, "setAudioVoice:" + high + " " + mid + " " + low);
                 setAudioHighVoice(high);
                 setAudioMidVoice(mid);
                 setAudioLowVoice(low);
@@ -1173,7 +1162,7 @@ public class SettingManager {
         }
         try {
             mCarAudioManager.setEqMode(m);
-            LogUtils.d(TAG, "setEqMode:" + m);
+            LogManager.Companion.d(TAG, "setEqMode:" + m);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1242,18 +1231,19 @@ public class SettingManager {
     private final class CarServiceConnection implements ServiceConnection {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            LogUtils.d(TAG, "onServiceConnected");
+            LogManager.Companion.d(TAG, "onServiceConnected start");
             connectService = true;
             initCarManager();
             onRegisterMcuListener();
             onRegisterSensorListener();
             onRegisterCabinListener();
             updateAdapterConnect();
+            LogManager.Companion.d(TAG, "onServiceConnected end");
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            LogUtils.e(TAG, "onServiceDisconnected");
+            LogManager.Companion.e(TAG, "onServiceDisconnected");
             connectService = false;
             updateAdapterConnect();
             mHandler.removeCallbacks(reConnectCarRunnable);
@@ -1262,7 +1252,7 @@ public class SettingManager {
 
         @Override
         public void onBindingDied(ComponentName name) {
-            LogUtils.e(TAG, "onBindingDied");
+            LogManager.Companion.e(TAG, "onBindingDied");
             connectService = false;
             updateAdapterConnect();
         }

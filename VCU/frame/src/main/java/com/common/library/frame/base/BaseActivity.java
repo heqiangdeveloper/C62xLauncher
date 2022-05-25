@@ -62,7 +62,7 @@ import java.lang.reflect.Type;
  *
  *
  */
-public abstract class BaseActivity<VM extends com.common.library.frame.base.BaseViewModel, VDB extends ViewDataBinding> extends AppCompatActivity implements IView<VM>, BaseNavigator {
+public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDataBinding> extends AppCompatActivity implements IView<VM>, BaseNavigator {
 
     /**
      * 请通过 {@link #getViewModel()}获取
