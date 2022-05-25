@@ -98,6 +98,9 @@ class CabinManagerFragment : BaseFragment<CabinViewModel, CabinFragmentBinding>(
             R.id.cabin_instrument -> {
                 fragment = CabinMeterFragment()
             }
+            R.id.cabin_other->{
+                fragment = CabinOtherFragment()
+            }
             else -> {}
         }
         return fragment

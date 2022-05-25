@@ -37,6 +37,7 @@
     <string name="vcu_cabin_air_conditioner">空调</string>
     <string name="vcu_cabin_safety">安全</string>
     <string name="vcu_cabin_instrument">仪表</string>
+    <string name="vcu_cabin_other">其他</string>
     <string name="vcu_cabin_instrument_title">仪表主题随驾驶模式联动</string>
 
     <string name="cabin_ac_auto_arid">空调自干燥</string>
@@ -59,6 +60,10 @@
     <string name="cabin_seat_copilot_guests">副驾迎宾</string>
     <string name="cabin_seat_automatic_heating">座椅自动加热</string>
 
+    <string name="cabin_other_trailer_remind">拖车提醒</string>
+    <string name="cabin_other_close">已关闭</string>
+    <string name="cabin_other_battery_optimization">蓄电池优化</string>
+    <string name="cabin_other_wireless_charging">无线充电</string>
 
     <string name="car_window_remote_control">遥控升窗/降窗</string>
     <string name="car_window_lock_car">锁车自动关窗</string>
