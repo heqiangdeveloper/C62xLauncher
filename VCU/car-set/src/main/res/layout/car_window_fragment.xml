@@ -8,10 +8,10 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="730dp"
+        android:layout_width="@dimen/x365"
         android:layout_height="match_parent"
-        android:paddingStart="30px"
-        android:paddingEnd="30px">
+        android:paddingStart="@dimen/x15"
+        android:paddingEnd="@dimen/x15">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/car_window_remote_control"
@@ -19,7 +19,7 @@
             android:layout_height="@dimen/switch_item_option_height"
             android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="MissingConstraints">
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 style="@style/switch_row_option_style"
@@ -40,9 +40,7 @@
 
         <View
             android:id="@+id/line1"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@drawable/list_divider_line"
+            style="@style/line"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/car_window_remote_control" />
 
@@ -73,9 +71,7 @@
 
         <View
             android:id="@+id/line2"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@drawable/list_divider_line"
+            style="@style/line"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/car_window_lock_car" />
 
@@ -106,9 +102,7 @@
 
         <View
             android:id="@+id/line3"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@drawable/list_divider_line"
+            style="@style/line"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/car_window_rainy_day" />
 
@@ -139,9 +133,7 @@
 
         <View
             android:id="@+id/line4"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@drawable/list_divider_line"
+            style="@style/line"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/car_window_wiper" />
     </androidx.constraintlayout.widget.ConstraintLayout>

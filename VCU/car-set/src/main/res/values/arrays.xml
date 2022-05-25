@@ -30,4 +30,10 @@
         <item>运动</item>
         <item>关联驾驶模式</item>
     </string-array>
+
+    <string-array name="car_trunk_mode_options">
+        <item>关闭</item>
+        <item>模式一</item>
+        <item>模式二</item>
+    </string-array>
 </resources>

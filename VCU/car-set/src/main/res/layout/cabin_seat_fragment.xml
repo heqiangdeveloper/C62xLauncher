@@ -8,10 +8,10 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="730dp"
+        android:layout_width="@dimen/x365"
         android:layout_height="match_parent"
-        android:paddingStart="30px"
-        android:paddingEnd="30px">
+        android:paddingStart="@dimen/x15"
+        android:paddingEnd="@dimen/x15">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -43,8 +43,8 @@
                     android:text="@string/cabin_seat_close" />
 
                 <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="@dimen/x24"
+                    android:layout_height="@dimen/x24"
                     android:background="@drawable/list_item_right_selector" />
             </LinearLayout>
 
@@ -53,9 +53,7 @@
 
         <View
             android:id="@+id/line1"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@drawable/list_divider_line"
+            style="@style/line"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cabin_seat_welcomes_guests" />
 
@@ -88,8 +86,8 @@
                     android:text="@string/cabin_seat_close" />
 
                 <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="@dimen/x24"
+                    android:layout_height="@dimen/x24"
                     android:background="@drawable/list_item_right_selector" />
             </LinearLayout>
 
@@ -98,9 +96,7 @@
 
         <View
             android:id="@+id/line2"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@drawable/list_divider_line"
+            style="@style/line"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cabin_seat_copilot_guests" />
 
@@ -133,8 +129,8 @@
                     android:text="@string/cabin_seat_close" />
 
                 <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="@dimen/x24"
+                    android:layout_height="@dimen/x24"
                     android:background="@drawable/list_item_right_selector" />
             </LinearLayout>
 
@@ -143,9 +139,7 @@
 
         <View
             android:id="@+id/line3"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@drawable/list_divider_line"
+            style="@style/line"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cabin_seat_automatic_heating" />
     </androidx.constraintlayout.widget.ConstraintLayout>

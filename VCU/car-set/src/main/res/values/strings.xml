@@ -65,4 +65,9 @@
     <string name="car_window_rainy_day">雨天自动关窗</string>
     <string name="car_window_wiper">雨刮维修</string>
 
+    <string name="car_trunk_electric_function">电动尾门电动功能</string>
+    <string name="car_trunk_intelligence_into">电动尾门智能进入</string>
+    <string name="car_trunk_light_flashing">灯光闪烁报警</string>
+    <string name="car_trunk_buzzer_alarms">蜂鸣器报警</string>
+
 </resources>

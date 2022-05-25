@@ -8,24 +8,25 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="730dp"
+        android:layout_width="@dimen/x365"
         android:layout_height="match_parent"
-        android:paddingStart="30px"
-        android:paddingEnd="30px">
+        android:paddingStart="@dimen/x15"
+        android:paddingEnd="@dimen/x15">
 
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="190px"
+            android:layout_height="@dimen/x95"
             android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="29px"
-                android:layout_marginBottom="19px"
+                android:layout_marginTop="@dimen/x15"
+                android:layout_marginBottom="@dimen/x10"
                 android:text="@string/drive_auto_lock"
                 android:textColor="@color/tab_option_title_text_color"
                 android:textSize="@dimen/tab_option_title_text_size" />
@@ -40,16 +41,14 @@
 
         <View
             android:id="@+id/line1"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@drawable/list_divider_line"
+            style="@style/line"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/linearLayout" />
 
         <LinearLayout
             android:id="@+id/acc_off_unlock"
             android:layout_width="match_parent"
-            android:layout_height="190px"
+            android:layout_height="@dimen/x95"
             android:orientation="vertical"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/line1">
@@ -57,8 +56,8 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="29px"
-                android:layout_marginBottom="19px"
+                android:layout_marginTop="@dimen/x15"
+                android:layout_marginBottom="@dimen/x10"
                 android:text="@string/acc_off_auto_unlock"
                 android:textColor="@color/tab_option_title_text_color"
                 android:textSize="@dimen/tab_option_title_text_size" />
@@ -73,9 +72,7 @@
 
         <View
             android:id="@+id/line2"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@drawable/list_divider_line"
+            style="@style/line"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/acc_off_unlock" />
 
@@ -106,9 +103,7 @@
 
         <View
             android:id="@+id/line3"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@drawable/list_divider_line"
+            style="@style/line"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cabin_whell_automatic_heating" />
 

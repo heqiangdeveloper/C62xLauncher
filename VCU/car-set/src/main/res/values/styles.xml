@@ -42,4 +42,10 @@
         <item name="android:textSize">@dimen/h3_text_size</item>
         <item name="android:textColor">@color/click_text_color</item>
     </style>
+
+    <style name="line">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/line_height</item>
+       <item name="android:background">@drawable/list_divider_line</item>
+    </style>
 </resources>
