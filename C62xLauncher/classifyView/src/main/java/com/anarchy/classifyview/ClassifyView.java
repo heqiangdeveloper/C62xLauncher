@@ -136,6 +136,8 @@ public class ClassifyView extends FrameLayout {
 
     private VelocityTracker mVelocityTracker;
     private boolean isExistAdd = false;//是否存在添加按钮
+    private static final int SUBCONTAINERWIDTH = 800;//文件弹出框的宽度
+    private static final int SUBCONTAINERHEIGHT = 550;//文件弹出框的度
 
     public ClassifyView(Context context) {
         super(context);
@@ -324,11 +326,10 @@ public class ClassifyView extends FrameLayout {
                         showSubContainer();
                     } else {
                         final int height = (int) (getHeight() * mSubRatio);
-                        LayoutParams params = new LayoutParams(800, 550);//设置高度，屏幕尺寸是1920*720
+                        LayoutParams params = new LayoutParams(SUBCONTAINERWIDTH, SUBCONTAINERHEIGHT);//设置高度，屏幕尺寸是1920*720
                         params.gravity = Gravity.CENTER;
                         mSubContainer.setLayoutParams(params);
                         addView(mSubContainer);
-                        int width = mSubContainer.getWidth();
                         ViewCompat.postOnAnimation(mSubContainer, new Runnable() {
                             @Override
                             public void run() {
@@ -563,6 +564,7 @@ public class ClassifyView extends FrameLayout {
 
             @Override
             public void onAnimationStart(Animator animation) {
+                //文件弹出窗外部的区域，点击此区域，文件弹出窗消失
                 mMainShadowView.setVisibility(VISIBLE);
             }
         });
@@ -672,7 +674,20 @@ public class ClassifyView extends FrameLayout {
                                     }
                                     list.add(new ResolveInfo());
                                     mSubCallBack.initData(mSelectedPosition, list);
-                                    showSubContainer();
+
+                                    final int height = (int) (getHeight() * mSubRatio);
+                                    LayoutParams params = new LayoutParams(SUBCONTAINERWIDTH, SUBCONTAINERHEIGHT);//设置高度，屏幕尺寸是1920*720
+                                    params.gravity = Gravity.CENTER;
+                                    mSubContainer.setLayoutParams(params);
+                                    removeView(mSubContainer);//如果有已存在的mSubContainer，先移除
+                                    addView(mSubContainer);
+                                    ViewCompat.postOnAnimation(mSubContainer, new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            mSubContainer.setTranslationY(height);
+                                            showSubContainer();
+                                        }
+                                    });
                                 }
                             });
                             editTv.setOnClickListener(new OnClickListener() {
