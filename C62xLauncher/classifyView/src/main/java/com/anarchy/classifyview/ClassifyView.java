@@ -347,7 +347,7 @@ public class ClassifyView extends FrameLayout {
                 L.d("onLongPress");
                 View pressedView = findChildView(mMainRecyclerView, e);
                 if (pressedView == null) return;
-                L.d("Main recycler view on long press: x: %1$s + y: %2$s", e.getX(), e.getY());
+                //L.d("Main recycler view on long press: x: %1$s + y: %2$s", e.getX(), e.getY());
                 int position = mMainRecyclerView.getChildAdapterPosition(pressedView);
 
                 int pointerId = MotionEventCompat.getPointerId(e, 0);
@@ -360,7 +360,7 @@ public class ClassifyView extends FrameLayout {
                         int index = MotionEventCompat.findPointerIndex(e, mMainActivePointerId);
                         mInitialTouchX = MotionEventCompat.getX(e, index);
                         mInitialTouchY = MotionEventCompat.getY(e, index);
-                        L.d("handle event on long press:X: %1$s , Y: %2$s ", mInitialTouchX, mInitialTouchY);
+                        //L.d("handle event on long press:X: %1$s , Y: %2$s ", mInitialTouchX, mInitialTouchY);
 
                         inMainRegion = true;
                         mSelected = pressedView;
@@ -378,13 +378,13 @@ public class ClassifyView extends FrameLayout {
 
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                L.d("onScroll");
+                //L.d("onScroll");
                 return super.onScroll(e1, e2, distanceX, distanceY);
             }
 
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                L.d("onFling");
+                //L.d("onFling");
                 return super.onFling(e1, e2, velocityX, velocityY);
             }
         });
@@ -397,10 +397,10 @@ public class ClassifyView extends FrameLayout {
 
                 switch (action) {
                     case MotionEvent.ACTION_MOVE:
-                        L.d("onInterceptTouchEvent ACTION_MOVE");
+                        //L.d("onInterceptTouchEvent ACTION_MOVE");
                         break;
                     case MotionEvent.ACTION_DOWN:
-                        L.d("onInterceptTouchEvent ACTION_DOWN");
+                        //L.d("onInterceptTouchEvent ACTION_DOWN");
                         mMainActivePointerId = MotionEventCompat.getPointerId(e, 0);
                         break;
                     case MotionEvent.ACTION_CANCEL:
@@ -689,13 +689,13 @@ public class ClassifyView extends FrameLayout {
                     }
                     break;
                 case DragEvent.ACTION_DRAG_LOCATION:
-                    L.d("ACTION_DRAG_LOCATION x = " + x + ",y = " + y);
-                    L.d("ACTION_DRAG_LOCATION lastX = " + lastX + ",lastY = " + lastY);
+//                    L.d("ACTION_DRAG_LOCATION x = " + x + ",y = " + y);
+//                    L.d("ACTION_DRAG_LOCATION lastX = " + lastX + ",lastY = " + lastY);
                     if(Math.abs(x - lastX) >= 5 || Math.abs(y - lastY) > 5){
                         if(dialog != null && dialog.isShowing()) {
                             dialog.dismiss();
                         }else {
-                            L.d("dialog is null");
+                            //L.d("dialog is null");
                         }
                     }
                     mVelocityTracker.addMovement(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(),
@@ -741,7 +741,9 @@ public class ClassifyView extends FrameLayout {
                         mDragView.setPivotX(0);
                         mDragView.setPivotY(0);
                         L.d("targetX:%1$s,targetY:%2$s,scaleX:%3$s,scaleY:%4$s", targetX, targetY, scaleX, scaleY);
-                        mDragView.animate().x(targetX).y(targetY).scaleX(scaleX).scaleY(scaleY).setListener(mMergeAnimListener).setDuration(mAnimationDuration).start();
+                        //不做图标缩放
+                        //mDragView.animate().x(targetX).y(targetY).scaleX(scaleX).scaleY(scaleY).setListener(mMergeAnimListener).setDuration(mAnimationDuration).start();
+                        mDragView.animate().x(targetX).y(targetY).scaleX(1f).scaleY(1f).setListener(mMergeAnimListener).setDuration(mAnimationDuration).start();
                         mergeSuccess = true;
                     }
                     break;
@@ -1091,7 +1093,7 @@ public class ClassifyView extends FrameLayout {
                     RecyclerView.ViewHolder viewHolder = mSubRecyclerView.findViewHolderForAdapterPosition(mSelectedPosition);
                     if (viewHolder != null) mSelected = viewHolder.itemView;
                     mSubCallBack.setDragPosition(targetPosition);
-                    mSubCallBack.moved(mSelectedPosition, targetPosition);
+                    //mSubCallBack.moved(mSelectedPosition, targetPosition);
                 }
             }
         }
@@ -1131,7 +1133,7 @@ public class ClassifyView extends FrameLayout {
                     RecyclerView.ViewHolder viewHolder = mMainRecyclerView.findViewHolderForAdapterPosition(mSelectedPosition);
                     if (viewHolder != null) mSelected = viewHolder.itemView;
                     mMainCallBack.setDragPosition(targetPosition);
-                    mMainCallBack.moved(mSelectedPosition, targetPosition);
+                    //mMainCallBack.moved(mSelectedPosition, targetPosition);
                 }
             }
         }
