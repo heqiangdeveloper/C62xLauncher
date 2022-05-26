@@ -91,4 +91,6 @@
     <string name="drive_sensitivity_setting">灵敏度设置</string>
     <string name="drive_aeb_title">自动紧急制动AEB</string>
     <string name="drive_aeb_content">检测到危险情况时产生一个短促制动</string>
+    <string name="drive_Lane_assist_system">车道辅助系统</string>
+    <string name="drive_Lane_assist_system_content">检测两侧车道线辅助车辆在车道内行驶</string>
 </resources>
