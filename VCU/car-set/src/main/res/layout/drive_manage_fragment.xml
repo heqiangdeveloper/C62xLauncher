@@ -67,6 +67,13 @@
                     app:tabSrc="@drawable/drive_lighting_selector"
                     app:tabText="@string/drive_tab_lighting_assist" />
 
+                <com.chinatsp.vehicle.settings.widget.TabRadio
+                    android:id="@+id/drive_traffic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    app:tabSrc="@drawable/drive_traffic_selector"
+                    app:tabText="@string/drive_tab_traffic" />
 
             </LinearLayout>
         </com.common.xui.widget.XUIWrapContentScrollView>

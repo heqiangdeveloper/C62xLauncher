@@ -88,6 +88,9 @@ class DriveManageFragment : BaseFragment<DriveViewModel, DriveManageFragmentBind
             R.id.drive_lighting_assist -> {
                 fragment = DriveLightingFragment()
             }
+            R.id.drive_traffic -> {
+                fragment = DriveTrafficFragment()
+            }
             else -> {
             }
         }
