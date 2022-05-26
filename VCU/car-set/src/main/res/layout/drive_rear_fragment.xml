@@ -8,11 +8,129 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="@dimen/x365"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingStart="@dimen/x15"
+        android:paddingTop="@dimen/x15"
         android:paddingEnd="@dimen/x15">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/bsd_constraint"
+            android:layout_width="@dimen/x243"
+            android:layout_height="@dimen/x160"
+            android:background="@drawable/drive_bg"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/bsd_tx"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/x12"
+                android:layout_marginTop="@dimen/x12"
+                android:text="@string/drive_bsd_title"
+                android:textColor="@color/xui_config_color_white"
+                android:textSize="@dimen/text_14"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/bsd_txt_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/x12"
+                android:layout_marginTop="@dimen/x8"
+                android:text="@string/drive_bsd_content"
+                android:textColor="@color/xui_config_color_white"
+                android:textSize="@dimen/text_9"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/bsd_tx" />
+
+            <com.common.xui.widget.button.switchbutton.SwitchButton
+                android:id="@+id/cabin_ac_advance_wind_swb"
+                style="@style/switch_button_style"
+                android:layout_marginTop="@dimen/x9"
+                android:layout_marginEnd="@dimen/x20"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/x6"
+                android:src="@drawable/img_bsd"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="@dimen/x243"
+            android:layout_height="@dimen/x160"
+            android:layout_marginStart="@dimen/x15"
+            android:background="@drawable/drive_bg"
+            app:layout_constraintLeft_toRightOf="@+id/bsd_constraint"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/dow_tx"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/x12"
+                android:layout_marginTop="@dimen/x12"
+                android:text="@string/drive_dow_title"
+                android:textColor="@color/xui_config_color_white"
+                android:textSize="@dimen/text_14"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/dow_txt_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/x12"
+                android:layout_marginTop="@dimen/x8"
+                android:text="@string/drive_dow_content"
+                android:textColor="@color/xui_config_color_white"
+                android:textSize="@dimen/text_9"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dow_tx" />
+
+            <com.common.xui.widget.button.switchbutton.SwitchButton
+                style="@style/switch_button_style"
+                android:layout_marginTop="@dimen/x9"
+                android:layout_marginEnd="@dimen/x20"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/x12"
+                android:layout_marginTop="@dimen/x12"
+                android:text="@string/drive_voice_prompt"
+                android:textColor="@color/xui_config_color_50_white"
+                android:textSize="@dimen/text_12"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dow_txt_content" />
+
+            <com.common.xui.widget.button.switchbutton.SwitchButton
+                style="@style/switch_button_style"
+                android:layout_marginTop="@dimen/x7"
+                android:layout_marginEnd="@dimen/x20"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dow_txt_content" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/x6"
+                android:src="@drawable/img_dow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

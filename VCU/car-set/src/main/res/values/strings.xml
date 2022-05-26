@@ -93,4 +93,9 @@
     <string name="drive_aeb_content">检测到危险情况时产生一个短促制动</string>
     <string name="drive_Lane_assist_system">车道辅助系统</string>
     <string name="drive_Lane_assist_system_content">检测两侧车道线辅助车辆在车道内行驶</string>
+    <string name="drive_bsd_title">盲区监测BSD</string>
+    <string name="drive_bsd_content">提醒驾驶者后方来车情况</string>
+    <string name="drive_dow_title">开门预警DOW</string>
+    <string name="drive_dow_content">开启车门时识别靠近目标并预警</string>
+    <string name="drive_voice_prompt">语音提示</string>
 </resources>
