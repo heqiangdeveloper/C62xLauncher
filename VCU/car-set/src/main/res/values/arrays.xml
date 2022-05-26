@@ -36,4 +36,10 @@
         <item>模式一</item>
         <item>模式二</item>
     </string-array>
+
+    <string-array name="drive_sensitivity_setting_options">
+        <item>高</item>
+        <item>中</item>
+        <item>低</item>
+    </string-array>
 </resources>

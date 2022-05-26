@@ -86,4 +86,9 @@
     <string name="drive_intelligent_cruise_assistant">智能巡航辅助</string>
     <string name="drive_full_speed_range">全速范围内为驾驶员提供车辆的横纵向辅助</string>
     <string name="drive_open">已开启</string>
+    <string name="drive_warning_fcw">前向碰撞预警FCW</string>
+    <string name="drive_fcw_txt_content">检测到前向预警碰撞风险时预警驾驶员</string>
+    <string name="drive_sensitivity_setting">灵敏度设置</string>
+    <string name="drive_aeb_title">自动紧急制动AEB</string>
+    <string name="drive_aeb_content">检测到危险情况时产生一个短促制动</string>
 </resources>
