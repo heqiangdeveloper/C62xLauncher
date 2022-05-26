@@ -104,4 +104,7 @@
     <string name="drive_hma_content">远近光自动切换的辅助</string>
     <string name="drive_sla_title">速度限制提醒SLA</string>
     <string name="drive_sla_content">探测行驶道路上或道路旁的限速标志</string>
+
+    <string name="lighting_title">灯光</string>
+    <string name="lighting_atmosphere_lamp">氛围灯</string>
 </resources>
