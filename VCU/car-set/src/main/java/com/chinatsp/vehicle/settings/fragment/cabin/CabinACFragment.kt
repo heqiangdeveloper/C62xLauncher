@@ -2,6 +2,7 @@ package com.chinatsp.vehicle.settings.fragment.cabin
 
 import android.os.Bundle
 import com.chinatsp.settinglib.LogManager
+import com.chinatsp.settinglib.listener.IACListener
 import com.chinatsp.settinglib.manager.ACManager
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CabinAcFragmentBinding
@@ -32,6 +33,8 @@ class CabinACFragment : BaseFragment<CabinACViewModel, CabinAcFragmentBinding>()
         monitorSwitchLiveData()
         setCheckedChangeListener()
         setTabSelectionChangedListener()
+
+        LogManager.d("ViewModel", "ViewModel:${System.identityHashCode(viewModel)}")
     }
 
     private fun setTabSelectionChangedListener() {
@@ -144,4 +147,5 @@ class CabinACFragment : BaseFragment<CabinACViewModel, CabinAcFragmentBinding>()
         }
 
     }
+
 }

@@ -44,7 +44,7 @@ android {
 //    android.applicationVariants.all { variant ->
 //        variant.outputs.all { output ->
 //            variant.getPackageApplication().outputDirectory = new File(project.rootDir.absolutePath + File.separator + "outputs")
-//            def newName = "${CAR_SET_NAME}-${versionCode}-${versionName}.apk"
+//            def newName = "${CAR_SET_NAME}_${versionCode}_${versionName}.apk"
 //            output.outputFileName = newName
 //        }
 //    }

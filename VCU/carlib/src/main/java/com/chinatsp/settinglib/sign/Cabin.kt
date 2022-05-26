@@ -17,23 +17,28 @@ enum class Cabin(vararg signalVararg: Int) {
 //    HELM(1, 2, 4, 5),
 //    CHAIR(4, 5, 8, 9),
     AIR_CONDITIONER(
+        /**空调自干燥*/
         CarCabinManager.ID_ACSELFSTSDISP,
+        /**预通风功能*/
         CarCabinManager.ID_ACPREVENTNDISP,
-        CarCabinManager.ID_ACC_DISTANCE_LEVEL,
-        CarCabinManager.ID_AC_DIS_AC_MAX,
-        CarCabinManager.ID_AC_DIS_API_INSIDE,
-        CarCabinManager.ID_AC_DIS_INSIDE_PM2_5_DATA,
-        CarCabinManager.ID_AC_DIS_OUTSIDE_PM2_5_DATA,
-        CarCabinManager.ID_AC_DIS_IN_CAR_TEMPERATURE,
-        CarCabinManager.ID_AC_DIS_AMBIENT_TEMPERATURE,
-        CarCabinManager.ID_AC_REFRESH_MODE_ACT_STS,
-        CarCabinManager.ID_AC_REFRESH_MODE_SET_STATUS,
-        CarCabinManager.ID_AC_AUTOMATICDE_FOGGING_STATUS
+        /**空调舒适性状态显示*/
+        CarCabinManager.ID_ACCMFTSTSDISP
+
+//        CarCabinManager.ID_AC_DIS_AC_MAX,
+//        CarCabinManager.ID_AC_DIS_API_INSIDE,
+//        CarCabinManager.ID_AC_DIS_INSIDE_PM2_5_DATA,
+//        CarCabinManager.ID_AC_DIS_OUTSIDE_PM2_5_DATA,
+//        CarCabinManager.ID_AC_DIS_IN_CAR_TEMPERATURE,
+//        CarCabinManager.ID_AC_DIS_AMBIENT_TEMPERATURE,
+//        CarCabinManager.ID_AC_REFRESH_MODE_ACT_STS,
+//        CarCabinManager.ID_AC_REFRESH_MODE_SET_STATUS,
+//        CarCabinManager.ID_AC_AUTOMATICDE_FOGGING_STATUS
     );
 
-    val signals: IntArray = signalVararg
+    val signals: HashSet<Int> = signalVararg.toCollection(HashSet<Int>())
 
     fun contains(id: Int): Boolean {
+        signals.add(111)
         return signals.contains(id)
     }
 
