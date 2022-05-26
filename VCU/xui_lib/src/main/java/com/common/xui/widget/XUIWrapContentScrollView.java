@@ -60,7 +60,7 @@ public class XUIWrapContentScrollView extends XUIObservableScrollView {
         }
     }
 
-    @Override
+   /* @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         ViewGroup.LayoutParams lp = getLayoutParams();
         int expandSpec;
@@ -70,5 +70,5 @@ public class XUIWrapContentScrollView extends XUIObservableScrollView {
             expandSpec = View.MeasureSpec.makeMeasureSpec(mMaxHeight, View.MeasureSpec.AT_MOST);
         }
         super.onMeasure(widthMeasureSpec, expandSpec);
-    }
+    }*/
 }

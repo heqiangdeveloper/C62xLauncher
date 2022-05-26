@@ -83,9 +83,11 @@
     <string name="drive_tab_lane_assist">车道辅助</string>
     <string name="drive_tab_rear_assist">侧后辅助</string>
     <string name="drive_tab_lighting_assist">灯光辅助</string>
+    <string name="drive_tab_traffic">交通标志</string>
     <string name="drive_intelligent_cruise_assistant">智能巡航辅助</string>
     <string name="drive_full_speed_range">全速范围内为驾驶员提供车辆的横纵向辅助</string>
     <string name="drive_open">已开启</string>
+    <string name="drive_close">已关闭</string>
     <string name="drive_warning_fcw">前向碰撞预警FCW</string>
     <string name="drive_fcw_txt_content">检测到前向预警碰撞风险时预警驾驶员</string>
     <string name="drive_sensitivity_setting">灵敏度设置</string>
@@ -98,4 +100,8 @@
     <string name="drive_dow_title">开门预警DOW</string>
     <string name="drive_dow_content">开启车门时识别靠近目标并预警</string>
     <string name="drive_voice_prompt">语音提示</string>
+    <string name="drive_hma_title">智能远光灯HMA</string>
+    <string name="drive_hma_content">远近光自动切换的辅助</string>
+    <string name="drive_sla_title">速度限制提醒SLA</string>
+    <string name="drive_sla_content">探测行驶道路上或道路旁的限速标志</string>
 </resources>
