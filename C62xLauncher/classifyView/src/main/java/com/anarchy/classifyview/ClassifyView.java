@@ -29,7 +29,10 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -98,6 +101,7 @@ public class ClassifyView extends FrameLayout {
     private View mMainShadowView;
     private RecyclerView mMainRecyclerView;
     private RecyclerView mSubRecyclerView;
+    private EditText titleEt;
     private TextView titleTv;
 
     private int mMainSpanCount;
@@ -138,6 +142,7 @@ public class ClassifyView extends FrameLayout {
     private boolean isExistAdd = false;//是否存在添加按钮
     private static final int SUBCONTAINERWIDTH = 800;//文件弹出框的宽度
     private static final int SUBCONTAINERHEIGHT = 550;//文件弹出框的度
+    private InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 
     public ClassifyView(Context context) {
         super(context);
@@ -195,15 +200,38 @@ public class ClassifyView extends FrameLayout {
         mMainContainer.addView(mMainShadowView);
         //mSubRecyclerView.setLayoutParams(new LayoutParams(600,600));
         mSubRecyclerView.setPadding(0,100,0,0);
-        mSubContainer.addView(mSubRecyclerView);
+
+        FrameLayout.LayoutParams titleSize =new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                100
+        );
+        FrameLayout.LayoutParams subRecyclerViewSize =new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        );
+
+        mSubContainer.addView(mSubRecyclerView,subRecyclerViewSize);
         //设置文件夹名称
+        titleEt = new EditText(context);
+        titleEt.setSingleLine(true);
+        titleEt.setText("文件夹");
+        titleEt.setGravity(Gravity.CENTER_HORIZONTAL);
+        titleEt.setTextSize(28);
+        titleEt.setPadding(0,30,0,0);
+        titleEt.setTextColor(Color.WHITE);
+
+        //标题文本
         titleTv = new TextView(context);
         titleTv.setText("文件夹");
         titleTv.setGravity(Gravity.CENTER_HORIZONTAL);
         titleTv.setTextSize(28);
         titleTv.setPadding(0,30,0,0);
         titleTv.setTextColor(Color.WHITE);
-        mSubContainer.addView(titleTv);
+
+        titleTv.setVisibility(View.GONE);
+        titleEt.setVisibility(View.GONE);
+        mSubContainer.addView(titleEt,titleSize);
+        mSubContainer.addView(titleTv,titleSize);
         mSubContainer.setBackgroundColor(Color.parseColor("#252C3D"));
 
         addViewInLayout(mMainContainer, 0, mMainContainer.getLayoutParams());
@@ -316,6 +344,12 @@ public class ClassifyView extends FrameLayout {
                     list.add(new ResolveInfo());
 
                     mSubCallBack.initData(position, list);
+                    titleTv.setVisibility(View.VISIBLE);
+                    titleEt.setVisibility(View.GONE);
+                    RecyclerView.ViewHolder target = mMainRecyclerView.findViewHolderForAdapterPosition(position);
+                    LinearLayout linearLayout = (LinearLayout)target.itemView;
+                    TextView nameTv = (TextView) linearLayout.getChildAt(1);
+                    titleTv.setText(nameTv.getText().toString());
                     if (ViewCompat.isAttachedToWindow(mSubContainer)) {
                         //取消之前进行的动画
                         if (mShowSubAnim != null && mShowSubAnim.isRunning()) {
@@ -560,6 +594,18 @@ public class ClassifyView extends FrameLayout {
 
             @Override
             public void onAnimationEnd(Animator animation) {
+                //如果是重命名，显示编辑框和键盘
+                if(titleEt.getVisibility() == View.VISIBLE){
+                    RecyclerView.ViewHolder target = mMainRecyclerView.findViewHolderForAdapterPosition(mSelectedPosition);
+                    LinearLayout linearLayout = (LinearLayout)target.itemView;
+                    TextView nameTv = (TextView) linearLayout.getChildAt(1);
+                    titleEt.setText(nameTv.getText().toString());
+                    titleEt.setFocusable(true);
+                    titleEt.setFocusableInTouchMode(true);
+                    titleEt.requestFocus();
+                    titleEt.setSelection(0,titleEt.getText().toString().length());
+                    imm.showSoftInput(titleEt,0);
+                }
             }
 
             @Override
@@ -596,6 +642,18 @@ public class ClassifyView extends FrameLayout {
 
             @Override
             public void onAnimationStart(Animator animation) {
+                if(titleEt.getVisibility() == View.VISIBLE){
+                    imm.hideSoftInputFromWindow(titleEt.getWindowToken(), 0); //强制隐藏键盘
+                    L.d("mSelectedPosition = " + mSelectedPosition);
+                    RecyclerView.ViewHolder target = mMainRecyclerView.findViewHolderForAdapterPosition(mSelectedPosition);
+                    if(target == null){
+                        L.d("target is null");
+                    }else {
+                        LinearLayout linearLayout = (LinearLayout)target.itemView;
+                        TextView nameTv = (TextView) linearLayout.getChildAt(1);
+                        nameTv.setText(titleEt.getText().toString());
+                    }
+                }
                 //隐藏弹出的文件夹框
                 mSubContainer.setVisibility(GONE);
                 //隐藏文件夹弹窗后，清除掉之前添加的添加按钮
@@ -677,10 +735,13 @@ public class ClassifyView extends FrameLayout {
 
                                     final int height = (int) (getHeight() * mSubRatio);
                                     LayoutParams params = new LayoutParams(SUBCONTAINERWIDTH, SUBCONTAINERHEIGHT);//设置高度，屏幕尺寸是1920*720
-                                    params.gravity = Gravity.CENTER;
+                                    params.gravity = Gravity.CENTER_HORIZONTAL;//防止键盘将输入框顶到外面去了，指定为CENTER_HORIZONTAL
                                     mSubContainer.setLayoutParams(params);
                                     removeView(mSubContainer);//如果有已存在的mSubContainer，先移除
                                     addView(mSubContainer);
+                                    titleEt.setVisibility(View.VISIBLE);
+                                    titleTv.setVisibility(View.GONE);
+
                                     ViewCompat.postOnAnimation(mSubContainer, new Runnable() {
                                         @Override
                                         public void run() {

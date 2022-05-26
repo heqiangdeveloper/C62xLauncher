@@ -37,7 +37,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<ResolveInfo, MyAppInfoAdapte
         holder.tvName.setText("");
         if(infos != null && infos.size() > 1){
             Log.d("heqq","info size is: " + infos.size());
-            holder.tvName.setText("文件夹");
+            holder.tvName.setText("文件夹" + position+1);
         } else if(infos.size() == 1){
             holder.tvName.setText(mData.get(position).get(0).loadLabel(context.getPackageManager()));
         }
