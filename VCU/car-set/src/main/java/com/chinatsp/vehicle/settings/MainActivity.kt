@@ -12,6 +12,7 @@ import com.chinatsp.vehicle.settings.fragment.AccessFragment
 import com.chinatsp.vehicle.settings.fragment.cabin.CabinManagerFragment
 import com.chinatsp.vehicle.settings.fragment.SimpleTabFragment
 import com.chinatsp.vehicle.settings.fragment.doors.DoorsManageFragment
+import com.chinatsp.vehicle.settings.fragment.drive.DriveManageFragment
 import com.chinatsp.vehicle.settings.vm.MainViewModel
 import com.common.library.frame.base.BaseActivity
 import com.google.android.material.tabs.TabLayout
@@ -111,8 +112,11 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
                 } else if (position == 1) {
                     val fragment = DoorsManageFragment();
                     mAdapter.addFragment(fragment, title)
-                } else if (position == 5) {
+                } else if (position == 4) {
                     val fragment = CabinManagerFragment()
+                    mAdapter.addFragment(fragment, title)
+                } else if (position == 5) {
+                    val fragment = DriveManageFragment()
                     mAdapter.addFragment(fragment, title)
                 } else {
                     mAdapter.addFragment(SimpleTabFragment.newInstance(title), title)

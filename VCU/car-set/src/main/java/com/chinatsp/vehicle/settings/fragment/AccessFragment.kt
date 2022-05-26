@@ -21,9 +21,9 @@ class AccessFragment: BaseLazyFragment<DoorViewModel, AccessFragmentBinding>() {
 //            this.setEqualWidth(true)
 //            this.setItems(array, array)
 //        }
-        with(binding.tabRadio) {
+        /*with(binding.tabRadio) {
             this.isSelected = true
-        }
+        }*/
     }
 
     override fun getLayoutId(): Int {

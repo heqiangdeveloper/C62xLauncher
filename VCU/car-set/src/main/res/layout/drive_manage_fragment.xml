@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingDefaultResource">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.common.xui.widget.XUIWrapContentScrollView
+            android:id="@+id/drive_manager_ScrollView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            app:layout_constraintEnd_toStartOf="@id/drive_manager_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:id="@+id/drive_manager_left_tab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.chinatsp.vehicle.settings.widget.TabRadio
+                    android:id="@+id/drive_intelligent_cruise"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    app:tabSrc="@drawable/drive_intelligent_selector"
+                    app:tabText="@string/drive_tab_intelligent_cruise" />
+
+                <com.chinatsp.vehicle.settings.widget.TabRadio
+                    android:id="@+id/drive_forward_assist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    app:tabSrc="@drawable/drive_forward_selector"
+                    app:tabText="@string/drive_tab_forward_assist" />
+
+                <com.chinatsp.vehicle.settings.widget.TabRadio
+                    android:id="@+id/drive_lane_assist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    app:tabSrc="@drawable/drive_lane_selector"
+                    app:tabText="@string/drive_tab_lane_assist" />
+
+                <com.chinatsp.vehicle.settings.widget.TabRadio
+                    android:id="@+id/drive_rear_assist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    app:tabSrc="@drawable/drive_rear_selector"
+                    app:tabText="@string/drive_tab_rear_assist" />
+
+                <com.chinatsp.vehicle.settings.widget.TabRadio
+                    android:id="@+id/drive_lighting_assist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    app:tabSrc="@drawable/drive_lighting_selector"
+                    app:tabText="@string/drive_tab_lighting_assist" />
+
+
+            </LinearLayout>
+        </com.common.xui.widget.XUIWrapContentScrollView>
+
+        <FrameLayout
+            android:id="@+id/drive_manager_layout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/drive_manager_ScrollView"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

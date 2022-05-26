@@ -1,4 +1,4 @@
-package com.chinatsp.vehicle.settings.fragment.doors
+package com.chinatsp.vehicle.settings.fragment.drive
 
 import android.os.Bundle
 import android.view.View
@@ -6,22 +6,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.chinatsp.vehicle.settings.R
-import com.chinatsp.vehicle.settings.databinding.DoorsManageFragmentBinding
-import com.chinatsp.vehicle.settings.fragment.cabin.*
-import com.chinatsp.vehicle.settings.vm.DoorsViewModel
+import com.chinatsp.vehicle.settings.databinding.DriveManageFragmentBinding
+import com.chinatsp.vehicle.settings.vm.DriveViewModel
 import com.common.library.frame.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DoorsManageFragment : BaseFragment<DoorsViewModel, DoorsManageFragmentBinding>() {
+class DriveManageFragment : BaseFragment<DriveViewModel, DriveManageFragmentBinding>() {
     var selectOption: View? = null
-
     private lateinit var tabOptions: List<View>
-
-    override fun getLayoutId(): Int {
-        return R.layout.doors_manage_fragment
-    }
-
     private fun onClick(view: View) {
         if (view != selectOption) {
             viewModel.tabLocationLiveData.let {
@@ -30,20 +23,25 @@ class DoorsManageFragment : BaseFragment<DoorsViewModel, DoorsManageFragmentBind
         }
     }
 
+    override fun getLayoutId(): Int {
+        return R.layout.drive_manage_fragment
+    }
+
     override fun initData(savedInstanceState: Bundle?) {
         initTabOptions()
+
         viewModel.tabLocationLiveData.observe(this) {
             updateSelectTabOption(it)
         }
         viewModel.tabLocationLiveData.let {
             if (it.value == -1) {
-                it.value = R.id.car_doors
+                it.value = R.id.drive_intelligent_cruise
             }
         }
     }
 
     private fun initTabOptions() {
-        val tabOptionLayout = binding.doorsManagerLeftTab
+        val tabOptionLayout = binding.driveManagerLeftTab
         val range = 0 until tabOptionLayout.childCount
         tabOptions = range.map {
             val child = tabOptionLayout.getChildAt(it)
@@ -54,19 +52,20 @@ class DoorsManageFragment : BaseFragment<DoorsViewModel, DoorsManageFragmentBind
 
     private fun updateSelectTabOption(viewId: Int) {
         if (viewId != selectOption?.id) {
-            selectOption?.isEnabled = true
+            selectOption?.isSelected = false
             selectOption = tabOptions.first { it.id == viewId }
-            selectOption?.isEnabled = false
+            selectOption?.isSelected = true
             updateDisplayFragment(viewId)
         }
     }
 
+
     private fun updateDisplayFragment(serial: Int) {
-        var fragment: Fragment? = checkOutFragment(serial)
+        val fragment: Fragment? = checkOutFragment(serial)
         fragment?.let {
             val manager: FragmentManager = childFragmentManager
             val transaction: FragmentTransaction = manager.beginTransaction()
-            transaction.replace(R.id.doors_manager_layout, it, it::class.simpleName)
+            transaction.replace(R.id.drive_manager_layout, it, it::class.simpleName)
             transaction.commitAllowingStateLoss()
         }
     }
@@ -74,18 +73,25 @@ class DoorsManageFragment : BaseFragment<DoorsViewModel, DoorsManageFragmentBind
     private fun checkOutFragment(serial: Int): Fragment? {
         var fragment: Fragment? = null
         when (serial) {
-            R.id.car_doors -> {
-                fragment = CarDoorsFragment()
+            R.id.drive_intelligent_cruise -> {
+                fragment = DriveIntelligentFragment()
             }
-            R.id.car_window -> {
-                fragment = CarWindowFragment()
+            R.id.drive_forward_assist -> {
+                fragment = DriveForwardFragment()
             }
-            R.id.car_trunk -> {
-                fragment = CarTrunkFragment()
+            R.id.drive_lane_assist -> {
+                fragment = DriveLaneFragment()
+            }
+            R.id.drive_rear_assist -> {
+                fragment = DriveRearFragment()
+            }
+            R.id.drive_lighting_assist -> {
+                fragment = DriveLightingFragment()
             }
             else -> {
             }
         }
         return fragment
     }
+
 }

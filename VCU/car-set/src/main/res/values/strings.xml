@@ -75,4 +75,15 @@
     <string name="car_trunk_light_flashing">灯光闪烁报警</string>
     <string name="car_trunk_buzzer_alarms">蜂鸣器报警</string>
 
+    <string name="ac_open_window">一键开窗</string>
+    <string name="ac_close_window">一键关窗</string>
+
+    <string name="drive_tab_intelligent_cruise">智能巡航</string>
+    <string name="drive_tab_forward_assist">前向辅助</string>
+    <string name="drive_tab_lane_assist">车道辅助</string>
+    <string name="drive_tab_rear_assist">侧后辅助</string>
+    <string name="drive_tab_lighting_assist">灯光辅助</string>
+    <string name="drive_intelligent_cruise_assistant">智能巡航辅助</string>
+    <string name="drive_full_speed_range">全速范围内为驾驶员提供车辆的横纵向辅助</string>
+    <string name="drive_open">已开启</string>
 </resources>
