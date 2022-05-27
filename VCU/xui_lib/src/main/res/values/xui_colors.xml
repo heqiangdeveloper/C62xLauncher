@@ -140,6 +140,7 @@
     <color name="xui_config_color_waring">#FEC005</color>
     <color name="xui_config_color_pure_yellow">#FFFF00</color>
     <color name="xui_config_color_light_yellow">#FFFFC0</color>
+    <color name="xui_config_color_light_green">#00B6FF</color>
 
     <color name="xui_config_color_red">#F15C58</color>
     <color name="xui_config_color_black">#333333</color>

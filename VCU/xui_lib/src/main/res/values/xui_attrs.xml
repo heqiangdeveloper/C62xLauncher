@@ -1735,5 +1735,9 @@
     <attr name="XUITipPointStyle" format="reference" />
     <attr name="XUITipNewStyle" format="reference" />
     <attr name="LoggerTextViewStyle" format="reference" />
-
+    <declare-styleable name="VerticalSeekBar">
+        <attr name="image_src" format="reference" />
+        <attr name="max_value" format="integer" />
+        <attr name="min_value" format="integer" />
+    </declare-styleable>
 </resources>

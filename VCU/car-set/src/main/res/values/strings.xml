@@ -114,4 +114,19 @@
     <string name="lighting_car_screen_title">车机屏幕亮度</string>
     <string name="lighting_car_outside_title">车外迎宾灯</string>
     <string name="lighting_car_inside_title">车内迎宾灯</string>
+
+    <string name="sound_title">声音</string>
+    <string name="sound_effect">音效</string>
+    <string name="sound_volume_adjustment">音量调节</string>
+    <string name="sound_alarm_volume">仪表报警音量</string>
+    <string name="sound_navigation_mixing">导航混音</string>
+    <string name="sound_volume_compensation">速度音量补偿</string>
+    <string name="sound_system_prompt">系统提示音</string>
+    <string name="sound_loudness_control">响度控制</string>
+    <string name="sound_huawei_sound">华为音效</string>
+    <string name="sound_navigation">导航</string>
+    <string name="sound_call">通话</string>
+    <string name="sound_voice">语音</string>
+    <string name="sound_media">媒体</string>
+    <string name="sound_system">系统</string>
 </resources>

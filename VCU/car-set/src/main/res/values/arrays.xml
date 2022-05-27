@@ -55,4 +55,8 @@
         <item>5次</item>
         <item>7次</item>
     </string-array>
+    <string-array name="sensitivity_setting_options">
+        <item>导航优先</item>
+        <item>直接混音</item>
+    </string-array>
 </resources>
