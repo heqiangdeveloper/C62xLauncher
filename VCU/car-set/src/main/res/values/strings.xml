@@ -107,4 +107,11 @@
 
     <string name="lighting_title">灯光</string>
     <string name="lighting_atmosphere_lamp">氛围灯</string>
+    <string name="lighting_go_home_title">伴我回家</string>
+    <string name="lighting_go_home_content">在锁车后，近光灯会点亮一段时间再熄灭，为你照亮回家的路</string>
+    <string name="lighting_turn_signal_title">转向灯变道闪烁次数</string>
+    <string name="lighting_physical_switch_title">物理开关背光亮度</string>
+    <string name="lighting_car_screen_title">车机屏幕亮度</string>
+    <string name="lighting_car_outside_title">车外迎宾灯</string>
+    <string name="lighting_car_inside_title">车内迎宾灯</string>
 </resources>

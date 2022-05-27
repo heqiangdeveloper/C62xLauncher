@@ -42,4 +42,17 @@
         <item>中</item>
         <item>低</item>
     </string-array>
+    <string-array name="lighting_go_home_options">
+        <item>关闭</item>
+        <item>10s</item>
+        <item>20s</item>
+        <item>30s</item>
+        <item>60s</item>
+        <item>120s</item>
+    </string-array>
+    <string-array name="lighting_turn_signal_options">
+        <item>3次</item>
+        <item>5次</item>
+        <item>7次</item>
+    </string-array>
 </resources>
