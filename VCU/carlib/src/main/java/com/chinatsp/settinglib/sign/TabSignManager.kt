@@ -1,6 +1,6 @@
 package com.chinatsp.settinglib.sign
 
-import com.chinatsp.settinglib.manager.ACManager
+import com.chinatsp.settinglib.manager.cabin.ACManager
 
 /**
  * @author : luohong

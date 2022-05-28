@@ -29,9 +29,11 @@ dependencies {
 //    implementation fileTree(dir: 'libs', include: ['*.jar'])
     compileOnly files('libs/classes.jar')
     compileOnly files('libs/classes-full-debug.jar')
-    implementation "androidx.core:core-ktx:1.6.0"
+    implementation deps.corektx
     //noinspection GradleDependency
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+//    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation deps.kotlin
+
 }
 
 repositories {

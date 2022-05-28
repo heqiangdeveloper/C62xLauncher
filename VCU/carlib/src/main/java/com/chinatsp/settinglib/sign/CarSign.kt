@@ -7,7 +7,7 @@ package com.chinatsp.settinglib.sign
  * @desc   :
  * @version: 1.0
  */
-class CarSign(val type: Type) {
+class CarSign(val type: SignalOrigin) {
 
     val signals:MutableSet<Int> by lazy { HashSet() }
 
@@ -21,15 +21,6 @@ class CarSign(val type: Type) {
 
     override fun hashCode(): Int {
         return type.hashCode()
-    }
-
-    enum class Type {
-
-        CAR_CABIN_SERVICE,
-        CAR_DY_CABIN_SERVICE,
-        CAR_HVAC_SERVICE,
-        CAR_DY_HVAC_SERVICE,
-        CAR_POWER_SERVICE
     }
 
 }

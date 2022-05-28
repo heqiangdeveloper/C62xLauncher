@@ -57,6 +57,7 @@
                 android:text="@string/sound_navigation" />
 
             <com.common.xui.widget.picker.VerticalSeekBar
+                android:id="@+id/sound_audio_navi_volume"
                 android:layout_width="@dimen/x44"
                 android:layout_height="@dimen/x180"
                 android:layout_marginTop="@dimen/x10"
@@ -76,6 +77,7 @@
                 android:text="@string/sound_call" />
 
             <com.common.xui.widget.picker.VerticalSeekBar
+                android:id="@+id/sound_audio_phone_volume"
                 android:layout_width="@dimen/x44"
                 android:layout_height="@dimen/x180"
                 android:layout_marginTop="@dimen/x10"
@@ -95,6 +97,7 @@
                 android:text="@string/sound_voice" />
 
             <com.common.xui.widget.picker.VerticalSeekBar
+                android:id="@+id/sound_audio_voice_volume"
                 android:layout_width="@dimen/x44"
                 android:layout_height="@dimen/x180"
                 android:layout_marginTop="@dimen/x10"
@@ -114,6 +117,7 @@
                 android:text="@string/sound_media" />
 
             <com.common.xui.widget.picker.VerticalSeekBar
+                android:id="@+id/sound_audio_media_volume"
                 android:layout_width="@dimen/x44"
                 android:layout_height="@dimen/x180"
                 android:layout_marginTop="@dimen/x10"
@@ -133,6 +137,7 @@
                 android:text="@string/sound_system" />
 
             <com.common.xui.widget.picker.VerticalSeekBar
+                android:id="@+id/sound_audio_system_volume"
                 android:layout_width="@dimen/x44"
                 android:layout_height="@dimen/x180"
                 android:layout_marginTop="@dimen/x10"

@@ -5,7 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.listener.IACListener
-import com.chinatsp.settinglib.manager.ACManager
+import com.chinatsp.settinglib.manager.cabin.ACManager
+import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.common.library.frame.base.BaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -52,11 +53,13 @@ class CabinACViewModel @Inject constructor(app: Application, model: BaseModel) :
     val windLiveData: LiveData<Boolean> by lazy { _windLiveData }
 
 
-    val comfortLiveData: MutableLiveData<Int> by lazy {
+    private val _comfortLiveData: MutableLiveData<Int> by lazy {
         val mutableLiveData = MutableLiveData<Int>()
         mutableLiveData.value = acManager.obtainAutoComfortOption()
         mutableLiveData
     }
+
+    val comfortLiveData: LiveData<Int> by lazy { _comfortLiveData }
 
     override fun onCreate() {
         super.onCreate()
@@ -80,19 +83,23 @@ class CabinACViewModel @Inject constructor(app: Application, model: BaseModel) :
         acManager.unRegisterVcuListener(keySerial, keySerial)
     }
 
-    override fun onACSwitchStatusChanged(status: Boolean, type: ACManager.SwitchNape) {
+    override fun onACSwitchStatusChanged(status: Boolean, type: SwitchNode) {
         val liveData = when (type) {
-            ACManager.SwitchNape.AC_AUTO_ARID -> {
+            SwitchNode.AC_AUTO_ARID -> {
                 _aridLiveData
             }
-            ACManager.SwitchNape.AC_AUTO_DEMIST -> {
+            SwitchNode.AC_AUTO_DEMIST -> {
                 _demistLiveData
             }
-            ACManager.SwitchNape.AC_ADVANCE_WIND -> {
+            SwitchNode.AC_ADVANCE_WIND -> {
                 _windLiveData
             }
         }
         liveData.takeIf { it.value!! xor status }?.value = status
+    }
+
+    override fun onAcComfortOptionChanged(location: Int) {
+        _comfortLiveData.value = location
     }
 
     override fun isNeedUpdate(version: Int): Boolean {
