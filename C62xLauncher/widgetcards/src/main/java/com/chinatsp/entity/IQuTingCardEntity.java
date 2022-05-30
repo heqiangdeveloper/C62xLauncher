@@ -3,21 +3,18 @@ package com.chinatsp.entity;
 import android.content.Context;
 import android.view.View;
 
-import com.chinatsp.douyin.DouyinCardLargeView;
-import com.chinatsp.douyin.DouyinCardView;
-import com.chinatsp.weaher.WeatherCardLargeView;
-import com.chinatsp.weaher.WeatherCardView;
-import com.chinatsp.widgetcards.adapter.BaseCardEntity;
+import com.chinatsp.iquting.IQuTingCardLargeView;
+import com.chinatsp.iquting.IQuTingCardView;
 
-public class DouyinCardEntity extends BaseCardEntity {
+public class IQuTingCardEntity extends BaseCardEntity {
 
     @Override
     public View getLayout(Context context) {
-        return new DouyinCardView(context);
+        return new IQuTingCardView(context);
     }
 
     @Override
     public View getLargeLayout(Context context) {
-        return new DouyinCardLargeView(context);
+        return new IQuTingCardLargeView(context);
     }
 }

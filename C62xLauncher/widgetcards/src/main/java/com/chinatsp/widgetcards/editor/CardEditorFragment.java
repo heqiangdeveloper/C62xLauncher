@@ -6,8 +6,13 @@ import android.widget.Button;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.chinatsp.widgetcards.BaseFragment;
+import launcher.base.component.BaseFragment;
 import com.chinatsp.widgetcards.R;
+import com.chinatsp.widgetcards.editor.adapter.CardSelectedAdapter;
+import com.chinatsp.widgetcards.editor.adapter.CardUnselectedAdapter;
+import com.chinatsp.widgetcards.service.CardsTypeManager;
+
+import launcher.base.recyclerview.SimpleRcvDecoration;
 
 public class CardEditorFragment extends BaseFragment {
 
@@ -22,12 +27,35 @@ public class CardEditorFragment extends BaseFragment {
         mBtnCancel.setOnClickListener(mOnClickListener);
 
         initSelectedCards(rootView);
+        initUnelectedCards(rootView);
     }
 
     private void initSelectedCards(View rootView) {
         RecyclerView rcvSelectedCards = rootView.findViewById(R.id.rcvCardEditorSelect);
-        rcvSelectedCards.setLayoutManager(new LinearLayoutManager(getActivity()));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(RecyclerView.HORIZONTAL);
+        rcvSelectedCards.setLayoutManager(layoutManager);
+        CardSelectedAdapter cardSelectedAdapter = new CardSelectedAdapter(getActivity());
+        cardSelectedAdapter.setData(CardsTypeManager.getInstance().getHomeList());
+        rcvSelectedCards.setAdapter(cardSelectedAdapter);
+        if (rcvSelectedCards.getItemDecorationCount() <= 0) {
+            SimpleRcvDecoration divider = new SimpleRcvDecoration(36, layoutManager);
+            rcvSelectedCards.addItemDecoration(divider);
+        }
+    }
 
+    private void initUnelectedCards(View rootView) {
+        RecyclerView rcvSelectedCards = rootView.findViewById(R.id.rcvCardEditorUnselect);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(RecyclerView.HORIZONTAL);
+        rcvSelectedCards.setLayoutManager(layoutManager);
+        CardUnselectedAdapter cardSelectedAdapter = new CardUnselectedAdapter(getActivity());
+        cardSelectedAdapter.setData(CardsTypeManager.getInstance().getUnselectCardList());
+        rcvSelectedCards.setAdapter(cardSelectedAdapter);
+        if (rcvSelectedCards.getItemDecorationCount() <= 0) {
+            SimpleRcvDecoration divider = new SimpleRcvDecoration(40, layoutManager);
+            rcvSelectedCards.addItemDecoration(divider);
+        }
     }
 
     @Override

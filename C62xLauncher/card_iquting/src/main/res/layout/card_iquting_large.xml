@@ -4,28 +4,25 @@
     android:layout_height="@dimen/card_height_large"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
-        android:id="@+id/ivCardDouyinUnlogin"
-        android:layout_width="@dimen/card_icon_size_lv0"
-        android:layout_height="@dimen/card_icon_size_lv0"
-        android:src="@drawable/card_douyin_unlogin"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="155px"
-        android:layout_marginStart="540px"
-        />
     <TextView
-
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/CardLv2TextView"
-        android:text="登录火山车娱\n发现更多好内容"
+        android:text="@string/iquting_unlogin_slogan"
         android:lineSpacingMultiplier="1.5"
         android:letterSpacing="0.1"
-        app:layout_constraintStart_toStartOf="@id/ivCardDouyinUnlogin"
-        app:layout_constraintEnd_toEndOf="@id/ivCardDouyinUnlogin"
-        app:layout_constraintTop_toBottomOf="@id/ivCardDouyinUnlogin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginTop="35px"
+        />
+
+    <include
+        android:id="@+id/layoutIQuTingPlayWidget"
+        layout="@layout/layout_iquting_play_widget"
+        android:layout_width="@dimen/iquting_play_widget_width"
+        android:layout_height="@dimen/iquting_play_widget_height"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

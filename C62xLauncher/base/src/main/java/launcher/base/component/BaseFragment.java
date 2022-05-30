@@ -1,4 +1,4 @@
-package launcher.base.ui;
+package launcher.base.component;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

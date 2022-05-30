@@ -2,19 +2,12 @@ package com.chinatsp.douyin;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-
-import java.util.LinkedList;
-
-import card.base.recyclerview.SimpleRcvDecoration;
 
 
 public class DouyinCardLargeView extends ConstraintLayout {

@@ -1,2 +1,7 @@
-package card.base;public class ICardStyleChange {
+package card.service;
+
+public interface ICardStyleChange {
+    void expand();
+
+    void collapse();
 }

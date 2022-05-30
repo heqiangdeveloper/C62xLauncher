@@ -17,7 +17,7 @@ import com.chinatsp.weaher.weekday.WeekDayAdapter;
 import java.util.LinkedList;
 import java.util.List;
 
-import card.base.recyclerview.SimpleRcvDecoration;
+import launcher.base.recyclerview.SimpleRcvDecoration;
 
 
 public class WeatherCardLargeView extends ConstraintLayout {

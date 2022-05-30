@@ -9,8 +9,10 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import card.service.ICardStyleChange;
 
-public class DouyinCardView extends ConstraintLayout {
+
+public class DouyinCardView extends ConstraintLayout implements ICardStyleChange {
     private static final String TAG = "WeatherCardLargeView";
 
     public DouyinCardView(@NonNull Context context) {
@@ -34,5 +36,15 @@ public class DouyinCardView extends ConstraintLayout {
     }
     private void init(){
         LayoutInflater.from(getContext()).inflate(R.layout.card_douyin, this);
+    }
+
+    @Override
+    public void expand() {
+
+    }
+
+    @Override
+    public void collapse() {
+
     }
 }

@@ -1,12 +1,12 @@
-package com.chinatsp.widgetcards.editor;
+package com.chinatsp.widgetcards.editor.adapter;
 
 import android.content.Context;
 import android.view.View;
 
 import com.chinatsp.widgetcards.R;
-import com.chinatsp.widgetcards.adapter.BaseCardEntity;
-import com.chinatsp.widgetcards.adapter.CardsAdapter;
-import com.chinatsp.widgetcards.adapter.DefaultCardEntity;
+import com.chinatsp.entity.BaseCardEntity;
+import com.chinatsp.widgetcards.editor.BaseRcvAdapter;
+import com.chinatsp.widgetcards.editor.BaseViewHolder;
 
 public class CardSelectedAdapter extends BaseRcvAdapter<BaseCardEntity> {
     public CardSelectedAdapter(Context context) {
