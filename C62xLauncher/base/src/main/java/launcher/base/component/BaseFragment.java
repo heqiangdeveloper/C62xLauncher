@@ -1,4 +1,4 @@
-package com.chinatsp.widgetcards;
+package launcher.base.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

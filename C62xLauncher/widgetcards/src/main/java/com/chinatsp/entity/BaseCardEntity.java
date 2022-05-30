@@ -1,4 +1,4 @@
-package com.chinatsp.widgetcards.adapter;
+package com.chinatsp.widgetcards.home;
 
 import android.content.Context;
 import android.view.View;
@@ -8,6 +8,10 @@ public abstract class BaseCardEntity {
     private int type;
     private String name;
     private int logoDrawableRes;
+
+
+    private int mSelectBgRes;
+    private int mUnselectBgRes;
 
     private boolean expandState;
 
@@ -48,5 +52,24 @@ public abstract class BaseCardEntity {
 
     public boolean isExpandState(){
         return expandState;
+    }
+
+
+    public int getSelectBgRes() {
+        return mSelectBgRes;
+    }
+
+    public BaseCardEntity setSelectBgRes(int selectBgRes) {
+        mSelectBgRes = selectBgRes;
+        return this;
+    }
+
+    public int getUnselectBgRes() {
+        return mUnselectBgRes;
+    }
+
+    public BaseCardEntity setUnselectBgRes(int unselectBgRes) {
+        mUnselectBgRes = unselectBgRes;
+        return this;
     }
 }

@@ -1,4 +1,4 @@
-package com.chinatsp.widgetcards.adapter;
+package com.chinatsp.widgetcards.home;
 
 import android.content.Context;
 import android.view.View;
