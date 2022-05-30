@@ -43,6 +43,14 @@
                     app:tabSrc="@drawable/lighting_atmosphere_selector"
                     app:tabText="@string/lighting_atmosphere_lamp" />
 
+                <com.chinatsp.vehicle.settings.widget.TabRadio
+                    android:id="@+id/lighting_screen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    app:tabSrc="@drawable/lighting_screen_selector"
+                    app:tabText="@string/lighting_screen" />
+
             </LinearLayout>
         </com.common.xui.widget.XUIWrapContentScrollView>
 

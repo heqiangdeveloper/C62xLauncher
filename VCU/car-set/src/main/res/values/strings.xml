@@ -23,12 +23,13 @@
     <string name="table2">灯光</string>
     <string name="table3">车辆音效</string>
     <string name="table4">驾驶辅助</string>
-    <string name="table5">座舱</string>
+    <string name="table5">行车</string>
     <string name="table6">BEIJING OS</string>
     <string name="back_navigation">返回</string>
     <string name="car_door">车门</string>
     <string name="car_window">车窗</string>
     <string name="car_trunk">电动尾门</string>
+    <string name="car_mirror">外后视镜</string>
     <string name="car_door_smart">车门智能进入</string>
     <string name="acc_off_auto_unlock">熄火自动解锁</string>
     <string name="drive_auto_lock">行车自动落锁</string>
@@ -73,7 +74,10 @@
     <string name="car_trunk_electric_function">电动尾门电动功能</string>
     <string name="car_trunk_intelligence_into">电动尾门智能进入</string>
     <string name="car_trunk_light_flashing">灯光闪烁报警</string>
-    <string name="car_trunk_buzzer_alarms">蜂鸣器报警</string>
+    <string name="car_trunk_buzzer_alarms">蜂鸣器报警开关</string>
+
+    <string name="car_mirror_automatic_folding">后视镜自动折叠</string>
+    <string name="car_mirror_automatic_folding_close">后视镜自动折叠已关闭</string>
 
     <string name="ac_open_window">一键开窗</string>
     <string name="ac_close_window">一键关窗</string>
@@ -107,11 +111,14 @@
 
     <string name="lighting_title">灯光</string>
     <string name="lighting_atmosphere_lamp">氛围灯</string>
+    <string name="lighting_screen">屏幕亮度</string>
     <string name="lighting_go_home_title">伴我回家</string>
-    <string name="lighting_go_home_content">在锁车后，近光灯会点亮一段时间再熄灭，为你照亮回家的路</string>
+    <string name="lighting_go_home_content">在锁车后,近光灯会点亮一段时间再熄灭,为你照亮回家的路</string>
     <string name="lighting_turn_signal_title">转向灯变道闪烁次数</string>
     <string name="lighting_physical_switch_title">物理开关背光亮度</string>
     <string name="lighting_car_screen_title">车机屏幕亮度</string>
+    <string name="lighting_instrument_screen_title">仪表屏幕亮度</string>
+    <string name="lighting_conditioner_screen_title">空调屏幕亮度</string>
     <string name="lighting_car_outside_title">车外迎宾灯</string>
     <string name="lighting_car_inside_title">车内迎宾灯</string>
 

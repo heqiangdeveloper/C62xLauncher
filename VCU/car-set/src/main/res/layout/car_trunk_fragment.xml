@@ -51,13 +51,10 @@
 
             <TextView
                 android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/switch_row_option_style"
                 android:layout_marginTop="@dimen/x15"
                 android:layout_marginBottom="@dimen/x10"
-                android:text="@string/car_trunk_intelligence_into"
-                android:textColor="@color/tab_option_title_text_color"
-                android:textSize="@dimen/tab_option_title_text_size" />
+                android:text="@string/car_trunk_intelligence_into" />
 
             <com.common.xui.widget.tabbar.TabControlView
                 style="@style/tdv_common_style"
