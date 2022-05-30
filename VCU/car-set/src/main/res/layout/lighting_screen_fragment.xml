@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <com.common.xui.widget.XUIWrapContentScrollView
+        android:id="@+id/lighting_manager_ScrollView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="@dimen/x365"
+                android:layout_height="match_parent"
+                android:paddingStart="@dimen/x15"
+                android:paddingEnd="@dimen/x15"
+                android:paddingBottom="@dimen/x20">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/lighting_car_screen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/x95"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/lighting_car_screen_title"
+                        style="@style/switch_row_option_style"
+                        android:layout_marginTop="@dimen/x15"
+                        android:layout_marginBottom="@dimen/x10"
+                        android:text="@string/lighting_car_screen_title"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <com.common.xui.widget.picker.VSeekBar
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/x11"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/lighting_car_screen_title"
+                        app:xsb_insideRangeLineStrokeWidth="@dimen/x32"
+                        app:xsb_outsideRangeLineStrokeWidth="@dimen/x32"
+                        app:xsb_sliderIcon="@null"
+                        app:xsb_verticalPadding="@dimen/x10" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:id="@+id/line1"
+                    style="@style/line"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/lighting_car_screen" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/lighting_instrument_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/x95"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/line1">
+
+                    <TextView
+                        android:id="@+id/lighting_instrument_screen_title"
+                        style="@style/switch_row_option_style"
+                        android:layout_marginTop="@dimen/x15"
+                        android:layout_marginBottom="@dimen/x10"
+                        android:text="@string/lighting_instrument_screen_title"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <com.common.xui.widget.picker.VSeekBar
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/x11"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/lighting_instrument_screen_title"
+                        app:xsb_insideRangeLineStrokeWidth="@dimen/x32"
+                        app:xsb_outsideRangeLineStrokeWidth="@dimen/x32"
+                        app:xsb_sliderIcon="@null"
+                        app:xsb_verticalPadding="@dimen/x10" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:id="@+id/line2"
+                    style="@style/line"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/lighting_instrument_switch" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/lighting_conditioner_screen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/x95"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/line2">
+
+                    <TextView
+                        android:id="@+id/lighting_conditioner_screen_title"
+                        style="@style/switch_row_option_style"
+                        android:layout_marginTop="@dimen/x15"
+                        android:layout_marginBottom="@dimen/x10"
+                        android:text="@string/lighting_conditioner_screen_title"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <com.common.xui.widget.picker.VSeekBar
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/x11"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/lighting_conditioner_screen_title"
+                        app:xsb_insideRangeLineStrokeWidth="@dimen/x32"
+                        app:xsb_outsideRangeLineStrokeWidth="@dimen/x32"
+                        app:xsb_sliderIcon="@null"
+                        app:xsb_verticalPadding="@dimen/x10" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:id="@+id/line3"
+                    style="@style/line"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/lighting_conditioner_screen" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </com.common.xui.widget.XUIWrapContentScrollView>
+</layout>

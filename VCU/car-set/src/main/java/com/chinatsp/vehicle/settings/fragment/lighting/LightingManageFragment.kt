@@ -78,6 +78,9 @@ class LightingManageFragment : BaseFragment<LightingViewModel, LightingManageFra
             R.id.lighting_atmosphere -> {
                 fragment = LightingAtmosphereFragment()
             }
+            R.id.lighting_screen -> {
+                fragment = LightingScreenFragment()
+            }
             else -> {
             }
         }

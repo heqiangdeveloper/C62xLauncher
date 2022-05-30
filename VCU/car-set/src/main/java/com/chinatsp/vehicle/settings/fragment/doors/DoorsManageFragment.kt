@@ -83,6 +83,9 @@ class DoorsManageFragment : BaseFragment<DoorsViewModel, DoorsManageFragmentBind
             R.id.car_trunk -> {
                 fragment = CarTrunkFragment()
             }
+            R.id.car_mirror -> {
+                fragment = CarMirrorFragment()
+            }
             else -> {
             }
         }

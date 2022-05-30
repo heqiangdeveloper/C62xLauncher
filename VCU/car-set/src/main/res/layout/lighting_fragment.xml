@@ -121,8 +121,8 @@
                         android:layout_marginTop="@dimen/x11"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/lighting_physical_switch_title"
-                        app:xsb_insideRangeLineStrokeWidth="@dimen/x20"
-                        app:xsb_outsideRangeLineStrokeWidth="@dimen/x20"
+                        app:xsb_insideRangeLineStrokeWidth="@dimen/x32"
+                        app:xsb_outsideRangeLineStrokeWidth="@dimen/x32"
                         app:xsb_sliderIcon="@null"
                         app:xsb_verticalPadding="@dimen/x10" />
 
@@ -157,8 +157,8 @@
                         android:layout_marginTop="@dimen/x11"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/lighting_car_screen_title"
-                        app:xsb_insideRangeLineStrokeWidth="@dimen/x20"
-                        app:xsb_outsideRangeLineStrokeWidth="@dimen/x20"
+                        app:xsb_insideRangeLineStrokeWidth="@dimen/x32"
+                        app:xsb_outsideRangeLineStrokeWidth="@dimen/x32"
                         app:xsb_sliderIcon="@null"
                         app:xsb_verticalPadding="@dimen/x10" />
 
