@@ -36,4 +36,5 @@ dependencies {
     implementation project(path: ':card_navigation')
     implementation project(path: ':card_douyin')
     implementation project(path: ':base')
+    implementation project(path: ':card_iquting')
 }

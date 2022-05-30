@@ -6,12 +6,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-public class BaseViewHolder extends RecyclerView.ViewHolder {
+public class BaseViewHolder<T>  extends RecyclerView.ViewHolder {
     public BaseViewHolder(@NonNull View itemView) {
         super(itemView);
     }
 
-    public <T> void bind(int position, T t) {
+    public void bind(int position, T t) {
 
     }
 }

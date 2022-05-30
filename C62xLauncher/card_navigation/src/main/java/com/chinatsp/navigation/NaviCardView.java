@@ -8,8 +8,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import card.service.ICardStyleChange;
 
-public class NaviCardView extends ConstraintLayout {
+
+public class NaviCardView extends ConstraintLayout implements ICardStyleChange {
     public NaviCardView(@NonNull Context context) {
         super(context);
         init();
@@ -32,5 +34,15 @@ public class NaviCardView extends ConstraintLayout {
 
     private void init(){
         LayoutInflater.from(getContext()).inflate(R.layout.card_navigation, this);
+    }
+
+    @Override
+    public void expand() {
+
+    }
+
+    @Override
+    public void collapse() {
+
     }
 }

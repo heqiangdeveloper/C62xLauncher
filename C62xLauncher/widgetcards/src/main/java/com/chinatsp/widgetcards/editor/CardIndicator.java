@@ -1,4 +1,4 @@
-package com.chinatsp.widgetcards;
+package com.chinatsp.widgetcards.editor;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -12,6 +12,8 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
+
+import com.chinatsp.widgetcards.R;
 
 public class CardIndicator extends View {
     private static final String TAG = "CardIndicator";

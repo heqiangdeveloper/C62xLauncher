@@ -5,9 +5,6 @@ import android.view.View;
 
 import com.chinatsp.douyin.DouyinCardLargeView;
 import com.chinatsp.douyin.DouyinCardView;
-import com.chinatsp.weaher.WeatherCardLargeView;
-import com.chinatsp.weaher.WeatherCardView;
-import com.chinatsp.widgetcards.adapter.BaseCardEntity;
 
 public class DouyinCardEntity extends BaseCardEntity {
 

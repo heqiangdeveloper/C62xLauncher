@@ -8,16 +8,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.View;
 
+import com.chinatsp.widgetcards.editor.CardIndicator;
 import com.chinatsp.widgetcards.home.ExpandStateManager;
 import com.chinatsp.widgetcards.service.CardsTypeManager;
 import com.chinatsp.widgetcards.home.CardsAdapter;
 
-import card.base.recyclerview.SimpleRcvDecoration;
+import launcher.base.recyclerview.SimpleRcvDecoration;
+import launcher.base.component.BaseFragment;
 import launcher.base.utils.EasyLog;
 
-public class CardsFragment extends BaseFragment {
+public class CardHomeFragment extends BaseFragment {
 
-    private static final String TAG = "CardsFragment";
+    private static final String TAG = "CardHomeFragment";
     private CardsAdapter mCardsAdapter;
     private RecyclerView mRcvCards;
     private CardIndicator mCardIndicator;

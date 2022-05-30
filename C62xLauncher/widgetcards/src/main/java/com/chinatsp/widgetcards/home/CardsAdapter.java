@@ -1,7 +1,6 @@
-package com.chinatsp.widgetcards.adapter;
+package com.chinatsp.widgetcards.home;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.chinatsp.entity.BaseCardEntity;
 import com.chinatsp.widgetcards.R;
 import com.chinatsp.widgetcards.service.CardsTypeManager;
 

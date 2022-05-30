@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingLeft="68px"
     android:paddingRight="68px"
-    tools:context=".CardsFragment">
+    tools:context=".CardHomeFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcvCards"
@@ -15,7 +15,7 @@
         android:overScrollMode="never"
         />
 
-    <com.chinatsp.widgetcards.CardIndicator
+    <com.chinatsp.widgetcards.editor.CardIndicator
         android:id="@+id/cardIndicator"
         android:layout_width="95px"
         android:layout_height="5px"

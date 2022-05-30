@@ -1,4 +1,4 @@
-package card.base.recyclerview;
+package launcher.base.recyclerview;
 
 import android.graphics.Rect;
 import android.view.View;

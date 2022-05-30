@@ -5,8 +5,6 @@ import android.view.View;
 
 import com.chinatsp.weaher.WeatherCardLargeView;
 import com.chinatsp.weaher.WeatherCardView;
-import com.chinatsp.widgetcards.R;
-import com.chinatsp.widgetcards.adapter.BaseCardEntity;
 
 public class WeatherCardEntity extends BaseCardEntity {
 

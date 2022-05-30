@@ -1,4 +1,4 @@
-package com.chinatsp.widgetcards.home;
+package com.chinatsp.entity;
 
 import android.content.Context;
 import android.view.View;

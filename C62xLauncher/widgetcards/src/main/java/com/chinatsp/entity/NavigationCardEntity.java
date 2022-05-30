@@ -5,8 +5,6 @@ import android.view.View;
 
 import com.chinatsp.navigation.NaviCardLargeView;
 import com.chinatsp.navigation.NaviCardView;
-import com.chinatsp.widgetcards.adapter.BaseCardEntity;
-import com.chinatsp.widgetcards.R;
 
 public class NavigationCardEntity extends BaseCardEntity {
 

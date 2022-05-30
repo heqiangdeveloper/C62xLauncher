@@ -77,11 +77,4 @@
         app:layout_constraintTop_toBottomOf="@id/tvCardWeatherDate"
         android:layout_marginTop="43px"
         />
-    <include
-        android:id="@+id/layoutLargeCardView"
-        layout="@layout/card_weather_large"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,10 +1,12 @@
 package com.chinatsp.widgetcards.service;
 
 import com.chinatsp.entity.DouyinCardEntity;
+import com.chinatsp.entity.IQuTingCardEntity;
 import com.chinatsp.entity.NavigationCardEntity;
 import com.chinatsp.entity.WeatherCardEntity;
-import com.chinatsp.widgetcards.adapter.BaseCardEntity;
-import com.chinatsp.widgetcards.adapter.DefaultCardEntity;
+import com.chinatsp.widgetcards.R;
+import com.chinatsp.entity.BaseCardEntity;
+import com.chinatsp.entity.DefaultCardEntity;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -13,14 +15,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import launcher.base.utils.EasyLog;
+
 public class CardsTypeManager {
+    private static final String TAG = "CardsTypeManager";
+
     private CardsTypeManager() {
 
     }
 
-    private static class  Holder{
+    private static class Holder {
         public static CardsTypeManager manager = new CardsTypeManager();
     }
+
     public static CardsTypeManager getInstance() {
         return Holder.manager;
     }
@@ -28,38 +35,122 @@ public class CardsTypeManager {
     @Retention(RetentionPolicy.SOURCE)
     public @interface CardType {
         int NAVIGATION = 1;
-        int MUSIC = 2;
+        int MEDIA = 2;
         int RADIO = 3;
         int VIDEO = 4;
         int WEATHER = 5;
         int PHONE = 6;
-        int VEHICLE= 7;
-        int YI_CONNECT = 8;
+        int VEHICLE_SETTING = 7;
+        int E_CONNECT = 8;
         int XINGCHE_QA = 9;
+        int USER_CENTER = 10;
+        int APP_STORE = 11;
+
+        int EMPTY = 100;
     }
 
     public static final int MAX_SHOWING = 6;
 
-    private Map<Integer, BaseCardEntity> mCardMap = new HashMap<>();
-    private final List<BaseCardEntity> mCardEntityList = new LinkedList<>();
+    private Map<Integer, BaseCardEntity> mHomeCardMap = new HashMap<>();
+    private final List<BaseCardEntity> mHomeCardList = new LinkedList<>();
+    private final List<BaseCardEntity> mUnselectCardList = new LinkedList<>();
 
-    public List<BaseCardEntity> createInitCards(){
-        mCardEntityList.clear();
-        addCard(new NavigationCardEntity().setName("导航").setType(CardType.NAVIGATION));
-        addCard(new DefaultCardEntity().setName("爱趣听").setType(CardType.RADIO));
-        addCard(new DouyinCardEntity().setName("火山车娱").setType(CardType.VIDEO));
-        addCard(new WeatherCardEntity().setName("天气").setType(CardType.WEATHER));
-        addCard(new DefaultCardEntity().setName("亿联").setType(CardType.YI_CONNECT));
-        addCard(new DefaultCardEntity().setName("行车顾问").setType(CardType.XINGCHE_QA));
-        return mCardEntityList;
+    public List<BaseCardEntity> getHomeList() {
+        if (mHomeCardList.isEmpty()) {
+            createInitCards();
+        }
+        EasyLog.d(TAG, "HomeList size:" + mHomeCardList.size());
+        return mHomeCardList;
     }
+    public List<BaseCardEntity> getUnselectCardList() {
+        if (mUnselectCardList.isEmpty()) {
+            createUnselectCards();
+        }
+        EasyLog.d(TAG, "HomeList size:" + mUnselectCardList.size());
+        return mUnselectCardList;
+    }
+
+
 
     public BaseCardEntity findByType(int type) {
-        return mCardMap.get(type);
+        return mHomeCardMap.get(type);
     }
 
-    private void addCard(BaseCardEntity cardEntity) {
-        mCardMap.put(cardEntity.getType(), cardEntity);
-        mCardEntityList.add(cardEntity);
+    private void addHomeCard(BaseCardEntity cardEntity) {
+        mHomeCardMap.put(cardEntity.getType(), cardEntity);
+        mHomeCardList.add(cardEntity);
+    }
+    private void addUnselectCard(BaseCardEntity cardEntity) {
+        mUnselectCardList.add(cardEntity);
+    }
+
+
+    public List<BaseCardEntity> createInitCards() {
+        mHomeCardList.clear();
+        addHomeCard(new NavigationCardEntity().setName("导航").setType(CardType.NAVIGATION)
+                .setSelectBgRes(R.drawable.card_edit_select_navi)
+                .setUnselectBgRes(R.drawable.card_edit_unselect_navi)
+        );
+        addHomeCard(new IQuTingCardEntity().setName("腾讯爱趣听").setType(CardType.RADIO)
+                .setSelectBgRes(R.drawable.card_edit_select_iquting)
+                .setUnselectBgRes(R.drawable.card_edit_unselect_iquting)
+        );
+        addHomeCard(new DouyinCardEntity().setName("火山车娱").setType(CardType.VIDEO)
+                .setSelectBgRes(R.drawable.card_edit_select_douyin)
+                .setUnselectBgRes(R.drawable.card_edit_unselect_douyin)
+        );
+        addHomeCard(new WeatherCardEntity().setName("天气").setType(CardType.WEATHER)
+                .setSelectBgRes(R.drawable.card_edit_select_weather)
+                .setUnselectBgRes(R.drawable.card_edit_unselect_weather)
+        );
+        addHomeCard(new DefaultCardEntity().setName("亿联").setType(CardType.E_CONNECT)
+                .setSelectBgRes(R.drawable.card_edit_select_e_connect)
+                .setUnselectBgRes(R.drawable.card_edit_unselect_e_connect)
+        );
+        addHomeCard(new DefaultCardEntity().setName("行车顾问").setType(CardType.XINGCHE_QA)
+                .setSelectBgRes(R.drawable.card_edit_select_drive_qa)
+                .setUnselectBgRes(R.drawable.card_edit_unselect_drive_qa)
+        );
+        return mHomeCardList;
+    }
+    public List<BaseCardEntity> createUnselectCards() {
+        mUnselectCardList.clear();
+        addUnselectCard(new DefaultCardEntity().setName("个人中心").setType(CardType.USER_CENTER)
+                .setSelectBgRes(R.drawable.card_edit_select_user_center)
+                .setUnselectBgRes(R.drawable.card_edit_unselect_user_center)
+        );
+        addUnselectCard(new DefaultCardEntity().setName("车辆设置").setType(CardType.VEHICLE_SETTING)
+                .setSelectBgRes(R.drawable.card_edit_select_vehicle_setting)
+                .setUnselectBgRes(R.drawable.card_edit_unselect_vehicle_setting)
+        );
+        addUnselectCard(new DefaultCardEntity().setName("电话").setType(CardType.PHONE)
+                .setSelectBgRes(R.drawable.card_edit_select_phone)
+                .setUnselectBgRes(R.drawable.card_edit_unselect_phone)
+        );
+        addUnselectCard(new DefaultCardEntity().setName("多媒体").setType(CardType.MEDIA)
+                .setSelectBgRes(R.drawable.card_edit_select_media)
+                .setUnselectBgRes(R.drawable.card_edit_unselect_media)
+        );
+        addUnselectCard(new DefaultCardEntity().setName("应用商城").setType(CardType.APP_STORE)
+                .setSelectBgRes(R.drawable.card_edit_select_app_store)
+                .setUnselectBgRes(R.drawable.card_edit_unselect_app_store)
+        );
+        addUnselectCard(new DefaultCardEntity().setName("空").setType(CardType.EMPTY)
+                .setSelectBgRes(R.drawable.card_edit_unselect_default)
+                .setUnselectBgRes(R.drawable.card_edit_unselect_default)
+        );
+        addUnselectCard(new DefaultCardEntity().setName("空").setType(CardType.EMPTY)
+                .setSelectBgRes(R.drawable.card_edit_unselect_default)
+                .setUnselectBgRes(R.drawable.card_edit_unselect_default)
+        );
+        addUnselectCard(new DefaultCardEntity().setName("空").setType(CardType.EMPTY)
+                .setSelectBgRes(R.drawable.card_edit_unselect_default)
+                .setUnselectBgRes(R.drawable.card_edit_unselect_default)
+        );
+        addUnselectCard(new DefaultCardEntity().setName("空").setType(CardType.EMPTY)
+                .setSelectBgRes(R.drawable.card_edit_unselect_default)
+                .setUnselectBgRes(R.drawable.card_edit_unselect_default)
+        );
+        return mUnselectCardList;
     }
 }

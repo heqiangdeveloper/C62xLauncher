@@ -7,17 +7,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.chinatsp.widgetcards.R;
-import com.chinatsp.widgetcards.adapter.BaseCardEntity;
+import com.chinatsp.entity.BaseCardEntity;
 import com.chinatsp.widgetcards.editor.BaseViewHolder;
 
 import launcher.base.utils.EasyLog;
 
-public class EditorHomeCardViewHolder extends BaseViewHolder<BaseCardEntity> {
+public class EditorUnselectCardViewHolder extends BaseViewHolder<BaseCardEntity> {
     private ImageView mIcon;
     private TextView mName;
-    private String Tag = "EditorHomeCardViewHolder";
+    private String Tag = "EditorUnselectCardViewHolder";
 
-    public EditorHomeCardViewHolder(@NonNull View itemView) {
+    public EditorUnselectCardViewHolder(@NonNull View itemView) {
         super(itemView);
         mIcon = itemView.findViewById(R.id.ivCardSelectedLogo);
         mName = itemView.findViewById(R.id.tvCardSelectName);
@@ -27,6 +27,7 @@ public class EditorHomeCardViewHolder extends BaseViewHolder<BaseCardEntity> {
     public void bind(int position, BaseCardEntity baseCardEntity) {
         super.bind(position, baseCardEntity);
         mName.setText(baseCardEntity.getName());
+        itemView.setBackgroundResource(baseCardEntity.getUnselectBgRes());
         EasyLog.d(Tag, "bind "+baseCardEntity.getName());
     }
 }
