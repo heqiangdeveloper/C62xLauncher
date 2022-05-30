@@ -139,7 +139,12 @@ public abstract class SimpleAdapter<T, VH extends SimpleAdapter.ViewHolder> impl
             L.d("on mergeStart:(%1$s,%2$s)",selectedPosition,targetPosition);
             CanMergeView canMergeView = targetViewHolder.getCanMergeView();
             if (canMergeView != null) {
-                canMergeView.onMergeStart();
+                if(selectedPosition != targetPosition){
+                    canMergeView.onMergeStart();
+                }else {
+                    //如果是拖动到另一个上，又拖回去了，则认为拖动取消
+                    canMergeView.onMergeCancel();
+                }
             }
             return true;
         }
@@ -160,6 +165,11 @@ public abstract class SimpleAdapter<T, VH extends SimpleAdapter.ViewHolder> impl
             L.d("on Merged:(%1$s,%2$s)",selectedPosition,targetPosition);
             //A. by heqiang
             L.d("targetPosition = " + targetPosition);
+            if(selectedPosition == targetPosition){
+                //如果是拖动到另一个上，又拖回去了，则认为拖动取消，并刷新，防止被覆盖的图标有轮廓
+                notifyDataSetChanged();
+                return;
+            }
             CanMergeView canMergeView = null;
             if(targetViewHolder != null){
                 canMergeView = targetViewHolder.getCanMergeView();
@@ -208,6 +218,8 @@ public abstract class SimpleAdapter<T, VH extends SimpleAdapter.ViewHolder> impl
         public boolean onMove(int selectedPosition, int targetPosition) {
             notifyItemMoved(selectedPosition, targetPosition);
             List<T> list = mData.remove(selectedPosition);
+            //List<T> list = mData.get(selectedPosition);
+            //mData.remove(selectedPosition);
             mData.add(targetPosition, list);
             return true;
         }
@@ -328,7 +340,7 @@ public abstract class SimpleAdapter<T, VH extends SimpleAdapter.ViewHolder> impl
 
         @Override
         public void removeItem(int position) {
-            if(position < mData.size()){
+            if(position != -1 && position < mData.size()){
                 mData.remove(position);
             }
 

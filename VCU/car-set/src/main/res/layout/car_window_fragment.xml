@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="@dimen/x365"
+        android:layout_height="match_parent"
+        android:paddingStart="@dimen/x15"
+        android:paddingEnd="@dimen/x15">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/car_window_remote_control"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/switch_item_option_height"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                style="@style/switch_row_option_style"
+                android:text="@string/car_window_remote_control"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.common.xui.widget.button.switchbutton.SwitchButton
+                android:id="@+id/car_window_remote_control_swb"
+                style="@style/switch_button_style"
+                android:checked="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/line1"
+            style="@style/line"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/car_window_remote_control" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/car_window_lock_car"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/switch_item_option_height"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/line1">
+
+            <TextView
+                style="@style/switch_row_option_style"
+                android:text="@string/car_window_lock_car"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.common.xui.widget.button.switchbutton.SwitchButton
+                android:id="@+id/car_window_lock_car_swb"
+                style="@style/switch_button_style"
+                android:checked="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/line2"
+            style="@style/line"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/car_window_lock_car" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/car_window_rainy_day"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/switch_item_option_height"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/line2">
+
+            <TextView
+                style="@style/switch_row_option_style"
+                android:text="@string/car_window_rainy_day"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.common.xui.widget.button.switchbutton.SwitchButton
+                android:id="@+id/car_window_rainy_day_swb"
+                style="@style/switch_button_style"
+                android:checked="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/line3"
+            style="@style/line"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/car_window_rainy_day" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/car_window_wiper"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/switch_item_option_height"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/line3">
+
+            <TextView
+                style="@style/switch_row_option_style"
+                android:text="@string/car_window_wiper"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.common.xui.widget.button.switchbutton.SwitchButton
+                android:id="@+id/car_window_wiper_swb"
+                style="@style/switch_button_style"
+                android:checked="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/line4"
+            style="@style/line"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/car_window_wiper" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

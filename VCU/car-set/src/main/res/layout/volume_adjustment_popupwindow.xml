@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="960dp"
+    android:layout_height="680dp">
+
+    <RelativeLayout
+        android:id="@+id/pop_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/x28"
+            android:layout_height="@dimen/x28"
+            android:layout_marginStart="@dimen/x15"
+            android:layout_marginTop="@dimen/x15"
+            android:src="@drawable/close_56_white" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/x15"
+            android:text="@string/sound_volume_adjustment"
+            android:textColor="@color/tab_option_title_text_color"
+            android:textSize="@dimen/text_18" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/x28"
+            android:layout_height="@dimen/x28"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/x15"
+            android:layout_marginEnd="@dimen/x15"
+            android:src="@drawable/icon_refresh_white_56" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/x50"
+        android:layout_marginEnd="@dimen/x50"
+        android:layout_marginTop="@dimen/x20"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pop_title">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/pop_txt"
+                android:layout_marginStart="@dimen/x8"
+                android:text="@string/sound_navigation" />
+
+            <com.common.xui.widget.picker.VerticalSeekBar
+                android:id="@+id/sound_audio_navi_volume"
+                android:layout_width="@dimen/x44"
+                android:layout_height="@dimen/x180"
+                android:layout_marginTop="@dimen/x10"
+                app:max_value="100"
+                app:min_value="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/pop_txt"
+                android:layout_marginStart="@dimen/x10"
+                android:text="@string/sound_call" />
+
+            <com.common.xui.widget.picker.VerticalSeekBar
+                android:id="@+id/sound_audio_phone_volume"
+                android:layout_width="@dimen/x44"
+                android:layout_height="@dimen/x180"
+                android:layout_marginTop="@dimen/x10"
+                app:max_value="100"
+                app:min_value="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/pop_txt"
+                android:layout_marginStart="@dimen/x10"
+                android:text="@string/sound_voice" />
+
+            <com.common.xui.widget.picker.VerticalSeekBar
+                android:id="@+id/sound_audio_voice_volume"
+                android:layout_width="@dimen/x44"
+                android:layout_height="@dimen/x180"
+                android:layout_marginTop="@dimen/x10"
+                app:max_value="100"
+                app:min_value="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/pop_txt"
+                android:layout_marginStart="@dimen/x10"
+                android:text="@string/sound_media" />
+
+            <com.common.xui.widget.picker.VerticalSeekBar
+                android:id="@+id/sound_audio_media_volume"
+                android:layout_width="@dimen/x44"
+                android:layout_height="@dimen/x180"
+                android:layout_marginTop="@dimen/x10"
+                app:max_value="100"
+                app:min_value="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/pop_txt"
+                android:layout_marginStart="@dimen/x10"
+                android:text="@string/sound_system" />
+
+            <com.common.xui.widget.picker.VerticalSeekBar
+                android:id="@+id/sound_audio_system_volume"
+                android:layout_width="@dimen/x44"
+                android:layout_height="@dimen/x180"
+                android:layout_marginTop="@dimen/x10"
+                app:max_value="100"
+                app:min_value="1" />
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

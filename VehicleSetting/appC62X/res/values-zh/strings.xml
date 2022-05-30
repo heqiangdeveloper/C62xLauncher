@@ -245,4 +245,19 @@
     <string name="blue_disconnect">蓝牙已断开</string>
     <string name="set_theme_info">正在切换主题，请稍后</string>
 
+    <string name="main_title_name_commonly">常用</string>
+    <string name="main_title_name_car">车门与车窗</string>
+    <string name="main_title_name_light">灯光</string>
+    <string name="main_title_name_sound">车辆音效</string>
+    <string name="main_title_name_cockpit">座舱</string>
+    <string name="main_title_name_driving">驾驶辅助</string>
+    <string name="main_title_name_beijing">BEIJING OS</string>
+
+    <string name="cockpit_title_name_steering_wheel">方向盘</string>
+    <string name="cockpit_title_name_seat">座椅</string>
+    <string name="cockpit_title_name_conditioner">空调</string>
+    <string name="cockpit_title_name_safety">安全</string>
+    <string name="cockpit_title_name_instrument">仪表</string>
+
+
 </resources>

@@ -1,0 +1,132 @@
+<resources>
+    <string name="app_name">车辆设置</string>
+    <string name="author_">作者：</string>
+
+    <string name="result_failure">获取失败</string>
+
+    <string name="label_search_history">历史查询</string>
+    <string name="label_search_result">查询结果</string>
+
+    <string name="tips_search_content">输入的内容不能为空</string>
+
+    <string name="btn_close">关闭</string>
+
+    <string name="oil_92h_">92号：</string>
+    <string name="oil_95h_">95号：</string>
+    <string name="oil_98h_">98号：</string>
+    <string name="oil_0h_">0号：</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="table0">常用</string>
+    <string name="table1">车门与车窗</string>
+    <string name="table2">灯光</string>
+    <string name="table3">车辆音效</string>
+    <string name="table4">驾驶辅助</string>
+    <string name="table5">座舱</string>
+    <string name="table6">BEIJING OS</string>
+    <string name="back_navigation">返回</string>
+    <string name="car_door">车门</string>
+    <string name="car_window">车窗</string>
+    <string name="car_trunk">电动尾门</string>
+    <string name="car_door_smart">车门智能进入</string>
+    <string name="acc_off_auto_unlock">熄火自动解锁</string>
+    <string name="drive_auto_lock">行车自动落锁</string>
+    <string name="vcu_cabin_wheel">方向盘</string>
+    <string name="vcu_cabin_seat">座椅</string>
+    <string name="vcu_cabin_air_conditioner">空调</string>
+    <string name="vcu_cabin_safety">安全</string>
+    <string name="vcu_cabin_instrument">仪表</string>
+    <string name="vcu_cabin_other">其他</string>
+    <string name="vcu_cabin_instrument_title">仪表主题随驾驶模式联动</string>
+
+    <string name="cabin_ac_auto_arid">空调自干燥</string>
+    <string name="cabin_ac_auto_demist">自动除雾</string>
+    <string name="cabin_ac_auto_wind_advance">预通风功能</string>
+    <string name="cabin_ac_auto_comfort">自动空调舒适性</string>
+
+    <string name="cabin_safe_fortify_success_tone">设防成功提示音</string>
+    <string name="cabin_safe_fortify_failure_tone">设防失败提示音</string>
+    <string name="cabin_safe_video_safe_mode">视频安全模式</string>
+
+    <string name="cabin_wheel_electronic_mode">电子助力转向模式</string>
+    <string name="cabin_wheel_press_key">方向盘自定义按键</string>
+    <string name="cabin_wheel_press_key_tv">隐私模式</string>
+    <string name="cabin_wheel_automatic_heating">方向盘自动加热</string>
+    <string name="cabin_wheel_automatic_heating_tv">已关闭</string>
+
+    <string name="cabin_seat_welcomes_guests">主驾迎宾</string>
+    <string name="cabin_seat_close">已关闭</string>
+    <string name="cabin_seat_copilot_guests">副驾迎宾</string>
+    <string name="cabin_seat_automatic_heating">座椅自动加热</string>
+
+    <string name="cabin_other_trailer_remind">拖车提醒</string>
+    <string name="cabin_other_close">已关闭</string>
+    <string name="cabin_other_battery_optimization">蓄电池优化</string>
+    <string name="cabin_other_wireless_charging">无线充电</string>
+
+    <string name="car_window_remote_control">遥控升窗/降窗</string>
+    <string name="car_window_lock_car">锁车自动关窗</string>
+    <string name="car_window_rainy_day">雨天自动关窗</string>
+    <string name="car_window_wiper">雨刮维修</string>
+
+    <string name="car_trunk_electric_function">电动尾门电动功能</string>
+    <string name="car_trunk_intelligence_into">电动尾门智能进入</string>
+    <string name="car_trunk_light_flashing">灯光闪烁报警</string>
+    <string name="car_trunk_buzzer_alarms">蜂鸣器报警</string>
+
+    <string name="ac_open_window">一键开窗</string>
+    <string name="ac_close_window">一键关窗</string>
+
+    <string name="drive_tab_intelligent_cruise">智能巡航</string>
+    <string name="drive_tab_forward_assist">前向辅助</string>
+    <string name="drive_tab_lane_assist">车道辅助</string>
+    <string name="drive_tab_rear_assist">侧后辅助</string>
+    <string name="drive_tab_lighting_assist">灯光辅助</string>
+    <string name="drive_tab_traffic">交通标志</string>
+    <string name="drive_intelligent_cruise_assistant">智能巡航辅助</string>
+    <string name="drive_full_speed_range">全速范围内为驾驶员提供车辆的横纵向辅助</string>
+    <string name="drive_open">已开启</string>
+    <string name="drive_close">已关闭</string>
+    <string name="drive_warning_fcw">前向碰撞预警FCW</string>
+    <string name="drive_fcw_txt_content">检测到前向预警碰撞风险时预警驾驶员</string>
+    <string name="drive_sensitivity_setting">灵敏度设置</string>
+    <string name="drive_aeb_title">自动紧急制动AEB</string>
+    <string name="drive_aeb_content">检测到危险情况时产生一个短促制动</string>
+    <string name="drive_Lane_assist_system">车道辅助系统</string>
+    <string name="drive_Lane_assist_system_content">检测两侧车道线辅助车辆在车道内行驶</string>
+    <string name="drive_bsd_title">盲区监测BSD</string>
+    <string name="drive_bsd_content">提醒驾驶者后方来车情况</string>
+    <string name="drive_dow_title">开门预警DOW</string>
+    <string name="drive_dow_content">开启车门时识别靠近目标并预警</string>
+    <string name="drive_voice_prompt">语音提示</string>
+    <string name="drive_hma_title">智能远光灯HMA</string>
+    <string name="drive_hma_content">远近光自动切换的辅助</string>
+    <string name="drive_sla_title">速度限制提醒SLA</string>
+    <string name="drive_sla_content">探测行驶道路上或道路旁的限速标志</string>
+
+    <string name="lighting_title">灯光</string>
+    <string name="lighting_atmosphere_lamp">氛围灯</string>
+    <string name="lighting_go_home_title">伴我回家</string>
+    <string name="lighting_go_home_content">在锁车后，近光灯会点亮一段时间再熄灭，为你照亮回家的路</string>
+    <string name="lighting_turn_signal_title">转向灯变道闪烁次数</string>
+    <string name="lighting_physical_switch_title">物理开关背光亮度</string>
+    <string name="lighting_car_screen_title">车机屏幕亮度</string>
+    <string name="lighting_car_outside_title">车外迎宾灯</string>
+    <string name="lighting_car_inside_title">车内迎宾灯</string>
+
+    <string name="sound_title">声音</string>
+    <string name="sound_effect">音效</string>
+    <string name="sound_volume_adjustment">音量调节</string>
+    <string name="sound_alarm_volume">仪表报警音量</string>
+    <string name="sound_navigation_mixing">导航混音</string>
+    <string name="sound_volume_compensation">速度音量补偿</string>
+    <string name="sound_system_prompt">系统提示音</string>
+    <string name="sound_loudness_control">响度控制</string>
+    <string name="sound_huawei_sound">华为音效</string>
+    <string name="sound_navigation">导航</string>
+    <string name="sound_call">通话</string>
+    <string name="sound_voice">语音</string>
+    <string name="sound_media">媒体</string>
+    <string name="sound_system">系统</string>
+</resources>

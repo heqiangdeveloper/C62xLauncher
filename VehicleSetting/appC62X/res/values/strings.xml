@@ -259,4 +259,18 @@
     <string name="blue_connect">bluetooth connected</string>
     <string name="blue_disconnect">bluetooth disconnect</string>
     <string name="set_theme_info">Change theme now，waiting</string>
+
+    <string name="main_title_name_commonly">Commonly used</string>
+    <string name="main_title_name_car">Doors and windows</string>
+    <string name="main_title_name_light">Lighting</string>
+    <string name="main_title_name_sound">Vehicle sound effect</string>
+    <string name="main_title_name_cockpit">Cockpit</string>
+    <string name="main_title_name_driving">Driving assistance</string>
+    <string name="main_title_name_beijing">BEIJING OS</string>
+
+    <string name="cockpit_title_name_steering_wheel">Steering wheel</string>
+    <string name="cockpit_title_name_seat">Seat</string>
+    <string name="cockpit_title_name_conditioner">Air Conditioner</string>
+    <string name="cockpit_title_name_safety">Safety</string>
+    <string name="cockpit_title_name_instrument">Instrument</string>
 </resources>

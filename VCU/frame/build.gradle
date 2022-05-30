@@ -1,0 +1,84 @@
+apply plugin: 'com.android.library'
+//apply from: 'bintray.gradle'
+apply plugin: "com.vanniktech.maven.publish"
+apply plugin: 'dagger.hilt.android.plugin'
+
+android {
+
+    compileSdkVersion build_versions.compileSdk
+    buildToolsVersion build_versions.buildTools
+
+    defaultConfig {
+        minSdkVersion build_versions.minSdk
+        targetSdkVersion build_versions.targetSdk
+        versionCode app_version.versionCode
+        versionName app_version.versionName
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    buildFeatures {
+        dataBinding = true
+    }
+
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lintOptions {
+        abortOnError false
+        warning 'InvalidPackage'
+    }
+
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    testImplementation deps.test.junit
+    androidTestImplementation deps.test.android_junit
+    androidTestImplementation deps.test.test
+    androidTestImplementation deps.test.espresso
+    //appcompat
+    compileOnly deps.appcompat
+
+    //okhttp
+    api deps.okhttp
+    //retrofit
+    api deps.retrofit.retrofit
+    api deps.retrofit.gson
+    api deps.retrofit.converter_gson
+
+    //retrofit-helper
+    api deps.jenly.retrofit_helper
+
+    //lifecycle
+    api deps.lifecycle.runtime
+    api deps.lifecycle.extensions
+    annotationProcessor deps.lifecycle.compiler
+
+    //room
+    api deps.room.runtime
+    annotationProcessor deps.room.compiler
+
+    //hilt
+    api deps.dagger.hilt_android
+    annotationProcessor deps.dagger.hilt_compiler
+
+    //log
+    api deps.timber
+}

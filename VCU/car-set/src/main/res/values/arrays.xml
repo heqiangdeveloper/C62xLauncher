@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="three_state_option">
+        <item>关闭</item>
+        <item>5KM</item>
+        <item>10KM</item>
+        <item>15KM</item>
+        <item>20KM</item>
+    </string-array>
+
+    <string-array name="auto_unlock_door_options">
+        <item>关闭</item>
+        <item>主驾熄火解锁</item>
+        <item>四门解锁</item>
+    </string-array>
+
+    <string-array name="cabin_ac_comfort_options">
+        <item>轻柔</item>
+        <item>标准</item>
+        <item>强劲</item>
+    </string-array>
+
+    <string-array name="cabin_meter_system_options">
+        <item>公制</item>
+        <item>英制</item>
+    </string-array>
+
+    <string-array name="cabin_wheel_mode_options">
+        <item>标准</item>
+        <item>运动</item>
+        <item>关联驾驶模式</item>
+    </string-array>
+
+    <string-array name="car_trunk_mode_options">
+        <item>关闭</item>
+        <item>模式一</item>
+        <item>模式二</item>
+    </string-array>
+
+    <string-array name="drive_sensitivity_setting_options">
+        <item>高</item>
+        <item>中</item>
+        <item>低</item>
+    </string-array>
+    <string-array name="lighting_go_home_options">
+        <item>关闭</item>
+        <item>10s</item>
+        <item>20s</item>
+        <item>30s</item>
+        <item>60s</item>
+        <item>120s</item>
+    </string-array>
+    <string-array name="lighting_turn_signal_options">
+        <item>3次</item>
+        <item>5次</item>
+        <item>7次</item>
+    </string-array>
+    <string-array name="sensitivity_setting_options">
+        <item>导航优先</item>
+        <item>直接混音</item>
+    </string-array>
+</resources>

@@ -82,7 +82,7 @@ public class MyAppFragment extends Fragment {
         List<ResolveInfo> allApps = getApps();
         allApps = getAvailabelApps(allApps);
         for(ResolveInfo info : allApps){
-            L.d("name: " + info.activityInfo.loadLabel(getContext().getPackageManager()) + "," + info.activityInfo.packageName);
+            //L.d("name: " + info.activityInfo.loadLabel(getContext().getPackageManager()) + "," + info.activityInfo.packageName);
             List<ResolveInfo> inner = new ArrayList<>();
             inner.add(info);
             data.add(inner);

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="190px"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="29px"
+            android:layout_marginBottom="19px"
+            android:text="@string/drive_auto_lock"
+            android:textColor="@color/tab_option_title_text_color"
+            android:textSize="@dimen/tab_option_title_text_size" />
+
+        <com.common.xui.widget.tabbar.TabControlView
+            android:id="@+id/tcv_drive_lock_delay"
+            style="@style/tdv_common_style"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tcv_items="@array/three_state_option" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="190px"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="29px"
+            android:layout_marginBottom="19px"
+            android:text="@string/acc_off_auto_unlock"
+            android:textColor="@color/tab_option_title_text_color"
+            android:textSize="@dimen/tab_option_title_text_size" />
+
+        <com.common.xui.widget.tabbar.TabControlView
+            android:id="@+id/tcv_door_smart_mode"
+            style="@style/tdv_common_style"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tcv_items="@array/auto_unlock_door_options" />
+    </LinearLayout>
+
+    <com.common.xui.widget.picker.VSeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linearLayout3"
+        app:xsb_insideRangeLineStrokeWidth="@dimen/seek_bar_inside_width"
+        app:xsb_outsideRangeLineStrokeWidth="@dimen/seek_bar_outside_width"
+        app:xsb_sliderIcon="@null"
+        app:xsb_verticalPadding="30px" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="108px"
+        android:layout_marginTop="36px"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/car_door_smart"
+            android:textColor="@color/tab_option_title_text_color"
+            android:textSize="@dimen/h2_text_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.common.xui.widget.button.switchbutton.SwitchButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:swb_animationDuration="200"
+            app:swb_backDrawable="@drawable/switch_track_selector"
+            app:swb_thumbDrawable="@drawable/switch_thumb_selector" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

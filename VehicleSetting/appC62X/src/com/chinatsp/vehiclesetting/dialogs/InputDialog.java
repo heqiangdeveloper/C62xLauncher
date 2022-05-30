@@ -1,6 +1,5 @@
 package com.chinatsp.vehiclesetting.dialogs;
 
-import android.annotation.Nullable;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -18,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.chinatsp.vehiclesetting.R;
 import com.chinatsp.vehiclesetting.utils.HandlerUtils;

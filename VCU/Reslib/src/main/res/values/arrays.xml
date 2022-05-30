@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="three_state_option">
+        <item>关闭</item>
+        <item>5KM</item>
+        <item>10KM</item>
+        <item>15KM</item>
+        <item>20KM</item>
+    </string-array>
+</resources>
