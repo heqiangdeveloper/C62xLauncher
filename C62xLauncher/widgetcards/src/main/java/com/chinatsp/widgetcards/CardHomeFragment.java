@@ -6,12 +6,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.View;
 
-import com.chinatsp.widgetcards.adapter.ExpandStateManager;
+import com.chinatsp.widgetcards.home.ExpandStateManager;
 import com.chinatsp.widgetcards.service.CardsTypeManager;
-import com.chinatsp.widgetcards.adapter.CardsAdapter;
+import com.chinatsp.widgetcards.home.CardsAdapter;
 
 import card.base.recyclerview.SimpleRcvDecoration;
 import launcher.base.utils.EasyLog;
