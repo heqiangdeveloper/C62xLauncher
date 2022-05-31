@@ -1,6 +1,7 @@
 package com.chinatsp.settinglib.manager
 
 import android.car.hardware.CarPropertyValue
+import android.car.hardware.cabin.CarCabinManager
 import com.chinatsp.settinglib.SettingManager
 import com.chinatsp.settinglib.optios.Area
 import com.chinatsp.settinglib.sign.SignalOrigin
@@ -17,6 +18,8 @@ abstract class BaseManager {
     val signalService: SettingManager
         get() = SettingManager.getInstance()
 
+    abstract val concernedSerials: Map<SignalOrigin, Set<Int>>
+
     fun onDispatchSignal(signal: Int, property: CarPropertyValue<*>, signalOrigin: SignalOrigin = SignalOrigin.CABIN_SIGNAL):Boolean {
         if (isConcernedSignal(signal, signalOrigin)) {
             return onHandleConcernedSignal(property, signalOrigin)
@@ -28,7 +31,7 @@ abstract class BaseManager {
 
     abstract fun isConcernedSignal(signal: Int, signalOrigin: SignalOrigin = SignalOrigin.CABIN_SIGNAL):Boolean
 
-    abstract fun getConcernedSignal(signalOrigin: SignalOrigin):Set<Int>?
+    abstract fun getConcernedSignal(signalOrigin: SignalOrigin):Set<Int>
 
     fun doSetProperty(id: Int, value: Int, origin: SignalOrigin, area: Area = Area.GLOBAL): Boolean {
         return signalService.doSetProperty(id, value, origin, area)

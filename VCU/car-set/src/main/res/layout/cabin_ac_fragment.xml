@@ -125,7 +125,8 @@
                 style="@style/tdv_common_style"
                 app:layout_constraintTop_toTopOf="parent"
                 app:tcv_defaultSelection="2"
-                app:tcv_items="@array/cabin_ac_comfort_options" />
+                app:tcv_items="@array/cabin_ac_comfort_options"
+                app:tcv_values="@array/cabin_ac_comfort_option_values" />
 
         </LinearLayout>
 

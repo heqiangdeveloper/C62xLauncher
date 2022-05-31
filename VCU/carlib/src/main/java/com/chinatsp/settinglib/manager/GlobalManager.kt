@@ -1,42 +1,35 @@
-package com.chinatsp.settinglib.manager.cabin
+package com.chinatsp.settinglib.manager
 
 import android.car.hardware.CarPropertyValue
-import com.chinatsp.settinglib.manager.BaseManager
+import com.chinatsp.settinglib.manager.cabin.CabinManager
+import com.chinatsp.settinglib.manager.sound.AudioManager
 import com.chinatsp.settinglib.sign.SignalOrigin
-import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author : luohong
  * @e-mail : luohong1@bdstar.com
- * @date   : 2022/5/20 14:08
+ * @date   : 2022/5/28 18:19
  * @desc   :
  * @version: 1.0
  */
-
-
-class SignalDispatchManager private constructor() : BaseManager() {
+class GlobalManager private constructor() : BaseManager() {
 
     companion object {
-        val TAG: String = SignalDispatchManager::class.java.simpleName
+        val TAG: String = GlobalManager::class.java.simpleName
 
-        val instance: SignalDispatchManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
-            SignalDispatchManager()
+        val instance: GlobalManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+            GlobalManager()
         }
     }
 
-//    private val identity by lazy { System.identityHashCode(this) }
-
-    private val version: AtomicInteger by lazy { AtomicInteger(0) }
-
     private var concernedSerialManagers: List<BaseManager>? = null
 
-    private val cabinManager: CabinManager by lazy { CabinManager.instance }
-
-    private val seatManager: SeatManager by lazy { SeatManager.instance }
 
     val managers: List<BaseManager> by lazy {
-        listOf(cabinManager, seatManager)
+        listOf(CabinManager.instance, AudioManager.instance)
     }
+    override val concernedSerials: Map<SignalOrigin, Set<Int>>
+        get() = HashMap()
 
     override fun onHandleConcernedSignal(
         property: CarPropertyValue<*>,
@@ -57,12 +50,12 @@ class SignalDispatchManager private constructor() : BaseManager() {
     override fun getConcernedSignal(signalOrigin: SignalOrigin): Set<Int> {
         val hashSet = HashSet<Int>()
         managers.forEach { manager ->
-            manager.getConcernedSignal(signalOrigin)?.let {
-                hashSet.addAll(it)
+            manager.getConcernedSignal(signalOrigin).let {
+                if (it.isNotEmpty()) {
+                    hashSet.addAll(it)
+                }
             }
         }
         return hashSet
     }
-
-
 }

@@ -1,8 +1,5 @@
 package com.chinatsp.settinglib.listener
 
-import com.chinatsp.settinglib.manager.cabin.ACManager
-import com.chinatsp.settinglib.sign.SignalOrigin
-
 
 interface IManager {
 

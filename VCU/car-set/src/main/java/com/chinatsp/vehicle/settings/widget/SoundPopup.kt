@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.manager.SoundManager
 import com.chinatsp.vehicle.settings.R
+import com.chinatsp.vehicle.settings.bean.Volume
 import com.common.xui.widget.picker.VerticalSeekBar
 import com.king.base.util.DensityUtils
 
@@ -61,7 +62,7 @@ class SoundPopup : PopupWindow, VerticalSeekBar.OnChangeListener {
         }
     }
 
-    fun setSeekBarMaxValue(type: Type, value: Int) {
+    fun updateVolumeValue(type: Type, volume: Volume?) {
         val seekBar = when (type) {
             Type.NAVI -> naviVolumeVsb
             Type.VOICE -> voiceVolumeVsb
@@ -69,8 +70,12 @@ class SoundPopup : PopupWindow, VerticalSeekBar.OnChangeListener {
             Type.PHONE -> phoneVolumeVsb
             Type.SYSTEM -> systemVolumeVsb
         }
-        LogManager.d("SoundPopup", "setSeekBarMaxValue type:$type, value:$value")
-        seekBar.setMaxValue(value)
+        volume?.let {
+            seekBar.setMaxValue(it.max)
+            seekBar.setMinValue(it.min)
+            seekBar.currentValue = it.pos
+            LogManager.d("SoundPopup", "updateVolumeValue type:$type, volume:$volume, seekbar:$seekBar")
+        }
     }
 
     fun updateSeekBarValue(type: Type, value: Int) {
@@ -115,14 +120,14 @@ class SoundPopup : PopupWindow, VerticalSeekBar.OnChangeListener {
         SYSTEM
     }
 
-    override fun onChange(view: View?, currentValue: Int) {
+    override fun onChange(view: View?, value: Int) {
         val volumeService = SoundManager.getInstance()
         when (view!!.id) {
-            R.id.sound_audio_navi_volume -> {volumeService.naviVolume = currentValue}
-            R.id.sound_audio_voice_volume -> {volumeService.cruiseVolume = currentValue}
-            R.id.sound_audio_media_volume -> {volumeService.mediaVolume = currentValue}
-            R.id.sound_audio_phone_volume -> {volumeService.phoneVolume = currentValue}
-            R.id.sound_audio_system_volume -> {volumeService.systemVolume = currentValue}
+            R.id.sound_audio_navi_volume -> {volumeService.naviVolume = value}
+            R.id.sound_audio_voice_volume -> {volumeService.cruiseVolume = value}
+            R.id.sound_audio_media_volume -> {volumeService.mediaVolume = value}
+            R.id.sound_audio_phone_volume -> {volumeService.phoneVolume = value}
+            R.id.sound_audio_system_volume -> {volumeService.systemVolume = value}
             else -> {}
         }
     }

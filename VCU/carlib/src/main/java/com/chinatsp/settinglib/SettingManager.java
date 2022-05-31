@@ -6,13 +6,11 @@ import static android.hardware.automotive.vehicle.V2_0.VehicleProperty.VENDOR_AM
 import android.annotation.SuppressLint;
 import android.car.Car;
 import android.car.CarNotConnectedException;
-import android.car.VehicleAreaSeat;
 import android.car.VehiclePropertyIds;
 import android.car.hardware.CarPropertyValue;
 import android.car.hardware.CarSensorEvent;
 import android.car.hardware.CarSensorManager;
 import android.car.hardware.cabin.CarCabinManager;
-import android.car.hardware.constant.MCU;
 import android.car.hardware.constant.VEHICLE;
 import android.car.hardware.hvac.CarHvacManager;
 import android.car.hardware.mcu.CarMcuManager;
@@ -40,10 +38,10 @@ import android.provider.Settings;
 import android.text.format.DateFormat;
 
 import com.android.internal.app.LocalePicker;
+import com.chinatsp.settinglib.manager.GlobalManager;
+import com.chinatsp.settinglib.manager.RegisterSignalManager;
 import com.chinatsp.settinglib.manager.SoundManager;
-import com.chinatsp.settinglib.manager.cabin.SignalDispatchManager;
 import com.chinatsp.settinglib.optios.Area;
-import com.chinatsp.settinglib.sign.CarSign;
 import com.chinatsp.settinglib.sign.SignalOrigin;
 import com.chinatsp.settinglib.sign.TabBlock;
 import com.chinatsp.settinglib.sign.TabSignManager;
@@ -51,7 +49,6 @@ import com.chinatsp.settinglib.sign.TabSignManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -104,14 +101,14 @@ public class SettingManager {
     private void unBindCarService() {
         if (null != mCarMcuManager) {
             try {
-                mCarMcuManager.unregisterCallback(mCarMcuEventCallback);
+                mCarMcuManager.unregisterCallback(mcuEventListener);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         if (null != mCarCabinManager) {
             try {
-                mCarCabinManager.unregisterCallback(mCarCabinEventCallback);
+                mCarCabinManager.unregisterCallback(cabinEventListener);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -151,24 +148,19 @@ public class SettingManager {
     }
 
     private void onRegisterMcuListener() {
+        if (!connectService) {
+            return;
+        }
         try {
-            if (connectService) {
-                if (null == mCarMcuManager) {
-                    mCarMcuManager = (CarMcuManager) mCarApi.getCarManager(Car.CAR_MCU_SERVICE);
-                }
-                if (null != mCarMcuManager) {
-                    mCarMcuManager.registerCallback(mCarMcuEventCallback, new int[]{
-                            CarMcuManager.ID_REVERSE_SIGNAL,
-                            CarMcuManager.ID_MCU_LOST_CANID,
-                            CarMcuManager.ID_MCU_ACC_STATE,
-                            //CarMcuManager.ID_SHUTDOWN_WARING_INFO,
-                            CarMcuManager.ID_VENDOR_MCU_POWER_MODE,
-                            CarMcuManager.ID_VENDOR_LIGHT_NIGHT_MODE_STATE,
-                            CarMcuManager.ID_NIGHT_MODE,
-                            CarMcuManager.ID_VENDOR_PHOTO_REQ
-                    });
-                    LogManager.Companion.d(TAG, "registerCallback ok");
-                }
+            if (null == mCarMcuManager) {
+                mCarMcuManager = (CarMcuManager) mCarApi.getCarManager(Car.CAR_MCU_SERVICE);
+            }
+            if (null != mCarMcuManager) {
+//                Set<Integer> signals = GlobalManager.Companion.getInstance().getConcernedSignal(SignalOrigin.MCU_SIGNAL);
+                Set<Integer> signals = RegisterSignalManager.Companion.getMcuSignal();
+                int[] signalArray = signals.stream().mapToInt(Integer::intValue).toArray();
+                mCarMcuManager.registerCallback(mcuEventListener, signalArray);
+                LogManager.Companion.d(TAG, "registerCallback ok");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -190,47 +182,6 @@ public class SettingManager {
         return signalSet;
     }
 
-    private void onRegisterCabinListener() {
-        if (connectService) {
-            try {
-                if (null == mCarCabinManager) {
-                    mCarCabinManager = (CarCabinManager) mCarApi.getCarManager(Car.CABIN_SERVICE);
-                }
-                if (null != mCarCabinManager) {
-//                    Set<Integer> cabinSignals = obtainSignals(CarSign.Type.CAR_CABIN_SERVICE);
-//                    int[] signalArray = cabinSignals.stream().mapToInt(Integer::intValue).distinct().toArray();
-//
-//                    HashSet<Integer> cabinConcernedSerial = ACManager.Companion.getCabinConcernedSerial();
-//                    HashSet<Integer> hvacConcernedSerial = ACManager.Companion.getHvacConcernedSerial();
-//                    cabinConcernedSerial.forEach(it -> {
-//                        LogManager.Companion.d("luohong",  "cabin-ac-cabinConcernedSerial:" + it);
-//                    });
-//                    hvacConcernedSerial.forEach(it -> {
-//                        LogManager.Companion.d("luohong",  "cabin-ac-hvacConcernedSerial:" + it);
-//                    });
-//                    cabinConcernedSerial = SeatManager.Companion.getCabinConcernedSerial();
-//                    hvacConcernedSerial = SeatManager.Companion.getHvacConcernedSerial();
-//                    cabinConcernedSerial.forEach(it -> {
-//                        LogManager.Companion.d("luohong",  "seat-ac-cabinConcernedSerial:" + it);
-//                    });
-//                    hvacConcernedSerial.forEach(it -> {
-//                        LogManager.Companion.d("luohong",  "seat-ac-hvacConcernedSerial:" + it);
-//                    });
-//                    int[] signalArray = Arrays.stream(Cabin.values())
-//                            .flatMapToInt(cabin -> Arrays.stream(cabin.getSignals())).distinct().toArray();
-//                    Arrays.stream(signalArray).forEach(it -> LogManager.Companion.d(TAG, "value:0x" + Integer.toHexString(it).toUpperCase()));
-                    Set<Integer> concernedSignal = SignalDispatchManager.Companion.getInstance()
-                            .getConcernedSignal(SignalOrigin.CABIN_SIGNAL);
-                    int[] signalArray = concernedSignal.stream().mapToInt(Integer::intValue).toArray();
-                    Arrays.stream(signalArray).forEach(it -> LogManager.Companion.d(TAG, "signal:" + it));
-                    mCarCabinManager.registerCallback(mCarCabinEventCallback, signalArray);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public void setGPSData(float[] data) {
         try {
             mCarCabinManager.setFloatArrayProperty(VehiclePropertyIds.DVR_CUR_LOCATION, VEHICLE_AREA_TYPE_GLOBAL, data);
@@ -239,28 +190,39 @@ public class SettingManager {
         }
     }
 
+    private void onRegisterCabinListener() {
+        if (!connectService) {
+            return;
+        }
+        try {
+            if (null == mCarCabinManager) {
+                mCarCabinManager = (CarCabinManager) mCarApi.getCarManager(Car.CABIN_SERVICE);
+            }
+            if (null != mCarCabinManager) {
+//                    int[] signalArray = Arrays.stream(Cabin.values())
+//                            .flatMapToInt(cabin -> Arrays.stream(cabin.getSignals())).distinct().toArray();
+//                    Arrays.stream(signalArray).forEach(it -> LogManager.Companion.d(TAG, "value:0x" + Integer.toHexString(it).toUpperCase()));
+//                    Set<Integer> signals = GlobalManager.Companion.getInstance().getConcernedSignal(SignalOrigin.CABIN_SIGNAL);
+                Set<Integer> signals = RegisterSignalManager.Companion.getCabinSignal();
+                int[] signalArray = signals.stream().mapToInt(Integer::intValue).toArray();
+                mCarCabinManager.registerCallback(cabinEventListener, signalArray);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-    private final CarCabinManager.CarCabinEventCallback mCarCabinEventCallback = new CarCabinManager.CarCabinEventCallback() {
+    private final CarCabinManager.CarCabinEventCallback cabinEventListener = new CarCabinManager.CarCabinEventCallback() {
         @Override
         public void onChangeEvent(CarPropertyValue property) {
             int propertyId = property.getPropertyId();
-            LogManager.Companion.d(TAG, "onChangeEvent:CarPropertyValue propertyId:" + propertyId);
-//            Map<TabBlock.Type, TabBlock> tabBlockMap = TabSignManager.Companion.getInstance().getTabSignMap();
-//            tabBlockMap.forEach((blockType, tabBlock) -> {
-//                if (tabBlock.contains(CarSign.Type.CAR_CABIN_SERVICE, propertyId)) {
-//                    if (TabBlock.Type.CABIN == blockType) {
-//                        ACManager.Companion.getInstance()
-//                                .onPropertyChanged(CarSign.Type.CAR_CABIN_SERVICE, property);
-//                    }
-//                }
-//            });
-
-            SignalDispatchManager.Companion.getInstance().onDispatchSignal(propertyId, property, SignalOrigin.CABIN_SIGNAL);
+            LogManager.Companion.d(TAG, "Cabin onChangeEvent propertyId:" + propertyId);
+            GlobalManager.Companion.getInstance().onDispatchSignal(propertyId, property, SignalOrigin.CABIN_SIGNAL);
         }
 
         @Override
         public void onErrorEvent(int i, int i1) {
-
+            LogManager.Companion.d(TAG, "Cabin onErrorEvent:i:" + i + ", i1:" + i1);
         }
     };
 
@@ -268,83 +230,81 @@ public class SettingManager {
         @Override
         public void onChangeEvent(CarPropertyValue property) {
             int propertyId = property.getPropertyId();
-            LogManager.Companion.d(TAG, "onChangeEvent:CarPropertyValue propertyId:" + propertyId);
-//            if (Cabin.AIR_CONDITIONER.contains(propertyId)) {
-//                ACManager.Companion.getInstance()
-//                        .onPropertyChanged(CarSign.Type.CAR_HVAC_SERVICE, property);
-//                        }
-            SignalDispatchManager.Companion.getInstance().onDispatchSignal(propertyId, property, SignalOrigin.HVAC_SIGNAL);
+            LogManager.Companion.d(TAG, "Hvac onChangeEvent:propertyId:" + propertyId);
+            GlobalManager.Companion.getInstance().onDispatchSignal(propertyId, property, SignalOrigin.HVAC_SIGNAL);
         }
 
         @Override
         public void onErrorEvent(int i, int i1) {
-
+            LogManager.Companion.d(TAG, "Hvac onErrorEvent:i:" + i + ", i1:" + i1);
         }
     };
 
-    private final CarMcuManager.CarMcuEventCallback mCarMcuEventCallback = new CarMcuManager.CarMcuEventCallback() {
+    private final CarMcuManager.CarMcuEventCallback mcuEventListener = new CarMcuManager.CarMcuEventCallback() {
         @Override
-        public void onChangeEvent(CarPropertyValue carPropertyValue) {
-            //LogUtils.d(TAG, "CarMcuManager onChangeEvent id = " + carPropertyValue.getPropertyId());
-            switch (carPropertyValue.getPropertyId()) {
-                case CarMcuManager.ID_VENDOR_MCU_POWER_MODE://电源状态
-                    int powerStatus = (Integer) carPropertyValue.getValue();
-                    LogManager.Companion.d(TAG, "powerStatus= " + powerStatus);//6 8 4
-                    if (powerStatus == MCU.POWER_ON) {//6
-                        for (int i = 0; i < mCarAdapterList.size(); i++) {
-                            mCarAdapterList.get(i).onAccStatusChange(true);
-                        }
-                    } else if (powerStatus == MCU.POWER_OFF) {//4
-                        for (int i = 0; i < mCarAdapterList.size(); i++) {
-                            mCarAdapterList.get(i).onAccStatusChange(false);
-                        }
-                    }
-
-                    break;
-                case CarMcuManager.ID_REVERSE_SIGNAL://倒车状态
-                    int reverseStatus = (Integer) carPropertyValue.getValue();
-                    LogManager.Companion.d(TAG, "ID_REVERSE_SIGNAL= " + reverseStatus);
-                    if (reverseStatus == VEHICLE.ON) {
-                        for (int i = 0; i < mCarAdapterList.size(); i++) {
-                            mCarAdapterList.get(i).onReverseStatusChange(true);
-                        }
-                    } else if (reverseStatus == VEHICLE.OFF) {
-                        for (int i = 0; i < mCarAdapterList.size(); i++) {
-                            mCarAdapterList.get(i).onReverseStatusChange(false);
-                        }
-                    }
-                    break;
-                case CarMcuManager.ID_VENDOR_LIGHT_NIGHT_MODE_STATE://显示模式
-                    break;
-                case CarMcuManager.ID_MCU_ACC_STATE:
-                    int mcu_acc_state = (Integer) carPropertyValue.getValue();
-                    LogManager.Companion.d(TAG, "ID_MCU_ACC_STATE= " + mcu_acc_state);
-                    if (mcu_acc_state == CarSensorEvent.IGNITION_STATE_ACC ||
-                            mcu_acc_state == CarSensorEvent.IGNITION_STATE_ON ||
-                            mcu_acc_state == CarSensorEvent.IGNITION_STATE_START) {
-                        for (int i = 0; i < mCarAdapterList.size(); i++) {
-                            mCarAdapterList.get(i).onPowerStatusChange(mcu_acc_state);
-                        }
-                    } //else if (mcu_acc_state == CarSensorEvent.IGNITION_STATE_OFF) { }
-                    break;
-                case CarMcuManager.ID_MCU_LOST_CANID:
-                    Integer[] lostCanidStatus = (Integer[]) carPropertyValue.getValue();//CAN节点丢失 0x00-正常 0x01-丢失
-                    LogManager.Companion.d(TAG, "ID_MCU_LOST_CANID= " + Arrays.toString(lostCanidStatus));
-                    break;
-                case CarMcuManager.ID_VENDOR_PHOTO_REQ:
-                    if (carPropertyValue.getAreaId() == VehicleAreaSeat.SEAT_ROW_1_CENTER) {
-                        LogManager.Companion.d("ID_VENDOR_PHOTO_REQ " + carPropertyValue.getValue());
-                        for (int i = 0; i < mCarAdapterList.size(); i++) {
-                            mCarAdapterList.get(i).onPhotoReqChange(true);
-                        }
-                    }
-                    break;
-            }
+        public void onChangeEvent(CarPropertyValue property) {
+            int propertyId = property.getPropertyId();
+            LogManager.Companion.d(TAG, "Mcu onChangeEvent:propertyId:" + propertyId);
+            GlobalManager.Companion.getInstance().onDispatchSignal(propertyId, property, SignalOrigin.MCU_SIGNAL);
+//            switch (property.getPropertyId()) {
+//                case CarMcuManager.ID_VENDOR_MCU_POWER_MODE://电源状态
+//                    int powerStatus = (Integer) property.getValue();
+//                    LogManager.Companion.d(TAG, "powerStatus= " + powerStatus);//6 8 4
+//                    if (powerStatus == MCU.POWER_ON) {//6
+//                        for (int i = 0; i < mCarAdapterList.size(); i++) {
+//                            mCarAdapterList.get(i).onAccStatusChange(true);
+//                        }
+//                    } else if (powerStatus == MCU.POWER_OFF) {//4
+//                        for (int i = 0; i < mCarAdapterList.size(); i++) {
+//                            mCarAdapterList.get(i).onAccStatusChange(false);
+//                        }
+//                    }
+//
+//                    break;
+//                case CarMcuManager.ID_REVERSE_SIGNAL://倒车状态
+//                    int reverseStatus = (Integer) property.getValue();
+//                    LogManager.Companion.d(TAG, "ID_REVERSE_SIGNAL= " + reverseStatus);
+//                    if (reverseStatus == VEHICLE.ON) {
+//                        for (int i = 0; i < mCarAdapterList.size(); i++) {
+//                            mCarAdapterList.get(i).onReverseStatusChange(true);
+//                        }
+//                    } else if (reverseStatus == VEHICLE.OFF) {
+//                        for (int i = 0; i < mCarAdapterList.size(); i++) {
+//                            mCarAdapterList.get(i).onReverseStatusChange(false);
+//                        }
+//                    }
+//                    break;
+//                case CarMcuManager.ID_VENDOR_LIGHT_NIGHT_MODE_STATE://显示模式
+//                    break;
+//                case CarMcuManager.ID_MCU_ACC_STATE:
+//                    int mcu_acc_state = (Integer) property.getValue();
+//                    LogManager.Companion.d(TAG, "ID_MCU_ACC_STATE= " + mcu_acc_state);
+//                    if (mcu_acc_state == CarSensorEvent.IGNITION_STATE_ACC ||
+//                            mcu_acc_state == CarSensorEvent.IGNITION_STATE_ON ||
+//                            mcu_acc_state == CarSensorEvent.IGNITION_STATE_START) {
+//                        for (int i = 0; i < mCarAdapterList.size(); i++) {
+//                            mCarAdapterList.get(i).onPowerStatusChange(mcu_acc_state);
+//                        }
+//                    } //else if (mcu_acc_state == CarSensorEvent.IGNITION_STATE_OFF) { }
+//                    break;
+//                case CarMcuManager.ID_MCU_LOST_CANID:
+//                    Integer[] lostCanidStatus = (Integer[]) property.getValue();//CAN节点丢失 0x00-正常 0x01-丢失
+//                    LogManager.Companion.d(TAG, "ID_MCU_LOST_CANID= " + Arrays.toString(lostCanidStatus));
+//                    break;
+//                case CarMcuManager.ID_VENDOR_PHOTO_REQ:
+//                    if (property.getAreaId() == VehicleAreaSeat.SEAT_ROW_1_CENTER) {
+//                        LogManager.Companion.d("ID_VENDOR_PHOTO_REQ " + property.getValue());
+//                        for (int i = 0; i < mCarAdapterList.size(); i++) {
+//                            mCarAdapterList.get(i).onPhotoReqChange(true);
+//                        }
+//                    }
+//                    break;
+//            }
         }
 
         @Override
         public void onErrorEvent(int i, int i1) {
-
+            LogManager.Companion.d(TAG, "Mcu onErrorEvent:i:" + i + ", i1:" + i1);
         }
     };
 
@@ -357,7 +317,7 @@ public class SettingManager {
         return false;
     }
 
-    private final CarSensorManager.OnSensorChangedListener listener = new CarSensorManager.OnSensorChangedListener() {
+    private final CarSensorManager.OnSensorChangedListener sensorEventlistener = new CarSensorManager.OnSensorChangedListener() {
         @Override
         public void onSensorChanged(CarSensorEvent carSensorEvent) {
             //LogUtils.d(TAG, "onSensorChanged " + carSensorEvent.sensorType);
@@ -1366,6 +1326,8 @@ public class SettingManager {
             onRegisterSensorListener();
             onRegisterCabinListener();
             onRegisterHvacListener();
+            onRegisterPowerListener();
+
             updateAdapterConnect();
             LogManager.Companion.d(TAG, "onServiceConnected end");
         }
@@ -1387,13 +1349,26 @@ public class SettingManager {
         }
     }
 
+    private void onRegisterPowerListener() {
+        if (!connectService) {
+            return;
+        }
+        try {
+            if (null == mCarPowerManager) {
+                mCarPowerManager = (CarPowerManager) mCarApi.getCarManager(Car.POWER_SERVICE);
+            }
+        } catch (CarNotConnectedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     private void initAudioManager() {
         if (connectService) {
             if (null == mCarAudioManager) {
                 try {
                     mCarAudioManager = (CarAudioManager) mCarApi.getCarManager(Car.AUDIO_SERVICE);
                     SoundManager.getInstance().initAudioManager(mCarAudioManager);
-                    LogManager.Companion.d(TAG, "initAudioManager==================" + mCarAudioManager);
                 } catch (CarNotConnectedException e) {
                     e.printStackTrace();
                 }
@@ -1411,11 +1386,8 @@ public class SettingManager {
                 hvacManager = (CarHvacManager) mCarApi.getCarManager(Car.HVAC_SERVICE);
             }
             if (null != hvacManager) {
-//                Set<Integer> signals = obtainSignals(CarSign.Type.CAR_HVAC_SERVICE);
-                Set<Integer> signals = SignalDispatchManager.Companion.getInstance().getConcernedSignal(SignalOrigin.HVAC_SIGNAL);
+                Set<Integer> signals = RegisterSignalManager.Companion.getHvacSignal();
                 int[] signalArray = signals.stream().mapToInt(Integer::intValue).toArray();
-//                int[] signalArray = Arrays.stream(Cabin.values()).flatMapToInt(cabin -> Arrays.stream(cabin.getSignals()))
-//                        .distinct().toArray();
                 hvacManager.registerCallback(hvacEventListener);
             }
         } catch (Exception e) {
@@ -1450,9 +1422,9 @@ public class SettingManager {
                 mCarSensorManager = (CarSensorManager) mCarApi.getCarManager(Car.SENSOR_SERVICE);
             }
             if (null != mCarSensorManager) {
-                mCarSensorManager.registerListener(listener, CarSensorManager.SENSOR_TYPE_IGNITION_STATE,
+                mCarSensorManager.registerListener(sensorEventlistener, CarSensorManager.SENSOR_TYPE_IGNITION_STATE,
                         CarSensorManager.SENSOR_RATE_NORMAL);//acc
-                mCarSensorManager.registerListener(listener, CarSensorManager.SENSOR_TYPE_NIGHT,
+                mCarSensorManager.registerListener(sensorEventlistener, CarSensorManager.SENSOR_TYPE_NIGHT,
                         CarSensorManager.SENSOR_RATE_NORMAL);//小灯，白天黑夜注册监听
             }
         } catch (CarNotConnectedException e) {

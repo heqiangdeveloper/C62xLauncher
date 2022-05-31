@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 
 
-class CabinManager private constructor(): BaseManager() {
+class CabinManager private constructor() : BaseManager() {
 
 //    private val version: AtomicInteger by lazy { AtomicInteger(0) }
 //
@@ -30,13 +30,6 @@ class CabinManager private constructor(): BaseManager() {
     private val acManager: ACManager by lazy { ACManager.instance }
 
     private val seatManager: SeatManager by lazy { SeatManager.instance }
-
-    val managers: List<out BaseManager> by lazy {
-        ArrayList<BaseManager>().apply {
-            add(acManager)
-            add(seatManager)
-        }
-    }
 
     override fun onHandleConcernedSignal(
         property: CarPropertyValue<*>,
@@ -54,18 +47,11 @@ class CabinManager private constructor(): BaseManager() {
         return list.isNotEmpty()
     }
 
-    override fun getConcernedSignal(signalOrigin: SignalOrigin): Set<Int>? {
-        val hashSet = HashSet<Int>()
-        managers.forEach {
-            manager ->
-            manager.getConcernedSignal(signalOrigin)?.let {
-                hashSet.addAll(it)
-            }
-        }
-        return hashSet
+    override fun getConcernedSignal(signalOrigin: SignalOrigin): Set<Int> {
+        return concernedSerials[signalOrigin] ?: HashSet()
     }
 
-    companion object: ISignal {
+    companion object : ISignal {
 
         override val TAG: String = CabinManager::class.java.simpleName
 
@@ -73,24 +59,26 @@ class CabinManager private constructor(): BaseManager() {
             CabinManager()
         }
 
-        override val mcuConcernedSerial: Set<Int>by lazy {
-            val hashSet = HashSet<Int>()
-            hashSet.apply {
+        val managers: List<out BaseManager> by lazy {
+            ArrayList<BaseManager>().apply {
+                add(ACManager.instance)
+                add(SeatManager.instance)
             }
         }
 
-        override val cabinConcernedSerial: Set<Int> by lazy {
-            val hashSet = HashSet<Int>()
-            hashSet.apply {
-                addAll(ACManager.cabinConcernedSerial)
-                addAll(SeatManager.cabinConcernedSerial)
-            }
-        }
-        override val hvacConcernedSerial: Set<Int> by lazy {
-            val hashSet = HashSet<Int>()
-            hashSet.apply {
-                addAll(ACManager.hvacConcernedSerial)
-                addAll(SeatManager.hvacConcernedSerial)
+    }
+
+    override val concernedSerials: Map<SignalOrigin, Set<Int>> by lazy {
+        HashMap<SignalOrigin, Set<Int>>().apply {
+            val keySet = managers.flatMap {
+                it.concernedSerials.keys
+            }.toSet()
+            keySet.forEach { key ->
+                val hashSet = HashSet<Int>()
+                managers.forEach { manager ->
+                    hashSet.addAll(manager.getConcernedSignal(key))
+                }
+                put(key, hashSet)
             }
         }
     }

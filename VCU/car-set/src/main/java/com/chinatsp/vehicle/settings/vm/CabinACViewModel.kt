@@ -3,7 +3,6 @@ package com.chinatsp.vehicle.settings.vm
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.listener.IACListener
 import com.chinatsp.settinglib.manager.cabin.ACManager
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -25,8 +24,6 @@ class CabinACViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val acManager: ACManager by lazy { ACManager.instance }
 
-    private var keySerial: Int = 0
-
     private val _aridLiveData: MutableLiveData<Boolean> by lazy {
         MutableLiveData<Boolean>().also {
             it.value = acManager.aridStatus.get()
@@ -36,66 +33,49 @@ class CabinACViewModel @Inject constructor(app: Application, model: BaseModel) :
     val aridLiveData: LiveData<Boolean> by lazy { _aridLiveData }
 
     private val _demistLiveData: MutableLiveData<Boolean> by lazy {
-        val mutableLiveData = MutableLiveData<Boolean>()
-        mutableLiveData.value = acManager.demistStatus.get()
-        mutableLiveData
+        MutableLiveData<Boolean>().apply {
+            value = acManager.demistStatus.get()
+        }
     }
 
     val demistLiveData: LiveData<Boolean> by lazy { _demistLiveData }
 
 
     private val _windLiveData: MutableLiveData<Boolean> by lazy {
-        val mutableLiveData = MutableLiveData<Boolean>()
-        mutableLiveData.value = acManager.windStatus.get()
-        mutableLiveData
+        MutableLiveData<Boolean>().apply {
+            value = acManager.windStatus.get()
+        }
     }
 
     val windLiveData: LiveData<Boolean> by lazy { _windLiveData }
 
 
     private val _comfortLiveData: MutableLiveData<Int> by lazy {
-        val mutableLiveData = MutableLiveData<Int>()
-        mutableLiveData.value = acManager.obtainAutoComfortOption()
-        mutableLiveData
+        MutableLiveData<Int>().apply {
+            value = acManager.obtainAutoComfortOption()
+        }
     }
 
     val comfortLiveData: LiveData<Int> by lazy { _comfortLiveData }
 
     override fun onCreate() {
         super.onCreate()
-        LogManager.d("onCreate!!")
         keySerial = acManager.onRegisterVcuListener(0, this)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        LogManager.d("onResume!!")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        LogManager.d("onPause!!")
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        LogManager.d("onDestroy!!")
         acManager.unRegisterVcuListener(keySerial, keySerial)
     }
 
     override fun onACSwitchStatusChanged(status: Boolean, type: SwitchNode) {
         val liveData = when (type) {
-            SwitchNode.AC_AUTO_ARID -> {
-                _aridLiveData
-            }
-            SwitchNode.AC_AUTO_DEMIST -> {
-                _demistLiveData
-            }
-            SwitchNode.AC_ADVANCE_WIND -> {
-                _windLiveData
-            }
+            SwitchNode.AC_AUTO_ARID -> _aridLiveData
+            SwitchNode.AC_AUTO_DEMIST -> _demistLiveData
+            SwitchNode.AC_ADVANCE_WIND -> _windLiveData
+            else -> null
         }
-        liveData.takeIf { it.value!! xor status }?.value = status
+        liveData?.takeIf { it.value!! xor status }?.value = status
     }
 
     override fun onAcComfortOptionChanged(location: Int) {

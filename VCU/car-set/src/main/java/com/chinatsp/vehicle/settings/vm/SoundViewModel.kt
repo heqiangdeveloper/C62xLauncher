@@ -1,45 +1,88 @@
 package com.chinatsp.vehicle.settings.vm
 
 import android.app.Application
-import android.view.View
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.listener.sound.ISoundListener
 import com.chinatsp.settinglib.manager.SoundManager
+import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
+import com.chinatsp.vehicle.settings.bean.Volume
 import com.common.library.frame.base.BaseModel
-import com.common.xui.widget.picker.VerticalSeekBar
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class SoundViewModel @Inject constructor(app: Application, model: BaseModel)
-    : BaseViewModel(app, model){
+    : BaseViewModel(app, model), ISoundListener{
     val tabLocationLiveData: MutableLiveData<Int> by lazy { MutableLiveData(-1) }
 
-    val phoneSoundVolume: MutableLiveData<Int> by lazy {
-        MutableLiveData(1).also { it.value = SoundManager.getInstance().phoneVolume }
-    }
-    val naviSoundVolume: MutableLiveData<Int> by lazy {
-        MutableLiveData(1).also { it.value = SoundManager.getInstance().naviVolume }
-    }
-    val voiceSoundVolume: MutableLiveData<Int> by lazy {
-        MutableLiveData(1).also { it.value = SoundManager.getInstance().cruiseVolume }
-    }
-    val mediaSoundVolume: MutableLiveData<Int> by lazy {
-        MutableLiveData(1).also { it.value = SoundManager.getInstance().mediaVolume }
-    }
-    val systemSoundVolume: MutableLiveData<Int> by lazy {
-        MutableLiveData(1).also { it.value = SoundManager.getInstance().systemVolume }
+    override fun onCreate() {
+        super.onCreate()
+        keySerial = VoiceManager.instance.onRegisterVcuListener(0, this)
     }
 
-    val phoneMaxVolume:Int
-        get() = SoundManager.getInstance().phoneMaxVolume
-    val naviMaxVolume:Int
-        get() = SoundManager.getInstance().naviMaxVolume
-    val voiceMaxVolume:Int
-        get() = SoundManager.getInstance().cruiseMaxVolume
-    val mediaMaxVolume:Int
-        get() = SoundManager.getInstance().mediaMaxVolume
-    val systemMaxVolume:Int
-        get() = SoundManager.getInstance().systemMaxVolume
+    override fun onDestroy() {
+        super.onDestroy()
+        VoiceManager.instance.unRegisterVcuListener(keySerial)
+    }
+
+    val naviVolume: MutableLiveData<Volume> by lazy {
+        MutableLiveData<Volume>().apply {
+            val pos = SoundManager.getInstance().naviVolume
+            val max = SoundManager.getInstance().naviMaxVolume
+            value = Volume(0, max, pos)
+        }
+    }
+
+    val mediaVolume: MutableLiveData<Volume> by lazy {
+        MutableLiveData<Volume>().apply {
+            val pos = SoundManager.getInstance().mediaVolume
+            val max = SoundManager.getInstance().mediaMaxVolume
+            value = Volume(0, max, pos)
+        }
+    }
+
+    val phoneVolume: MutableLiveData<Volume> by lazy {
+        MutableLiveData<Volume>().apply {
+            val pos = SoundManager.getInstance().phoneVolume
+            val max = SoundManager.getInstance().phoneMaxVolume
+            value = Volume(0, max, pos)
+        }
+    }
+
+    val voiceVolume: MutableLiveData<Volume> by lazy {
+        MutableLiveData<Volume>().apply {
+            val pos = SoundManager.getInstance().cruiseVolume
+            val max = SoundManager.getInstance().cruiseMaxVolume
+            value = Volume(0, max, pos)
+        }
+    }
+
+    val systemVolume: MutableLiveData<Volume> by lazy {
+        MutableLiveData<Volume>().apply {
+            val pos = SoundManager.getInstance().systemVolume
+            val max = SoundManager.getInstance().systemMaxVolume
+            value = Volume(0, max, pos)
+        }
+    }
+
+    override fun onSoundVolumeChanged(pos: Int, serial: String) {
+        val liveData = when (serial) {
+            "NAVI" -> naviVolume
+            "VOICE" -> voiceVolume
+            "PHONE" -> phoneVolume
+            "MEDIA" -> mediaVolume
+            "SYSTEM" -> systemVolume
+            else -> null
+        }
+        liveData?.value?.let {
+            liveData.value = it.copy(pos = pos)
+        }
+    }
+
+    override fun isNeedUpdate(version: Int): Boolean {
+       return true
+    }
+
 
 }

@@ -18,6 +18,8 @@ import javax.inject.Inject
 open class BaseViewModel @Inject constructor(application: Application, model: BaseModel) :
     DataViewModel(application, model) {
 
+    var keySerial: Int = 0
+
     val apiService: ApiService by lazy {
         getRetrofitService(ApiService::class.java)
     }

@@ -2,8 +2,8 @@ package com.chinatsp.settinglib.manager.sound
 
 import android.car.hardware.CarPropertyValue
 import com.chinatsp.settinglib.manager.BaseManager
+import com.chinatsp.settinglib.manager.cabin.CabinManager
 import com.chinatsp.settinglib.sign.SignalOrigin
-import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author : luohong
@@ -14,24 +14,26 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 
 
-class SoundSignalManager private constructor() : BaseManager() {
+class AudioManager private constructor() : BaseManager() {
 
     companion object {
-        val TAG: String = SoundSignalManager::class.java.simpleName
+        val TAG: String = AudioManager::class.java.simpleName
 
-        val INSTANCE: SoundSignalManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
-            SoundSignalManager()
+        val instance: AudioManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+            AudioManager()
+        }
+
+        val managers: List<out BaseManager> by lazy {
+            ArrayList<BaseManager>().apply {
+                add(VoiceManager.instance)
+            }
         }
     }
-
-//    private val identity by lazy { System.identityHashCode(this) }
-
-    private val version: AtomicInteger by lazy { AtomicInteger(0) }
 
     private var concernedSerialManagers: List<BaseManager>? = null
 
     val managers: List<BaseManager> by lazy {
-        listOf(SoundAudioManager.INSTANCE)
+        listOf(VoiceManager.instance)
     }
 
     override fun onHandleConcernedSignal(
@@ -53,11 +55,28 @@ class SoundSignalManager private constructor() : BaseManager() {
     override fun getConcernedSignal(signalOrigin: SignalOrigin): Set<Int> {
         val hashSet = HashSet<Int>()
         managers.forEach { manager ->
-            manager.getConcernedSignal(signalOrigin)?.let {
-                hashSet.addAll(it)
+            manager.getConcernedSignal(signalOrigin).let {
+                if (it.isNotEmpty()) {
+                    hashSet.addAll(it)
+                }
             }
         }
         return hashSet
+    }
+
+    override val concernedSerials: Map<SignalOrigin, Set<Int>> by lazy {
+        HashMap<SignalOrigin, Set<Int>>().apply {
+            val keySet = managers.flatMap {
+                it.concernedSerials.keys
+            }.toSet()
+            keySet.forEach { key ->
+                val hashSet = HashSet<Int>()
+                managers.forEach { manager ->
+                    hashSet.addAll(manager.getConcernedSignal(key))
+                }
+                put(key, hashSet)
+            }
+        }
     }
 
 

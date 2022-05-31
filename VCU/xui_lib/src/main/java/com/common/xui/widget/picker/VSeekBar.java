@@ -15,6 +15,7 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.Xfermode;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewParent;
@@ -468,6 +469,7 @@ public class VSeekBar extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (!isEnabled()) {
+            Log.d("VSeekBar", "11111111111111111");
             return false;
         }
 
@@ -487,7 +489,7 @@ public class VSeekBar extends View {
                         && !checkTouchingMinTarget(actionIndex, event)) {
                     jumpToPosition(actionIndex, event);
                 }
-
+                Log.d("VSeekBar", "MotionEvent.ACTION_DOWN");
                 invalidate();
                 break;
 
@@ -497,7 +499,7 @@ public class VSeekBar extends View {
 
                 mTouchingMinTarget.remove(event.getPointerId(actionIndex));
                 mTouchingMaxTarget.remove(event.getPointerId(actionIndex));
-
+                Log.d("VSeekBar", "MotionEvent.ACTION_POINTER_UP");
                 invalidate();
                 break;
 
@@ -505,20 +507,25 @@ public class VSeekBar extends View {
                 updateTouchStatus(true);
 
                 for (int i = 0; i < event.getPointerCount(); i++) {
-                    if (mTouchingMinTarget.contains(event.getPointerId(i))) {
-                        int touchX = (int) event.getX(i);
-                        touchX = clamp(touchX, mLineStartX, mLineEndX);
-                        if (touchX >= mMaxPosition) {
-                            mMaxPosition = touchX;
-                            callMaxChangedCallbacks();
-                        }
-                    }
-                    if (mTouchingMaxTarget.contains(event.getPointerId(i))) {
-                        int touchX = (int) event.getX(i);
-                        touchX = clamp(touchX, mLineStartX, mLineEndX);
-                        mMaxPosition = touchX;
-                        callMaxChangedCallbacks();
-                    }
+//                    if (mTouchingMinTarget.contains(event.getPointerId(i))) {
+//                        int touchX = (int) event.getX(i);
+//                        touchX = clamp(touchX, mLineStartX, mLineEndX);
+//                        if (touchX >= mMaxPosition) {
+//                            mMaxPosition = touchX;
+//                            callMaxChangedCallbacks();
+//                        }
+//                    }
+//                    if (mTouchingMaxTarget.contains(event.getPointerId(i))) {
+//                        int touchX = (int) event.getX(i);
+//                        touchX = clamp(touchX, mLineStartX, mLineEndX);
+//                        mMaxPosition = touchX;
+//                        callMaxChangedCallbacks();
+//                    }
+
+                    int touchX = (int) event.getX(i);
+                    touchX = clamp(touchX, mLineStartX, mLineEndX);
+                    mMaxPosition = touchX;
+                    callMaxChangedCallbacks();
                 }
                 invalidate();
                 break;
@@ -537,7 +544,7 @@ public class VSeekBar extends View {
                         jumpToPosition(i, event);
                     }
                 }
-
+                Log.d("VSeekBar", "MotionEvent.ACTION_POINTER_DOWN");
                 break;
 
             case MotionEvent.ACTION_CANCEL:
@@ -545,6 +552,8 @@ public class VSeekBar extends View {
 
                 mTouchingMinTarget.clear();
                 mTouchingMaxTarget.clear();
+                Log.d("VSeekBar", "MotionEvent.ACTION_CANCEL");
+
                 invalidate();
                 break;
 
