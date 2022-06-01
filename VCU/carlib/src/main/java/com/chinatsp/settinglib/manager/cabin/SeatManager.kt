@@ -9,12 +9,10 @@ import com.chinatsp.settinglib.SettingManager
 import com.chinatsp.settinglib.bean.Status1
 import com.chinatsp.settinglib.listener.IACListener
 import com.chinatsp.settinglib.listener.IBaseListener
-import com.chinatsp.settinglib.listener.cabin.IAcManager
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.optios.Area
 import com.chinatsp.settinglib.optios.SwitchNode
-import com.chinatsp.settinglib.sign.CarSign
 import com.chinatsp.settinglib.sign.SignalOrigin
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
@@ -57,6 +55,13 @@ class SeatManager private constructor(): BaseManager(), IConcernChanged {
 
     val version: AtomicInteger by lazy { AtomicInteger(0) }
 
+    override val concernedSerials: Map<SignalOrigin, Set<Int>> by lazy {
+        HashMap<SignalOrigin, Set<Int>>().apply {
+            val cabinSet = HashSet<Int> ().apply {
+            }
+            put(SignalOrigin.CABIN_SIGNAL, cabinSet)
+        }
+    }
 
 
     override fun onHandleConcernedSignal(
@@ -68,23 +73,12 @@ class SeatManager private constructor(): BaseManager(), IConcernChanged {
     }
 
     override fun isConcernedSignal(signal: Int, signalOrigin: SignalOrigin): Boolean {
-        return when (signalOrigin) {
-            SignalOrigin.CABIN_SIGNAL -> {
-                cabinConcernedSerial.contains(signal)
-            }
-            SignalOrigin.HVAC_SIGNAL -> {
-                hvacConcernedSerial.contains(signal)
-            }
-            else -> false
-        }
+        val signals = getConcernedSignal(signalOrigin)
+        return signals.contains(signal)
     }
 
-    override fun getConcernedSignal(signalOrigin: SignalOrigin): Set<Int>? {
-        return when (signalOrigin) {
-            SignalOrigin.CABIN_SIGNAL -> cabinConcernedSerial
-            SignalOrigin.HVAC_SIGNAL -> hvacConcernedSerial
-            else -> null
-        }
+    override fun getConcernedSignal(signalOrigin: SignalOrigin): Set<Int> {
+        return concernedSerials[signalOrigin] ?: HashSet()
     }
 
     private fun issueCabinIntProperty(id: Int, value: Int, area: Area = Area.GLOBAL): Boolean {
@@ -121,22 +115,7 @@ class SeatManager private constructor(): BaseManager(), IConcernChanged {
      * @param isStatus 开关期望状态
      */
     fun doSwitchACOption(switchNode: SwitchNode, isStatus: Boolean): Boolean {
-        val status = if (isStatus) {
-            Status1.ON
-        } else {
-            Status1.OFF
-        }
-        return when (switchNode) {
-            SwitchNode.AC_AUTO_ARID -> {
-                issueCabinIntProperty(autoAridProperty, status.value)
-            }
-            SwitchNode.AC_AUTO_DEMIST -> {
-                issueHvacIntProperty(autoDemistProperty, status.value)
-            }
-            SwitchNode.AC_ADVANCE_WIND -> {
-                issueCabinIntProperty(autoWindAdvanceProperty, status.value)
-            }
-        }
+        return false
     }
 
     override fun onPropertyChanged(type: SignalOrigin, property: CarPropertyValue<*>) {
@@ -225,25 +204,6 @@ class SeatManager private constructor(): BaseManager(), IConcernChanged {
             SeatManager()
         }
 
-        override val mcuConcernedSerial: Set<Int>by lazy {
-            val hashSet = HashSet<Int>()
-            hashSet.apply {
-            }
-        }
-
-        override val cabinConcernedSerial: Set<Int> by lazy {
-            val hashSet = HashSet<Int>()
-            hashSet.apply {
-                add(CarCabinManager.ID_ACSELFSTSDISP)/**空调自干燥*/
-                add(CarCabinManager.ID_ACPREVENTNDISP)/**预通风功能*/
-                add(CarCabinManager.ID_ACCMFTSTSDISP) /**空调舒适性状态显示*/
-            }
-        }
-
-        override val hvacConcernedSerial: Set<Int> by lazy {
-            val hashSet = HashSet<Int>()
-            hashSet.apply {}
-        }
     }
 
 }

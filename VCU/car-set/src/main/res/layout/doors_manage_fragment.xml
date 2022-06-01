@@ -50,6 +50,14 @@
                     app:tabSrc="@drawable/vcu_ic_car_trunk_selector"
                     app:tabText="@string/car_trunk" />
 
+                <com.chinatsp.vehicle.settings.widget.TabRadio
+                    android:id="@+id/car_mirror"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    app:tabSrc="@drawable/vcu_ic_car_mirror_selector"
+                    app:tabText="@string/car_mirror" />
+
             </LinearLayout>
         </com.common.xui.widget.XUIWrapContentScrollView>
 

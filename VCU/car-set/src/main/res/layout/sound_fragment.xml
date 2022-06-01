@@ -74,12 +74,14 @@
 
 
                     <com.common.xui.widget.tabbar.TabControlView
+                        android:id="@+id/sound_meter_alarm_option"
                         style="@style/tdv_common_style"
                         android:layout_marginTop="@dimen/x11"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/sound_alarm_volume_title"
                         app:tcv_defaultSelection="1"
-                        app:tcv_items="@array/drive_sensitivity_setting_options" />
+                        app:tcv_items="@array/drive_sensitivity_setting_options"
+                        app:tcv_values="@array/drive_sensitivity_setting_options_value" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -107,12 +109,14 @@
 
 
                     <com.common.xui.widget.tabbar.TabControlView
+                        android:id="@+id/sound_remix_option"
                         style="@style/tdv_common_style"
                         android:layout_marginTop="@dimen/x11"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/sound_navigation_mixing_title"
                         app:tcv_defaultSelection="1"
-                        app:tcv_items="@array/sensitivity_setting_options" />
+                        app:tcv_items="@array/remix_option_title"
+                        app:tcv_values="@array/remix_option_value" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

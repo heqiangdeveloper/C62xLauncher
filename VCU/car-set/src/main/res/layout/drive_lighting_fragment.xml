@@ -8,61 +8,53 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/x365"
         android:layout_height="match_parent"
         android:paddingStart="@dimen/x15"
         android:paddingTop="@dimen/x15"
         android:paddingEnd="@dimen/x15">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/fcw_constraint"
-            android:layout_width="@dimen/x243"
-            android:layout_height="@dimen/x160"
-            android:background="@drawable/drive_bg"
+            android:id="@+id/drive_hma"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/switch_item_option_height"
+            android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/hma_tx"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/x12"
-                android:layout_marginTop="@dimen/x12"
+                android:id="@+id/drive_hma_title"
+                style="@style/switch_row_option_style"
                 android:text="@string/drive_hma_title"
-                android:textColor="@color/xui_config_color_white"
-                android:textSize="@dimen/text_14"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/hma_txt_content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/x12"
-                android:layout_marginTop="@dimen/x8"
+            <androidx.appcompat.widget.AppCompatImageView
+                style="@style/image_prompt"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/drive_hma_title"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/txt_prompt"
                 android:text="@string/drive_hma_content"
-                android:textColor="@color/xui_config_color_white"
-                android:textSize="@dimen/text_9"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/hma_tx" />
+                app:layout_constraintTop_toBottomOf="@+id/drive_hma_title" />
+
 
             <com.common.xui.widget.button.switchbutton.SwitchButton
-                android:id="@+id/cabin_ac_advance_wind_swb"
                 style="@style/switch_button_style"
-                android:layout_marginTop="@dimen/x9"
-                android:layout_marginEnd="@dimen/x20"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/img_hma"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/line1"
+            style="@style/line"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/drive_hma" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

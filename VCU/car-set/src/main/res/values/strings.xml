@@ -23,12 +23,13 @@
     <string name="table2">灯光</string>
     <string name="table3">车辆音效</string>
     <string name="table4">驾驶辅助</string>
-    <string name="table5">座舱</string>
+    <string name="table5">行车</string>
     <string name="table6">BEIJING OS</string>
     <string name="back_navigation">返回</string>
     <string name="car_door">车门</string>
     <string name="car_window">车窗</string>
     <string name="car_trunk">电动尾门</string>
+    <string name="car_mirror">外后视镜</string>
     <string name="car_door_smart">车门智能进入</string>
     <string name="acc_off_auto_unlock">熄火自动解锁</string>
     <string name="drive_auto_lock">行车自动落锁</string>
@@ -45,6 +46,7 @@
     <string name="cabin_ac_auto_wind_advance">预通风功能</string>
     <string name="cabin_ac_auto_comfort">自动空调舒适性</string>
 
+    <string name="cabin_safe_fortify_tone">设防提示音</string>
     <string name="cabin_safe_fortify_success_tone">设防成功提示音</string>
     <string name="cabin_safe_fortify_failure_tone">设防失败提示音</string>
     <string name="cabin_safe_video_safe_mode">视频安全模式</string>
@@ -64,6 +66,7 @@
     <string name="cabin_other_close">已关闭</string>
     <string name="cabin_other_battery_optimization">蓄电池优化</string>
     <string name="cabin_other_wireless_charging">无线充电</string>
+    <string name="cabin_other_wireless_charging_lamp">无线充电灯</string>
 
     <string name="car_window_remote_control">遥控升窗/降窗</string>
     <string name="car_window_lock_car">锁车自动关窗</string>
@@ -73,7 +76,10 @@
     <string name="car_trunk_electric_function">电动尾门电动功能</string>
     <string name="car_trunk_intelligence_into">电动尾门智能进入</string>
     <string name="car_trunk_light_flashing">灯光闪烁报警</string>
-    <string name="car_trunk_buzzer_alarms">蜂鸣器报警</string>
+    <string name="car_trunk_buzzer_alarms">蜂鸣器报警开关</string>
+
+    <string name="car_mirror_automatic_folding">后视镜自动折叠</string>
+    <string name="car_mirror_automatic_folding_close">后视镜自动折叠已关闭</string>
 
     <string name="ac_open_window">一键开窗</string>
     <string name="ac_close_window">一键关窗</string>
@@ -84,13 +90,14 @@
     <string name="drive_tab_rear_assist">侧后辅助</string>
     <string name="drive_tab_lighting_assist">灯光辅助</string>
     <string name="drive_tab_traffic">交通标志</string>
-    <string name="drive_intelligent_cruise_assistant">智能巡航辅助</string>
+    <string name="drive_intelligent_cruise_assistant">智能巡航辅助ACC</string>
     <string name="drive_full_speed_range">全速范围内为驾驶员提供车辆的横纵向辅助</string>
     <string name="drive_open">已开启</string>
     <string name="drive_close">已关闭</string>
     <string name="drive_warning_fcw">前向碰撞预警FCW</string>
     <string name="drive_fcw_txt_content">检测到前向预警碰撞风险时预警驾驶员</string>
     <string name="drive_sensitivity_setting">灵敏度设置</string>
+    <string name="drive_sensitivity">灵敏度</string>
     <string name="drive_aeb_title">自动紧急制动AEB</string>
     <string name="drive_aeb_content">检测到危险情况时产生一个短促制动</string>
     <string name="drive_Lane_assist_system">车道辅助系统</string>
@@ -99,21 +106,37 @@
     <string name="drive_bsd_content">提醒驾驶者后方来车情况</string>
     <string name="drive_dow_title">开门预警DOW</string>
     <string name="drive_dow_content">开启车门时识别靠近目标并预警</string>
+    <string name="drive_bsd_camera_title">盲区摄像头</string>
+    <string name="drive_bsd_camera_content">提供驾驶者右侧视觉盲区图像信息</string>
     <string name="drive_voice_prompt">语音提示</string>
-    <string name="drive_hma_title">智能远光灯HMA</string>
-    <string name="drive_hma_content">远近光自动切换的辅助</string>
+    <string name="drive_hma_title">智能远光灯辅助HMA</string>
+    <string name="drive_hma_content">远近光灯自动切换的辅助</string>
     <string name="drive_sla_title">速度限制提醒SLA</string>
     <string name="drive_sla_content">探测行驶道路上或道路旁的限速标志</string>
+    <string name="drive_target_tone">目标提示音</string>
+    <string name="drive_vehicle_departure">前车驶离提示</string>
+    <string name="drive_alarm_way">报警方式</string>
+    <string name="drive_auxiliary_line">辅助线</string>
+    <string name="drive_display_area">显示区域</string>
 
     <string name="lighting_title">灯光</string>
     <string name="lighting_atmosphere_lamp">氛围灯</string>
+    <string name="lighting_screen">屏幕亮度</string>
     <string name="lighting_go_home_title">伴我回家</string>
-    <string name="lighting_go_home_content">在锁车后，近光灯会点亮一段时间再熄灭，为你照亮回家的路</string>
+    <string name="lighting_go_home_content">在锁车后,近光灯会点亮一段时间再熄灭,为你照亮回家的路</string>
     <string name="lighting_turn_signal_title">转向灯变道闪烁次数</string>
     <string name="lighting_physical_switch_title">物理开关背光亮度</string>
     <string name="lighting_car_screen_title">车机屏幕亮度</string>
+    <string name="lighting_instrument_screen_title">仪表屏幕亮度</string>
+    <string name="lighting_conditioner_screen_title">空调屏幕亮度</string>
     <string name="lighting_car_outside_title">车外迎宾灯</string>
     <string name="lighting_car_inside_title">车内迎宾灯</string>
+    <string name="lighting_front_atmosphere">前排氛围灯</string>
+    <string name="lighting_rear_atmosphere">后排氛围灯</string>
+    <string name="lighting_brightness">亮度</string>
+    <string name="lighting_color">颜色</string>
+    <string name="lighting_intelligent_model">智能模式</string>
+    <string name="lighting_install">其他设置</string>
 
     <string name="sound_title">声音</string>
     <string name="sound_effect">音效</string>

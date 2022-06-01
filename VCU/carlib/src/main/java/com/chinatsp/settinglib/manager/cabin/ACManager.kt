@@ -5,7 +5,6 @@ import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.hvac.CarHvacManager
 import com.chinatsp.settinglib.IConcernChanged
 import com.chinatsp.settinglib.LogManager
-import com.chinatsp.settinglib.bean.DownStatus
 import com.chinatsp.settinglib.bean.Status1
 import com.chinatsp.settinglib.listener.IACListener
 import com.chinatsp.settinglib.listener.IBaseListener
@@ -14,7 +13,6 @@ import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.optios.Area
 import com.chinatsp.settinglib.optios.SwitchNode
-import com.chinatsp.settinglib.sign.CarSign
 import com.chinatsp.settinglib.sign.SignalOrigin
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
@@ -68,23 +66,19 @@ class ACManager private constructor() : BaseManager(), IConcernChanged, IAcManag
             ACManager()
         }
 
-        override val mcuConcernedSerial: Set<Int>by lazy {
-            val hashSet = HashSet<Int>()
-            hashSet.apply {
-            }
-        }
+    }
 
-        override val cabinConcernedSerial: Set<Int> by lazy {
-            val hashSet = HashSet<Int>()
-            hashSet.apply {
-                add(CarCabinManager.ID_ACSELFSTSDISP)/**空调自干燥*/
-                add(CarCabinManager.ID_ACPREVENTNDISP)/**预通风功能*/
-                add(CarCabinManager.ID_ACCMFTSTSDISP) /**空调舒适性状态显示*/
+    override val concernedSerials: Map<SignalOrigin, Set<Int>> by lazy {
+        HashMap<SignalOrigin, Set<Int>>().apply {
+            val cabinSet = HashSet<Int> ().apply {
+                /**空调自干燥*/
+                add(CarCabinManager.ID_ACSELFSTSDISP)
+                /**预通风功能*/
+                add(CarCabinManager.ID_ACPREVENTNDISP)
+                /**空调舒适性状态显示*/
+                add(CarCabinManager.ID_ACCMFTSTSDISP)
             }
-        }
-        override val hvacConcernedSerial: Set<Int> by lazy {
-            val hashSet = HashSet<Int>()
-            hashSet.apply {}
+            put(SignalOrigin.CABIN_SIGNAL, cabinSet)
         }
     }
 
@@ -112,10 +106,10 @@ class ACManager private constructor() : BaseManager(), IConcernChanged, IAcManag
     ): Boolean {
         when (signalOrigin) {
             SignalOrigin.CABIN_SIGNAL -> {
-                onPropertyChanged(signalOrigin, property)
+                onCabinPropertyChanged(property)
             }
             SignalOrigin.HVAC_SIGNAL -> {
-                onPropertyChanged(signalOrigin, property)
+                onHvacPropertyChanged(property)
             }
             else -> {}
         }
@@ -123,23 +117,12 @@ class ACManager private constructor() : BaseManager(), IConcernChanged, IAcManag
     }
 
     override fun isConcernedSignal(signal: Int, signalOrigin: SignalOrigin): Boolean {
-        return when (signalOrigin) {
-            SignalOrigin.CABIN_SIGNAL -> {
-                cabinConcernedSerial.contains(signal)
-            }
-            SignalOrigin.HVAC_SIGNAL -> {
-                hvacConcernedSerial.contains(signal)
-            }
-            else -> false
-        }
+        val signals = getConcernedSignal(signalOrigin)
+        return signals.contains(signal)
     }
 
-    override fun getConcernedSignal(signalOrigin: SignalOrigin): Set<Int>? {
-        return when (signalOrigin) {
-            SignalOrigin.CABIN_SIGNAL -> SeatManager.cabinConcernedSerial
-            SignalOrigin.HVAC_SIGNAL -> SeatManager.hvacConcernedSerial
-            else -> null
-        }
+    override fun getConcernedSignal(signalOrigin: SignalOrigin): Set<Int> {
+        return concernedSerials[signalOrigin] ?: HashSet()
     }
 
 
@@ -199,8 +182,8 @@ class ACManager private constructor() : BaseManager(), IConcernChanged, IAcManag
     0x7: Invalid
      */
     fun doUpdateAcComfort(value: Int): Boolean {
-        val invalidValue = listOf(0x01, 0x02, 0x03).any { it == value }
-        if (!invalidValue) {
+        val isValid = listOf(0x01, 0x02, 0x03).any { it == value }
+        if (!isValid) {
             return false
         }
         val signal = CarHvacManager.ID_HVAC_AVN_AC_AUTO_CMFT_SWT
@@ -212,25 +195,21 @@ class ACManager private constructor() : BaseManager(), IConcernChanged, IAcManag
      * @param switchNode 开关选项
      * @param isStatus 开关期望状态
      */
-    fun doSwitchACOption(switchNode: SwitchNode, isStatus: Boolean): Boolean {
-        val status = if (isStatus) {
-            DownStatus.ENABLED
-        } else {
-            DownStatus.DISABLED
-        }
+    fun doSwitchOption(switchNode: SwitchNode, isStatus: Boolean): Boolean {
         return when (switchNode) {
             SwitchNode.AC_AUTO_ARID -> {
                 val signal = CarHvacManager.ID_HVAC_AVN_SELF_DESICAA_SWT
-                doSetProperty(signal, status.value, SignalOrigin.HVAC_SIGNAL)
+                doSetProperty(signal, switchNode.obtainValue(isStatus), SignalOrigin.HVAC_SIGNAL)
             }
             SwitchNode.AC_AUTO_DEMIST -> {
                 val signal = CarHvacManager.ID_HVAC_AVN_KEY_DEFROST
-                doSetProperty(signal, status.value, SignalOrigin.HVAC_SIGNAL)
+                doSetProperty(signal, switchNode.obtainValue(isStatus), SignalOrigin.HVAC_SIGNAL)
             }
             SwitchNode.AC_ADVANCE_WIND -> {
                 val signal = CarHvacManager.ID_HVAC_AVN_UNLOCK_BREATHABLE_ENABLE
-                doSetProperty(signal, status.value, SignalOrigin.HVAC_SIGNAL)
+                doSetProperty(signal, switchNode.obtainValue(isStatus), SignalOrigin.HVAC_SIGNAL)
             }
+            else -> false
         }
     }
 
@@ -276,9 +255,9 @@ class ACManager private constructor() : BaseManager(), IConcernChanged, IAcManag
     private fun onComfortOptionChanged(value: Any?) {
         if (value is Int) {
             when (value) {
-                0x01 -> {}
-                0x02 -> {}
-                0x03 -> {}
+                0x01 -> notifyComfortChanged(value)
+                0x02 -> notifyComfortChanged(value)
+                0x03 -> notifyComfortChanged(value)
                 else -> {}
             }
         }
@@ -325,6 +304,18 @@ class ACManager private constructor() : BaseManager(), IConcernChanged, IAcManag
                     val listener = it.value.get()
                     if (listener is IACListener) {
                         listener.onACSwitchStatusChanged(status, type)
+                    }
+                }
+        }
+    }
+
+    private fun notifyComfortChanged(optionValue: Int) {
+        synchronized(listenerStore) {
+            listenerStore.filter { null != it.value.get() }
+                .forEach {
+                    val listener = it.value.get()
+                    if (listener is IACListener) {
+                        listener.onAcComfortOptionChanged(optionValue)
                     }
                 }
         }

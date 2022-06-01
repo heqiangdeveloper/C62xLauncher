@@ -445,6 +445,28 @@ public class TabControlView extends RadioGroup implements HasTypeface {
     /**
      * 通过标题设置选中的Tab
      *
+     * @param position
+     * @return
+     */
+    public TabControlView setSelectionPosition(int position, boolean isSilent) {
+        if (position >= 0 && position < mOptions.size()) {
+            RadioButton option = mOptions.get(position);
+            if (null != option) {
+                if (isSilent) {
+                    setOnCheckedChangeListener(null);
+                    this.check(option.getId());
+                    setOnCheckedChangeListener(mSelectionChangedListener);
+                } else {
+                    this.check(option.getId());
+                }
+            }
+        }
+        return this;
+    }
+
+    /**
+     * 通过标题设置选中的Tab
+     *
      * @param title
      * @return
      */

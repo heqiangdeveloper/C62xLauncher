@@ -102,6 +102,7 @@
                     android:id="@+id/lighting_physical_switch"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/x95"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/line2">
 
@@ -121,8 +122,8 @@
                         android:layout_marginTop="@dimen/x11"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/lighting_physical_switch_title"
-                        app:xsb_insideRangeLineStrokeWidth="@dimen/x20"
-                        app:xsb_outsideRangeLineStrokeWidth="@dimen/x20"
+                        app:xsb_insideRangeLineStrokeWidth="@dimen/x32"
+                        app:xsb_outsideRangeLineStrokeWidth="@dimen/x32"
                         app:xsb_sliderIcon="@null"
                         app:xsb_verticalPadding="@dimen/x10" />
 
@@ -131,6 +132,7 @@
                 <View
                     android:id="@+id/line3"
                     style="@style/line"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/lighting_physical_switch" />
 
@@ -138,6 +140,7 @@
                     android:id="@+id/lighting_car_screen"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/x95"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/line3">
 
@@ -157,8 +160,8 @@
                         android:layout_marginTop="@dimen/x11"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/lighting_car_screen_title"
-                        app:xsb_insideRangeLineStrokeWidth="@dimen/x20"
-                        app:xsb_outsideRangeLineStrokeWidth="@dimen/x20"
+                        app:xsb_insideRangeLineStrokeWidth="@dimen/x32"
+                        app:xsb_outsideRangeLineStrokeWidth="@dimen/x32"
                         app:xsb_sliderIcon="@null"
                         app:xsb_verticalPadding="@dimen/x10" />
 
@@ -167,6 +170,7 @@
                 <View
                     android:id="@+id/line4"
                     style="@style/line"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/lighting_car_screen" />
 
@@ -176,7 +180,7 @@
                     android:layout_height="@dimen/switch_item_option_height"
                     android:orientation="horizontal"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/line4">
+                    app:layout_constraintTop_toBottomOf="@id/line2">
 
                     <TextView
                         style="@style/switch_row_option_style"

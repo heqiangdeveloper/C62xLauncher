@@ -38,6 +38,13 @@
         <item name="android:textColor">@color/tab_option_title_text_color</item>
     </style>
 
+    <style name="txt_prompt_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_14</item>
+        <item name="android:textColor">@color/tab_option_title_text_color</item>
+    </style>
+
     <style name="switch_button_style">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -71,5 +78,20 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/text_10</item>
         <item name="android:textColor">@color/tab_option_title_text_color</item>
+    </style>
+
+    <style name="txt_prompt">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_10</item>
+        <item name="android:textColor">@color/text_prompt_color</item>
+        <item name="android:layout_marginTop">@dimen/x2</item>
+    </style>
+
+    <style name="image_prompt">
+        <item name="android:layout_width">@dimen/x16</item>
+        <item name="android:layout_height">@dimen/x16</item>
+        <item name="android:src">@drawable/icon_information_32</item>
+        <item name="android:layout_marginStart">@dimen/x5</item>
     </style>
 </resources>

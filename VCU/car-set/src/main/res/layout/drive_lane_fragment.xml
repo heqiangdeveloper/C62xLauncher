@@ -7,87 +7,142 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="@dimen/x365"
-        android:layout_height="match_parent"
-        android:paddingStart="@dimen/x15"
-        android:paddingTop="@dimen/x15"
-        android:paddingEnd="@dimen/x15">
+    <com.common.xui.widget.XUIWrapContentScrollView
+        android:id="@+id/lighting_manager_ScrollView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
 
-        <RelativeLayout
-            android:layout_width="@dimen/x243"
-            android:layout_height="@dimen/x160"
-            android:background="@drawable/drive_bg"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/Lane_assist_system_lin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/x12"
-                android:layout_marginTop="@dimen/x12"
-                android:orientation="horizontal">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="@dimen/x365"
+                android:layout_height="match_parent"
+                android:paddingStart="@dimen/x15"
+                android:paddingEnd="@dimen/x15"
+                android:paddingBottom="@dimen/x20">
 
-                <TextView
-                    android:id="@+id/Lane_assist_system_tx"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/drive_Lane_assist_system"
-                    android:textColor="@color/xui_config_color_white"
-                    android:textSize="@dimen/text_14" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/drive_Lane_assist_system"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x95"
+                    android:orientation="horizontal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="@dimen/x4"
-                    android:background="@drawable/why_selector" />
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/lane_assist_system"
+                        style="@style/switch_row_option_style"
+                        android:layout_marginTop="@dimen/x15"
+                        android:text="@string/drive_Lane_assist_system"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
+                    <androidx.appcompat.widget.AppCompatImageView
+                        style="@style/image_prompt"
+                        android:layout_marginTop="@dimen/x16"
+                        app:layout_constraintLeft_toRightOf="@+id/lane_assist_system"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/Lane_assist_system_lin"
-                android:layout_marginStart="@dimen/x12"
-                android:layout_marginTop="@dimen/x8"
-                android:text="@string/drive_Lane_assist_system_content"
-                android:textColor="@color/xui_config_color_white"
-                android:textSize="@dimen/text_9" />
+                    <com.common.xui.widget.tabbar.TabControlView
+                        android:id="@+id/auxiliary_system_tab"
+                        style="@style/tdv_common_style"
+                        android:layout_marginTop="@dimen/x10"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/lane_assist_system"
+                        app:tcv_defaultSelection="1"
+                        app:tcv_items="@array/drive_auxiliary_system" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="@dimen/x10"
-                android:layout_marginEnd="@dimen/x4"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/drive_open"
-                    android:textColor="@color/text_open"
-                    android:textSize="@dimen/text_12" />
-
-                <ImageView
-                    android:layout_width="@dimen/x24"
-                    android:layout_height="@dimen/x24"
-                    android:background="@drawable/icon_arrow_right_48_pre" />
-            </LinearLayout>
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/txt_prompt"
+                        android:layout_marginTop="@dimen/x4"
+                        android:text="@string/drive_Lane_assist_system_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/auxiliary_system_tab" />
 
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/img_chedao" />
-        </RelativeLayout>
+                    <com.common.xui.widget.button.switchbutton.SwitchButton
+                        style="@style/switch_button_style"
+                        android:layout_marginTop="@dimen/x15"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <View
+                    android:id="@+id/line1"
+                    style="@style/line"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/drive_Lane_assist_system" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/drive_alarm_way"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x95"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/line1">
+
+                    <TextView
+                        android:id="@+id/drive_alarm_way_title"
+                        style="@style/switch_row_option_style"
+                        android:layout_marginTop="@dimen/x15"
+                        android:layout_marginBottom="@dimen/x10"
+                        android:text="@string/drive_alarm_way"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <com.common.xui.widget.tabbar.TabControlView
+                        style="@style/tdv_common_style"
+                        android:layout_marginTop="@dimen/x11"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/drive_alarm_way_title"
+                        app:tcv_defaultSelection="1"
+                        app:tcv_items="@array/drive_alarm_way_options" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:id="@+id/line2"
+                    style="@style/line"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/drive_alarm_way" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/drive_sensitivity"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x95"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/line2">
+
+                    <TextView
+                        android:id="@+id/drive_sensitivity_title"
+                        style="@style/switch_row_option_style"
+                        android:layout_marginTop="@dimen/x15"
+                        android:layout_marginBottom="@dimen/x10"
+                        android:text="@string/drive_sensitivity"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <com.common.xui.widget.tabbar.TabControlView
+                        style="@style/tdv_common_style"
+                        android:layout_marginTop="@dimen/x11"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/drive_sensitivity_title"
+                        app:tcv_defaultSelection="1"
+                        app:tcv_items="@array/drive_sensitivity_options" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:id="@+id/line3"
+                    style="@style/line"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/drive_sensitivity" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </com.common.xui.widget.XUIWrapContentScrollView>
 </layout>

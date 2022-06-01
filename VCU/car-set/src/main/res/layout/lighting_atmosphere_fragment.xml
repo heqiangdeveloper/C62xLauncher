@@ -10,12 +10,144 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingStart="@dimen/x15"
+        android:paddingStart="@dimen/x36"
         android:paddingTop="@dimen/x15"
         android:paddingEnd="@dimen/x15">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/lighting_front_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/lighting_front_atmosphere"
+                style="@style/switch_row_option_style"
+                android:text="@string/lighting_front_atmosphere"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
+            <com.common.xui.widget.button.switchbutton.SwitchButton
+                style="@style/switch_button_style"
+                android:layout_marginStart="@dimen/x10"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/lighting_front_atmosphere"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/x50"
+            app:layout_constraintLeft_toRightOf="@+id/lighting_front_layout"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/lighting_rear_atmosphere"
+                style="@style/switch_row_option_style"
+                android:text="@string/lighting_rear_atmosphere"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.common.xui.widget.button.switchbutton.SwitchButton
+                style="@style/switch_button_style"
+                android:layout_marginStart="@dimen/x10"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/lighting_rear_atmosphere"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/x80"
+            android:layout_marginEnd="@dimen/x117"
+            android:layout_marginBottom="@dimen/x23"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/x31"
+                    android:layout_height="@dimen/x31"
+                    android:src="@drawable/icon_dayandnightmode_64" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/txt_prompt_style"
+                    android:layout_marginTop="@dimen/x4"
+                    android:text="@string/lighting_brightness" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/x31"
+                    android:layout_height="@dimen/x31"
+                    android:src="@drawable/icon_theme_64" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/txt_prompt_style"
+                    android:layout_marginTop="@dimen/x4"
+                    android:text="@string/lighting_color" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/x31"
+                    android:layout_height="@dimen/x31"
+                    android:src="@drawable/icon_dayandnightmode_64" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/txt_prompt_style"
+                    android:layout_marginTop="@dimen/x4"
+                    android:text="@string/lighting_intelligent_model" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/x31"
+                    android:layout_height="@dimen/x31"
+                    android:src="@drawable/icon_settings_64" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/txt_prompt_style"
+                    android:layout_marginTop="@dimen/x4"
+                    android:text="@string/lighting_install" />
+            </LinearLayout>
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

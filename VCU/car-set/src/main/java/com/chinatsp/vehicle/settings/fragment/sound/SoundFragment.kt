@@ -1,20 +1,20 @@
 package com.chinatsp.vehicle.settings.fragment.sound
 
 import android.os.Bundle
-import android.view.View
+import com.chinatsp.settinglib.LogManager
+import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.SoundFragmentBinding
 import com.chinatsp.vehicle.settings.vm.SoundViewModel
-import com.chinatsp.vehicle.settings.widget.SoundPopup
 import com.common.library.frame.base.BaseFragment
-import com.common.xui.widget.picker.VerticalSeekBar
-import com.king.base.util.DensityUtils.dip2px
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SoundFragment : BaseFragment<SoundViewModel, SoundFragmentBinding>() {
 
-    var soundPopup: SoundPopup? = null
+    var soundDialog: SoundDialogFragment? = null
+
+    val voiceManager: VoiceManager by lazy { VoiceManager.instance }
 
     override fun getLayoutId(): Int {
         return R.layout.sound_fragment
@@ -22,39 +22,65 @@ class SoundFragment : BaseFragment<SoundViewModel, SoundFragmentBinding>() {
 
     override fun initData(savedInstanceState: Bundle?) {
         setCheckedChangeListener()
+        initSoundVolume()
+        initSoundListener()
+        observeSoundVolume()
+        binding.soundMeterAlarmOption.setOnTabSelectionChangedListener { title, value ->
+            LogManager.d("setOnTabSelectionChangedListener title:$title, value:$value")
+            voiceManager.doUpdateAlarmOption(value.toInt())
+        }
+
+        binding.soundRemixOption.setOnTabSelectionChangedListener { title, value ->
+            voiceManager.doUpdateRemixOption(value.toInt())
+        }
+
+    }
+
+    private fun observeSoundVolume() {
+        viewModel.naviVolume.observe(this) {
+            soundDialog?.updateVolumeValue(SoundDialogFragment.Type.NAVI, it)
+        }
+        viewModel.mediaVolume.observe(this) {
+            soundDialog?.updateVolumeValue(SoundDialogFragment.Type.MEDIA, it)
+        }
+        viewModel.phoneVolume.observe(this) {
+            soundDialog?.updateVolumeValue(SoundDialogFragment.Type.PHONE, it)
+        }
+        viewModel.voiceVolume.observe(this) {
+            soundDialog?.updateVolumeValue(SoundDialogFragment.Type.VOICE, it)
+        }
+        viewModel.systemVolume.observe(this) {
+            soundDialog?.updateVolumeValue(SoundDialogFragment.Type.SYSTEM, it)
+        }
     }
 
     private fun setCheckedChangeListener() {
         binding.soundVolumeAdjustment.setOnClickListener {
-            if (soundPopup == null) {
-                popWindow()
+            soundDialog = SoundDialogFragment()
+            activity?.let { it1 ->
+                soundDialog!!.show(
+                    it1.supportFragmentManager,
+                    "soundDialog"
+                )
             }
-            soundPopup?.apply {
-                width = dip2px(context, 960f)
-                showPopupWindow(it)
-            }
-            initSoundVolume()
+
+        }
+    }
+
+    private fun initSoundListener() {
+        soundDialog?.let {
+
         }
     }
 
     private fun initSoundVolume() {
-        soundPopup?.also {
-            it.setSeekBarMaxValue(SoundPopup.Type.NAVI, viewModel.naviMaxVolume)
-            it.setSeekBarMaxValue(SoundPopup.Type.VOICE, viewModel.voiceMaxVolume)
-            it.setSeekBarMaxValue(SoundPopup.Type.MEDIA, viewModel.mediaMaxVolume)
-            it.setSeekBarMaxValue(SoundPopup.Type.PHONE, viewModel.phoneMaxVolume)
-            it.setSeekBarMaxValue(SoundPopup.Type.SYSTEM, viewModel.systemMaxVolume)
-
-            it.updateSeekBarValue(SoundPopup.Type.NAVI, viewModel.naviSoundVolume.value!!)
-            it.updateSeekBarValue(SoundPopup.Type.VOICE, viewModel.voiceSoundVolume.value!!)
-            it.updateSeekBarValue(SoundPopup.Type.MEDIA, viewModel.mediaSoundVolume.value!!)
-            it.updateSeekBarValue(SoundPopup.Type.PHONE, viewModel.phoneSoundVolume.value!!)
-            it.updateSeekBarValue(SoundPopup.Type.SYSTEM, viewModel.systemSoundVolume.value!!)
+        soundDialog?.also {
+            it.updateVolumeValue(SoundDialogFragment.Type.NAVI, viewModel.naviVolume.value)
+            it.updateVolumeValue(SoundDialogFragment.Type.VOICE, viewModel.voiceVolume.value)
+            it.updateVolumeValue(SoundDialogFragment.Type.MEDIA, viewModel.mediaVolume.value)
+            it.updateVolumeValue(SoundDialogFragment.Type.PHONE, viewModel.phoneVolume.value)
+            it.updateVolumeValue(SoundDialogFragment.Type.SYSTEM, viewModel.systemVolume.value)
         }
-    }
-
-    private fun popWindow() {
-        soundPopup = SoundPopup(requireActivity())
     }
 
 }

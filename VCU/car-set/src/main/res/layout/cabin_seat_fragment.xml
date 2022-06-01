@@ -29,24 +29,11 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
+            <com.common.xui.widget.button.switchbutton.SwitchButton
+                style="@style/switch_button_style"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <TextView
-                    style="@style/click_row_option_style"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/cabin_seat_close" />
-
-                <ImageView
-                    android:layout_width="@dimen/x24"
-                    android:layout_height="@dimen/x24"
-                    android:background="@drawable/list_item_right_selector" />
-            </LinearLayout>
+                app:layout_constraintTop_toTopOf="parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
