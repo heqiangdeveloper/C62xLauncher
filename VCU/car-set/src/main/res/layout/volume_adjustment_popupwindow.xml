@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="960dp"
-    android:layout_height="680dp">
+    android:layout_height="680dp"
+    android:background="@drawable/bg_sound_popup_20">
 
     <RelativeLayout
         android:id="@+id/pop_title"
@@ -12,6 +13,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/close_dialog"
             android:layout_width="@dimen/x28"
             android:layout_height="@dimen/x28"
             android:layout_marginStart="@dimen/x15"
@@ -40,8 +42,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/x50"
-        android:layout_marginEnd="@dimen/x50"
         android:layout_marginTop="@dimen/x20"
+        android:layout_marginEnd="@dimen/x50"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/pop_title">
 
@@ -49,11 +51,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
 
             <TextView
                 style="@style/pop_txt"
-                android:layout_marginStart="@dimen/x8"
+                android:layout_gravity="center_horizontal"
                 android:text="@string/sound_navigation" />
 
             <com.common.xui.widget.picker.VerticalSeekBar
@@ -69,11 +72,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
 
             <TextView
                 style="@style/pop_txt"
-                android:layout_marginStart="@dimen/x10"
+                android:layout_gravity="center_horizontal"
                 android:text="@string/sound_call" />
 
             <com.common.xui.widget.picker.VerticalSeekBar
@@ -89,11 +93,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
 
             <TextView
                 style="@style/pop_txt"
-                android:layout_marginStart="@dimen/x10"
+                android:layout_gravity="center_horizontal"
                 android:text="@string/sound_voice" />
 
             <com.common.xui.widget.picker.VerticalSeekBar
@@ -109,11 +114,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
 
             <TextView
                 style="@style/pop_txt"
-                android:layout_marginStart="@dimen/x10"
+                android:layout_gravity="center_horizontal"
                 android:text="@string/sound_media" />
 
             <com.common.xui.widget.picker.VerticalSeekBar
@@ -129,12 +135,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
 
             <TextView
                 style="@style/pop_txt"
-                android:layout_marginStart="@dimen/x10"
-                android:text="@string/sound_system" />
+                android:text="@string/sound_system"
+                android:layout_gravity="center_horizontal"/>
 
             <com.common.xui.widget.picker.VerticalSeekBar
                 android:id="@+id/sound_audio_system_volume"

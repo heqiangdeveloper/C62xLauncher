@@ -154,6 +154,7 @@ public class VerticalSeekBar extends View {
 
     public void setCurrentValue(int currentValue) {
         this.currentValue = currentValue;
+        invalidate();
     }
 
     public void setMaxValue(int maxValue) {

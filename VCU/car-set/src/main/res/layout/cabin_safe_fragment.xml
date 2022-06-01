@@ -23,7 +23,7 @@
 
             <TextView
                 style="@style/switch_row_option_style"
-                android:text="@string/cabin_safe_fortify_success_tone"
+                android:text="@string/cabin_safe_fortify_tone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -43,41 +43,12 @@
             app:layout_constraintTop_toBottomOf="@id/cabin_ac_auto_dry_layout" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cabin_ac_auto_demist_layout"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/switch_item_option_height"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/line1">
-
-            <TextView
-                style="@style/switch_row_option_style"
-                android:text="@string/cabin_safe_fortify_failure_tone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.common.xui.widget.button.switchbutton.SwitchButton
-                android:id="@+id/cabin_ac_auto_demist_swb"
-                style="@style/switch_button_style"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <View
-            android:id="@+id/line2"
-            style="@style/line"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cabin_ac_auto_demist_layout" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cabin_ac_auto_wind_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/switch_item_option_height"
             android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/line2">
+            app:layout_constraintTop_toBottomOf="@id/line1">
 
             <TextView
                 style="@style/switch_row_option_style"
@@ -95,7 +66,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
-            android:id="@+id/line3"
+            android:id="@+id/line2"
             style="@style/line"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cabin_ac_auto_wind_layout" />

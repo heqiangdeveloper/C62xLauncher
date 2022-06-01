@@ -32,9 +32,8 @@
     </string-array>
 
     <string-array name="cabin_wheel_mode_options">
-        <item>标准</item>
-        <item>运动</item>
-        <item>关联驾驶模式</item>
+        <item>正常</item>
+        <item>重</item>
     </string-array>
 
     <string-array name="car_trunk_mode_options">
@@ -73,5 +72,28 @@
     <string-array name="remix_option_value">
         <item>1</item>
         <item>3</item>
+    </string-array>
+    <string-array name="drive_intelligent_options">
+        <item>识别提示</item>
+        <item>消失提示</item>
+        <item>识别消失均提示</item>
+    </string-array>
+    <string-array name="drive_auxiliary_system">
+        <item>智能车道居中</item>
+        <item>偏离预警</item>
+        <item>偏离辅助</item>
+    </string-array>
+    <string-array name="drive_alarm_way_options">
+        <item>图示</item>
+        <item>图示+声音</item>
+        <item>图示+震动</item>
+    </string-array>
+    <string-array name="drive_sensitivity_options">
+        <item>高</item>
+        <item>低</item>
+    </string-array>
+    <string-array name="drive_display_area_options">
+        <item>左</item>
+        <item>右</item>
     </string-array>
 </resources>

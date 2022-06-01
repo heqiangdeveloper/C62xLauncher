@@ -23,13 +23,10 @@
 
             <TextView
                 android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/switch_row_option_style"
                 android:layout_marginTop="@dimen/x15"
                 android:layout_marginBottom="@dimen/x10"
-                android:text="@string/cabin_wheel_electronic_mode"
-                android:textColor="@color/tab_option_title_text_color"
-                android:textSize="@dimen/tab_option_title_text_size" />
+                android:text="@string/cabin_wheel_electronic_mode" />
 
             <com.common.xui.widget.tabbar.TabControlView
                 android:id="@+id/cabin_ac_comfort_option"
