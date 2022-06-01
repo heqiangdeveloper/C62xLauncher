@@ -12,11 +12,13 @@
     <dimen name="card_icon_size_lv1">80px</dimen>
     <dimen name="card_icon_size_lv2">64px</dimen>
     <dimen name="card_icon_size_lv3">48px</dimen>
+    <dimen name="card_icon_size_lv4">36px</dimen>
 
     <dimen name="card_text_size_lv0">36px</dimen>
     <dimen name="card_text_size_lv1">32px</dimen>
     <dimen name="card_text_size_lv2">30px</dimen>
     <dimen name="card_text_size_lv3">28px</dimen>
+    <dimen name="card_text_size_lv4">24px</dimen>
 
     <dimen name="card_icon_size_weather_sun">138px</dimen>
     <dimen name="card_weather_temperature_width">46px</dimen>

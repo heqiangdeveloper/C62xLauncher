@@ -30,6 +30,6 @@ dependencies {
     implementation rootProject.ext.dependencies.appcompat
     implementation rootProject.ext.dependencies.material
     implementation rootProject.ext.dependencies.constraintlayout
-    implementation project(path: ':baseRes')
+    implementation project(path: ':baseCard')
     implementation project(path: ':base')
 }

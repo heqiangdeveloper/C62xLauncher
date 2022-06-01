@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="@dimen/card_width_large"
     android:layout_height="@dimen/card_height_large"
-    android:background="@drawable/card_weather_bg_default_large">
+    >
 
     <ImageView
         android:id="@+id/ivWeatherBg"
@@ -46,6 +46,7 @@
         android:layout_width="272px"
         android:layout_height="90px"
         android:layout_marginStart="36px"
+        android:background="@drawable/rect_round_12"
         app:layout_constraintBottom_toBottomOf="@id/ivCardWeatherType"
         app:layout_constraintStart_toEndOf="@id/ivCardWeatherType">
 

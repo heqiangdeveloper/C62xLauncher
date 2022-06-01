@@ -22,6 +22,7 @@ import java.util.List;
 
 import card.service.ICardStyleChange;
 import launcher.base.recyclerview.SimpleRcvDecoration;
+import launcher.base.utils.view.LayoutParamUtil;
 
 
 public class WeatherCardView extends ConstraintLayout implements ICardStyleChange {
@@ -57,28 +58,30 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
         mSmallCardView = findViewById(R.id.layoutSmallCardView);
         mSmallWidth = (int) getResources().getDimension(R.dimen.card_width);
         mLargeWidth = (int) getResources().getDimension(R.dimen.card_width_large);
+
     }
 
     @Override
     public void expand() {
         if (mLargeCardView == null) {
             mLargeCardView = LayoutInflater.from(getContext()).inflate(R.layout.card_weather_large, this, false);
-            mLargeCardView.setVisibility(View.GONE);
             initWeeklyWeather();
         }
         addView(mLargeCardView);
         mLargeCardView.setVisibility(VISIBLE);
         mSmallCardView.setVisibility(GONE);
-        changeWidth(mLargeWidth, this);
+        LayoutParamUtil.setWidth(mLargeWidth, this);
 
+        runExpandAnim();
     }
+
 
     @Override
     public void collapse() {
         mSmallCardView.setVisibility(VISIBLE);
         mLargeCardView.setVisibility(GONE);
         removeView(mLargeCardView);
-        changeWidth(mSmallWidth, this);
+        LayoutParamUtil.setWidth(mSmallWidth, this);
     }
 
     private void initWeeklyWeather() {
@@ -101,6 +104,10 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
 
     }
 
+    private void runExpandAnim() {
+        ObjectAnimator.ofFloat(mLargeCardView, "translationX", -500, 0).setDuration(150).start();
+        ObjectAnimator.ofFloat(mLargeCardView, "alpha", 0.1f, 1.0f).setDuration(500).start();
+    }
     private List<DayWeatherBean> createTest() {
         List<DayWeatherBean> testData = new LinkedList<>();
         testData.add(new DayWeatherBean("明天", 1, "多云", "13 ~ 22"+"℃"));
@@ -111,11 +118,4 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
         testData.add(new DayWeatherBean("星期六", 1, "多云", "22 ~ 25"+"℃"));
         return testData;
     }
-
-    private void changeWidth(int width, View... views) {
-        for (View view : views) {
-            view.getLayoutParams().width = width;
-        }
-    }
-
 }

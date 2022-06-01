@@ -2,6 +2,7 @@ package com.chinatsp.widgetcards;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,7 +12,7 @@ import android.view.View;
 import com.chinatsp.widgetcards.editor.CardIndicator;
 import com.chinatsp.widgetcards.home.ExpandStateManager;
 import com.chinatsp.widgetcards.service.CardsTypeManager;
-import com.chinatsp.widgetcards.home.CardsAdapter;
+import com.chinatsp.widgetcards.home.HomeCardsAdapter;
 
 import launcher.base.recyclerview.SimpleRcvDecoration;
 import launcher.base.component.BaseFragment;
@@ -20,7 +21,7 @@ import launcher.base.utils.EasyLog;
 public class CardHomeFragment extends BaseFragment {
 
     private static final String TAG = "CardHomeFragment";
-    private CardsAdapter mCardsAdapter;
+    private HomeCardsAdapter mCardsAdapter;
     private RecyclerView mRcvCards;
     private CardIndicator mCardIndicator;
     private PagerSnapHelper mSnapHelper;
@@ -64,11 +65,12 @@ public class CardHomeFragment extends BaseFragment {
         mSnapHelper.attachToRecyclerView(mRcvCards);
         layoutManager.setOrientation(RecyclerView.HORIZONTAL);
         mRcvCards.setLayoutManager(layoutManager);
+        mRcvCards.setItemAnimator(new DefaultItemAnimator());
         if (mRcvCards.getItemDecorationCount() == 0) {
             SimpleRcvDecoration decoration = new SimpleRcvDecoration(30, layoutManager);
             mRcvCards.addItemDecoration(decoration);
         }
-        mCardsAdapter = new CardsAdapter(getActivity(), mRcvCards);
+        mCardsAdapter = new HomeCardsAdapter(getActivity(), mRcvCards);
         mCardsAdapter.setCardEntityList(cardsTypeManager.createInitCards());
         mRcvCards.setAdapter(mCardsAdapter);
 

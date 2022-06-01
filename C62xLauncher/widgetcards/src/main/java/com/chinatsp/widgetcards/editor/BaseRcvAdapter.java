@@ -12,8 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.LinkedList;
 import java.util.List;
 
-import launcher.base.utils.EasyLog;
-
 public abstract class BaseRcvAdapter<T> extends RecyclerView.Adapter<BaseViewHolder<T>> {
 
     private Context mContext;

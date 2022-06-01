@@ -19,7 +19,7 @@ import java.util.Set;
 
 import launcher.base.utils.EasyLog;
 
-public class CardsAdapter extends RecyclerView.Adapter<CardFrameViewHolder> {
+public class HomeCardsAdapter extends RecyclerView.Adapter<CardFrameViewHolder> {
 
     private static final String TAG = "CardsAdapter";
     private final Context mContext;
@@ -29,7 +29,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardFrameViewHolder> {
     private RecyclerView mRecyclerView;
 
 
-    public CardsAdapter(Context context, RecyclerView recyclerView) {
+    public HomeCardsAdapter(Context context, RecyclerView recyclerView) {
         mContext = context;
         mRecyclerView = recyclerView;
         mLayoutInflater = LayoutInflater.from(mContext);
@@ -39,7 +39,12 @@ public class CardsAdapter extends RecyclerView.Adapter<CardFrameViewHolder> {
     @Override
     public CardFrameViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         BaseCardEntity cardEntity = CardsTypeManager.getInstance().findByType(viewType);
-        ViewGroup layout = (ViewGroup) mLayoutInflater.inflate(R.layout.item_card_frame, parent, false);
+        ViewGroup layout;
+        if (cardEntity.isCanExpand()) {
+            layout = (ViewGroup) mLayoutInflater.inflate(R.layout.item_card_frame, parent, false);
+        } else {
+            layout = (ViewGroup) mLayoutInflater.inflate(R.layout.item_card_frame_locked, parent, false);
+        }
         View innerCard = cardEntity.getLayout(layout.getContext());
         innerCard.setTag("InnerCard");
         layout.addView(innerCard,0);
