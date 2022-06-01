@@ -26,5 +26,12 @@
         <item name="android:includeFontPadding">false</item>
     </style>
 
+    <style name="CardLv4TextView">
+        <item name="android:textColor" >@color/white</item>
+        <item name="android:textSize">@dimen/card_text_size_lv4</item>
+        <item name="android:gravity">center</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
 
 </resources>

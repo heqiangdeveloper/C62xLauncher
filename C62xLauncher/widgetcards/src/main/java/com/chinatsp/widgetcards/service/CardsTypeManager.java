@@ -1,6 +1,8 @@
 package com.chinatsp.widgetcards.service;
 
 import com.chinatsp.entity.DouyinCardEntity;
+import com.chinatsp.entity.DriveCounselorEntity;
+import com.chinatsp.entity.EConnectEntity;
 import com.chinatsp.entity.IQuTingCardEntity;
 import com.chinatsp.entity.NavigationCardEntity;
 import com.chinatsp.entity.WeatherCardEntity;
@@ -45,7 +47,6 @@ public class CardsTypeManager {
         int XINGCHE_QA = 9;
         int USER_CENTER = 10;
         int APP_STORE = 11;
-
         int EMPTY = 100;
     }
 
@@ -103,11 +104,13 @@ public class CardsTypeManager {
                 .setSelectBgRes(R.drawable.card_edit_select_weather)
                 .setUnselectBgRes(R.drawable.card_edit_unselect_weather)
         );
-        addHomeCard(new DefaultCardEntity().setName("亿联").setType(CardType.E_CONNECT)
+        addHomeCard(new EConnectEntity().setName("亿联").setType(CardType.E_CONNECT)
                 .setSelectBgRes(R.drawable.card_edit_select_e_connect)
                 .setUnselectBgRes(R.drawable.card_edit_unselect_e_connect)
+                .setCanExpand(false)
         );
-        addHomeCard(new DefaultCardEntity().setName("行车顾问").setType(CardType.XINGCHE_QA)
+        addHomeCard(new DriveCounselorEntity().setName("行车顾问").setType(CardType.XINGCHE_QA)
+                .setCanExpand(false)
                 .setSelectBgRes(R.drawable.card_edit_select_drive_qa)
                 .setUnselectBgRes(R.drawable.card_edit_unselect_drive_qa)
         );

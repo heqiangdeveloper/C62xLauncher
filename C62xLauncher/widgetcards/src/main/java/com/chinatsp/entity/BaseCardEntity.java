@@ -12,6 +12,7 @@ public abstract class BaseCardEntity {
 
     private int mSelectBgRes;
     private int mUnselectBgRes;
+    private boolean mCanExpand = true;
 
     private boolean expandState;
 
@@ -70,6 +71,15 @@ public abstract class BaseCardEntity {
 
     public BaseCardEntity setUnselectBgRes(int unselectBgRes) {
         mUnselectBgRes = unselectBgRes;
+        return this;
+    }
+
+    public boolean isCanExpand() {
+        return mCanExpand;
+    }
+
+    public BaseCardEntity setCanExpand(boolean canExpand) {
+        mCanExpand = canExpand;
         return this;
     }
 }

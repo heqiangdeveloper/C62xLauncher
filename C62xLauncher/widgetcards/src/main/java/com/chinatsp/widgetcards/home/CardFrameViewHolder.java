@@ -1,6 +1,5 @@
 package com.chinatsp.widgetcards.home;
 
-import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -17,12 +16,16 @@ import com.chinatsp.entity.BaseCardEntity;
 import com.chinatsp.widgetcards.R;
 import com.chinatsp.widgetcards.editor.CardEditorActivity;
 
+import java.util.function.Consumer;
+
 import card.service.ICardStyleChange;
 import launcher.base.routine.ActivityBus;
 import launcher.base.utils.EasyLog;
+import launcher.base.utils.flowcontrol.StableOnClickListener;
 
 public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     private static final String TAG = "CardFrameViewHolder";
+    private static final int MIN_CLICK_INTERVAL = 400; // ms
     private RecyclerView mRecyclerView;
     private TextView mTvCardName;
     private ImageView mIvCardZoom;
@@ -63,14 +66,14 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     private View.OnClickListener mOnClickListener;
 
     private View.OnClickListener createListener(BaseCardEntity cardEntity) {
-        return new View.OnClickListener() {
+        return new StableOnClickListener(MIN_CLICK_INTERVAL, new Consumer<View>() {
             @Override
-            public void onClick(View v) {
-                if (v == mIvCardZoom) {
+            public void accept(View view) {
+                if (view == mIvCardZoom) {
                     changeExpandState(cardEntity);
                 }
             }
-        };
+        });
     }
 
     private void changeExpandState(BaseCardEntity cardEntity) {
@@ -123,26 +126,19 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void expand(BaseCardEntity cardEntity) {
-        ViewGroup.LayoutParams layoutParams = itemView.getLayoutParams();
-//        layoutParams.width = (int) getDimension(R.dimen.card_width_large);
         itemView.setBackgroundResource(R.drawable.card_bg_large);
         mIvCardZoom.setImageResource(R.drawable.card_icon_back);
-
-//        ViewGroup root = (ViewGroup) itemView;
-//        root.removeView(mCardInner);
-//        root.addView(getLargeCardView(cardEntity), 0);
         if (mCardInner instanceof ICardStyleChange) {
             ((ICardStyleChange) mCardInner).expand();
         }
 
-        mTvCardName.setTextColor(getColor(R.color.card_blue_default));
+        mTvCardName.setTextColor(getColor(R.color.card_blue_lv1));
         runExpandAnimation();
     }
 
     private void runExpandAnimation() {
         int largeWidth = (int) getDimension(R.dimen.card_width_large);
         int smallWidth = (int) getDimension(R.dimen.card_width);
-//        ObjectAnimator.ofInt(itemView, "width",largeWidth).setDuration(500).start();
         ViewGroup.LayoutParams layoutParams = itemView.getLayoutParams();
         ValueAnimator valueAnimator = ObjectAnimator.ofInt(smallWidth, largeWidth).setDuration(150);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -160,7 +156,6 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     private void runCollapseAnimation() {
         int largeWidth = (int) getDimension(R.dimen.card_width_large);
         int smallWidth = (int) getDimension(R.dimen.card_width);
-//        ObjectAnimator.ofInt(itemView, "width",largeWidth).setDuration(500).start();
         ViewGroup.LayoutParams layoutParams = itemView.getLayoutParams();
         ValueAnimator valueAnimator = ObjectAnimator.ofInt(largeWidth, smallWidth).setDuration(150);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -176,17 +171,12 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void collapse(BaseCardEntity cardEntity) {
-        ViewGroup.LayoutParams layoutParams = itemView.getLayoutParams();
-//        layoutParams.width = (int) getDimension(R.dimen.card_width);
         itemView.setBackgroundResource(R.drawable.card_bg_small);
         mIvCardZoom.setImageResource(R.drawable.card_common_icon_expand);
 
         if (mCardInner instanceof ICardStyleChange) {
             ((ICardStyleChange) mCardInner).collapse();
         }
-//        ViewGroup root = (ViewGroup) itemView;
-//        root.removeView(getLargeCardView(cardEntity));
-//        root.addView(mCardInner, 0);
         mTvCardName.setTextColor(getColor(R.color.white));
         runCollapseAnimation();
     }
