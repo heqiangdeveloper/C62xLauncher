@@ -12,6 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class LightingAtmosphereFragment :
     BaseFragment<LightingViewModel, LightingAtmosphereFragmentBinding>() {
     var installDialog: LightingInstallDialogFragment? = null
+    var modeDialog: LightingModelDialogFragment? = null
     override fun getLayoutId(): Int {
         return R.layout.lighting_atmosphere_fragment
     }
@@ -27,6 +28,15 @@ class LightingAtmosphereFragment :
                 installDialog!!.show(
                     it1.supportFragmentManager,
                     "installDialog"
+                )
+            }
+        }
+        binding.lightingIntelligentModel.setOnClickListener {
+            modeDialog = LightingModelDialogFragment()
+            activity?.let { it1 ->
+                modeDialog!!.show(
+                    it1.supportFragmentManager,
+                    "modeDialog"
                 )
             }
         }

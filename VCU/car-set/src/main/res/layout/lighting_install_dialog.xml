@@ -9,6 +9,7 @@
         android:id="@+id/pop_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/x18"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -33,7 +34,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/lighting_closing_reminder"
         style="@style/install_dialog_layout"
-        android:layout_marginTop="@dimen/x18"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/pop_title">
 

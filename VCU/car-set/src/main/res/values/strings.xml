@@ -118,6 +118,11 @@
     <string name="drive_alarm_way">报警方式</string>
     <string name="drive_auxiliary_line">辅助线</string>
     <string name="drive_display_area">显示区域</string>
+    <string name="drive_colour_breathing">色彩呼吸</string>
+    <string name="drive_music_rhythm">音乐律动</string>
+    <string name="drive_car_rhythm">车速律动</string>
+    <string name="drive_pm_display">PM2.5显示</string>
+    <string name="drive_temperature_rhythm">调温律动</string>
 
     <string name="lighting_title">灯光</string>
     <string name="lighting_atmosphere_lamp">氛围灯</string>

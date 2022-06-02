@@ -10,19 +10,20 @@ import androidx.fragment.app.DialogFragment
 import com.chinatsp.vehicle.settings.R
 import com.common.xui.utils.DensityUtils
 
-class LightingInstallDialogFragment : DialogFragment() {
-    private var installView: View? = null
+class LightingModelDialogFragment : DialogFragment() {
+    private var modeView: View? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         this.dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        installView = inflater.inflate(R.layout.lighting_install_dialog, null, false);
-        return installView
+        modeView = inflater.inflate(R.layout.lighting_model_dialog_fragment, null, false);
+        return modeView
     }
+
     override fun onResume() {
         super.onResume()
-        dialog?.window?.setLayout(DensityUtils.dp2px(960f), DensityUtils.dp2px(600f));
+        dialog?.window?.setLayout(DensityUtils.dp2px(1168f), DensityUtils.dp2px(600f));
     }
 }

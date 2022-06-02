@@ -98,7 +98,9 @@
                     android:text="@string/lighting_color" />
             </LinearLayout>
 
-            <LinearLayout style="@style/lighting_layout">
+            <LinearLayout
+                android:id="@+id/lighting_intelligent_model"
+                style="@style/lighting_layout">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="@dimen/x31"
