@@ -265,6 +265,11 @@ public abstract class SimpleAdapter<T, VH extends SimpleAdapter.ViewHolder> impl
             mData.remove(position);
             notifyDataSetChanged();
         }
+
+        @Override
+        public int total() {
+            return mData.size();
+        }
     }
 
     class SimpleSubAdapter extends BaseSubAdapter<VH> {

@@ -147,5 +147,10 @@ public abstract class BaseMainAdapter<VH extends RecyclerView.ViewHolder, Sub ex
     public void removeItem(int position) {
 
     }
+
+    @Override
+    public int total() {
+        return 0;
+    }
 }
 
