@@ -72,13 +72,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
+            <LinearLayout style="@style/lighting_layout">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="@dimen/x31"
@@ -91,13 +85,7 @@
                     android:text="@string/lighting_brightness" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
+            <LinearLayout style="@style/lighting_layout">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="@dimen/x31"
@@ -110,13 +98,7 @@
                     android:text="@string/lighting_color" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
+            <LinearLayout style="@style/lighting_layout">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="@dimen/x31"
@@ -130,12 +112,8 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:id="@+id/lighting_install"
+                style="@style/lighting_layout">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="@dimen/x31"

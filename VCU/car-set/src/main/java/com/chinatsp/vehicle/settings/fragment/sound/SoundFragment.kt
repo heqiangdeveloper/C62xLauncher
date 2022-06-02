@@ -1,6 +1,8 @@
 package com.chinatsp.vehicle.settings.fragment.sound
 
 import android.os.Bundle
+import android.os.Handler
+import android.util.Log
 import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.vehicle.settings.R
@@ -22,8 +24,6 @@ class SoundFragment : BaseFragment<SoundViewModel, SoundFragmentBinding>() {
 
     override fun initData(savedInstanceState: Bundle?) {
         setCheckedChangeListener()
-        initSoundVolume()
-        initSoundListener()
         observeSoundVolume()
         binding.soundMeterAlarmOption.setOnTabSelectionChangedListener { title, value ->
             LogManager.d("setOnTabSelectionChangedListener title:$title, value:$value")
@@ -33,7 +33,6 @@ class SoundFragment : BaseFragment<SoundViewModel, SoundFragmentBinding>() {
         binding.soundRemixOption.setOnTabSelectionChangedListener { title, value ->
             voiceManager.doUpdateRemixOption(value.toInt())
         }
-
     }
 
     private fun observeSoundVolume() {
@@ -64,6 +63,11 @@ class SoundFragment : BaseFragment<SoundViewModel, SoundFragmentBinding>() {
                 )
             }
 
+            Handler().postDelayed({
+                initSoundVolume()
+                initSoundListener()
+            }, 50)
+
         }
     }
 
@@ -82,5 +86,6 @@ class SoundFragment : BaseFragment<SoundViewModel, SoundFragmentBinding>() {
             it.updateVolumeValue(SoundDialogFragment.Type.SYSTEM, viewModel.systemVolume.value)
         }
     }
+
 
 }

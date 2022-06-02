@@ -137,6 +137,12 @@
     <string name="lighting_color">颜色</string>
     <string name="lighting_intelligent_model">智能模式</string>
     <string name="lighting_install">其他设置</string>
+    <string name="lighting_closing_reminder">开关门提醒</string>
+    <string name="lighting_shut_reminder">开关锁提醒</string>
+    <string name="lighting_brightness_breathing">亮度呼吸</string>
+    <string name="lighting_rear_reminder">开门后方来车提醒</string>
+    <string name="lighting_related_topics">关联主题</string>
+    <string name="drive_related_topics_content">将设置项保存于当前主题中，在主题切换时同步设置结果</string>
 
     <string name="sound_title">声音</string>
     <string name="sound_effect">音效</string>
