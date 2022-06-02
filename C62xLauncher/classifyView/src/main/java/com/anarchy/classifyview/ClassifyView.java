@@ -333,15 +333,15 @@ public class ClassifyView extends FrameLayout {
                     mMainCallBack.onItemClick(position, pressedView);
                     return true;
                 } else {
-                    //如果没有添加按钮，则新增一个添加按钮
+                    //如果没有添加按钮，则新增一个添加按钮,防止添加按钮不是在最末尾，先清除，再新增
                     isExistAdd = false;
                     for(int i = 0; i < list.size(); i++){
-                        if(((ResolveInfo)list.get(i)).activityInfo == null){
+                        if(list.get(i) == null){
                             list.remove(i);
                             break;
                         }
                     }
-                    list.add(new ResolveInfo());
+                    list.add(null);
 
                     mSubCallBack.initData(position, list);
                     titleTv.setVisibility(View.VISIBLE);
@@ -725,12 +725,12 @@ public class ClassifyView extends FrameLayout {
                                     dialog.dismiss();
                                     //如果没有添加按钮，则新增一个添加按钮
                                     for(int i = 0; i < list.size(); i++){
-                                        if(((ResolveInfo)list.get(i)).activityInfo == null){
+                                        if(list.get(i) == null){
                                             list.remove(i);
                                             break;
                                         }
                                     }
-                                    list.add(new ResolveInfo());
+                                    list.add(null);
                                     mSubCallBack.initData(mSelectedPosition, list);
 
                                     final int height = (int) (getHeight() * mSubRatio);
@@ -925,9 +925,10 @@ public class ClassifyView extends FrameLayout {
                     if (mSubCallBack.canDragOut(mSelectedPosition)) {
                         inSubRegion = false;
                         inMainRegion = true;
+                        hideSubContainer();
                         //重新刷新sub及main
                         mSubCallBack.removeItem(mSubRecyclerView.getChildCount() - 1);
-                        hideSubContainer();
+
                         mSelectedPosition = mMainCallBack.onLeaveSubRegion(mSelectedPosition, new SubAdapterReference(mSubCallBack));
                         L.d("mSelectedPosition = " + mSelectedPosition);
                         mMainCallBack.setDragPosition(mSelectedPosition);
