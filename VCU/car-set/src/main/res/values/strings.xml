@@ -64,7 +64,16 @@
     <string name="cabin_seat_welcomes_guests">主驾迎宾</string>
     <string name="cabin_seat_close">已关闭</string>
     <string name="cabin_seat_copilot_guests">副驾迎宾</string>
+    <string name="cabin_seat_copilot_guests_position">副驾迎宾位置</string>
     <string name="cabin_seat_automatic_heating">座椅自动加热</string>
+    <string name="cabin_seat_set_up">请先设置副驾常用位置和迎宾位置</string>
+    <string name="cabin_seat_passenger_safety">开启后，副驾座椅移动时，请注意后排乘客安全</string>
+    <string name="cabin_seat_common_location">常用位置</string>
+    <string name="cabin_seat_welcome_location">迎宾位置</string>
+    <string name="cabin_seat_not_saved">未保存</string>
+    <string name="cabin_seat_screen_modify">去空调屏修改</string>
+    <string name="cabin_seat_copilot_lower">副驾下车</string>
+    <string name="cabin_seat_copilot_top">副驾上车</string>
 
     <string name="cabin_other_trailer_remind">拖车提醒</string>
     <string name="cabin_other_close">已关闭</string>
