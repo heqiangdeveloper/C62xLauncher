@@ -1,7 +1,9 @@
 package com.chinatsp.settinglib.manager
 
 import android.car.hardware.CarPropertyValue
+import com.chinatsp.settinglib.manager.access.AccessManager
 import com.chinatsp.settinglib.manager.cabin.CabinManager
+import com.chinatsp.settinglib.manager.lamp.LampManager
 import com.chinatsp.settinglib.manager.sound.AudioManager
 import com.chinatsp.settinglib.sign.SignalOrigin
 
@@ -26,7 +28,12 @@ class GlobalManager private constructor() : BaseManager() {
 
 
     val managers: List<BaseManager> by lazy {
-        listOf(CabinManager.instance, AudioManager.instance)
+        ArrayList<BaseManager>().apply {
+            add(CabinManager.instance)
+            add(AudioManager.instance)
+            add(LampManager.instance)
+            add(AccessManager.instance)
+        }
     }
     override val concernedSerials: Map<SignalOrigin, Set<Int>>
         get() = HashMap()

@@ -15,7 +15,7 @@ import com.chinatsp.vehicle.settings.bean.Volume
 import com.common.xui.utils.DensityUtils
 import com.common.xui.widget.picker.VerticalSeekBar
 
-class SoundDialogFragment : DialogFragment(), VerticalSeekBar.OnChangeListener {
+class SoundDialogFragment(_listener: IViewListener?) : DialogFragment(), VerticalSeekBar.OnChangeListener {
     private var recordingView: View? = null
     private lateinit var phoneVolumeVsb: VerticalSeekBar
     private lateinit var naviVolumeVsb: VerticalSeekBar
@@ -24,12 +24,13 @@ class SoundDialogFragment : DialogFragment(), VerticalSeekBar.OnChangeListener {
     private lateinit var systemVolumeVsb: VerticalSeekBar
     private lateinit var closeDialog: AppCompatImageView
     private var callBack: CallBack? = null
-    fun newInstance(): SoundDialogFragment {
-        val args = Bundle()
-        val fragment = SoundDialogFragment()
-        fragment.arguments = args
-        return fragment
-    }
+    private var listener: IViewListener? = _listener
+//    fun newInstance(): SoundDialogFragment {
+//        val args = Bundle()
+//        val fragment = SoundDialogFragment()
+//        fragment.arguments = args
+//        return fragment
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,6 +46,11 @@ class SoundDialogFragment : DialogFragment(), VerticalSeekBar.OnChangeListener {
         return recordingView
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        listener?.doViewCreated()
+    }
+
 
     override fun onResume() {
         super.onResume()
@@ -58,11 +64,11 @@ class SoundDialogFragment : DialogFragment(), VerticalSeekBar.OnChangeListener {
     }
 
     private fun setSeekBarListener(listener: VerticalSeekBar.OnChangeListener) {
-        naviVolumeVsb?.setOnChangeListener(listener)
-        voiceVolumeVsb?.setOnChangeListener(listener)
-        mediaVolumeVsb?.setOnChangeListener(listener)
-        phoneVolumeVsb?.setOnChangeListener(listener)
-        systemVolumeVsb?.setOnChangeListener(listener)
+        naviVolumeVsb.setOnChangeListener(listener)
+        voiceVolumeVsb.setOnChangeListener(listener)
+        mediaVolumeVsb.setOnChangeListener(listener)
+        phoneVolumeVsb.setOnChangeListener(listener)
+        systemVolumeVsb.setOnChangeListener(listener)
     }
 
     private fun initVerticalSeekBar() {
@@ -135,7 +141,7 @@ class SoundDialogFragment : DialogFragment(), VerticalSeekBar.OnChangeListener {
 
     override fun onChange(view: View?, currentValue: Int) {
         val volumeService = SoundManager.getInstance()
-        when (requireView().id) {
+        when (view?.id) {
             R.id.sound_audio_navi_volume -> {
                 volumeService.naviVolume = currentValue
             }
@@ -155,4 +161,9 @@ class SoundDialogFragment : DialogFragment(), VerticalSeekBar.OnChangeListener {
             }
         }
     }
+
+    interface IViewListener {
+        fun doViewCreated()
+    }
+
 }

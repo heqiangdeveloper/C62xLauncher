@@ -60,7 +60,8 @@
                 style="@style/tdv_common_style"
                 app:layout_constraintTop_toTopOf="parent"
                 app:tcv_defaultSelection="1"
-                app:tcv_items="@array/car_trunk_mode_options" />
+                app:tcv_items="@array/electric_stern_door_option_titles"
+                app:tcv_values="@array/electric_stern_door_option_values" />
         </LinearLayout>
 
         <View

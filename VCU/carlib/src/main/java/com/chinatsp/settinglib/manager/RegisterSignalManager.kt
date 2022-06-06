@@ -32,6 +32,15 @@ class RegisterSignalManager private constructor() {
                     add(CarCabinManager.ID_ACCMFTSTSDISP)
                     /**车辆音效-声音-响度控制*/
                     add(CarCabinManager.ID_AMP_LOUD_SW_STS)
+                    /**雨天自动关窗*/
+                    add(CarCabinManager.ID_BCM_RAIN_WIN_CLOSE_FUN_STS)
+
+                    /**行车自动落锁*/
+                    add(CarCabinManager.ID_VSPEED_LOCKING_STATUE)
+                    /**熄火自动解锁*/
+                    add(CarCabinManager.ID_CUTOFF_UNLOCK_DOORS_STATUE)
+                    /**车门智能进入*/
+                    add(CarCabinManager.ID_SMART_ENTRY_STS)
                 }
             }
 
