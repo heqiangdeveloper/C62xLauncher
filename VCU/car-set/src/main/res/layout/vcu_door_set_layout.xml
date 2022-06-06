@@ -29,7 +29,7 @@
             android:id="@+id/tcv_drive_lock_delay"
             style="@style/tdv_common_style"
             app:layout_constraintTop_toTopOf="parent"
-            app:tcv_items="@array/three_state_option" />
+            app:tcv_items="@array/drive_auto_lock_door_option_titles" />
     </LinearLayout>
 
     <LinearLayout
@@ -54,7 +54,8 @@
             android:id="@+id/tcv_door_smart_mode"
             style="@style/tdv_common_style"
             app:layout_constraintTop_toTopOf="parent"
-            app:tcv_items="@array/auto_unlock_door_options" />
+            app:tcv_items="@array/auto_unlock_door_options"
+            app:tcv_values="@array/auto_unlock_door_option_values" />
     </LinearLayout>
 
     <com.common.xui.widget.picker.VSeekBar

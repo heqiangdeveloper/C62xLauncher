@@ -16,7 +16,7 @@ class AccessFragment: BaseLazyFragment<DoorViewModel, AccessFragmentBinding>() {
 //        viewModel.liveDataAutoLockDoor.observe(this) {
 //            binding.accessCarWindow.text = it
 //        }
-        val array = ResUtils.getStringArray(R.array.three_state_option)
+        val array = ResUtils.getStringArray(R.array.drive_auto_lock_door_option_titles)
 //        with(binding.tabControlView) {
 //            this.setEqualWidth(true)
 //            this.setItems(array, array)

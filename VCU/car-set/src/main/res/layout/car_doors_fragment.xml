@@ -29,11 +29,12 @@
                 android:text="@string/drive_auto_lock" />
 
             <com.common.xui.widget.tabbar.TabControlView
-                android:id="@+id/car_doors_option"
+                android:id="@+id/car_doors_drive_lock_option"
                 style="@style/tdv_common_style"
                 app:layout_constraintTop_toTopOf="parent"
                 app:tcv_defaultSelection="1"
-                app:tcv_items="@array/three_state_option" />
+                app:tcv_items="@array/drive_auto_lock_door_option_titles"
+                app:tcv_values="@array/drive_auto_lock_door_option_values" />
         </LinearLayout>
 
         <View
@@ -60,8 +61,9 @@
                 android:id="@+id/auto_unlock_door_options"
                 style="@style/tdv_common_style"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tcv_defaultSelection="1"
-                app:tcv_items="@array/auto_unlock_door_options" />
+                app:tcv_defaultSelection="3"
+                app:tcv_items="@array/auto_unlock_door_options"
+                app:tcv_values="@array/auto_unlock_door_option_values" />
         </LinearLayout>
 
         <View

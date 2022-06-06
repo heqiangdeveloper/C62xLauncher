@@ -54,7 +54,8 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/lane_assist_system"
                         app:tcv_defaultSelection="1"
-                        app:tcv_items="@array/drive_auxiliary_system" />
+                        app:tcv_items="@array/drive_auxiliary_system"
+                        app:tcv_values="@array/drive_auxiliary_system_values" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/txt_prompt"

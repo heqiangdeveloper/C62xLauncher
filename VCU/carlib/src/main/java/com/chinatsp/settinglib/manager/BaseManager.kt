@@ -37,6 +37,10 @@ abstract class BaseManager {
         return signalService.doSetProperty(id, value, origin, area)
     }
 
+    fun doSetProperty(id: Int, value: Int, origin: SignalOrigin, areaValue: Int): Boolean {
+        return signalService.doSetProperty(id, value, origin, areaValue)
+    }
+
     fun doGetIntProperty(id: Int, origin: SignalOrigin, area: Area = Area.GLOBAL): Int {
         return signalService.doGetIntProperty(id, origin, area)
     }

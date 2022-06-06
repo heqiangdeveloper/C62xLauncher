@@ -2,6 +2,7 @@ package com.chinatsp.vehicle.settings
 
 import android.app.Application
 import com.chinatsp.settinglib.SettingManager
+import com.chinatsp.settinglib.manager.VehicleManager
 import com.chinatsp.vehicle.settings.app.Constants
 import com.king.retrofit.retrofithelper.RetrofitHelper
 import com.orhanobut.logger.AndroidLogAdapter
@@ -70,6 +71,7 @@ class App : Application() {
     private fun initCarSettingManager() {
         SettingManager.init(applicationContext)
         SettingManager.getInstance()
+        VehicleManager.instance.initVehicleConnect(applicationContext)
     }
 
     private fun initLogger() {

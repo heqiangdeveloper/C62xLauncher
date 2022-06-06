@@ -55,7 +55,14 @@ class SoundFragment : BaseFragment<SoundViewModel, SoundFragmentBinding>() {
 
     private fun setCheckedChangeListener() {
         binding.soundVolumeAdjustment.setOnClickListener {
-            soundDialog = SoundDialogFragment()
+            soundDialog = SoundDialogFragment(object : SoundDialogFragment.IViewListener {
+                override fun doViewCreated() {
+                    initSoundVolume()
+                    initSoundListener()
+                    observeSoundVolume()
+                }
+
+            })
             activity?.let { it1 ->
                 soundDialog!!.show(
                     it1.supportFragmentManager,

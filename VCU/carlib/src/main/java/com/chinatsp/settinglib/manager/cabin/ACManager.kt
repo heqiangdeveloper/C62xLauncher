@@ -197,18 +197,19 @@ class ACManager private constructor() : BaseManager(), IConcernChanged, IAcManag
      */
     fun doSwitchOption(switchNode: SwitchNode, isStatus: Boolean): Boolean {
         return when (switchNode) {
-            SwitchNode.AC_AUTO_ARID -> {
-                val signal = CarHvacManager.ID_HVAC_AVN_SELF_DESICAA_SWT
-                doSetProperty(signal, switchNode.obtainValue(isStatus), SignalOrigin.HVAC_SIGNAL)
-            }
-            SwitchNode.AC_AUTO_DEMIST -> {
-                val signal = CarHvacManager.ID_HVAC_AVN_KEY_DEFROST
-                doSetProperty(signal, switchNode.obtainValue(isStatus), SignalOrigin.HVAC_SIGNAL)
-            }
+            SwitchNode.AC_AUTO_ARID,
+            SwitchNode.AC_AUTO_DEMIST,
             SwitchNode.AC_ADVANCE_WIND -> {
-                val signal = CarHvacManager.ID_HVAC_AVN_UNLOCK_BREATHABLE_ENABLE
-                doSetProperty(signal, switchNode.obtainValue(isStatus), SignalOrigin.HVAC_SIGNAL)
+                doSetProperty(switchNode.signal, switchNode.obtainValue(isStatus), switchNode.origin)
             }
+//            SwitchNode.AC_AUTO_DEMIST -> {
+//                val signal = CarHvacManager.ID_HVAC_AVN_KEY_DEFROST
+//                doSetProperty(signal, switchNode.obtainValue(isStatus), SignalOrigin.HVAC_SIGNAL)
+//            }
+//            SwitchNode.AC_ADVANCE_WIND -> {
+//                val signal = CarHvacManager.ID_HVAC_AVN_UNLOCK_BREATHABLE_ENABLE
+//                doSetProperty(signal, switchNode.obtainValue(isStatus), SignalOrigin.HVAC_SIGNAL)
+//            }
             else -> false
         }
     }
