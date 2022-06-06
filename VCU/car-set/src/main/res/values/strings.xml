@@ -53,9 +53,13 @@
 
     <string name="cabin_wheel_electronic_mode">电子助力转向模式</string>
     <string name="cabin_wheel_press_key">方向盘自定义按键</string>
+    <string name="cabin_wheel_custom_button">方向盘自定义按钮</string>
     <string name="cabin_wheel_press_key_tv">隐私模式</string>
     <string name="cabin_wheel_automatic_heating">方向盘自动加热</string>
     <string name="cabin_wheel_automatic_heating_tv">已关闭</string>
+    <string name="cabin_wheel_turn_screen">熄屏</string>
+    <string name="cabin_wheel_navigation">导航</string>
+    <string name="cabin_wheel_starting_temperature">自动加热起始温度</string>
 
     <string name="cabin_seat_welcomes_guests">主驾迎宾</string>
     <string name="cabin_seat_close">已关闭</string>

@@ -128,4 +128,21 @@
         <item name="android:textSize">@dimen/text_14</item>
         <item name="android:gravity">center</item>
     </style>
+
+    <style name="dialog_title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/tab_option_title_text_color</item>
+        <item name="android:textSize">@dimen/text_18</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_marginTop">@dimen/x15</item>
+    </style>
+
+    <style name="close_dialog">
+        <item name="android:layout_width">@dimen/x28</item>
+        <item name="android:layout_height">@dimen/x28</item>
+        <item name="android:src">@drawable/close_56_white</item>
+        <item name="android:layout_marginLeft">@dimen/x15</item>
+        <item name="android:layout_marginTop">@dimen/x15</item>
+    </style>
 </resources>
