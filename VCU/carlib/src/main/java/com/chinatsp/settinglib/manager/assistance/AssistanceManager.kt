@@ -1,6 +1,7 @@
 package com.chinatsp.settinglib.manager.assistance
 
 import android.car.hardware.CarPropertyValue
+import com.chinatsp.settinglib.ITabStore
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
@@ -17,9 +18,13 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 
 
-class AssistanceManager private constructor() : BaseManager() {
+class AssistanceManager private constructor() : BaseManager(), ITabStore {
 
-    private var concernedSerialManagers: List<out BaseManager>? = null
+    private var concernedSerialManagers: List<BaseManager>? = null
+
+    override val tabSerial: AtomicInteger by lazy {
+        AtomicInteger(-1)
+    }
 
     override fun onHandleConcernedSignal(
         property: CarPropertyValue<*>,
@@ -49,10 +54,14 @@ class AssistanceManager private constructor() : BaseManager() {
             AssistanceManager()
         }
 
-        val managers: List<out BaseManager> by lazy {
+        val managers: List<BaseManager> by lazy {
             ArrayList<BaseManager>().apply {
                 add(CruiseManager.instance)
+                add(ForwardManager.instance)
+                add(LamplightManager.instance)
+                add(LaneManager.instance)
                 add(RoadSignManager.instance)
+                add(SideBackManager.instance)
             }
         }
 

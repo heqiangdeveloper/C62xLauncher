@@ -49,10 +49,26 @@ enum class SwitchNode(val on: Int, val off: Int, val def: Int, val origin: Signa
      */
     AC_ADVANCE_WIND(0x01, 0x02, 0x01, SignalOrigin.HVAC_SIGNAL, CarHvacManager.ID_HVAC_AVN_UNLOCK_BREATHABLE_ENABLE),
 
+    //----------------车辆音效 开始--------------
+    /**
+     * 车辆音效-声音-系统提示音
+     */
+    AUDIO_SOUND_TONE(0x01, 0x02, 0x01, SignalOrigin.CABIN_SIGNAL, -1),
+    /**
+     * 车辆音效-声音-速度音量补偿
+     */
+    AUDIO_SOUND_OFFSET(0x01, 0x02, 0x01, SignalOrigin.CABIN_SIGNAL, -1),
+    /**
+     * 车辆音效-声音-华为音效
+     */
+    AUDIO_SOUND_HUAWEI(0x01, 0x02, 0x01, SignalOrigin.CABIN_SIGNAL, -1),
     /**
      * 车辆音效-声音-响度控制
      */
-    SE_LOUDNESS(0x01, 0x02, 0x01, SignalOrigin.CABIN_SIGNAL, CarCabinManager.ID_HUM_LOUD_SW),
+    AUDIO_SOUND_LOUDNESS(0x01, 0x02, 0x01, SignalOrigin.CABIN_SIGNAL, CarCabinManager.ID_HUM_LOUD_SW),
+
+
+    //----------------车辆音效 结束--------------
 
     /**
      * 车门车窗-车门-车门智能进入
@@ -142,13 +158,54 @@ enum class SwitchNode(val on: Int, val off: Int, val def: Int, val origin: Signa
     ADAS_AEB(0x01, 0x02, 0x01, SignalOrigin.CABIN_SIGNAL, CarCabinManager.ID_FCW_SWT),
     /**是否超速标示位[0x1,-1,0x0,0x4] 0x0: Invalid 0x1: NOT overspeed 0x2: Overspeed*/
     ADAS_OVER_SPEED_SIGN(0x02, 0x01, 0x01, SignalOrigin.CABIN_SIGNAL, CarCabinManager.ID_HUM_ICM_SPEEDLIMIT_STATS),
+    /**智能远光灯辅助 HMA */
+    ADAS_SMART_BEAN_LIGHT(0x02, 0x01, 0x01, SignalOrigin.CABIN_SIGNAL, -1),
+
+    /**
+     * 驾驶辅助--侧后辅助--开门预警 DOW
+     */
+    ADAS_DOW(0x02, 0x01, 0x01, SignalOrigin.CABIN_SIGNAL, -1),
+    /**
+     * 驾驶辅助--侧后辅助--盲区监测 BSD
+     */
+    ADAS_BSD(0x02, 0x01, 0x01, SignalOrigin.CABIN_SIGNAL, -1),
+
+    /**
+     * 驾驶辅助--侧后辅助--盲区摄像头
+     */
+    ADAS_BSC(0x02, 0x01, 0x01, SignalOrigin.CABIN_SIGNAL, -1),
+    /**
+     * 驾驶辅助--侧后辅助--辅助线
+     */
+    ADAS_GUIDES(0x02, 0x01, 0x01, SignalOrigin.CABIN_SIGNAL, -1),
     /**驾驶辅助 结束*/
+
+    //----------------行车 start ---------------------------------
+    /**
+     * 行车--其它--蓄电池优化
+     */
+    DRIVE_BATTERY_OPTIMIZE(0x02, 0x01, 0x01, SignalOrigin.CABIN_SIGNAL, -1),
+
+    /**
+     * 行车--其它--无线充电
+     */
+    DRIVE_WIRELESS_CHARGING(0x02, 0x01, 0x01, SignalOrigin.CABIN_SIGNAL, -1),
+
+    /**
+     * 行车--其它--无线充电灯
+     */
+    DRIVE_WIRELESS_CHARGING_LAMP(0x02, 0x01, 0x01, SignalOrigin.CABIN_SIGNAL, -1),
+    //----------------行车 end ---------------------------------
+
+
 
     INVALID(0x01, 0x02, 0x01, SignalOrigin.CABIN_SIGNAL, CarHvacManager.ID_HVAC_AVN_SELF_DESICAA_SWT);
 
     fun obtainValue(status: Boolean): Int {
         return if (status) on else off
     }
+
+    fun isValidValue(value: Int) = (on == value) or (off == value)
 
     fun isOn(value: Int) = on == value
 

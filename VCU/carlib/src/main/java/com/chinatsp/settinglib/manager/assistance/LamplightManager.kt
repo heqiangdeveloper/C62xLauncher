@@ -12,11 +12,11 @@ import com.chinatsp.settinglib.sign.SignalOrigin
 /**
  * @author : luohong
  * @e-mail : luohong1@bdstar.com
- * @date   : 2022/6/2 11:34
+ * @date   : 2022/6/7 10:50
  * @desc   :
  * @version: 1.0
  */
-class RoadSignManager: BaseManager(), ISwitchManager {
+class LamplightManager: BaseManager(), ISwitchManager {
 
     companion object: ISignal {
 
@@ -52,12 +52,12 @@ class RoadSignManager: BaseManager(), ISwitchManager {
     }
 
     override fun doGetSwitchOption(switchNode: SwitchNode): Boolean {
-        TODO("Not yet implemented")
+        return false
     }
 
     override fun doSetSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean {
         return when (switchNode) {
-            SwitchNode.ADAS_OVER_SPEED_SIGN -> {
+            SwitchNode.ADAS_SMART_BEAN_LIGHT -> {
                 doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin, VehicleAreaSeat.SEAT_DRIVER)
             }
             else -> false

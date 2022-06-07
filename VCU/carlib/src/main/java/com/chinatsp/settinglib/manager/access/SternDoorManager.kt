@@ -1,16 +1,14 @@
 package com.chinatsp.settinglib.manager.access
 
-import android.app.Application
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
-import android.car.hardware.hvac.CarHvacManager
-import com.chinatsp.settinglib.IConcernChanged
 import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.listener.IBaseListener
-import com.chinatsp.settinglib.listener.lamp.ILightManager
 import com.chinatsp.settinglib.manager.BaseManager
+import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.optios.Area
+import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.SignalOrigin
 import java.lang.ref.WeakReference
@@ -24,7 +22,7 @@ import java.lang.ref.WeakReference
  */
 
 
-class SternDoorManager private constructor() : BaseManager(), IConcernChanged, ILightManager{
+class SternDoorManager private constructor() : BaseManager(), IOptionManager {
 
 
     private val identity by lazy { System.identityHashCode(this) }
@@ -74,6 +72,14 @@ class SternDoorManager private constructor() : BaseManager(), IConcernChanged, I
         return concernedSerials[signalOrigin] ?: HashSet()
     }
 
+    override fun doGetRadioOption(radioNode: RadioNode): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun doSetRadioOption(radioNode: RadioNode, value: Int): Boolean {
+        TODO("Not yet implemented")
+    }
+
     override fun unRegisterVcuListener(serial: Int, callSerial: Int): Boolean {
         LogManager.d(TAG, "unRegisterVcuListener serial:$serial, callSerial:$callSerial")
         synchronized(listenerStore) {
@@ -93,6 +99,18 @@ class SternDoorManager private constructor() : BaseManager(), IConcernChanged, I
         return serial
     }
 
+    override fun doGetSwitchOption(switchNode: SwitchNode): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun doSetSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean {
+        return when (switchNode) {
+            SwitchNode.AS_STERN_AUDIO_ALARM, SwitchNode.AS_STERN_LIGHT_ALARM, SwitchNode.AS_STERN_ELECTRIC -> {
+                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin)
+            }
+            else -> false
+        }
+    }
 
 
     /**
@@ -108,23 +126,6 @@ class SternDoorManager private constructor() : BaseManager(), IConcernChanged, I
         return doSetProperty(signal, value, SignalOrigin.CABIN_SIGNAL, Area.GLOBAL)
     }
 
-    /**
-     *
-     * @param switchNode 开关选项
-     * @param isStatus 开关期望状态
-     */
-    fun doSwitchOption(switchNode: SwitchNode, isStatus: Boolean): Boolean {
-        return when (switchNode) {
-            SwitchNode.AS_STERN_AUDIO_ALARM, SwitchNode.AS_STERN_LIGHT_ALARM, SwitchNode.AS_STERN_ELECTRIC -> {
-                doSetProperty(switchNode.signal, switchNode.obtainValue(isStatus), switchNode.origin)
-            }
-            else -> false
-        }
-    }
-
-    override fun onPropertyChanged(type: SignalOrigin, property: CarPropertyValue<*>) {
-
-    }
 
     private fun onHvacPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {

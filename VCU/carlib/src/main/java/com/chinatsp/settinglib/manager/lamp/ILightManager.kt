@@ -1,12 +1,12 @@
-package com.chinatsp.settinglib.listener.sound
+package com.chinatsp.settinglib.manager.lamp
 
 import com.chinatsp.settinglib.manager.IOptionManager
 
 /**
  * @author : luohong
  * @e-mail : luohong1@bdstar.com
- * @date   : 2022/5/30 16:18
+ * @date   : 2022/5/31 13:51
  * @desc   :
  * @version: 1.0
  */
-interface ISoundManager: IOptionManager
+interface ILightManager: IOptionManager

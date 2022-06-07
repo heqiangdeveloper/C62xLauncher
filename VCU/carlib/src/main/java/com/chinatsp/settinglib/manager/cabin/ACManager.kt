@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 
 
-class ACManager private constructor() : BaseManager(), IConcernChanged, IAcManager {
+class ACManager private constructor() : BaseManager(), IAcManager {
 
     /**
      * 【反馈】self-desiccation
@@ -214,17 +214,6 @@ class ACManager private constructor() : BaseManager(), IConcernChanged, IAcManag
         }
     }
 
-    override fun onPropertyChanged(type: SignalOrigin, property: CarPropertyValue<*>) {
-        when (type) {
-            SignalOrigin.CABIN_SIGNAL -> {
-                onCabinPropertyChanged(property)
-            }
-            SignalOrigin.HVAC_SIGNAL -> {
-                onHvacPropertyChanged(property)
-            }
-        }
-    }
-
     private fun onHvacPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             //自动除雾
@@ -304,7 +293,7 @@ class ACManager private constructor() : BaseManager(), IConcernChanged, IAcManag
                 .forEach {
                     val listener = it.value.get()
                     if (listener is IACListener) {
-                        listener.onSwitchStatusChanged(status, type)
+                        listener.onSwitchOptionChanged(status, type)
                     }
                 }
         }

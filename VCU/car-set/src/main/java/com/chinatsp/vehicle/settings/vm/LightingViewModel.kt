@@ -2,12 +2,15 @@ package com.chinatsp.vehicle.settings.vm
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.manager.assistance.LaneManager
+import com.chinatsp.settinglib.manager.lamp.LampManager
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.common.library.frame.base.BaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class LightingViewModel @Inject constructor(app: Application, model: BaseModel): BaseViewModel(app, model){
-    val tabLocationLiveData: MutableLiveData<Int> by lazy { MutableLiveData(-1) }
+class LightingViewModel @Inject constructor(app: Application, model: BaseModel) :
+    BaseViewModel(app, model) {
+    val tabLocationLiveData: MutableLiveData<Int> by lazy { MutableLiveData(LampManager.instance.getTabSerial()) }
 }

@@ -16,7 +16,7 @@ class SoundFragment : BaseFragment<SoundViewModel, SoundFragmentBinding>() {
 
     var soundDialog: SoundDialogFragment? = null
 
-    val voiceManager: VoiceManager by lazy { VoiceManager.instance }
+    private val voiceManager: VoiceManager by lazy { VoiceManager.instance }
 
     override fun getLayoutId(): Int {
         return R.layout.sound_fragment

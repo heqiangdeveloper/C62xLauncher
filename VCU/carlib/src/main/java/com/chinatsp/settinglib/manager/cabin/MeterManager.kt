@@ -3,9 +3,11 @@ package com.chinatsp.settinglib.manager.cabin
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
 import com.chinatsp.settinglib.listener.IBaseListener
-import com.chinatsp.settinglib.listener.cabin.ISafeListener
+import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.manager.BaseManager
+import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.ISignal
+import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.SignalOrigin
 import java.lang.ref.WeakReference
@@ -20,20 +22,20 @@ import java.util.concurrent.atomic.AtomicInteger
  * @version: 1.0
  */
 
-class SafeManager private constructor() : BaseManager() {
+class MeterManager private constructor() : BaseManager(), IRadioManager {
 
     private val fortifySoundSignal = CarCabinManager.ID_LOCK_SUCCESS_SOUND_STATUE
 
-    private val selfSerial by lazy { System.identityHashCode(this) }
+    private val identity by lazy { System.identityHashCode(this) }
 
     private val listenerStore by lazy { HashMap<Int, WeakReference<IBaseListener>>() }
 
 
-    private val fortifySoundStatus: AtomicBoolean by lazy {
-        val node = SwitchNode.DRIVE_SAFE_FORTIFY_SOUND
-        AtomicBoolean(node.isOn()).apply {
-            val value = doGetIntProperty(fortifySoundSignal, node.origin, node.area)
-            doUpdateSwitchStatus(node, this, value)
+    val fortifySoundStatus: AtomicBoolean by lazy {
+        val switchNode = SwitchNode.DRIVE_SAFE_FORTIFY_SOUND
+        AtomicBoolean(switchNode.isOn()).apply {
+            val value = doGetIntProperty(fortifySoundSignal, switchNode.origin, switchNode.area)
+            doUpdateSwitchStatus(switchNode, this, value)
         }
     }
 
@@ -70,19 +72,6 @@ class SafeManager private constructor() : BaseManager() {
         return concernedSerials[signalOrigin] ?: HashSet()
     }
 
-    /**
-     *
-     * @param switchNode 开关选项
-     * @param status 开关期望状态
-     */
-    fun doSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean {
-        return when (switchNode) {
-            SwitchNode.DRIVE_SAFE_FORTIFY_SOUND -> {
-                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin)
-            }
-            else -> false
-        }
-    }
 
     fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
@@ -113,7 +102,7 @@ class SafeManager private constructor() : BaseManager() {
         synchronized(listenerStore) {
             listenerStore.filterValues { null != it.get() }.forEach { (_, u) ->
                 val listener = u.get()
-                if (listener is ISafeListener) {
+                if (listener is ISwitchListener) {
                     listener.onSwitchOptionChanged(status, switchNode)
                 }
             }
@@ -135,10 +124,31 @@ class SafeManager private constructor() : BaseManager() {
     }
 
     companion object : ISignal {
-        override val TAG: String = SafeManager::class.java.simpleName
-        val instance: SafeManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
-            SafeManager()
+        override val TAG: String = MeterManager::class.java.simpleName
+        val instance: MeterManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+            MeterManager()
         }
+    }
+
+    override fun doGetRadioOption(radioNode: RadioNode): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun doSetRadioOption(radioNode: RadioNode, value: Int): Boolean {
+        return when (radioNode) {
+            RadioNode.DRIVE_METER_SYSTEM -> {
+                doSetProperty(-1, value, SignalOrigin.CABIN_SIGNAL)
+            }
+            else -> false
+        }
+    }
+
+    override fun unRegisterVcuListener(serial: Int, callSerial: Int): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun onRegisterVcuListener(priority: Int, listener: IBaseListener): Int {
+        TODO("Not yet implemented")
     }
 
 }

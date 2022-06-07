@@ -1,10 +1,12 @@
 package com.chinatsp.vehicle.settings.fragment.doors
 
+import android.content.res.AssetManager
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.chinatsp.settinglib.manager.access.AccessManager
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.DoorsManageFragmentBinding
 import com.chinatsp.vehicle.settings.fragment.cabin.*
@@ -14,6 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class DoorsManageFragment : BaseFragment<DoorsViewModel, DoorsManageFragmentBinding>() {
+
     var selectOption: View? = null
 
     private lateinit var tabOptions: List<View>
@@ -23,11 +26,7 @@ class DoorsManageFragment : BaseFragment<DoorsViewModel, DoorsManageFragmentBind
     }
 
     private fun onClick(view: View) {
-        if (view != selectOption) {
-            viewModel.tabLocationLiveData.let {
-                it.value = view.id
-            }
-        }
+        viewModel.tabLocationLiveData.takeIf { it.value != view.id }?.value = view.id
     }
 
     override fun initData(savedInstanceState: Bundle?) {
@@ -38,6 +37,8 @@ class DoorsManageFragment : BaseFragment<DoorsViewModel, DoorsManageFragmentBind
         viewModel.tabLocationLiveData.let {
             if (it.value == -1) {
                 it.value = R.id.car_doors
+            } else {
+                it.value = it.value
             }
         }
     }
@@ -53,16 +54,14 @@ class DoorsManageFragment : BaseFragment<DoorsViewModel, DoorsManageFragmentBind
     }
 
     private fun updateSelectTabOption(viewId: Int) {
-        if (viewId != selectOption?.id) {
-            selectOption?.isEnabled = true
-            selectOption = tabOptions.first { it.id == viewId }
-            selectOption?.isEnabled = false
-            updateDisplayFragment(viewId)
-        }
+        tabOptions.forEach { it.isSelected = false }
+        updateDisplayFragment(viewId)
     }
 
     private fun updateDisplayFragment(serial: Int) {
         var fragment: Fragment? = checkOutFragment(serial)
+        tabOptions.first { it.id == serial }.isSelected = true
+        AccessManager.instance.setTabSerial(serial)
         fragment?.let {
             val manager: FragmentManager = childFragmentManager
             val transaction: FragmentTransaction = manager.beginTransaction()

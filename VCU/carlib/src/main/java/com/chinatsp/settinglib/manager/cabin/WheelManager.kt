@@ -9,7 +9,9 @@ import com.chinatsp.settinglib.bean.Status1
 import com.chinatsp.settinglib.listener.cabin.IACListener
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.manager.BaseManager
+import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.ISignal
+import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.SignalOrigin
 import java.lang.ref.WeakReference
@@ -24,7 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * @version: 1.0
  */
 
-class WheelManager private constructor(): BaseManager() {
+class WheelManager private constructor(): BaseManager(), IOptionManager {
 
     private val autoAridProperty = CarCabinManager.ID_ACSELFSTSDISP
 
@@ -190,6 +192,23 @@ class WheelManager private constructor(): BaseManager() {
             WheelManager()
         }
 
+    }
+
+    override fun doGetRadioOption(radioNode: RadioNode): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun doSetRadioOption(radioNode: RadioNode, value: Int): Boolean {
+        TODO("Not yet implemented")
+    }
+
+
+    override fun doGetSwitchOption(switchNode: SwitchNode): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun doSetSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean {
+        TODO("Not yet implemented")
     }
 
 }
