@@ -63,7 +63,7 @@ class DoorsViewModel @Inject constructor(app: Application, model: BaseModel):
         }
     }
 
-    override fun onSwitchChanged(switchNode: SwitchNode, status: Boolean) {
+    override fun onSwitchStatusChanged(status: Boolean, type: SwitchNode) {
         if (status xor (liveDataAutoAccessSwitch.value == true)) {
             liveDataAutoAccessSwitch.value = status
         }

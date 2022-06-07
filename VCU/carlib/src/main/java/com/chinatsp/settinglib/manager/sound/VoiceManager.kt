@@ -2,12 +2,10 @@ package com.chinatsp.settinglib.manager.sound
 
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
-import android.car.hardware.hvac.CarHvacManager
 import android.car.hardware.mcu.CarMcuManager
 import com.chinatsp.settinglib.IConcernChanged
 import com.chinatsp.settinglib.LogManager
-import com.chinatsp.settinglib.bean.DownStatus
-import com.chinatsp.settinglib.listener.IACListener
+import com.chinatsp.settinglib.listener.cabin.IACListener
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.sound.ISoundListener
 import com.chinatsp.settinglib.listener.sound.ISoundManager
@@ -209,7 +207,7 @@ class VoiceManager private constructor() : BaseManager(), IConcernChanged, ISoun
                 .forEach {
                     val listener = it.value.get()
                     if (listener is IACListener) {
-                        listener.onACSwitchStatusChanged(status, type)
+                        listener.onSwitchStatusChanged(status, type)
                     }
                 }
         }

@@ -14,6 +14,27 @@ import com.chinatsp.settinglib.sign.SignalOrigin
 enum class SwitchNode(val on: Int, val off: Int, val def: Int, val origin: SignalOrigin, val signal: Int, val area: Area = Area.GLOBAL) {
 
     /**
+     * 方向盘加热设置[0x1,0,0x0,0x3]
+     * 0x0: Inactive
+     * 0x1: On
+     * 0x2: Off
+     * 0x3: Reserved
+     */
+    DRIVE_WHEEL_AUTO_HEAT(0x01, 0x02, 0x01, SignalOrigin.CABIN_SIGNAL, CarCabinManager.ID_SWS_HEAT_SWT),
+
+    /**
+     * 设防提示音 开关
+     * 0x1: No sound(default)   0x2: Sound
+     */
+    DRIVE_SAFE_FORTIFY_SOUND(0x01, 0x02, 0x01, SignalOrigin.CABIN_SIGNAL, CarCabinManager.ID_LOCK_SUCCESS_SOUND_SET),
+
+    /**
+     * 视频安全模式 开关
+     * 0x1: No sound(default)   0x2: Sound
+     */
+    DRIVE_SAFE_VIDEO_PLAYING(0x01, 0x02, 0x01, SignalOrigin.CABIN_SIGNAL, -1),
+
+    /**
      * 空调自干燥
      */
     AC_AUTO_ARID(0x01, 0x02, 0x01, SignalOrigin.HVAC_SIGNAL, CarHvacManager.ID_HVAC_AVN_SELF_DESICAA_SWT),

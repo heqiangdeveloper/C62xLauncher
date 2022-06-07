@@ -9,5 +9,4 @@ import com.chinatsp.settinglib.listener.IManager
  * @desc   :
  * @version: 1.0
  */
-interface ISoundManager: IManager {
-}
+interface ISoundManager: IManager

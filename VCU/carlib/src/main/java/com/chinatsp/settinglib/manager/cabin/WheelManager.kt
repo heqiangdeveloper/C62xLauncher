@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * @version: 1.0
  */
 
-class SeatManager private constructor(): BaseManager() {
+class WheelManager private constructor(): BaseManager() {
 
     private val autoAridProperty = CarCabinManager.ID_ACSELFSTSDISP
 
@@ -184,10 +184,10 @@ class SeatManager private constructor(): BaseManager() {
 
     companion object: ISignal{
 
-        override val TAG: String = SeatManager::class.java.simpleName
+        override val TAG: String = WheelManager::class.java.simpleName
 
-        val instance: SeatManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
-            SeatManager()
+        val instance: WheelManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+            WheelManager()
         }
 
     }

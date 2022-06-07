@@ -6,7 +6,7 @@ import android.car.hardware.hvac.CarHvacManager
 import com.chinatsp.settinglib.IConcernChanged
 import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.bean.Status1
-import com.chinatsp.settinglib.listener.IACListener
+import com.chinatsp.settinglib.listener.cabin.IACListener
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.cabin.IAcManager
 import com.chinatsp.settinglib.manager.BaseManager
@@ -304,7 +304,7 @@ class ACManager private constructor() : BaseManager(), IConcernChanged, IAcManag
                 .forEach {
                     val listener = it.value.get()
                     if (listener is IACListener) {
-                        listener.onACSwitchStatusChanged(status, type)
+                        listener.onSwitchStatusChanged(status, type)
                     }
                 }
         }

@@ -5,12 +5,7 @@ import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.hvac.CarHvacManager
 import com.chinatsp.settinglib.IConcernChanged
 import com.chinatsp.settinglib.LogManager
-import com.chinatsp.settinglib.bean.Status1
-import com.chinatsp.settinglib.listener.IACListener
 import com.chinatsp.settinglib.listener.IBaseListener
-import com.chinatsp.settinglib.listener.IManager
-import com.chinatsp.settinglib.listener.cabin.IAcManager
-import com.chinatsp.settinglib.listener.lamp.ILightListener
 import com.chinatsp.settinglib.listener.lamp.ILightManager
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
@@ -18,8 +13,6 @@ import com.chinatsp.settinglib.optios.Area
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.SignalOrigin
 import java.lang.ref.WeakReference
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author : luohong

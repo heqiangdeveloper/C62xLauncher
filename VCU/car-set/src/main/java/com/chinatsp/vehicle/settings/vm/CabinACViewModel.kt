@@ -3,7 +3,7 @@ package com.chinatsp.vehicle.settings.vm
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.chinatsp.settinglib.listener.IACListener
+import com.chinatsp.settinglib.listener.cabin.IACListener
 import com.chinatsp.settinglib.manager.cabin.ACManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
@@ -68,7 +68,7 @@ class CabinACViewModel @Inject constructor(app: Application, model: BaseModel) :
         acManager.unRegisterVcuListener(keySerial, keySerial)
     }
 
-    override fun onACSwitchStatusChanged(status: Boolean, type: SwitchNode) {
+    override fun onSwitchStatusChanged(status: Boolean, type: SwitchNode) {
         val liveData = when (type) {
             SwitchNode.AC_AUTO_ARID -> _aridLiveData
             SwitchNode.AC_AUTO_DEMIST -> _demistLiveData

@@ -33,7 +33,8 @@ class WindowManager private constructor() : BaseManager(), ILightManager{
     private val autoCloseWinInRain: AtomicBoolean by lazy {
         AtomicBoolean(false).apply {
             val switchNode = SwitchNode.AS_AUTO_CLOSE_WIN_IN_RAIN
-            val result = signalService.doGetIntProperty(switchNode.signal, switchNode.origin, Area.GLOBAL)
+            val signal = CarCabinManager.ID_BCM_RAIN_WIN_CLOSE_FUN_STS
+            val result = signalService.doGetIntProperty(signal, switchNode.origin, Area.GLOBAL)
             set(switchNode.isOn(result))
         }
     }
@@ -41,7 +42,8 @@ class WindowManager private constructor() : BaseManager(), ILightManager{
     private val autoCloseWinAtLock: AtomicBoolean by lazy {
         AtomicBoolean(false).apply {
             val switchNode = SwitchNode.AS_AUTO_CLOSE_WIN_AT_LOCK
-            val result = signalService.doGetIntProperty(switchNode.signal, switchNode.origin, Area.GLOBAL)
+            val signal = CarCabinManager.ID_BCM_WIN_CLOSE_FUN_STS
+            val result = signalService.doGetIntProperty(signal, switchNode.origin, Area.GLOBAL)
             set(switchNode.isOn(result))
         }
     }
@@ -143,7 +145,6 @@ class WindowManager private constructor() : BaseManager(), ILightManager{
     /**
      *
      * @param switchNode 开关选项
-     * @param isStatus 开关期望状态
      */
     fun doGetSwitchStatus(switchNode: SwitchNode): Boolean {
         return when (switchNode) {
@@ -251,7 +252,7 @@ class WindowManager private constructor() : BaseManager(), ILightManager{
         synchronized(listenerStore) {
             listenerStore.filterValues { null != it.get() }
                 .forEach{
-                    it.value.get()?.onSwitchChanged(switchNode, status)
+                    it.value.get()?.onSwitchStatusChanged(status, switchNode)
                 }
         }
     }

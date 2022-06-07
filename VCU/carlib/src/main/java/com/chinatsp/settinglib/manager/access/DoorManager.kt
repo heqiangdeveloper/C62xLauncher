@@ -32,37 +32,34 @@ class DoorManager private constructor() : BaseManager(), ILightManager{
 
     val smartEnterStatus:AtomicBoolean by lazy {
         AtomicBoolean(false).apply {
-            val node = SwitchNode.AS_SMART_ENTER_DOOR
-            val observerSignal = CarCabinManager.ID_SMART_ENTRY_STS
-            val statusValue = doGetIntProperty(observerSignal, node.origin)
-            set(node.isOn(statusValue))
+            val switchNode = SwitchNode.AS_SMART_ENTER_DOOR
+            val signal = CarCabinManager.ID_SMART_ENTRY_STS
+            val value = doGetIntProperty(signal, switchNode.origin)
+            set(switchNode.isOn(value))
         }
     }
 
     val driveLockOption: AtomicInteger by lazy {
         AtomicInteger(0).apply {
-            val observerSignal = CarCabinManager.ID_VSPEED_LOCKING_STATUE
-            val intValue = doGetIntProperty(observerSignal, SignalOrigin.CABIN_SIGNAL)
-            set(intValue)
+            val signal = CarCabinManager.ID_VSPEED_LOCKING_STATUE
+            val value = doGetIntProperty(signal, SignalOrigin.CABIN_SIGNAL)
+            set(value)
         }
     }
 
     val shutDownUnlockOption: AtomicInteger by lazy {
         AtomicInteger(0).apply {
-            val observerSignal = CarCabinManager.ID_CUTOFF_UNLOCK_DOORS_STATUE
-            val intValue = doGetIntProperty(observerSignal, SignalOrigin.CABIN_SIGNAL)
-            set(intValue)
+            val signal = CarCabinManager.ID_CUTOFF_UNLOCK_DOORS_STATUE
+            val value = doGetIntProperty(signal, SignalOrigin.CABIN_SIGNAL)
+            set(value)
         }
     }
 
     companion object : ISignal {
-
         override val TAG: String = DoorManager::class.java.simpleName
-
         val instance: DoorManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             DoorManager()
         }
-
     }
 
     override val concernedSerials: Map<SignalOrigin, Set<Int>> by lazy {
@@ -198,7 +195,7 @@ class DoorManager private constructor() : BaseManager(), ILightManager{
                 smartEnterStatus.set(status)
                 synchronized(listenerStore) {
                     listenerStore.filterValues { null != it.get() }.forEach {
-                        it.value.get()?.onSwitchChanged(switchNode, status)
+                        it.value.get()?.onSwitchStatusChanged(status, switchNode)
                     }
                 }
             }

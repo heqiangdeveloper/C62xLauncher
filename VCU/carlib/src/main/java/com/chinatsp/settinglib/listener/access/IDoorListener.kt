@@ -1,6 +1,7 @@
 package com.chinatsp.settinglib.listener.access
 
 import com.chinatsp.settinglib.listener.IBaseListener
+import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.optios.SwitchNode
 
 /**
@@ -10,11 +11,10 @@ import com.chinatsp.settinglib.optios.SwitchNode
  * @desc   :
  * @version: 1.0
  */
-interface IDoorListener : IBaseListener{
+interface IDoorListener : ISwitchListener{
 
     fun onDriveAutoLockOptionChanged(value: Int)
 
     fun onShutDownAutoUnlockOptionChanged(value: Int)
 
-    fun onSwitchChanged(switchNode: SwitchNode, status: Boolean)
 }

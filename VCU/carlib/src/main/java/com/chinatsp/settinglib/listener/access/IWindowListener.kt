@@ -1,6 +1,7 @@
 package com.chinatsp.settinglib.listener.access
 
 import com.chinatsp.settinglib.listener.IBaseListener
+import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.optios.SwitchNode
 
 /**
@@ -10,7 +11,4 @@ import com.chinatsp.settinglib.optios.SwitchNode
  * @desc   :
  * @version: 1.0
  */
-interface IWindowListener : IBaseListener{
-
-    fun onSwitchChanged(switchNode: SwitchNode, status: Boolean)
-}
+interface IWindowListener : ISwitchListener
