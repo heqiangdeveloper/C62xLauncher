@@ -7,247 +7,262 @@
 
     </data>
 
-    <com.common.xui.widget.XUIWrapContentScrollView
-        android:id="@+id/lighting_manager_ScrollView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scrollbars="none">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <com.common.xui.widget.XUIWrapContentScrollView
+            android:id="@+id/lighting_manager_ScrollView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:scrollbars="none"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="@dimen/x365"
-                android:layout_height="match_parent"
-                android:paddingStart="@dimen/x15"
-                android:paddingEnd="@dimen/x15"
-                android:paddingBottom="@dimen/x20">
-
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/sound_volume_adjustment"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/switch_item_option_height"
-                    android:orientation="horizontal"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <TextView
-                        style="@style/switch_row_option_style"
-                        android:text="@string/sound_volume_adjustment"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/list_item_right_selector"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <View
-                    android:id="@+id/line1"
-                    style="@style/line"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/sound_volume_adjustment" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/sound_alarm_volume"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/x95"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/line1">
+                    android:layout_width="@dimen/x365"
+                    android:layout_height="match_parent"
+                    android:paddingStart="@dimen/x15"
+                    android:paddingEnd="@dimen/x15"
+                    android:paddingBottom="@dimen/x20">
 
-                    <TextView
-                        android:id="@+id/sound_alarm_volume_title"
-                        style="@style/switch_row_option_style"
-                        android:layout_marginTop="@dimen/x15"
-                        android:layout_marginBottom="@dimen/x10"
-                        android:text="@string/sound_alarm_volume"
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/sound_volume_adjustment"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/switch_item_option_height"
+                        android:orientation="horizontal"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent">
 
+                        <TextView
+                            style="@style/switch_row_option_style"
+                            android:text="@string/sound_volume_adjustment"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                    <com.common.xui.widget.tabbar.TabControlView
-                        android:id="@+id/sound_meter_alarm_option"
-                        style="@style/tdv_common_style"
-                        android:layout_marginTop="@dimen/x11"
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/list_item_right_selector"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/line1"
+                        style="@style/line"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/sound_alarm_volume_title"
-                        app:tcv_defaultSelection="1"
-                        app:tcv_items="@array/drive_sensitivity_setting_options"
-                        app:tcv_values="@array/drive_sensitivity_setting_options_value" />
+                        app:layout_constraintTop_toBottomOf="@id/sound_volume_adjustment" />
 
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/sound_alarm_volume"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/x95"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/line1">
+
+                        <TextView
+                            android:id="@+id/sound_alarm_volume_title"
+                            style="@style/switch_row_option_style"
+                            android:layout_marginTop="@dimen/x15"
+                            android:layout_marginBottom="@dimen/x10"
+                            android:text="@string/sound_alarm_volume"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                        <com.common.xui.widget.tabbar.TabControlView
+                            android:id="@+id/sound_meter_alarm_option"
+                            style="@style/tdv_common_style"
+                            android:layout_marginTop="@dimen/x11"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/sound_alarm_volume_title"
+                            app:tcv_defaultSelection="1"
+                            app:tcv_items="@array/drive_sensitivity_setting_options"
+                            app:tcv_values="@array/drive_sensitivity_setting_options_value" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/line2"
+                        style="@style/line"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/sound_alarm_volume" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/sound_navigation_mixing"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/x95"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/line2">
+
+                        <TextView
+                            android:id="@+id/sound_navigation_mixing_title"
+                            style="@style/switch_row_option_style"
+                            android:layout_marginTop="@dimen/x15"
+                            android:layout_marginBottom="@dimen/x10"
+                            android:text="@string/sound_navigation_mixing"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                        <com.common.xui.widget.tabbar.TabControlView
+                            android:id="@+id/sound_remix_option"
+                            style="@style/tdv_common_style"
+                            android:layout_marginTop="@dimen/x11"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/sound_navigation_mixing_title"
+                            app:tcv_defaultSelection="1"
+                            app:tcv_items="@array/remix_option_title"
+                            app:tcv_values="@array/remix_option_value" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/line3"
+                        style="@style/line"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/sound_navigation_mixing" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/sound_volume_compensation"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/x95"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/line3">
+
+                        <TextView
+                            android:id="@+id/sound_volume_compensation_title"
+                            style="@style/switch_row_option_style"
+                            android:layout_marginTop="@dimen/x15"
+                            android:layout_marginBottom="@dimen/x10"
+                            android:text="@string/sound_volume_compensation"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.common.xui.widget.button.switchbutton.SwitchButton
+                            style="@style/switch_button_style"
+                            android:layout_marginTop="@dimen/x15"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.common.xui.widget.tabbar.TabControlView
+                            style="@style/tdv_common_style"
+                            android:layout_marginTop="@dimen/x11"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/sound_volume_compensation_title"
+                            app:tcv_defaultSelection="1"
+                            app:tcv_items="@array/drive_sensitivity_setting_options" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/line4"
+                        style="@style/line"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/sound_volume_compensation" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/sound_system_prompt"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/switch_item_option_height"
+                        android:orientation="horizontal"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/line4">
+
+                        <TextView
+                            style="@style/switch_row_option_style"
+                            android:text="@string/sound_system_prompt"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.common.xui.widget.button.switchbutton.SwitchButton
+                            style="@style/switch_button_style"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/line5"
+                        style="@style/line"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/sound_system_prompt" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/sound_loudness_control"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/switch_item_option_height"
+                        android:orientation="horizontal"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/line5">
+
+                        <TextView
+                            style="@style/switch_row_option_style"
+                            android:text="@string/sound_loudness_control"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.common.xui.widget.button.switchbutton.SwitchButton
+                            style="@style/switch_button_style"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/line6"
+                        style="@style/line"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/sound_loudness_control" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/sound_huawei_sound"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/switch_item_option_height"
+                        android:orientation="horizontal"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/line6">
+
+                        <TextView
+                            style="@style/switch_row_option_style"
+                            android:text="@string/sound_huawei_sound"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.common.xui.widget.button.switchbutton.SwitchButton
+                            style="@style/switch_button_style"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/line7"
+                        style="@style/line"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/sound_huawei_sound" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+        </com.common.xui.widget.XUIWrapContentScrollView>
 
-                <View
-                    android:id="@+id/line2"
-                    style="@style/line"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/sound_alarm_volume" />
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/sound_navigation_mixing"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/x95"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/line2">
-
-                    <TextView
-                        android:id="@+id/sound_navigation_mixing_title"
-                        style="@style/switch_row_option_style"
-                        android:layout_marginTop="@dimen/x15"
-                        android:layout_marginBottom="@dimen/x10"
-                        android:text="@string/sound_navigation_mixing"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-
-                    <com.common.xui.widget.tabbar.TabControlView
-                        android:id="@+id/sound_remix_option"
-                        style="@style/tdv_common_style"
-                        android:layout_marginTop="@dimen/x11"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/sound_navigation_mixing_title"
-                        app:tcv_defaultSelection="1"
-                        app:tcv_items="@array/remix_option_title"
-                        app:tcv_values="@array/remix_option_value" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <View
-                    android:id="@+id/line3"
-                    style="@style/line"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/sound_navigation_mixing" />
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/sound_volume_compensation"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/x95"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/line3">
-
-                    <TextView
-                        android:id="@+id/sound_volume_compensation_title"
-                        style="@style/switch_row_option_style"
-                        android:layout_marginTop="@dimen/x15"
-                        android:layout_marginBottom="@dimen/x10"
-                        android:text="@string/sound_volume_compensation"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <com.common.xui.widget.button.switchbutton.SwitchButton
-                        style="@style/switch_button_style"
-                        android:layout_marginTop="@dimen/x15"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <com.common.xui.widget.tabbar.TabControlView
-                        style="@style/tdv_common_style"
-                        android:layout_marginTop="@dimen/x11"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/sound_volume_compensation_title"
-                        app:tcv_defaultSelection="1"
-                        app:tcv_items="@array/drive_sensitivity_setting_options" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <View
-                    android:id="@+id/line4"
-                    style="@style/line"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/sound_volume_compensation" />
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/sound_system_prompt"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/switch_item_option_height"
-                    android:orientation="horizontal"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/line4">
-
-                    <TextView
-                        style="@style/switch_row_option_style"
-                        android:text="@string/sound_system_prompt"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <com.common.xui.widget.button.switchbutton.SwitchButton
-                        style="@style/switch_button_style"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <View
-                    android:id="@+id/line5"
-                    style="@style/line"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/sound_system_prompt" />
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/sound_loudness_control"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/switch_item_option_height"
-                    android:orientation="horizontal"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/line5">
-
-                    <TextView
-                        style="@style/switch_row_option_style"
-                        android:text="@string/sound_loudness_control"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <com.common.xui.widget.button.switchbutton.SwitchButton
-                        style="@style/switch_button_style"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <View
-                    android:id="@+id/line6"
-                    style="@style/line"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/sound_loudness_control" />
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/sound_huawei_sound"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/switch_item_option_height"
-                    android:orientation="horizontal"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/line6">
-
-                    <TextView
-                        style="@style/switch_row_option_style"
-                        android:text="@string/sound_huawei_sound"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <com.common.xui.widget.button.switchbutton.SwitchButton
-                        style="@style/switch_button_style"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <View
-                    android:id="@+id/line7"
-                    style="@style/line"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/sound_huawei_sound" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </LinearLayout>
-    </com.common.xui.widget.XUIWrapContentScrollView>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/right_car"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
