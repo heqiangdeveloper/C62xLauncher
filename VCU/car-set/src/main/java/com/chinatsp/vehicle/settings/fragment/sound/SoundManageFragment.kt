@@ -5,6 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.chinatsp.settinglib.manager.sound.AudioManager
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.SoundManageFragmentBinding
 import com.chinatsp.vehicle.settings.fragment.lighting.LightingAtmosphereFragment
@@ -30,16 +31,14 @@ class SoundManageFragment : BaseFragment<SoundViewModel, SoundManageFragmentBind
         viewModel.tabLocationLiveData.let {
             if (it.value == -1) {
                 it.value = R.id.sound_tab
+            } else {
+                it.value = it.value
             }
         }
     }
 
     private fun onClick(view: View) {
-        if (view != selectOption) {
-            viewModel.tabLocationLiveData.let {
-                it.value = view.id
-            }
-        }
+        viewModel.tabLocationLiveData.takeIf { it.value != view.id }?.value = view.id
     }
 
     private fun initTabOptions() {
@@ -53,16 +52,14 @@ class SoundManageFragment : BaseFragment<SoundViewModel, SoundManageFragmentBind
     }
 
     private fun updateSelectTabOption(viewId: Int) {
-        if (viewId != selectOption?.id) {
-            selectOption?.isEnabled = true
-            selectOption = tabOptions.first { it.id == viewId }
-            selectOption?.isEnabled = false
-            updateDisplayFragment(viewId)
-        }
+        tabOptions.forEach { it.isSelected = false }
+        updateDisplayFragment(viewId)
     }
 
     private fun updateDisplayFragment(serial: Int) {
         var fragment: Fragment? = checkOutFragment(serial)
+        tabOptions.first { it.id == serial }.isSelected = true
+        AudioManager.instance.setTabSerial(serial)
         fragment?.let {
             val manager: FragmentManager = childFragmentManager
             val transaction: FragmentTransaction = manager.beginTransaction()

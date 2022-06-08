@@ -5,10 +5,10 @@ import android.car.hardware.cabin.CarCabinManager
 import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.access.IDoorListener
-import com.chinatsp.settinglib.listener.lamp.ILightManager
 import com.chinatsp.settinglib.manager.BaseManager
+import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.ISignal
-import com.chinatsp.settinglib.optios.Area
+import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.SignalOrigin
 import java.lang.ref.WeakReference
@@ -24,18 +24,18 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 
 
-class DoorManager private constructor() : BaseManager(), ILightManager{
+class DoorManager private constructor() : BaseManager(), IOptionManager {
 
     private val identity by lazy { System.identityHashCode(this) }
 
     private val listenerStore by lazy { HashMap<Int, WeakReference<IDoorListener>>() }
 
     val smartEnterStatus:AtomicBoolean by lazy {
-        AtomicBoolean(false).apply {
-            val switchNode = SwitchNode.AS_SMART_ENTER_DOOR
+        val switchNode = SwitchNode.AS_SMART_ENTER_DOOR
+        AtomicBoolean(switchNode.isOn()).apply {
             val signal = CarCabinManager.ID_SMART_ENTRY_STS
             val value = doGetIntProperty(signal, switchNode.origin)
-            set(switchNode.isOn(value))
+            doUpdateSwitchStatus(switchNode, this, value)
         }
     }
 
@@ -101,6 +101,8 @@ class DoorManager private constructor() : BaseManager(), ILightManager{
         return concernedSerials[signalOrigin] ?: HashSet()
     }
 
+
+
     override fun unRegisterVcuListener(serial: Int, callSerial: Int): Boolean {
         LogManager.d(TAG, "unRegisterVcuListener serial:$serial, callSerial:$callSerial")
         synchronized(listenerStore) {
@@ -123,47 +125,27 @@ class DoorManager private constructor() : BaseManager(), ILightManager{
         return -1
     }
 
-
-
-    /**
-     * 【设置】解锁车门
-     * @param value 0x1: unlock FL door 0x2: unlock all doors(default)   0x3: FunctionDisable
-     */
-    fun doUpdateUnlockDoorOption(value: Int): Boolean {
-        val isValid = listOf(0x01, 0x02, 0x03).any { it == value }
-        if (!isValid) {
-            return false
-        }
-        val signal = CarCabinManager.ID_CUT_OFF_UNLOCK_DOORS
-        return doSetProperty(signal, value, SignalOrigin.CABIN_SIGNAL, Area.GLOBAL)
+    override fun doGetSwitchOption(switchNode: SwitchNode): Boolean {
+        TODO("Not yet implemented")
     }
 
-    /**
-     * 【设置】解锁车门
-     * @param value 0x1: unlock FL door 0x2: unlock all doors(default)   0x3: FunctionDisable
-     */
-    fun doUpdateDriveLockOption(value: Int): Boolean {
-        val isValid = listOf(0x01, 0x02, 0x03, 0x04, 0x05).any { it == value }
-        if (!isValid) {
-            return false
-        }
-        val signal = CarCabinManager.ID_VSPEED_LOCK
-        return doSetProperty(signal, value, SignalOrigin.CABIN_SIGNAL, Area.GLOBAL)
-    }
-
-    /**
-     *
-     * @param switchNode 开关选项
-     * @param isStatus 开关期望状态
-     */
-    fun doSwitchOption(switchNode: SwitchNode, isStatus: Boolean): Boolean {
+    override fun doSetSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean {
         return when (switchNode) {
             SwitchNode.AS_SMART_ENTER_DOOR -> {
-                doSetProperty(switchNode.signal, switchNode.obtainValue(isStatus), switchNode.origin)
+                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin)
             }
             else -> false
         }
     }
+
+    override fun doGetRadioOption(radioNode: RadioNode): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun doSetRadioOption(radioNode: RadioNode, value: Int): Boolean {
+        TODO("Not yet implemented")
+    }
+
 
     private fun onHvacPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
@@ -195,7 +177,7 @@ class DoorManager private constructor() : BaseManager(), ILightManager{
                 smartEnterStatus.set(status)
                 synchronized(listenerStore) {
                     listenerStore.filterValues { null != it.get() }.forEach {
-                        it.value.get()?.onSwitchStatusChanged(status, switchNode)
+                        it.value.get()?.onSwitchOptionChanged(status, switchNode)
                     }
                 }
             }
@@ -222,6 +204,20 @@ class DoorManager private constructor() : BaseManager(), ILightManager{
                 }
             }
         }
+    }
+
+    private fun doUpdateSwitchStatus(
+        node: SwitchNode,
+        atomic: AtomicBoolean,
+        value: Int
+    ): AtomicBoolean {
+        if (node.isValidValue(value)) {
+            val status = node.isOn(value)
+            if (atomic.get() xor status) {
+                atomic.set(status)
+            }
+        }
+        return atomic
     }
 
 

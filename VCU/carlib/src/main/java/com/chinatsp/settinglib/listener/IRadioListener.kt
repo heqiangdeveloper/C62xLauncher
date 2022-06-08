@@ -1,5 +1,6 @@
 package com.chinatsp.settinglib.listener
 
+import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 
 /**
@@ -9,8 +10,8 @@ import com.chinatsp.settinglib.optios.SwitchNode
  * @desc   :
  * @version: 1.0
  */
-interface ISwitchListener: IBaseListener {
+interface IRadioListener: IBaseListener {
 
-    fun onSwitchOptionChanged(status: Boolean, node: SwitchNode)
+    fun onRadioOptionChanged(node: RadioNode, value: Int)
 
 }

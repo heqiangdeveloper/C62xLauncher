@@ -16,25 +16,23 @@ import com.chinatsp.settinglib.sign.SignalOrigin
  * @desc   :
  * @version: 1.0
  */
-class CruiseManager: BaseManager(), IOptionManager {
+class SideBackManager : BaseManager(), IOptionManager {
 
-    companion object: ISignal {
-
-        override val TAG: String = CruiseManager::class.java.simpleName
-
-        val instance: CruiseManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
-            CruiseManager()
+    companion object : ISignal {
+        override val TAG: String = SideBackManager::class.java.simpleName
+        val instance: SideBackManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+            SideBackManager()
         }
-
     }
 
     override val concernedSerials: Map<SignalOrigin, Set<Int>> by lazy {
         HashMap<SignalOrigin, Set<Int>>().apply {
-            val cabinSet = HashSet<Int> ().apply {
+            val cabinSet = HashSet<Int>().apply {
             }
             put(SignalOrigin.CABIN_SIGNAL, cabinSet)
         }
     }
+
     override fun onHandleConcernedSignal(
         property: CarPropertyValue<*>,
         signalOrigin: SignalOrigin
@@ -71,6 +69,21 @@ class CruiseManager: BaseManager(), IOptionManager {
     }
 
     override fun doSetSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean {
-        TODO("Not yet implemented")
+        return when (switchNode) {
+            SwitchNode.ADAS_DOW -> {
+                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin)
+            }
+            SwitchNode.ADAS_BSD -> {
+                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin)
+            }
+            SwitchNode.ADAS_BSC -> {
+                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin)
+            }
+            SwitchNode.ADAS_GUIDES -> {
+                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin)
+            }
+            else -> false
+        }
     }
+
 }

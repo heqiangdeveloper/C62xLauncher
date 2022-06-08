@@ -1,15 +1,12 @@
 package com.chinatsp.settinglib.manager.assistance
 
-import android.car.VehicleAreaSeat
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
-import android.widget.Switch
-import com.chinatsp.settinglib.LogManager
-import com.chinatsp.settinglib.bean.Status1
+import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.manager.BaseManager
+import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.ISignal
-import com.chinatsp.settinglib.manager.cabin.ACManager
-import com.chinatsp.settinglib.manager.cabin.SeatManager
+import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.SignalOrigin
 import java.util.concurrent.atomic.AtomicBoolean
@@ -22,9 +19,9 @@ import java.util.concurrent.atomic.AtomicInteger
  * @desc   :
  * @version: 1.0
  */
-class LaneManager: BaseManager() {
+class LaneManager : BaseManager(), IOptionManager {
 
-    companion object: ISignal {
+    companion object : ISignal {
 
         override val TAG: String = LaneManager::class.java.simpleName
 
@@ -50,26 +47,26 @@ class LaneManager: BaseManager() {
     }
 
     val fcwStatus: AtomicBoolean by lazy {
-        AtomicBoolean(false).apply {
+        val switchNode = SwitchNode.ADAS_FCW
+        AtomicBoolean(switchNode.isOn()).apply {
             val signal = CarCabinManager.ID_FCW_STATUS
             val value = doGetIntProperty(signal, SignalOrigin.CABIN_SIGNAL)
-            val switchNode = SwitchNode.ADAS_FCW
             doUpdateSwitchStatus(switchNode, this, value)
         }
     }
 
     val aebStatus: AtomicBoolean by lazy {
-        AtomicBoolean(false).apply {
+        val switchNode = SwitchNode.ADAS_AEB
+        AtomicBoolean(switchNode.isOn()).apply {
             val signal = CarCabinManager.ID_AEB_STATUS
             val value = doGetIntProperty(signal, SignalOrigin.CABIN_SIGNAL)
-            val switchNode = SwitchNode.ADAS_AEB
             doUpdateSwitchStatus(switchNode, this, value)
         }
     }
 
     override val concernedSerials: Map<SignalOrigin, Set<Int>> by lazy {
         HashMap<SignalOrigin, Set<Int>>().apply {
-            val cabinSet = HashSet<Int> ().apply {
+            val cabinSet = HashSet<Int>().apply {
                 add(CarCabinManager.ID_LDW_RDP_LKS_STATUS)
                 /**车道辅助类型*/
                 add(CarCabinManager.ID_LANE_ASSIT_TYPE)
@@ -79,6 +76,7 @@ class LaneManager: BaseManager() {
             put(SignalOrigin.CABIN_SIGNAL, cabinSet)
         }
     }
+
     override fun onHandleConcernedSignal(
         property: CarPropertyValue<*>,
         signalOrigin: SignalOrigin
@@ -190,10 +188,42 @@ class LaneManager: BaseManager() {
 
     }
 
-    private fun doUpdateSwitchStatus(switchNode: SwitchNode, atomicBoolean: AtomicBoolean, value: Int): AtomicBoolean {
-        val status = switchNode.isOn(value)
-        atomicBoolean.set(status)
-        return atomicBoolean
+    private fun doUpdateSwitchStatus(
+        node: SwitchNode,
+        atomic: AtomicBoolean,
+        value: Int
+    ): AtomicBoolean {
+        if (node.isValidValue(value)) {
+            val status = node.isOn(value)
+            if (atomic.get() xor status) {
+                atomic.set(status)
+            }
+        }
+        return atomic
+    }
+
+    override fun doGetRadioOption(radioNode: RadioNode): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun doSetRadioOption(radioNode: RadioNode, value: Int): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun unRegisterVcuListener(serial: Int, callSerial: Int): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun onRegisterVcuListener(priority: Int, listener: IBaseListener): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun doGetSwitchOption(switchNode: SwitchNode): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun doSetSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean {
+        TODO("Not yet implemented")
     }
 
 }

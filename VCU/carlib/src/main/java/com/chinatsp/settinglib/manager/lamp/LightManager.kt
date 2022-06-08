@@ -6,10 +6,10 @@ import android.car.hardware.hvac.CarHvacManager
 import com.chinatsp.settinglib.IConcernChanged
 import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.listener.IBaseListener
-import com.chinatsp.settinglib.listener.lamp.ILightManager
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.optios.Area
+import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.SignalOrigin
 import java.lang.ref.WeakReference
@@ -23,7 +23,7 @@ import java.lang.ref.WeakReference
  */
 
 
-class LightManager private constructor() : BaseManager(), IConcernChanged, ILightManager{
+class LightManager private constructor() : BaseManager(), IConcernChanged, ILightManager {
 
 
     private val identity by lazy { System.identityHashCode(this) }
@@ -79,6 +79,14 @@ class LightManager private constructor() : BaseManager(), IConcernChanged, ILigh
         return concernedSerials[signalOrigin] ?: HashSet()
     }
 
+    override fun doGetRadioOption(radioNode: RadioNode): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun doSetRadioOption(radioNode: RadioNode, value: Int): Boolean {
+        TODO("Not yet implemented")
+    }
+
     override fun unRegisterVcuListener(serial: Int, callSerial: Int): Boolean {
         LogManager.d(TAG, "unRegisterVcuListener serial:$serial, callSerial:$callSerial")
         synchronized(listenerStore) {
@@ -98,45 +106,23 @@ class LightManager private constructor() : BaseManager(), IConcernChanged, ILigh
         return serial
     }
 
-
-
-    /**
-     * 更新空调舒适性
-     * @param value (自动舒适模式开关AC Auto Comfort Switch
-    0x0: Inactive
-    0x1: Gentle
-    0x2: Standard
-    0x3: Powerful
-    0x4~0x6: Reserved
-    0x7: Invalid
-     */
-    fun doUpdateAcComfort(value: Int): Boolean {
-        val isValid = listOf(0x01, 0x02, 0x03).any { it == value }
-        if (!isValid) {
-            return false
-        }
-        val signal = CarHvacManager.ID_HVAC_AVN_AC_AUTO_CMFT_SWT
-        return doSetProperty(signal, value, SignalOrigin.HVAC_SIGNAL, Area.GLOBAL)
+    override fun doGetSwitchOption(switchNode: SwitchNode): Boolean {
+        TODO("Not yet implemented")
     }
 
-    /**
-     *
-     * @param switchNode 开关选项
-     * @param isStatus 开关期望状态
-     */
-    fun doSwitchOption(switchNode: SwitchNode, isStatus: Boolean): Boolean {
+    override fun doSetSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean {
         return when (switchNode) {
             SwitchNode.AC_AUTO_ARID -> {
                 val signal = CarHvacManager.ID_HVAC_AVN_SELF_DESICAA_SWT
-                doSetProperty(signal, switchNode.obtainValue(isStatus), SignalOrigin.HVAC_SIGNAL)
+                doSetProperty(signal, switchNode.obtainValue(status), SignalOrigin.HVAC_SIGNAL)
             }
             SwitchNode.AC_AUTO_DEMIST -> {
                 val signal = CarHvacManager.ID_HVAC_AVN_KEY_DEFROST
-                doSetProperty(signal, switchNode.obtainValue(isStatus), SignalOrigin.HVAC_SIGNAL)
+                doSetProperty(signal, switchNode.obtainValue(status), SignalOrigin.HVAC_SIGNAL)
             }
             SwitchNode.AC_ADVANCE_WIND -> {
                 val signal = CarHvacManager.ID_HVAC_AVN_UNLOCK_BREATHABLE_ENABLE
-                doSetProperty(signal, switchNode.obtainValue(isStatus), SignalOrigin.HVAC_SIGNAL)
+                doSetProperty(signal, switchNode.obtainValue(status), SignalOrigin.HVAC_SIGNAL)
             }
             else -> false
         }
@@ -150,6 +136,7 @@ class LightManager private constructor() : BaseManager(), IConcernChanged, ILigh
             SignalOrigin.HVAC_SIGNAL -> {
                 onHvacPropertyChanged(property)
             }
+            else -> {}
         }
     }
 

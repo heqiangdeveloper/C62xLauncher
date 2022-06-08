@@ -1,9 +1,11 @@
 package com.chinatsp.settinglib.manager.lamp
 
 import android.car.hardware.CarPropertyValue
+import com.chinatsp.settinglib.ITabStore
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.sign.SignalOrigin
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author : luohong
@@ -14,13 +16,13 @@ import com.chinatsp.settinglib.sign.SignalOrigin
  */
 
 
-class LampManager private constructor() : BaseManager() {
+class LampManager private constructor() : BaseManager(), ITabStore {
 
     private var concernedSerialManagers: List<out BaseManager>? = null
 
-    private val lightManager: LightManager by lazy { LightManager.instance }
-
-
+    override val tabSerial: AtomicInteger by lazy {
+        AtomicInteger(-1)
+    }
     override fun onHandleConcernedSignal(
         property: CarPropertyValue<*>,
         signalOrigin: SignalOrigin

@@ -1,4 +1,4 @@
-package com.chinatsp.settinglib.manager.access
+package com.chinatsp.settinglib.manager.cabin
 
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
@@ -7,6 +7,7 @@ import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.access.IWindowListener
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
+import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.optios.Area
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.SignalOrigin
@@ -22,41 +23,49 @@ import java.util.concurrent.atomic.AtomicBoolean
  */
 
 
-class WindowManager private constructor() : BaseManager(), IWindowManager {
-
+class OtherManager private constructor() : BaseManager(), ISwitchManager {
 
     private val identity by lazy { System.identityHashCode(this) }
 
     private val listenerStore by lazy { HashMap<Int, WeakReference<IWindowListener>>() }
 
-    private val autoCloseWinInRain: AtomicBoolean by lazy {
+    private val batteryOptimize: AtomicBoolean by lazy {
         val switchNode = SwitchNode.AS_AUTO_CLOSE_WIN_IN_RAIN
         AtomicBoolean(switchNode.isOn()).apply {
             val signal = CarCabinManager.ID_BCM_RAIN_WIN_CLOSE_FUN_STS
             val result = signalService.doGetIntProperty(signal, switchNode.origin, Area.GLOBAL)
-            set(switchNode.isOn(result))
+            doUpdateSwitchStatus(switchNode, this, result)
         }
     }
 
-    private val autoCloseWinAtLock: AtomicBoolean by lazy {
+    private val wirelessCharging: AtomicBoolean by lazy {
         val switchNode = SwitchNode.AS_AUTO_CLOSE_WIN_AT_LOCK
         AtomicBoolean(switchNode.isOn()).apply {
             val signal = CarCabinManager.ID_BCM_WIN_CLOSE_FUN_STS
             val result = signalService.doGetIntProperty(signal, switchNode.origin, Area.GLOBAL)
-            set(switchNode.isOn(result))
+            doUpdateSwitchStatus(switchNode, this, result)
+        }
+    }
+
+    private val wirelessChargingLamp: AtomicBoolean by lazy {
+        val switchNode = SwitchNode.AS_AUTO_CLOSE_WIN_AT_LOCK
+        AtomicBoolean(switchNode.isOn()).apply {
+            val signal = CarCabinManager.ID_BCM_WIN_CLOSE_FUN_STS
+            val result = signalService.doGetIntProperty(signal, switchNode.origin, Area.GLOBAL)
+            doUpdateSwitchStatus(switchNode, this, result)
         }
     }
 
     companion object : ISignal {
-        override val TAG: String = WindowManager::class.java.simpleName
-        val instance: WindowManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
-            WindowManager()
+        override val TAG: String = OtherManager::class.java.simpleName
+        val instance: OtherManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+            OtherManager()
         }
     }
 
     override val concernedSerials: Map<SignalOrigin, Set<Int>> by lazy {
         HashMap<SignalOrigin, Set<Int>>().apply {
-            val cabinSet = HashSet<Int> ().apply {
+            val cabinSet = HashSet<Int>().apply {
                 /**雨天自动关窗*/
                 add(CarCabinManager.ID_BCM_RAIN_WIN_CLOSE_FUN_STS)
                 /**锁车自动关窗*/
@@ -97,16 +106,13 @@ class WindowManager private constructor() : BaseManager(), IWindowManager {
 
     override fun doSetSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean {
         return when (switchNode) {
-            SwitchNode.AS_AUTO_CLOSE_WIN_IN_RAIN -> {
+            SwitchNode.DRIVE_BATTERY_OPTIMIZE -> {
                 doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin)
             }
-            SwitchNode.AS_AUTO_CLOSE_WIN_AT_LOCK -> {
+            SwitchNode.DRIVE_WIRELESS_CHARGING -> {
                 doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin)
             }
-            SwitchNode.AS_REMOTE_RISE_AND_FALL -> {
-                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin)
-            }
-            SwitchNode.AS_RAIN_WIPER_REPAIR -> {
+            SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP -> {
                 doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin)
             }
             else -> false
@@ -136,58 +142,20 @@ class WindowManager private constructor() : BaseManager(), IWindowManager {
     }
 
 
-
-    /**
-     * 【设置】解锁车门
-     * @param value 0x1: unlock FL door 0x2: unlock all doors(default)   0x3: FunctionDisable
-     */
-    fun doUpdateUnlockDoorOption(value: Int): Boolean {
-        val isValid = listOf(0x01, 0x02, 0x03).any { it == value }
-        if (!isValid) {
-            return false
-        }
-        val signal = CarCabinManager.ID_CUT_OFF_UNLOCK_DOORS
-        return doSetProperty(signal, value, SignalOrigin.CABIN_SIGNAL, Area.GLOBAL)
-    }
-
-    /**
-     * 【设置】解锁车门
-     * @param value 0x1: unlock FL door 0x2: unlock all doors(default)   0x3: FunctionDisable
-     */
-    fun doUpdateDriveLockOption(value: Int): Boolean {
-        val isValid = listOf(0x01, 0x02, 0x03, 0x04, 0x05).any { it == value }
-        if (!isValid) {
-            return false
-        }
-        val signal = CarCabinManager.ID_VSPEED_LOCK
-        return doSetProperty(signal, value, SignalOrigin.CABIN_SIGNAL, Area.GLOBAL)
-    }
-
     /**
      *
      * @param switchNode 开关选项
      */
     fun doGetSwitchStatus(switchNode: SwitchNode): Boolean {
         return when (switchNode) {
-            SwitchNode.AS_AUTO_CLOSE_WIN_IN_RAIN -> {
-                val signal = CarCabinManager.ID_BCM_RAIN_WIN_CLOSE_FUN_STS
-                val value = doGetIntProperty(signal, SignalOrigin.CABIN_SIGNAL, switchNode.area)
-                switchNode.isOn(value)
+            SwitchNode.DRIVE_BATTERY_OPTIMIZE -> {
+                batteryOptimize.get()
             }
-            SwitchNode.AS_AUTO_CLOSE_WIN_AT_LOCK -> {
-                val signal = CarCabinManager.ID_BCM_WIN_CLOSE_FUN_STS
-                val value = doGetIntProperty(signal, SignalOrigin.CABIN_SIGNAL, switchNode.area)
-                switchNode.isOn(value)
+            SwitchNode.DRIVE_WIRELESS_CHARGING -> {
+                wirelessCharging.get()
             }
-            SwitchNode.AS_REMOTE_RISE_AND_FALL -> {
-                val signal = CarCabinManager.ID_BCM_RAIN_WIN_CLOSE_FUN_STS
-                val value = doGetIntProperty(signal, SignalOrigin.CABIN_SIGNAL, switchNode.area)
-                switchNode.isOn(value)
-            }
-            SwitchNode.AS_RAIN_WIPER_REPAIR -> {
-                val signal = CarCabinManager.ID_BCM_RAIN_WIN_CLOSE_FUN_STS
-                val value = doGetIntProperty(signal, SignalOrigin.CABIN_SIGNAL, switchNode.area)
-                switchNode.isOn(value)
+            SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP -> {
+                wirelessChargingLamp.get()
             }
             else -> false
         }
@@ -213,44 +181,54 @@ class WindowManager private constructor() : BaseManager(), IWindowManager {
     }
 
     private fun onSwitchChanged(switchNode: SwitchNode, property: CarPropertyValue<*>) {
-        when (switchNode) {
-            /**
-             * 车门车窗-车窗-雨天自动关窗 (状态下发)
-             * 0x0: Disable
-             * 0x1: Enable
-             */
-            SwitchNode.AS_AUTO_CLOSE_WIN_IN_RAIN -> {
-                var value = property.value
-                if (value is Int) {
+        var value = property.value
+        if (value is Int) {
+            when (switchNode) {
+                SwitchNode.DRIVE_BATTERY_OPTIMIZE -> {
                     value += 1
-                    autoCloseWinInRain.set(switchNode.isOn(value))
-                    onSwitchChanged(switchNode, autoCloseWinInRain.get())
+                    onSwitchChanged(
+                        switchNode,
+                        doUpdateSwitchStatus(switchNode, batteryOptimize, value).get()
+                    )
                 }
-            }
-            /**
-             * 车门车窗-车窗-锁车自动关窗 (状态上报)
-             * 0x0: No action when locking（default）
-             * 0x1: close windows when locking door
-             * 0x2: reserved
-             * 0x3: Reserved
-             */
-            SwitchNode.AS_AUTO_CLOSE_WIN_AT_LOCK -> {
-                var value = property.value
-                if (value is Int) {
+                SwitchNode.DRIVE_WIRELESS_CHARGING -> {
                     value += 1
-                    autoCloseWinAtLock.set(switchNode.isOn(value))
-                    onSwitchChanged(switchNode, autoCloseWinAtLock.get())
+                    onSwitchChanged(
+                        switchNode,
+                        doUpdateSwitchStatus(switchNode, wirelessCharging, value).get()
+                    )
                 }
+                SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP -> {
+                    value += 1
+                    onSwitchChanged(
+                        switchNode,
+                        doUpdateSwitchStatus(switchNode, wirelessChargingLamp, value).get()
+                    )
+                }
+                else -> {}
             }
         }
     }
 
+    private fun doUpdateSwitchStatus(
+        node: SwitchNode,
+        atomic: AtomicBoolean,
+        value: Int
+    ): AtomicBoolean {
+        if (node.isValidValue(value)) {
+            val status = node.isOn(value)
+            if (atomic.get() xor status) {
+                atomic.set(status)
+            }
+        }
+        return atomic
+    }
+
     private fun onSwitchChanged(switchNode: SwitchNode, status: Boolean) {
         synchronized(listenerStore) {
-            listenerStore.filterValues { null != it.get() }
-                .forEach{
-                    it.value.get()?.onSwitchOptionChanged(status, switchNode)
-                }
+            listenerStore.forEach {
+                it.value.get()?.onSwitchOptionChanged(status, switchNode)
+            }
         }
     }
 

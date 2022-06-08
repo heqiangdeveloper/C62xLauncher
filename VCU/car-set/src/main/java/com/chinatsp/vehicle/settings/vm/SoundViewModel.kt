@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.listener.sound.ISoundListener
 import com.chinatsp.settinglib.manager.SoundManager
+import com.chinatsp.settinglib.manager.sound.AudioManager
 import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.chinatsp.vehicle.settings.bean.Volume
@@ -12,9 +13,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class SoundViewModel @Inject constructor(app: Application, model: BaseModel)
-    : BaseViewModel(app, model), ISoundListener{
-    val tabLocationLiveData: MutableLiveData<Int> by lazy { MutableLiveData(-1) }
+class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
+    BaseViewModel(app, model), ISoundListener {
+
+    val tabLocationLiveData: MutableLiveData<Int> by lazy { MutableLiveData(AudioManager.instance.getTabSerial()) }
 
     override fun onCreate() {
         super.onCreate()
@@ -78,10 +80,6 @@ class SoundViewModel @Inject constructor(app: Application, model: BaseModel)
         liveData?.value?.let {
             liveData.value = it.copy(pos = pos)
         }
-    }
-
-    override fun isNeedUpdate(version: Int): Boolean {
-       return true
     }
 
 

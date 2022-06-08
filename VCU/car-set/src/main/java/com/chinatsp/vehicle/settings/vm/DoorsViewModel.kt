@@ -3,6 +3,7 @@ package com.chinatsp.vehicle.settings.vm
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.listener.access.IDoorListener
+import com.chinatsp.settinglib.manager.access.AccessManager
 import com.chinatsp.settinglib.manager.access.DoorManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.R
@@ -15,7 +16,8 @@ import javax.inject.Inject
 @HiltViewModel
 class DoorsViewModel @Inject constructor(app: Application, model: BaseModel):
     BaseViewModel(app, model), IDoorListener{
-    val tabLocationLiveData: MutableLiveData<Int> by lazy { MutableLiveData(-1) }
+
+    val tabLocationLiveData: MutableLiveData<Int> by lazy { MutableLiveData(AccessManager.instance.getTabSerial()) }
 
     private val doorManager:DoorManager
         get() = DoorManager.instance
@@ -63,13 +65,10 @@ class DoorsViewModel @Inject constructor(app: Application, model: BaseModel):
         }
     }
 
-    override fun onSwitchStatusChanged(status: Boolean, type: SwitchNode) {
+    override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         if (status xor (liveDataAutoAccessSwitch.value == true)) {
             liveDataAutoAccessSwitch.value = status
         }
     }
 
-    override fun isNeedUpdate(version: Int): Boolean {
-        return true
-    }
 }

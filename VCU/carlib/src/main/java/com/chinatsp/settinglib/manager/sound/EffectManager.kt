@@ -26,16 +26,16 @@ import java.util.concurrent.atomic.AtomicBoolean
  */
 
 
-class VoiceManager private constructor() : BaseManager(), ISoundManager {
+class EffectManager private constructor() : BaseManager(), ISoundManager {
 
     private val identity by lazy { System.identityHashCode(this) }
 
     private val listenerStore by lazy { HashMap<Int, WeakReference<IBaseListener>>() }
 
     companion object : ISignal {
-        override val TAG: String = VoiceManager::class.java.simpleName
-        val instance: VoiceManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
-            VoiceManager()
+        override val TAG: String = EffectManager::class.java.simpleName
+        val instance: EffectManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+            EffectManager()
         }
     }
 
