@@ -1,7 +1,9 @@
 package com.chinatsp.apppanel.adapter;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -9,13 +11,23 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.anarchy.classifyview.simple.SimpleAdapter;
+import com.anarchy.classifyview.simple.widget.InsertAbleGridView;
+import com.anarchy.classifyview.util.MyConfigs;
 import com.chinatsp.apppanel.R;
 import com.chinatsp.apppanel.bean.InfoBean;
 import com.chinatsp.apppanel.bean.LocationBean;
@@ -37,11 +49,18 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
     private List<String> titleLists = new ArrayList<>();
     private List<LocationBean> infos = null;
     private String titleStr = null;
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor editor;
+    private int parentIndex;
+    private String title;
+    private boolean showDelete;
 
     public MyAppInfoAdapter(Context context, List<List<LocationBean>> mData) {
         super(mData);
         this.mData = mData;
         this.context = context;
+        preferences = context.getSharedPreferences(MyConfigs.APPPANELSP, Context.MODE_PRIVATE);
+        editor = preferences.edit();
         db = new MyAppDB(context);
         for(int i = 0; i < mData.size(); i++){
             infos = mData.get(i);
@@ -60,9 +79,16 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         super.onBindMainViewHolder(holder, position);
         List<LocationBean> infos = mData.get(position);
         holder.tvName.setText("");
-        //Log.d("heqq","info size is: " + infos.size());
-        if(infos != null && infos.size() > 1){
-            if(!TextUtils.isEmpty(infos.get(0).getTitle())){
+        Log.d("hqtest","info size is: " + infos.size());
+        if(infos != null && infos.size() > 1){//文件夹
+            parentIndex = preferences.getInt( MyConfigs.PARENTINDEX ,  -1 );
+            title = preferences.getString( MyConfigs.TITLE ,  "" );
+            if(position == parentIndex && !TextUtils.isEmpty(title)){
+                titleStr = title;
+                editor.putInt(MyConfigs.PARENTINDEX,-1);
+                editor.putString(MyConfigs.TITLE,"");
+                editor.commit();
+            }else if(!TextUtils.isEmpty(infos.get(0).getTitle())){
                 titleStr = infos.get(0).getTitle();
             }else {
                 int index = getExistDirIndex(db.getAllTitles());
@@ -79,12 +105,14 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
                 }
             }
             holder.tvName.setText(titleStr);
+            holder.deleteIv.setVisibility(View.GONE);
 
             for(int i = 0; i < infos.size(); i++){
                 if(infos.get(i) == null){
                     continue;
                 }
                 LocationBean lb = infos.get(i);
+                holder.deleteIv.setTag(lb.getCanuninstalled());
 //                locationBean.setParentIndex(position);
 //                locationBean.setChildIndex(i);
                 //infos.get(i).setTitle(titleStr);
@@ -120,6 +148,20 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             }
         } else if(infos.size() == 1){
             holder.tvName.setText(mData.get(position).get(0).getName());
+            holder.deleteIv.setTag(mData.get(position).get(0).getCanuninstalled());
+            //是否显示删除按钮
+            parentIndex = preferences.getInt(MyConfigs.SHOWDELETEPOSITION ,  -1);
+            showDelete = preferences.getBoolean(MyConfigs.SHOWDELETE,false);
+            if(parentIndex != -1 && parentIndex == position){
+                if(showDelete){
+                    holder.deleteIv.setVisibility((int)holder.deleteIv.getTag() == 1 ? View.VISIBLE : View.GONE);
+                }else {
+                    holder.deleteIv.setVisibility(View.GONE);
+                }
+                editor.putBoolean(MyConfigs.SHOWDELETE,false);
+                editor.putInt(MyConfigs.SHOWDELETEPOSITION,-1);
+                editor.commit();
+            }
 
             locationBean = mData.get(position).get(0);
 //            locationBean.setParentIndex(position);
@@ -145,7 +187,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             locationBean.setStatus(0);
             locationBean.setPriority(0);
             locationBean.setInstalled(1);
-            locationBean.setCanuninstalled(1);
+//            locationBean.setCanuninstalled(1);
             int num = db.isExistPackage(locationBean.getPackageName());
             Log.d("hqtest","package package is: " + mData.get(position).get(0).getPackageName() + ",count = " + num + ",parent = " + position + ",child = " + -1);
             if(num == 0){
@@ -153,8 +195,15 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             }else {
                 db.updateTitle(locationBean);
             }
+
+//            showDelete = preferences.getBoolean(MyConfigs.SHOWDELETE ,  false);
+//            if(showDelete){
+//                holder.deleteIv.setVisibility(mData.get(position).get(0).getCanuninstalled() == 1 ? View.VISIBLE : View.GONE);
+//            }else {
+//                holder.deleteIv.setVisibility(View.GONE);
+//            }
+
         }
-        //Log.d("heqq","name is: " + holder.tvName.getText().toString());
     }
 
     /*
@@ -228,24 +277,73 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
     protected void onItemClick(View view, int parentIndex, int index) {
         //Toast.makeText(view.getContext(),"x: "+parentIndex+"\nindex: "+index,Toast.LENGTH_SHORT).show();
 
-        String packageName = "";
-        if(index == -1){//-1 是main area
-            packageName = mData.get(parentIndex).get(0).getPackageName();
+        RelativeLayout relativeLayout = (RelativeLayout) view;
+        ImageView iv = (ImageView) relativeLayout.getChildAt(1);
+        TextView tv = (TextView) relativeLayout.getChildAt(2);
+        if(iv.getVisibility() == View.VISIBLE){//如果删除按钮显示了，执行删除应用逻辑
+            hideDeleteIcon((RecyclerView) relativeLayout.getParent());
+            showDeleteDialog(tv.getText().toString());
         }else {
-            if(mData.get(parentIndex).get(index) != null){
-                packageName = mData.get(parentIndex).get(index).getPackageName();
+            hideDeleteIcon((RecyclerView) relativeLayout.getParent());
+            String packageName = "";
+            if(index == -1){//-1 是main area
+                packageName = mData.get(parentIndex).get(0).getPackageName();
             }else {
-                return;
+                if(mData.get(parentIndex).get(index) != null){
+                    packageName = mData.get(parentIndex).get(index).getPackageName();
+                }else {
+                    return;
+                }
+            }
+            launchApp(packageName);
+        }
+    }
+
+    private void showDeleteDialog(String name){
+        Dialog dialog = new Dialog(context, com.anarchy.classifyview.R.style.mydialog);
+        dialog.setContentView(R.layout.uninstall_dialog);
+        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+        dialog.getWindow().setGravity(Gravity.CENTER);
+        dialog.getWindow().setAttributes(params);
+        TextView positiveTv = (TextView) dialog.getWindow().findViewById(R.id.uninstall_dialog_positive_tv);
+        TextView negativeTv = (TextView) dialog.getWindow().findViewById(R.id.uninstall_dialog_negative_tv);
+        TextView titleTv = (TextView) dialog.getWindow().findViewById(R.id.uninstall_dialog_title);
+        titleTv.setText(context.getString(R.string.uninstall_dialog_title,name));
+        positiveTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        negativeTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
+    private void hideDeleteIcon(RecyclerView recyclerView){
+        RelativeLayout relativeLayout;
+        InsertAbleGridView insertAbleGridView;
+        for(int i = 0; i < recyclerView.getChildCount(); i++){
+            relativeLayout = (RelativeLayout) recyclerView.getChildAt(i);
+            insertAbleGridView = (InsertAbleGridView) relativeLayout.getChildAt(0);
+            if(insertAbleGridView.getChildCount() == 1){//非文件夹
+                ImageView iv = (ImageView) relativeLayout.getChildAt(1);
+                iv.setVisibility(View.GONE);
             }
         }
-        launchApp(packageName);
     }
 
     static class ViewHolder extends SimpleAdapter.ViewHolder {
         public TextView tvName;
+        public ImageView deleteIv;
         public ViewHolder(View itemView) {
             super(itemView);
             tvName = (TextView) itemView.findViewById(R.id.app_name_tv);
+            deleteIv = (ImageView) itemView.findViewById(R.id.delete_iv);
         }
     }
 }
