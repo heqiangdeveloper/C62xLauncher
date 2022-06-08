@@ -1736,8 +1736,13 @@
     <attr name="XUITipNewStyle" format="reference" />
     <attr name="LoggerTextViewStyle" format="reference" />
     <declare-styleable name="VerticalSeekBar">
-        <attr name="image_src" format="reference" />
-        <attr name="max_value" format="integer" />
-        <attr name="min_value" format="integer" />
+        <attr name="klvs_progressColor" format="color" />
+        <attr name="klvs_backgroundColor" format="color" />
+        <attr name="klvs_cornerRadius" format="integer" />
+        <attr name="klvs_progress" format="integer" />
+        <attr name="klvs_steep" format="integer" />
+        <attr name="klvs_max" format="integer" />
+        <attr name="klvs_enabled" format="boolean" />
+        <attr name="klvs_touchEnabled" format="boolean" />
     </declare-styleable>
 </resources>

@@ -35,11 +35,12 @@
                     android:text="@string/vcu_cabin_instrument" />
 
                 <com.common.xui.widget.tabbar.TabControlView
+                    android:id="@+id/cabin_meter_system_options"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/radio_option_height"
                     android:background="@drawable/vcu_bg_tab_shape"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tcv_defaultSelection="1"
+                    app:tcv_defaultSelection="0"
                     app:tcv_equalWidth="true"
                     app:tcv_items="@array/cabin_meter_system_options"
                     app:tcv_left_option="@drawable/tcv_left_option2"
@@ -111,6 +112,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_measurement"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/company_km"

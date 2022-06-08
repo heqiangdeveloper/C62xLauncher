@@ -79,6 +79,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="@dimen/x45"
+                android:layout_height="@dimen/x45"
+                android:layout_marginTop="@dimen/x61"
+                android:background="@drawable/bg_txt_round"
+                android:gravity="center"
+                android:text="@string/drive_one_hundred_twenty"
+                android:textColor="@color/xui_config_color_pure_black"
+                android:textSize="@dimen/text_17"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="wrap_content"

@@ -2,7 +2,6 @@ package com.chinatsp.vehicle.settings.fragment.sound
 
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.vehicle.settings.R

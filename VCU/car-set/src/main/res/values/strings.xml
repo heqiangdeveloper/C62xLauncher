@@ -136,6 +136,7 @@
     <string name="drive_car_rhythm">车速律动</string>
     <string name="drive_pm_display">PM2.5显示</string>
     <string name="drive_temperature_rhythm">调温律动</string>
+    <string name="drive_one_hundred_twenty">120</string>
 
     <string name="lighting_title">灯光</string>
     <string name="lighting_atmosphere_lamp">氛围灯</string>
