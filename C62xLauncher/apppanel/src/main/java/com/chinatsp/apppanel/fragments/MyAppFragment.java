@@ -1,6 +1,8 @@
 package com.chinatsp.apppanel.fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
@@ -20,6 +22,7 @@ import android.widget.TextView;
 
 import com.anarchy.classifyview.ClassifyView;
 import com.anarchy.classifyview.adapter.MainRecyclerViewCallBack;
+import com.anarchy.classifyview.util.MyConfigs;
 import com.chinatsp.apppanel.AppConfigs.AppLists;
 import com.chinatsp.apppanel.R;
 import com.chinatsp.apppanel.adapter.AppInfoAdapter;
@@ -55,6 +58,8 @@ public class MyAppFragment extends Fragment {
     private ByteArrayOutputStream baos;
     private Bitmap bitmap;
     private Drawable drawable;
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor editor;
     public MyAppFragment() {
         // Required empty public constructor
     }
@@ -85,6 +90,8 @@ public class MyAppFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         db = new MyAppDB(getContext());
+        preferences = getContext().getSharedPreferences(MyConfigs.APPPANELSP, Context.MODE_PRIVATE);
+        editor = preferences.edit();
     }
 
     @Override
@@ -113,6 +120,7 @@ public class MyAppFragment extends Fragment {
                 locationBean.setImgDrawable(drawable);
                 locationBean.setName((info.activityInfo.loadLabel(getContext().getPackageManager())).toString());
                 locationBean.setTitle("");
+                locationBean.setCanuninstalled(packageUninstallStatus(info.activityInfo.packageName));
                 inner.add(locationBean);
                 data.add(inner);
             }
@@ -151,6 +159,28 @@ public class MyAppFragment extends Fragment {
         return allApps;
     }
 
+    /*
+    * 指定应用是否可卸载
+    * @packageName 包名
+    * @return 1可卸载,0不可卸载
+     */
+    private int packageUninstallStatus(String packageName){
+        int status = 1;
+        for(String packages:AppLists.cannotUninstallListApps){
+            if(packages.equals(packageName)){
+                status = 0;
+                break;
+            }
+        }
+        return status;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("heqq","myAppFragment onResume");
+    }
+
     @Override
     public void onStop() {
         super.onStop();
@@ -180,6 +210,8 @@ public class MyAppFragment extends Fragment {
 //                if(db.countLocation() != 0){
 //                    db.deleteLocation();
 //                }
+                editor.putBoolean(MyConfigs.SHOWDELETE,false);
+                editor.commit();
                 MainRecyclerViewCallBack mainAdapter = (MainRecyclerViewCallBack) appInfoClassifyView.getMainRecyclerView().getAdapter();
                 Log.d("heqq","is MainRecyclerViewCallBack");
 
@@ -223,6 +255,9 @@ public class MyAppFragment extends Fragment {
                     } else {//文件夹
                         for(int j = 0; j < list.size(); j++){
                             locationBean = (LocationBean) list.get(j);
+                            if(null == locationBean){
+                                continue;
+                            }
                             locationBean.setParentIndex(i);
                             locationBean.setChildIndex(j);
 //                            locationBean.setTitle(appInfo.getTitle());
