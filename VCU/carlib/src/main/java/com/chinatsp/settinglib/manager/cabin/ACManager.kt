@@ -3,11 +3,10 @@ package com.chinatsp.settinglib.manager.cabin
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.hvac.CarHvacManager
-import com.chinatsp.settinglib.IConcernChanged
 import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.bean.Status1
-import com.chinatsp.settinglib.listener.cabin.IACListener
 import com.chinatsp.settinglib.listener.IBaseListener
+import com.chinatsp.settinglib.listener.cabin.IACListener
 import com.chinatsp.settinglib.listener.cabin.IAcManager
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
@@ -53,10 +52,6 @@ class ACManager private constructor() : BaseManager(), IAcManager {
     private val cabinComfortSignal = CarCabinManager.ID_ACCMFTSTSDISP
 
     private val hvacDemistSignal = CarHvacManager.ID_HVAC_AVN_KEY_DEFROST
-
-    private val identity by lazy { System.identityHashCode(this) }
-
-    private val listenerStore by lazy { HashMap<Int, WeakReference<IBaseListener>>() }
 
     companion object : ISignal {
 
@@ -214,7 +209,7 @@ class ACManager private constructor() : BaseManager(), IAcManager {
         }
     }
 
-    private fun onHvacPropertyChanged(property: CarPropertyValue<*>) {
+    override fun onHvacPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             //自动除雾
             hvacDemistSignal -> {
@@ -224,7 +219,7 @@ class ACManager private constructor() : BaseManager(), IAcManager {
         }
     }
 
-    private fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
+    override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             //空调自干燥
             cabinAridSignal -> {

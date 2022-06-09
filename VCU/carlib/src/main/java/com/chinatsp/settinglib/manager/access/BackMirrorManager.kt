@@ -1,4 +1,4 @@
-package com.chinatsp.settinglib.manager.cabin
+package com.chinatsp.settinglib.manager.access
 
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
@@ -24,39 +24,22 @@ import java.util.concurrent.atomic.AtomicBoolean
  */
 
 
-class OtherManager private constructor() : BaseManager(), ISwitchManager {
+class BackMirrorManager private constructor() : BaseManager(), ISwitchManager {
 
-    private val batteryOptimize: AtomicBoolean by lazy {
-        val switchNode = SwitchNode.AS_AUTO_CLOSE_WIN_IN_RAIN
+    private val backMirrorFold: AtomicBoolean by lazy {
+        val switchNode = SwitchNode.AS_BACK_MIRROR_FOLD
         AtomicBoolean(switchNode.isOn()).apply {
-            val signal = CarCabinManager.ID_BCM_RAIN_WIN_CLOSE_FUN_STS
-            val result = signalService.doGetIntProperty(signal, switchNode.origin, Area.GLOBAL)
+            val signal = -1
+            val result = doGetIntProperty(signal, switchNode.origin, Area.GLOBAL)
             doUpdateSwitchStatus(switchNode, this, result)
         }
     }
 
-    private val wirelessCharging: AtomicBoolean by lazy {
-        val switchNode = SwitchNode.AS_AUTO_CLOSE_WIN_AT_LOCK
-        AtomicBoolean(switchNode.isOn()).apply {
-            val signal = CarCabinManager.ID_BCM_WIN_CLOSE_FUN_STS
-            val result = signalService.doGetIntProperty(signal, switchNode.origin, Area.GLOBAL)
-            doUpdateSwitchStatus(switchNode, this, result)
-        }
-    }
-
-    private val wirelessChargingLamp: AtomicBoolean by lazy {
-        val switchNode = SwitchNode.AS_AUTO_CLOSE_WIN_AT_LOCK
-        AtomicBoolean(switchNode.isOn()).apply {
-            val signal = CarCabinManager.ID_BCM_WIN_CLOSE_FUN_STS
-            val result = signalService.doGetIntProperty(signal, switchNode.origin, Area.GLOBAL)
-            doUpdateSwitchStatus(switchNode, this, result)
-        }
-    }
 
     companion object : ISignal {
-        override val TAG: String = OtherManager::class.java.simpleName
-        val instance: OtherManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
-            OtherManager()
+        override val TAG: String = BackMirrorManager::class.java.simpleName
+        val instance: BackMirrorManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+            BackMirrorManager()
         }
     }
 
@@ -98,18 +81,17 @@ class OtherManager private constructor() : BaseManager(), ISwitchManager {
     }
 
     override fun doGetSwitchOption(switchNode: SwitchNode): Boolean {
-        TODO("Not yet implemented")
+        return when (switchNode) {
+            SwitchNode.AS_BACK_MIRROR_FOLD -> {
+                backMirrorFold.get()
+            }
+            else -> false
+        }
     }
 
     override fun doSetSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean {
         return when (switchNode) {
-            SwitchNode.DRIVE_BATTERY_OPTIMIZE -> {
-                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin)
-            }
-            SwitchNode.DRIVE_WIRELESS_CHARGING -> {
-                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin)
-            }
-            SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP -> {
+            SwitchNode.AS_BACK_MIRROR_FOLD -> {
                 doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin)
             }
             else -> false
@@ -138,26 +120,6 @@ class OtherManager private constructor() : BaseManager(), ISwitchManager {
         return -1
     }
 
-
-    /**
-     *
-     * @param switchNode 开关选项
-     */
-    fun doGetSwitchStatus(switchNode: SwitchNode): Boolean {
-        return when (switchNode) {
-            SwitchNode.DRIVE_BATTERY_OPTIMIZE -> {
-                batteryOptimize.get()
-            }
-            SwitchNode.DRIVE_WIRELESS_CHARGING -> {
-                wirelessCharging.get()
-            }
-            SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP -> {
-                wirelessChargingLamp.get()
-            }
-            else -> false
-        }
-    }
-
     override fun onHvacPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             else -> {}
@@ -178,44 +140,30 @@ class OtherManager private constructor() : BaseManager(), ISwitchManager {
     }
 
     private fun onSwitchChanged(switchNode: SwitchNode, property: CarPropertyValue<*>) {
-        var value = property.value
-        if (value is Int) {
-            when (switchNode) {
-                SwitchNode.DRIVE_BATTERY_OPTIMIZE -> {
+        when (switchNode) {
+            SwitchNode.AS_BACK_MIRROR_FOLD -> {
+                var value = property.value
+                if (value is Int) {
                     value += 1
-                    onSwitchChanged(
-                        switchNode,
-                        doUpdateSwitchStatus(switchNode, batteryOptimize, value).get()
-                    )
+                    backMirrorFold.set(switchNode.isOn(value))
+                    onSwitchChanged(switchNode, backMirrorFold.get())
                 }
-                SwitchNode.DRIVE_WIRELESS_CHARGING -> {
-                    value += 1
-                    onSwitchChanged(
-                        switchNode,
-                        doUpdateSwitchStatus(switchNode, wirelessCharging, value).get()
-                    )
-                }
-                SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP -> {
-                    value += 1
-                    onSwitchChanged(
-                        switchNode,
-                        doUpdateSwitchStatus(switchNode, wirelessChargingLamp, value).get()
-                    )
-                }
-                else -> {}
             }
+            else -> {}
         }
     }
 
     private fun onSwitchChanged(switchNode: SwitchNode, status: Boolean) {
         synchronized(listenerStore) {
-            listenerStore.forEach { (_, u) ->
-                val listener = u.get()
-                if (listener is ISwitchListener) {
-                    listener.onSwitchOptionChanged(status, switchNode)
+            listenerStore.filterValues { null != it.get() }
+                .forEach {
+                    val listener = it.value.get()
+                    if (null != listener && listener is ISwitchListener) {
+                        listener.onSwitchOptionChanged(status, switchNode)
+                    }
                 }
-            }
         }
     }
+
 
 }

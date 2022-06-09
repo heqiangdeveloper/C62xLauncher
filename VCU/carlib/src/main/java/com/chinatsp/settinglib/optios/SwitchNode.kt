@@ -70,6 +70,7 @@ enum class SwitchNode(val on: Int, val off: Int, val def: Int, val origin: Signa
 
     //----------------车辆音效 结束--------------
 
+    //----------------车门与车窗 开始--------------
     /**
      * 车门车窗-车门-车门智能进入
      */
@@ -111,7 +112,7 @@ enum class SwitchNode(val on: Int, val off: Int, val def: Int, val origin: Signa
     AS_RAIN_WIPER_REPAIR(0x02, 0x01, 0x01, SignalOrigin.CABIN_SIGNAL, CarCabinManager.ID_AVN_RAIN_WIN_CLOSE_FUN_CFG_SET),
 
     /**
-     * 车门车窗-电动尾门-蜂鸣报警天关
+     * 车门车窗-电动尾门-蜂鸣报警开关
      */
     AS_STERN_AUDIO_ALARM(0x01, 0x02, 0x01, SignalOrigin.CABIN_SIGNAL, CarCabinManager.ID_SOUND_ENABLE_PTM_SET),
 
@@ -123,6 +124,14 @@ enum class SwitchNode(val on: Int, val off: Int, val def: Int, val origin: Signa
      * 车门车窗-电动尾门-电动尾门电动功能
      */
     AS_STERN_ELECTRIC(0x01, 0x02, 0x01, SignalOrigin.CABIN_SIGNAL, CarCabinManager.ID_POWER_ENABLE_PTM_SET),
+
+    /**
+     * 车门车窗-外后视镜-后视镜自动折叠
+     */
+    AS_BACK_MIRROR_FOLD(0x01, 0x02, 0x01, SignalOrigin.CABIN_SIGNAL, -1),
+    //----------------车门与车窗 结束--------------
+
+
     /**
      * 行车-座椅-主驾迎宾
      */
@@ -151,20 +160,52 @@ enum class SwitchNode(val on: Int, val off: Int, val def: Int, val origin: Signa
      */
     SEAT_HEAT_T_R(0x01, 0x02, 0x01, SignalOrigin.CABIN_SIGNAL, CarCabinManager.ID_HUM_SEAT_HEAT_POS),
 
-    /**驾驶辅助 开始*/
-    /**前向碰撞预警 */
+    //----------------------驾驶辅助 开始-------------------
+    /**
+     * 驾驶辅助--智能巡航--智能巡航辅助 ACC
+     */
+    ADAS_CRUISE_ASSIST(0x01, 0x02, 0x01, SignalOrigin.CABIN_SIGNAL, -1),
+
+    /**
+     * 驾驶辅助--智能巡航--目标提示音
+     */
+    ADAS_TARGET_PROMPT(0x01, 0x02, 0x01, SignalOrigin.CABIN_SIGNAL, -1),
+
+    /**
+     * 驾驶辅助--智能巡航--前车驶离提示
+     */
+    ADAS_LIMBER_LEAVE(0x01, 0x02, 0x01, SignalOrigin.CABIN_SIGNAL, -1),
+
+    /**
+     * 驾驶辅助--前身辅助-前车碰撞预警
+     */
     ADAS_FCW(0x01, 0x02, 0x01, SignalOrigin.CABIN_SIGNAL, CarCabinManager.ID_FCW_SWT),
-    /**前向碰撞预警 */
-    ADAS_AEB(0x01, 0x02, 0x01, SignalOrigin.CABIN_SIGNAL, CarCabinManager.ID_FCW_SWT),
-    /**是否超速标示位[0x1,-1,0x0,0x4] 0x0: Invalid 0x1: NOT overspeed 0x2: Overspeed*/
-    ADAS_OVER_SPEED_SIGN(0x02, 0x01, 0x01, SignalOrigin.CABIN_SIGNAL, CarCabinManager.ID_HUM_ICM_SPEEDLIMIT_STATS),
-    /**智能远光灯辅助 HMA */
-    ADAS_SMART_BEAN_LIGHT(0x02, 0x01, 0x01, SignalOrigin.CABIN_SIGNAL, -1),
+    /**
+     * 驾驶辅助--前身辅助-自动紧急制动
+     */
+    ADAS_AEB(0x01, 0x02, 0x01, SignalOrigin.CABIN_SIGNAL, CarCabinManager.ID_AEB_SWT),
+
+    /**
+     * 驾驶辅助--车道辅助-车道辅助系统
+     */
+    ADAS_LANE_ASSIST(0x01, 0x02, 0x01, SignalOrigin.CABIN_SIGNAL, -1),
+
+
+    /**
+     * 驾驶辅助--交通标志--速度限制提醒 SLA
+     * [0x1,-1,0x0,0x4] 0x0: Invalid 0x1: NOT overspeed 0x2: Overspeed
+     */
+    ADAS_SLA(0x02, 0x01, 0x02, SignalOrigin.CABIN_SIGNAL, CarCabinManager.ID_HUM_ICM_SPEEDLIMIT_STATS),
+    /**
+     * 驾驶辅助--灯光辅助--智能远光灯辅助 HMA
+     *
+     */
+    ADAS_HMA(0x02, 0x01, 0x01, SignalOrigin.CABIN_SIGNAL, -1),
 
     /**
      * 驾驶辅助--侧后辅助--开门预警 DOW
      */
-    ADAS_DOW(0x02, 0x01, 0x01, SignalOrigin.CABIN_SIGNAL, -1),
+    ADAS_DOW(0x02, 0x01, 0x02, SignalOrigin.CABIN_SIGNAL, -1),
     /**
      * 驾驶辅助--侧后辅助--盲区监测 BSD
      */
@@ -173,12 +214,12 @@ enum class SwitchNode(val on: Int, val off: Int, val def: Int, val origin: Signa
     /**
      * 驾驶辅助--侧后辅助--盲区摄像头
      */
-    ADAS_BSC(0x02, 0x01, 0x01, SignalOrigin.CABIN_SIGNAL, -1),
+    ADAS_BSC(0x02, 0x01, 0x02, SignalOrigin.CABIN_SIGNAL, -1),
     /**
      * 驾驶辅助--侧后辅助--辅助线
      */
     ADAS_GUIDES(0x02, 0x01, 0x01, SignalOrigin.CABIN_SIGNAL, -1),
-    /**驾驶辅助 结束*/
+    //----------------------驾驶辅助 结束-------------------
 
     //----------------行车 start ---------------------------------
     /**

@@ -12,6 +12,7 @@ import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.SignalOrigin
 import java.lang.ref.WeakReference
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * @author : luohong
@@ -25,10 +26,6 @@ import java.lang.ref.WeakReference
 class SternDoorManager private constructor() : BaseManager(), IOptionManager {
 
 
-    private val identity by lazy { System.identityHashCode(this) }
-
-    private val listenerStore by lazy { HashMap<Int, WeakReference<IBaseListener>>() }
-
     companion object : ISignal {
 
         override val TAG: String = SternDoorManager::class.java.simpleName
@@ -38,6 +35,36 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
         }
 
     }
+
+    private val _electricFunction: AtomicBoolean by lazy {
+        val switchNode = SwitchNode.AS_STERN_ELECTRIC
+        AtomicBoolean(switchNode.isOn()).apply {
+            val signal = -1
+            val result = doGetIntProperty(signal, switchNode.origin, Area.GLOBAL)
+            doUpdateSwitchStatus(switchNode, this, result)
+        }
+    }
+
+
+    private val _lightAlarmFunction: AtomicBoolean by lazy {
+        val switchNode = SwitchNode.AS_STERN_LIGHT_ALARM
+        AtomicBoolean(switchNode.isOn()).apply {
+            val signal = -1
+            val result = doGetIntProperty(signal, switchNode.origin, Area.GLOBAL)
+            doUpdateSwitchStatus(switchNode, this, result)
+        }
+    }
+
+
+    private val _audioAlarmFunction: AtomicBoolean by lazy {
+        val switchNode = SwitchNode.AS_STERN_AUDIO_ALARM
+        AtomicBoolean(switchNode.isOn()).apply {
+            val signal = -1
+            val result = doGetIntProperty(signal, switchNode.origin, Area.GLOBAL)
+            doUpdateSwitchStatus(switchNode, this, result)
+        }
+    }
+
 
     override val concernedSerials: Map<SignalOrigin, Set<Int>> by lazy {
         HashMap<SignalOrigin, Set<Int>>().apply {
@@ -73,11 +100,21 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
     }
 
     override fun doGetRadioOption(radioNode: RadioNode): Int {
-        TODO("Not yet implemented")
+        return when (radioNode) {
+            RadioNode.ACCESS_STERN_SMART_ENTER -> {2}
+            else -> -1
+        }
     }
 
     override fun doSetRadioOption(radioNode: RadioNode, value: Int): Boolean {
-        TODO("Not yet implemented")
+        var result = false
+        do {
+            if (RadioNode.ACCESS_STERN_SMART_ENTER != radioNode) {
+                break
+            }
+            result = doUpdateSternDoorOption(value)
+        } while (false)
+        return result
     }
 
     override fun unRegisterVcuListener(serial: Int, callSerial: Int): Boolean {
@@ -100,7 +137,18 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
     }
 
     override fun doGetSwitchOption(switchNode: SwitchNode): Boolean {
-        TODO("Not yet implemented")
+        return when (switchNode) {
+             SwitchNode.AS_STERN_ELECTRIC -> {
+                _electricFunction.get()
+            }
+            SwitchNode.AS_STERN_LIGHT_ALARM -> {
+                _lightAlarmFunction.get()
+            }
+            SwitchNode.AS_STERN_AUDIO_ALARM -> {
+                _audioAlarmFunction.get()
+            }
+            else -> false
+        }
     }
 
     override fun doSetSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean {
@@ -117,26 +165,13 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
      * 【设置】电动尾门感应进入设置
      * @param value 0x1: OFF; 0x2: On Mode 1; 0x3: On Mode 2
      */
-    fun doUpdateSternDoorOption(value: Int): Boolean {
+    private fun doUpdateSternDoorOption(value: Int): Boolean {
         val isValid = listOf(0x01, 0x02, 0x03).any { it == value }
         if (!isValid) {
             return false
         }
         val signal = CarCabinManager.ID_PTM_SMT_ENTRY_SET
         return doSetProperty(signal, value, SignalOrigin.CABIN_SIGNAL, Area.GLOBAL)
-    }
-
-
-    private fun onHvacPropertyChanged(property: CarPropertyValue<*>) {
-        when (property.propertyId) {
-            else -> {}
-        }
-    }
-
-    private fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
-        when (property.propertyId) {
-            else -> {}
-        }
     }
 
 

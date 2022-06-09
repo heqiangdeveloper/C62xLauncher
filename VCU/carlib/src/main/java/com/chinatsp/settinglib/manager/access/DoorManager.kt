@@ -26,10 +26,6 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class DoorManager private constructor() : BaseManager(), IOptionManager {
 
-    private val identity by lazy { System.identityHashCode(this) }
-
-    private val listenerStore by lazy { HashMap<Int, WeakReference<IDoorListener>>() }
-
     val smartEnterStatus:AtomicBoolean by lazy {
         val switchNode = SwitchNode.AS_SMART_ENTER_DOOR
         AtomicBoolean(switchNode.isOn()).apply {
@@ -147,13 +143,13 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
     }
 
 
-    private fun onHvacPropertyChanged(property: CarPropertyValue<*>) {
+    override fun onHvacPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             else -> {}
         }
     }
 
-    private fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
+    override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             /**熄火自动解锁*/
             CarCabinManager.ID_CUTOFF_UNLOCK_DOORS_STATUE -> {
@@ -177,7 +173,11 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
                 smartEnterStatus.set(status)
                 synchronized(listenerStore) {
                     listenerStore.filterValues { null != it.get() }.forEach {
-                        it.value.get()?.onSwitchOptionChanged(status, switchNode)
+                        it.value.get()?.let { listener ->
+                            if (listener is IDoorListener) {
+                                listener.onSwitchOptionChanged(status, switchNode)
+                            }
+                        }
                     }
                 }
             }
@@ -189,7 +189,11 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
         if (value is Int) {
             synchronized(listenerStore) {
                 listenerStore.filterValues { null != it.get() }.forEach {
-                    it.value.get()?.onShutDownAutoUnlockOptionChanged(value)
+                    it.value.get()?.let { listener ->
+                        if (listener is IDoorListener) {
+                            listener.onShutDownAutoUnlockOptionChanged(value)
+                        }
+                    }
                 }
             }
         }
@@ -200,25 +204,14 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
         if (value is Int) {
             synchronized(listenerStore) {
                 listenerStore.filterValues { null != it.get() }.forEach {
-                    it.value.get()?.onDriveAutoLockOptionChanged(value)
+                    it.value.get()?.let { listener ->
+                        if (listener is IDoorListener) {
+                            listener.onDriveAutoLockOptionChanged(value)
+                        }
+                    }
                 }
             }
         }
     }
-
-    private fun doUpdateSwitchStatus(
-        node: SwitchNode,
-        atomic: AtomicBoolean,
-        value: Int
-    ): AtomicBoolean {
-        if (node.isValidValue(value)) {
-            val status = node.isOn(value)
-            if (atomic.get() xor status) {
-                atomic.set(status)
-            }
-        }
-        return atomic
-    }
-
 
 }

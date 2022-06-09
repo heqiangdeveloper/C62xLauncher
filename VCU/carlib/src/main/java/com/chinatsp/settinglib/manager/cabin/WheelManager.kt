@@ -38,8 +38,6 @@ class WheelManager private constructor(): BaseManager(), IOptionManager {
 
     private val selfSerial by lazy { System.identityHashCode(this) }
 
-    private val listenerStore by lazy { HashMap<Int, WeakReference<IBaseListener>>() }
-
 
     val aridStatus: AtomicBoolean by lazy {
         AtomicBoolean(false)
@@ -110,7 +108,7 @@ class WheelManager private constructor(): BaseManager(), IOptionManager {
         }
     }
 
-    fun onHvacPropertyChanged(property: CarPropertyValue<*>) {
+    override fun onHvacPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             //自动除雾
             autoDemistProperty -> {
@@ -120,7 +118,7 @@ class WheelManager private constructor(): BaseManager(), IOptionManager {
         }
     }
 
-    fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
+    override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             //空调自干燥
             autoAridProperty -> {

@@ -1,13 +1,17 @@
 package com.chinatsp.settinglib.manager.assistance
 
-import android.car.hardware.CarPropertyValue
+import android.car.hardware.cabin.CarCabinManager
 import com.chinatsp.settinglib.listener.IBaseListener
+import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.SignalOrigin
+import java.lang.ref.WeakReference
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author : luohong
@@ -33,39 +37,100 @@ class SideBackManager : BaseManager(), IOptionManager {
         }
     }
 
-    override fun onHandleConcernedSignal(
-        property: CarPropertyValue<*>,
-        signalOrigin: SignalOrigin
-    ): Boolean {
-        TODO("Not yet implemented")
+    private val showAreaValue: AtomicInteger by lazy {
+        AtomicInteger(1).apply {
+            val signal = CarCabinManager.ID_LKS_SENSITIVITY
+            val value = doGetIntProperty(signal, SignalOrigin.CABIN_SIGNAL)
+            set(value)
+        }
     }
 
-    override fun isConcernedSignal(signal: Int, signalOrigin: SignalOrigin): Boolean {
-        TODO("Not yet implemented")
+    private val dowValue: AtomicBoolean by lazy {
+        val node = SwitchNode.ADAS_DOW
+        AtomicBoolean(node.isOn()).apply {
+            val signal = -1
+            val value = doGetIntProperty(signal, node.origin, node.area)
+            doUpdateSwitchStatus(node, this, value)
+        }
     }
 
-    override fun getConcernedSignal(signalOrigin: SignalOrigin): Set<Int> {
-        TODO("Not yet implemented")
+    private val bsdValue: AtomicBoolean by lazy {
+        val node = SwitchNode.ADAS_BSD
+        AtomicBoolean(node.isOn()).apply {
+            val signal = -1
+            val value = doGetIntProperty(signal, node.origin, node.area)
+            doUpdateSwitchStatus(node, this, value)
+        }
     }
+
+    private val bscValue: AtomicBoolean by lazy {
+        val node = SwitchNode.ADAS_BSC
+        AtomicBoolean(node.isOn()).apply {
+            val signal = -1
+            val value = doGetIntProperty(signal, node.origin, node.area)
+            doUpdateSwitchStatus(node, this, value)
+        }
+    }
+
+    private val guidesValue: AtomicBoolean by lazy {
+        val node = SwitchNode.ADAS_GUIDES
+        AtomicBoolean(node.isOn()).apply {
+            val signal = -1
+            val value = doGetIntProperty(signal, node.origin, node.area)
+            doUpdateSwitchStatus(node, this, value)
+        }
+    }
+
 
     override fun doGetRadioOption(radioNode: RadioNode): Int {
-        TODO("Not yet implemented")
+        return when (radioNode) {
+            RadioNode.ADAS_SIDE_BACK_SHOW_AREA -> {
+                showAreaValue.get()
+            }
+            else -> -1
+        }
     }
 
     override fun doSetRadioOption(radioNode: RadioNode, value: Int): Boolean {
-        TODO("Not yet implemented")
+        return when (radioNode) {
+            RadioNode.ADAS_SIDE_BACK_SHOW_AREA -> {
+                val signal = -1
+                doSetProperty(signal, value, SignalOrigin.CABIN_SIGNAL)
+            }
+            else -> false
+        }
     }
 
-    override fun unRegisterVcuListener(serial: Int, callSerial: Int): Boolean {
-        TODO("Not yet implemented")
-    }
 
     override fun onRegisterVcuListener(priority: Int, listener: IBaseListener): Int {
-        TODO("Not yet implemented")
+        var result = -1
+        if (listener is IOptionListener) {
+            val serial: Int = System.identityHashCode(listener)
+            synchronized(listenerStore) {
+                unRegisterVcuListener(serial, identity)
+                listenerStore.put(serial, WeakReference(listener))
+            }
+            result = serial
+        }
+        return result
     }
 
     override fun doGetSwitchOption(switchNode: SwitchNode): Boolean {
-        TODO("Not yet implemented")
+        return when (switchNode) {
+            SwitchNode.ADAS_DOW -> {
+                dowValue.get()
+            }
+            SwitchNode.ADAS_BSD -> {
+                bsdValue.get()
+            }
+            SwitchNode.ADAS_BSC -> {
+                bscValue.get()
+            }
+            SwitchNode.ADAS_GUIDES -> {
+                guidesValue.get()
+            }
+            else -> false
+        }
     }
 
     override fun doSetSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean {

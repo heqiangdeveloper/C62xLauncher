@@ -54,24 +54,25 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <com.common.xui.widget.tabbar.TabControlView
-                            android:id="@+id/auxiliary_system_tab"
+                            android:id="@+id/adas_lane_lane_assist_radio"
                             style="@style/tdv_common_style"
                             android:layout_marginTop="@dimen/x10"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/lane_assist_system"
                             app:tcv_defaultSelection="1"
-                            app:tcv_items="@array/drive_auxiliary_system"
-                            app:tcv_values="@array/drive_auxiliary_system_values" />
+                            app:tcv_items="@array/adas_lane_assist_option_titles"
+                            app:tcv_values="@array/adas_lane_assist_option_values" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             style="@style/txt_prompt"
                             android:layout_marginTop="@dimen/x4"
                             android:text="@string/drive_Lane_assist_system_content"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/auxiliary_system_tab" />
+                            app:layout_constraintTop_toBottomOf="@+id/adas_lane_lane_assist_radio" />
 
 
                         <com.common.xui.widget.button.switchbutton.SwitchButton
+                            android:id="@+id/adas_lane_lane_assist_switch"
                             style="@style/switch_button_style"
                             android:layout_marginTop="@dimen/x15"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -102,12 +103,14 @@
 
 
                         <com.common.xui.widget.tabbar.TabControlView
+                            android:id="@+id/adas_lane_ldw_style_radio"
                             style="@style/tdv_common_style"
                             android:layout_marginTop="@dimen/x11"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/drive_alarm_way_title"
                             app:tcv_defaultSelection="1"
-                            app:tcv_items="@array/drive_alarm_way_options" />
+                            app:tcv_items="@array/drive_alarm_way_options"
+                            app:tcv_values="@array/adas_ldw_style_option_values" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -135,12 +138,14 @@
 
 
                         <com.common.xui.widget.tabbar.TabControlView
+                            android:id="@+id/adas_lane_ldw_sensitivity_radio"
                             style="@style/tdv_common_style"
                             android:layout_marginTop="@dimen/x11"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/drive_sensitivity_title"
                             app:tcv_defaultSelection="1"
-                            app:tcv_items="@array/drive_sensitivity_options" />
+                            app:tcv_items="@array/drive_sensitivity_options"
+                            app:tcv_values="@array/adas_ldw_sensitivity_option_values" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -180,12 +185,12 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/x20"
                 android:layout_marginBottom="@dimen/x33"
                 android:src="@drawable/car_nor"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginEnd="@dimen/x20"/>
+                app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

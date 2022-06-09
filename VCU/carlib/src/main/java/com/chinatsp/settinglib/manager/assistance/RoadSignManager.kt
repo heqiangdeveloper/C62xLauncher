@@ -57,7 +57,7 @@ class RoadSignManager: BaseManager(), ISwitchManager {
 
     override fun doSetSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean {
         return when (switchNode) {
-            SwitchNode.ADAS_OVER_SPEED_SIGN -> {
+            SwitchNode.ADAS_SLA -> {
                 doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin, VehicleAreaSeat.SEAT_DRIVER)
             }
             else -> false

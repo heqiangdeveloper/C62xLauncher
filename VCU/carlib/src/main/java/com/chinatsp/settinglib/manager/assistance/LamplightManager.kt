@@ -57,7 +57,7 @@ class LamplightManager: BaseManager(), ISwitchManager {
 
     override fun doSetSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean {
         return when (switchNode) {
-            SwitchNode.ADAS_SMART_BEAN_LIGHT -> {
+            SwitchNode.ADAS_HMA -> {
                 doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin, VehicleAreaSeat.SEAT_DRIVER)
             }
             else -> false

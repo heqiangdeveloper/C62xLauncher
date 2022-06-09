@@ -21,16 +21,11 @@ import java.util.concurrent.atomic.AtomicBoolean
  */
 class ForwardManager : BaseManager(), ISwitchManager {
 
-    private val lisStore by lazy { HashMap<Int, WeakReference<IBaseListener>>() }
-
     companion object : ISignal {
-
         override val TAG: String = ForwardManager::class.java.simpleName
-
         val instance: ForwardManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             ForwardManager()
         }
-
     }
 
     private val fcwStatus: AtomicBoolean by lazy {
@@ -61,20 +56,7 @@ class ForwardManager : BaseManager(), ISwitchManager {
         }
     }
 
-    override fun onHandleConcernedSignal(
-        property: CarPropertyValue<*>,
-        signalOrigin: SignalOrigin
-    ): Boolean {
-        when (signalOrigin) {
-            SignalOrigin.CABIN_SIGNAL -> {
-                onCabinValueChanged(property)
-            }
-            else -> {}
-        }
-        return false
-    }
-
-    private fun onCabinValueChanged(property: CarPropertyValue<*>) {
+    override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             CarCabinManager.ID_FCW_STATUS -> {
                 onSwitchChanged(SwitchNode.ADAS_FCW, property)
@@ -121,8 +103,8 @@ class ForwardManager : BaseManager(), ISwitchManager {
     }
 
     private fun onSwitchChanged(switchNode: SwitchNode, status: Boolean) {
-        synchronized(lisStore) {
-            lisStore.values.forEach {
+        synchronized(listenerStore) {
+            listenerStore.values.forEach {
                 val listener = it.get()
                 if (null != listener && listener is ISwitchListener) {
                     listener.onSwitchOptionChanged(status, switchNode)
@@ -131,23 +113,17 @@ class ForwardManager : BaseManager(), ISwitchManager {
         }
     }
 
-    private fun doUpdateSwitchStatus(
-        node: SwitchNode,
-        atomic: AtomicBoolean,
-        value: Int
-    ): AtomicBoolean {
-        if (node.isValidValue(value)) {
-            val status = node.isOn(value)
-            if (atomic.get() xor status) {
-                atomic.set(status)
-            }
-        }
-        return atomic
-    }
 
     override fun doGetSwitchOption(switchNode: SwitchNode): Boolean {
-
-        return false
+        return when (switchNode) {
+            SwitchNode.ADAS_FCW -> {
+                fcwStatus.get()
+            }
+            SwitchNode.ADAS_AEB -> {
+                aebStatus.get()
+            }
+            else -> false
+        }
     }
 
     override fun doSetSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean {
@@ -157,16 +133,24 @@ class ForwardManager : BaseManager(), ISwitchManager {
                 val signal = CarCabinManager.ID_FCW_SWT
                 doSetProperty(signal, switchNode.obtainValue(status), switchNode.origin)
             }
+            SwitchNode.ADAS_AEB -> {
+                val signal = CarCabinManager.ID_AEB_SWT
+                doSetProperty(signal, switchNode.obtainValue(status), switchNode.origin)
+            }
             else -> false
         }
     }
 
-    override fun unRegisterVcuListener(serial: Int, callSerial: Int): Boolean {
-        TODO("Not yet implemented")
-    }
-
     override fun onRegisterVcuListener(priority: Int, listener: IBaseListener): Int {
-        TODO("Not yet implemented")
+        var result = -1
+        if (listener is ISwitchListener) {
+            val serial: Int = System.identityHashCode(listener)
+            synchronized(listenerStore) {
+                unRegisterVcuListener(serial, identity)
+                listenerStore.put(serial, WeakReference(listener))
+            }
+            result = serial
+        }
+        return result
     }
-
 }

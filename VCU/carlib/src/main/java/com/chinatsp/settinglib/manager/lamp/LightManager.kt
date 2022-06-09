@@ -25,11 +25,6 @@ import java.lang.ref.WeakReference
 
 class LightManager private constructor() : BaseManager(), IConcernChanged, ILightManager {
 
-
-    private val identity by lazy { System.identityHashCode(this) }
-
-    private val listenerStore by lazy { HashMap<Int, WeakReference<IBaseListener>>() }
-
     companion object : ISignal {
 
         override val TAG: String = LightManager::class.java.simpleName
@@ -140,13 +135,13 @@ class LightManager private constructor() : BaseManager(), IConcernChanged, ILigh
         }
     }
 
-    private fun onHvacPropertyChanged(property: CarPropertyValue<*>) {
+    override fun onHvacPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             else -> {}
         }
     }
 
-    private fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
+    override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             else -> {}
         }

@@ -4,6 +4,7 @@ import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
 import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.listener.IBaseListener
+import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.listener.access.IWindowListener
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
@@ -24,10 +25,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class WindowManager private constructor() : BaseManager(), IWindowManager {
 
-
-    private val identity by lazy { System.identityHashCode(this) }
-
-    private val listenerStore by lazy { HashMap<Int, WeakReference<IWindowListener>>() }
 
     private val autoCloseWinInRain: AtomicBoolean by lazy {
         val switchNode = SwitchNode.AS_AUTO_CLOSE_WIN_IN_RAIN
@@ -193,13 +190,7 @@ class WindowManager private constructor() : BaseManager(), IWindowManager {
         }
     }
 
-    private fun onHvacPropertyChanged(property: CarPropertyValue<*>) {
-        when (property.propertyId) {
-            else -> {}
-        }
-    }
-
-    private fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
+    override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         /**雨天自动关窗*/
         when (property.propertyId) {
             CarCabinManager.ID_BCM_RAIN_WIN_CLOSE_FUN_STS -> {
@@ -249,7 +240,10 @@ class WindowManager private constructor() : BaseManager(), IWindowManager {
         synchronized(listenerStore) {
             listenerStore.filterValues { null != it.get() }
                 .forEach{
-                    it.value.get()?.onSwitchOptionChanged(status, switchNode)
+                    val listener = it.value.get()
+                    if (null != listener && listener is ISwitchListener) {
+                        listener.onSwitchOptionChanged(status, switchNode)
+                    }
                 }
         }
     }

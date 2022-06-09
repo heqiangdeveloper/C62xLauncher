@@ -3,12 +3,14 @@ package com.chinatsp.settinglib.manager.assistance
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
 import com.chinatsp.settinglib.listener.IBaseListener
+import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.SignalOrigin
+import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -30,7 +32,7 @@ class LaneManager : BaseManager(), IOptionManager {
         }
     }
 
-    val keepLaneSensitivity: AtomicInteger by lazy {
+    private val laneAssistMode: AtomicInteger by lazy {
         AtomicInteger(1).apply {
             val signal = CarCabinManager.ID_LKS_SENSITIVITY
             val value = doGetIntProperty(signal, SignalOrigin.CABIN_SIGNAL)
@@ -38,16 +40,24 @@ class LaneManager : BaseManager(), IOptionManager {
         }
     }
 
-    val laneAssistType: AtomicInteger by lazy {
+    private val ldwWarningSensitivity: AtomicInteger by lazy {
         AtomicInteger(1).apply {
-            val signal = CarCabinManager.ID_LDW_RDP_LKS_FUNC_EN
-            val value = doGetIntProperty(signal, SignalOrigin.CABIN_SIGNAL)
-            set(value)
+//            val signal = CarCabinManager.ID_LKS_SENSITIVITY
+//            val value = doGetIntProperty(signal, SignalOrigin.CABIN_SIGNAL)
+//            set(value)
         }
     }
 
-    val fcwStatus: AtomicBoolean by lazy {
-        val switchNode = SwitchNode.ADAS_FCW
+    private val ldwWarningStyle: AtomicInteger by lazy {
+        AtomicInteger(2).apply {
+//            val signal = CarCabinManager.ID_LDW_RDP_LKS_FUNC_EN
+//            val value = doGetIntProperty(signal, SignalOrigin.CABIN_SIGNAL)
+//            set(value)
+        }
+    }
+
+    private val laneAssistFunction: AtomicBoolean by lazy {
+        val switchNode = SwitchNode.ADAS_LANE_ASSIST
         AtomicBoolean(switchNode.isOn()).apply {
             val signal = CarCabinManager.ID_FCW_STATUS
             val value = doGetIntProperty(signal, SignalOrigin.CABIN_SIGNAL)
@@ -55,42 +65,19 @@ class LaneManager : BaseManager(), IOptionManager {
         }
     }
 
-    val aebStatus: AtomicBoolean by lazy {
-        val switchNode = SwitchNode.ADAS_AEB
-        AtomicBoolean(switchNode.isOn()).apply {
-            val signal = CarCabinManager.ID_AEB_STATUS
-            val value = doGetIntProperty(signal, SignalOrigin.CABIN_SIGNAL)
-            doUpdateSwitchStatus(switchNode, this, value)
-        }
-    }
 
     override val concernedSerials: Map<SignalOrigin, Set<Int>> by lazy {
         HashMap<SignalOrigin, Set<Int>>().apply {
             val cabinSet = HashSet<Int>().apply {
-                add(CarCabinManager.ID_LDW_RDP_LKS_STATUS)
-                /**车道辅助类型*/
-                add(CarCabinManager.ID_LANE_ASSIT_TYPE)
                 /**车道保持灵敏度*/
-                add(CarCabinManager.ID_LKS_SENSITIVITY)
+                add(CarCabinManager.ID_ADAS_LDW_WARNING_SENSITIVITY)
             }
             put(SignalOrigin.CABIN_SIGNAL, cabinSet)
         }
     }
 
-    override fun onHandleConcernedSignal(
-        property: CarPropertyValue<*>,
-        signalOrigin: SignalOrigin
-    ): Boolean {
-        when (signalOrigin) {
-            SignalOrigin.CABIN_SIGNAL -> {
-                onCabinValueChanged(property)
-            }
-            else -> false
-        }
-        return false
-    }
 
-    private fun onCabinValueChanged(property: CarPropertyValue<*>) {
+    override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             CarCabinManager.ID_LANE_ASSIT_TYPE -> {
                 onRadioOptionChangedAtLaneAssist(property)
@@ -106,8 +93,8 @@ class LaneManager : BaseManager(), IOptionManager {
         //Operation mode of LDW/RDP/LKS. The default value is 0x1 LDW in C53F, 0x3 LKS in C62X. 0x0:Initial 0x1:LDW 0x2:RDP 0x3:LKS
         val value = property.value
         if (value is Int) {
-            if ((laneAssistType.get() != value) and setOf(0x01, 0x02, 0x03).contains(value)) {
-                laneAssistType.set(value)
+            if ((ldwWarningStyle.get() != value) and setOf(0x01, 0x02, 0x03).contains(value)) {
+                ldwWarningStyle.set(value)
             }
         }
     }
@@ -116,19 +103,11 @@ class LaneManager : BaseManager(), IOptionManager {
         //LKS sensitivity车道保持的灵敏度 0x0:lowSensitivity 0x1:highSensitivity 0x2: Initial 0x3:reserved
         val value = property.value
         if (value is Int) {
-            if ((keepLaneSensitivity.get() != value) and setOf(0x01, 0x02).contains(value)) {
-                keepLaneSensitivity.set(value)
+            if ((ldwWarningSensitivity.get() != value) && setOf(0x01, 0x02, 0x03).contains(value)
+            ) {
+                ldwWarningSensitivity.set(value)
             }
         }
-    }
-
-    override fun isConcernedSignal(signal: Int, signalOrigin: SignalOrigin): Boolean {
-        val signals = getConcernedSignal(signalOrigin)
-        return signals.contains(signal)
-    }
-
-    override fun getConcernedSignal(signalOrigin: SignalOrigin): Set<Int> {
-        return concernedSerials[signalOrigin] ?: HashSet()
     }
 
     /**
@@ -188,42 +167,70 @@ class LaneManager : BaseManager(), IOptionManager {
 
     }
 
-    private fun doUpdateSwitchStatus(
-        node: SwitchNode,
-        atomic: AtomicBoolean,
-        value: Int
-    ): AtomicBoolean {
-        if (node.isValidValue(value)) {
-            val status = node.isOn(value)
-            if (atomic.get() xor status) {
-                atomic.set(status)
-            }
-        }
-        return atomic
-    }
 
     override fun doGetRadioOption(radioNode: RadioNode): Int {
-        TODO("Not yet implemented")
+        return when (radioNode) {
+            RadioNode.ADAS_LANE_ASSIST_MODE -> {
+                laneAssistMode.get()
+            }
+            RadioNode.ADAS_LDW_STYLE -> {
+                ldwWarningStyle.get()
+            }
+            RadioNode.ADAS_LDW_SENSITIVITY -> {
+                ldwWarningSensitivity.get()
+            }
+            else -> -1
+        }
     }
 
     override fun doSetRadioOption(radioNode: RadioNode, value: Int): Boolean {
-        TODO("Not yet implemented")
+        return when (radioNode) {
+            RadioNode.ADAS_LANE_ASSIST_MODE -> {
+                val signal = -1
+                doSetProperty(signal, value, SignalOrigin.CABIN_SIGNAL)
+            }
+            RadioNode.ADAS_LDW_STYLE -> {
+                val signal = -1
+                doSetProperty(signal, value, SignalOrigin.CABIN_SIGNAL)
+            }
+            RadioNode.ADAS_LDW_SENSITIVITY -> {
+                val signal = CarCabinManager.ID_LDW_LKS_SENSITIVITY_SWT
+                doSetProperty(signal, value, SignalOrigin.CABIN_SIGNAL)
+            }
+            else -> false
+        }
     }
 
-    override fun unRegisterVcuListener(serial: Int, callSerial: Int): Boolean {
-        TODO("Not yet implemented")
-    }
 
     override fun onRegisterVcuListener(priority: Int, listener: IBaseListener): Int {
-        TODO("Not yet implemented")
+        var result = -1
+        if (listener is IOptionListener) {
+            val serial: Int = System.identityHashCode(listener)
+            synchronized(listenerStore) {
+                unRegisterVcuListener(serial, identity)
+                listenerStore.put(serial, WeakReference(listener))
+            }
+            result = serial
+        }
+        return result
     }
 
     override fun doGetSwitchOption(switchNode: SwitchNode): Boolean {
-        TODO("Not yet implemented")
+        return when (switchNode) {
+            SwitchNode.ADAS_LANE_ASSIST -> {
+                laneAssistFunction.get()
+            }
+            else -> false
+        }
     }
 
     override fun doSetSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean {
-        TODO("Not yet implemented")
+        return when (switchNode) {
+            SwitchNode.ADAS_LANE_ASSIST -> {
+                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin, switchNode.area)
+            }
+            else -> false
+        }
     }
 
 }

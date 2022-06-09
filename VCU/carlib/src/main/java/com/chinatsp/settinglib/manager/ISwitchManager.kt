@@ -27,4 +27,5 @@ interface ISwitchManager : IManager {
      * @return  返回接口调用是否成功
      */
     fun doSetSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean
+
 }

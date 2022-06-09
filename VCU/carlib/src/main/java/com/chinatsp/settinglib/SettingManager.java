@@ -603,7 +603,7 @@ public class SettingManager {
     public int doGetIntProperty(int id, @NotNull SignalOrigin origin, @NotNull Area area) {
         int result = -1;
         if (!connectService) {
-            LogManager.Companion.d("doGetIntProperty propertyId:" + id + ", origin:" + origin);
+            LogManager.Companion.e("doGetIntProperty propertyId:" + id + ", origin:" + origin + ", connectService: false!");
             return result;
         }
         if (SignalOrigin.CABIN_SIGNAL == origin) {

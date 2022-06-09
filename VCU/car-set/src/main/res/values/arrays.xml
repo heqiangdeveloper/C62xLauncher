@@ -96,12 +96,18 @@
         <item>消失提示</item>
         <item>识别消失均提示</item>
     </string-array>
-    <string-array name="drive_auxiliary_system">
+    <string-array name="adas_cruise_limber_leave_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="adas_lane_assist_option_titles">
         <item>智能车道居中</item>
         <item>偏离预警</item>
         <item>偏离辅助</item>
     </string-array>
-    <string-array name="drive_auxiliary_system_values">
+    <string-array name="adas_lane_assist_option_values">
         <item>3</item>
         <item>1</item>
         <item>2</item>
@@ -111,12 +117,25 @@
         <item>图示+声音</item>
         <item>图示+震动</item>
     </string-array>
+    <string-array name="adas_ldw_style_option_values">
+        <item>2</item>
+        <item>1</item>
+        <item>3</item>
+    </string-array>
     <string-array name="drive_sensitivity_options">
         <item>高</item>
         <item>低</item>
     </string-array>
+    <string-array name="adas_ldw_sensitivity_option_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
     <string-array name="drive_display_area_options">
         <item>左</item>
         <item>右</item>
+    </string-array>
+    <string-array name="adas_side_show_area_option_values">
+        <item>1</item>
+        <item>2</item>
     </string-array>
 </resources>

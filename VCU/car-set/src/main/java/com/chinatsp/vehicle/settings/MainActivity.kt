@@ -28,9 +28,7 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
     OnTabSelectedListener {
 
     private val mAdapter: FragmentStateViewPager2Adapter by lazy {
-        FragmentStateViewPager2Adapter(
-            this
-        )
+        FragmentStateViewPager2Adapter(this)
     }
 
     override fun getLayoutId(): Int {

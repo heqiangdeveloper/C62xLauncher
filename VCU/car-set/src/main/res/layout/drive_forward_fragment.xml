@@ -49,6 +49,7 @@
 
 
                 <com.common.xui.widget.button.switchbutton.SwitchButton
+                    android:id="@+id/adas_forward_fcw_switch"
                     style="@style/switch_button_style"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -90,6 +91,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/drive_aeb_title" />
 
                 <com.common.xui.widget.button.switchbutton.SwitchButton
+                    android:id="@+id/adas_forward_aeb_switch"
                     style="@style/switch_button_style"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

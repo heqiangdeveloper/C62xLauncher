@@ -50,6 +50,7 @@
 
 
                 <com.common.xui.widget.button.switchbutton.SwitchButton
+                    android:id="@+id/adas_light_hma_switch"
                     style="@style/switch_button_style"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

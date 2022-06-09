@@ -61,6 +61,7 @@
 
 
                         <com.common.xui.widget.button.switchbutton.SwitchButton
+                            android:id="@+id/adas_side_dow_switch"
                             style="@style/switch_button_style"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -103,6 +104,7 @@
 
 
                         <com.common.xui.widget.button.switchbutton.SwitchButton
+                            android:id="@+id/adas_side_bsd_switch"
                             style="@style/switch_button_style"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -145,6 +147,7 @@
 
 
                         <com.common.xui.widget.button.switchbutton.SwitchButton
+                            android:id="@+id/adas_side_bsc_switch"
                             style="@style/switch_button_style"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -173,6 +176,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <com.common.xui.widget.button.switchbutton.SwitchButton
+                            android:id="@+id/adas_side_guides_switch"
                             style="@style/switch_button_style"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -202,12 +206,14 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <com.common.xui.widget.tabbar.TabControlView
+                            android:id="@+id/adas_side_show_area_radio"
                             style="@style/tdv_common_style"
                             android:layout_marginTop="@dimen/x10"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/drive_display_area"
                             app:tcv_defaultSelection="1"
-                            app:tcv_items="@array/drive_display_area_options" />
+                            app:tcv_items="@array/drive_display_area_options"
+                            app:tcv_values="@array/adas_side_show_area_option_values" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <View

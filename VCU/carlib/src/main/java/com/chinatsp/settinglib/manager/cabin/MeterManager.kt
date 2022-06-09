@@ -26,11 +26,6 @@ class MeterManager private constructor() : BaseManager(), IRadioManager {
 
     private val fortifySoundSignal = CarCabinManager.ID_LOCK_SUCCESS_SOUND_STATUE
 
-    private val identity by lazy { System.identityHashCode(this) }
-
-    private val listenerStore by lazy { HashMap<Int, WeakReference<IBaseListener>>() }
-
-
     val fortifySoundStatus: AtomicBoolean by lazy {
         val switchNode = SwitchNode.DRIVE_SAFE_FORTIFY_SOUND
         AtomicBoolean(switchNode.isOn()).apply {
@@ -73,7 +68,7 @@ class MeterManager private constructor() : BaseManager(), IRadioManager {
     }
 
 
-    fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
+    override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             //设防提示音
             CarCabinManager.ID_LOCK_SUCCESS_SOUND_STATUE -> {
@@ -107,20 +102,6 @@ class MeterManager private constructor() : BaseManager(), IRadioManager {
                 }
             }
         }
-    }
-
-    private fun doUpdateSwitchStatus(
-        node: SwitchNode,
-        atomic: AtomicBoolean,
-        value: Int
-    ): AtomicBoolean {
-        if (node.isValidValue(value)) {
-            val status = node.isOn(value)
-            if (atomic.get() xor status) {
-                atomic.set(status)
-            }
-        }
-        return atomic
     }
 
     companion object : ISignal {

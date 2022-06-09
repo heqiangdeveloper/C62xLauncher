@@ -49,6 +49,7 @@
 
 
                 <com.common.xui.widget.button.switchbutton.SwitchButton
+                    android:id="@+id/access_cruise_cruise_assist"
                     style="@style/switch_button_style"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -78,6 +79,7 @@
 
 
                 <com.common.xui.widget.button.switchbutton.SwitchButton
+                    android:id="@+id/access_cruise_target_prompt"
                     style="@style/switch_button_style"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -108,18 +110,21 @@
 
 
                 <com.common.xui.widget.button.switchbutton.SwitchButton
+                    android:id="@+id/access_cruise_limber_leave"
                     style="@style/switch_button_style"
                     android:layout_marginTop="@dimen/x15"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.common.xui.widget.tabbar.TabControlView
+                    android:id="@+id/access_cruise_limber_leave_radio"
                     style="@style/tdv_common_style"
                     android:layout_marginTop="@dimen/x10"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/vehicle_departure"
                     app:tcv_defaultSelection="1"
-                    app:tcv_items="@array/drive_intelligent_options" />
+                    app:tcv_items="@array/drive_intelligent_options"
+                    app:tcv_values="@array/adas_cruise_limber_leave_values" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <View

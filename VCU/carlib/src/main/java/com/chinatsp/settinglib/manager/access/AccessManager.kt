@@ -59,6 +59,7 @@ class AccessManager private constructor() : BaseManager(), ITabStore {
                 add(DoorManager.instance)
                 add(WindowManager.instance)
                 add(SternDoorManager.instance)
+                add(BackMirrorManager.instance)
             }
         }
 

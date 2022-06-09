@@ -28,10 +28,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class EffectManager private constructor() : BaseManager(), ISoundManager {
 
-    private val identity by lazy { System.identityHashCode(this) }
-
-    private val listenerStore by lazy { HashMap<Int, WeakReference<IBaseListener>>() }
-
     companion object : ISignal {
         override val TAG: String = EffectManager::class.java.simpleName
         val instance: EffectManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
@@ -263,27 +259,13 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    private fun doUpdateSwitchStatus(
-        node: SwitchNode,
-        atomic: AtomicBoolean,
-        value: Int
-    ): AtomicBoolean {
-        if (node.isValidValue(value)) {
-            val status = node.isOn(value)
-            if (atomic.get() xor status) {
-                atomic.set(status)
-            }
-        }
-        return atomic
-    }
-
-    private fun onHvacPropertyChanged(property: CarPropertyValue<*>) {
+    override fun onHvacPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             else -> {}
         }
     }
 
-    private fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
+    override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             else -> {}
         }
