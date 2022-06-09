@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.chinatsp.apppanel.bean.LocationBean;
 
@@ -258,6 +259,8 @@ public class MyAppDB extends SQLiteOpenHelper {
                 locationBean.getImgByte(),locationBean.getName(),locationBean.getAddBtn(),locationBean.getStatus(),
                 locationBean.getPriority(),locationBean.getInstalled(),locationBean.getCanuninstalled(),"","","","","","",
                 locationBean.getPackageName()});
+//        Log.d("mysql","parentIndex = " + locationBean.getParentIndex() + ",childIndex = " +
+//                locationBean.getChildIndex() + ",package = " + locationBean.getPackageName());
     }
 
     public void updateTitle(LocationBean locationBean){
