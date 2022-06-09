@@ -18,6 +18,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.SystemClock;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.DragEvent;
@@ -150,6 +151,7 @@ public class ClassifyView extends FrameLayout {
     private static final int SUBCONTAINERWIDTH = 800;//文件弹出框的宽度
     private static final int SUBCONTAINERHEIGHT = 550;//文件弹出框的度
     private InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+    private int position = 0;//点击的桌面主位置
 
     public ClassifyView(Context context) {
         super(context);
@@ -199,8 +201,17 @@ public class ClassifyView extends FrameLayout {
             public void onClick(View v) {
                 if (mHideSubAnim != null && mHideSubAnim.isRunning()) return;
                 hideSubContainer();
-                //刷新桌面中sub的显示
-                mSubCallBack.removeItem(mSubRecyclerView.getChildCount() - 1);
+                //刷新桌面中sub的显示,实际发现mSubRecyclerView.getChildCount()数目会变少，不采用mSubRecyclerView计算
+                //mSubCallBack.removeItem(mSubRecyclerView.getChildCount() - 1);
+                mMainCallBack = (MainRecyclerViewCallBack) mMainRecyclerView.getAdapter();
+                List list = mMainCallBack.explodeItem(position, null);
+                for(int i = list.size() - 1; i >= 0; i--){
+                    if(list.get(i) == null){
+                        list.remove(i);
+                        break;
+                    }
+                }
+                mSubCallBack.initData(position,list);
             }
         });
         mMainShadowView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
@@ -221,7 +232,7 @@ public class ClassifyView extends FrameLayout {
         //设置文件夹名称
         titleEt = new EditText(context);
         titleEt.setSingleLine(true);
-        titleEt.setText("文件夹");
+        titleEt.setText("");
         titleEt.setGravity(Gravity.CENTER_HORIZONTAL);
         titleEt.setTextSize(28);
         titleEt.setPadding(0,30,0,0);
@@ -229,7 +240,7 @@ public class ClassifyView extends FrameLayout {
 
         //标题文本
         titleTv = new TextView(context);
-        titleTv.setText("文件夹");
+        titleTv.setText("");
         titleTv.setGravity(Gravity.CENTER_HORIZONTAL);
         titleTv.setTextSize(28);
         titleTv.setPadding(0,30,0,0);
@@ -334,7 +345,7 @@ public class ClassifyView extends FrameLayout {
             public boolean onSingleTapConfirmed(MotionEvent e) {
                 View pressedView = findChildView(mMainRecyclerView, e);
                 if (pressedView == null) return false;
-                int position = mMainRecyclerView.getChildAdapterPosition(pressedView);
+                position = mMainRecyclerView.getChildAdapterPosition(pressedView);
                 List list = mMainCallBack.explodeItem(position, pressedView);
                 if (list == null || list.size() < 2) {
                     mMainCallBack.onItemClick(position, pressedView);
@@ -661,19 +672,23 @@ public class ClassifyView extends FrameLayout {
                 if(titleEt.getVisibility() == View.VISIBLE){
                     imm.hideSoftInputFromWindow(titleEt.getWindowToken(), 0); //强制隐藏键盘
                     L.d("mSelectedPosition = " + mSelectedPosition);
-//                    RecyclerView.ViewHolder target = mMainRecyclerView.findViewHolderForAdapterPosition(mSelectedPosition);
-//                    if(target == null){
-//                        L.d("target is null");
-//                    }else {
-//                        LinearLayout linearLayout = (LinearLayout)target.itemView;
-//                        TextView nameTv = (TextView) linearLayout.getChildAt(1);
-//                        nameTv.setText(titleEt.getText().toString());
-//                    }
-                    SharedPreferences sp = getContext().getSharedPreferences(MyConfigs.APPPANELSP,Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sp.edit();
-                    editor.putString(MyConfigs.TITLE,titleEt.getText().toString());
-                    editor.putInt(MyConfigs.PARENTINDEX,mSelectedPosition);
-                    editor.commit();
+                    RecyclerView.ViewHolder target = mMainRecyclerView.findViewHolderForAdapterPosition(mSelectedPosition);
+                    if(target == null){
+                        L.d("target is null");
+                    }else {
+                        if(!TextUtils.isEmpty(titleEt.getText().toString())){
+                            RelativeLayout relativeLayout = (RelativeLayout)target.itemView;
+                            TextView nameTv = (TextView) relativeLayout.getChildAt(2);
+                            nameTv.setText(titleEt.getText().toString());
+                        }
+                    }
+                    if(!TextUtils.isEmpty(titleEt.getText().toString())){
+                        SharedPreferences sp = getContext().getSharedPreferences(MyConfigs.APPPANELSP,Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putString(MyConfigs.TITLE,titleEt.getText().toString());
+                        editor.putInt(MyConfigs.PARENTINDEX,mSelectedPosition);
+                        editor.commit();
+                    }
                 }
                 //隐藏弹出的文件夹框
                 mSubContainer.setVisibility(GONE);
@@ -830,8 +845,10 @@ public class ClassifyView extends FrameLayout {
                             }
                         }
                     }
-                    mVelocityTracker.addMovement(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(),
-                            MotionEvent.ACTION_MOVE, x, y, 0));
+                    if (mVelocityTracker != null){
+                        mVelocityTracker.addMovement(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(),
+                                MotionEvent.ACTION_MOVE, x, y, 0));
+                    }
                     mDragView.setX(centerX);
                     mDragView.setY(centerY);
                     mDx = x - mInitialTouchX;
@@ -994,8 +1011,17 @@ public class ClassifyView extends FrameLayout {
                         inSubRegion = false;
                         inMainRegion = true;
                         hideSubContainer();
-                        //重新刷新sub及main
-                        mSubCallBack.removeItem(mSubRecyclerView.getChildCount() - 1);
+                        //重新刷新sub及main，,实际发现mSubRecyclerView.getChildCount()数目会变少，不采用mSubRecyclerView计算
+                        //mSubCallBack.removeItem(mSubRecyclerView.getChildCount() - 1);
+                        mMainCallBack = (MainRecyclerViewCallBack) mMainRecyclerView.getAdapter();
+                        List list = mMainCallBack.explodeItem(position, null);
+                        for(int i = list.size() - 1; i >= 0; i--){
+                            if(list.get(i) == null){
+                                list.remove(i);
+                                break;
+                            }
+                        }
+                        mSubCallBack.initData(position,list);
 
                         mSelectedPosition = mMainCallBack.onLeaveSubRegion(mSelectedPosition, new SubAdapterReference(mSubCallBack));
                         L.d("mSelectedPosition = " + mSelectedPosition);

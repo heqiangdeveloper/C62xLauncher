@@ -211,6 +211,7 @@ public class MyAppFragment extends Fragment {
 //                    db.deleteLocation();
 //                }
                 editor.putBoolean(MyConfigs.SHOWDELETE,false);
+                editor.putInt(MyConfigs.SHOWDELETEPOSITION,-1);
                 editor.commit();
                 MainRecyclerViewCallBack mainAdapter = (MainRecyclerViewCallBack) appInfoClassifyView.getMainRecyclerView().getAdapter();
                 Log.d("heqq","is MainRecyclerViewCallBack");
