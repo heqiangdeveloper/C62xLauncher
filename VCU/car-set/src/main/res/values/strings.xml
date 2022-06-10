@@ -177,4 +177,6 @@
     <string name="sound_voice">语音</string>
     <string name="sound_media">媒体</string>
     <string name="sound_system">系统</string>
+    <string name="sound_equalizer">均衡器</string>
+    <string name="sound_volume_balance">音量平衡</string>
 </resources>

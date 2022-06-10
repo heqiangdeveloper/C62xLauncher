@@ -10,10 +10,76 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/default_shadow_button_color_pressed">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="@dimen/x450"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/sound_equalizer"
+                style="@style/switch_row_option_style"
+                android:layout_marginStart="@dimen/x30"
+                android:layout_marginTop="@dimen/x16"
+                android:text="@string/sound_equalizer"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/switch_row_option_style"
+                android:layout_marginTop="@dimen/x16"
+                android:text="@string/sound_volume_balance"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.common.xui.widget.smooth.SmoothLineChartView
+                android:id="@+id/smoothChartView"
+                android:layout_width="@dimen/x366"
+                android:layout_height="@dimen/x160"
+                android:layout_marginStart="@dimen/x30"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sound_equalizer" />
+
+            <com.common.xui.widget.tabbar.TabControlView
+                android:id="@+id/adas_side_show_area_radio"
+                style="@style/tdv_common_style"
+                android:layout_marginStart="@dimen/x30"
+                android:layout_marginTop="@dimen/x17"
+                android:layout_marginEnd="@dimen/x30"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/smoothChartView"
+                app:tcv_defaultSelection="1"
+                app:tcv_items="@array/sound_equalizer_option" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/right_car_vioce"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/shengchang"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
