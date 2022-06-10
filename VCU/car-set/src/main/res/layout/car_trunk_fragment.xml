@@ -8,121 +8,141 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="@dimen/x365"
-        android:layout_height="match_parent"
-        android:paddingStart="@dimen/x15"
-        android:paddingEnd="@dimen/x15">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/car_trunk_electric_function"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/switch_item_option_height"
-            android:orientation="horizontal"
+            android:layout_width="@dimen/x365"
+            android:layout_height="match_parent"
+            android:paddingStart="@dimen/x15"
+            android:paddingEnd="@dimen/x15"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                style="@style/switch_row_option_style"
-                android:text="@string/car_trunk_electric_function"
-                app:layout_constraintBottom_toBottomOf="parent"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/car_trunk_electric_function"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/switch_item_option_height"
+                android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
 
-            <com.common.xui.widget.button.switchbutton.SwitchButton
-                style="@style/switch_button_style"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    style="@style/switch_row_option_style"
+                    android:text="@string/car_trunk_electric_function"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.common.xui.widget.button.switchbutton.SwitchButton
+                    android:id="@+id/access_stern_electric_sw"
+                    style="@style/switch_button_style"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/line1"
+                style="@style/line"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/car_trunk_electric_function" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/x95"
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/line1">
+
+                <TextView
+                    android:id="@+id/textView"
+                    style="@style/switch_row_option_style"
+                    android:layout_marginTop="@dimen/x15"
+                    android:layout_marginBottom="@dimen/x10"
+                    android:text="@string/car_trunk_intelligence_into" />
+
+                <com.common.xui.widget.tabbar.TabControlView
+                    android:id="@+id/access_stern_smart_enter_radio"
+                    style="@style/tdv_common_style"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tcv_defaultSelection="1"
+                    app:tcv_items="@array/electric_stern_door_option_titles"
+                    app:tcv_values="@array/electric_stern_door_option_values" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/line2"
+                style="@style/line"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/linearLayout" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/car_trunk_light_flashing"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/switch_item_option_height"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/line2">
+
+                <TextView
+                    style="@style/switch_row_option_style"
+                    android:text="@string/car_trunk_light_flashing"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.common.xui.widget.button.switchbutton.SwitchButton
+                    android:id="@+id/access_stern_light_alarm_sw"
+                    style="@style/switch_button_style"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/line3"
+                style="@style/line"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/car_trunk_light_flashing" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/car_trunk_buzzer_alarms"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/switch_item_option_height"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/line3">
+
+                <TextView
+                    style="@style/switch_row_option_style"
+                    android:text="@string/car_trunk_buzzer_alarms"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.common.xui.widget.button.switchbutton.SwitchButton
+                    android:id="@+id/access_stern_audio_alarm_sw"
+                    style="@style/switch_button_style"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/line4"
+                style="@style/line"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/car_trunk_buzzer_alarms" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <View
-            android:id="@+id/line1"
-            style="@style/line"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/car_trunk_electric_function" />
-
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/x95"
-            android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/line1">
-
-            <TextView
-                android:id="@+id/textView"
-                style="@style/switch_row_option_style"
-                android:layout_marginTop="@dimen/x15"
-                android:layout_marginBottom="@dimen/x10"
-                android:text="@string/car_trunk_intelligence_into" />
-
-            <com.common.xui.widget.tabbar.TabControlView
-                style="@style/tdv_common_style"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tcv_defaultSelection="1"
-                app:tcv_items="@array/car_trunk_mode_options" />
-        </LinearLayout>
-
-        <View
-            android:id="@+id/line2"
-            style="@style/line"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/linearLayout" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/car_trunk_light_flashing"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/switch_item_option_height"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/line2">
-
-            <TextView
-                style="@style/switch_row_option_style"
-                android:text="@string/car_trunk_light_flashing"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.common.xui.widget.button.switchbutton.SwitchButton
-                style="@style/switch_button_style"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <View
-            android:id="@+id/line3"
-            style="@style/line"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/car_trunk_light_flashing" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/car_trunk_buzzer_alarms"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/switch_item_option_height"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/line3">
-
-            <TextView
-                style="@style/switch_row_option_style"
-                android:text="@string/car_trunk_buzzer_alarms"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.common.xui.widget.button.switchbutton.SwitchButton
-                style="@style/switch_button_style"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <View
-            android:id="@+id/line4"
-            style="@style/line"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/car_trunk_buzzer_alarms" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/right_car_nol_trunkoff"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

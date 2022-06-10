@@ -1,17 +1,15 @@
 package com.chinatsp.settinglib.manager.cabin
 
+import android.car.VehicleAreaSeat
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.hvac.CarHvacManager
-import com.chinatsp.settinglib.IConcernChanged
 import com.chinatsp.settinglib.LogManager
-import com.chinatsp.settinglib.SettingManager
 import com.chinatsp.settinglib.bean.Status1
-import com.chinatsp.settinglib.listener.IACListener
+import com.chinatsp.settinglib.listener.cabin.IACListener
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
-import com.chinatsp.settinglib.optios.Area
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.SignalOrigin
 import java.lang.ref.WeakReference
@@ -26,7 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * @version: 1.0
  */
 
-class SeatManager private constructor(): BaseManager(), IConcernChanged {
+class SeatManager private constructor(): BaseManager() {
 
     private val autoAridProperty = CarCabinManager.ID_ACSELFSTSDISP
 
@@ -37,8 +35,6 @@ class SeatManager private constructor(): BaseManager(), IConcernChanged {
     private val autoDemistProperty = CarHvacManager.ID_HVAC_AVN_KEY_DEFROST
 
     private val selfSerial by lazy { System.identityHashCode(this) }
-
-    private val listenerStore by lazy { HashMap<Int, WeakReference<IBaseListener>>() }
 
 
     val aridStatus: AtomicBoolean by lazy {
@@ -81,48 +77,36 @@ class SeatManager private constructor(): BaseManager(), IConcernChanged {
         return concernedSerials[signalOrigin] ?: HashSet()
     }
 
-    private fun issueCabinIntProperty(id: Int, value: Int, area: Area = Area.GLOBAL): Boolean {
-        val settingManager = SettingManager.getInstance()
-        return settingManager.doSetCabinProperty(id, value, area)
-    }
-
-    private fun issueHvacIntProperty(id: Int, value: Int, area: Area = Area.GLOBAL): Boolean {
-        val settingManager = SettingManager.getInstance()
-        return settingManager.doSetHvacProperty(id, value, area)
-    }
-
-    /**
-     * 更新空调舒适性
-     * @param value (空调舒适性状态显示
-     * 0x0: Reserved
-     * 0x1: Gentle
-     * 0x2: Standard
-     * 0x3: Powerful
-     * 0x4~0x6: Reserved
-     * 0x7: Invalid)
-     */
-    fun doUpdateACComfort(value: Int): Boolean {
-        val invalidValue = listOf(0x01, 0x02, 0x03).any { it == value }
-        if (!invalidValue) {
-            return false
-        }
-        return issueCabinIntProperty(CarCabinManager.ID_ACCMFTSTSDISP, value)
-    }
-
     /**
      *
      * @param switchNode 开关选项
-     * @param isStatus 开关期望状态
+     * @param status 开关期望状态
      */
-    fun doSwitchACOption(switchNode: SwitchNode, isStatus: Boolean): Boolean {
-        return false
+    fun doSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean {
+        return when (switchNode) {
+            SwitchNode.SEAT_MAIN_DRIVE_MEET -> {
+                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin, VehicleAreaSeat.SEAT_DRIVER)
+            }
+            SwitchNode.SEAT_FORK_DRIVE_MEET -> {
+                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin, VehicleAreaSeat.SEAT_PASSENGER)
+            }
+            SwitchNode.SEAT_HEAT_F_L -> {
+                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin, VehicleAreaSeat.SEAT_ROW_1_LEFT)
+            }
+            SwitchNode.SEAT_HEAT_F_R -> {
+                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin, VehicleAreaSeat.SEAT_ROW_1_RIGHT)
+            }
+            SwitchNode.SEAT_HEAT_T_L -> {
+                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin, VehicleAreaSeat.SEAT_ROW_2_LEFT)
+            }
+            SwitchNode.SEAT_HEAT_T_R -> {
+                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin, VehicleAreaSeat.SEAT_ROW_2_RIGHT)
+            }
+            else -> false
+        }
     }
 
-    override fun onPropertyChanged(type: SignalOrigin, property: CarPropertyValue<*>) {
-
-    }
-
-    fun onHvacPropertyChanged(property: CarPropertyValue<*>) {
+    override fun onHvacPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             //自动除雾
             autoDemistProperty -> {
@@ -132,7 +116,7 @@ class SeatManager private constructor(): BaseManager(), IConcernChanged {
         }
     }
 
-    fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
+    override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             //空调自干燥
             autoAridProperty -> {

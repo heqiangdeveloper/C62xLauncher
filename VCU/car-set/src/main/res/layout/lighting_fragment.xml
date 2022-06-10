@@ -7,229 +7,244 @@
 
     </data>
 
-    <com.common.xui.widget.XUIWrapContentScrollView
-        android:id="@+id/lighting_manager_ScrollView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scrollbars="none">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <com.common.xui.widget.XUIWrapContentScrollView
+            android:id="@+id/lighting_manager_ScrollView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:scrollbars="none"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="@dimen/x365"
-                android:layout_height="match_parent"
-                android:paddingStart="@dimen/x15"
-                android:paddingEnd="@dimen/x15"
-                android:paddingBottom="@dimen/x20">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/lighting_go_home"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/x95"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <TextView
-                        android:id="@+id/textView"
-                        style="@style/switch_row_option_style"
-                        android:layout_marginTop="@dimen/x15"
-                        android:layout_marginBottom="@dimen/x10"
-                        android:text="@string/lighting_go_home_title"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        style="@style/txt_content_style"
-                        android:layout_marginStart="@dimen/x9"
-                        android:layout_marginTop="@dimen/x22"
-                        android:text="@string/lighting_go_home_content"
-                        app:layout_constraintLeft_toRightOf="@+id/textView"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <com.common.xui.widget.tabbar.TabControlView
-                        style="@style/tdv_common_style"
-                        android:layout_marginTop="@dimen/x11"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/textView"
-                        app:tcv_defaultSelection="1"
-                        app:tcv_items="@array/lighting_go_home_options" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <View
-                    android:id="@+id/line1"
-                    style="@style/line"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/lighting_go_home" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/lighting_turn_signal"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/x95"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/line1">
+                    android:layout_width="@dimen/x365"
+                    android:layout_height="match_parent"
+                    android:paddingStart="@dimen/x15"
+                    android:paddingEnd="@dimen/x15"
+                    android:paddingBottom="@dimen/x20">
 
-                    <TextView
-                        android:id="@+id/lighting_turn_signal_title"
-                        style="@style/switch_row_option_style"
-                        android:layout_marginTop="@dimen/x15"
-                        android:layout_marginBottom="@dimen/x10"
-                        android:text="@string/lighting_turn_signal_title"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-
-                    <com.common.xui.widget.tabbar.TabControlView
-                        style="@style/tdv_common_style"
-                        android:layout_marginTop="@dimen/x11"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/lighting_turn_signal_title"
-                        app:tcv_defaultSelection="1"
-                        app:tcv_items="@array/lighting_turn_signal_options" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <View
-                    android:id="@+id/line2"
-                    style="@style/line"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/lighting_turn_signal" />
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/lighting_physical_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/x95"
-                    android:visibility="gone"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/line2">
-
-                    <TextView
-                        android:id="@+id/lighting_physical_switch_title"
-                        style="@style/switch_row_option_style"
-                        android:layout_marginTop="@dimen/x15"
-                        android:layout_marginBottom="@dimen/x10"
-                        android:text="@string/lighting_physical_switch_title"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-
-                    <com.common.xui.widget.picker.VSeekBar
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/lighting_go_home"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/x11"
+                        android:layout_height="@dimen/x95"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/lighting_physical_switch_title"
-                        app:xsb_insideRangeLineStrokeWidth="@dimen/x32"
-                        app:xsb_outsideRangeLineStrokeWidth="@dimen/x32"
-                        app:xsb_sliderIcon="@null"
-                        app:xsb_verticalPadding="@dimen/x10" />
+                        app:layout_constraintTop_toTopOf="parent">
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        <TextView
+                            android:id="@+id/textView"
+                            style="@style/switch_row_option_style"
+                            android:layout_marginTop="@dimen/x15"
+                            android:layout_marginBottom="@dimen/x10"
+                            android:text="@string/lighting_go_home_title"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                <View
-                    android:id="@+id/line3"
-                    style="@style/line"
-                    android:visibility="gone"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/lighting_physical_switch" />
+                        <TextView
+                            style="@style/txt_content_style"
+                            android:layout_marginStart="@dimen/x9"
+                            android:layout_marginTop="@dimen/x22"
+                            android:text="@string/lighting_go_home_content"
+                            app:layout_constraintLeft_toRightOf="@+id/textView"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/lighting_car_screen"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/x95"
-                    android:visibility="gone"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/line3">
+                        <com.common.xui.widget.tabbar.TabControlView
+                            style="@style/tdv_common_style"
+                            android:layout_marginTop="@dimen/x11"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/textView"
+                            app:tcv_defaultSelection="1"
+                            app:tcv_items="@array/lighting_go_home_options" />
 
-                    <TextView
-                        android:id="@+id/lighting_car_screen_title"
-                        style="@style/switch_row_option_style"
-                        android:layout_marginTop="@dimen/x15"
-                        android:layout_marginBottom="@dimen/x10"
-                        android:text="@string/lighting_car_screen_title"
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/line1"
+                        style="@style/line"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toBottomOf="@id/lighting_go_home" />
 
-
-                    <com.common.xui.widget.picker.VSeekBar
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/lighting_turn_signal"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/x11"
+                        android:layout_height="@dimen/x95"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/lighting_car_screen_title"
-                        app:xsb_insideRangeLineStrokeWidth="@dimen/x32"
-                        app:xsb_outsideRangeLineStrokeWidth="@dimen/x32"
-                        app:xsb_sliderIcon="@null"
-                        app:xsb_verticalPadding="@dimen/x10" />
+                        app:layout_constraintTop_toBottomOf="@id/line1">
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        <TextView
+                            android:id="@+id/lighting_turn_signal_title"
+                            style="@style/switch_row_option_style"
+                            android:layout_marginTop="@dimen/x15"
+                            android:layout_marginBottom="@dimen/x10"
+                            android:text="@string/lighting_turn_signal_title"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                <View
-                    android:id="@+id/line4"
-                    style="@style/line"
-                    android:visibility="gone"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/lighting_car_screen" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/lighting_car_outside"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/switch_item_option_height"
-                    android:orientation="horizontal"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/line2">
+                        <com.common.xui.widget.tabbar.TabControlView
+                            style="@style/tdv_common_style"
+                            android:layout_marginTop="@dimen/x11"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/lighting_turn_signal_title"
+                            app:tcv_defaultSelection="1"
+                            app:tcv_items="@array/lighting_turn_signal_options" />
 
-                    <TextView
-                        style="@style/switch_row_option_style"
-                        android:text="@string/lighting_car_outside_title"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/line2"
+                        style="@style/line"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toBottomOf="@id/lighting_turn_signal" />
 
-                    <com.common.xui.widget.button.switchbutton.SwitchButton
-                        style="@style/switch_button_style"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <View
-                    android:id="@+id/line5"
-                    style="@style/line"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/lighting_car_outside" />
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/lighting_car_inside"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/switch_item_option_height"
-                    android:orientation="horizontal"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/line5">
-
-                    <TextView
-                        style="@style/switch_row_option_style"
-                        android:text="@string/lighting_car_inside_title"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/lighting_physical_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/x95"
+                        android:visibility="gone"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toBottomOf="@id/line2">
 
-                    <com.common.xui.widget.button.switchbutton.SwitchButton
-                        style="@style/switch_button_style"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        <TextView
+                            android:id="@+id/lighting_physical_switch_title"
+                            style="@style/switch_row_option_style"
+                            android:layout_marginTop="@dimen/x15"
+                            android:layout_marginBottom="@dimen/x10"
+                            android:text="@string/lighting_physical_switch_title"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                        <com.common.xui.widget.picker.VSeekBar
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/x11"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/lighting_physical_switch_title"
+                            app:xsb_insideRangeLineStrokeWidth="@dimen/x32"
+                            app:xsb_outsideRangeLineStrokeWidth="@dimen/x32"
+                            app:xsb_sliderIcon="@null"
+                            app:xsb_verticalPadding="@dimen/x10" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/line3"
+                        style="@style/line"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/lighting_physical_switch" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/lighting_car_screen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/x95"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/line3">
+
+                        <TextView
+                            android:id="@+id/lighting_car_screen_title"
+                            style="@style/switch_row_option_style"
+                            android:layout_marginTop="@dimen/x15"
+                            android:layout_marginBottom="@dimen/x10"
+                            android:text="@string/lighting_car_screen_title"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                        <com.common.xui.widget.picker.VSeekBar
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/x11"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/lighting_car_screen_title"
+                            app:xsb_insideRangeLineStrokeWidth="@dimen/x32"
+                            app:xsb_outsideRangeLineStrokeWidth="@dimen/x32"
+                            app:xsb_sliderIcon="@null"
+                            app:xsb_verticalPadding="@dimen/x10" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/line4"
+                        style="@style/line"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/lighting_car_screen" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/lighting_car_outside"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/switch_item_option_height"
+                        android:orientation="horizontal"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/line2">
+
+                        <TextView
+                            style="@style/switch_row_option_style"
+                            android:text="@string/lighting_car_outside_title"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.common.xui.widget.button.switchbutton.SwitchButton
+                            style="@style/switch_button_style"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/line5"
+                        style="@style/line"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/lighting_car_outside" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/lighting_car_inside"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/switch_item_option_height"
+                        android:orientation="horizontal"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/line5">
+
+                        <TextView
+                            style="@style/switch_row_option_style"
+                            android:text="@string/lighting_car_inside_title"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.common.xui.widget.button.switchbutton.SwitchButton
+                            style="@style/switch_button_style"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/line6"
+                        style="@style/line"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/lighting_car_inside" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+        </com.common.xui.widget.XUIWrapContentScrollView>
 
-                <View
-                    android:id="@+id/line6"
-                    style="@style/line"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/lighting_car_inside" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </LinearLayout>
-    </com.common.xui.widget.XUIWrapContentScrollView>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/right_car"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,6 +1,7 @@
 package com.chinatsp.settinglib.manager.cabin
 
 import android.car.hardware.CarPropertyValue
+import com.chinatsp.settinglib.ITabStore
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
@@ -17,19 +18,13 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 
 
-class CabinManager private constructor() : BaseManager() {
+class CabinManager private constructor() : BaseManager(), ITabStore {
 
-//    private val version: AtomicInteger by lazy { AtomicInteger(0) }
-//
-//    private val selfSerial by lazy { System.identityHashCode(this) }
-//
-//    private val listenerStore by lazy { HashMap<Int, WeakReference<IBaseListener>>() }
+    private var concernedSerialManagers: List<BaseManager>? = null
 
-    private var concernedSerialManagers: List<out BaseManager>? = null
-
-    private val acManager: ACManager by lazy { ACManager.instance }
-
-    private val seatManager: SeatManager by lazy { SeatManager.instance }
+    override val tabSerial: AtomicInteger by lazy {
+        AtomicInteger(-1)
+    }
 
     override fun onHandleConcernedSignal(
         property: CarPropertyValue<*>,

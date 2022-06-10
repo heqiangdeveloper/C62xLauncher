@@ -83,4 +83,9 @@ public interface MainRecyclerViewCallBack<Sub extends SubRecyclerViewCallBack> {
      * @param position位置
      */
     void removeItem(int position);
+
+    /*
+    *  总数目
+     */
+    int total();
 }

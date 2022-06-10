@@ -1,6 +1,6 @@
 package com.chinatsp.settinglib.listener.sound
 
-import com.chinatsp.settinglib.listener.IManager
+import com.chinatsp.settinglib.manager.IOptionManager
 
 /**
  * @author : luohong
@@ -9,5 +9,4 @@ import com.chinatsp.settinglib.listener.IManager
  * @desc   :
  * @version: 1.0
  */
-interface ISoundManager: IManager {
-}
+interface ISoundManager: IOptionManager

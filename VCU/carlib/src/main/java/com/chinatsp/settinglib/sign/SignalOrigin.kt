@@ -8,10 +8,10 @@ package com.chinatsp.settinglib.sign
  * @version: 1.0
  */
 enum class SignalOrigin {
+    MCU_SIGNAL,
+    POWER_SIGNAL,
     CABIN_SIGNAL,
     CABIN_SIGNAL_DY,
     HVAC_SIGNAL,
-    MCU_SIGNAL,
-    HVAC_SIGNAL_DY,
-    POWER_SIGNAL
+    HVAC_SIGNAL_DY
 }

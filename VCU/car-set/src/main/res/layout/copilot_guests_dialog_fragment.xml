@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="960dp"
+    android:layout_height="680dp"
+    android:background="@drawable/bg_sound_popup_20">
+
+    <RelativeLayout
+        android:id="@+id/pop_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/close_dialog"
+            style="@style/close_dialog" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/dialog_title"
+            android:text="@string/cabin_seat_copilot_guests_position" />
+
+        <com.common.xui.widget.button.switchbutton.SwitchButton
+            style="@style/switch_button_style"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/x15"
+            android:layout_marginEnd="@dimen/x15" />
+    </RelativeLayout>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/cabin_seat_set_up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/x35"
+        android:layout_marginTop="@dimen/x20"
+        android:text="@string/cabin_seat_set_up"
+        android:textColor="@color/xui_config_color_white"
+        android:textSize="@dimen/text_15"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pop_title" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/cabin_seat_passenger_safety"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/x35"
+        android:layout_marginTop="@dimen/x6"
+        android:text="@string/cabin_seat_passenger_safety"
+        android:textColor="@color/pop_text_prompt_color"
+        android:textSize="@dimen/text_12"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cabin_seat_set_up" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/x65"
+        android:layout_marginTop="@dimen/x14"
+        android:layout_marginEnd="@dimen/x65"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cabin_seat_passenger_safety">
+
+        <LinearLayout
+            android:layout_width="@dimen/x112"
+            android:layout_height="@dimen/x144"
+            android:background="@drawable/bg_card_14"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/x38"
+                android:layout_height="@dimen/x38"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/x15"
+                android:src="@drawable/seat_76" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/x8"
+                android:text="@string/cabin_seat_common_location"
+                android:textColor="@color/card_txt"
+                android:textSize="@dimen/text_14" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/x1"
+                android:text="@string/cabin_seat_not_saved"
+                android:textColor="@color/pop_text_prompt_color"
+                android:textSize="@dimen/text_11" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/x15"
+                android:text="@string/cabin_seat_screen_modify"
+                android:textColor="@color/text_open"
+                android:textSize="@dimen/text_11" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/x10"
+                android:layout_height="@dimen/x10"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/x1"
+                android:src="@drawable/jiantoudown_blue_20" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/x24"
+            android:layout_marginRight="@dimen/x24"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cabin_seat_copilot_lower"
+                android:textColor="@color/pop_text_prompt_color"
+                android:textSize="@dimen/text_10" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/x24"
+                android:layout_height="@dimen/x24"
+                android:layout_marginTop="@dimen/x5"
+                android:layout_marginBottom="@dimen/x5"
+                android:src="@drawable/jiantou_48"
+                android:layout_gravity="center_horizontal"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cabin_seat_copilot_top"
+                android:textColor="@color/pop_text_prompt_color"
+                android:textSize="@dimen/text_10" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="@dimen/x112"
+            android:layout_height="@dimen/x144"
+            android:background="@drawable/bg_card_14"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/x38"
+                android:layout_height="@dimen/x38"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/x15"
+                android:src="@drawable/seat_76" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/x8"
+                android:text="@string/cabin_seat_welcome_location"
+                android:textColor="@color/card_txt"
+                android:textSize="@dimen/text_14" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/x1"
+                android:text="@string/cabin_seat_not_saved"
+                android:textColor="@color/pop_text_prompt_color"
+                android:textSize="@dimen/text_11" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/x15"
+                android:text="@string/cabin_seat_screen_modify"
+                android:textColor="@color/text_open"
+                android:textSize="@dimen/text_11" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/x10"
+                android:layout_height="@dimen/x10"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/x1"
+                android:src="@drawable/jiantoudown_blue_20" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

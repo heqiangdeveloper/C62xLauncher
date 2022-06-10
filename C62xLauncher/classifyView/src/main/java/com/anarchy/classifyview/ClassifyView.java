@@ -10,6 +10,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ResolveInfo;
 import android.content.res.TypedArray;
@@ -17,6 +18,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.SystemClock;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.DragEvent;
@@ -30,9 +32,12 @@ import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Adapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -50,7 +55,10 @@ import com.anarchy.classifyview.adapter.MainRecyclerViewCallBack;
 import com.anarchy.classifyview.adapter.SubAdapterReference;
 import com.anarchy.classifyview.adapter.SubRecyclerViewCallBack;
 import com.anarchy.classifyview.simple.BaseSimpleAdapter;
+import com.anarchy.classifyview.simple.SimpleAdapter;
+import com.anarchy.classifyview.simple.widget.InsertAbleGridView;
 import com.anarchy.classifyview.util.L;
+import com.anarchy.classifyview.util.MyConfigs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,6 +151,7 @@ public class ClassifyView extends FrameLayout {
     private static final int SUBCONTAINERWIDTH = 800;//文件弹出框的宽度
     private static final int SUBCONTAINERHEIGHT = 550;//文件弹出框的度
     private InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+    private int position = 0;//点击的桌面主位置
 
     public ClassifyView(Context context) {
         super(context);
@@ -192,8 +201,17 @@ public class ClassifyView extends FrameLayout {
             public void onClick(View v) {
                 if (mHideSubAnim != null && mHideSubAnim.isRunning()) return;
                 hideSubContainer();
-                //刷新桌面中sub的显示
-                mSubCallBack.removeItem(mSubRecyclerView.getChildCount() - 1);
+                //刷新桌面中sub的显示,实际发现mSubRecyclerView.getChildCount()数目会变少，不采用mSubRecyclerView计算
+                //mSubCallBack.removeItem(mSubRecyclerView.getChildCount() - 1);
+                mMainCallBack = (MainRecyclerViewCallBack) mMainRecyclerView.getAdapter();
+                List list = mMainCallBack.explodeItem(position, null);
+                for(int i = list.size() - 1; i >= 0; i--){
+                    if(list.get(i) == null){
+                        list.remove(i);
+                        break;
+                    }
+                }
+                mSubCallBack.initData(position,list);
             }
         });
         mMainShadowView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
@@ -214,7 +232,7 @@ public class ClassifyView extends FrameLayout {
         //设置文件夹名称
         titleEt = new EditText(context);
         titleEt.setSingleLine(true);
-        titleEt.setText("文件夹");
+        titleEt.setText("");
         titleEt.setGravity(Gravity.CENTER_HORIZONTAL);
         titleEt.setTextSize(28);
         titleEt.setPadding(0,30,0,0);
@@ -222,7 +240,7 @@ public class ClassifyView extends FrameLayout {
 
         //标题文本
         titleTv = new TextView(context);
-        titleTv.setText("文件夹");
+        titleTv.setText("");
         titleTv.setGravity(Gravity.CENTER_HORIZONTAL);
         titleTv.setTextSize(28);
         titleTv.setPadding(0,30,0,0);
@@ -327,28 +345,37 @@ public class ClassifyView extends FrameLayout {
             public boolean onSingleTapConfirmed(MotionEvent e) {
                 View pressedView = findChildView(mMainRecyclerView, e);
                 if (pressedView == null) return false;
-                int position = mMainRecyclerView.getChildAdapterPosition(pressedView);
+                position = mMainRecyclerView.getChildAdapterPosition(pressedView);
                 List list = mMainCallBack.explodeItem(position, pressedView);
                 if (list == null || list.size() < 2) {
                     mMainCallBack.onItemClick(position, pressedView);
                     return true;
                 } else {
-                    //如果没有添加按钮，则新增一个添加按钮
+                    //隐藏非文件夹的删除按钮
+                    for(int i = 0; i < mMainRecyclerView.getChildCount(); i++){
+                        relativeLayout = (RelativeLayout) mMainRecyclerView.getChildAt(i);
+                        insertAbleGridView = (InsertAbleGridView) relativeLayout.getChildAt(0);
+                        if(insertAbleGridView.getChildCount() == 1){//非文件夹
+                            ImageView iv = (ImageView) relativeLayout.getChildAt(1);
+                            iv.setVisibility(View.GONE);
+                        }
+                    }
+                    //如果没有添加按钮，则新增一个添加按钮,防止添加按钮不是在最末尾，先清除，再新增
                     isExistAdd = false;
                     for(int i = 0; i < list.size(); i++){
-                        if(((ResolveInfo)list.get(i)).activityInfo == null){
+                        if(list.get(i) == null){
                             list.remove(i);
                             break;
                         }
                     }
-                    list.add(new ResolveInfo());
+                    list.add(null);
 
                     mSubCallBack.initData(position, list);
                     titleTv.setVisibility(View.VISIBLE);
                     titleEt.setVisibility(View.GONE);
                     RecyclerView.ViewHolder target = mMainRecyclerView.findViewHolderForAdapterPosition(position);
-                    LinearLayout linearLayout = (LinearLayout)target.itemView;
-                    TextView nameTv = (TextView) linearLayout.getChildAt(1);
+                    RelativeLayout relativeLayout = (RelativeLayout)target.itemView;
+                    TextView nameTv = (TextView) relativeLayout.getChildAt(2);
                     titleTv.setText(nameTv.getText().toString());
                     if (ViewCompat.isAttachedToWindow(mSubContainer)) {
                         //取消之前进行的动画
@@ -597,8 +624,8 @@ public class ClassifyView extends FrameLayout {
                 //如果是重命名，显示编辑框和键盘
                 if(titleEt.getVisibility() == View.VISIBLE){
                     RecyclerView.ViewHolder target = mMainRecyclerView.findViewHolderForAdapterPosition(mSelectedPosition);
-                    LinearLayout linearLayout = (LinearLayout)target.itemView;
-                    TextView nameTv = (TextView) linearLayout.getChildAt(1);
+                    RelativeLayout relativeLayout = (RelativeLayout)target.itemView;
+                    TextView nameTv = (TextView) relativeLayout.getChildAt(2);
                     titleEt.setText(nameTv.getText().toString());
                     titleEt.setFocusable(true);
                     titleEt.setFocusableInTouchMode(true);
@@ -649,9 +676,18 @@ public class ClassifyView extends FrameLayout {
                     if(target == null){
                         L.d("target is null");
                     }else {
-                        LinearLayout linearLayout = (LinearLayout)target.itemView;
-                        TextView nameTv = (TextView) linearLayout.getChildAt(1);
-                        nameTv.setText(titleEt.getText().toString());
+                        if(!TextUtils.isEmpty(titleEt.getText().toString())){
+                            RelativeLayout relativeLayout = (RelativeLayout)target.itemView;
+                            TextView nameTv = (TextView) relativeLayout.getChildAt(2);
+                            nameTv.setText(titleEt.getText().toString());
+                        }
+                    }
+                    if(!TextUtils.isEmpty(titleEt.getText().toString())){
+                        SharedPreferences sp = getContext().getSharedPreferences(MyConfigs.APPPANELSP,Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putString(MyConfigs.TITLE,titleEt.getText().toString());
+                        editor.putInt(MyConfigs.PARENTINDEX,mSelectedPosition);
+                        editor.commit();
                     }
                 }
                 //隐藏弹出的文件夹框
@@ -672,6 +708,10 @@ public class ClassifyView extends FrameLayout {
     float lastX = 0f;
     float lastY = 0f;
     Dialog dialog = null;
+    boolean isInDeleteMode = true;
+    RecyclerView recyclerView;
+    RelativeLayout relativeLayout;
+    InsertAbleGridView insertAbleGridView;
     class MainDragListener implements View.OnDragListener {
         @Override
         public boolean onDrag(View v, DragEvent event) {
@@ -698,10 +738,26 @@ public class ClassifyView extends FrameLayout {
                         mDragView.bringToFront();
                         mElevationHelper.floatView(mMainRecyclerView, mDragView);
 
+                        recyclerView = (RecyclerView) v;
                         final List list = mMainCallBack.explodeItem(mSelectedPosition, mDragView);
                         if (list == null || list.size() < 2) {//非文件夹
-
+                            for(int i = 0; i < recyclerView.getChildCount(); i++){
+                                relativeLayout = (RelativeLayout) recyclerView.getChildAt(i);
+                                insertAbleGridView = (InsertAbleGridView) relativeLayout.getChildAt(0);
+                                if(insertAbleGridView.getChildCount() == 1){//非文件夹
+                                    ImageView iv = (ImageView) relativeLayout.getChildAt(1);
+                                    iv.setVisibility((int)iv.getTag() == 1 ? View.VISIBLE : View.GONE);
+                                }
+                            }
                         } else {//文件夹
+                            for(int i = 0; i < recyclerView.getChildCount(); i++){
+                                relativeLayout = (RelativeLayout) recyclerView.getChildAt(i);
+                                insertAbleGridView = (InsertAbleGridView) relativeLayout.getChildAt(0);
+                                if(insertAbleGridView.getChildCount() == 1){//非文件夹
+                                    ImageView iv = (ImageView) relativeLayout.getChildAt(1);
+                                    iv.setVisibility(View.GONE);
+                                }
+                            }
                             dialog = new Dialog(getContext(),R.style.mydialog);
                             dialog.setContentView(R.layout.file_edit_item);
                             WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
@@ -725,12 +781,12 @@ public class ClassifyView extends FrameLayout {
                                     dialog.dismiss();
                                     //如果没有添加按钮，则新增一个添加按钮
                                     for(int i = 0; i < list.size(); i++){
-                                        if(((ResolveInfo)list.get(i)).activityInfo == null){
+                                        if(list.get(i) == null){
                                             list.remove(i);
                                             break;
                                         }
                                     }
-                                    list.add(new ResolveInfo());
+                                    list.add(null);
                                     mSubCallBack.initData(mSelectedPosition, list);
 
                                     final int height = (int) (getHeight() * mSubRatio);
@@ -755,6 +811,14 @@ public class ClassifyView extends FrameLayout {
                                 @Override
                                 public void onClick(View view) {
                                     dialog.dismiss();
+                                    for(int i = 0; i < mMainRecyclerView.getChildCount(); i++){
+                                        relativeLayout = (RelativeLayout) recyclerView.getChildAt(i);
+                                        insertAbleGridView = (InsertAbleGridView) relativeLayout.getChildAt(0);
+                                        if(insertAbleGridView.getChildCount() == 1){//非文件夹
+                                            ImageView iv = (ImageView) relativeLayout.getChildAt(1);
+                                            iv.setVisibility((int)iv.getTag() == 1 ? View.VISIBLE : View.GONE);
+                                        }
+                                    }
                                 }
                             });
                             dialog.show();
@@ -765,17 +829,26 @@ public class ClassifyView extends FrameLayout {
                     }
                     break;
                 case DragEvent.ACTION_DRAG_LOCATION:
-//                    L.d("ACTION_DRAG_LOCATION x = " + x + ",y = " + y);
+                    L.d("ACTION_DRAG_LOCATION x = " + x + ",y = " + y);
 //                    L.d("ACTION_DRAG_LOCATION lastX = " + lastX + ",lastY = " + lastY);
                     if(Math.abs(x - lastX) >= 5 || Math.abs(y - lastY) > 5){
                         if(dialog != null && dialog.isShowing()) {
                             dialog.dismiss();
-                        }else {
-                            //L.d("dialog is null");
+                        }
+                        recyclerView = (RecyclerView) v;
+                        for(int i = 0; i < recyclerView.getChildCount(); i++){
+                            relativeLayout = (RelativeLayout) recyclerView.getChildAt(i);
+                            insertAbleGridView = (InsertAbleGridView) relativeLayout.getChildAt(0);
+                            if(insertAbleGridView.getChildCount() == 1){//非文件夹
+                                ImageView iv = (ImageView) relativeLayout.getChildAt(1);
+                                iv.setVisibility(View.GONE);
+                            }
                         }
                     }
-                    mVelocityTracker.addMovement(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(),
-                            MotionEvent.ACTION_MOVE, x, y, 0));
+                    if (mVelocityTracker != null){
+                        mVelocityTracker.addMovement(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(),
+                                MotionEvent.ACTION_MOVE, x, y, 0));
+                    }
                     mDragView.setX(centerX);
                     mDragView.setY(centerY);
                     mDx = x - mInitialTouchX;
@@ -800,6 +873,18 @@ public class ClassifyView extends FrameLayout {
                     L.d("ACTION_DRAG_EXITED");
                     break;
                 case DragEvent.ACTION_DROP:
+                    L.d("x = " + x + ",lastX = " + lastX);
+                    if(Math.abs(x - lastX) >= 5 || Math.abs(y - lastY) > 5){
+                        isInDeleteMode = false;
+                    }else {
+                        isInDeleteMode = true;
+                    }
+                    //存储在SP中，在MyAppInfoAdapter中刷新时再判断是否显示删除按钮
+                    SharedPreferences sp = getContext().getSharedPreferences(MyConfigs.APPPANELSP,Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putBoolean(MyConfigs.SHOWDELETE,isInDeleteMode ? true : false);
+                    editor.putInt(MyConfigs.SHOWDELETEPOSITION,mSelectedPosition);
+                    editor.commit();
                     L.d("ACTION_DROP");
                     if (inMergeState) {
                         inMergeState = false;
@@ -925,9 +1010,19 @@ public class ClassifyView extends FrameLayout {
                     if (mSubCallBack.canDragOut(mSelectedPosition)) {
                         inSubRegion = false;
                         inMainRegion = true;
-                        //重新刷新sub及main
-                        mSubCallBack.removeItem(mSubRecyclerView.getChildCount() - 1);
                         hideSubContainer();
+                        //重新刷新sub及main，,实际发现mSubRecyclerView.getChildCount()数目会变少，不采用mSubRecyclerView计算
+                        //mSubCallBack.removeItem(mSubRecyclerView.getChildCount() - 1);
+                        mMainCallBack = (MainRecyclerViewCallBack) mMainRecyclerView.getAdapter();
+                        List list = mMainCallBack.explodeItem(position, null);
+                        for(int i = list.size() - 1; i >= 0; i--){
+                            if(list.get(i) == null){
+                                list.remove(i);
+                                break;
+                            }
+                        }
+                        mSubCallBack.initData(position,list);
+
                         mSelectedPosition = mMainCallBack.onLeaveSubRegion(mSelectedPosition, new SubAdapterReference(mSubCallBack));
                         L.d("mSelectedPosition = " + mSelectedPosition);
                         mMainCallBack.setDragPosition(mSelectedPosition);

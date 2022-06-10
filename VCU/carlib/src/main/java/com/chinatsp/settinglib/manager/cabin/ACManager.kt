@@ -3,11 +3,10 @@ package com.chinatsp.settinglib.manager.cabin
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.hvac.CarHvacManager
-import com.chinatsp.settinglib.IConcernChanged
 import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.bean.Status1
-import com.chinatsp.settinglib.listener.IACListener
 import com.chinatsp.settinglib.listener.IBaseListener
+import com.chinatsp.settinglib.listener.cabin.IACListener
 import com.chinatsp.settinglib.listener.cabin.IAcManager
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
@@ -27,7 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 
 
-class ACManager private constructor() : BaseManager(), IConcernChanged, IAcManager {
+class ACManager private constructor() : BaseManager(), IAcManager {
 
     /**
      * 【反馈】self-desiccation
@@ -53,10 +52,6 @@ class ACManager private constructor() : BaseManager(), IConcernChanged, IAcManag
     private val cabinComfortSignal = CarCabinManager.ID_ACCMFTSTSDISP
 
     private val hvacDemistSignal = CarHvacManager.ID_HVAC_AVN_KEY_DEFROST
-
-    private val identity by lazy { System.identityHashCode(this) }
-
-    private val listenerStore by lazy { HashMap<Int, WeakReference<IBaseListener>>() }
 
     companion object : ISignal {
 
@@ -197,34 +192,24 @@ class ACManager private constructor() : BaseManager(), IConcernChanged, IAcManag
      */
     fun doSwitchOption(switchNode: SwitchNode, isStatus: Boolean): Boolean {
         return when (switchNode) {
-            SwitchNode.AC_AUTO_ARID -> {
-                val signal = CarHvacManager.ID_HVAC_AVN_SELF_DESICAA_SWT
-                doSetProperty(signal, switchNode.obtainValue(isStatus), SignalOrigin.HVAC_SIGNAL)
-            }
-            SwitchNode.AC_AUTO_DEMIST -> {
-                val signal = CarHvacManager.ID_HVAC_AVN_KEY_DEFROST
-                doSetProperty(signal, switchNode.obtainValue(isStatus), SignalOrigin.HVAC_SIGNAL)
-            }
+            SwitchNode.AC_AUTO_ARID,
+            SwitchNode.AC_AUTO_DEMIST,
             SwitchNode.AC_ADVANCE_WIND -> {
-                val signal = CarHvacManager.ID_HVAC_AVN_UNLOCK_BREATHABLE_ENABLE
-                doSetProperty(signal, switchNode.obtainValue(isStatus), SignalOrigin.HVAC_SIGNAL)
+                doSetProperty(switchNode.signal, switchNode.obtainValue(isStatus), switchNode.origin)
             }
+//            SwitchNode.AC_AUTO_DEMIST -> {
+//                val signal = CarHvacManager.ID_HVAC_AVN_KEY_DEFROST
+//                doSetProperty(signal, switchNode.obtainValue(isStatus), SignalOrigin.HVAC_SIGNAL)
+//            }
+//            SwitchNode.AC_ADVANCE_WIND -> {
+//                val signal = CarHvacManager.ID_HVAC_AVN_UNLOCK_BREATHABLE_ENABLE
+//                doSetProperty(signal, switchNode.obtainValue(isStatus), SignalOrigin.HVAC_SIGNAL)
+//            }
             else -> false
         }
     }
 
-    override fun onPropertyChanged(type: SignalOrigin, property: CarPropertyValue<*>) {
-        when (type) {
-            SignalOrigin.CABIN_SIGNAL -> {
-                onCabinPropertyChanged(property)
-            }
-            SignalOrigin.HVAC_SIGNAL -> {
-                onHvacPropertyChanged(property)
-            }
-        }
-    }
-
-    private fun onHvacPropertyChanged(property: CarPropertyValue<*>) {
+    override fun onHvacPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             //自动除雾
             hvacDemistSignal -> {
@@ -234,7 +219,7 @@ class ACManager private constructor() : BaseManager(), IConcernChanged, IAcManag
         }
     }
 
-    private fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
+    override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             //空调自干燥
             cabinAridSignal -> {
@@ -303,7 +288,7 @@ class ACManager private constructor() : BaseManager(), IConcernChanged, IAcManag
                 .forEach {
                     val listener = it.value.get()
                     if (listener is IACListener) {
-                        listener.onACSwitchStatusChanged(status, type)
+                        listener.onSwitchOptionChanged(status, type)
                     }
                 }
         }

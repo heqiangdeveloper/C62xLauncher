@@ -5,6 +5,8 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.chinatsp.settinglib.LogManager
+import com.chinatsp.settinglib.manager.cabin.CabinManager
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CabinFragmentBinding
 import com.chinatsp.vehicle.settings.vm.CabinViewModel
@@ -21,7 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class CabinManagerFragment : BaseFragment<CabinViewModel, CabinFragmentBinding>() {
 
-    var selectOption: View? = null
+//    var selectOption: View? = null
 
     private lateinit var tabOptions: List<View>
 
@@ -30,21 +32,18 @@ class CabinManagerFragment : BaseFragment<CabinViewModel, CabinFragmentBinding>(
     }
 
     private fun onClick(view: View) {
-        if (view != selectOption) {
-            viewModel.tabLocationLiveData.let {
-                it.value = view.id
-            }
-        }
+        viewModel.tabLocationLiveData.takeIf { it.value != view.id }?.value = view.id
     }
 
     override fun initData(savedInstanceState: Bundle?) {
         initTabOptions()
-
         viewModel.tabLocationLiveData.observe(this) {
             updateSelectTabOption(it)
         }
-        viewModel.tabLocationLiveData.let {
-            if (it.value == -1) {
+        viewModel.tabLocationLiveData.let { it ->
+            if (tabOptions.map { item -> item.id }.contains(it.value)) {
+                it.value = it.value
+            } else {
                 it.value = R.id.cabin_wheel
             }
         }
@@ -55,22 +54,21 @@ class CabinManagerFragment : BaseFragment<CabinViewModel, CabinFragmentBinding>(
         val range = 0 until tabOptionLayout.childCount
         tabOptions = range.map {
             val child = tabOptionLayout.getChildAt(it)
-            child.apply { setOnClickListener {onClick(this)} }
+            child.isSelected = false
+            child.apply { setOnClickListener { onClick(this) } }
             child
         }.toList()
     }
 
     private fun updateSelectTabOption(viewId: Int) {
-        if (viewId != selectOption?.id) {
-            selectOption?.isSelected = false
-            selectOption = tabOptions.first { it.id == viewId }
-            selectOption?.isSelected = true
-            updateDisplayFragment(viewId)
-        }
+        tabOptions.forEach { it.isSelected = false }
+        updateDisplayFragment(viewId)
     }
 
 
     private fun updateDisplayFragment(serial: Int) {
+        tabOptions.first { it.id == serial }.isSelected = true
+        CabinManager.instance.setTabSerial(serial)
         val fragment: Fragment? = checkOutFragment(serial)
         fragment?.let {
             val manager: FragmentManager = childFragmentManager
@@ -80,7 +78,7 @@ class CabinManagerFragment : BaseFragment<CabinViewModel, CabinFragmentBinding>(
         }
     }
 
-    private fun checkOutFragment(serial: Int): Fragment?{
+    private fun checkOutFragment(serial: Int): Fragment? {
         var fragment: Fragment? = null
         when (serial) {
             R.id.cabin_wheel -> {
@@ -98,7 +96,7 @@ class CabinManagerFragment : BaseFragment<CabinViewModel, CabinFragmentBinding>(
             R.id.cabin_instrument -> {
                 fragment = CabinMeterFragment()
             }
-            R.id.cabin_other->{
+            R.id.cabin_other -> {
                 fragment = CabinOtherFragment()
             }
             else -> {}

@@ -42,6 +42,7 @@ import com.chinatsp.settinglib.manager.GlobalManager;
 import com.chinatsp.settinglib.manager.RegisterSignalManager;
 import com.chinatsp.settinglib.manager.SoundManager;
 import com.chinatsp.settinglib.optios.Area;
+import com.chinatsp.settinglib.service.VehicleService;
 import com.chinatsp.settinglib.sign.SignalOrigin;
 import com.chinatsp.settinglib.sign.TabBlock;
 import com.chinatsp.settinglib.sign.TabSignManager;
@@ -522,20 +523,34 @@ public class SettingManager {
         }
         switch (origin) {
             case CABIN_SIGNAL:
-                return doSetCabinProperty(id, value, area);
+                return doSetCabinProperty(id, value, area.getId());
             case HVAC_SIGNAL:
-                return doSetHvacProperty(id, value, area);
+                return doSetHvacProperty(id, value, area.getId());
+            default:
+                return false;
+        }
+    }
+
+    public boolean doSetProperty(int id, int value, SignalOrigin origin, int areaValue) {
+        if (!connectService) {
+            return false;
+        }
+        switch (origin) {
+            case CABIN_SIGNAL:
+                return doSetCabinProperty(id, value, areaValue);
+            case HVAC_SIGNAL:
+                return doSetHvacProperty(id, value, areaValue);
             default:
                 return false;
         }
     }
 
 
-    public boolean doSetCabinProperty(int id, int value, @NotNull Area area) {
+    public boolean doSetCabinProperty(int id, int value, int areaValue) {
         if (null != mCarCabinManager) {
             try {
                 LogManager.Companion.d(TAG, "doSetCabinProperty b hex propertyId:" + Integer.toHexString(id) + ", value:" + value);
-                mCarCabinManager.setIntProperty(id, area.getId(), value);
+                mCarCabinManager.setIntProperty(id, areaValue, value);
                 LogManager.Companion.d(TAG, "doSetCabinProperty e dec propertyId:" + id + ", value:" + value);
                 return true;
             } catch (CarNotConnectedException e) {
@@ -545,11 +560,11 @@ public class SettingManager {
         return false;
     }
 
-    public boolean doSetHvacProperty(int id, int value, @NotNull Area area) {
+    public boolean doSetHvacProperty(int id, int value, int areaValue) {
         if (null != hvacManager) {
             try {
                 LogManager.Companion.d(TAG, "doSetHvacProperty b hex propertyId:" + Integer.toHexString(id) + ", value:" + value);
-                hvacManager.setIntProperty(id, area.getId(), value);
+                hvacManager.setIntProperty(id, areaValue, value);
                 LogManager.Companion.d(TAG, "doSetHvacProperty e dec propertyId:" + id + ", value:" + value);
                 return true;
             } catch (CarNotConnectedException e) {
@@ -588,7 +603,7 @@ public class SettingManager {
     public int doGetIntProperty(int id, @NotNull SignalOrigin origin, @NotNull Area area) {
         int result = -1;
         if (!connectService) {
-            LogManager.Companion.d("doGetIntProperty propertyId:" + id + ", origin:" + origin);
+            LogManager.Companion.e("doGetIntProperty propertyId:" + id + ", origin:" + origin + ", connectService: false!");
             return result;
         }
         if (SignalOrigin.CABIN_SIGNAL == origin) {

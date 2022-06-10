@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="960dp"
+    android:layout_height="680dp"
+    android:background="@drawable/bg_sound_popup_20">
+
+    <RelativeLayout
+        android:id="@+id/pop_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/close_dialog"
+            style="@style/close_dialog" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/dialog_title"
+            android:text="@string/cabin_seat_automatic_heating" />
+    </RelativeLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cabin_wheel_automatic_heating"
+        style="@style/install_dialog_layout"
+        android:layout_marginTop="@dimen/x18"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pop_title">
+
+        <TextView
+            style="@style/txt_prompt_style"
+            android:text="@string/cabin_seat_automatic_heating"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <com.common.xui.widget.button.switchbutton.SwitchButton
+            style="@style/switch_button_style"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/line1"
+        style="@style/line"
+        android:layout_marginStart="@dimen/x45"
+        android:layout_marginEnd="@dimen/x45"
+        android:background="@color/pop_line_color"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cabin_wheel_automatic_heating" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/x45"
+        android:layout_marginTop="@dimen/x30"
+        android:layout_marginEnd="@dimen/x45"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/line1">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/starting_temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cabin_wheel_starting_temperature"
+            android:textColor="@color/xui_config_color_white"
+            android:textSize="@dimen/text_14"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.common.xui.widget.picker.VSeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/x20"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/starting_temperature"
+            app:xsb_insideRangeLineStrokeWidth="@dimen/x32"
+            app:xsb_outsideRangeLineStrokeWidth="@dimen/x32"
+            app:xsb_sliderIcon="@null"
+            app:xsb_verticalPadding="@dimen/x10" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

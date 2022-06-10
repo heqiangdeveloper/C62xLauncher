@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="1186dp"
+    android:layout_height="680dp"
+    android:background="@drawable/bg_sound_popup_20">
+
+    <RelativeLayout
+        android:id="@+id/pop_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/close_dialog"
+            style="@style/close_dialog" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/dialog_title"
+            android:text="@string/lighting_intelligent_model" />
+    </RelativeLayout>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_car_interior_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/model_title"
+        style="@style/txt_prompt_style"
+        android:layout_marginStart="@dimen/x40"
+        android:layout_marginTop="@dimen/x28"
+        android:text="@string/lighting_intelligent_model"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pop_title" />
+
+    <com.common.xui.widget.button.switchbutton.SwitchButton
+        style="@style/switch_button_style"
+        android:layout_marginStart="@dimen/x121"
+        android:layout_marginTop="@dimen/x26"
+        app:layout_constraintLeft_toRightOf="@+id/model_title"
+        app:layout_constraintTop_toBottomOf="@id/pop_title" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/drive_colour_breathing"
+        style="@style/model_txt_dialog"
+        android:layout_marginStart="@dimen/x36"
+        android:layout_marginTop="@dimen/x17"
+        android:text="@string/drive_colour_breathing"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/model_title" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/model_txt_dialog"
+        android:layout_marginStart="@dimen/x8"
+        android:layout_marginTop="@dimen/x17"
+        android:text="@string/drive_music_rhythm"
+        app:layout_constraintLeft_toRightOf="@+id/drive_colour_breathing"
+        app:layout_constraintTop_toBottomOf="@id/model_title" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/drive_car_rhythm"
+        style="@style/model_txt_dialog"
+        android:layout_marginStart="@dimen/x36"
+        android:layout_marginTop="@dimen/x8"
+        android:text="@string/drive_car_rhythm"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/drive_colour_breathing" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/model_txt_dialog"
+        android:layout_marginStart="@dimen/x8"
+        android:layout_marginTop="@dimen/x8"
+        android:text="@string/drive_pm_display"
+        app:layout_constraintLeft_toRightOf="@+id/drive_car_rhythm"
+        app:layout_constraintTop_toBottomOf="@id/drive_colour_breathing" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/drive_temperature_rhythm"
+        style="@style/model_txt_dialog"
+        android:layout_marginStart="@dimen/x36"
+        android:layout_marginTop="@dimen/x8"
+        android:text="@string/drive_temperature_rhythm"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/drive_car_rhythm" />
+</androidx.constraintlayout.widget.ConstraintLayout>

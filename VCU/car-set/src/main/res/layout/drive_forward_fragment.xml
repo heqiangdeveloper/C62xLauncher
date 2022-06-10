@@ -8,93 +8,146 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="@dimen/x365"
-        android:layout_height="match_parent"
-        android:paddingStart="@dimen/x15"
-        android:paddingEnd="@dimen/x15">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/drive_warning_fcw"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/switch_item_option_height"
-            android:orientation="horizontal"
+            android:layout_width="@dimen/x365"
+            android:layout_height="match_parent"
+            android:paddingStart="@dimen/x15"
+            android:paddingEnd="@dimen/x15"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/drive_warning"
-                style="@style/switch_row_option_style"
-                android:text="@string/drive_warning_fcw"
-                app:layout_constraintBottom_toBottomOf="parent"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/drive_warning_fcw"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/switch_item_option_height"
+                android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.appcompat.widget.AppCompatImageView
-                style="@style/image_prompt"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/drive_warning"
-                app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:id="@+id/drive_warning"
+                    style="@style/switch_row_option_style"
+                    android:text="@string/drive_warning_fcw"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/txt_prompt"
-                android:text="@string/drive_fcw_txt_content"
+                <androidx.appcompat.widget.AppCompatImageView
+                    style="@style/image_prompt"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/drive_warning"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/txt_prompt"
+                    android:text="@string/drive_fcw_txt_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/drive_warning" />
+
+
+                <com.common.xui.widget.button.switchbutton.SwitchButton
+                    android:id="@+id/adas_forward_fcw_switch"
+                    style="@style/switch_button_style"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/line1"
+                style="@style/line"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/drive_warning" />
+                app:layout_constraintTop_toBottomOf="@id/drive_warning_fcw" />
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/drive_aeb"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/switch_item_option_height"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/line1">
 
-            <com.common.xui.widget.button.switchbutton.SwitchButton
-                style="@style/switch_button_style"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:id="@+id/drive_aeb_title"
+                    style="@style/switch_row_option_style"
+                    android:text="@string/drive_aeb_title"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    style="@style/image_prompt"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/drive_aeb_title"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/txt_prompt"
+                    android:text="@string/drive_aeb_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/drive_aeb_title" />
+
+                <com.common.xui.widget.button.switchbutton.SwitchButton
+                    android:id="@+id/adas_forward_aeb_switch"
+                    style="@style/switch_button_style"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/line2"
+                style="@style/line"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/drive_aeb" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <View
-            android:id="@+id/line1"
-            style="@style/line"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/drive_warning_fcw" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/drive_aeb"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/switch_item_option_height"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/line1">
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/road"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/drive_aeb_title"
-                style="@style/switch_row_option_style"
-                android:text="@string/drive_aeb_title"
-                app:layout_constraintBottom_toBottomOf="parent"
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/bg_right"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatImageView
-                style="@style/image_prompt"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/drive_aeb_title"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/txt_prompt"
-                android:text="@string/drive_aeb_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/drive_aeb_title" />
-
-            <com.common.xui.widget.button.switchbutton.SwitchButton
-                style="@style/switch_button_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/x117"
+                android:src="@drawable/acccar_rad"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/x142"
+                android:src="@drawable/warning_48"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/x33"
+                android:src="@drawable/car_nor"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <View
-            android:id="@+id/line2"
-            style="@style/line"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/drive_aeb" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

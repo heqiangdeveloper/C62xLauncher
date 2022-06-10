@@ -93,7 +93,7 @@ public abstract class SimpleAdapter<T, VH extends SimpleAdapter.ViewHolder> impl
      */
     public abstract View getView(ViewGroup parent, int mainPosition, int subPosition);
 
-    class SimpleMainAdapter extends BaseMainAdapter<VH, SimpleSubAdapter> {
+    public class SimpleMainAdapter extends BaseMainAdapter<VH, SimpleSubAdapter> {
         private List<List<T>> mData;
         private SimpleAdapter<T, VH> mSimpleAdapter;
 
@@ -264,6 +264,11 @@ public abstract class SimpleAdapter<T, VH extends SimpleAdapter.ViewHolder> impl
         public void removeItem(int position) {
             mData.remove(position);
             notifyDataSetChanged();
+        }
+
+        @Override
+        public int total() {
+            return mData.size();
         }
     }
 

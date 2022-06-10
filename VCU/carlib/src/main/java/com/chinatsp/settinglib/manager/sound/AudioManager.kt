@@ -1,9 +1,10 @@
 package com.chinatsp.settinglib.manager.sound
 
 import android.car.hardware.CarPropertyValue
+import com.chinatsp.settinglib.ITabStore
 import com.chinatsp.settinglib.manager.BaseManager
-import com.chinatsp.settinglib.manager.cabin.CabinManager
 import com.chinatsp.settinglib.sign.SignalOrigin
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author : luohong
@@ -14,7 +15,11 @@ import com.chinatsp.settinglib.sign.SignalOrigin
  */
 
 
-class AudioManager private constructor() : BaseManager() {
+class AudioManager private constructor() : BaseManager(), ITabStore {
+
+    override val tabSerial: AtomicInteger by lazy {
+        AtomicInteger(-1)
+    }
 
     companion object {
         val TAG: String = AudioManager::class.java.simpleName

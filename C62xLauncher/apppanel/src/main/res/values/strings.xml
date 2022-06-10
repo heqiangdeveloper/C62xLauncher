@@ -1,4 +1,11 @@
 <resources>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="uninstall_dialog_title">要删除“%s”吗？</string>
+    <string name="uninstall_dialog_vice_title">删除此APP将同时删除其数据</string>
+    <string name="uninstall_dialog_positive">删除APP</string>
+    <string name="uninstall_dialog_negative">取消</string>
+    <string name="add_dialog_positive">确认</string>
+    <string name="add_dialog_negative">取消</string>
+    <string name="add_dialog_title">添加（%s）</string>
 </resources>

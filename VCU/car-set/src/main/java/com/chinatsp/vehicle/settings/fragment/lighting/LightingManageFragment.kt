@@ -5,6 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.chinatsp.settinglib.manager.lamp.LampManager
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.LightingManageFragmentBinding
 import com.chinatsp.vehicle.settings.vm.LightingViewModel
@@ -28,16 +29,14 @@ class LightingManageFragment : BaseFragment<LightingViewModel, LightingManageFra
         viewModel.tabLocationLiveData.let {
             if (it.value == -1) {
                 it.value = R.id.lighting_tab
+            } else {
+                it.value = it.value
             }
         }
     }
 
     private fun onClick(view: View) {
-        if (view != selectOption) {
-            viewModel.tabLocationLiveData.let {
-                it.value = view.id
-            }
-        }
+        viewModel.tabLocationLiveData.takeIf { it.value != view.id }?.value = view.id
     }
 
     private fun initTabOptions() {
@@ -51,16 +50,15 @@ class LightingManageFragment : BaseFragment<LightingViewModel, LightingManageFra
     }
 
     private fun updateSelectTabOption(viewId: Int) {
-        if (viewId != selectOption?.id) {
-            selectOption?.isEnabled = true
-            selectOption = tabOptions.first { it.id == viewId }
-            selectOption?.isEnabled = false
-            updateDisplayFragment(viewId)
-        }
+        tabOptions.forEach { it.isSelected = false }
+        updateDisplayFragment(viewId)
+
     }
 
     private fun updateDisplayFragment(serial: Int) {
         var fragment: Fragment? = checkOutFragment(serial)
+        tabOptions.first { it.id == serial }.isSelected = true
+        LampManager.instance.setTabSerial(serial)
         fragment?.let {
             val manager: FragmentManager = childFragmentManager
             val transaction: FragmentTransaction = manager.beginTransaction()

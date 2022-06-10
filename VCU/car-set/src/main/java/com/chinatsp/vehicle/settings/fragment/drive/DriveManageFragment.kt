@@ -5,6 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.chinatsp.settinglib.manager.assistance.AssistanceManager
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.DriveManageFragmentBinding
 import com.chinatsp.vehicle.settings.vm.DriveViewModel
@@ -16,11 +17,7 @@ class DriveManageFragment : BaseFragment<DriveViewModel, DriveManageFragmentBind
     var selectOption: View? = null
     private lateinit var tabOptions: List<View>
     private fun onClick(view: View) {
-        if (view != selectOption) {
-            viewModel.tabLocationLiveData.let {
-                it.value = view.id
-            }
-        }
+        viewModel.tabLocationLiveData.takeIf { it.value != view.id }?.value = view.id
     }
 
     override fun getLayoutId(): Int {
@@ -36,6 +33,8 @@ class DriveManageFragment : BaseFragment<DriveViewModel, DriveManageFragmentBind
         viewModel.tabLocationLiveData.let {
             if (it.value == -1) {
                 it.value = R.id.drive_intelligent_cruise
+            } else {
+                it.value = it.value
             }
         }
     }
@@ -51,17 +50,15 @@ class DriveManageFragment : BaseFragment<DriveViewModel, DriveManageFragmentBind
     }
 
     private fun updateSelectTabOption(viewId: Int) {
-        if (viewId != selectOption?.id) {
-            selectOption?.isSelected = false
-            selectOption = tabOptions.first { it.id == viewId }
-            selectOption?.isSelected = true
-            updateDisplayFragment(viewId)
-        }
+        tabOptions.forEach { it.isSelected = false }
+        updateDisplayFragment(viewId)
     }
 
 
     private fun updateDisplayFragment(serial: Int) {
         val fragment: Fragment? = checkOutFragment(serial)
+        tabOptions.first { it.id == serial }.isSelected = true
+        AssistanceManager.instance.setTabSerial(serial)
         fragment?.let {
             val manager: FragmentManager = childFragmentManager
             val transaction: FragmentTransaction = manager.beginTransaction()

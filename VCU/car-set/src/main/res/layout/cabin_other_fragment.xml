@@ -8,144 +8,159 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="@dimen/x365"
-        android:layout_height="match_parent"
-        android:paddingStart="@dimen/x15"
-        android:paddingEnd="@dimen/x15">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cabin_other_trailer_remind"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/switch_item_option_height"
-            android:orientation="horizontal"
+            android:layout_width="@dimen/x365"
+            android:layout_height="match_parent"
+            android:paddingStart="@dimen/x15"
+            android:paddingEnd="@dimen/x15"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                style="@style/switch_row_option_style"
-                android:text="@string/cabin_other_trailer_remind"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cabin_other_trailer_remind"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/switch_item_option_height"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    android:id="@+id/cabin_whell_click_tv"
-                    style="@style/click_row_option_style"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/cabin_other_close" />
+                    style="@style/switch_row_option_style"
+                    android:text="@string/cabin_other_trailer_remind"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:layout_width="@dimen/x24"
-                    android:layout_height="@dimen/x24"
-                    android:background="@drawable/list_item_right_selector" />
-            </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/cabin_whell_click_tv"
+                        style="@style/click_row_option_style"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/cabin_other_close" />
+
+                    <ImageView
+                        android:layout_width="@dimen/x24"
+                        android:layout_height="@dimen/x24"
+                        android:background="@drawable/list_item_right_selector" />
+                </LinearLayout>
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <View
-            android:id="@+id/line1"
-            style="@style/line"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cabin_other_trailer_remind" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cabin_other_battery_optimization"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/switch_item_option_height"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/line1">
-
-            <TextView
-                style="@style/switch_row_option_style"
-                android:text="@string/cabin_other_battery_optimization"
-                app:layout_constraintBottom_toBottomOf="parent"
+            <View
+                android:id="@+id/line1"
+                style="@style/line"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/cabin_other_trailer_remind" />
 
-            <com.common.xui.widget.button.switchbutton.SwitchButton
-                style="@style/switch_button_style"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <View
-            android:id="@+id/line2"
-            style="@style/line"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cabin_other_battery_optimization" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cabin_other_wireless_charging"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/switch_item_option_height"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/line2">
-
-            <TextView
-                android:id="@+id/cabin_other_wireless_charging_title"
-                style="@style/switch_row_option_style"
-                android:text="@string/cabin_other_wireless_charging"
-                app:layout_constraintBottom_toBottomOf="parent"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cabin_other_battery_optimization"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/switch_item_option_height"
+                android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/line1">
 
-            <androidx.appcompat.widget.AppCompatImageView
-                style="@style/image_prompt"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/cabin_other_wireless_charging_title"
-                app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    style="@style/switch_row_option_style"
+                    android:text="@string/cabin_other_battery_optimization"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <com.common.xui.widget.button.switchbutton.SwitchButton
-                style="@style/switch_button_style"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <com.common.xui.widget.button.switchbutton.SwitchButton
+                    style="@style/switch_button_style"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <View
-            android:id="@+id/line3"
-            style="@style/line"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cabin_other_wireless_charging" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cabin_other_wireless_charging_lamp"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/switch_item_option_height"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/line3">
-
-            <TextView
-                style="@style/switch_row_option_style"
-                android:text="@string/cabin_other_wireless_charging_lamp"
-                app:layout_constraintBottom_toBottomOf="parent"
+            <View
+                android:id="@+id/line2"
+                style="@style/line"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/cabin_other_battery_optimization" />
 
-            <com.common.xui.widget.button.switchbutton.SwitchButton
-                style="@style/switch_button_style"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cabin_other_wireless_charging"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/switch_item_option_height"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/line2">
+
+                <TextView
+                    android:id="@+id/cabin_other_wireless_charging_title"
+                    style="@style/switch_row_option_style"
+                    android:text="@string/cabin_other_wireless_charging"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    style="@style/image_prompt"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/cabin_other_wireless_charging_title"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.common.xui.widget.button.switchbutton.SwitchButton
+                    style="@style/switch_button_style"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/line3"
+                style="@style/line"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cabin_other_wireless_charging" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cabin_other_wireless_charging_lamp"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/switch_item_option_height"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/line3">
+
+                <TextView
+                    style="@style/switch_row_option_style"
+                    android:text="@string/cabin_other_wireless_charging_lamp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.common.xui.widget.button.switchbutton.SwitchButton
+                    style="@style/switch_button_style"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/line4"
+                style="@style/line"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cabin_other_wireless_charging_lamp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <View
-            android:id="@+id/line4"
-            style="@style/line"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cabin_other_wireless_charging_lamp" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/right_car"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

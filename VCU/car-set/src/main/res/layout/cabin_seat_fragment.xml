@@ -8,126 +8,140 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="@dimen/x365"
-        android:layout_height="match_parent"
-        android:paddingStart="@dimen/x15"
-        android:paddingEnd="@dimen/x15">
-
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cabin_seat_welcomes_guests"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/switch_item_option_height"
-            android:orientation="horizontal"
+            android:layout_width="@dimen/x365"
+            android:layout_height="match_parent"
+            android:paddingStart="@dimen/x15"
+            android:paddingEnd="@dimen/x15"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                style="@style/switch_row_option_style"
-                android:text="@string/cabin_seat_welcomes_guests"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.common.xui.widget.button.switchbutton.SwitchButton
-                style="@style/switch_button_style"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <View
-            android:id="@+id/line1"
-            style="@style/line"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cabin_seat_welcomes_guests" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cabin_seat_copilot_guests"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/switch_item_option_height"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/line1">
-
-            <TextView
-                style="@style/switch_row_option_style"
-                android:text="@string/cabin_seat_copilot_guests"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cabin_seat_welcomes_guests"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/switch_item_option_height"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    style="@style/click_row_option_style"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/cabin_seat_close" />
+                    style="@style/switch_row_option_style"
+                    android:text="@string/cabin_seat_welcomes_guests"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:layout_width="@dimen/x24"
-                    android:layout_height="@dimen/x24"
-                    android:background="@drawable/list_item_right_selector" />
-            </LinearLayout>
+                <com.common.xui.widget.button.switchbutton.SwitchButton
+                    style="@style/switch_button_style"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <View
-            android:id="@+id/line2"
-            style="@style/line"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cabin_seat_copilot_guests" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cabin_seat_automatic_heating"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/switch_item_option_height"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/line2">
-
-            <TextView
-                style="@style/switch_row_option_style"
-                android:text="@string/cabin_seat_automatic_heating"
-                app:layout_constraintBottom_toBottomOf="parent"
+            <View
+                android:id="@+id/line1"
+                style="@style/line"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/cabin_seat_welcomes_guests" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cabin_seat_copilot_guests"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/switch_item_option_height"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/line1">
 
                 <TextView
-                    style="@style/click_row_option_style"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/cabin_seat_close" />
+                    style="@style/switch_row_option_style"
+                    android:text="@string/cabin_seat_copilot_guests"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:layout_width="@dimen/x24"
-                    android:layout_height="@dimen/x24"
-                    android:background="@drawable/list_item_right_selector" />
-            </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        style="@style/click_row_option_style"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/cabin_seat_close" />
+
+                    <ImageView
+                        android:layout_width="@dimen/x24"
+                        android:layout_height="@dimen/x24"
+                        android:background="@drawable/list_item_right_selector" />
+                </LinearLayout>
 
 
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/line2"
+                style="@style/line"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cabin_seat_copilot_guests" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cabin_seat_automatic_heating"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/switch_item_option_height"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/line2">
+
+                <TextView
+                    style="@style/switch_row_option_style"
+                    android:text="@string/cabin_seat_automatic_heating"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        style="@style/click_row_option_style"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/cabin_seat_close" />
+
+                    <ImageView
+                        android:layout_width="@dimen/x24"
+                        android:layout_height="@dimen/x24"
+                        android:background="@drawable/list_item_right_selector" />
+                </LinearLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/line3"
+                style="@style/line"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cabin_seat_automatic_heating" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <View
-            android:id="@+id/line3"
-            style="@style/line"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cabin_seat_automatic_heating" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/right_car"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
