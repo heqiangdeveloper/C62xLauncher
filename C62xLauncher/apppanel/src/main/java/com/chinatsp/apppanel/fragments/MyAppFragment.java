@@ -25,7 +25,7 @@ import com.anarchy.classifyview.adapter.MainRecyclerViewCallBack;
 import com.anarchy.classifyview.util.MyConfigs;
 import com.chinatsp.apppanel.AppConfigs.AppLists;
 import com.chinatsp.apppanel.R;
-import com.chinatsp.apppanel.adapter.AppInfoAdapter;
+import com.chinatsp.apppanel.adapter.AddAppAdapter;
 import com.chinatsp.apppanel.adapter.MyAppInfoAdapter;
 import com.chinatsp.apppanel.bean.LocationBean;
 import com.chinatsp.apppanel.db.MyAppDB;
@@ -52,7 +52,7 @@ public class MyAppFragment extends Fragment {
 
     private TextView loadingTv;
     private ClassifyView appInfoClassifyView;
-    private AppInfoAdapter adapter;
+    private AddAppAdapter adapter;
     private MyAppDB db;
     private LocationBean locationBean;
     private ByteArrayOutputStream baos;
@@ -185,24 +185,6 @@ public class MyAppFragment extends Fragment {
     public void onStop() {
         super.onStop();
         Log.d("heqq","myAppFragment onStop");
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.d("heqq","myAppFragment onDestroyView");
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        Log.d("heqq","myAppFragment onDetach");
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d("heqq","myAppFragment onDestroy");
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -295,5 +277,23 @@ public class MyAppFragment extends Fragment {
                 }
             }
         }).start();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d("heqq","myAppFragment onDestroyView");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.d("heqq","myAppFragment onDetach");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("heqq","myAppFragment onDestroy");
     }
 }

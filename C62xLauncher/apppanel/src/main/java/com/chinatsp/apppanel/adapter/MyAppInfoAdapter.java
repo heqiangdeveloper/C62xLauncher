@@ -24,6 +24,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.view.ViewCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anarchy.classifyview.simple.SimpleAdapter;
@@ -281,23 +283,70 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         RelativeLayout relativeLayout = (RelativeLayout) view;
         ImageView iv = (ImageView) relativeLayout.getChildAt(1);
         TextView tv = (TextView) relativeLayout.getChildAt(2);
-        if(iv.getVisibility() == View.VISIBLE){//如果删除按钮显示了，执行删除应用逻辑
-            hideDeleteIcon((RecyclerView) relativeLayout.getParent());
-            showDeleteDialog(tv.getText().toString());
+        if(tv.getText().toString().trim().equals(context.getString(R.string.add))){
+            showAddDialog(parentIndex);
         }else {
-            hideDeleteIcon((RecyclerView) relativeLayout.getParent());
-            String packageName = "";
-            if(index == -1){//-1 是main area
-                packageName = mData.get(parentIndex).get(0).getPackageName();
+            if(iv.getVisibility() == View.VISIBLE){//如果删除按钮显示了，执行删除应用逻辑
+                hideDeleteIcon((RecyclerView) relativeLayout.getParent());
+                showDeleteDialog(tv.getText().toString());
             }else {
-                if(mData.get(parentIndex).get(index) != null){
-                    packageName = mData.get(parentIndex).get(index).getPackageName();
+                hideDeleteIcon((RecyclerView) relativeLayout.getParent());
+                String packageName = "";
+                if(index == -1){//-1 是main area
+                    packageName = mData.get(parentIndex).get(0).getPackageName();
                 }else {
-                    return;
+                    if(mData.get(parentIndex).get(index) != null){
+                        packageName = mData.get(parentIndex).get(index).getPackageName();
+                    }else {
+                        return;
+                    }
                 }
+                launchApp(packageName);
             }
-            launchApp(packageName);
         }
+    }
+
+    private void showAddDialog(int parentIndex){
+        Dialog dialog = new Dialog(context, com.anarchy.classifyview.R.style.mydialog);
+        dialog.setContentView(R.layout.add_dialog);
+        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.MATCH_PARENT);
+        dialog.getWindow().setGravity(Gravity.CENTER);
+        dialog.getWindow().setAttributes(params);
+        RecyclerView rv = (RecyclerView) dialog.getWindow().findViewById(R.id.add_recyclerview);
+        rv.setAdapter(new AddAppAdapter(context,getAddAppLists(parentIndex)));
+        rv.setLayoutManager(new GridLayoutManager(context, 3));
+
+        TextView positiveTv = (TextView) dialog.getWindow().findViewById(R.id.add_dialog_positive_tv);
+        TextView negativeTv = (TextView) dialog.getWindow().findViewById(R.id.add_dialog_negative_tv);
+        TextView titleTv = (TextView) dialog.getWindow().findViewById(R.id.add_dialog_title);
+        //titleTv.setText(context.getString(R.string.uninstall_dialog_title,name));
+        positiveTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        negativeTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
+    private List<LocationBean> getAddAppLists(int parentIndex){
+        List<LocationBean> addAppLists = new ArrayList<>();
+        List<LocationBean> lists;
+        addAppLists.addAll(mData.get(parentIndex));
+        for(int i = 0; i < mData.size(); i++){
+            lists = mData.get(i);
+            if(lists != null && lists.size() == 1){//非文件夹
+                addAppLists.add(lists.get(0));
+            }
+        }
+        return addAppLists;
     }
 
     private void showDeleteDialog(String name){
