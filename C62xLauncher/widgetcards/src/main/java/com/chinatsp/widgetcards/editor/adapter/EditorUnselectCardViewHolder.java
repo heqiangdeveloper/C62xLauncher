@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 
 import com.chinatsp.widgetcards.R;
 import com.chinatsp.entity.BaseCardEntity;
-import com.chinatsp.widgetcards.editor.BaseViewHolder;
+import launcher.base.recyclerview.BaseViewHolder;
 
 import launcher.base.utils.EasyLog;
 

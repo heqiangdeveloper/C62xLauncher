@@ -28,7 +28,7 @@ public class ExpandStateManager {
     public void register(LifecycleOwner lifecycleOwner, Observer<? super Boolean> observer) {
         mExpandStateLiveData.observe(lifecycleOwner, observer);
     }
-    public void unregister(LifecycleOwner lifecycleOwner, Observer<? super Boolean> observer) {
-        mExpandStateLiveData.observe(lifecycleOwner, observer);
+    public void unregister(Observer<? super Boolean> observer) {
+        mExpandStateLiveData.removeObserver(observer);
     }
 }

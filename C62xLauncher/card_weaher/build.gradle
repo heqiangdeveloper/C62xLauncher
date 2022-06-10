@@ -27,6 +27,7 @@ android {
 }
 
 dependencies {
+    compileOnly fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
     implementation rootProject.ext.dependencies.appcompat
     implementation rootProject.ext.dependencies.material
     implementation rootProject.ext.dependencies.constraintlayout

@@ -1,11 +1,17 @@
 package com.chinatsp.widgetcards.service;
 
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+
+import com.chinatsp.entity.DemoCardEntity;
 import com.chinatsp.entity.DouyinCardEntity;
 import com.chinatsp.entity.DriveCounselorEntity;
 import com.chinatsp.entity.EConnectEntity;
 import com.chinatsp.entity.IQuTingCardEntity;
 import com.chinatsp.entity.NavigationCardEntity;
 import com.chinatsp.entity.WeatherCardEntity;
+import com.chinatsp.widgetcards.CardHomeFragment;
 import com.chinatsp.widgetcards.R;
 import com.chinatsp.entity.BaseCardEntity;
 import com.chinatsp.entity.DefaultCardEntity;
@@ -25,6 +31,7 @@ public class CardsTypeManager {
     private CardsTypeManager() {
 
     }
+
 
     private static class Holder {
         public static CardsTypeManager manager = new CardsTypeManager();
@@ -48,6 +55,7 @@ public class CardsTypeManager {
         int USER_CENTER = 10;
         int APP_STORE = 11;
         int EMPTY = 100;
+        int DEMO = 101;
     }
 
     public static final int MAX_SHOWING = 6;
@@ -55,6 +63,7 @@ public class CardsTypeManager {
     private Map<Integer, BaseCardEntity> mHomeCardMap = new HashMap<>();
     private final List<BaseCardEntity> mHomeCardList = new LinkedList<>();
     private final List<BaseCardEntity> mUnselectCardList = new LinkedList<>();
+    private MutableLiveData<List<BaseCardEntity>> mHomeCardsLiveData = new MutableLiveData<>();
 
     public List<BaseCardEntity> getHomeList() {
         if (mHomeCardList.isEmpty()) {
@@ -70,8 +79,6 @@ public class CardsTypeManager {
         EasyLog.d(TAG, "HomeList size:" + mUnselectCardList.size());
         return mUnselectCardList;
     }
-
-
 
     public BaseCardEntity findByType(int type) {
         return mHomeCardMap.get(type);
@@ -114,7 +121,14 @@ public class CardsTypeManager {
                 .setSelectBgRes(R.drawable.card_edit_select_drive_qa)
                 .setUnselectBgRes(R.drawable.card_edit_unselect_drive_qa)
         );
+//        addHomeCard(new DemoCardEntity().setName("DemoCard").setType(CardType.DEMO)
+//                .setCanExpand(true)
+//        );
         return mHomeCardList;
+    }
+
+    public void refreshHomeList() {
+        mHomeCardsLiveData.postValue(mHomeCardList);
     }
     public List<BaseCardEntity> createUnselectCards() {
         mUnselectCardList.clear();
@@ -155,5 +169,13 @@ public class CardsTypeManager {
                 .setUnselectBgRes(R.drawable.card_edit_unselect_default)
         );
         return mUnselectCardList;
+    }
+
+    public void registerHomeCardsOb(LifecycleOwner lifecycleOwner, Observer<List<BaseCardEntity>> homeCardsOb) {
+        mHomeCardsLiveData.observe(lifecycleOwner, homeCardsOb);
+    }
+
+    public void unregisterHomeCardsOb(Observer<List<BaseCardEntity>> homeCardsOb) {
+        mHomeCardsLiveData.removeObserver(homeCardsOb);
     }
 }

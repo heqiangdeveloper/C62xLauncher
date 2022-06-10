@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.RecyclerView;
 
 import card.service.ICardStyleChange;
 

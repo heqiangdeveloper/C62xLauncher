@@ -51,9 +51,6 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
         itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if (!mExpandState) {
-                    return false;
-                }
                 EasyLog.d(TAG, "onLongClick " + cardEntity.getName());
                 ActivityBus.newInstance(itemView.getContext())
                         .withClass(CardEditorActivity.class)

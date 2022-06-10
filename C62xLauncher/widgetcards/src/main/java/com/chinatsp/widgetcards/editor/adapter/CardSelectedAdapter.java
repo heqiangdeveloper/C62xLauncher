@@ -5,10 +5,12 @@ import android.view.View;
 
 import com.chinatsp.widgetcards.R;
 import com.chinatsp.entity.BaseCardEntity;
-import com.chinatsp.widgetcards.editor.BaseRcvAdapter;
-import com.chinatsp.widgetcards.editor.BaseViewHolder;
+import launcher.base.recyclerview.BaseRcvAdapter;
+import launcher.base.recyclerview.BaseViewHolder;
 
 public class CardSelectedAdapter extends BaseRcvAdapter<BaseCardEntity> {
+    private View.OnTouchListener mOnTouchListener;
+
     public CardSelectedAdapter(Context context) {
         super(context);
     }
@@ -22,5 +24,4 @@ public class CardSelectedAdapter extends BaseRcvAdapter<BaseCardEntity> {
     protected BaseViewHolder<BaseCardEntity> createViewHolder(View view) {
         return new EditorHomeCardViewHolder(view);
     }
-
 }

@@ -1,4 +1,4 @@
-package com.chinatsp.widgetcards.editor;
+package launcher.base.recyclerview;
 
 import android.view.View;
 
