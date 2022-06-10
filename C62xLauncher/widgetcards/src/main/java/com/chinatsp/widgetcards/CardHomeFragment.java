@@ -7,12 +7,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 
+import com.chinatsp.entity.BaseCardEntity;
 import com.chinatsp.widgetcards.editor.CardIndicator;
 import com.chinatsp.widgetcards.home.ExpandStateManager;
 import com.chinatsp.widgetcards.service.CardsTypeManager;
 import com.chinatsp.widgetcards.home.HomeCardsAdapter;
+
+import java.util.List;
 
 import launcher.base.recyclerview.SimpleRcvDecoration;
 import launcher.base.component.BaseFragment;
@@ -32,14 +36,17 @@ public class CardHomeFragment extends BaseFragment {
         initCardsRcv(rootView);
         mCardIndicator = rootView.findViewById(R.id.cardIndicator);
         mCardIndicator.setIndex(0);
+
     }
 
     private void initObservers() {
         ExpandStateManager.getInstance().register(this, mExpandOb);
+        CardsTypeManager.getInstance().registerHomeCardsOb(this, mHomeCardsOb);
     }
 
     private void releaseObservers() {
-        ExpandStateManager.getInstance().unregister(this, mExpandOb);
+        ExpandStateManager.getInstance().unregister(mExpandOb);
+        CardsTypeManager.getInstance().unregisterHomeCardsOb(mHomeCardsOb);
     }
 
     Observer<Boolean> mExpandOb = new Observer<Boolean>() {
@@ -48,6 +55,14 @@ public class CardHomeFragment extends BaseFragment {
             if (expand && mSnapHelper != null) {
 
             }
+        }
+    };
+    Observer<List<BaseCardEntity>> mHomeCardsOb = new Observer<List<BaseCardEntity>>() {
+        @SuppressLint("NotifyDataSetChanged")
+        @Override
+        public void onChanged(List<BaseCardEntity> baseCardEntities) {
+            mCardsAdapter.setCardEntityList(baseCardEntities);
+            mCardsAdapter.notifyDataSetChanged();
         }
     };
     private void initCardsRcv(View rootView) {

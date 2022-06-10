@@ -3,16 +3,12 @@ package com.chinatsp.drivecounselor;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.chinatsp.widgetcards.R;
-
-import card.service.ICardStyleChange;
-import launcher.base.utils.view.LayoutParamUtil;
 
 
 public class DriveCounselorCardView extends ConstraintLayout {

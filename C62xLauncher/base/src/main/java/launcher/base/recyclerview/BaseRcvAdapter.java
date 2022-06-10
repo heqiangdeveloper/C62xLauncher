@@ -1,4 +1,4 @@
-package com.chinatsp.widgetcards.editor;
+package launcher.base.recyclerview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -48,8 +48,11 @@ public abstract class BaseRcvAdapter<T> extends RecyclerView.Adapter<BaseViewHol
         if (data == null) {
             return;
         }
-        mData.clear();
-        mData.addAll(data);
+        mData = data;
         notifyDataSetChanged();
+    }
+
+    public List<T> getData() {
+        return mData;
     }
 }
