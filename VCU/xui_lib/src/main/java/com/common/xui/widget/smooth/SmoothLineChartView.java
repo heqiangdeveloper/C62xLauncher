@@ -276,7 +276,6 @@ public class SmoothLineChartView extends View {
         mPaint.setStrokeWidth(1);
         mPaint.setStyle(Paint.Style.FILL);
         for (PointF point : mPoints) {
-            Log.i("tttttt", "point.x: " + point.x + "  point.y: " + point.y + "   height + mBorder: " + height + mBorder);
             canvas.drawLine(point.x, height / 2 - mBorder, point.x, height + mBorder, mPaint);
         }
         //绘制圆环内圆填充

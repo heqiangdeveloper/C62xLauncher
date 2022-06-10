@@ -26,13 +26,15 @@
                 android:layout_width="@dimen/main_tab_width"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:src="@drawable/back_ic_selector" />
+                android:src="@drawable/back_ic_selector"
+                android:visibility="gone" />
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tab_layout"
                 style="@style/TabLayoutStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/x36"
                 android:layout_weight="1"
                 app:tabBackground="@drawable/normal_mask"
                 app:tabIndicator="@drawable/press_mask"
@@ -42,13 +44,20 @@
         </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/navigation_bar_line1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title_tab_layout" />
+
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/right_car"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:visibility="gone"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_pager"
