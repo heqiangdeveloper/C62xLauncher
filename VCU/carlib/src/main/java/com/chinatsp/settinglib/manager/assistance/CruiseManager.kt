@@ -9,7 +9,7 @@ import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.optios.Area
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
-import com.chinatsp.settinglib.sign.SignalOrigin
+import com.chinatsp.settinglib.sign.Origin
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -31,57 +31,54 @@ class CruiseManager : BaseManager(), IOptionManager {
     }
 
     private val cruiseAssistFunction: AtomicBoolean by lazy {
-        val switchNode = SwitchNode.ADAS_CRUISE_ASSIST
+        val switchNode = SwitchNode.ADAS_IACC
         AtomicBoolean(switchNode.isOn()).apply {
-            val signal = -1
-            val result = doGetIntProperty(signal, switchNode.origin, Area.GLOBAL)
-            doUpdateSwitchStatus(switchNode, this, result)
+            val result = readIntProperty(switchNode.get.signal, switchNode.get.origin)
+            doUpdateSwitchValue(switchNode, this, result)
         }
     }
     private val targetPromptFunction: AtomicBoolean by lazy {
         val switchNode = SwitchNode.ADAS_TARGET_PROMPT
         AtomicBoolean(switchNode.isOn()).apply {
-            val signal = -1
-            val result = doGetIntProperty(signal, switchNode.origin, Area.GLOBAL)
-            doUpdateSwitchStatus(switchNode, this, result)
+            val result = readIntProperty(switchNode.get.signal, switchNode.get.origin)
+            doUpdateSwitchValue(switchNode, this, result)
         }
     }
 
     private val limberLeaveFunction: AtomicBoolean by lazy {
         val switchNode = SwitchNode.ADAS_LIMBER_LEAVE
         AtomicBoolean(switchNode.isOn()).apply {
-            val signal = -1
-            val result = doGetIntProperty(signal, switchNode.origin, Area.GLOBAL)
-            doUpdateSwitchStatus(switchNode, this, result)
+            val result = readIntProperty(switchNode.get.signal, switchNode.get.origin)
+            doUpdateSwitchValue(switchNode, this, result)
         }
     }
 
     private val limberLeaveRadio: AtomicInteger by lazy {
         AtomicInteger(-1).apply {
             val signal = -1
-            val result = doGetIntProperty(signal, SignalOrigin.CABIN_SIGNAL, Area.GLOBAL)
+            val result = readIntProperty(signal, Origin.CABIN, Area.GLOBAL)
             set(result)
         }
     }
 
 
-    override val concernedSerials: Map<SignalOrigin, Set<Int>> by lazy {
-        HashMap<SignalOrigin, Set<Int>>().apply {
+    override val concernedSerials: Map<Origin, Set<Int>> by lazy {
+        HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int>().apply {
             }
-            put(SignalOrigin.CABIN_SIGNAL, cabinSet)
+            put(Origin.CABIN, cabinSet)
         }
     }
 
     override fun onHandleConcernedSignal(
         property: CarPropertyValue<*>,
-        signalOrigin: SignalOrigin
+        signalOrigin: Origin
     ): Boolean {
         when (signalOrigin) {
-            SignalOrigin.CABIN_SIGNAL -> {
+            Origin.CABIN -> {
                 onCabinPropertyChanged(property)
             }
-            SignalOrigin.HVAC_SIGNAL -> {
+            Origin.HVAC -> {
                 onHvacPropertyChanged(property)
             }
             else -> {}
@@ -89,17 +86,17 @@ class CruiseManager : BaseManager(), IOptionManager {
         return true
     }
 
-    override fun isConcernedSignal(signal: Int, signalOrigin: SignalOrigin): Boolean {
+    override fun isConcernedSignal(signal: Int, signalOrigin: Origin): Boolean {
         val signals = getConcernedSignal(signalOrigin)
         return signals.contains(signal)
     }
 
-    override fun getConcernedSignal(signalOrigin: SignalOrigin): Set<Int> {
+    override fun getConcernedSignal(signalOrigin: Origin): Set<Int> {
         return concernedSerials[signalOrigin] ?: HashSet()
     }
 
-    override fun doGetRadioOption(radioNode: RadioNode): Int {
-        return when (radioNode) {
+    override fun doGetRadioOption(node: RadioNode): Int {
+        return when (node) {
             RadioNode.ADAS_LIMBER_LEAVE -> {
                 limberLeaveRadio.get()
             }
@@ -107,11 +104,11 @@ class CruiseManager : BaseManager(), IOptionManager {
         }
     }
 
-    override fun doSetRadioOption(radioNode: RadioNode, value: Int): Boolean {
-        return when (radioNode) {
+    override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
+        return when (node) {
             RadioNode.ADAS_LIMBER_LEAVE -> {
                 val signal = -1
-                doSetProperty(signal, value, SignalOrigin.CABIN_SIGNAL)
+                writeProperty(signal, value, Origin.CABIN)
             }
             else -> false
         }
@@ -130,9 +127,9 @@ class CruiseManager : BaseManager(), IOptionManager {
         return result
     }
 
-    override fun doGetSwitchOption(switchNode: SwitchNode): Boolean {
-        return when (switchNode) {
-            SwitchNode.ADAS_CRUISE_ASSIST -> {
+    override fun doGetSwitchOption(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.ADAS_IACC -> {
                 cruiseAssistFunction.get()
             }
             SwitchNode.ADAS_TARGET_PROMPT -> {
@@ -145,16 +142,16 @@ class CruiseManager : BaseManager(), IOptionManager {
         }
     }
 
-    override fun doSetSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean {
-        return when (switchNode) {
-            SwitchNode.ADAS_CRUISE_ASSIST -> {
-                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin)
+    override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
+        return when (node) {
+            SwitchNode.ADAS_IACC -> {
+                writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
             SwitchNode.ADAS_TARGET_PROMPT -> {
-                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin)
+                writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
             SwitchNode.ADAS_LIMBER_LEAVE -> {
-                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin)
+                writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
             else -> false
         }

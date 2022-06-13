@@ -2,13 +2,11 @@ package com.chinatsp.settinglib.manager.cabin
 
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
-import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.cabin.ISafeListener
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.optios.SwitchNode
-import com.chinatsp.settinglib.sign.SignalOrigin
-import java.lang.ref.WeakReference
+import com.chinatsp.settinglib.sign.Origin
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -22,34 +20,32 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class SafeManager private constructor() : BaseManager() {
 
-    private val fortifySoundSignal = CarCabinManager.ID_LOCK_SUCCESS_SOUND_STATUE
-
 
     private val fortifySoundStatus: AtomicBoolean by lazy {
         val node = SwitchNode.DRIVE_SAFE_FORTIFY_SOUND
         AtomicBoolean(node.isOn()).apply {
-            val value = doGetIntProperty(fortifySoundSignal, node.origin, node.area)
-            doUpdateSwitchStatus(node, this, value)
+            val result = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, result)
         }
     }
 
     val version: AtomicInteger by lazy { AtomicInteger(0) }
 
-    override val concernedSerials: Map<SignalOrigin, Set<Int>> by lazy {
-        HashMap<SignalOrigin, Set<Int>>().apply {
+    override val concernedSerials: Map<Origin, Set<Int>> by lazy {
+        HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int>().apply {
                 /**设防提示音 开关*/
                 add(CarCabinManager.ID_LOCK_SUCCESS_SOUND_STATUE)
             }
-            put(SignalOrigin.CABIN_SIGNAL, cabinSet)
+            put(Origin.CABIN, cabinSet)
         }
     }
 
 
-    override fun onHandleConcernedSignal(property: CarPropertyValue<*>, signalOrigin: SignalOrigin):
+    override fun onHandleConcernedSignal(property: CarPropertyValue<*>, signalOrigin: Origin):
             Boolean {
         when (signalOrigin) {
-            SignalOrigin.CABIN_SIGNAL -> {
+            Origin.CABIN -> {
                 onCabinPropertyChanged(property)
             }
             else -> {}
@@ -57,24 +53,24 @@ class SafeManager private constructor() : BaseManager() {
         return false
     }
 
-    override fun isConcernedSignal(signal: Int, signalOrigin: SignalOrigin): Boolean {
+    override fun isConcernedSignal(signal: Int, signalOrigin: Origin): Boolean {
         val signals = getConcernedSignal(signalOrigin)
         return signals.contains(signal)
     }
 
-    override fun getConcernedSignal(signalOrigin: SignalOrigin): Set<Int> {
+    override fun getConcernedSignal(signalOrigin: Origin): Set<Int> {
         return concernedSerials[signalOrigin] ?: HashSet()
     }
 
     /**
      *
-     * @param switchNode 开关选项
+     * @param node 开关选项
      * @param status 开关期望状态
      */
-    fun doSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean {
-        return when (switchNode) {
+    fun doSwitchOption(node: SwitchNode, status: Boolean): Boolean {
+        return when (node) {
             SwitchNode.DRIVE_SAFE_FORTIFY_SOUND -> {
-                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin)
+                writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
             else -> false
         }
@@ -97,7 +93,7 @@ class SafeManager private constructor() : BaseManager() {
                 if (value is Int) {
                     onSwitchChanged(
                         switchNode,
-                        doUpdateSwitchStatus(switchNode, fortifySoundStatus, value).get()
+                        doUpdateSwitchValue(switchNode, fortifySoundStatus, value).get()
                     )
                 }
             }

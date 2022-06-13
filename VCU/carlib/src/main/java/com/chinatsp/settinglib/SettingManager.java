@@ -40,10 +40,10 @@ import android.text.format.DateFormat;
 import com.android.internal.app.LocalePicker;
 import com.chinatsp.settinglib.manager.GlobalManager;
 import com.chinatsp.settinglib.manager.RegisterSignalManager;
-import com.chinatsp.settinglib.manager.SoundManager;
+import com.chinatsp.settinglib.manager.lamp.BrightnessManager;
+import com.chinatsp.settinglib.manager.sound.VoiceManager;
 import com.chinatsp.settinglib.optios.Area;
-import com.chinatsp.settinglib.service.VehicleService;
-import com.chinatsp.settinglib.sign.SignalOrigin;
+import com.chinatsp.settinglib.sign.Origin;
 import com.chinatsp.settinglib.sign.TabBlock;
 import com.chinatsp.settinglib.sign.TabSignManager;
 
@@ -170,7 +170,7 @@ public class SettingManager {
 
     private boolean isAVMOn = false, isAPAOn = false;
 
-    private Set<Integer> obtainSignals(SignalOrigin type) {
+    private Set<Integer> obtainSignals(Origin type) {
         Collection<TabBlock> values = TabSignManager.Companion.getInstance().getTabSignMap().values();
         final Set<Integer> signalSet = new HashSet<>();
         values.stream().forEach(tab -> {
@@ -218,7 +218,7 @@ public class SettingManager {
         public void onChangeEvent(CarPropertyValue property) {
             int propertyId = property.getPropertyId();
             LogManager.Companion.d(TAG, "Cabin onChangeEvent propertyId:" + propertyId);
-            GlobalManager.Companion.getInstance().onDispatchSignal(propertyId, property, SignalOrigin.CABIN_SIGNAL);
+            GlobalManager.Companion.getInstance().onDispatchSignal(propertyId, property, Origin.CABIN);
         }
 
         @Override
@@ -232,7 +232,7 @@ public class SettingManager {
         public void onChangeEvent(CarPropertyValue property) {
             int propertyId = property.getPropertyId();
             LogManager.Companion.d(TAG, "Hvac onChangeEvent:propertyId:" + propertyId);
-            GlobalManager.Companion.getInstance().onDispatchSignal(propertyId, property, SignalOrigin.HVAC_SIGNAL);
+            GlobalManager.Companion.getInstance().onDispatchSignal(propertyId, property, Origin.HVAC);
         }
 
         @Override
@@ -246,7 +246,7 @@ public class SettingManager {
         public void onChangeEvent(CarPropertyValue property) {
             int propertyId = property.getPropertyId();
             LogManager.Companion.d(TAG, "Mcu onChangeEvent:propertyId:" + propertyId);
-            GlobalManager.Companion.getInstance().onDispatchSignal(propertyId, property, SignalOrigin.MCU_SIGNAL);
+            GlobalManager.Companion.getInstance().onDispatchSignal(propertyId, property, Origin.MCU);
 //            switch (property.getPropertyId()) {
 //                case CarMcuManager.ID_VENDOR_MCU_POWER_MODE://电源状态
 //                    int powerStatus = (Integer) property.getValue();
@@ -517,28 +517,28 @@ public class SettingManager {
         });
     }
 
-    public boolean doSetProperty(int id, int value, SignalOrigin origin, @NotNull Area area) {
+    public boolean doSetProperty(int id, int value, Origin origin, @NotNull Area area) {
         if (!connectService) {
             return false;
         }
         switch (origin) {
-            case CABIN_SIGNAL:
+            case CABIN:
                 return doSetCabinProperty(id, value, area.getId());
-            case HVAC_SIGNAL:
+            case HVAC:
                 return doSetHvacProperty(id, value, area.getId());
             default:
                 return false;
         }
     }
 
-    public boolean doSetProperty(int id, int value, SignalOrigin origin, int areaValue) {
+    public boolean doSetProperty(int id, int value, Origin origin, int areaValue) {
         if (!connectService) {
             return false;
         }
         switch (origin) {
-            case CABIN_SIGNAL:
+            case CABIN:
                 return doSetCabinProperty(id, value, areaValue);
-            case HVAC_SIGNAL:
+            case HVAC:
                 return doSetHvacProperty(id, value, areaValue);
             default:
                 return false;
@@ -600,15 +600,15 @@ public class SettingManager {
         return result;
     }
 
-    public int doGetIntProperty(int id, @NotNull SignalOrigin origin, @NotNull Area area) {
+    public int readIntProperty(int id, @NotNull Origin origin, @NotNull Area area) {
         int result = -1;
         if (!connectService) {
             LogManager.Companion.e("doGetIntProperty propertyId:" + id + ", origin:" + origin + ", connectService: false!");
             return result;
         }
-        if (SignalOrigin.CABIN_SIGNAL == origin) {
+        if (Origin.CABIN == origin) {
             result = doGetCabinIntProperty(id, area);
-        } else if (SignalOrigin.HVAC_SIGNAL == origin) {
+        } else if (Origin.HVAC == origin) {
             result = doGetHvacIntProperty(id, area);
         }
         return result;
@@ -1371,6 +1371,7 @@ public class SettingManager {
         try {
             if (null == mCarPowerManager) {
                 mCarPowerManager = (CarPowerManager) mCarApi.getCarManager(Car.POWER_SERVICE);
+                BrightnessManager.Companion.getInstance().injectManager(mCarPowerManager);
             }
         } catch (CarNotConnectedException e) {
             e.printStackTrace();
@@ -1383,7 +1384,8 @@ public class SettingManager {
             if (null == mCarAudioManager) {
                 try {
                     mCarAudioManager = (CarAudioManager) mCarApi.getCarManager(Car.AUDIO_SERVICE);
-                    SoundManager.getInstance().initAudioManager(mCarAudioManager);
+//                    SoundManager.getInstance().initAudioManager(mCarAudioManager);
+                    VoiceManager.Companion.getInstance().injectAudioManager(mCarAudioManager);
                 } catch (CarNotConnectedException e) {
                     e.printStackTrace();
                 }
@@ -1420,9 +1422,9 @@ public class SettingManager {
 //            if (null == mCarAudioManager) {
 //                mCarAudioManager = (CarAudioManager) mCarApi.getCarManager(Car.AUDIO_SERVICE);
 //            }
-            if (null == mCarPowerManager) {
-                mCarPowerManager = (CarPowerManager) mCarApi.getCarManager(Car.POWER_SERVICE);
-            }
+//            if (null == mCarPowerManager) {
+//                mCarPowerManager = (CarPowerManager) mCarApi.getCarManager(Car.POWER_SERVICE);
+//            }
             if (null == mBoxManager) {
                 mBoxManager = (TboxManager) mCarApi.getCarManager(Car.TBOX_SERVICE);
             }

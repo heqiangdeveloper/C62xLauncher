@@ -10,7 +10,7 @@ import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.optios.Area
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
-import com.chinatsp.settinglib.sign.SignalOrigin
+import com.chinatsp.settinglib.sign.Origin
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -39,9 +39,8 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
     private val _electricFunction: AtomicBoolean by lazy {
         val switchNode = SwitchNode.AS_STERN_ELECTRIC
         AtomicBoolean(switchNode.isOn()).apply {
-            val signal = -1
-            val result = doGetIntProperty(signal, switchNode.origin, Area.GLOBAL)
-            doUpdateSwitchStatus(switchNode, this, result)
+            val result = readIntProperty(switchNode.get.signal, switchNode.get.origin)
+            doUpdateSwitchValue(switchNode, this, result)
         }
     }
 
@@ -49,9 +48,8 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
     private val _lightAlarmFunction: AtomicBoolean by lazy {
         val switchNode = SwitchNode.AS_STERN_LIGHT_ALARM
         AtomicBoolean(switchNode.isOn()).apply {
-            val signal = -1
-            val result = doGetIntProperty(signal, switchNode.origin, Area.GLOBAL)
-            doUpdateSwitchStatus(switchNode, this, result)
+            val result = readIntProperty(switchNode.get.signal, switchNode.get.origin)
+            doUpdateSwitchValue(switchNode, this, result)
         }
     }
 
@@ -59,30 +57,29 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
     private val _audioAlarmFunction: AtomicBoolean by lazy {
         val switchNode = SwitchNode.AS_STERN_AUDIO_ALARM
         AtomicBoolean(switchNode.isOn()).apply {
-            val signal = -1
-            val result = doGetIntProperty(signal, switchNode.origin, Area.GLOBAL)
-            doUpdateSwitchStatus(switchNode, this, result)
+            val result = readIntProperty(switchNode.get.signal, switchNode.get.origin)
+            doUpdateSwitchValue(switchNode, this, result)
         }
     }
 
 
-    override val concernedSerials: Map<SignalOrigin, Set<Int>> by lazy {
-        HashMap<SignalOrigin, Set<Int>>().apply {
-            val cabinSet = HashSet<Int> ().apply {
+    override val concernedSerials: Map<Origin, Set<Int>> by lazy {
+        HashMap<Origin, Set<Int>>().apply {
+            val cabinSet = HashSet<Int>().apply {
             }
-            put(SignalOrigin.CABIN_SIGNAL, cabinSet)
+            put(Origin.CABIN, cabinSet)
         }
     }
 
     override fun onHandleConcernedSignal(
         property: CarPropertyValue<*>,
-        signalOrigin: SignalOrigin
+        signalOrigin: Origin
     ): Boolean {
         when (signalOrigin) {
-            SignalOrigin.CABIN_SIGNAL -> {
+            Origin.CABIN -> {
                 onCabinPropertyChanged(property)
             }
-            SignalOrigin.HVAC_SIGNAL -> {
+            Origin.HVAC -> {
                 onHvacPropertyChanged(property)
             }
             else -> {}
@@ -90,26 +87,28 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
         return true
     }
 
-    override fun isConcernedSignal(signal: Int, signalOrigin: SignalOrigin): Boolean {
+    override fun isConcernedSignal(signal: Int, signalOrigin: Origin): Boolean {
         val signals = getConcernedSignal(signalOrigin)
         return signals.contains(signal)
     }
 
-    override fun getConcernedSignal(signalOrigin: SignalOrigin): Set<Int> {
+    override fun getConcernedSignal(signalOrigin: Origin): Set<Int> {
         return concernedSerials[signalOrigin] ?: HashSet()
     }
 
-    override fun doGetRadioOption(radioNode: RadioNode): Int {
-        return when (radioNode) {
-            RadioNode.ACCESS_STERN_SMART_ENTER -> {2}
+    override fun doGetRadioOption(node: RadioNode): Int {
+        return when (node) {
+            RadioNode.ACCESS_STERN_SMART_ENTER -> {
+                2
+            }
             else -> -1
         }
     }
 
-    override fun doSetRadioOption(radioNode: RadioNode, value: Int): Boolean {
+    override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
         var result = false
         do {
-            if (RadioNode.ACCESS_STERN_SMART_ENTER != radioNode) {
+            if (RadioNode.ACCESS_STERN_SMART_ENTER != node) {
                 break
             }
             result = doUpdateSternDoorOption(value)
@@ -136,9 +135,9 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
         return serial
     }
 
-    override fun doGetSwitchOption(switchNode: SwitchNode): Boolean {
-        return when (switchNode) {
-             SwitchNode.AS_STERN_ELECTRIC -> {
+    override fun doGetSwitchOption(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.AS_STERN_ELECTRIC -> {
                 _electricFunction.get()
             }
             SwitchNode.AS_STERN_LIGHT_ALARM -> {
@@ -151,13 +150,20 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
         }
     }
 
-    override fun doSetSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean {
-        return when (switchNode) {
-            SwitchNode.AS_STERN_AUDIO_ALARM, SwitchNode.AS_STERN_LIGHT_ALARM, SwitchNode.AS_STERN_ELECTRIC -> {
-                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin)
-            }
-            else -> false
+    override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
+        val result = when (node) {
+            SwitchNode.AS_STERN_AUDIO_ALARM -> _audioAlarmFunction
+            SwitchNode.AS_STERN_LIGHT_ALARM -> _lightAlarmFunction
+            SwitchNode.AS_STERN_ELECTRIC -> _electricFunction
+            else -> null
         }
+        return result?.let {
+            val success = writeProperty(node.set.signal, node.value(status), node.set.origin)
+            if (success) {
+                doUpdateSwitchValue(node, result, status)
+            }
+            return@let success
+        } ?: false
     }
 
 
@@ -171,7 +177,7 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
             return false
         }
         val signal = CarCabinManager.ID_PTM_SMT_ENTRY_SET
-        return doSetProperty(signal, value, SignalOrigin.CABIN_SIGNAL, Area.GLOBAL)
+        return writeProperty(signal, value, Origin.CABIN, Area.GLOBAL)
     }
 
 

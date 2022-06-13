@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="960dp"
+        android:layout_height="680dp"
+        android:background="@drawable/bg_sound_popup_20">
+
+        <RelativeLayout
+            android:id="@+id/pop_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/close_dialog"
+                android:layout_width="@dimen/x28"
+                android:layout_height="@dimen/x28"
+                android:layout_marginStart="@dimen/x15"
+                android:layout_marginTop="@dimen/x15"
+                android:src="@drawable/close_56_white" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/x15"
+                android:text="@string/sound_volume_adjustment"
+                android:textColor="@color/tab_option_title_text_color"
+                android:textSize="@dimen/text_18" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/x28"
+                android:layout_height="@dimen/x28"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="@dimen/x15"
+                android:layout_marginEnd="@dimen/x15"
+                android:src="@drawable/icon_refresh_white_56" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/x50"
+            android:layout_marginTop="@dimen/x20"
+            android:layout_marginEnd="@dimen/x50"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pop_title">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/pop_txt"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/sound_navigation" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="@dimen/x44"
+                    android:layout_height="@dimen/x180"
+                    android:layout_marginTop="@dimen/x10">
+
+                    <com.common.xui.widget.picker.VerticalSeekBar
+                        android:id="@+id/sound_audio_navi_volume"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:klvs_backgroundColor="@color/xui_config_color_black"
+                        app:klvs_cornerRadius="45"
+                        app:klvs_max="100"
+                        app:klvs_progress="50"
+                        app:klvs_progressColor="@color/xui_config_color_light_green"
+                        app:klvs_steep="1"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/x14"
+                        android:src="@drawable/vioce_daohang"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/navi_volume_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/x14"
+                        android:textColor="@color/tab_option_title_text_color"
+                        android:textSize="@dimen/text_12"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/pop_txt"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/sound_call" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="@dimen/x44"
+                    android:layout_height="@dimen/x180"
+                    android:layout_marginTop="@dimen/x10">
+
+                    <com.common.xui.widget.picker.VerticalSeekBar
+                        android:id="@+id/sound_audio_phone_volume"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:klvs_backgroundColor="@color/xui_config_color_black"
+                        app:klvs_cornerRadius="45"
+                        app:klvs_max="100"
+                        app:klvs_progress="50"
+                        app:klvs_progressColor="@color/xui_config_color_light_green"
+                        app:klvs_steep="1"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/x14"
+                        android:src="@drawable/vioce_dianhua"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/phone_volume_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/x14"
+                        android:textColor="@color/tab_option_title_text_color"
+                        android:textSize="@dimen/text_12"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/pop_txt"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/sound_voice" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="@dimen/x44"
+                    android:layout_height="@dimen/x180"
+                    android:layout_marginTop="@dimen/x10">
+
+                    <com.common.xui.widget.picker.VerticalSeekBar
+                        android:id="@+id/sound_audio_voice_volume"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:klvs_backgroundColor="@color/xui_config_color_black"
+                        app:klvs_cornerRadius="45"
+                        app:klvs_max="100"
+                        app:klvs_progress="50"
+                        app:klvs_progressColor="@color/xui_config_color_light_green"
+                        app:klvs_steep="1"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/x14"
+                        android:src="@drawable/vioce_mic"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/voice_volume_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/x14"
+                        android:textColor="@color/tab_option_title_text_color"
+                        android:textSize="@dimen/text_12"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/pop_txt"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/sound_media" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="@dimen/x44"
+                    android:layout_height="@dimen/x180"
+                    android:layout_marginTop="@dimen/x10">
+
+                    <com.common.xui.widget.picker.VerticalSeekBar
+                        android:id="@+id/sound_audio_media_volume"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:klvs_backgroundColor="@color/xui_config_color_black"
+                        app:klvs_cornerRadius="45"
+                        app:klvs_max="100"
+                        app:klvs_progress="50"
+                        app:klvs_progressColor="@color/xui_config_color_light_green"
+                        app:klvs_steep="1"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/x14"
+                        android:src="@drawable/vioce_yule"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/media_volume_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/x14"
+                        android:textColor="@color/tab_option_title_text_color"
+                        android:textSize="@dimen/text_12"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/pop_txt"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/sound_system" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="@dimen/x44"
+                    android:layout_height="@dimen/x180"
+                    android:layout_marginTop="@dimen/x10">
+
+                    <com.common.xui.widget.picker.VerticalSeekBar
+                        android:id="@+id/sound_audio_system_volume"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:klvs_backgroundColor="@color/xui_config_color_black"
+                        app:klvs_cornerRadius="45"
+                        app:klvs_max="100"
+                        app:klvs_progress="50"
+                        app:klvs_progressColor="@color/xui_config_color_light_green"
+                        app:klvs_steep="1"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/x14"
+                        android:src="@drawable/vioce_shezhi"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/system_volume_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/x14"
+                        android:textColor="@color/tab_option_title_text_color"
+                        android:textSize="@dimen/text_12"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,5 +1,6 @@
 package com.chinatsp.settinglib.listener.sound
 
+import com.chinatsp.settinglib.IProgressManager
 import com.chinatsp.settinglib.manager.IOptionManager
 
 /**
@@ -9,4 +10,4 @@ import com.chinatsp.settinglib.manager.IOptionManager
  * @desc   :
  * @version: 1.0
  */
-interface ISoundManager: IOptionManager
+interface ISoundManager: IOptionManager, IProgressManager

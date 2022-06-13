@@ -1,8 +1,5 @@
 package com.chinatsp.settinglib.manager
 
-import com.chinatsp.settinglib.manager.cabin.SeatManager
-import com.chinatsp.settinglib.sign.SignalOrigin
-
 /**
  * @author : luohong
  * @e-mail : luohong1@bdstar.com

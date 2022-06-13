@@ -71,7 +71,7 @@ public abstract class BaseDialogFragment<VM extends BaseViewModel, VDB extends V
      */
     private View mRootView;
 
-    protected static final float DEFAULT_WIDTH_RATIO = 0.85f;
+    protected static final float DEFAULT_WIDTH_RATIO = 0.5f;
 
     private Dialog mProgressDialog;
 
@@ -109,7 +109,7 @@ public abstract class BaseDialogFragment<VM extends BaseViewModel, VDB extends V
     protected void initDialog(Dialog dialog) {
         if (dialog != null) {
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCanceledOnTouchOutside(true);
         }
 
     }

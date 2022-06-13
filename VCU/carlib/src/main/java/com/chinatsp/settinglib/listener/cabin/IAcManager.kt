@@ -1,6 +1,7 @@
 package com.chinatsp.settinglib.listener.cabin
 
 import com.chinatsp.settinglib.listener.IManager
+import com.chinatsp.settinglib.manager.IOptionManager
 
 /**
  * @author : luohong
@@ -9,14 +10,14 @@ import com.chinatsp.settinglib.listener.IManager
  * @desc   :
  * @version: 1.0
  */
-interface IAcManager: IManager {
+interface IAcManager: IOptionManager {
 
-    fun obtainAutoAridStatus():Boolean
-
-    fun obtainAutoWindStatus():Boolean
-
-    fun obtainAutoDemistStatus():Boolean
-
-    fun obtainAutoComfortOption():Int
+//    fun obtainAutoAridStatus():Boolean
+//
+//    fun obtainAutoWindStatus():Boolean
+//
+//    fun obtainAutoDemistStatus():Boolean
+//
+//    fun obtainAutoComfortOption():Int
 
 }

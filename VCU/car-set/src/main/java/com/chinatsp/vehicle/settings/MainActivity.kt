@@ -4,9 +4,11 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.vehicle.settings.databinding.MainActivityTablayoutBinding
 import com.chinatsp.vehicle.settings.fragment.AccessFragment
 import com.chinatsp.vehicle.settings.fragment.cabin.CabinManagerFragment
@@ -99,6 +101,7 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
         ViewUtils.setVisibility(binding.viewPager, show)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun refreshAdapter(isShow: Boolean) {
         if (isShow) {
             // 动态加载选项卡内容
@@ -129,7 +132,7 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
                 }
             }
             mAdapter.notifyDataSetChanged()
-            binding.viewPager.setCurrentItem(0, false)
+            binding.viewPager.setCurrentItem(GlobalManager.instance.tabSerial.get(), false)
         } else {
             mAdapter.clear()
         }
@@ -145,7 +148,7 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
     }
 
     override fun onTabSelected(tab: TabLayout.Tab?) {
-
+        GlobalManager.instance.tabSerial.set(binding.tabLayout.selectedTabPosition)
     }
 
     override fun onTabUnselected(tab: TabLayout.Tab?) {

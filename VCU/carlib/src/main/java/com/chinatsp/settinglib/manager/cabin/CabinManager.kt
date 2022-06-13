@@ -2,11 +2,9 @@ package com.chinatsp.settinglib.manager.cabin
 
 import android.car.hardware.CarPropertyValue
 import com.chinatsp.settinglib.ITabStore
-import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
-import com.chinatsp.settinglib.sign.SignalOrigin
-import java.lang.ref.WeakReference
+import com.chinatsp.settinglib.sign.Origin
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
@@ -28,7 +26,7 @@ class CabinManager private constructor() : BaseManager(), ITabStore {
 
     override fun onHandleConcernedSignal(
         property: CarPropertyValue<*>,
-        signalOrigin: SignalOrigin
+        signalOrigin: Origin
     ): Boolean {
         concernedSerialManagers?.forEach {
             it.onDispatchSignal(property.propertyId, property, signalOrigin)
@@ -36,13 +34,13 @@ class CabinManager private constructor() : BaseManager(), ITabStore {
         return true
     }
 
-    override fun isConcernedSignal(signal: Int, signalOrigin: SignalOrigin): Boolean {
+    override fun isConcernedSignal(signal: Int, signalOrigin: Origin): Boolean {
         val list = managers.filter { it.isConcernedSignal(signal, signalOrigin) }.toList()
         concernedSerialManagers = list
         return list.isNotEmpty()
     }
 
-    override fun getConcernedSignal(signalOrigin: SignalOrigin): Set<Int> {
+    override fun getConcernedSignal(signalOrigin: Origin): Set<Int> {
         return concernedSerials[signalOrigin] ?: HashSet()
     }
 
@@ -63,8 +61,8 @@ class CabinManager private constructor() : BaseManager(), ITabStore {
 
     }
 
-    override val concernedSerials: Map<SignalOrigin, Set<Int>> by lazy {
-        HashMap<SignalOrigin, Set<Int>>().apply {
+    override val concernedSerials: Map<Origin, Set<Int>> by lazy {
+        HashMap<Origin, Set<Int>>().apply {
             val keySet = managers.flatMap {
                 it.concernedSerials.keys
             }.toSet()

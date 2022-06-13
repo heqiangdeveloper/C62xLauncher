@@ -10,7 +10,7 @@ import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
-import com.chinatsp.settinglib.sign.SignalOrigin
+import com.chinatsp.settinglib.sign.Origin
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -29,16 +29,15 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
     val smartEnterStatus:AtomicBoolean by lazy {
         val switchNode = SwitchNode.AS_SMART_ENTER_DOOR
         AtomicBoolean(switchNode.isOn()).apply {
-            val signal = CarCabinManager.ID_SMART_ENTRY_STS
-            val value = doGetIntProperty(signal, switchNode.origin)
-            doUpdateSwitchStatus(switchNode, this, value)
+            val result = readIntProperty(switchNode.get.signal, switchNode.get.origin)
+            doUpdateSwitchValue(switchNode, this, result)
         }
     }
 
     val driveLockOption: AtomicInteger by lazy {
         AtomicInteger(0).apply {
             val signal = CarCabinManager.ID_VSPEED_LOCKING_STATUE
-            val value = doGetIntProperty(signal, SignalOrigin.CABIN_SIGNAL)
+            val value = readIntProperty(signal, Origin.CABIN)
             set(value)
         }
     }
@@ -46,7 +45,7 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
     val shutDownUnlockOption: AtomicInteger by lazy {
         AtomicInteger(0).apply {
             val signal = CarCabinManager.ID_CUTOFF_UNLOCK_DOORS_STATUE
-            val value = doGetIntProperty(signal, SignalOrigin.CABIN_SIGNAL)
+            val value = readIntProperty(signal, Origin.CABIN)
             set(value)
         }
     }
@@ -58,8 +57,8 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
         }
     }
 
-    override val concernedSerials: Map<SignalOrigin, Set<Int>> by lazy {
-        HashMap<SignalOrigin, Set<Int>>().apply {
+    override val concernedSerials: Map<Origin, Set<Int>> by lazy {
+        HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int> ().apply {
                 /**行车自动落锁*/
                 add(CarCabinManager.ID_VSPEED_LOCKING_STATUE)
@@ -68,19 +67,19 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
                 /**车门智能进入*/
                 add(CarCabinManager.ID_SMART_ENTRY_STS)
             }
-            put(SignalOrigin.CABIN_SIGNAL, cabinSet)
+            put(Origin.CABIN, cabinSet)
         }
     }
 
     override fun onHandleConcernedSignal(
         property: CarPropertyValue<*>,
-        signalOrigin: SignalOrigin
+        signalOrigin: Origin
     ): Boolean {
         when (signalOrigin) {
-            SignalOrigin.CABIN_SIGNAL -> {
+            Origin.CABIN -> {
                 onCabinPropertyChanged(property)
             }
-            SignalOrigin.HVAC_SIGNAL -> {
+            Origin.HVAC -> {
                 onHvacPropertyChanged(property)
             }
             else -> {}
@@ -88,12 +87,12 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
         return true
     }
 
-    override fun isConcernedSignal(signal: Int, signalOrigin: SignalOrigin): Boolean {
+    override fun isConcernedSignal(signal: Int, signalOrigin: Origin): Boolean {
         val signals = getConcernedSignal(signalOrigin)
         return signals.contains(signal)
     }
 
-    override fun getConcernedSignal(signalOrigin: SignalOrigin): Set<Int> {
+    override fun getConcernedSignal(signalOrigin: Origin): Set<Int> {
         return concernedSerials[signalOrigin] ?: HashSet()
     }
 
@@ -121,24 +120,24 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
         return -1
     }
 
-    override fun doGetSwitchOption(switchNode: SwitchNode): Boolean {
+    override fun doGetSwitchOption(node: SwitchNode): Boolean {
         TODO("Not yet implemented")
     }
 
-    override fun doSetSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean {
-        return when (switchNode) {
+    override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
+        return when (node) {
             SwitchNode.AS_SMART_ENTER_DOOR -> {
-                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin)
+                writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
             else -> false
         }
     }
 
-    override fun doGetRadioOption(radioNode: RadioNode): Int {
+    override fun doGetRadioOption(node: RadioNode): Int {
         TODO("Not yet implemented")
     }
 
-    override fun doSetRadioOption(radioNode: RadioNode, value: Int): Boolean {
+    override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
         TODO("Not yet implemented")
     }
 

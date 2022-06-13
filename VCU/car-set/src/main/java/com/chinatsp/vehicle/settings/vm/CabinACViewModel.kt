@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.listener.cabin.IACListener
 import com.chinatsp.settinglib.manager.cabin.ACManager
+import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.common.library.frame.base.BaseModel
@@ -22,19 +23,23 @@ import javax.inject.Inject
 class CabinACViewModel @Inject constructor(app: Application, model: BaseModel) :
     BaseViewModel(app, model), IACListener {
 
-    private val acManager: ACManager by lazy { ACManager.instance }
+    private val manager: ACManager by lazy { ACManager.instance }
 
     private val _aridLiveData: MutableLiveData<Boolean> by lazy {
-        MutableLiveData<Boolean>().also {
-            it.value = acManager.aridStatus.get()
+        val node = SwitchNode.AC_AUTO_ARID
+        MutableLiveData(node.isOn()).apply {
+            val result = manager.doGetSwitchOption(node)
+            postValue(result)
         }
     }
 
     val aridLiveData: LiveData<Boolean> by lazy { _aridLiveData }
 
     private val _demistLiveData: MutableLiveData<Boolean> by lazy {
-        MutableLiveData<Boolean>().apply {
-            value = acManager.demistStatus.get()
+        val node = SwitchNode.AC_AUTO_DEMIST
+        MutableLiveData(node.isOn()).apply {
+            val result = manager.doGetSwitchOption(node)
+            postValue(result)
         }
     }
 
@@ -42,17 +47,21 @@ class CabinACViewModel @Inject constructor(app: Application, model: BaseModel) :
 
 
     private val _windLiveData: MutableLiveData<Boolean> by lazy {
-        MutableLiveData<Boolean>().apply {
-            value = acManager.windStatus.get()
+        val node = SwitchNode.AC_ADVANCE_WIND
+        MutableLiveData(node.isOn()).apply {
+            val result = manager.doGetSwitchOption(node)
+            postValue(result)
         }
     }
 
-    val windLiveData: LiveData<Boolean> by lazy { _windLiveData }
+    val windLiveData: LiveData<Boolean>
+        get() = _windLiveData
 
 
     private val _comfortLiveData: MutableLiveData<Int> by lazy {
-        MutableLiveData<Int>().apply {
-            value = acManager.obtainAutoComfortOption()
+        val node = RadioNode.AC_COMFORT
+        MutableLiveData(node.default).apply {
+            value = manager.doGetRadioOption(node)
         }
     }
 
@@ -60,12 +69,12 @@ class CabinACViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     override fun onCreate() {
         super.onCreate()
-        keySerial = acManager.onRegisterVcuListener(0, this)
+        keySerial = manager.onRegisterVcuListener(0, this)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        acManager.unRegisterVcuListener(keySerial, keySerial)
+        manager.unRegisterVcuListener(keySerial, keySerial)
     }
 
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {

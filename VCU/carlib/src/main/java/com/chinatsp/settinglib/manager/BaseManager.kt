@@ -7,10 +7,12 @@ import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.IManager
 import com.chinatsp.settinglib.manager.cabin.ACManager
 import com.chinatsp.settinglib.optios.Area
+import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
-import com.chinatsp.settinglib.sign.SignalOrigin
+import com.chinatsp.settinglib.sign.Origin
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author : luohong
@@ -19,30 +21,37 @@ import java.util.concurrent.atomic.AtomicBoolean
  * @desc   :
  * @version: 1.0
  */
-abstract class BaseManager: IManager {
+abstract class BaseManager : IManager {
 
-    val signalService: SettingManager
+    private val signalService: SettingManager
         get() = SettingManager.getInstance()
 
     protected val identity by lazy { System.identityHashCode(this) }
 
     protected val listenerStore by lazy { HashMap<Int, WeakReference<IBaseListener>>() }
 
-    abstract val concernedSerials: Map<SignalOrigin, Set<Int>>
+    abstract val concernedSerials: Map<Origin, Set<Int>>
 
-    fun onDispatchSignal(signal: Int, property: CarPropertyValue<*>, signalOrigin: SignalOrigin = SignalOrigin.CABIN_SIGNAL):Boolean {
+    fun onDispatchSignal(
+        signal: Int,
+        property: CarPropertyValue<*>,
+        signalOrigin: Origin = Origin.CABIN
+    ): Boolean {
         if (isConcernedSignal(signal, signalOrigin)) {
             return onHandleConcernedSignal(property, signalOrigin)
         }
         return false
     }
 
-    protected open fun onHandleConcernedSignal(property: CarPropertyValue<*>, signalOrigin: SignalOrigin = SignalOrigin.CABIN_SIGNAL):Boolean {
+    protected open fun onHandleConcernedSignal(
+        property: CarPropertyValue<*>,
+        signalOrigin: Origin = Origin.CABIN
+    ): Boolean {
         when (signalOrigin) {
-            SignalOrigin.CABIN_SIGNAL -> {
+            Origin.CABIN -> {
                 onCabinPropertyChanged(property)
             }
-            SignalOrigin.HVAC_SIGNAL -> {
+            Origin.HVAC -> {
                 onHvacPropertyChanged(property)
             }
             else -> {}
@@ -50,12 +59,12 @@ abstract class BaseManager: IManager {
         return true
     }
 
-    open fun isConcernedSignal(signal: Int, signalOrigin: SignalOrigin = SignalOrigin.CABIN_SIGNAL):Boolean {
+    open fun isConcernedSignal(signal: Int, signalOrigin: Origin = Origin.CABIN): Boolean {
         val signals = getConcernedSignal(signalOrigin)
         return signals.contains(signal)
     }
 
-    open fun getConcernedSignal(signalOrigin: SignalOrigin):Set<Int> {
+    open fun getConcernedSignal(signalOrigin: Origin): Set<Int> {
         return concernedSerials[signalOrigin] ?: HashSet()
     }
 
@@ -71,28 +80,49 @@ abstract class BaseManager: IManager {
         return true
     }
 
-    fun doSetProperty(id: Int, value: Int, origin: SignalOrigin, area: Area = Area.GLOBAL): Boolean {
+    fun writeProperty(id: Int, value: Int, origin: Origin, area: Area = Area.GLOBAL): Boolean {
         return signalService.doSetProperty(id, value, origin, area)
     }
 
-    fun doSetProperty(id: Int, value: Int, origin: SignalOrigin, areaValue: Int): Boolean {
+    fun writeProperty(id: Int, value: Int, origin: Origin, areaValue: Int): Boolean {
         return signalService.doSetProperty(id, value, origin, areaValue)
     }
 
-    fun doGetIntProperty(id: Int, origin: SignalOrigin, area: Area = Area.GLOBAL): Int {
-        return signalService.doGetIntProperty(id, origin, area)
+    fun readIntProperty(id: Int, origin: Origin, area: Area = Area.GLOBAL): Int {
+        return signalService.readIntProperty(id, origin, area)
     }
 
-    protected fun doUpdateSwitchStatus(
+    protected fun doUpdateSwitchValue(
         node: SwitchNode,
         atomic: AtomicBoolean,
-        value: Int
+        value: Int,
+        block: ((Boolean) -> Unit)? = null
     ): AtomicBoolean {
-        if (node.isValidValue(value)) {
+        if (node.isValid(value)) {
             val status = node.isOn(value)
-            if (atomic.get() xor status) {
-                atomic.set(status)
-            }
+            doUpdateSwitchValue(node, atomic, status, block)
+        }
+        return atomic
+    }
+
+    protected fun doUpdateSwitchValue(
+        node: SwitchNode,
+        atomic: AtomicBoolean,
+        status: Boolean,
+        block: ((Boolean) -> Unit)? = null
+    ): AtomicBoolean {
+        if (atomic.get() xor status) {
+            atomic.set(status)
+            block?.let { it(status) }
+        }
+        return atomic
+    }
+
+    protected fun doUpdateRadioValue(node: RadioNode, atomic: AtomicInteger, value: Int, block: ((Int) -> Unit)? = null)
+            : AtomicInteger {
+        if (node.isValid(value)) {
+            atomic.set(value)
+            block?.let { it(value) }
         }
         return atomic
     }

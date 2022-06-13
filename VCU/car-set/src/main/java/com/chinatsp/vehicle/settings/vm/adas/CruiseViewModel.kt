@@ -22,7 +22,7 @@ class CruiseViewModel @Inject constructor(app: Application, model: BaseModel) :
     val cruiseAssistFunction: LiveData<Boolean> by lazy { _cruiseAssistFunction }
 
     private val _cruiseAssistFunction: MutableLiveData<Boolean> by lazy {
-        val switchNode = SwitchNode.ADAS_CRUISE_ASSIST
+        val switchNode = SwitchNode.ADAS_IACC
         MutableLiveData(switchNode.isOn()).apply {
             value = manager.doGetSwitchOption(switchNode)
         }
@@ -57,7 +57,7 @@ class CruiseViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {
-            SwitchNode.ADAS_CRUISE_ASSIST -> {
+            SwitchNode.ADAS_IACC -> {
                 _cruiseAssistFunction.value = status
             }
             SwitchNode.ADAS_TARGET_PROMPT -> {

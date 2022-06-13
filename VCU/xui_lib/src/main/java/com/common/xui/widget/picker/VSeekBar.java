@@ -633,6 +633,13 @@ public class VSeekBar extends View {
         invalidate();
     }
 
+    public void setValueNoEvent(int value) {
+        mSelectedNumber = value;
+//        setSelectedValue(value);
+        mMaxPosition = Math.round(((value - mMin) / mConvertFactor) + mLineStartX);
+        invalidate();
+    }
+
     private void setSelectedValue(int selectedMax) {
         mMaxPosition = Math.round(((selectedMax - mMin) / mConvertFactor) + mLineStartX);
         callMaxChangedCallbacks();
