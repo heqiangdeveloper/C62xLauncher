@@ -68,6 +68,9 @@ public class CardsTypeManager {
     public List<BaseCardEntity> getHomeList() {
         if (mHomeCardList.isEmpty()) {
             createInitCards();
+            for (BaseCardEntity baseCardEntity : mHomeCardList) {
+                mHomeCardMap.put(baseCardEntity.getType(), baseCardEntity);
+            }
         }
         EasyLog.d(TAG, "HomeList size:" + mHomeCardList.size());
         return mHomeCardList;
@@ -75,6 +78,9 @@ public class CardsTypeManager {
     public List<BaseCardEntity> getUnselectCardList() {
         if (mUnselectCardList.isEmpty()) {
             createUnselectCards();
+            for (BaseCardEntity baseCardEntity : mUnselectCardList) {
+                mHomeCardMap.put(baseCardEntity.getType(), baseCardEntity);
+            }
         }
         EasyLog.d(TAG, "HomeList size:" + mUnselectCardList.size());
         return mUnselectCardList;
@@ -85,7 +91,6 @@ public class CardsTypeManager {
     }
 
     private void addHomeCard(BaseCardEntity cardEntity) {
-        mHomeCardMap.put(cardEntity.getType(), cardEntity);
         mHomeCardList.add(cardEntity);
     }
     private void addUnselectCard(BaseCardEntity cardEntity) {

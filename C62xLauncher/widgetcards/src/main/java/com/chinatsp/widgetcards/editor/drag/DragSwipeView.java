@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class DragSwipeView extends View {
     public DragSwipeView(Context context) {
@@ -22,13 +23,24 @@ public class DragSwipeView extends View {
     public DragSwipeView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
-    private int positionInList;
+    private int mPositionInList;
+
+    private RecyclerView mRecyclerView;
+
+    public RecyclerView getRecyclerView() {
+        return mRecyclerView;
+    }
+
+    public void setRecyclerView(RecyclerView recyclerView) {
+        mRecyclerView = recyclerView;
+    }
+
 
     public int getPositionInList() {
-        return positionInList;
+        return mPositionInList;
     }
 
     public void setPositionInList(int positionInList) {
-        this.positionInList = positionInList;
+        this.mPositionInList = positionInList;
     }
 }

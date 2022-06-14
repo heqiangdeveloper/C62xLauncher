@@ -40,9 +40,10 @@
         android:layout_marginEnd="61px"
         android:layout_marginTop="32px"
         android:paddingLeft="64px"
-        android:paddingRight="76px"
+        android:paddingRight="64px"
         android:paddingTop="19px"
         android:paddingBottom="19px"
+        android:background="@color/card_transparent_30"
         />
 
     <TextView
