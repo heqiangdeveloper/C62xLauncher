@@ -33,7 +33,7 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
 
     private fun observeSwitchOptionChange() {
         binding.accessCruiseCruiseAssist.setOnCheckedChangeListener { buttonView, isChecked ->
-            doUpdateSwitchOption(SwitchNode.ADAS_CRUISE_ASSIST, buttonView, isChecked)
+            doUpdateSwitchOption(SwitchNode.ADAS_IACC, buttonView, isChecked)
         }
         binding.accessCruiseTargetPrompt.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.ADAS_TARGET_PROMPT, buttonView, isChecked)
@@ -73,7 +73,7 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
 
     private fun observeSwitchLiveData() {
         viewModel.cruiseAssistFunction.observe(this) {
-            updateSwitchOptionStatus(SwitchNode.ADAS_CRUISE_ASSIST, it)
+            updateSwitchOptionStatus(SwitchNode.ADAS_IACC, it)
         }
         viewModel.targetPromptFunction.observe(this) {
             updateSwitchOptionStatus(SwitchNode.ADAS_TARGET_PROMPT, it)
@@ -85,7 +85,7 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
 
     private fun initSwitchOptions() {
         updateSwitchOptionStatus(
-            SwitchNode.ADAS_CRUISE_ASSIST,
+            SwitchNode.ADAS_IACC,
             viewModel.cruiseAssistFunction.value!!,
             true
         )
@@ -107,7 +107,7 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
         immediately: Boolean = false
     ) {
         val switchButton = when (switchNode) {
-            SwitchNode.ADAS_CRUISE_ASSIST -> {
+            SwitchNode.ADAS_IACC -> {
                 binding.accessCruiseCruiseAssist
             }
             SwitchNode.ADAS_TARGET_PROMPT -> {

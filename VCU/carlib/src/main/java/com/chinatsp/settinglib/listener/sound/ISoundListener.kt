@@ -1,5 +1,6 @@
 package com.chinatsp.settinglib.listener.sound
 
+import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IBaseListener
 
 /**
@@ -11,6 +12,5 @@ import com.chinatsp.settinglib.listener.IBaseListener
  */
 interface ISoundListener: IBaseListener {
 
-    fun onSoundVolumeChanged(pos: Int, serial:String)
-
+    fun onSoundVolumeChanged(navi: Volume, media: Volume, phone: Volume, voice: Volume, system: Volume)
 }

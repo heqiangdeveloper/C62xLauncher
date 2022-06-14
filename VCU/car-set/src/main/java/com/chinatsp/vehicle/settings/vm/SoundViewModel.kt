@@ -2,12 +2,11 @@ package com.chinatsp.vehicle.settings.vm
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.sound.ISoundListener
-import com.chinatsp.settinglib.manager.SoundManager
 import com.chinatsp.settinglib.manager.sound.AudioManager
 import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
-import com.chinatsp.vehicle.settings.bean.Volume
 import com.common.library.frame.base.BaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -15,6 +14,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
     BaseViewModel(app, model), ISoundListener {
+
+    val manager: VoiceManager by lazy { VoiceManager.instance }
 
     val tabLocationLiveData: MutableLiveData<Int> by lazy { MutableLiveData(AudioManager.instance.getTabSerial()) }
 
@@ -30,55 +31,54 @@ class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     val naviVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            val pos = SoundManager.getInstance().naviVolume
-            val max = SoundManager.getInstance().naviMaxVolume
-            value = Volume(0, max, pos)
+            value = manager.doGetVolume(Volume.Type.NAVI)?.copy()
         }
     }
 
     val mediaVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            val pos = SoundManager.getInstance().mediaVolume
-            val max = SoundManager.getInstance().mediaMaxVolume
-            value = Volume(0, max, pos)
+            value = manager.doGetVolume(Volume.Type.MEDIA)?.copy()
         }
     }
 
     val phoneVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            val pos = SoundManager.getInstance().phoneVolume
-            val max = SoundManager.getInstance().phoneMaxVolume
-            value = Volume(0, max, pos)
+            value = manager.doGetVolume(Volume.Type.PHONE)?.copy()
         }
     }
 
     val voiceVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            val pos = SoundManager.getInstance().cruiseVolume
-            val max = SoundManager.getInstance().cruiseMaxVolume
-            value = Volume(0, max, pos)
+            value = manager.doGetVolume(Volume.Type.VOICE)?.copy()
         }
     }
 
     val systemVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            val pos = SoundManager.getInstance().systemVolume
-            val max = SoundManager.getInstance().systemMaxVolume
-            value = Volume(0, max, pos)
+            value = manager.doGetVolume(Volume.Type.SYSTEM)?.copy()
         }
     }
 
-    override fun onSoundVolumeChanged(pos: Int, serial: String) {
-        val liveData = when (serial) {
-            "NAVI" -> naviVolume
-            "VOICE" -> voiceVolume
-            "PHONE" -> phoneVolume
-            "MEDIA" -> mediaVolume
-            "SYSTEM" -> systemVolume
-            else -> null
-        }
-        liveData?.value?.let {
-            liveData.value = it.copy(pos = pos)
+    override fun onSoundVolumeChanged(
+        navi: Volume,
+        media: Volume,
+        phone: Volume,
+        voice: Volume,
+        system: Volume
+    ) {
+        updateVolume(naviVolume, navi)
+        updateVolume(mediaVolume, media)
+        updateVolume(phoneVolume, phone)
+        updateVolume(voiceVolume, voice)
+        updateVolume(systemVolume, system)
+    }
+
+    fun updateVolume(target: MutableLiveData<Volume>, expect: Volume) {
+        target.takeIf { it.value?.type == expect.type }?.let {
+            it.takeUnless { it.value == expect }?.let { liveData ->
+                liveData.value?.pos = expect.pos
+                liveData.value = liveData.value
+            }
         }
     }
 

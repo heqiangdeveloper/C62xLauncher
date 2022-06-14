@@ -1,8 +1,7 @@
 package com.chinatsp.settinglib
 
 import android.car.hardware.CarPropertyValue
-import com.chinatsp.settinglib.sign.CarSign
-import com.chinatsp.settinglib.sign.SignalOrigin
+import com.chinatsp.settinglib.sign.Origin
 
 /**
  * @author : luohong
@@ -13,5 +12,5 @@ import com.chinatsp.settinglib.sign.SignalOrigin
  */
 interface IConcernChanged {
 
-    fun onPropertyChanged(type: SignalOrigin, property: CarPropertyValue<*>)
+    fun onPropertyChanged(type: Origin, property: CarPropertyValue<*>)
 }

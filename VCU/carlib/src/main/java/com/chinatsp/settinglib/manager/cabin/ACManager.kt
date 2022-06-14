@@ -3,16 +3,15 @@ package com.chinatsp.settinglib.manager.cabin
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.hvac.CarHvacManager
-import com.chinatsp.settinglib.LogManager
-import com.chinatsp.settinglib.bean.Status1
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.cabin.IACListener
 import com.chinatsp.settinglib.listener.cabin.IAcManager
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.optios.Area
+import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
-import com.chinatsp.settinglib.sign.SignalOrigin
+import com.chinatsp.settinglib.sign.Origin
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -63,9 +62,9 @@ class ACManager private constructor() : BaseManager(), IAcManager {
 
     }
 
-    override val concernedSerials: Map<SignalOrigin, Set<Int>> by lazy {
-        HashMap<SignalOrigin, Set<Int>>().apply {
-            val cabinSet = HashSet<Int> ().apply {
+    override val concernedSerials: Map<Origin, Set<Int>> by lazy {
+        HashMap<Origin, Set<Int>>().apply {
+            val cabinSet = HashSet<Int>().apply {
                 /**空调自干燥*/
                 add(CarCabinManager.ID_ACSELFSTSDISP)
                 /**预通风功能*/
@@ -73,37 +72,52 @@ class ACManager private constructor() : BaseManager(), IAcManager {
                 /**空调舒适性状态显示*/
                 add(CarCabinManager.ID_ACCMFTSTSDISP)
             }
-            put(SignalOrigin.CABIN_SIGNAL, cabinSet)
+            put(Origin.CABIN, cabinSet)
         }
     }
 
-    val aridStatus: AtomicBoolean by lazy {
-        AtomicBoolean(false).also { it.set(obtainAutoAridStatus()) }
+    private val aridStatus: AtomicBoolean by lazy {
+        val node = SwitchNode.AC_AUTO_ARID
+        AtomicBoolean(node.isOn()).apply {
+            val result = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, result)
+        }
     }
 
-    val demistStatus: AtomicBoolean by lazy {
-        AtomicBoolean(false).also { it.set(obtainAutoDemistStatus()) }
+    private val demistStatus: AtomicBoolean by lazy {
+        val node = SwitchNode.AC_AUTO_DEMIST
+        AtomicBoolean(node.isOn()).apply {
+            val result = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, result)
+        }
     }
 
-    val windStatus: AtomicBoolean by lazy {
-        AtomicBoolean(false).also { it.set(obtainAutoWindStatus()) }
+    private val windStatus: AtomicBoolean by lazy {
+        val node = SwitchNode.AC_ADVANCE_WIND
+        AtomicBoolean(node.isOn()).apply {
+            val result = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, result)
+        }
     }
 
-    val comfortOption: AtomicInteger by lazy {
-        AtomicInteger(0).also { it.set(obtainAutoComfortOption()) }
+    private val comfortOption: AtomicInteger by lazy {
+        val node = RadioNode.AC_COMFORT
+        AtomicInteger(node.default).apply {
+            val result = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateRadioValue(node, this, result)
+        }
     }
 
-    val version: AtomicInteger by lazy { AtomicInteger(0) }
 
     override fun onHandleConcernedSignal(
         property: CarPropertyValue<*>,
-        signalOrigin: SignalOrigin
+        signalOrigin: Origin
     ): Boolean {
         when (signalOrigin) {
-            SignalOrigin.CABIN_SIGNAL -> {
+            Origin.CABIN -> {
                 onCabinPropertyChanged(property)
             }
-            SignalOrigin.HVAC_SIGNAL -> {
+            Origin.HVAC -> {
                 onHvacPropertyChanged(property)
             }
             else -> {}
@@ -111,48 +125,36 @@ class ACManager private constructor() : BaseManager(), IAcManager {
         return true
     }
 
-    override fun isConcernedSignal(signal: Int, signalOrigin: SignalOrigin): Boolean {
+    override fun isConcernedSignal(signal: Int, signalOrigin: Origin): Boolean {
         val signals = getConcernedSignal(signalOrigin)
         return signals.contains(signal)
     }
 
-    override fun getConcernedSignal(signalOrigin: SignalOrigin): Set<Int> {
+    override fun getConcernedSignal(signalOrigin: Origin): Set<Int> {
         return concernedSerials[signalOrigin] ?: HashSet()
     }
 
 
-    override fun obtainAutoAridStatus(): Boolean {
-        val value = signalService.doGetIntProperty(cabinAridSignal, SignalOrigin.CABIN_SIGNAL, Area.GLOBAL)
-        LogManager.d("obtainAutoAridStatus value:$value")
-        return Status1.ON.value == value
-    }
-
-    override fun obtainAutoWindStatus(): Boolean {
-        val value = signalService.doGetIntProperty(cabinWindSignal, SignalOrigin.CABIN_SIGNAL ,Area.GLOBAL)
-        LogManager.d("obtainAutoWindStatus value:$value")
-        return Status1.ON.value == value
-    }
-
-    override fun obtainAutoDemistStatus(): Boolean {
-        val value = signalService.doGetIntProperty(hvacDemistSignal, SignalOrigin.HVAC_SIGNAL, Area.GLOBAL)
-        return Status1.ON.value == value
-    }
-
-    override fun obtainAutoComfortOption(): Int {
-        return signalService.doGetIntProperty(cabinComfortSignal, SignalOrigin.CABIN_SIGNAL, Area.GLOBAL)
-    }
-
-
-    override fun unRegisterVcuListener(serial: Int, callSerial: Int): Boolean {
-        LogManager.d(TAG, "unRegisterVcuListener serial:$serial, callSerial:$callSerial")
-        synchronized(listenerStore) {
-//            listenerStore.let {
-//                if (it.containsKey(serial)) it else null
-//            }?.remove(serial)
-            val contains = listenerStore.containsKey(serial)
-            if (contains) listenerStore.remove(serial)
+    override fun doGetRadioOption(node: RadioNode): Int {
+        return when (node) {
+            RadioNode.AC_COMFORT -> {
+                comfortOption.get()
+            }
+            else -> -1
         }
-        return true
+    }
+
+    override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
+        return if (!node.isValid(value, false)) {
+            false
+        } else {
+            when (node) {
+                RadioNode.AC_COMFORT -> {
+                    writeProperty(node.set.signal, value, node.set.origin, node.area)
+                }
+                else -> false
+            }
+        }
     }
 
     override fun onRegisterVcuListener(priority: Int, listener: IBaseListener): Int {
@@ -164,6 +166,35 @@ class ACManager private constructor() : BaseManager(), IAcManager {
         return serial
     }
 
+    override fun doGetSwitchOption(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.AC_AUTO_ARID -> {
+                aridStatus.get()
+            }
+            SwitchNode.AC_ADVANCE_WIND -> {
+                windStatus.get()
+            }
+            SwitchNode.AC_AUTO_DEMIST -> {
+                demistStatus.get()
+            }
+            else -> false
+        }
+    }
+
+    override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
+        return when (node) {
+            SwitchNode.AC_AUTO_ARID -> {
+                writeProperty(node.set.signal, node.value(status), node.set.origin)
+            }
+            SwitchNode.AC_ADVANCE_WIND -> {
+                writeProperty(node.set.signal, node.value(status), node.set.origin)
+            }
+            SwitchNode.AC_AUTO_DEMIST -> {
+                writeProperty(node.set.signal, node.value(status), node.set.origin)
+            }
+            else -> false
+        }
+    }
 
 
     /**
@@ -177,34 +208,26 @@ class ACManager private constructor() : BaseManager(), IAcManager {
     0x7: Invalid
      */
     fun doUpdateAcComfort(value: Int): Boolean {
-        val isValid = listOf(0x01, 0x02, 0x03).any { it == value }
+        val isValid = listOf(0x1, 0x2, 0x3).any { it == value }
         if (!isValid) {
             return false
         }
         val signal = CarHvacManager.ID_HVAC_AVN_AC_AUTO_CMFT_SWT
-        return doSetProperty(signal, value, SignalOrigin.HVAC_SIGNAL, Area.GLOBAL)
+        return writeProperty(signal, value, Origin.HVAC, Area.GLOBAL)
     }
 
     /**
      *
-     * @param switchNode 开关选项
-     * @param isStatus 开关期望状态
+     * @param node 开关选项
+     * @param status 开关期望状态
      */
-    fun doSwitchOption(switchNode: SwitchNode, isStatus: Boolean): Boolean {
-        return when (switchNode) {
+    fun doSwitchOption(node: SwitchNode, status: Boolean): Boolean {
+        return when (node) {
             SwitchNode.AC_AUTO_ARID,
             SwitchNode.AC_AUTO_DEMIST,
             SwitchNode.AC_ADVANCE_WIND -> {
-                doSetProperty(switchNode.signal, switchNode.obtainValue(isStatus), switchNode.origin)
+                writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
-//            SwitchNode.AC_AUTO_DEMIST -> {
-//                val signal = CarHvacManager.ID_HVAC_AVN_KEY_DEFROST
-//                doSetProperty(signal, switchNode.obtainValue(isStatus), SignalOrigin.HVAC_SIGNAL)
-//            }
-//            SwitchNode.AC_ADVANCE_WIND -> {
-//                val signal = CarHvacManager.ID_HVAC_AVN_UNLOCK_BREATHABLE_ENABLE
-//                doSetProperty(signal, switchNode.obtainValue(isStatus), SignalOrigin.HVAC_SIGNAL)
-//            }
             else -> false
         }
     }
@@ -212,8 +235,8 @@ class ACManager private constructor() : BaseManager(), IAcManager {
     override fun onHvacPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             //自动除雾
-            hvacDemistSignal -> {
-                onAutoDemistStatusChanged(property.value)
+            SwitchNode.AC_AUTO_DEMIST.get.signal -> {
+                onSwitchOptionChanged(SwitchNode.AC_AUTO_DEMIST, property.value)
             }
             else -> {}
         }
@@ -223,61 +246,47 @@ class ACManager private constructor() : BaseManager(), IAcManager {
         when (property.propertyId) {
             //空调自干燥
             cabinAridSignal -> {
-                onAutoAridStatusChanged(property.value)
+                onSwitchOptionChanged(SwitchNode.AC_AUTO_ARID, property.value)
             }
             //预通风功能
             cabinWindSignal -> {
-                onAdvanceHairStatusChanged(property.value)
+                onSwitchOptionChanged(SwitchNode.AC_ADVANCE_WIND, property.value)
             }
             //自动空调舒适性
             CarCabinManager.ID_ACCMFTSTSDISP -> {
-                onComfortOptionChanged(property.value)
+                onRadioOptionChanged(RadioNode.AC_COMFORT, property.value)
             }
             else -> {}
         }
     }
 
-    private fun onComfortOptionChanged(value: Any?) {
-        if (value is Int) {
-            when (value) {
-                0x01 -> notifyComfortChanged(value)
-                0x02 -> notifyComfortChanged(value)
-                0x03 -> notifyComfortChanged(value)
+    private fun onSwitchOptionChanged(node: SwitchNode, value: Any?) {
+        if (value is Int && node.isValid(value)) {
+            when (node) {
+                SwitchNode.AC_AUTO_ARID -> {
+                    doUpdateSwitchValue(node, aridStatus, value) {
+                        notifySwitchStatus(it, node)
+                    }
+                }
+                SwitchNode.AC_ADVANCE_WIND -> {
+                    doUpdateSwitchValue(node, windStatus, value) {
+                        notifySwitchStatus(it, node)
+                    }
+                }
                 else -> {}
             }
         }
     }
 
-
-    private fun onAutoAridStatusChanged(value: Any?) {
-        LogManager.d(TAG, "onAutoAridStatusChanged value:$value")
-        if (value is Int) {
-            val status = value == Status1.ON.value
-            if (aridStatus.get() xor status) {
-                aridStatus.set(status)
-                notifySwitchStatus(aridStatus.get(), SwitchNode.AC_AUTO_ARID)
-            }
-        }
-    }
-
-    private fun onAutoDemistStatusChanged(value: Any?) {
-        LogManager.d(TAG, "onAutoDemistStatusChanged value:$value")
-        if (value is Int) {
-            val status = value == Status1.ON.value
-            if (demistStatus.get() xor status) {
-                demistStatus.set(status)
-                notifySwitchStatus(demistStatus.get(), SwitchNode.AC_AUTO_DEMIST)
-            }
-        }
-    }
-
-    private fun onAdvanceHairStatusChanged(value: Any?) {
-        LogManager.d(TAG, "onAdvanceHairStatusChanged value:$value")
-        if (value is Int) {
-            val status = value == Status1.ON.value
-            if (windStatus.get() xor status) {
-                windStatus.set(status)
-                notifySwitchStatus(windStatus.get(), SwitchNode.AC_ADVANCE_WIND)
+    private fun onRadioOptionChanged(node: RadioNode, value: Any?) {
+        if (value is Int && node.isValid(value)) {
+            when (node) {
+                RadioNode.AC_COMFORT -> {
+                    doUpdateRadioValue(node, comfortOption, value) {
+                        notifyComfortChanged(it)
+                    }
+                }
+                else -> {}
             }
         }
     }

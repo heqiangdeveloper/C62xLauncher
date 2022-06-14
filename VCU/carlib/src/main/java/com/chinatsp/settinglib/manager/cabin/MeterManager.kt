@@ -9,8 +9,7 @@ import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
-import com.chinatsp.settinglib.sign.SignalOrigin
-import java.lang.ref.WeakReference
+import com.chinatsp.settinglib.sign.Origin
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -24,33 +23,31 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class MeterManager private constructor() : BaseManager(), IRadioManager {
 
-    private val fortifySoundSignal = CarCabinManager.ID_LOCK_SUCCESS_SOUND_STATUE
-
     val fortifySoundStatus: AtomicBoolean by lazy {
-        val switchNode = SwitchNode.DRIVE_SAFE_FORTIFY_SOUND
-        AtomicBoolean(switchNode.isOn()).apply {
-            val value = doGetIntProperty(fortifySoundSignal, switchNode.origin, switchNode.area)
-            doUpdateSwitchStatus(switchNode, this, value)
+        val node = SwitchNode.DRIVE_SAFE_FORTIFY_SOUND
+        AtomicBoolean(node.isOn()).apply {
+            val result = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, result)
         }
     }
 
     val version: AtomicInteger by lazy { AtomicInteger(0) }
 
-    override val concernedSerials: Map<SignalOrigin, Set<Int>> by lazy {
-        HashMap<SignalOrigin, Set<Int>>().apply {
+    override val concernedSerials: Map<Origin, Set<Int>> by lazy {
+        HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int>().apply {
                 /**设防提示音 开关*/
                 add(CarCabinManager.ID_LOCK_SUCCESS_SOUND_STATUE)
             }
-            put(SignalOrigin.CABIN_SIGNAL, cabinSet)
+            put(Origin.CABIN, cabinSet)
         }
     }
 
 
-    override fun onHandleConcernedSignal(property: CarPropertyValue<*>, signalOrigin: SignalOrigin):
+    override fun onHandleConcernedSignal(property: CarPropertyValue<*>, signalOrigin: Origin):
             Boolean {
         when (signalOrigin) {
-            SignalOrigin.CABIN_SIGNAL -> {
+            Origin.CABIN -> {
                 onCabinPropertyChanged(property)
             }
             else -> {}
@@ -58,12 +55,12 @@ class MeterManager private constructor() : BaseManager(), IRadioManager {
         return false
     }
 
-    override fun isConcernedSignal(signal: Int, signalOrigin: SignalOrigin): Boolean {
+    override fun isConcernedSignal(signal: Int, signalOrigin: Origin): Boolean {
         val signals = getConcernedSignal(signalOrigin)
         return signals.contains(signal)
     }
 
-    override fun getConcernedSignal(signalOrigin: SignalOrigin): Set<Int> {
+    override fun getConcernedSignal(signalOrigin: Origin): Set<Int> {
         return concernedSerials[signalOrigin] ?: HashSet()
     }
 
@@ -85,7 +82,7 @@ class MeterManager private constructor() : BaseManager(), IRadioManager {
                 if (value is Int) {
                     onSwitchChanged(
                         switchNode,
-                        doUpdateSwitchStatus(switchNode, fortifySoundStatus, value).get()
+                        doUpdateSwitchValue(switchNode, fortifySoundStatus, value).get()
                     )
                 }
             }
@@ -111,14 +108,14 @@ class MeterManager private constructor() : BaseManager(), IRadioManager {
         }
     }
 
-    override fun doGetRadioOption(radioNode: RadioNode): Int {
+    override fun doGetRadioOption(node: RadioNode): Int {
         TODO("Not yet implemented")
     }
 
-    override fun doSetRadioOption(radioNode: RadioNode, value: Int): Boolean {
-        return when (radioNode) {
+    override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
+        return when (node) {
             RadioNode.DRIVE_METER_SYSTEM -> {
-                doSetProperty(-1, value, SignalOrigin.CABIN_SIGNAL)
+                writeProperty(-1, value, Origin.CABIN)
             }
             else -> false
         }

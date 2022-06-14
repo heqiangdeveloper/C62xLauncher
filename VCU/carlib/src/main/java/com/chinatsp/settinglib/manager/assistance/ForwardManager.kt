@@ -8,7 +8,7 @@ import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.optios.SwitchNode
-import com.chinatsp.settinglib.sign.SignalOrigin
+import com.chinatsp.settinglib.sign.Origin
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -31,28 +31,26 @@ class ForwardManager : BaseManager(), ISwitchManager {
     private val fcwStatus: AtomicBoolean by lazy {
         val switchNode = SwitchNode.ADAS_FCW
         AtomicBoolean(switchNode.isOn()).apply {
-            val signal = CarCabinManager.ID_FCW_STATUS
-            val value = doGetIntProperty(signal, SignalOrigin.CABIN_SIGNAL)
-            doUpdateSwitchStatus(switchNode, this, value)
+            val result = readIntProperty(switchNode.get.signal, switchNode.get.origin)
+            doUpdateSwitchValue(switchNode, this, result)
         }
     }
 
     private val aebStatus: AtomicBoolean by lazy {
         val switchNode = SwitchNode.ADAS_AEB
         AtomicBoolean(switchNode.isOn()).apply {
-            val signal = CarCabinManager.ID_AEB_STATUS
-            val value = doGetIntProperty(signal, SignalOrigin.CABIN_SIGNAL)
-            doUpdateSwitchStatus(switchNode, this, value)
+            val result = readIntProperty(switchNode.get.signal, switchNode.get.origin)
+            doUpdateSwitchValue(switchNode, this, result)
         }
     }
 
-    override val concernedSerials: Map<SignalOrigin, Set<Int>> by lazy {
-        HashMap<SignalOrigin, Set<Int>>().apply {
+    override val concernedSerials: Map<Origin, Set<Int>> by lazy {
+        HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int>().apply {
                 add(CarCabinManager.ID_FCW_STATUS)
                 add(CarCabinManager.ID_AEB_STATUS)
             }
-            put(SignalOrigin.CABIN_SIGNAL, cabinSet)
+            put(Origin.CABIN, cabinSet)
         }
     }
 
@@ -68,12 +66,12 @@ class ForwardManager : BaseManager(), ISwitchManager {
         }
     }
 
-    override fun isConcernedSignal(signal: Int, signalOrigin: SignalOrigin): Boolean {
+    override fun isConcernedSignal(signal: Int, signalOrigin: Origin): Boolean {
         val signals = getConcernedSignal(signalOrigin)
         return signals.contains(signal)
     }
 
-    override fun getConcernedSignal(signalOrigin: SignalOrigin): Set<Int> {
+    override fun getConcernedSignal(signalOrigin: Origin): Set<Int> {
         return concernedSerials[signalOrigin] ?: HashSet()
     }
 
@@ -85,7 +83,7 @@ class ForwardManager : BaseManager(), ISwitchManager {
                 if (value is Int) {
                     onSwitchChanged(
                         switchNode,
-                        doUpdateSwitchStatus(switchNode, fcwStatus, value).get()
+                        doUpdateSwitchValue(switchNode, fcwStatus, value).get()
                     )
                 }
             }
@@ -94,7 +92,7 @@ class ForwardManager : BaseManager(), ISwitchManager {
                 if (value is Int) {
                     onSwitchChanged(
                         switchNode,
-                        doUpdateSwitchStatus(switchNode, aebStatus, value).get()
+                        doUpdateSwitchValue(switchNode, aebStatus, value).get()
                     )
                 }
             }
@@ -114,8 +112,8 @@ class ForwardManager : BaseManager(), ISwitchManager {
     }
 
 
-    override fun doGetSwitchOption(switchNode: SwitchNode): Boolean {
-        return when (switchNode) {
+    override fun doGetSwitchOption(node: SwitchNode): Boolean {
+        return when (node) {
             SwitchNode.ADAS_FCW -> {
                 fcwStatus.get()
             }
@@ -126,16 +124,14 @@ class ForwardManager : BaseManager(), ISwitchManager {
         }
     }
 
-    override fun doSetSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean {
-        return when (switchNode) {
+    override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
+        return when (node) {
             /**FCW status. 0x0:Inactive 0x1:Active 0x2:Reserved 0x3:Reserved*/
             SwitchNode.ADAS_FCW -> {
-                val signal = CarCabinManager.ID_FCW_SWT
-                doSetProperty(signal, switchNode.obtainValue(status), switchNode.origin)
+                writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
             SwitchNode.ADAS_AEB -> {
-                val signal = CarCabinManager.ID_AEB_SWT
-                doSetProperty(signal, switchNode.obtainValue(status), switchNode.origin)
+                writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
             else -> false
         }

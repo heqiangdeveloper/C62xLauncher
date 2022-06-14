@@ -2,6 +2,7 @@ package com.chinatsp.vehicle.settings.fragment.doors
 
 import android.os.Bundle
 import android.widget.CompoundButton
+import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.access.SternDoorManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -23,14 +24,14 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-        initSwitchOptions()
-        observeSwitchLiveData()
+        initSwitchOption()
+        addSwitchLiveDataListener()
+        setSwitchListener()
 
-        observeRadioOptionChange()
-        observeSwitchOptionChange()
+        setRadioListener()
     }
 
-    private fun observeSwitchOptionChange() {
+    private fun setSwitchListener() {
         binding.accessSternElectricSw.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.AS_STERN_ELECTRIC, buttonView, isChecked)
         }
@@ -42,7 +43,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         }
     }
 
-    private fun observeRadioOptionChange() {
+    private fun setRadioListener() {
         binding.accessSternSmartEnterRadio.setOnTabSelectionChangedListener { _, value ->
             val result = isCanToInt(value) && manager.doSetRadioOption(
                 RadioNode.ACCESS_STERN_SMART_ENTER, value.toInt()
@@ -54,10 +55,10 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         }
     }
 
-    private fun doUpdateSwitchOption(switchNode: SwitchNode, buttonView: CompoundButton, status: Boolean) {
-        val result = manager.doSetSwitchOption(switchNode, status)
-        if (!result && buttonView is SwitchButton) {
-            buttonView.setCheckedImmediatelyNoEvent(!status)
+    private fun doUpdateSwitchOption(node: SwitchNode, button: CompoundButton, status: Boolean) {
+        val result = manager.doSetSwitchOption(node, status)
+        if (!result && button is SwitchButton) {
+            button.setCheckedImmediatelyNoEvent(!status)
         }
     }
 
@@ -66,42 +67,31 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     }
 
 
-    private fun observeSwitchLiveData() {
+    private fun addSwitchLiveDataListener() {
         viewModel.electricFunction.observe(this) {
-            updateSwitchOptionStatus(SwitchNode.AS_STERN_ELECTRIC, it)
+            doUpdateSwitch(SwitchNode.AS_STERN_ELECTRIC, it)
         }
         viewModel.lightAlarmFunction.observe(this) {
-            updateSwitchOptionStatus(SwitchNode.AS_STERN_LIGHT_ALARM, it)
+            doUpdateSwitch(SwitchNode.AS_STERN_LIGHT_ALARM, it)
         }
         viewModel.audioAlarmFunction.observe(this) {
-            updateSwitchOptionStatus(SwitchNode.AS_STERN_AUDIO_ALARM, it)
+            doUpdateSwitch(SwitchNode.AS_STERN_AUDIO_ALARM, it)
         }
     }
 
-    private fun initSwitchOptions() {
-        updateSwitchOptionStatus(
-            SwitchNode.AS_STERN_ELECTRIC,
-            viewModel.electricFunction.value!!,
-            true
-        )
-        updateSwitchOptionStatus(
-            SwitchNode.AS_STERN_LIGHT_ALARM,
-            viewModel.lightAlarmFunction.value!!,
-            true
-        )
-        updateSwitchOptionStatus(
-            SwitchNode.AS_STERN_AUDIO_ALARM,
-            viewModel.audioAlarmFunction.value!!,
-            true
-        )
+    private fun initSwitchOption() {
+        initSwitchOption(SwitchNode.AS_STERN_ELECTRIC, viewModel.electricFunction,)
+        initSwitchOption(SwitchNode.AS_STERN_LIGHT_ALARM, viewModel.lightAlarmFunction,)
+        initSwitchOption(SwitchNode.AS_STERN_AUDIO_ALARM, viewModel.audioAlarmFunction,)
     }
 
-    private fun updateSwitchOptionStatus(
-        switchNode: SwitchNode,
-        status: Boolean,
-        immediately: Boolean = false
-    ) {
-        val switchButton = when (switchNode) {
+    private fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {
+        val status = liveData.value ?: false
+        doUpdateSwitch(node, status, true)
+    }
+
+    private fun doUpdateSwitch(node: SwitchNode, status: Boolean, immediately: Boolean = false) {
+        val swb = when (node) {
             SwitchNode.AS_STERN_ELECTRIC -> {
                 binding.accessSternElectricSw
             }
@@ -113,12 +103,17 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
             }
             else -> null
         }
-        switchButton?.let {
-            if (!immediately) {
-                it.setCheckedNoEvent(status)
-            } else {
-                it.setCheckedImmediatelyNoEvent(status)
-            }
+        swb?.let {
+            doUpdateSwitch(it, status, immediately)
         }
     }
+
+    private fun doUpdateSwitch(swb: SwitchButton, status: Boolean, immediately: Boolean = false) {
+        if (!immediately) {
+            swb.setCheckedNoEvent(status)
+        } else {
+            swb.setCheckedImmediatelyNoEvent(status)
+        }
+    }
+
 }

@@ -7,7 +7,7 @@ import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.optios.SwitchNode
-import com.chinatsp.settinglib.sign.SignalOrigin
+import com.chinatsp.settinglib.sign.Origin
 
 /**
  * @author : luohong
@@ -28,37 +28,37 @@ class LamplightManager: BaseManager(), ISwitchManager {
 
     }
 
-    override val concernedSerials: Map<SignalOrigin, Set<Int>> by lazy {
-        HashMap<SignalOrigin, Set<Int>>().apply {
+    override val concernedSerials: Map<Origin, Set<Int>> by lazy {
+        HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int> ().apply {
             }
-            put(SignalOrigin.CABIN_SIGNAL, cabinSet)
+            put(Origin.CABIN, cabinSet)
         }
     }
     override fun onHandleConcernedSignal(
         property: CarPropertyValue<*>,
-        signalOrigin: SignalOrigin
+        signalOrigin: Origin
     ): Boolean {
         TODO("Not yet implemented")
     }
 
-    override fun isConcernedSignal(signal: Int, signalOrigin: SignalOrigin): Boolean {
+    override fun isConcernedSignal(signal: Int, signalOrigin: Origin): Boolean {
         val signals = getConcernedSignal(signalOrigin)
         return signals.contains(signal)
     }
 
-    override fun getConcernedSignal(signalOrigin: SignalOrigin): Set<Int> {
+    override fun getConcernedSignal(signalOrigin: Origin): Set<Int> {
         return concernedSerials[signalOrigin] ?: HashSet()
     }
 
-    override fun doGetSwitchOption(switchNode: SwitchNode): Boolean {
+    override fun doGetSwitchOption(node: SwitchNode): Boolean {
         return false
     }
 
-    override fun doSetSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean {
-        return when (switchNode) {
+    override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
+        return when (node) {
             SwitchNode.ADAS_HMA -> {
-                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin, VehicleAreaSeat.SEAT_DRIVER)
+                writeProperty(node.set.signal, node.value(status), node.set.origin, VehicleAreaSeat.SEAT_DRIVER)
             }
             else -> false
         }

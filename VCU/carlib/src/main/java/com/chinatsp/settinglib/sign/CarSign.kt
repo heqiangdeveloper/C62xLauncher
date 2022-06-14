@@ -7,7 +7,7 @@ package com.chinatsp.settinglib.sign
  * @desc   :
  * @version: 1.0
  */
-class CarSign(val type: SignalOrigin) {
+class CarSign(val type: Origin) {
 
     val signals:MutableSet<Int> by lazy { HashSet() }
 

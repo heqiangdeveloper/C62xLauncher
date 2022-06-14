@@ -30,7 +30,7 @@ class TabBlock(val type: Type) {
 
     private fun initCabinSignal(hashSet: HashSet<CarSign>) {
         hashSet.run {
-            var carSign = CarSign(SignalOrigin.CABIN_SIGNAL)
+            var carSign = CarSign(Origin.CABIN)
             carSign.signals.let {
                 /**空调自干燥*/
                 it.add(CarCabinManager.ID_ACSELFSTSDISP)
@@ -40,7 +40,7 @@ class TabBlock(val type: Type) {
                 it.add(CarCabinManager.ID_ACCMFTSTSDISP)
             }
             add(carSign)
-            carSign = CarSign(SignalOrigin.HVAC_SIGNAL)
+            carSign = CarSign(Origin.HVAC)
             carSign.signals.let {
                 /**自动除雾*/
                 it.add(CarHvacManager.ID_HVAC_AVN_KEY_DEFROST)
@@ -51,7 +51,7 @@ class TabBlock(val type: Type) {
 
     private fun initCommonSignal(hashSet: HashSet<CarSign>) {
         hashSet.run {
-            var carSign = CarSign(SignalOrigin.CABIN_SIGNAL)
+            var carSign = CarSign(Origin.CABIN)
             carSign.signals.let {
                 /**空调自干燥*/
                 it.add(CarCabinManager.ID_ACSELFSTSDISP)
@@ -61,7 +61,7 @@ class TabBlock(val type: Type) {
                 it.add(CarCabinManager.ID_ACCMFTSTSDISP)
             }
             add(carSign)
-            carSign = CarSign(SignalOrigin.HVAC_SIGNAL)
+            carSign = CarSign(Origin.HVAC)
             carSign.signals.let {
                 /**自动除雾*/
                 it.add(CarHvacManager.ID_HVAC_AVN_KEY_DEFROST)
@@ -70,7 +70,7 @@ class TabBlock(val type: Type) {
         }
     }
 
-    fun contains(type: SignalOrigin, propertyId: Int): Boolean {
+    fun contains(type: Origin, propertyId: Int): Boolean {
         try {
             return signals.first { type == it.type }.signals.contains(propertyId)
         } catch (e: Exception) {

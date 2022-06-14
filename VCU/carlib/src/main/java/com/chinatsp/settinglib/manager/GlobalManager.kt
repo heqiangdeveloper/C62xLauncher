@@ -5,7 +5,8 @@ import com.chinatsp.settinglib.manager.access.AccessManager
 import com.chinatsp.settinglib.manager.cabin.CabinManager
 import com.chinatsp.settinglib.manager.lamp.LampManager
 import com.chinatsp.settinglib.manager.sound.AudioManager
-import com.chinatsp.settinglib.sign.SignalOrigin
+import com.chinatsp.settinglib.sign.Origin
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author : luohong
@@ -26,6 +27,10 @@ class GlobalManager private constructor() : BaseManager() {
 
     private var concernedSerialManagers: List<BaseManager>? = null
 
+    val tabSerial: AtomicInteger by lazy {
+        AtomicInteger(0)
+    }
+
 
     val managers: List<BaseManager> by lazy {
         ArrayList<BaseManager>().apply {
@@ -35,12 +40,12 @@ class GlobalManager private constructor() : BaseManager() {
             add(AccessManager.instance)
         }
     }
-    override val concernedSerials: Map<SignalOrigin, Set<Int>>
+    override val concernedSerials: Map<Origin, Set<Int>>
         get() = HashMap()
 
     override fun onHandleConcernedSignal(
         property: CarPropertyValue<*>,
-        signalOrigin: SignalOrigin
+        signalOrigin: Origin
     ): Boolean {
         concernedSerialManagers?.forEach {
             it.onDispatchSignal(property.propertyId, property, signalOrigin)
@@ -48,13 +53,13 @@ class GlobalManager private constructor() : BaseManager() {
         return true
     }
 
-    override fun isConcernedSignal(signal: Int, signalOrigin: SignalOrigin): Boolean {
+    override fun isConcernedSignal(signal: Int, signalOrigin: Origin): Boolean {
         val list = managers.filter { it.isConcernedSignal(signal, signalOrigin) }.toList()
         concernedSerialManagers = list
         return list.isNotEmpty()
     }
 
-    override fun getConcernedSignal(signalOrigin: SignalOrigin): Set<Int> {
+    override fun getConcernedSignal(signalOrigin: Origin): Set<Int> {
         val hashSet = HashSet<Int>()
         managers.forEach { manager ->
             manager.getConcernedSignal(signalOrigin).let {

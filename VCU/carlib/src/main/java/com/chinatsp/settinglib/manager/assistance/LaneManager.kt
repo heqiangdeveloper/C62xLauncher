@@ -9,7 +9,7 @@ import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
-import com.chinatsp.settinglib.sign.SignalOrigin
+import com.chinatsp.settinglib.sign.Origin
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -35,7 +35,7 @@ class LaneManager : BaseManager(), IOptionManager {
     private val laneAssistMode: AtomicInteger by lazy {
         AtomicInteger(1).apply {
             val signal = CarCabinManager.ID_LKS_SENSITIVITY
-            val value = doGetIntProperty(signal, SignalOrigin.CABIN_SIGNAL)
+            val value = readIntProperty(signal, Origin.CABIN)
             set(value)
         }
     }
@@ -59,20 +59,19 @@ class LaneManager : BaseManager(), IOptionManager {
     private val laneAssistFunction: AtomicBoolean by lazy {
         val switchNode = SwitchNode.ADAS_LANE_ASSIST
         AtomicBoolean(switchNode.isOn()).apply {
-            val signal = CarCabinManager.ID_FCW_STATUS
-            val value = doGetIntProperty(signal, SignalOrigin.CABIN_SIGNAL)
-            doUpdateSwitchStatus(switchNode, this, value)
+            val result = readIntProperty(switchNode.get.signal, switchNode.get.origin)
+            doUpdateSwitchValue(switchNode, this, result)
         }
     }
 
 
-    override val concernedSerials: Map<SignalOrigin, Set<Int>> by lazy {
-        HashMap<SignalOrigin, Set<Int>>().apply {
+    override val concernedSerials: Map<Origin, Set<Int>> by lazy {
+        HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int>().apply {
                 /**车道保持灵敏度*/
                 add(CarCabinManager.ID_ADAS_LDW_WARNING_SENSITIVITY)
             }
-            put(SignalOrigin.CABIN_SIGNAL, cabinSet)
+            put(Origin.CABIN, cabinSet)
         }
     }
 
@@ -127,7 +126,7 @@ class LaneManager : BaseManager(), IOptionManager {
         //0x1: Low Sensitivity
         //0x2: High Sensitivity(default)
         //0x3: Reserved
-        return doSetProperty(signal, value, SignalOrigin.CABIN_SIGNAL)
+        return writeProperty(signal, value, Origin.CABIN)
     }
 
     /**
@@ -146,7 +145,7 @@ class LaneManager : BaseManager(), IOptionManager {
 //        0x1: LDW Enable
 //        0x2: RDP Enable
 //        0x3: LKS Enable（C62 default）
-        return doSetProperty(signal, value, SignalOrigin.CABIN_SIGNAL)
+        return writeProperty(signal, value, Origin.CABIN)
     }
 
     /**
@@ -168,8 +167,8 @@ class LaneManager : BaseManager(), IOptionManager {
     }
 
 
-    override fun doGetRadioOption(radioNode: RadioNode): Int {
-        return when (radioNode) {
+    override fun doGetRadioOption(node: RadioNode): Int {
+        return when (node) {
             RadioNode.ADAS_LANE_ASSIST_MODE -> {
                 laneAssistMode.get()
             }
@@ -183,19 +182,19 @@ class LaneManager : BaseManager(), IOptionManager {
         }
     }
 
-    override fun doSetRadioOption(radioNode: RadioNode, value: Int): Boolean {
-        return when (radioNode) {
+    override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
+        return when (node) {
             RadioNode.ADAS_LANE_ASSIST_MODE -> {
                 val signal = -1
-                doSetProperty(signal, value, SignalOrigin.CABIN_SIGNAL)
+                writeProperty(signal, value, Origin.CABIN)
             }
             RadioNode.ADAS_LDW_STYLE -> {
                 val signal = -1
-                doSetProperty(signal, value, SignalOrigin.CABIN_SIGNAL)
+                writeProperty(signal, value, Origin.CABIN)
             }
             RadioNode.ADAS_LDW_SENSITIVITY -> {
                 val signal = CarCabinManager.ID_LDW_LKS_SENSITIVITY_SWT
-                doSetProperty(signal, value, SignalOrigin.CABIN_SIGNAL)
+                writeProperty(signal, value, Origin.CABIN)
             }
             else -> false
         }
@@ -215,8 +214,8 @@ class LaneManager : BaseManager(), IOptionManager {
         return result
     }
 
-    override fun doGetSwitchOption(switchNode: SwitchNode): Boolean {
-        return when (switchNode) {
+    override fun doGetSwitchOption(node: SwitchNode): Boolean {
+        return when (node) {
             SwitchNode.ADAS_LANE_ASSIST -> {
                 laneAssistFunction.get()
             }
@@ -224,10 +223,10 @@ class LaneManager : BaseManager(), IOptionManager {
         }
     }
 
-    override fun doSetSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean {
-        return when (switchNode) {
+    override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
+        return when (node) {
             SwitchNode.ADAS_LANE_ASSIST -> {
-                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin, switchNode.area)
+                writeProperty(node.set.signal, node.value(status), node.set.origin, node.area)
             }
             else -> false
         }

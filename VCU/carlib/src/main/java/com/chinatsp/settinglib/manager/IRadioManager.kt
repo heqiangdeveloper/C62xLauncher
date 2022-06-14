@@ -13,15 +13,15 @@ import com.chinatsp.settinglib.optios.RadioNode
 interface IRadioManager : IManager {
 
     /**
-     * @param   radioNode 选项
+     * @param   node 选项
      * @return 返回选中的值
      */
-    fun doGetRadioOption(radioNode: RadioNode): Int
+    fun doGetRadioOption(node: RadioNode): Int
 
     /**
-     * @param   radioNode 选项
+     * @param   node 选项
      * @param   value 选中项的 value值
      * @return  返回接口调用是否成功
      */
-    fun doSetRadioOption(radioNode: RadioNode, value: Int): Boolean
+    fun doSetRadioOption(node: RadioNode, value: Int): Boolean
 }

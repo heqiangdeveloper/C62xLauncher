@@ -2,16 +2,14 @@ package com.chinatsp.settinglib.manager.lamp
 
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
-import android.car.hardware.hvac.CarHvacManager
 import com.chinatsp.settinglib.IConcernChanged
 import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
-import com.chinatsp.settinglib.optios.Area
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
-import com.chinatsp.settinglib.sign.SignalOrigin
+import com.chinatsp.settinglib.sign.Origin
 import java.lang.ref.WeakReference
 
 /**
@@ -35,8 +33,8 @@ class LightManager private constructor() : BaseManager(), IConcernChanged, ILigh
 
     }
 
-    override val concernedSerials: Map<SignalOrigin, Set<Int>> by lazy {
-        HashMap<SignalOrigin, Set<Int>>().apply {
+    override val concernedSerials: Map<Origin, Set<Int>> by lazy {
+        HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int> ().apply {
                 /**空调自干燥*/
                 add(CarCabinManager.ID_ACSELFSTSDISP)
@@ -45,19 +43,19 @@ class LightManager private constructor() : BaseManager(), IConcernChanged, ILigh
                 /**空调舒适性状态显示*/
                 add(CarCabinManager.ID_ACCMFTSTSDISP)
             }
-            put(SignalOrigin.CABIN_SIGNAL, cabinSet)
+            put(Origin.CABIN, cabinSet)
         }
     }
 
     override fun onHandleConcernedSignal(
         property: CarPropertyValue<*>,
-        signalOrigin: SignalOrigin
+        signalOrigin: Origin
     ): Boolean {
         when (signalOrigin) {
-            SignalOrigin.CABIN_SIGNAL -> {
+            Origin.CABIN -> {
                 onCabinPropertyChanged(property)
             }
-            SignalOrigin.HVAC_SIGNAL -> {
+            Origin.HVAC -> {
                 onHvacPropertyChanged(property)
             }
             else -> {}
@@ -65,20 +63,20 @@ class LightManager private constructor() : BaseManager(), IConcernChanged, ILigh
         return true
     }
 
-    override fun isConcernedSignal(signal: Int, signalOrigin: SignalOrigin): Boolean {
+    override fun isConcernedSignal(signal: Int, signalOrigin: Origin): Boolean {
         val signals = getConcernedSignal(signalOrigin)
         return signals.contains(signal)
     }
 
-    override fun getConcernedSignal(signalOrigin: SignalOrigin): Set<Int> {
+    override fun getConcernedSignal(signalOrigin: Origin): Set<Int> {
         return concernedSerials[signalOrigin] ?: HashSet()
     }
 
-    override fun doGetRadioOption(radioNode: RadioNode): Int {
+    override fun doGetRadioOption(node: RadioNode): Int {
         TODO("Not yet implemented")
     }
 
-    override fun doSetRadioOption(radioNode: RadioNode, value: Int): Boolean {
+    override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
         TODO("Not yet implemented")
     }
 
@@ -101,34 +99,31 @@ class LightManager private constructor() : BaseManager(), IConcernChanged, ILigh
         return serial
     }
 
-    override fun doGetSwitchOption(switchNode: SwitchNode): Boolean {
+    override fun doGetSwitchOption(node: SwitchNode): Boolean {
         TODO("Not yet implemented")
     }
 
-    override fun doSetSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean {
-        return when (switchNode) {
+    override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
+        return when (node) {
             SwitchNode.AC_AUTO_ARID -> {
-                val signal = CarHvacManager.ID_HVAC_AVN_SELF_DESICAA_SWT
-                doSetProperty(signal, switchNode.obtainValue(status), SignalOrigin.HVAC_SIGNAL)
+                writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
             SwitchNode.AC_AUTO_DEMIST -> {
-                val signal = CarHvacManager.ID_HVAC_AVN_KEY_DEFROST
-                doSetProperty(signal, switchNode.obtainValue(status), SignalOrigin.HVAC_SIGNAL)
+                writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
             SwitchNode.AC_ADVANCE_WIND -> {
-                val signal = CarHvacManager.ID_HVAC_AVN_UNLOCK_BREATHABLE_ENABLE
-                doSetProperty(signal, switchNode.obtainValue(status), SignalOrigin.HVAC_SIGNAL)
+                writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
             else -> false
         }
     }
 
-    override fun onPropertyChanged(type: SignalOrigin, property: CarPropertyValue<*>) {
+    override fun onPropertyChanged(type: Origin, property: CarPropertyValue<*>) {
         when (type) {
-            SignalOrigin.CABIN_SIGNAL -> {
+            Origin.CABIN -> {
                 onCabinPropertyChanged(property)
             }
-            SignalOrigin.HVAC_SIGNAL -> {
+            Origin.HVAC -> {
                 onHvacPropertyChanged(property)
             }
             else -> {}

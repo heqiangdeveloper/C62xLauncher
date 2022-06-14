@@ -8,7 +8,7 @@ import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
-import com.chinatsp.settinglib.sign.SignalOrigin
+import com.chinatsp.settinglib.sign.Origin
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -29,18 +29,18 @@ class SideBackManager : BaseManager(), IOptionManager {
         }
     }
 
-    override val concernedSerials: Map<SignalOrigin, Set<Int>> by lazy {
-        HashMap<SignalOrigin, Set<Int>>().apply {
+    override val concernedSerials: Map<Origin, Set<Int>> by lazy {
+        HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int>().apply {
             }
-            put(SignalOrigin.CABIN_SIGNAL, cabinSet)
+            put(Origin.CABIN, cabinSet)
         }
     }
 
     private val showAreaValue: AtomicInteger by lazy {
         AtomicInteger(1).apply {
             val signal = CarCabinManager.ID_LKS_SENSITIVITY
-            val value = doGetIntProperty(signal, SignalOrigin.CABIN_SIGNAL)
+            val value = readIntProperty(signal, Origin.CABIN)
             set(value)
         }
     }
@@ -48,42 +48,38 @@ class SideBackManager : BaseManager(), IOptionManager {
     private val dowValue: AtomicBoolean by lazy {
         val node = SwitchNode.ADAS_DOW
         AtomicBoolean(node.isOn()).apply {
-            val signal = -1
-            val value = doGetIntProperty(signal, node.origin, node.area)
-            doUpdateSwitchStatus(node, this, value)
+            val result = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, result)
         }
     }
 
     private val bsdValue: AtomicBoolean by lazy {
         val node = SwitchNode.ADAS_BSD
         AtomicBoolean(node.isOn()).apply {
-            val signal = -1
-            val value = doGetIntProperty(signal, node.origin, node.area)
-            doUpdateSwitchStatus(node, this, value)
+            val result = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, result)
         }
     }
 
     private val bscValue: AtomicBoolean by lazy {
         val node = SwitchNode.ADAS_BSC
         AtomicBoolean(node.isOn()).apply {
-            val signal = -1
-            val value = doGetIntProperty(signal, node.origin, node.area)
-            doUpdateSwitchStatus(node, this, value)
+            val result = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, result)
         }
     }
 
     private val guidesValue: AtomicBoolean by lazy {
         val node = SwitchNode.ADAS_GUIDES
         AtomicBoolean(node.isOn()).apply {
-            val signal = -1
-            val value = doGetIntProperty(signal, node.origin, node.area)
-            doUpdateSwitchStatus(node, this, value)
+            val result = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, result)
         }
     }
 
 
-    override fun doGetRadioOption(radioNode: RadioNode): Int {
-        return when (radioNode) {
+    override fun doGetRadioOption(node: RadioNode): Int {
+        return when (node) {
             RadioNode.ADAS_SIDE_BACK_SHOW_AREA -> {
                 showAreaValue.get()
             }
@@ -91,11 +87,11 @@ class SideBackManager : BaseManager(), IOptionManager {
         }
     }
 
-    override fun doSetRadioOption(radioNode: RadioNode, value: Int): Boolean {
-        return when (radioNode) {
+    override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
+        return when (node) {
             RadioNode.ADAS_SIDE_BACK_SHOW_AREA -> {
                 val signal = -1
-                doSetProperty(signal, value, SignalOrigin.CABIN_SIGNAL)
+                writeProperty(signal, value, Origin.CABIN)
             }
             else -> false
         }
@@ -115,8 +111,8 @@ class SideBackManager : BaseManager(), IOptionManager {
         return result
     }
 
-    override fun doGetSwitchOption(switchNode: SwitchNode): Boolean {
-        return when (switchNode) {
+    override fun doGetSwitchOption(node: SwitchNode): Boolean {
+        return when (node) {
             SwitchNode.ADAS_DOW -> {
                 dowValue.get()
             }
@@ -133,19 +129,19 @@ class SideBackManager : BaseManager(), IOptionManager {
         }
     }
 
-    override fun doSetSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean {
-        return when (switchNode) {
+    override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
+        return when (node) {
             SwitchNode.ADAS_DOW -> {
-                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin)
+                writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
             SwitchNode.ADAS_BSD -> {
-                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin)
+                writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
             SwitchNode.ADAS_BSC -> {
-                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin)
+                writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
             SwitchNode.ADAS_GUIDES -> {
-                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin)
+                writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
             else -> false
         }

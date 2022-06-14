@@ -3,12 +3,14 @@ package com.chinatsp.vehicle.settings.fragment.sound
 import android.os.Bundle
 import android.os.Handler
 import com.chinatsp.settinglib.LogManager
+import com.chinatsp.settinglib.SettingManager
 import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.SoundFragmentBinding
 import com.chinatsp.vehicle.settings.vm.SoundViewModel
 import com.common.library.frame.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
 @AndroidEntryPoint
 class SoundFragment : BaseFragment<SoundViewModel, SoundFragmentBinding>() {
@@ -23,7 +25,7 @@ class SoundFragment : BaseFragment<SoundViewModel, SoundFragmentBinding>() {
 
     override fun initData(savedInstanceState: Bundle?) {
         setCheckedChangeListener()
-        observeSoundVolume()
+//        observeSoundVolume()
         binding.soundMeterAlarmOption.setOnTabSelectionChangedListener { title, value ->
             LogManager.d("setOnTabSelectionChangedListener title:$title, value:$value")
             voiceManager.doUpdateAlarmOption(value.toInt())
@@ -36,44 +38,43 @@ class SoundFragment : BaseFragment<SoundViewModel, SoundFragmentBinding>() {
 
     private fun observeSoundVolume() {
         viewModel.naviVolume.observe(this) {
-            soundDialog?.updateVolumeValue(SoundDialogFragment.Type.NAVI, it)
+            soundDialog?.updateVolumeValue(it)
         }
         viewModel.mediaVolume.observe(this) {
-            soundDialog?.updateVolumeValue(SoundDialogFragment.Type.MEDIA, it)
+            soundDialog?.updateVolumeValue(it)
         }
         viewModel.phoneVolume.observe(this) {
-            soundDialog?.updateVolumeValue(SoundDialogFragment.Type.PHONE, it)
+            soundDialog?.updateVolumeValue(it)
         }
         viewModel.voiceVolume.observe(this) {
-            soundDialog?.updateVolumeValue(SoundDialogFragment.Type.VOICE, it)
+            soundDialog?.updateVolumeValue(it)
         }
         viewModel.systemVolume.observe(this) {
-            soundDialog?.updateVolumeValue(SoundDialogFragment.Type.SYSTEM, it)
+            soundDialog?.updateVolumeValue(it)
         }
     }
 
     private fun setCheckedChangeListener() {
         binding.soundVolumeAdjustment.setOnClickListener {
-            soundDialog = SoundDialogFragment(object : SoundDialogFragment.IViewListener {
-                override fun doViewCreated() {
-                    initSoundVolume()
-                    initSoundListener()
-                    observeSoundVolume()
-                }
-
-            })
-            activity?.let { it1 ->
-                soundDialog!!.show(
-                    it1.supportFragmentManager,
-                    "soundDialog"
-                )
+            val volumeDialog = VolumeDialogFragment()
+            activity?.supportFragmentManager?.let { it ->
+                volumeDialog.show(it, volumeDialog.javaClass.simpleName)
             }
 
-            Handler().postDelayed({
-                initSoundVolume()
-                initSoundListener()
-            }, 50)
-
+//            soundDialog = SoundDialogFragment(object : SoundDialogFragment.IViewListener {
+//                override fun doViewCreated() {
+//                    initSoundVolume()
+//                    initSoundListener()
+//                    observeSoundVolume()
+//                }
+//
+//            })
+//            activity?.let { it1 ->
+//                soundDialog!!.show(
+//                    it1.supportFragmentManager,
+//                    "soundDialog"
+//                )
+//            }
         }
     }
 
@@ -85,11 +86,11 @@ class SoundFragment : BaseFragment<SoundViewModel, SoundFragmentBinding>() {
 
     private fun initSoundVolume() {
         soundDialog?.also {
-            it.updateVolumeValue(SoundDialogFragment.Type.NAVI, viewModel.naviVolume.value)
-            it.updateVolumeValue(SoundDialogFragment.Type.VOICE, viewModel.voiceVolume.value)
-            it.updateVolumeValue(SoundDialogFragment.Type.MEDIA, viewModel.mediaVolume.value)
-            it.updateVolumeValue(SoundDialogFragment.Type.PHONE, viewModel.phoneVolume.value)
-            it.updateVolumeValue(SoundDialogFragment.Type.SYSTEM, viewModel.systemVolume.value)
+            it.updateVolumeValue(viewModel.naviVolume.value)
+            it.updateVolumeValue(viewModel.voiceVolume.value)
+            it.updateVolumeValue(viewModel.mediaVolume.value)
+            it.updateVolumeValue(viewModel.phoneVolume.value)
+            it.updateVolumeValue(viewModel.systemVolume.value)
         }
     }
 

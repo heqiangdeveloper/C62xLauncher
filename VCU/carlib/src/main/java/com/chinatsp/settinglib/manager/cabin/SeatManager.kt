@@ -2,17 +2,11 @@ package com.chinatsp.settinglib.manager.cabin
 
 import android.car.VehicleAreaSeat
 import android.car.hardware.CarPropertyValue
-import android.car.hardware.cabin.CarCabinManager
-import android.car.hardware.hvac.CarHvacManager
-import com.chinatsp.settinglib.LogManager
-import com.chinatsp.settinglib.bean.Status1
 import com.chinatsp.settinglib.listener.cabin.IACListener
-import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.optios.SwitchNode
-import com.chinatsp.settinglib.sign.SignalOrigin
-import java.lang.ref.WeakReference
+import com.chinatsp.settinglib.sign.Origin
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -25,16 +19,6 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 
 class SeatManager private constructor(): BaseManager() {
-
-    private val autoAridProperty = CarCabinManager.ID_ACSELFSTSDISP
-
-    private val autoWindAdvanceProperty = CarCabinManager.ID_ACPREVENTNDISP
-
-    private val autoComfortProperty = CarCabinManager.ID_ACCMFTSTSDISP
-
-    private val autoDemistProperty = CarHvacManager.ID_HVAC_AVN_KEY_DEFROST
-
-    private val selfSerial by lazy { System.identityHashCode(this) }
 
 
     val aridStatus: AtomicBoolean by lazy {
@@ -51,122 +35,70 @@ class SeatManager private constructor(): BaseManager() {
 
     val version: AtomicInteger by lazy { AtomicInteger(0) }
 
-    override val concernedSerials: Map<SignalOrigin, Set<Int>> by lazy {
-        HashMap<SignalOrigin, Set<Int>>().apply {
+    override val concernedSerials: Map<Origin, Set<Int>> by lazy {
+        HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int> ().apply {
             }
-            put(SignalOrigin.CABIN_SIGNAL, cabinSet)
+            put(Origin.CABIN, cabinSet)
         }
     }
 
 
     override fun onHandleConcernedSignal(
         property: CarPropertyValue<*>,
-        signalOrigin: SignalOrigin
+        signalOrigin: Origin
     ): Boolean {
 
         return false
     }
 
-    override fun isConcernedSignal(signal: Int, signalOrigin: SignalOrigin): Boolean {
+    override fun isConcernedSignal(signal: Int, signalOrigin: Origin): Boolean {
         val signals = getConcernedSignal(signalOrigin)
         return signals.contains(signal)
     }
 
-    override fun getConcernedSignal(signalOrigin: SignalOrigin): Set<Int> {
+    override fun getConcernedSignal(signalOrigin: Origin): Set<Int> {
         return concernedSerials[signalOrigin] ?: HashSet()
     }
 
     /**
      *
-     * @param switchNode 开关选项
+     * @param node 开关选项
      * @param status 开关期望状态
      */
-    fun doSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean {
-        return when (switchNode) {
+    fun doSwitchOption(node: SwitchNode, status: Boolean): Boolean {
+        return when (node) {
             SwitchNode.SEAT_MAIN_DRIVE_MEET -> {
-                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin, VehicleAreaSeat.SEAT_DRIVER)
+                writeProperty(node.set.signal, node.value(status), node.set.origin, VehicleAreaSeat.SEAT_DRIVER)
             }
             SwitchNode.SEAT_FORK_DRIVE_MEET -> {
-                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin, VehicleAreaSeat.SEAT_PASSENGER)
+                writeProperty(node.set.signal, node.value(status), node.set.origin, VehicleAreaSeat.SEAT_PASSENGER)
             }
             SwitchNode.SEAT_HEAT_F_L -> {
-                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin, VehicleAreaSeat.SEAT_ROW_1_LEFT)
+                writeProperty(node.set.signal, node.value(status), node.set.origin, VehicleAreaSeat.SEAT_ROW_1_LEFT)
             }
             SwitchNode.SEAT_HEAT_F_R -> {
-                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin, VehicleAreaSeat.SEAT_ROW_1_RIGHT)
+                writeProperty(node.set.signal, node.value(status), node.set.origin, VehicleAreaSeat.SEAT_ROW_1_RIGHT)
             }
             SwitchNode.SEAT_HEAT_T_L -> {
-                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin, VehicleAreaSeat.SEAT_ROW_2_LEFT)
+                writeProperty(node.set.signal, node.value(status), node.set.origin, VehicleAreaSeat.SEAT_ROW_2_LEFT)
             }
             SwitchNode.SEAT_HEAT_T_R -> {
-                doSetProperty(switchNode.signal, switchNode.obtainValue(status), switchNode.origin, VehicleAreaSeat.SEAT_ROW_2_RIGHT)
+                writeProperty(node.set.signal, node.value(status), node.set.origin, VehicleAreaSeat.SEAT_ROW_2_RIGHT)
             }
             else -> false
         }
     }
 
     override fun onHvacPropertyChanged(property: CarPropertyValue<*>) {
-        when (property.propertyId) {
-            //自动除雾
-            autoDemistProperty -> {
-                onAutoDemistStatusChanged(property.value)
-            }
-            else -> {}
-        }
+
     }
 
     override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
-        when (property.propertyId) {
-            //空调自干燥
-            autoAridProperty -> {
-                onAutoAridStatusChanged(property.value)
-            }
-            //预通风功能
-            autoWindAdvanceProperty -> {
-                onAdvanceHairStatusChanged(property.value)
-            }
-            //自动空调舒适性
-            CarCabinManager.ID_ACCMFTSTSDISP -> {
 
-            }
-            else -> {}
-        }
     }
 
 
-    private fun onAutoAridStatusChanged(value: Any?) {
-        LogManager.d(TAG, "onAutoAridStatusChanged value:$value")
-        if (value is Int) {
-            val status = value == Status1.ON.value
-            if (aridStatus.get() xor status) {
-                aridStatus.set(status)
-                notifySwitchStatus(aridStatus.get(), SwitchNode.AC_AUTO_ARID)
-            }
-        }
-    }
-
-    private fun onAutoDemistStatusChanged(value: Any?) {
-        LogManager.d(TAG, "onAutoDemistStatusChanged value:$value")
-        if (value is Int) {
-            val status = value == Status1.ON.value
-            if (demistStatus.get() xor status) {
-                demistStatus.set(status)
-                notifySwitchStatus(demistStatus.get(), SwitchNode.AC_AUTO_DEMIST)
-            }
-        }
-    }
-
-    private fun onAdvanceHairStatusChanged(value: Any?) {
-        LogManager.d(TAG, "onAdvanceHairStatusChanged value:$value")
-        if (value is Int) {
-            val status = value == Status1.ON.value
-            if (windStatus.get() xor status) {
-                windStatus.set(status)
-                notifySwitchStatus(windStatus.get(), SwitchNode.AC_ADVANCE_WIND)
-            }
-        }
-    }
 
     private fun notifySwitchStatus(status: Boolean, type: SwitchNode) {
         synchronized(listenerStore) {

@@ -3,8 +3,6 @@ package com.chinatsp.vehicle.settings.fragment.sound
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +10,9 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.DialogFragment
 import com.chinatsp.settinglib.LogManager
-import com.chinatsp.settinglib.manager.SoundManager
+import com.chinatsp.settinglib.bean.Volume
+import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.vehicle.settings.R
-import com.chinatsp.vehicle.settings.bean.Volume
 import com.common.xui.utils.DensityUtils
 import com.common.xui.widget.picker.VerticalSeekBar
 
@@ -41,6 +39,10 @@ class SoundDialogFragment(_listener: IViewListener?) : DialogFragment(),
 //        fragment.arguments = args
 //        return fragment
 //    }
+
+    val manager: VoiceManager by lazy {
+        VoiceManager.instance
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,6 +76,7 @@ class SoundDialogFragment(_listener: IViewListener?) : DialogFragment(),
     }
 
     private fun setSeekBarListener(listener: VerticalSeekBar.OnValuesChangeListener) {
+
         naviVolumeVsb.setOnBoxedPointsChangeListener(listener)
         voiceVolumeVsb.setOnBoxedPointsChangeListener(listener)
         mediaVolumeVsb.setOnBoxedPointsChangeListener(listener)
@@ -97,70 +100,38 @@ class SoundDialogFragment(_listener: IViewListener?) : DialogFragment(),
         }
     }
 
-    fun updateVolumeValue(type: Type, volume: Volume?) {
-        if (type == Type.NAVI) {
-            if (volume != null) {
-                naviVolumeTxt.text = volume.pos.toString()
-            }
-        } else if (type == Type.VOICE) {
-            if (volume != null) {
-                voiceVolumeTxt.text = volume.pos.toString()
-            }
-        } else if (type == Type.MEDIA) {
-            if (volume != null) {
-                mediaVolumeTxt.text = volume.pos.toString()
-            }
-        } else if (type == Type.PHONE) {
-            if (volume != null) {
-                phoneVolumeTxt.text = volume.pos.toString()
-            }
-        } else if (type == Type.SYSTEM) {
-            if (volume != null) {
-                systemVolumeTxt.text = volume.pos.toString()
-            }
-        }
-        val seekBar = when (type) {
-            Type.NAVI -> naviVolumeVsb
-            Type.VOICE -> voiceVolumeVsb
-            Type.MEDIA -> mediaVolumeVsb
-            Type.PHONE -> phoneVolumeVsb
-            Type.SYSTEM -> systemVolumeVsb
-        }
+    fun updateVolumeValue(volume: Volume?) {
         volume?.let {
-            //seekBar.setMaxValue(it.max)
-            seekBar.max = it.max
-            seekBar.progress = it.pos
-            //seekBar.setMinValue(it.min)
-            //seekBar.currentValue = it.pos
-            LogManager.d(
-                "SoundDialogFragment",
-                "updateVolumeValue type:$type, volume:$volume, seekbar:$seekBar"
-            )
+            var seekBar: VerticalSeekBar? = null
+            var textView: AppCompatTextView? = null
+            when (it.type) {
+                Volume.Type.NAVI -> {
+                    seekBar = naviVolumeVsb
+                    textView = naviVolumeTxt
+                }
+                Volume.Type.VOICE -> {
+                    seekBar = voiceVolumeVsb
+                    textView = voiceVolumeTxt
+                }
+                Volume.Type.MEDIA -> {
+                    seekBar = mediaVolumeVsb
+                    textView = mediaVolumeTxt
+                }
+                Volume.Type.PHONE -> {
+                    seekBar = phoneVolumeVsb
+                    textView = phoneVolumeTxt
+                }
+                Volume.Type.SYSTEM -> {
+                    seekBar = systemVolumeVsb
+                    textView = systemVolumeTxt
+                }
+            }
+            seekBar?.let { bar ->
+                bar.max = it.max
+                bar.progress = it.pos
+            }
+            textView?.text = it.pos.toString()
         }
-    }
-
-    fun setSeekBarMaxValue(type: Type, value: Int) {
-        val seekBar = when (type) {
-            Type.NAVI -> naviVolumeVsb
-            Type.VOICE -> voiceVolumeVsb
-            Type.MEDIA -> mediaVolumeVsb
-            Type.PHONE -> phoneVolumeVsb
-            Type.SYSTEM -> systemVolumeVsb
-        }
-        LogManager.e("SoundDialogFragment", "setSeekBarMaxValue type:$type, value:$value")
-        seekBar.max = value
-    }
-
-    fun updateSeekBarValue(type: Type, value: Int) {
-        val seekBar = when (type) {
-            Type.NAVI -> naviVolumeVsb
-            Type.VOICE -> voiceVolumeVsb
-            Type.MEDIA -> mediaVolumeVsb
-            Type.PHONE -> phoneVolumeVsb
-            Type.SYSTEM -> systemVolumeVsb
-        }
-        LogManager.e("SoundDialogFragment", "updateSeekBarValue type:$type, value:$value")
-        seekBar.progress = value
     }
 
     fun setCallBack(callBack: CallBack) {
@@ -172,64 +143,33 @@ class SoundDialogFragment(_listener: IViewListener?) : DialogFragment(),
         fun onSendContent(content: String)
     }
 
-    enum class Type {
-        NAVI,
-        VOICE,
-        MEDIA,
-        PHONE,
-        SYSTEM
-    }
-
-    /* override fun onChange(view: View?, currentValue: Int) {
-         val volumeService = SoundManager.getInstance()
-         when (view?.id) {
-             R.id.sound_audio_navi_volume -> {
-                 volumeService.naviVolume = currentValue
-             }
-             R.id.sound_audio_voice_volume -> {
-                 volumeService.cruiseVolume = currentValue
-             }
-             R.id.sound_audio_media_volume -> {
-                 volumeService.mediaVolume = currentValue
-             }
-             R.id.sound_audio_phone_volume -> {
-                 volumeService.phoneVolume = currentValue
-             }
-             R.id.sound_audio_system_volume -> {
-                 volumeService.systemVolume = currentValue
-             }
-             else -> {
-             }
-         }
-     }*/
-
     interface IViewListener {
         fun doViewCreated()
     }
 
     override fun onPointsChanged(view: VerticalSeekBar?, progress: Int) {
-        val volumeService = SoundManager.getInstance()
+
         when (view?.id) {
             R.id.sound_audio_navi_volume -> {
-                volumeService.naviVolume = progress
+                manager.doSetVolume(Volume.Type.NAVI, progress)
                 naviVolumeTxt.text = progress.toString()
             }
             R.id.sound_audio_voice_volume -> {
-                volumeService.cruiseVolume = progress
+                manager.doSetVolume(Volume.Type.VOICE, progress)
                 voiceVolumeTxt.text = progress.toString()
             }
             R.id.sound_audio_media_volume -> {
-                volumeService.mediaVolume = progress
+                manager.doSetVolume(Volume.Type.MEDIA, progress)
                 mediaVolumeTxt.text = progress.toString()
             }
             R.id.sound_audio_phone_volume -> {
-                volumeService.phoneVolume = progress
+                manager.doSetVolume(Volume.Type.PHONE, progress)
                 phoneVolumeTxt.text = progress.toString()
             }
-            R.id.sound_audio_system_volume -> {
-                volumeService.systemVolume = progress
-                systemVolumeTxt.text = progress.toString()
-            }
+//            R.id.sound_audio_system_volume -> {
+//                manager.doSetVolume(Volume.Type.SYSTEM, progress)
+//                systemVolumeTxt.text = progress.toString()
+//            }
             else -> {
             }
         }

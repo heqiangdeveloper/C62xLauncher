@@ -3,7 +3,9 @@ package com.chinatsp.settinglib.manager.sound
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.mcu.CarMcuManager
+import android.car.media.CarAudioManager
 import com.chinatsp.settinglib.LogManager
+import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.cabin.IACListener
 import com.chinatsp.settinglib.listener.sound.ISoundListener
@@ -13,7 +15,7 @@ import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.optios.Area
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
-import com.chinatsp.settinglib.sign.SignalOrigin
+import com.chinatsp.settinglib.sign.Origin
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -28,6 +30,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class VoiceManager private constructor() : BaseManager(), ISoundManager {
 
+    private var manager: CarAudioManager? = null
+
     companion object : ISignal {
         override val TAG: String = VoiceManager::class.java.simpleName
         val instance: VoiceManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
@@ -35,65 +39,85 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
+    fun injectAudioManager(audioManager: CarAudioManager) {
+        this.manager = audioManager
+    }
+
     private val toneAtomic: AtomicBoolean by lazy {
         val node = SwitchNode.AUDIO_SOUND_TONE
         AtomicBoolean(node.isOn()).apply {
-            val signal = -1
-            val result = doGetIntProperty(signal, node.origin, node.area)
-            doUpdateSwitchStatus(node, this, result)
+            val result = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, result)
         }
     }
     private val huaweiAtomic: AtomicBoolean by lazy {
         val node = SwitchNode.AUDIO_SOUND_HUAWEI
         AtomicBoolean(node.isOn()).apply {
-            val signal = -1
-            val result = doGetIntProperty(signal, node.origin, node.area)
-            doUpdateSwitchStatus(node, this, result)
+            val result = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, result)
         }
     }
     private val offsetAtomic: AtomicBoolean by lazy {
         val node = SwitchNode.AUDIO_SOUND_OFFSET
         AtomicBoolean(node.isOn()).apply {
-            val signal = -1
-            val result = doGetIntProperty(signal, node.origin, node.area)
-            doUpdateSwitchStatus(node, this, result)
+            val result = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, result)
         }
     }
     private val loudnessAtomic: AtomicBoolean by lazy {
         val node = SwitchNode.AUDIO_SOUND_LOUDNESS
         AtomicBoolean(node.isOn()).apply {
-            val signal = -1
-            val result = doGetIntProperty(signal, node.origin, node.area)
-            doUpdateSwitchStatus(node, this, result)
+            val result = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, result)
         }
     }
 
-    override val concernedSerials: Map<SignalOrigin, Set<Int>> by lazy {
-        HashMap<SignalOrigin, Set<Int>>().apply {
+    private val naviVolume: Volume by lazy {
+        initVolume(Volume.Type.NAVI)
+    }
+
+    private val mediaVolume: Volume by lazy {
+        initVolume(Volume.Type.MEDIA)
+    }
+
+    private val voiceVolume: Volume by lazy {
+        initVolume(Volume.Type.VOICE)
+    }
+
+    private val phoneVolume: Volume by lazy {
+        initVolume(Volume.Type.PHONE)
+    }
+
+    private val systemVolume: Volume by lazy {
+        initVolume(Volume.Type.SYSTEM)
+    }
+
+    override val concernedSerials: Map<Origin, Set<Int>> by lazy {
+        HashMap<Origin, Set<Int>>().apply {
             val mcuSet = HashSet<Int>().apply {
                 /**【反馈】返回设置音源音量信息*/
                 add(CarMcuManager.ID_AUDIO_VOL_SETTING_INFO)
             }
-            put(SignalOrigin.MCU_SIGNAL, mcuSet)
+            put(Origin.MCU, mcuSet)
             val cabinSet = HashSet<Int>().apply {
                 add(CarCabinManager.ID_AMP_LOUD_SW_STS)
             }
-            put(SignalOrigin.CABIN_SIGNAL, cabinSet)
+            put(Origin.CABIN, cabinSet)
         }
     }
 
     override fun onHandleConcernedSignal(
         property: CarPropertyValue<*>,
-        signalOrigin: SignalOrigin
+        signalOrigin: Origin
     ): Boolean {
         when (signalOrigin) {
-            SignalOrigin.CABIN_SIGNAL -> {
+            Origin.CABIN -> {
                 onCabinPropertyChanged(property)
             }
-            SignalOrigin.HVAC_SIGNAL -> {
+            Origin.HVAC -> {
                 onHvacPropertyChanged(property)
             }
-            SignalOrigin.MCU_SIGNAL -> {
+            Origin.MCU -> {
                 onMcuPropertyChanged(property)
             }
             else -> {}
@@ -110,50 +134,58 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
+    private fun initVolume(type: Volume.Type): Volume {
+        val pos = getVolumePosition(type)
+        val max = getVolumeMaximum(type)
+        return Volume(type, 0, max, pos)
+    }
+
     private fun onMcuVolumeChanged(property: CarPropertyValue<*>) {
         val value = property.value
         value?.let {
             if (it is Array<*>) {
+                it.forEachIndexed { index, any -> LogManager.d("luohong", "index[$index]=$any") }
                 if (it.size >= 5) {
-                    onMcuVolumeChanged(it.elementAt(0) as Int, "MEDIA")
-                    onMcuVolumeChanged(it.elementAt(1) as Int, "PHONE")
-                    onMcuVolumeChanged(it.elementAt(2) as Int, "VOICE")
-                    onMcuVolumeChanged(it.elementAt(3) as Int, "NAVI")
-                    onMcuVolumeChanged(it.elementAt(4) as Int, "SYSTEM")
+                    updateVolumePosition(mediaVolume, it.elementAt(0) as Int)
+                    updateVolumePosition(phoneVolume, it.elementAt(1) as Int)
+                    updateVolumePosition(voiceVolume, it.elementAt(2) as Int)
+                    updateVolumePosition(naviVolume, it.elementAt(3) as Int)
+                    updateVolumePosition(systemVolume, it.elementAt(4) as Int)
+                    onMcuVolumeChanged()
                 }
             }
         }
     }
 
-    private fun onMcuVolumeChanged(pos: Int, serial: String) {
+    private fun updateVolumePosition(volume: Volume, value: Int) {
+        volume.takeIf { it.pos != value }?.pos = value
+    }
+
+    private fun onMcuVolumeChanged() {
         synchronized(listenerStore) {
             listenerStore.filter { null != it.value.get() }
                 .forEach {
                     val listener = it.value.get()
                     if (listener is ISoundListener) {
-                        listener.onSoundVolumeChanged(pos, serial)
+                        listener.onSoundVolumeChanged(
+                            navi = naviVolume,
+                            media = mediaVolume,
+                            phone = phoneVolume,
+                            voice = voiceVolume,
+                            system = systemVolume
+                        )
                     }
                 }
         }
     }
 
-    override fun isConcernedSignal(signal: Int, signalOrigin: SignalOrigin): Boolean {
+    override fun isConcernedSignal(signal: Int, signalOrigin: Origin): Boolean {
         val signals = getConcernedSignal(signalOrigin)
         return signals.contains(signal)
     }
 
-    override fun getConcernedSignal(signalOrigin: SignalOrigin): Set<Int> {
+    override fun getConcernedSignal(signalOrigin: Origin): Set<Int> {
         return concernedSerials[signalOrigin] ?: HashSet()
-    }
-
-    override fun unRegisterVcuListener(serial: Int, callSerial: Int): Boolean {
-        LogManager.d(TAG, "unRegisterVcuListener serial:$serial, callSerial:$callSerial")
-        synchronized(listenerStore) {
-            listenerStore.let {
-                if (it.containsKey(serial)) it else null
-            }?.remove(serial)
-        }
-        return true
     }
 
     override fun onRegisterVcuListener(priority: Int, listener: IBaseListener): Int {
@@ -165,16 +197,16 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         return serial
     }
 
-    override fun doGetRadioOption(radioNode: RadioNode): Int {
+    override fun doGetRadioOption(node: RadioNode): Int {
         TODO("Not yet implemented")
     }
 
-    override fun doSetRadioOption(radioNode: RadioNode, value: Int): Boolean {
+    override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
         TODO("Not yet implemented")
     }
 
-    override fun doGetSwitchOption(switchNode: SwitchNode): Boolean {
-        return when (switchNode) {
+    override fun doGetSwitchOption(node: SwitchNode): Boolean {
+        return when (node) {
             SwitchNode.AUDIO_SOUND_TONE -> {
                 toneAtomic.get()
             }
@@ -191,23 +223,19 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    override fun doSetSwitchOption(switchNode: SwitchNode, status: Boolean): Boolean {
-        return when (switchNode) {
+    override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
+        return when (node) {
             SwitchNode.AUDIO_SOUND_TONE -> {
-                val signal = -1
-                doSetProperty(signal, switchNode.obtainValue(status), switchNode.origin, switchNode.area)
+                writeProperty(node.set.signal, node.value(status), node.set.origin, node.area)
             }
             SwitchNode.AUDIO_SOUND_HUAWEI -> {
-                val signal = -1
-                doSetProperty(signal, switchNode.obtainValue(status), switchNode.origin, switchNode.area)
+                writeProperty(node.set.signal, node.value(status), node.set.origin, node.area)
             }
             SwitchNode.AUDIO_SOUND_OFFSET -> {
-                val signal = -1
-                doSetProperty(signal, switchNode.obtainValue(status), switchNode.origin, switchNode.area)
+                writeProperty(node.set.signal, node.value(status), node.set.origin, node.area)
             }
             SwitchNode.AUDIO_SOUND_LOUDNESS -> {
-                val signal = -1
-                doSetProperty(signal, switchNode.obtainValue(status), switchNode.origin, switchNode.area)
+                writeProperty(node.set.signal, node.value(status), node.set.origin, node.area)
             }
             else -> false
         }
@@ -228,7 +256,7 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
             return false
         }
         val signal = CarCabinManager.ID_HUM_ICM_VOLUME_LEVEL
-        return doSetProperty(signal, value, SignalOrigin.CABIN_SIGNAL, Area.GLOBAL)
+        return writeProperty(signal, value, Origin.CABIN, Area.GLOBAL)
     }
 
     /**
@@ -241,7 +269,7 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
             return false
         }
         val signal = CarCabinManager.ID_HUM_SOUND_MIX
-        return doSetProperty(signal, value, SignalOrigin.CABIN_SIGNAL, Area.GLOBAL)
+        return writeProperty(signal, value, Origin.CABIN, Area.GLOBAL)
     }
 
     /**
@@ -253,7 +281,7 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         return when (switchNode) {
             SwitchNode.AUDIO_SOUND_LOUDNESS -> {
                 val signal = CarCabinManager.ID_HUM_LOUD_SW
-                doSetProperty(signal, switchNode.obtainValue(isStatus), SignalOrigin.CABIN_SIGNAL)
+                writeProperty(signal, switchNode.value(isStatus), Origin.CABIN)
             }
             else -> false
         }
@@ -281,6 +309,82 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
                     }
                 }
         }
+    }
+
+    override fun doGetVolume(type: Volume.Type): Volume? {
+        return when (type) {
+            Volume.Type.NAVI -> {
+                naviVolume
+            }
+            Volume.Type.VOICE -> {
+                voiceVolume
+            }
+            Volume.Type.MEDIA -> {
+                mediaVolume
+            }
+            Volume.Type.PHONE -> {
+                phoneVolume
+            }
+            Volume.Type.SYSTEM -> {
+                systemVolume
+            }
+            else -> null
+        }
+    }
+
+    override fun doSetVolume(type: Volume.Type, value: Int): Boolean {
+        return when (type) {
+            Volume.Type.NAVI,
+            Volume.Type.VOICE,
+            Volume.Type.MEDIA,
+            Volume.Type.PHONE,
+            Volume.Type.SYSTEM -> {
+                setVolumePosition(type.id, value)
+                true
+            }
+            else -> false
+        }
+    }
+
+    private fun getVolumePosition(type: Volume.Type): Int {
+        return getVolumePosition(type.id)
+    }
+
+    private fun getVolumeMaximum(type: Volume.Type): Int {
+        return getVolumeMaximum(type.id)
+    }
+
+    private fun setVolumePosition(type: Int, value: Int) {
+        try {
+            manager?.let {
+                it.setGroupVolume(it.getVolumeGroupIdForUsage(type), value, 0)
+                LogManager.d(TAG, "setVolumePosition type:$type, value:$value")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun getVolumePosition(type: Int): Int {
+        try {
+            return manager?.let {
+                it.getGroupVolume(it.getVolumeGroupIdForUsage(type))
+            } ?: -1
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return -1
+    }
+
+    private fun getVolumeMaximum(type: Int): Int {
+        try {
+            return manager?.let {
+                it.getGroupMaxVolume(it.getVolumeGroupIdForUsage(type))
+            } ?: -1
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return -1
     }
 
 }
