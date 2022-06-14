@@ -35,5 +35,12 @@
         android:visibility="gone"
         />
 
-
+    <ImageView
+        android:id="@+id/ivCardSelectedEmptyBg"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/card_edit_empty_frame_home"
+        android:layout_margin="25px"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

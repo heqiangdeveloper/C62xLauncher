@@ -86,7 +86,7 @@ public class CardHomeFragment extends BaseFragment {
             mRcvCards.addItemDecoration(decoration);
         }
         mCardsAdapter = new HomeCardsAdapter(getActivity(), mRcvCards);
-        mCardsAdapter.setCardEntityList(cardsTypeManager.createInitCards());
+        mCardsAdapter.setCardEntityList(cardsTypeManager.getHomeList());
         mRcvCards.setAdapter(mCardsAdapter);
 
         mRcvCards.addOnScrollListener(new RecyclerView.OnScrollListener() {

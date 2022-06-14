@@ -2,9 +2,7 @@ package com.chinatsp.widgetcards.editor.drag;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.content.ClipData;
 import android.content.Context;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,18 +10,16 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.chinatsp.entity.BaseCardEntity;
 import com.chinatsp.widgetcards.R;
-
-import java.util.List;
 
 import launcher.base.recyclerview.BaseRcvAdapter;
 
 import launcher.base.utils.EasyLog;
-import launcher.base.utils.collection.IndexCheck;
 
 public class DragHelper {
     private static final String TAG = "DragHelper";
-    private static final int ANIMATE_DURATION = 200;
+    private static final int ANIMATE_DURATION = 300;
     private ViewGroup mRootContainer;
     private RecyclerView mRecyclerView1;
     private RecyclerView mRecyclerView2;
@@ -35,12 +31,24 @@ public class DragHelper {
     private View mSelectedView;
     private View mTargetItemView;
     private IOnSwipeFinish mOnSwipeFinish;
+    private IDragItemView mDragItemView;
+    private float mScaleX = 1f;
+    private float mScaleY = 1f;
+    private volatile boolean mRunningAnimate;
+    private final IEnableDragStrategy mEnableDragStrategy;
 
-    public DragHelper(ViewGroup rootContainer) {
+    public DragHelper(ViewGroup rootContainer, IEnableDragStrategy enableDragStrategy) {
         mRootContainer = rootContainer;
         this.mContext = rootContainer.getContext();
+        mEnableDragStrategy = enableDragStrategy;
         addDragView();
         addSwipeTargetView();
+    }
+
+    public void initTouchListener(IOnSwipeFinish onSwipeFinish) {
+        mRecyclerView1.addOnItemTouchListener(mOnItemTouchListener);
+        mRecyclerView2.addOnItemTouchListener(mOnItemTouchListener);
+        setOnSwipeFinish(onSwipeFinish);
     }
 
     private void addDragView() {
@@ -81,116 +89,287 @@ public class DragHelper {
         public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent event) {
 //            EasyLog.d(TAG, "mRecyclerView1 , onTouchEvent:" + event.getAction());
 //            mMainGestureDetector.onTouchEvent(event);
-            dealTouchEvent(event);
+            dealTouchEvent(rv, event);
         }
-
     };
 
-
-    public void initTouchListener(IOnSwipeFinish onSwipeFinish) {
-//        mRecyclerView1.setOnDragListener(mOnDragListener);
-        mRecyclerView1.addOnItemTouchListener(mOnItemTouchListener);
-        setOnSwipeFinish(onSwipeFinish);
-    }
 
     private float mDownX;
     private float mDownY;
 
-    private void dealTouchEvent(MotionEvent event) {
+    private void dealTouchEvent(RecyclerView rv, MotionEvent event) {
 //        EasyLog.i(TAG, "dealTouchEvent: " + event.getAction());
+        if (mRunningAnimate) {
+            return;
+        }
+        if (!enableDrag(rv, mSelectedView) && event.getAction() != MotionEvent.ACTION_DOWN) {
+            return;
+        }
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mDownX = event.getX();
                 mDownY = event.getY();
-                View pressedView = findChildView(mRecyclerView1, event.getX(), event.getY());
-                mSelectedView = pressedView;
-                EasyLog.d(TAG, "dealTouchEvent onDown. Found pressedView:" + pressedView);
-                if (pressedView == null) {
+                DragViewWrapper dragViewWrapper = findDragView(rv, event.getX(), event.getY());
+                if (dragViewWrapper == null) {
                     return;
                 }
-                startDrag();
+                mSelectedView = dragViewWrapper.getView();
+                EasyLog.d(TAG, "dealTouchEvent onDown. Found pressedView:" + mSelectedView);
+                mDragItemView = new DragItemViewHelp(mSelectedView);
+                startDrag(dragViewWrapper);
                 break;
             case MotionEvent.ACTION_MOVE:
                 float dx = event.getX() - mDownX;
                 float dy = event.getY() - mDownY;
                 dealMove((int) dx, (int) dy);
-                checkSwipeTarget(event);
+                showTargetHighlight(rv, event);
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                dealEventUp(event);
-                flushListState(event);
+                dealEventUp(rv, event);
                 break;
         }
     }
 
-    private void dealEventUp(MotionEvent event) {
+    private boolean enableDrag(RecyclerView rv, View selectedView) {
+        if (rv == null || selectedView == null) {
+            return false;
+        }
+        return mEnableDragStrategy.enableDrag((BaseRcvAdapter<BaseCardEntity>) rv.getAdapter(), mDragView.getPositionInList());
+    }
+
+    private void dealEventUp(RecyclerView rv, MotionEvent event) {
         if (mTargetItemView != null) {
             mTargetItemView.setBackgroundColor(mContext.getColor(android.R.color.transparent));
         }
-        View swipeView = findTargetView(event.getX(), event.getY());
-        if (swipeView != null) {
-            mNeedSwiped = true;
-            dealSwipe(swipeView);
+        boolean needSwipe = false;
+        DragViewWrapper targetViewWrapper = findTargetView(event);
+        if (targetViewWrapper != null) {
+            boolean swipeInRcv2 = targetViewWrapper.getRecyclerView() == rv && rv == mRecyclerView2;
+            boolean enableSwipe = mEnableDragStrategy.enableSwipe(targetViewWrapper, rv, mSelectedView);
+            needSwipe = !swipeInRcv2 && enableSwipe;
+            if (swipeInRcv2) {
+                // 不允许在列表2之间交换卡片
+                EasyLog.w(TAG, "findTargetView, cannot swipe items between rcv2.");
+            }
+            if (needSwipe){
+                setTargetViewState(targetViewWrapper);
+            }
+
+        }
+        boolean swipeInDiffRcv = isSwipeInDiffRcv(mDragView, mSwipeTargetView);
+        EasyLog.i(TAG, "dealEventUp , needSwipe: " + needSwipe + " , swipeInDiffRcv:" + swipeInDiffRcv);
+        computeSwipeScale(needSwipe, swipeInDiffRcv);
+        if (needSwipe) {
+            swipeCard(targetViewWrapper, swipeInDiffRcv);
+        } else {
+            moveDragViewToNewPosition(false, false);
         }
     }
 
-    private void checkSwipeTarget(MotionEvent event) {
-        View targetView = findTargetView(event.getX(), event.getY());
-        showTargetHighlight(targetView);
-    }
-
-    private void showTargetHighlight(View targetView) {
-        if (mTargetItemView == targetView) {
+    private void computeSwipeScale(boolean needSwipe, boolean swipeInDiffRcv) {
+        if (!swipeInDiffRcv || !needSwipe) {
+            mScaleX = 1f;
+            mScaleY = 1f;
             return;
         }
+        float dragWidth = mDragView.getLayoutParams().width;
+        float dragHeight = mDragView.getLayoutParams().height;
+        float swipeWidth = mSwipeTargetView.getLayoutParams().width;
+        float swipeHeight = mSwipeTargetView.getLayoutParams().height;
+        if (dragWidth == 0 || swipeWidth == 0) {
+            mScaleX = 1f;
+        } else {
+            mScaleX = dragWidth / swipeWidth;
+        }
+        if (dragHeight == 0 || swipeHeight == 0) {
+            mScaleY = 1f;
+        } else {
+            mScaleY = dragHeight / swipeHeight;
+        }
+        EasyLog.i(TAG, "computeSwipeScale , scaleX: " + mScaleX + " , scaleY: " + mScaleY);
+    }
+
+    private void swipeCard(DragViewWrapper targetViewWrapper, boolean swipeInDiffRcv) {
+        // 被拖拽的卡片的新位置
+        mDragViewCurrentX = (int) mSwipeTargetView.getX();
+        mDragViewCurrentY = (int) mSwipeTargetView.getY();
+        moveTargetViewToNewPosition(targetViewWrapper, swipeInDiffRcv);
+        moveDragViewToNewPosition(true, swipeInDiffRcv);
+    }
+
+    private boolean isSwipeInDiffRcv(DragSwipeView dragView, DragSwipeView swipeTargetView) {
+        if (dragView != null && swipeTargetView != null) {
+            return dragView.getRecyclerView() != swipeTargetView.getRecyclerView();
+        }
+        return false;
+    }
+
+    private void moveTargetViewToNewPosition(DragViewWrapper targetViewWrapper, boolean diffRcv) {
+        if (targetViewWrapper != null) {
+            targetViewWrapper.getView().setVisibility(View.INVISIBLE);
+            int[] newLocation = computeTargetNewLocation(targetViewWrapper);
+            mSwipeTargetView.animate()
+                    .scaleX(mScaleX)
+                    .scaleY(mScaleY)
+                    .x(newLocation[0])
+                    .y(newLocation[1])
+                    .setDuration(ANIMATE_DURATION)
+                    .start();
+        }
+    }
+
+    /**
+     * 计算 目标View即将被交换到新位置的坐标
+     */
+    private int[] computeTargetNewLocation(DragViewWrapper targetViewWrapper) {
+        View targetView = targetViewWrapper.getView();
+        int[] newLocation = new int[2];
+        mSelectedView.getLocationOnScreen(newLocation);
+        boolean diffRcv = targetViewWrapper.getRecyclerView() != mDragView.getRecyclerView();
+        if (!diffRcv) {
+            return newLocation;
+        }
+        newLocation[0] = newLocation[0] + (mSelectedView.getWidth() - mTargetItemView.getWidth()) / 2;
+        newLocation[1] = newLocation[1] + (mSelectedView.getHeight() - mTargetItemView.getHeight()) / 2;
+        return newLocation;
+    }
+
+    /**
+     * 计算 DragView即将移动到新位置的坐标
+     *
+     * @param diffRcv
+     */
+    private int[] computeDragNewLocation(boolean diffRcv) {
+        int[] newLocation = new int[]{mDragViewCurrentX, mDragViewCurrentY};
+        if (!diffRcv) {
+            return newLocation;
+        }
+        newLocation[0] = newLocation[0] + (mTargetItemView.getWidth() - mSelectedView.getWidth()) / 2;
+        newLocation[1] = newLocation[1] + (mTargetItemView.getHeight() - mSelectedView.getHeight()) / 2;
+        return newLocation;
+    }
+
+    private void setTargetViewState(DragViewWrapper targetViewWrapper) {
+        if (targetViewWrapper != null) {
+            mSwipeTargetView.bringToFront();
+            mTargetItemView = targetViewWrapper.getView();
+            resizeAndLocateView(mSwipeTargetView, targetViewWrapper.getView());
+            mSwipeTargetView.setRecyclerView(targetViewWrapper.getRecyclerView());
+            mSwipeTargetView.setBackground(new CardDragDrawable(targetViewWrapper.getView()));
+            mSwipeTargetView.setVisibility(View.VISIBLE);
+            mSwipeTargetView.setPositionInList(targetViewWrapper.getRecyclerView().getChildAdapterPosition(targetViewWrapper.getView()));
+        }
+    }
+
+    private void moveDragViewToNewPosition(boolean needSwipe, boolean diffRcv) {
+        int[] newLocation = computeDragNewLocation(diffRcv);
+        mRunningAnimate = true;
+        mDragView.animate()
+                .x(newLocation[0])
+                .y(newLocation[1])
+                .scaleX(1f / mScaleX)
+                .scaleY(1f / mScaleY)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        onDragEnd(needSwipe);
+                        mRunningAnimate = false;
+                    }
+                }).setDuration(ANIMATE_DURATION).start();
+    }
+
+    private void onDragEnd(boolean needSwipe) {
+        mDragView.setVisibility(View.GONE);
+        mSelectedView.setVisibility(View.VISIBLE);
+        mDragItemView.restore();
+        mSwipeTargetView.setScaleX(1f);
+        mSwipeTargetView.setScaleY(1f);
+        mDragView.setScaleX(1f);
+        mDragView.setScaleY(1f);
+        if (needSwipe) {
+            mSwipeTargetView.setVisibility(View.GONE);
+            mTargetItemView.setVisibility(View.VISIBLE);
+            changeItemPosition(mDragView, mSwipeTargetView);
+        }
+    }
+
+    private void showTargetHighlight(RecyclerView rv, MotionEvent event) {
+        DragViewWrapper viewWrapper = findTargetView(event);
+
         if (mTargetItemView != null) {
             mTargetItemView.setBackgroundColor(mContext.getColor(android.R.color.transparent));
         }
-        mTargetItemView = targetView;
-        EasyLog.i(TAG, "showTargetHighlight :" + mRecyclerView1.getChildAdapterPosition(mTargetItemView));
+        if (viewWrapper == null) {
+            return;
+        }
+        boolean swipeInRcv2 = viewWrapper.getRecyclerView() == rv && rv == mRecyclerView2;
+        if (swipeInRcv2) {
+            // 不允许在列表2之间交换卡片
+            EasyLog.w(TAG, "showTargetHighlight, cannot swipe items between rcv2.");
+            return;
+        }
+        if (!mEnableDragStrategy.enableSwipe(viewWrapper, rv, mSelectedView)) {
+            EasyLog.w(TAG, "showTargetHighlight, cannot swipe items which type is empty.");
+            return;
+        }
+        if (mSelectedView == viewWrapper.getView()) {
+            // 仍在选中的卡片View范围内, 所以无需交换卡片
+            EasyLog.w(TAG, "showTargetHighlight, it is self...");
+            return;
+        }
+        mTargetItemView = viewWrapper.getView();
+//        EasyLog.i(TAG, "showTargetHighlight :" + mTargetRecyclerView.getChildAdapterPosition(mTargetItemView));
         if (mTargetItemView != null) {
             mTargetItemView.setBackgroundColor(mContext.getColor(R.color.card_blue_default));
         }
     }
 
-    private boolean mNeedSwiped = false;
-
-    private void dealSwipe(View targetView) {
-        if (targetView != null) {
-            mTargetItemView = targetView;
-            resizeAndLocateView(mSwipeTargetView, targetView);
-            mSwipeTargetView.bringToFront();
-            mSwipeTargetView.setBackgroundDrawable(new CardDragDrawable(targetView));
-            mSwipeTargetView.setVisibility(View.VISIBLE);
-            mSwipeTargetView.setPositionInList(mRecyclerView1.getChildAdapterPosition(targetView));
-            targetView.setVisibility(View.INVISIBLE);
-            // 新位置
-            mDragViewCurrentX = (int) mSwipeTargetView.getX();
-            mDragViewCurrentY = (int) mSwipeTargetView.getY();
-
-            mSwipeTargetView.animate().x(mDragViewOriginX).y(mDragViewOriginY).setDuration(ANIMATE_DURATION).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    super.onAnimationEnd(animation);
-                }
-            }).start();
+    // 检测碰撞
+    private DragViewWrapper findTargetView(MotionEvent event) {
+        float rawX = event.getRawX();
+        float rawY = event.getRawY();
+        int x;
+        int y;
+        View targetView = null;
+        RecyclerView rcv = null;
+        RecyclerView[] recyclerViews = new RecyclerView[]{mRecyclerView1, mRecyclerView2};
+        for (int i = 0; i < recyclerViews.length; i++) {
+            RecyclerView tRcv = recyclerViews[i];
+            x = (int) (rawX - tRcv.getX());
+            y = (int) (rawY - tRcv.getY());
+            targetView = tRcv.findChildViewUnder(x, y);
+            rcv = tRcv;
+            if (targetView != null) {
+                break;
+            }
         }
+        if (targetView == null) {
+            EasyLog.w(TAG, "findTargetView failed, nothing be found.");
+            return null;
+        }
+
+        DragViewWrapper targetViewWrapper = new DragViewWrapper(targetView, rcv);
+        return targetViewWrapper;
     }
 
-    // 检测碰撞
-    private View findTargetView(float dX, float dY) {
-        View targetView = findChildView(mRecyclerView1, dX, dY);
-        if (targetView == null) {
-            return null;
+    /**
+     * 根据坐标查询被拖拽的View
+     *
+     * @param rv
+     * @param dx
+     * @param dy
+     * @return
+     */
+    private DragViewWrapper findDragView(RecyclerView rv, float dx, float dy) {
+        DragViewWrapper dragViewWrapper = null;
+        EasyLog.i(TAG, "findDragView : " + dx + " , " + dy);
+        View dragView = rv.findChildViewUnder(dx, dy);
+        if (dragView != null) {
+            dragViewWrapper = new DragViewWrapper(dragView, rv);
         }
-        if (mSelectedView == targetView) {
-            // 仍在选中的卡片View范围内
-            EasyLog.w(TAG, "findTargetView, it is self...");
-            return null;
-        }
-//        targetView.setBackgroundColor(mContext.getColor(R.color.card_blue_default));
-        return targetView;
+        return dragViewWrapper;
     }
 
     private int mDragViewOriginX;
@@ -198,27 +377,24 @@ public class DragHelper {
     private int mDragViewCurrentX;
     private int mDragViewCurrentY;
 
-    private void startDrag() {
-        if (mSelectedView == null) {
+    private void startDrag(DragViewWrapper dragViewWrapper) {
+        if (dragViewWrapper == null) {
             return;
         }
         resizeAndLocateView(mDragView, mSelectedView);
         mDragViewCurrentX = mDragViewOriginX = (int) mDragView.getX();
         mDragViewCurrentY = mDragViewOriginY = (int) mDragView.getY();
         mDragView.bringToFront();
-        int position = mRecyclerView1.getChildAdapterPosition(mSelectedView);
+        mDragView.setRecyclerView(dragViewWrapper.getRecyclerView());
+        int position = dragViewWrapper.getRecyclerView().getChildAdapterPosition(mSelectedView);
         EasyLog.i(TAG, "startDrag : " + position);
         mDragView.setPositionInList(position);
         mDragView.setBackgroundDrawable(new CardDragDrawable(mSelectedView));
         mDragView.setVisibility(View.VISIBLE);
-        mSelectedView.setVisibility(View.INVISIBLE);
+        mDragItemView.becomeEmpty();
     }
 
     private void dealMove(int dX, int dY) {
-//        float minMove = 10;
-//        if (Math.abs(dX) < minMove && Math.abs(dY) < minMove) {
-//            return;
-//        }
         if (mSelectedView == null) {
             return;
         }
@@ -244,53 +420,18 @@ public class DragHelper {
 
     // 处理松开手指. 如果没有发现可交换的targetView, 就返回原位置.
     private void flushListState(MotionEvent event) {
-        mDragView.animate().x(mDragViewCurrentX).y(mDragViewCurrentY).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                mDragView.setVisibility(View.GONE);
-                mSelectedView.setVisibility(View.VISIBLE);
-                if (mNeedSwiped) {
-                    mSwipeTargetView.setVisibility(View.GONE);
-                    mTargetItemView.setVisibility(View.VISIBLE);
-                    int p1 = mDragView.getPositionInList();
-                    int p2 = mSwipeTargetView.getPositionInList();
-                    changeItemPosition(mAdapter1, p1, p2);
-                }
-                mNeedSwiped = false;
-            }
-        }).setDuration(ANIMATE_DURATION).start();
-    }
 
-    // 操作取消, 返回原来的位置
-    private void dealCancel() {
-        mDragView.animate().x(mDragViewOriginX).y(mDragViewOriginY).setDuration(ANIMATE_DURATION).start();
     }
 
     @SuppressWarnings("rawtypes")
-    private void changeItemPosition(BaseRcvAdapter adapter, int position1, int position2) {
+    private void changeItemPosition(DragSwipeView dragView, DragSwipeView swipeTargetView) {
+        int position1 = dragView.getPositionInList();
+        int position2 = swipeTargetView.getPositionInList();
         EasyLog.d(TAG, "changeItemPosition:" + position1 + ", " + position2);
-        List data = adapter.getData();
-        if (data == null) {
-            return;
-        }
-        if (IndexCheck.indexOutOfArray(data, position1) || IndexCheck.indexOutOfArray(data, position2)) {
-            return;
-        }
-        EasyLog.d(TAG, "changeItemPosition:" + data.size());
-        if (mOnSwipeFinish != null) {
-            mOnSwipeFinish.onSwipeHome(position1, position2);
-        }
-//        Object temp1 = data.get(position1);
-//        Object temp2 = data.get(position2);
-//        data.set(position1, temp2);
-//        data.set(position2, temp1);
-//        mAdapter1.notifyDataSetChanged();
-    }
 
-    private View findChildView(RecyclerView recyclerView, float x, float y) {
-        // first check elevated views, if none, then call RV
-        return recyclerView.findChildViewUnder(x, y);
+        if (mOnSwipeFinish != null) {
+            mOnSwipeFinish.onSwipe(position1, dragView.getRecyclerView(), position2, swipeTargetView.getRecyclerView());
+        }
     }
 
     public void setOnSwipeFinish(IOnSwipeFinish onSwipeFinish) {
