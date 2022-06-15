@@ -40,7 +40,7 @@
                 app:tabIndicator="@drawable/press_mask"
                 app:tabIndicatorGravity="center"
                 app:tabMaxWidth="300dp"
-                app:tabMinWidth="200dp" />
+                app:tabMinWidth="@dimen/main_tab_width" />
         </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatImageView

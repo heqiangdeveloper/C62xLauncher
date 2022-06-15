@@ -145,4 +145,10 @@
         <item name="android:layout_marginLeft">@dimen/x15</item>
         <item name="android:layout_marginTop">@dimen/x15</item>
     </style>
+
+    <style name="constraintLayout">
+        <item name="android:layout_width">@dimen/x365</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginLeft">@dimen/x30</item>
+    </style>
 </resources>
