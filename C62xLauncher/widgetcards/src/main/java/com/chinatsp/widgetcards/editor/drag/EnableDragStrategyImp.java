@@ -4,11 +4,11 @@ import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.chinatsp.entity.BaseCardEntity;
-import com.chinatsp.widgetcards.service.CardsTypeManager;
+import com.chinatsp.widgetcards.manager.CardManager;
 
 import java.util.List;
 
+import card.base.LauncherCard;
 import launcher.base.recyclerview.BaseRcvAdapter;
 import launcher.base.utils.EasyLog;
 import launcher.base.utils.collection.IndexCheck;
@@ -17,14 +17,14 @@ public class EnableDragStrategyImp implements IEnableDragStrategy {
     private static final String TAG = "EnableDragStrategyImp";
 
     @Override
-    public boolean enableDrag(BaseRcvAdapter<BaseCardEntity> adapter, int position) {
-        List<BaseCardEntity> data = adapter.getData();
+    public boolean enableDrag(BaseRcvAdapter<LauncherCard> adapter, int position) {
+        List<LauncherCard> data = adapter.getData();
         if (data == null) {
             return false;
         }
         boolean indexOutOfArray = IndexCheck.indexOutOfArray(data, position);
         if (!indexOutOfArray) {
-            return data.get(position).getType() != CardsTypeManager.CardType.EMPTY;
+            return data.get(position).getType() != CardManager.CardType.EMPTY;
         }
         return false;
     }
@@ -43,14 +43,14 @@ public class EnableDragStrategyImp implements IEnableDragStrategy {
     }
 
     public boolean checkSwipeNotEmptyCard(RecyclerView recyclerView, int position) {
-        BaseRcvAdapter<BaseCardEntity> adapter = (BaseRcvAdapter<BaseCardEntity>) recyclerView.getAdapter();
-        List<BaseCardEntity> data = adapter.getData();
+        BaseRcvAdapter<LauncherCard> adapter = (BaseRcvAdapter<LauncherCard>) recyclerView.getAdapter();
+        List<LauncherCard> data = adapter.getData();
         if (data == null) {
             return false;
         }
         boolean indexOutOfArray = IndexCheck.indexOutOfArray(data, position);
         if (!indexOutOfArray) {
-            boolean result = data.get(position).getType() != CardsTypeManager.CardType.EMPTY;
+            boolean result = data.get(position).getType() != CardManager.CardType.EMPTY;
             if (!result) {
                 EasyLog.w(TAG, "showTargetHighlight, cannot swipe items which type is empty.");
             }

@@ -15,7 +15,7 @@
         android:overScrollMode="never"
         />
 
-    <com.chinatsp.widgetcards.editor.CardIndicator
+    <com.chinatsp.widgetcards.home.CardIndicator
         android:id="@+id/cardIndicator"
         android:layout_width="95px"
         android:layout_height="5px"

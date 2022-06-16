@@ -8,15 +8,15 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.chinatsp.entity.BaseCardEntity;
 import com.chinatsp.widgetcards.R;
-import com.chinatsp.widgetcards.service.CardsTypeManager;
+import com.chinatsp.widgetcards.manager.CardManager;
 
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import card.base.LauncherCard;
 import launcher.base.utils.EasyLog;
 
 public class HomeCardsAdapter extends RecyclerView.Adapter<CardFrameViewHolder> {
@@ -24,7 +24,7 @@ public class HomeCardsAdapter extends RecyclerView.Adapter<CardFrameViewHolder> 
     private static final String TAG = "CardsAdapter";
     private final Context mContext;
     private final LayoutInflater mLayoutInflater;
-    private final List<BaseCardEntity> mCardEntityList = new LinkedList<>();
+    private final List<LauncherCard> mCardEntityList = new LinkedList<>();
     private final Set<CardFrameViewHolder> mViewHolders = new HashSet<>();
     private RecyclerView mRecyclerView;
 
@@ -38,7 +38,7 @@ public class HomeCardsAdapter extends RecyclerView.Adapter<CardFrameViewHolder> 
     @NonNull
     @Override
     public CardFrameViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        BaseCardEntity cardEntity = CardsTypeManager.getInstance().findByType(viewType);
+        LauncherCard cardEntity = CardManager.getInstance().findByType(viewType);
         ViewGroup layout;
         if (cardEntity.isCanExpand()) {
             layout = (ViewGroup) mLayoutInflater.inflate(R.layout.item_card_frame, parent, false);
@@ -53,11 +53,11 @@ public class HomeCardsAdapter extends RecyclerView.Adapter<CardFrameViewHolder> 
 
     @Override
     public int getItemViewType(int position) {
-        BaseCardEntity cardEntity = mCardEntityList.get(position);
+        LauncherCard cardEntity = mCardEntityList.get(position);
         return cardEntity.getType();
     }
 
-    public void setCardEntityList(List<BaseCardEntity> cardList) {
+    public void setCardEntityList(List<LauncherCard> cardList) {
         if (cardList != null) {
             mCardEntityList.clear();
             mCardEntityList.addAll(cardList);

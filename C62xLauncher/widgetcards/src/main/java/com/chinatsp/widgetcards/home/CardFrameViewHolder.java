@@ -12,13 +12,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.chinatsp.entity.BaseCardEntity;
 import com.chinatsp.widgetcards.R;
-import com.chinatsp.widgetcards.editor.CardEditorActivity;
+import com.chinatsp.widgetcards.editor.ui.CardEditorActivity;
 
 import java.util.function.Consumer;
 
 import card.service.ICardStyleChange;
+import card.base.LauncherCard;
 import launcher.base.routine.ActivityBus;
 import launcher.base.utils.EasyLog;
 import launcher.base.utils.flowcontrol.StableOnClickListener;
@@ -41,7 +41,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
         mCardInner = cardInner;
     }
 
-    public void bind(int position, BaseCardEntity cardEntity) {
+    public void bind(int position, LauncherCard cardEntity) {
         mTvCardName.setText(cardEntity.getName());
         if (mOnClickListener == null) {
             mOnClickListener = createListener(cardEntity);
@@ -62,18 +62,29 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
 
     private View.OnClickListener mOnClickListener;
 
-    private View.OnClickListener createListener(BaseCardEntity cardEntity) {
+    private View.OnClickListener createListener(LauncherCard cardEntity) {
         return new StableOnClickListener(MIN_CLICK_INTERVAL, new Consumer<View>() {
             @Override
             public void accept(View view) {
+                EasyLog.d(TAG, "click expand or collapse view");
                 if (view == mIvCardZoom) {
                     changeExpandState(cardEntity);
                 }
             }
         });
+
+//        return new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                EasyLog.d(TAG, "click expand or collapse view");
+//                if (view == mIvCardZoom) {
+//                    changeExpandState(cardEntity);
+//                }
+//            }
+//        };
     }
 
-    private void changeExpandState(BaseCardEntity cardEntity) {
+    private void changeExpandState(LauncherCard cardEntity) {
         boolean changeSuccess = true;
         if (mExpandState) {
             collapse(cardEntity);
@@ -87,7 +98,6 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
         }
         if (changeSuccess) {
             mExpandState = !mExpandState;
-            cardEntity.setExpandState(mExpandState);
             ExpandStateManager.getInstance().setExpand(mExpandState);
         }
     }
@@ -122,13 +132,13 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    private void expand(BaseCardEntity cardEntity) {
+    private void expand(LauncherCard cardEntity) {
         itemView.setBackgroundResource(R.drawable.card_bg_large);
-        mIvCardZoom.setImageResource(R.drawable.card_icon_back);
+        mIvCardZoom.setImageResource(R.drawable.card_icon_collapse);
+
         if (mCardInner instanceof ICardStyleChange) {
             ((ICardStyleChange) mCardInner).expand();
         }
-
         mTvCardName.setTextColor(getColor(R.color.card_blue_lv1));
         runExpandAnimation();
     }
@@ -144,7 +154,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
                 int value = (int) animation.getAnimatedValue();
                 layoutParams.width = value;
                 itemView.setLayoutParams(layoutParams);
-                EasyLog.d(TAG, "AnimatedValue:" + value);
+//                EasyLog.d(TAG, "AnimatedValue:" + value);
             }
         });
         valueAnimator.start();
@@ -161,28 +171,21 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
                 int value = (int) animation.getAnimatedValue();
                 layoutParams.width = value;
                 itemView.setLayoutParams(layoutParams);
-                EasyLog.d(TAG, "AnimatedValue:" + value);
+//                EasyLog.d(TAG, "AnimatedValue:" + value);
             }
         });
         valueAnimator.start();
     }
 
-    private void collapse(BaseCardEntity cardEntity) {
+    private void collapse(LauncherCard cardEntity) {
         itemView.setBackgroundResource(R.drawable.card_bg_small);
-        mIvCardZoom.setImageResource(R.drawable.card_common_icon_expand);
+        mIvCardZoom.setImageResource(R.drawable.card_icon_expand);
 
         if (mCardInner instanceof ICardStyleChange) {
             ((ICardStyleChange) mCardInner).collapse();
         }
         mTvCardName.setTextColor(getColor(R.color.white));
         runCollapseAnimation();
-    }
-
-    private View getLargeCardView(BaseCardEntity cardEntity) {
-        if (mCardLargeInner == null) {
-            mCardLargeInner = cardEntity.getLargeLayout(itemView.getContext());
-        }
-        return mCardLargeInner;
     }
 
     /**

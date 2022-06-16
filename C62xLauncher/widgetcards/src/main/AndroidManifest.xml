@@ -4,7 +4,7 @@
 
     <application>
         <activity
-            android:name=".editor.CardEditorActivity"
+            android:name=".editor.ui.CardEditorActivity"
             android:exported="false" />
     </application>
 

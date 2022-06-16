@@ -47,9 +47,9 @@ public class NaviCardLargeView extends ConstraintLayout {
         mNaviTimeView = findViewById(R.id.layoutBottomNaviTime);
         mNaviUsedTimeView = findViewById(R.id.layoutBottomNaviUsedTime);
 
-        mDistanceView.setImageResource(R.drawable.card_common_icon_location);
-        mNaviTimeView.setImageResource(R.drawable.card_common_icon_clock);
-        mNaviUsedTimeView.setImageResource(R.drawable.card_common_icon_flag);
+        mDistanceView.setImageResource(R.drawable.card_icon_location);
+        mNaviTimeView.setImageResource(R.drawable.card_icon_clock);
+        mNaviUsedTimeView.setImageResource(R.drawable.card_icon_flag);
 
         mDistanceView.setText("20 km");
         mNaviTimeView.setText("00:30 h");

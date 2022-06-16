@@ -1,33 +1,39 @@
-package com.chinatsp.widgetcards.editor;
+package com.chinatsp.widgetcards.editor.ui;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import card.base.LauncherCard;
+import card.views.dialog.CustomDialog;
+import card.views.dialog.DialogMaster;
 import launcher.base.component.BaseFragment;
 
-import com.chinatsp.entity.BaseCardEntity;
 import com.chinatsp.widgetcards.R;
 import com.chinatsp.widgetcards.editor.adapter.CardSelectedAdapter;
 import com.chinatsp.widgetcards.editor.adapter.CardUnselectedAdapter;
 import com.chinatsp.widgetcards.editor.drag.DragHelper;
 import com.chinatsp.widgetcards.editor.drag.EnableDragStrategyImp;
 import com.chinatsp.widgetcards.editor.drag.IOnSwipeFinish;
-import com.chinatsp.widgetcards.service.CardsTypeManager;
+import com.chinatsp.widgetcards.manager.CardManager;
 
 import java.util.List;
+import java.util.Objects;
 
 import launcher.base.recyclerview.SimpleRcvDecoration;
 import launcher.base.utils.EasyLog;
 import launcher.base.utils.collection.IndexCheck;
 import launcher.base.utils.collection.ListKit;
 
-public class CardEditorFragment extends BaseFragment {
+public class CardEditorFragment extends BaseFragment implements EditorContract{
 
     private static final String TAG = "CardEditorFragment";
+    private CardEditorController mController;
     private Button mBtnFinish;
     private Button mBtnCancel;
     private DragHelper mDragHelper;
@@ -35,7 +41,8 @@ public class CardEditorFragment extends BaseFragment {
     private RecyclerView rcvUnelectedCards;
 
     @Override
-    protected void initViews(View rootView) {
+    protected void initViews(@NonNull View rootView) {
+        mController = new CardEditorController(this);
         mBtnFinish = rootView.findViewById(R.id.btnCardEditorOk);
         mBtnCancel = rootView.findViewById(R.id.btnCardEditorCancel);
 
@@ -49,8 +56,9 @@ public class CardEditorFragment extends BaseFragment {
         mDragHelper.initTouchListener(new IOnSwipeFinish() {
             @Override
             public void onSwipe(int position1, RecyclerView recyclerView1, int position2, RecyclerView recyclerView2) {
+
                 if (recyclerView1 == recyclerView2) {
-                    swipeHomeList(position1, position2);
+                    mController.swipeHomeItem(position1, position2);
                 } else {
                     swipeHomeAndUnselect(recyclerView1, position1, recyclerView2, position2);
                 }
@@ -60,43 +68,30 @@ public class CardEditorFragment extends BaseFragment {
 
     private void swipeHomeAndUnselect(RecyclerView recyclerView1, int position1, RecyclerView recyclerView2, int position2) {
         EasyLog.d(TAG, "swipeHomeAndUnselect:" + position1+" , "+position2);
-        List<BaseCardEntity> homeList = CardsTypeManager.getInstance().getHomeList();
-        List<BaseCardEntity> unselectCardList = CardsTypeManager.getInstance().getUnselectCardList();
-        if (IndexCheck.indexOutOfArray(homeList, position1) || IndexCheck.indexOutOfArray(unselectCardList, position2)) {
-            return;
+        int positionInHome = position1, positionInUnselect = position2;
+        if (recyclerView1 == rcvUnelectedCards) {
+            positionInHome = position2;
+            positionInUnselect = position1;
         }
-        List<BaseCardEntity> list1, list2;
-        if (recyclerView1 == rcvSelectedCards) {
-            list1 = homeList;
-            list2 = unselectCardList;
-        } else {
-            list1 = unselectCardList;
-            list2 = homeList;
-        }
-        ListKit.swipeElement(list1, list2, position1, position2);
-        rcvSelectedCards.getAdapter().notifyDataSetChanged();
-        rcvUnelectedCards.getAdapter().notifyDataSetChanged();
-        CardsTypeManager.getInstance().refreshHomeList();
+        mController.swipeHomeAndUnselect(positionInHome, positionInUnselect);
     }
 
     private void swipeHomeList(int position1, int position2) {
         EasyLog.d(TAG, "swipeHomeList:" + position1+" , "+position2);
-        List<BaseCardEntity> homeList = CardsTypeManager.getInstance().getHomeList();
+        List<LauncherCard> homeList = CardManager.getInstance().getHomeList();
         if (IndexCheck.indexOutOfArray(homeList, position1) || IndexCheck.indexOutOfArray(homeList, position2)) {
             return;
         }
         ListKit.swipeElement(homeList, position1, position2);
-        rcvSelectedCards.getAdapter().notifyDataSetChanged();
-        CardsTypeManager.getInstance().refreshHomeList();
     }
 
-    private void initSelectedCards(View rootView) {
+    private void initSelectedCards(@NonNull View rootView) {
         rcvSelectedCards = rootView.findViewById(R.id.rcvCardEditorSelect);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(RecyclerView.HORIZONTAL);
         rcvSelectedCards.setLayoutManager(layoutManager);
         CardSelectedAdapter cardSelectedAdapter = new CardSelectedAdapter(getActivity());
-        cardSelectedAdapter.setData(CardsTypeManager.getInstance().getHomeList());
+        cardSelectedAdapter.setData(mController.getHomeList());
         rcvSelectedCards.setAdapter(cardSelectedAdapter);
         if (rcvSelectedCards.getItemDecorationCount() <= 0) {
             SimpleRcvDecoration divider = new SimpleRcvDecoration(36, layoutManager);
@@ -105,13 +100,13 @@ public class CardEditorFragment extends BaseFragment {
         mDragHelper.setRecyclerView1(rcvSelectedCards);
     }
 
-    private void initUnelectedCards(View rootView) {
+    private void initUnelectedCards(@NonNull View rootView) {
         rcvUnelectedCards = rootView.findViewById(R.id.rcvCardEditorUnselect);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(RecyclerView.HORIZONTAL);
         rcvUnelectedCards.setLayoutManager(layoutManager);
         CardUnselectedAdapter cardSelectedAdapter = new CardUnselectedAdapter(getActivity());
-        cardSelectedAdapter.setData(CardsTypeManager.getInstance().getUnselectCardList());
+        cardSelectedAdapter.setData(mController.getUnselectCardList());
         rcvUnelectedCards.setAdapter(cardSelectedAdapter);
         if (rcvUnelectedCards.getItemDecorationCount() <= 0) {
             SimpleRcvDecoration divider = new SimpleRcvDecoration(40, layoutManager);
@@ -131,9 +126,59 @@ public class CardEditorFragment extends BaseFragment {
         public void onClick(View v) {
             if (mBtnFinish == v) {
                 requireActivity().finish();
+                okPage();
             } else if (mBtnCancel == v) {
-                requireActivity().finish();
+                cancelPage();
             }
         }
     };
+
+    private void okPage() {
+        if (mController.checkChanged()) {
+            mController.commitEdit();
+        }
+        requireActivity().finish();
+    }
+
+    private void cancelPage() {
+        if (!mController.checkChanged()) {
+            requireActivity().finish();
+            return;
+        }
+        DialogMaster dialogMaster = DialogMaster.create(getActivity(), new DialogMaster.OnPressOk() {
+                    @Override
+                    public void onPress(View v) {
+                        mController.commitEdit();
+                        requireActivity().finish();
+                    }
+                }, new DialogMaster.OnPressCancel() {
+                    @Override
+                    public void onPress(View v) {
+                        requireActivity().finish();
+                    }
+                }, 740, 488
+        );
+        CustomDialog editDialog = dialogMaster.getDialog();
+        editDialog.setTitleIcon(R.drawable.card_icon_wifi_warning);
+        editDialog.show();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    public void notifyHomeCardChange() {
+        Objects.requireNonNull(rcvSelectedCards.getAdapter()).notifyDataSetChanged();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    public void notifyTotalCardChange() {
+        Objects.requireNonNull(rcvSelectedCards.getAdapter()).notifyDataSetChanged();
+        Objects.requireNonNull(rcvUnelectedCards.getAdapter()).notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mController.onDestroy();
+    }
 }
