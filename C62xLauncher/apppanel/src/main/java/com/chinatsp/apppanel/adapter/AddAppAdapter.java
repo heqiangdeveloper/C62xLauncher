@@ -16,9 +16,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.anarchy.classifyview.util.L;
 import com.chinatsp.apppanel.R;
 import com.chinatsp.apppanel.bean.LocationBean;
+import com.chinatsp.apppanel.event.SelectedCallback;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,11 +29,21 @@ public class AddAppAdapter extends RecyclerView.Adapter<AddAppAdapter.ViewHolder
     private Context context;
     private List<LocationBean> infos;
     private LayoutInflater layoutInflater;
-    public AddAppAdapter(Context context, List<LocationBean> infos) {
+    private int parentIndex;
+    private SelectedCallback selectedCallback;
+    private List<LocationBean> selectdItems = new ArrayList<>();
+    public AddAppAdapter(Context context, List<LocationBean> infos,int parentIndex,SelectedCallback selectedCallback) {
         this.context = context;
         this.infos = infos;
+        this.parentIndex = parentIndex;
+        this.selectedCallback = selectedCallback;
         infos.removeAll(Collections.singleton(null));//清除掉null对象
         layoutInflater = LayoutInflater.from(context);
+        for (LocationBean info: infos) {
+            if(info.getParentIndex() == parentIndex){
+                selectdItems.add(info);
+            }
+        }
     }
 
     @NonNull
@@ -49,22 +62,33 @@ public class AddAppAdapter extends RecyclerView.Adapter<AddAppAdapter.ViewHolder
             holder.iconIv.setImageDrawable(infos.get(position).getImgDrawable());
         }
         holder.nameTv.setText(infos.get(position).getName());
+        if(selectdItems.contains(infos.get(position))){
+            holder.selectIv.setSelected(true);
+        }else {
+            holder.selectIv.setSelected(false);
+        }
         holder.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(holder.selectIv.isSelected()){
+                    holder.selectIv.setSelected(false);
+                    selectdItems.remove(infos.get(holder.getAdapterPosition()));
+                }else {
+                    holder.selectIv.setSelected(true);
+                    selectdItems.add(infos.get(holder.getAdapterPosition()));
+                }
+                selectedCallback.onSelect(selectdItems.size() + "/" + infos.size());
             }
         });
     }
 
     @Override
-    public long getItemId(int position) {
-        return 0;
-    }
-
-    @Override
     public int getItemCount() {
         return infos.size();
+    }
+
+    public List<LocationBean> getSelectdItems(){
+        return selectdItems;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{

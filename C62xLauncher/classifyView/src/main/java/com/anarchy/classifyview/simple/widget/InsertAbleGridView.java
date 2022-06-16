@@ -21,6 +21,7 @@ import com.anarchy.classifyview.R;
 import com.anarchy.classifyview.simple.SimpleAdapter;
 import com.anarchy.classifyview.util.L;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -227,6 +228,8 @@ public class InsertAbleGridView extends ViewGroup implements CanMergeView{
         removeAllViewsInLayout();
         this.parentIndex = parentIndex;
         for(int i =0;i<list.size();i++){
+            //当添加应用完成时，主桌面文件夹中不显示添加按钮；
+            if(list.get(i) == null) continue;
             if(mSimpleAdapter!=null){
                 View child = mSimpleAdapter.getView(this,parentIndex,i);
                 addViewInLayout(child,i,generateDefaultLayoutParams());

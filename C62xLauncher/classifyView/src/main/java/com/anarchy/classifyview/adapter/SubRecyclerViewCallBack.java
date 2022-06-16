@@ -27,6 +27,11 @@ public interface SubRecyclerViewCallBack {
      */
     void initData(int parentIndex,List data);
 
+    /*
+    *获取sub的数据
+     */
+    List getSubData();
+
     void setDragPosition(int position);
 
 
