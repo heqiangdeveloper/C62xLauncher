@@ -6,6 +6,7 @@ import com.chinatsp.vehicle.settings.databinding.LightingAtmosphereFragmentBindi
 import com.chinatsp.vehicle.settings.fragment.sound.SoundDialogFragment
 import com.chinatsp.vehicle.settings.vm.LightingViewModel
 import com.common.library.frame.base.BaseFragment
+import com.common.xui.widget.picker.ColorPickerView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -40,5 +41,22 @@ class LightingAtmosphereFragment :
                 )
             }
         }
+        binding.picker.setOnColorPickerChangeListener(object :
+            ColorPickerView.OnColorPickerChangeListener {
+            override fun onColorChanged(picker: ColorPickerView?, color: Int) {
+                binding.picker.indicatorColor = color
+            }
+
+            override fun onStartTrackingTouch(picker: ColorPickerView?) {
+
+            }
+
+            override fun onStopTrackingTouch(picker: ColorPickerView?) {
+
+            }
+
+
+        }
+        )
     }
 }

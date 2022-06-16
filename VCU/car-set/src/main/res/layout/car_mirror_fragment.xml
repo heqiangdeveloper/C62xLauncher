@@ -15,10 +15,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraint"
-            android:layout_width="@dimen/x365"
-            android:layout_height="match_parent"
-            android:paddingStart="@dimen/x15"
-            android:paddingEnd="@dimen/x15"
+            style="@style/constraintLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 

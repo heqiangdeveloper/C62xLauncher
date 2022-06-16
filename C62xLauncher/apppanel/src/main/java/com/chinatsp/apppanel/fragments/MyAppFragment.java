@@ -22,6 +22,9 @@ import android.widget.TextView;
 
 import com.anarchy.classifyview.ClassifyView;
 import com.anarchy.classifyview.adapter.MainRecyclerViewCallBack;
+import com.anarchy.classifyview.event.ChangeTitleEvent;
+import com.anarchy.classifyview.event.Event;
+import com.anarchy.classifyview.event.HideSubContainerEvent;
 import com.anarchy.classifyview.util.MyConfigs;
 import com.chinatsp.apppanel.AppConfigs.AppLists;
 import com.chinatsp.apppanel.R;
@@ -29,6 +32,10 @@ import com.chinatsp.apppanel.adapter.AddAppAdapter;
 import com.chinatsp.apppanel.adapter.MyAppInfoAdapter;
 import com.chinatsp.apppanel.bean.LocationBean;
 import com.chinatsp.apppanel.db.MyAppDB;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -60,6 +67,7 @@ public class MyAppFragment extends Fragment {
     private Drawable drawable;
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
+    private MyAppInfoAdapter mMyAppInfoAdapter;
     public MyAppFragment() {
         // Required empty public constructor
     }
@@ -92,6 +100,7 @@ public class MyAppFragment extends Fragment {
         db = new MyAppDB(getContext());
         preferences = getContext().getSharedPreferences(MyConfigs.APPPANELSP, Context.MODE_PRIVATE);
         editor = preferences.edit();
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -129,8 +138,18 @@ public class MyAppFragment extends Fragment {
         }
 
         loadingTv.setVisibility(View.GONE);
-        appInfoClassifyView.setAdapter(new MyAppInfoAdapter(view.getContext(),data));
+        mMyAppInfoAdapter = new MyAppInfoAdapter(view.getContext(), data);
+        appInfoClassifyView.setAdapter(mMyAppInfoAdapter);
         return view;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(Event event){
+        if(event instanceof ChangeTitleEvent){
+            mMyAppInfoAdapter.changeTitle((ChangeTitleEvent)event);
+        }else if(event instanceof HideSubContainerEvent){
+            appInfoClassifyView.hideSubContainer();
+        }
     }
 
     /**
@@ -294,6 +313,7 @@ public class MyAppFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
         Log.d("heqq","myAppFragment onDestroy");
     }
 }

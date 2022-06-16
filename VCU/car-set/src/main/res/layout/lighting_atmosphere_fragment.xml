@@ -130,5 +130,18 @@
             </LinearLayout>
         </LinearLayout>
 
+        <com.common.xui.widget.picker.ColorPickerView
+            android:id="@+id/picker"
+            android:layout_width="@dimen/x505"
+            android:layout_height="@dimen/x33"
+            android:layout_marginBottom="@dimen/x25"
+            android:background="@color/transparent"
+            app:indicatorColor="#ffffff"
+            app:indicatorEnable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:orientation="horizontal"
+            android:visibility="gone"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
