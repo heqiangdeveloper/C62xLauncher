@@ -7,12 +7,9 @@ import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.annotation.TargetApi;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.content.pm.ResolveInfo;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -32,33 +29,31 @@ import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Adapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.core.view.MotionEventCompat;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.anarchy.classifyview.Bean.AddBean;
 import com.anarchy.classifyview.adapter.BaseMainAdapter;
 import com.anarchy.classifyview.adapter.BaseSubAdapter;
 import com.anarchy.classifyview.adapter.MainRecyclerViewCallBack;
 import com.anarchy.classifyview.adapter.SubAdapterReference;
 import com.anarchy.classifyview.adapter.SubRecyclerViewCallBack;
+import com.anarchy.classifyview.event.ChangeTitleEvent;
 import com.anarchy.classifyview.simple.BaseSimpleAdapter;
-import com.anarchy.classifyview.simple.SimpleAdapter;
 import com.anarchy.classifyview.simple.widget.InsertAbleGridView;
 import com.anarchy.classifyview.util.L;
 import com.anarchy.classifyview.util.MyConfigs;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -606,7 +601,7 @@ public class ClassifyView extends FrameLayout {
     /**
      * 显示次级窗口
      */
-    private void showSubContainer() {
+    public void showSubContainer() {
         if (mShowSubAnim != null && mShowSubAnim.isRunning()) return;
         mSubContainer.setVisibility(VISIBLE);
         mShowSubAnim = new AnimatorSet();
@@ -648,7 +643,7 @@ public class ClassifyView extends FrameLayout {
     /**
      * 隐藏次级窗口
      */
-    private void hideSubContainer() {
+    public void hideSubContainer() {
         if (mHideSubAnim != null && mHideSubAnim.isRunning()) return;
         int height = mSubContainer.getHeight();
         mHideSubAnim = new AnimatorSet();
@@ -683,11 +678,8 @@ public class ClassifyView extends FrameLayout {
                         }
                     }
                     if(!TextUtils.isEmpty(titleEt.getText().toString())){
-                        SharedPreferences sp = getContext().getSharedPreferences(MyConfigs.APPPANELSP,Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sp.edit();
-                        editor.putString(MyConfigs.TITLE,titleEt.getText().toString());
-                        editor.putInt(MyConfigs.PARENTINDEX,mSelectedPosition);
-                        editor.commit();
+                        //通知adapter更新title
+                        EventBus.getDefault().post(new ChangeTitleEvent(mSelectedPosition,titleEt.getText().toString()));
                     }
                 }
                 //隐藏弹出的文件夹框

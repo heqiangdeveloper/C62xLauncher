@@ -323,6 +323,11 @@ public abstract class SimpleAdapter<T, VH extends SimpleAdapter.ViewHolder> impl
         }
 
         @Override
+        public List getSubData() {
+            return mData;
+        }
+
+        @Override
         public boolean onMove(int selectedPosition, int targetPosition) {
             notifyItemMoved(selectedPosition, targetPosition);
             T t = mData.remove(selectedPosition);
