@@ -1,4 +1,4 @@
-package com.chinatsp.widgetcards.editor;
+package com.chinatsp.widgetcards.home;
 
 import android.content.Context;
 import android.graphics.Bitmap;

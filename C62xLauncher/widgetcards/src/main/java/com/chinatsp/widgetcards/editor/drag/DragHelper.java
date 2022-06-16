@@ -3,16 +3,14 @@ package com.chinatsp.widgetcards.editor.drag;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.chinatsp.entity.BaseCardEntity;
 import com.chinatsp.widgetcards.R;
-
+import card.base.LauncherCard;
 import launcher.base.recyclerview.BaseRcvAdapter;
 
 import launcher.base.utils.EasyLog;
@@ -20,6 +18,8 @@ import launcher.base.utils.EasyLog;
 public class DragHelper {
     private static final String TAG = "DragHelper";
     private static final int ANIMATE_DURATION = 300;
+    public int mContainerY = 90;
+    public int mContainerX = 90;
     private ViewGroup mRootContainer;
     private RecyclerView mRecyclerView1;
     private RecyclerView mRecyclerView2;
@@ -41,8 +41,29 @@ public class DragHelper {
         mRootContainer = rootContainer;
         this.mContext = rootContainer.getContext();
         mEnableDragStrategy = enableDragStrategy;
+        computeContainerLocation(rootContainer);
         addDragView();
         addSwipeTargetView();
+    }
+
+    /**
+     * 实际上是计算根容器在顶部的Y坐标
+     * @param rootContainer
+     */
+    private void computeContainerLocation(ViewGroup rootContainer) {
+        int[] location = new int[2];
+        rootContainer.getLocationInWindow(location);
+        mContainerX = location[0];
+        mContainerY = location[1];
+        int statusBarHeight = 0;
+        Resources res = mContext.getResources();
+        int resourceId = res.getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            statusBarHeight = res.getDimensionPixelSize(resourceId);
+        }
+        EasyLog.d(TAG, "computeContainerLocation statusBarHeight: " + statusBarHeight);
+        EasyLog.d(TAG, "computeContainerLocation: " + mContainerX + " , " + mContainerY);
+        mContainerY = mContainerY + statusBarHeight;
     }
 
     public void initTouchListener(IOnSwipeFinish onSwipeFinish) {
@@ -135,7 +156,7 @@ public class DragHelper {
         if (rv == null || selectedView == null) {
             return false;
         }
-        return mEnableDragStrategy.enableDrag((BaseRcvAdapter<BaseCardEntity>) rv.getAdapter(), mDragView.getPositionInList());
+        return mEnableDragStrategy.enableDrag((BaseRcvAdapter<LauncherCard>) rv.getAdapter(), mDragView.getPositionInList());
     }
 
     private void dealEventUp(RecyclerView rv, MotionEvent event) {
@@ -225,13 +246,13 @@ public class DragHelper {
     private int[] computeTargetNewLocation(DragViewWrapper targetViewWrapper) {
         View targetView = targetViewWrapper.getView();
         int[] newLocation = new int[2];
-        mSelectedView.getLocationOnScreen(newLocation);
+        mSelectedView.getLocationInWindow(newLocation);
         boolean diffRcv = targetViewWrapper.getRecyclerView() != mDragView.getRecyclerView();
         if (!diffRcv) {
             return newLocation;
         }
         newLocation[0] = newLocation[0] + (mSelectedView.getWidth() - mTargetItemView.getWidth()) / 2;
-        newLocation[1] = newLocation[1] + (mSelectedView.getHeight() - mTargetItemView.getHeight()) / 2;
+        newLocation[1] = newLocation[1] + (mSelectedView.getHeight() - mTargetItemView.getHeight()) / 2 - mContainerY;
         return newLocation;
     }
 
@@ -412,15 +433,9 @@ public class DragHelper {
         layoutParams.height = selectedViewLayoutParams.height;
         int[] location = new int[2];
         anchor.getLocationInWindow(location);
-        anchor.getLocationOnScreen(location);
 
         target.setX(location[0]);
-        target.setY(location[1]);
-    }
-
-    // 处理松开手指. 如果没有发现可交换的targetView, 就返回原位置.
-    private void flushListState(MotionEvent event) {
-
+        target.setY(location[1] - mContainerY);
     }
 
     @SuppressWarnings("rawtypes")

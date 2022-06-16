@@ -7,14 +7,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.chinatsp.widgetcards.R;
-import com.chinatsp.entity.BaseCardEntity;
-import com.chinatsp.widgetcards.service.CardsTypeManager;
+import com.chinatsp.widgetcards.manager.CardManager;
 
+import card.base.LauncherCard;
 import launcher.base.recyclerview.BaseViewHolder;
 
 import launcher.base.utils.EasyLog;
 
-public class EditorUnselectCardViewHolder extends BaseViewHolder<BaseCardEntity> {
+public class EditorUnselectCardViewHolder extends BaseViewHolder<LauncherCard> {
     private ImageView mIcon;
     private TextView mName;
     private ImageView mIvBg;
@@ -31,13 +31,12 @@ public class EditorUnselectCardViewHolder extends BaseViewHolder<BaseCardEntity>
     }
 
     @Override
-    public void bind(int position, BaseCardEntity baseCardEntity) {
+    public void bind(int position, LauncherCard baseCardEntity) {
         super.bind(position, baseCardEntity);
         mName.setText(baseCardEntity.getName());
         mIvBg.setImageResource(baseCardEntity.getUnselectBgRes());
 
-        EasyLog.d(Tag, "bind "+baseCardEntity.getName());
-        if (baseCardEntity.getType() != CardsTypeManager.CardType.EMPTY) {
+        if (baseCardEntity.getType() != CardManager.CardType.EMPTY) {
             mIvBg.setVisibility(View.VISIBLE);
             mIvBgEmpty.setVisibility(View.GONE);
         } else {

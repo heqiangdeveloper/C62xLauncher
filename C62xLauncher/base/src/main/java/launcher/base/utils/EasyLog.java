@@ -2,6 +2,8 @@ package launcher.base.utils;
 
 import android.util.Log;
 
+import java.util.List;
+
 public class EasyLog {
 
     public static boolean enableLog = true;
@@ -28,4 +30,5 @@ public class EasyLog {
             Log.w(ORIGIN_TAG, "["+tag+"] "+msg);
         }
     }
+
 }

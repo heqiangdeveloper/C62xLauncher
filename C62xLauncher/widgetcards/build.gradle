@@ -33,9 +33,9 @@ dependencies {
     implementation rootProject.ext.dependencies.material
     implementation rootProject.ext.dependencies.constraintlayout
     implementation project(path: ':card_weaher')
-    implementation project(path: ':baseCard')
+    api project(path: ':baseCard')
     implementation project(path: ':card_navigation')
     implementation project(path: ':card_douyin')
-    implementation project(path: ':base')
+    api project(path: ':base')
     implementation project(path: ':card_iquting')
 }

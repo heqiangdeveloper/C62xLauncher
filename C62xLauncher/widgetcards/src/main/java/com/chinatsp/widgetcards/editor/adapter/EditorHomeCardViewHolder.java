@@ -7,12 +7,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.chinatsp.widgetcards.R;
-import com.chinatsp.entity.BaseCardEntity;
+
+import card.base.LauncherCard;
 import launcher.base.recyclerview.BaseViewHolder;
 
 import launcher.base.utils.EasyLog;
 
-public class EditorHomeCardViewHolder extends BaseViewHolder<BaseCardEntity> {
+public class EditorHomeCardViewHolder extends BaseViewHolder<LauncherCard> {
     private ImageView mIcon;
     private ImageView mIvBg;
     private ImageView mIvBgEmpty;
@@ -28,14 +29,11 @@ public class EditorHomeCardViewHolder extends BaseViewHolder<BaseCardEntity> {
     }
 
     @Override
-    public void bind(int position, BaseCardEntity baseCardEntity) {
+    public void bind(int position, LauncherCard baseCardEntity) {
         super.bind(position, baseCardEntity);
         mName.setText(baseCardEntity.getName());
-
-
         mIvBg.setImageResource(baseCardEntity.getSelectBgRes());
         mIvBg.setVisibility(View.VISIBLE);
         mIvBgEmpty.setVisibility(View.GONE);
-        EasyLog.d(Tag, "bind "+baseCardEntity.getName());
     }
 }

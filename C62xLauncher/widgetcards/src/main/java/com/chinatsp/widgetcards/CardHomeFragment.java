@@ -10,14 +10,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
 import android.view.View;
 
-import com.chinatsp.entity.BaseCardEntity;
-import com.chinatsp.widgetcards.editor.CardIndicator;
+import com.chinatsp.widgetcards.home.CardIndicator;
 import com.chinatsp.widgetcards.home.ExpandStateManager;
-import com.chinatsp.widgetcards.service.CardsTypeManager;
+import com.chinatsp.widgetcards.manager.CardManager;
 import com.chinatsp.widgetcards.home.HomeCardsAdapter;
 
 import java.util.List;
 
+import card.base.LauncherCard;
 import launcher.base.recyclerview.SimpleRcvDecoration;
 import launcher.base.component.BaseFragment;
 import launcher.base.utils.EasyLog;
@@ -41,12 +41,12 @@ public class CardHomeFragment extends BaseFragment {
 
     private void initObservers() {
         ExpandStateManager.getInstance().register(this, mExpandOb);
-        CardsTypeManager.getInstance().registerHomeCardsOb(this, mHomeCardsOb);
+        CardManager.getInstance().registerHomeCardsOb(this, mHomeCardsOb);
     }
 
     private void releaseObservers() {
         ExpandStateManager.getInstance().unregister(mExpandOb);
-        CardsTypeManager.getInstance().unregisterHomeCardsOb(mHomeCardsOb);
+        CardManager.getInstance().unregisterHomeCardsOb(mHomeCardsOb);
     }
 
     Observer<Boolean> mExpandOb = new Observer<Boolean>() {
@@ -57,17 +57,17 @@ public class CardHomeFragment extends BaseFragment {
             }
         }
     };
-    Observer<List<BaseCardEntity>> mHomeCardsOb = new Observer<List<BaseCardEntity>>() {
+    Observer<List<LauncherCard>> mHomeCardsOb = new Observer<List<LauncherCard>>() {
         @SuppressLint("NotifyDataSetChanged")
         @Override
-        public void onChanged(List<BaseCardEntity> baseCardEntities) {
+        public void onChanged(List<LauncherCard> baseCardEntities) {
             mCardsAdapter.setCardEntityList(baseCardEntities);
             mCardsAdapter.notifyDataSetChanged();
         }
     };
     private void initCardsRcv(View rootView) {
         EasyLog.d(TAG, "initCardsRcv");
-        CardsTypeManager cardsTypeManager = CardsTypeManager.getInstance();
+        CardManager cardManager = CardManager.getInstance();
         mRcvCards = rootView.findViewById(R.id.rcvCards);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity()){
             @Override
@@ -86,7 +86,7 @@ public class CardHomeFragment extends BaseFragment {
             mRcvCards.addItemDecoration(decoration);
         }
         mCardsAdapter = new HomeCardsAdapter(getActivity(), mRcvCards);
-        mCardsAdapter.setCardEntityList(cardsTypeManager.getHomeList());
+        mCardsAdapter.setCardEntityList(cardManager.getHomeList());
         mRcvCards.setAdapter(mCardsAdapter);
 
         mRcvCards.addOnScrollListener(new RecyclerView.OnScrollListener() {

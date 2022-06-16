@@ -1,4 +1,4 @@
-package com.chinatsp.widgetcards.editor;
+package com.chinatsp.widgetcards.editor.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 

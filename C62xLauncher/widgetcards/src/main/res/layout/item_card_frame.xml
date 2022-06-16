@@ -9,7 +9,7 @@
         android:id="@+id/ivCardZoom"
         android:layout_width="64px"
         android:layout_height="64px"
-        android:src="@drawable/card_common_icon_expand"
+        android:src="@drawable/card_icon_expand"
         android:layout_marginStart="2px"
         android:layout_marginTop="31px"
         app:layout_constraintStart_toStartOf="parent"

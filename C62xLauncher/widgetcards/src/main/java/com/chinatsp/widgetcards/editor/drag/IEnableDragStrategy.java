@@ -4,8 +4,7 @@ import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.chinatsp.entity.BaseCardEntity;
-
+import card.base.LauncherCard;
 import launcher.base.recyclerview.BaseRcvAdapter;
 
 public interface IEnableDragStrategy  {
@@ -14,7 +13,7 @@ public interface IEnableDragStrategy  {
      * @param position 元素在RecyclerView中的位置
      * @return 元素是否允许被拖动
      */
-    boolean enableDrag(BaseRcvAdapter<BaseCardEntity> adapter, int position);
+    boolean enableDrag(BaseRcvAdapter<LauncherCard> adapter, int position);
 
     /**
      * @param targetViewWrapper 被交换的目标ViewWrapper

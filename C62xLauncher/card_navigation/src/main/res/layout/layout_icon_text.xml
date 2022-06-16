@@ -10,7 +10,7 @@
         android:id="@+id/ivIcon"
         android:layout_width="48px"
         android:layout_height="48px"
-        android:src="@drawable/card_common_icon_location"
+        android:src="@drawable/card_icon_location"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

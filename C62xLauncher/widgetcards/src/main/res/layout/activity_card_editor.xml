@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/all_app_bg"
-    tools:context=".editor.CardEditorActivity">
+    tools:context=".editor.ui.CardEditorActivity">
 
     <fragment
         android:id="@+id/cardsEditorFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.chinatsp.widgetcards.editor.CardEditorFragment"
+        android:name="com.chinatsp.widgetcards.editor.ui.CardEditorFragment"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
