@@ -6,17 +6,22 @@ import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.AudioSoundVolumeDialogBinding
-import com.chinatsp.vehicle.settings.vm.SoundViewModel
+import com.chinatsp.vehicle.settings.vm.sound.SoundViewModel
+import com.chinatsp.vehicle.settings.vm.sound.VolumeViewModel
 import com.common.library.frame.base.BaseDialogFragment
 import com.common.xui.widget.picker.VerticalSeekBar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class VolumeDialogFragment : BaseDialogFragment<SoundViewModel, AudioSoundVolumeDialogBinding>(),
+class VolumeDialogFragment : BaseDialogFragment<VolumeViewModel, AudioSoundVolumeDialogBinding>(),
     VerticalSeekBar.OnValuesChangeListener {
 
     val manager: VoiceManager by lazy {
         VoiceManager.instance
+    }
+
+    override fun getLayoutId(): Int {
+        return R.layout.audio_sound_volume_dialog
     }
 
     private fun setSeekBarListener(listener: VerticalSeekBar.OnValuesChangeListener) {
@@ -93,9 +98,6 @@ class VolumeDialogFragment : BaseDialogFragment<SoundViewModel, AudioSoundVolume
 
     }
 
-    override fun getLayoutId(): Int {
-        return R.layout.audio_sound_volume_dialog
-    }
 
     override fun initData(savedInstanceState: Bundle?) {
         setSeekBarListener(this)

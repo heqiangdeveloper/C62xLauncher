@@ -3,7 +3,6 @@ package com.chinatsp.settinglib.manager.sound
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.mcu.CarMcuManager
-import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.cabin.IACListener
@@ -50,7 +49,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         }
     }
     private val offsetAtomic: AtomicBoolean by lazy {
-        val node = SwitchNode.AUDIO_SOUND_OFFSET
+        val node = SwitchNode.SPEED_VOLUME_OFFSET
         AtomicBoolean(node.isOn()).apply {
             val result = readIntProperty(node.get.signal, node.get.origin)
             doUpdateSwitchValue(node, this, result)
@@ -64,7 +63,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    override val concernedSerials: Map<Origin, Set<Int>> by lazy {
+    override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
             val mcuSet = HashSet<Int>().apply {
                 /**【反馈】返回设置音源音量信息*/
@@ -78,11 +77,11 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    override fun onHandleConcernedSignal(
+    override fun onHandleSignal(
         property: CarPropertyValue<*>,
-        signalOrigin: Origin
+        origin: Origin
     ): Boolean {
-        when (signalOrigin) {
+        when (origin) {
             Origin.CABIN -> {
                 onCabinPropertyChanged(property)
             }
@@ -133,23 +132,13 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
 //        }
     }
 
-    override fun isConcernedSignal(signal: Int, signalOrigin: Origin): Boolean {
-        val signals = getConcernedSignal(signalOrigin)
+    override fun isCareSignal(signal: Int, origin: Origin): Boolean {
+        val signals = getOriginSignal(origin)
         return signals.contains(signal)
     }
 
-    override fun getConcernedSignal(signalOrigin: Origin): Set<Int> {
-        return concernedSerials[signalOrigin] ?: HashSet()
-    }
-
-    override fun unRegisterVcuListener(serial: Int, callSerial: Int): Boolean {
-        LogManager.d(TAG, "unRegisterVcuListener serial:$serial, callSerial:$callSerial")
-        synchronized(listenerStore) {
-            listenerStore.let {
-                if (it.containsKey(serial)) it else null
-            }?.remove(serial)
-        }
-        return true
+    override fun getOriginSignal(origin: Origin): Set<Int> {
+        return careSerials[origin] ?: HashSet()
     }
 
     override fun onRegisterVcuListener(priority: Int, listener: IBaseListener): Int {
@@ -177,7 +166,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
             SwitchNode.AUDIO_SOUND_HUAWEI -> {
                 huaweiAtomic.get()
             }
-            SwitchNode.AUDIO_SOUND_OFFSET -> {
+            SwitchNode.SPEED_VOLUME_OFFSET -> {
                 offsetAtomic.get()
             }
             SwitchNode.AUDIO_SOUND_LOUDNESS -> {
@@ -195,7 +184,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
             SwitchNode.AUDIO_SOUND_HUAWEI -> {
                 writeProperty(node.set.signal, node.value(status), node.set.origin, node.area)
             }
-            SwitchNode.AUDIO_SOUND_OFFSET -> {
+            SwitchNode.SPEED_VOLUME_OFFSET -> {
                 writeProperty(node.set.signal, node.value(status), node.set.origin, node.area)
             }
             SwitchNode.AUDIO_SOUND_LOUDNESS -> {

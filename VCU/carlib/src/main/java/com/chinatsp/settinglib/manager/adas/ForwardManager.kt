@@ -1,4 +1,4 @@
-package com.chinatsp.settinglib.manager.assistance
+package com.chinatsp.settinglib.manager.adas
 
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
@@ -44,11 +44,13 @@ class ForwardManager : BaseManager(), ISwitchManager {
         }
     }
 
-    override val concernedSerials: Map<Origin, Set<Int>> by lazy {
+    override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int>().apply {
-                add(CarCabinManager.ID_FCW_STATUS)
-                add(CarCabinManager.ID_AEB_STATUS)
+//                add(CarCabinManager.ID_FCW_STATUS)
+//                add(CarCabinManager.ID_AEB_STATUS)
+                add(SwitchNode.ADAS_FCW.get.signal)
+                add(SwitchNode.ADAS_AEB.get.signal)
             }
             put(Origin.CABIN, cabinSet)
         }
@@ -57,69 +59,32 @@ class ForwardManager : BaseManager(), ISwitchManager {
     override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             CarCabinManager.ID_FCW_STATUS -> {
-                onSwitchChanged(SwitchNode.ADAS_FCW, property)
+                onSwitchChanged(SwitchNode.ADAS_FCW, fcwStatus, property)
             }
             CarCabinManager.ID_AEB_STATUS -> {
-                onSwitchChanged(SwitchNode.ADAS_AEB, property)
+                onSwitchChanged(SwitchNode.ADAS_AEB, aebStatus, property)
             }
             else -> {}
         }
     }
 
-    override fun isConcernedSignal(signal: Int, signalOrigin: Origin): Boolean {
-        val signals = getConcernedSignal(signalOrigin)
-        return signals.contains(signal)
-    }
-
-    override fun getConcernedSignal(signalOrigin: Origin): Set<Int> {
-        return concernedSerials[signalOrigin] ?: HashSet()
-    }
-
-
-    private fun onSwitchChanged(switchNode: SwitchNode, property: CarPropertyValue<*>) {
-        when (switchNode) {
-            SwitchNode.ADAS_FCW -> {
-                val value = property.value
-                if (value is Int) {
-                    onSwitchChanged(
-                        switchNode,
-                        doUpdateSwitchValue(switchNode, fcwStatus, value).get()
-                    )
-                }
-            }
-            SwitchNode.ADAS_AEB -> {
-                val value = property.value
-                if (value is Int) {
-                    onSwitchChanged(
-                        switchNode,
-                        doUpdateSwitchValue(switchNode, aebStatus, value).get()
-                    )
-                }
-            }
-            else -> {}
-        }
-    }
-
-    private fun onSwitchChanged(switchNode: SwitchNode, status: Boolean) {
-        synchronized(listenerStore) {
-            listenerStore.values.forEach {
-                val listener = it.get()
-                if (null != listener && listener is ISwitchListener) {
-                    listener.onSwitchOptionChanged(status, switchNode)
-                }
-            }
-        }
-    }
-
+//    private fun onSwitchChanged(
+//        node: SwitchNode,
+//        atomic: AtomicBoolean,
+//        property: CarPropertyValue<*>
+//    ) {
+//        val value = property.value
+//        if (value is Int) {
+//            onSwitchChanged(node, atomic, value, this::doUpdateSwitchValue) { newNode, newValue ->
+//                doSwitchChanged(newNode, newValue)
+//            }
+//        }
+//    }
 
     override fun doGetSwitchOption(node: SwitchNode): Boolean {
         return when (node) {
-            SwitchNode.ADAS_FCW -> {
-                fcwStatus.get()
-            }
-            SwitchNode.ADAS_AEB -> {
-                aebStatus.get()
-            }
+            SwitchNode.ADAS_FCW -> fcwStatus.get()
+            SwitchNode.ADAS_AEB -> aebStatus.get()
             else -> false
         }
     }

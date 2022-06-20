@@ -6,7 +6,6 @@ import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.manager.lamp.BrightnessManager
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.LightingScreenFragmentBinding
-import com.chinatsp.vehicle.settings.vm.LightingViewModel
 import com.chinatsp.vehicle.settings.vm.light.BrightnessViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.picker.VSeekBar

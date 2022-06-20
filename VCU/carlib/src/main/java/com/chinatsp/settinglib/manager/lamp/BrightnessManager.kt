@@ -2,7 +2,6 @@ package com.chinatsp.settinglib.manager.lamp
 
 import android.car.hardware.power.CarPowerManager
 import com.chinatsp.settinglib.IProgressManager
-import com.chinatsp.settinglib.ITabStore
 import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.manager.BaseManager
@@ -93,15 +92,15 @@ class BrightnessManager : BaseManager(), IProgressManager {
     }
 
 
-    override val concernedSerials: Map<Origin, Set<Int>> by lazy {
+    override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
             val keySet = LampManager.managers.flatMap {
-                it.concernedSerials.keys
+                it.careSerials.keys
             }.toSet()
             keySet.forEach { key ->
                 val hashSet = HashSet<Int>()
                 LampManager.managers.forEach { manager ->
-                    hashSet.addAll(manager.getConcernedSignal(key))
+                    hashSet.addAll(manager.getOriginSignal(key))
                 }
                 put(key, hashSet)
             }

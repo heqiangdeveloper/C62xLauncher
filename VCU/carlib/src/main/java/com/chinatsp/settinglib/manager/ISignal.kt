@@ -11,12 +11,4 @@ interface ISignal {
 
     val TAG: String
 
-//    val mcuConcernedSerial:Set<Int>
-//
-//    val cabinConcernedSerial:Set<Int>
-//
-//    val hvacConcernedSerial:Set<Int>
-
-//    val concernedSerials: Map<SignalOrigin, Set<Int>>
-
 }

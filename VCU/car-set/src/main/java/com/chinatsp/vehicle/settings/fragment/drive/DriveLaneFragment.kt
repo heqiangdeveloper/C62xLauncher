@@ -3,7 +3,7 @@ package com.chinatsp.vehicle.settings.fragment.drive
 import android.os.Bundle
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
-import com.chinatsp.settinglib.manager.assistance.LaneManager
+import com.chinatsp.settinglib.manager.adas.LaneManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.R
@@ -26,77 +26,136 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
 
 
     override fun initData(savedInstanceState: Bundle?) {
-        initSwitchOptions()
-        initRadioOptions()
+        initSwitchOption()
+        addSwitchLiveDataListener()
+        setSwitchListener()
 
-        observeRadioLiveData()
-        observeSwitchLiveData()
-
-        observeRadioOptionChange()
-        observeSwitchOptionChange()
+        initRadioOption()
+        addRadioLiveDataListener()
+        setRadioListener()
     }
 
-    private fun observeRadioLiveData() {
+
+    private fun initRadioOption() {
+        initRadioOption(RadioNode.ADAS_LANE_ASSIST_MODE, viewModel.laneAssistMode)
+        initRadioOption(RadioNode.ADAS_LDW_STYLE, viewModel.ldwStyle)
+        initRadioOption(RadioNode.ADAS_LDW_SENSITIVITY, viewModel.ldwSensitivity)
+    }
+
+    private fun addRadioLiveDataListener() {
         viewModel.laneAssistMode.observe(this) {
-            updateRadioOption(RadioNode.ADAS_LANE_ASSIST_MODE, it, false)
+            doUpdateRadio(RadioNode.ADAS_LANE_ASSIST_MODE, it, false)
         }
-        viewModel.ldwWarningStyle.observe(this) {
-            updateRadioOption(RadioNode.ADAS_LDW_STYLE, it, false)
+        viewModel.ldwStyle.observe(this) {
+            doUpdateRadio(RadioNode.ADAS_LDW_STYLE, it, false)
         }
-        viewModel.ldwWarningSensitivity.observe(this) {
-            updateRadioOption(RadioNode.ADAS_LDW_SENSITIVITY, it, false)
+        viewModel.ldwSensitivity.observe(this) {
+            doUpdateRadio(RadioNode.ADAS_LDW_SENSITIVITY, it, false)
         }
     }
 
-    private fun observeSwitchOptionChange() {
+    private fun setRadioListener() {
+        binding.adasLaneLaneAssistRadio.let {
+            it.setOnTabSelectionChangedListener { _, value ->
+                doUpdateRadio(RadioNode.ADAS_LANE_ASSIST_MODE, value, viewModel.laneAssistMode, it)
+            }
+        }
+        binding.adasLaneLdwStyleRadio.let {
+            it.setOnTabSelectionChangedListener { _, value ->
+                doUpdateRadio(RadioNode.ADAS_LDW_STYLE, value, viewModel.ldwStyle, it)
+            }
+        }
+        binding.adasLaneLdwSensitivityRadio.let {
+            it.setOnTabSelectionChangedListener { _, value ->
+                doUpdateRadio(RadioNode.ADAS_LDW_SENSITIVITY, value, viewModel.ldwSensitivity, it
+                )
+            }
+        }
+
+    }
+
+    private fun initRadioOption(node: RadioNode, liveData: LiveData<Int>) {
+        val value = liveData.value ?: node.default
+        doUpdateRadio(node, value, isInit = true)
+    }
+
+    private fun doUpdateRadio(
+        node: RadioNode,
+        value: String,
+        liveData: LiveData<Int>,
+        tabView: TabControlView
+    ) {
+        val result = isCanToInt(value) && manager.doSetRadioOption(node, value.toInt())
+        tabView.takeIf { !result }?.setSelection(liveData.value.toString(), true)
+    }
+
+    private fun doUpdateRadio(node: RadioNode, value: Int, immediately: Boolean = false, isInit: Boolean = false) {
+        val tabView = when (node) {
+            RadioNode.ADAS_LANE_ASSIST_MODE -> binding.adasLaneLaneAssistRadio
+            RadioNode.ADAS_LDW_STYLE -> binding.adasLaneLdwStyleRadio
+            RadioNode.ADAS_LDW_SENSITIVITY -> binding.adasLaneLdwSensitivityRadio
+            else -> null
+        }
+        tabView?.let {
+            bindRadioData(node, tabView, isInit)
+            doUpdateRadio(it, value, immediately)
+        }
+    }
+
+
+    private fun bindRadioData(node: RadioNode, tabView: TabControlView, isInit: Boolean) {
+        if (isInit) {
+            val names = tabView.nameArray.map { it.toString() }.toTypedArray()
+            val values = node.get.values.map { it.toString() }.toTypedArray()
+            tabView.setItems(names, values)
+        }
+    }
+
+    private fun doUpdateRadio(tabView: TabControlView, value: Int, immediately: Boolean = false) {
+        tabView.setSelection(value.toString(), true)
+    }
+
+    private fun initSwitchOption() {
+        initSwitchOption(SwitchNode.ADAS_LANE_ASSIST, viewModel.laneAssistFunction)
+    }
+
+    private fun addSwitchLiveDataListener() {
+        viewModel.laneAssistFunction.observe(this) {
+            doUpdateSwitch(SwitchNode.ADAS_LANE_ASSIST, it)
+        }
+    }
+
+    private fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {
+        val status = liveData.value ?: node.default
+        doUpdateSwitch(node, status, true)
+    }
+
+    private fun doUpdateSwitch(node: SwitchNode, status: Boolean, immediately: Boolean = false) {
+        val swb = when (node) {
+            SwitchNode.ADAS_LANE_ASSIST -> binding.adasLaneLaneAssistSwitch
+            else -> null
+        }
+        takeIf { null != swb }?.doUpdateSwitch(swb!!, status, immediately)
+    }
+
+    private fun doUpdateSwitch(swb: SwitchButton, status: Boolean, immediately: Boolean = false) {
+        if (!immediately) {
+            swb.setCheckedNoEvent(status)
+        } else {
+            swb.setCheckedImmediatelyNoEvent(status)
+        }
+    }
+
+    private fun setSwitchListener() {
         binding.adasLaneLaneAssistSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.ADAS_LANE_ASSIST, buttonView, isChecked)
         }
     }
 
-    private fun observeRadioOptionChange() {
-        listeningRadioOption(
-            binding.adasLaneLaneAssistRadio,
-            viewModel.laneAssistMode,
-            RadioNode.ADAS_LANE_ASSIST_MODE
-        )
-        listeningRadioOption(
-            binding.adasLaneLdwStyleRadio,
-            viewModel.ldwWarningStyle,
-            RadioNode.ADAS_LDW_STYLE
-        )
-        listeningRadioOption(
-            binding.adasLaneLdwSensitivityRadio,
-            viewModel.ldwWarningSensitivity,
-            RadioNode.ADAS_LDW_SENSITIVITY
-        )
-
-    }
-
-    private fun listeningRadioOption(
-        tabView: TabControlView,
-        liveData: LiveData<Int>,
-        radioNode: RadioNode
-    ) {
-        tabView.setOnTabSelectionChangedListener { _, value ->
-            val result = isCanToInt(value) && manager.doSetRadioOption(radioNode, value.toInt())
-            if (!result) {
-                val oldValue = liveData.value!!
-//                tabView.setSelection(oldValue.toString(), false)
-                updateRadioOption(radioNode, oldValue, false)
-            }
-        }
-    }
-
-
-    private fun doUpdateSwitchOption(
-        switchNode: SwitchNode,
-        buttonView: CompoundButton,
-        status: Boolean
-    ) {
-        val result = manager.doSetSwitchOption(switchNode, status)
-        if (!result && buttonView is SwitchButton) {
-            buttonView.setCheckedImmediatelyNoEvent(!status)
+    private fun doUpdateSwitchOption(node: SwitchNode, button: CompoundButton, status: Boolean) {
+        val result = manager.doSetSwitchOption(node, status)
+        if (!result && button is SwitchButton) {
+            button.setCheckedImmediatelyNoEvent(!status)
         }
     }
 
@@ -104,59 +163,5 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
         return null != value && value.isNotBlank() && value.matches(Regex("\\d+"))
     }
 
-
-    private fun observeSwitchLiveData() {
-        viewModel.laneAssistFunction.observe(this) {
-            updateSwitchOption(SwitchNode.ADAS_LANE_ASSIST, it)
-        }
-    }
-
-    private fun initSwitchOptions() {
-        updateSwitchOption(SwitchNode.ADAS_LANE_ASSIST, viewModel.laneAssistFunction.value!!, true)
-    }
-
-    private fun initRadioOptions() {
-        updateRadioOption(RadioNode.ADAS_LANE_ASSIST_MODE, viewModel.laneAssistMode.value!!, true)
-        updateRadioOption(RadioNode.ADAS_LDW_STYLE, viewModel.ldwWarningStyle.value!!, true)
-        updateRadioOption(
-            RadioNode.ADAS_LDW_SENSITIVITY,
-            viewModel.ldwWarningSensitivity.value!!,
-            true
-        )
-    }
-
-    private fun updateSwitchOption(node: SwitchNode, value: Boolean, immediately: Boolean = false) {
-        val switchButton = when (node) {
-            SwitchNode.ADAS_LANE_ASSIST -> {
-                binding.adasLaneLaneAssistSwitch
-            }
-            else -> null
-        }
-        switchButton?.let {
-            if (!immediately) {
-                it.setCheckedNoEvent(value)
-            } else {
-                it.setCheckedImmediatelyNoEvent(value)
-            }
-        }
-    }
-
-    private fun updateRadioOption(node: RadioNode, value: Int, immediately: Boolean = false) {
-        val tabView = when (node) {
-            RadioNode.ADAS_LANE_ASSIST_MODE -> {
-                binding.adasLaneLaneAssistRadio
-            }
-            RadioNode.ADAS_LDW_STYLE -> {
-                binding.adasLaneLdwStyleRadio
-            }
-            RadioNode.ADAS_LDW_SENSITIVITY -> {
-                binding.adasLaneLdwSensitivityRadio
-            }
-            else -> null
-        }
-        tabView?.let {
-            it.setSelection(value.toString(), false)
-        }
-    }
 }
 

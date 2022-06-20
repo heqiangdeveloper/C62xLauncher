@@ -1,15 +1,19 @@
 package com.chinatsp.vehicle.settings.fragment.cabin
 
 import android.os.Bundle
+import android.widget.CompoundButton
+import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.manager.cabin.ACManager
+import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CabinAcFragmentBinding
 import com.chinatsp.vehicle.settings.vm.CabinACViewModel
 import com.common.library.frame.base.BaseFragment
+import com.common.xui.widget.button.switchbutton.SwitchButton
+import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 /**
  * @author : luohong
@@ -21,7 +25,7 @@ import timber.log.Timber
 @AndroidEntryPoint
 class CabinACFragment : BaseFragment<CabinACViewModel, CabinAcFragmentBinding>() {
 
-    val acManager: ACManager
+    private val manager: ACManager
         get() = ACManager.instance
 
     override fun getLayoutId(): Int {
@@ -29,140 +33,134 @@ class CabinACFragment : BaseFragment<CabinACViewModel, CabinAcFragmentBinding>()
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-//        val result = ACManager.instance.doUpdateACComfort(0x02)
-//        Timber.d("initData doUpdateACComfort result:$result")
-        monitorRadioOption()
-        monitorSwitchLiveData()
-        setCheckedChangeListener()
-        setTabSelectionChangedListener()
-        updateComfortOption(1)
-        LogManager.d("ViewModel", "ViewModel:${System.identityHashCode(viewModel)}")
+        initSwitchOption()
+        addSwitchLiveDataListener()
+        setSwitchListener()
+
+        initRadioOption()
+        addRadioLiveDataListener()
+        setRadioListener()
     }
 
-    private fun setTabSelectionChangedListener() {
-        binding.cabinAcComfortOption.setOnTabSelectionChangedListener { _, value ->
-            val oldValue = viewModel.comfortLiveData.value
-            val success = acManager.doUpdateAcComfort(value.toInt())
-            if (!success) {
-                binding.cabinAcComfortOption.setSelection(oldValue.toString(), true)
-            }
 
-//            val stringArray = ResUtils.getStringArray(R.array.cabin_ac_comfort_options)
-//            stringArray.forEachIndexed { index, name ->
-//                if (name == value) {
-//                    val signalValue = index + 1;
-//                    val oldValue = viewModel.comfortLiveData.value
-//                    val result = ACManager.instance.doUpdateAcComfort(signalValue)
-//                    if (!result) {
-//                        updateComfortOption(true, oldValue ?: 0)
-//                    } else {
-//                        val obtainAutoComfortOption = ACManager.instance.obtainAutoComfortOption()
-//                        LogManager.d(
-//                            "CabinACFragment",
-//                            "obtainAutoComfortOption: $obtainAutoComfortOption"
-//                        )
-//                    }
-//                }
-//            }
+    private fun initRadioOption() {
+        initRadioOption(RadioNode.AC_COMFORT, viewModel.comfortLiveData)
+    }
+
+    private fun addRadioLiveDataListener() {
+        viewModel.comfortLiveData.observe(this) {
+            doUpdateRadio(RadioNode.AC_COMFORT, it, false)
         }
     }
 
-    private fun monitorRadioOption() {
-//        val stringArray = ResUtils.getStringArray(R.array.cabin_ac_comfort_options)
-        viewModel.comfortLiveData.let {
-            it.observe(this) { value ->
-                updateComfortOption(value)
+    private fun setRadioListener() {
+        binding.cabinAcComfortOption.let {
+            it.setOnTabSelectionChangedListener { _, value ->
+                doUpdateRadio(RadioNode.AC_COMFORT, value, viewModel.comfortLiveData, it)
             }
         }
     }
 
-//    private fun updateComfortOption(force: Boolean, value: Int) {
-//        val stringArray = ResUtils.getStringArray(R.array.cabin_ac_comfort_options)
-//        var next = value
-//        if (!force) {
-//            next = viewModel.comfortLiveData.let {
-//                it.value?.let { value ->
-//                    if (value >= 0 && value < stringArray.size) value else 0x00
-//                } ?: 0x00
-//            }
-//        }
-//        updateComfortOption(next, stringArray)
-//    }
-
-    private fun updateComfortOption(value: Int) {
-        binding.cabinAcComfortOption.setSelection(value.toString(), true)
-//        var title: String = when (value) {
-//            0x01 -> {
-//                stringArray[0]
-////                binding.cabinAcComfortOption.setSelection(stringArray[0])
-//            }
-//            0x02 -> {
-//                stringArray[1]
-////                binding.cabinAcComfortOption.setSelection(stringArray[1])
-//            }
-//            0x03 -> {
-//                stringArray[2]
-////                binding.cabinAcComfortOption.setSelection(stringArray[2])
-//            }
-//            else -> {
-//                stringArray[0]
-////                binding.cabinAcComfortOption.setSelection(stringArray[0])
-//            }
-//        }
-//        updateComfortOption(title, stringArray)
+    private fun initRadioOption(node: RadioNode, liveData: LiveData<Int>) {
+        val value = liveData.value ?: node.default
+        doUpdateRadio(node, value, isInit = true)
     }
 
-//    private fun updateComfortOption(value: String, stringArray: Array<String>) {
-//        val any = stringArray.any { it == value }
-//        if (any) {
-//            binding.cabinAcComfortOption.setSelection(value, true)
-//        }
-//    }
+    private fun doUpdateRadio(
+        node: RadioNode,
+        value: String,
+        liveData: LiveData<Int>,
+        tabView: TabControlView
+    ) {
+        val result = isCanToInt(value) && manager.doSetRadioOption(node, value.toInt())
+        tabView.takeIf { !result }?.setSelection(liveData.value.toString(), true)
+    }
 
-    private fun monitorSwitchLiveData() {
-        viewModel.aridLiveData.let {
-            binding.cabinAcAutoAridSwb.setCheckedNoEvent(it.value == true)
-            it.observe(this) { checked ->
-                binding.cabinAcAutoAridSwb.setCheckedNoEvent(checked)
+    private fun doUpdateRadio(
+        node: RadioNode,
+        value: Int,
+        immediately: Boolean = false,
+        isInit: Boolean = false
+    ) {
+        when (node) {
+            RadioNode.AC_COMFORT -> binding.cabinAcComfortOption
+            else -> null
+        }?.let {
+            if (isInit) {
+                val names = it.nameArray.map { item -> item.toString() }.toTypedArray()
+                val values = node.get.values.map { item -> item.toString() }.toTypedArray()
+                it.setItems(names, values)
             }
-        }
-        viewModel.demistLiveData.let {
-            binding.cabinAcAutoDemistSwb.setCheckedNoEvent(it.value == true)
-            it.observe(this) { checked ->
-                binding.cabinAcAutoDemistSwb.setCheckedNoEvent(checked)
-            }
-        }
-        viewModel.windLiveData.let {
-            binding.cabinAcAdvanceWindSwb.setCheckedNoEvent(it.value == true)
-            it.observe(this) { checked ->
-                binding.cabinAcAdvanceWindSwb.setCheckedNoEvent(checked)
-            }
+            doUpdateRadio(it, value, immediately)
         }
     }
 
-    private fun setCheckedChangeListener() {
-        binding.cabinAcAutoAridSwb.setOnCheckedChangeListener { _, isChecked ->
-            val result = acManager.doSwitchOption(SwitchNode.AC_AUTO_ARID, isChecked)
-            if (!result) {
-                binding.cabinAcAutoAridSwb.setCheckedNoEvent(!isChecked)
-            }
-            Timber.d("doSwitchACOption arid result:$result, isChecked:$isChecked")
-        }
-        binding.cabinAcAutoDemistSwb.setOnCheckedChangeListener { _, isChecked ->
-            val result = acManager.doSwitchOption(SwitchNode.AC_AUTO_DEMIST, isChecked)
-            if (!result) {
-                binding.cabinAcAutoDemistSwb.setCheckedNoEvent(!isChecked)
-            }
-            Timber.d("doSwitchACOption demist result:$result, isChecked:$isChecked")
-        }
-        binding.cabinAcAdvanceWindSwb.setOnCheckedChangeListener { _, isChecked ->
-            val result = acManager.doSwitchOption(SwitchNode.AC_ADVANCE_WIND, isChecked)
-            if (!result) {
-                binding.cabinAcAdvanceWindSwb.setCheckedNoEvent(!isChecked)
-            }
-            Timber.d("doSwitchACOption wind result:$result, isChecked:$isChecked")
-        }
+    private fun doUpdateRadio(tabView: TabControlView, value: Int, immediately: Boolean = false) {
+        tabView.setSelection(value.toString(), true)
+    }
 
+    private fun initSwitchOption() {
+        initSwitchOption(SwitchNode.AC_AUTO_ARID, viewModel.aridLiveData)
+        initSwitchOption(SwitchNode.AC_AUTO_DEMIST, viewModel.demistLiveData)
+        initSwitchOption(SwitchNode.AC_ADVANCE_WIND, viewModel.windLiveData)
+    }
+
+    private fun addSwitchLiveDataListener() {
+        viewModel.aridLiveData.observe(this) {
+            doUpdateSwitch(SwitchNode.AC_AUTO_ARID, it)
+        }
+        viewModel.demistLiveData.observe(this) {
+            doUpdateSwitch(SwitchNode.AC_AUTO_DEMIST, it)
+        }
+        viewModel.windLiveData.observe(this) {
+            doUpdateSwitch(SwitchNode.AC_ADVANCE_WIND, it)
+        }
+    }
+
+    private fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {
+        val status = liveData.value ?: node.default
+        doUpdateSwitch(node, status, true)
+    }
+
+    private fun doUpdateSwitch(node: SwitchNode, status: Boolean, immediately: Boolean = false) {
+        val swb = when (node) {
+            SwitchNode.AC_AUTO_ARID -> binding.cabinAcAutoAridSwb
+            SwitchNode.AC_AUTO_DEMIST -> binding.cabinAcAutoDemistSwb
+            SwitchNode.AC_ADVANCE_WIND -> binding.cabinAcAdvanceWindSwb
+            else -> null
+        }
+        takeIf { null != swb }?.doUpdateSwitch(swb!!, status, immediately)
+    }
+
+    private fun doUpdateSwitch(swb: SwitchButton, status: Boolean, immediately: Boolean = false) {
+        if (!immediately) {
+            swb.setCheckedNoEvent(status)
+        } else {
+            swb.setCheckedImmediatelyNoEvent(status)
+        }
+    }
+
+    private fun setSwitchListener() {
+        binding.cabinAcAutoAridSwb.setOnCheckedChangeListener { buttonView, isChecked ->
+            doUpdateSwitchOption(SwitchNode.AC_AUTO_ARID, buttonView, isChecked)
+        }
+        binding.cabinAcAutoDemistSwb.setOnCheckedChangeListener { buttonView, isChecked ->
+            doUpdateSwitchOption(SwitchNode.AC_AUTO_DEMIST, buttonView, isChecked)
+        }
+        binding.cabinAcAdvanceWindSwb.setOnCheckedChangeListener { buttonView, isChecked ->
+            doUpdateSwitchOption(SwitchNode.AC_ADVANCE_WIND, buttonView, isChecked)
+        }
+    }
+
+    private fun doUpdateSwitchOption(node: SwitchNode, button: CompoundButton, status: Boolean) {
+        val result = manager.doSetSwitchOption(node, status)
+        if (!result && button is SwitchButton) {
+            button.setCheckedImmediatelyNoEvent(!status)
+        }
+    }
+
+    private fun isCanToInt(value: String?): Boolean {
+        return null != value && value.isNotBlank() && value.matches(Regex("\\d+"))
     }
 
 }

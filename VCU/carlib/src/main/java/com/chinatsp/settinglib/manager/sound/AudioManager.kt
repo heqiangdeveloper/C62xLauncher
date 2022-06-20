@@ -28,39 +28,37 @@ class AudioManager private constructor() : BaseManager(), ITabStore {
             AudioManager()
         }
 
-        val managers: List<out BaseManager> by lazy {
+        val managers: List<BaseManager> by lazy {
             ArrayList<BaseManager>().apply {
                 add(VoiceManager.instance)
+                add(EffectManager.instance)
             }
         }
     }
 
-    private var concernedSerialManagers: List<BaseManager>? = null
+    private var followers: List<BaseManager>? = null
 
     val managers: List<BaseManager> by lazy {
         listOf(VoiceManager.instance)
     }
 
-    override fun onHandleConcernedSignal(
-        property: CarPropertyValue<*>,
-        signalOrigin: Origin
-    ): Boolean {
-        concernedSerialManagers?.forEach {
-            it.onDispatchSignal(property.propertyId, property, signalOrigin)
+    override fun onHandleSignal(property: CarPropertyValue<*>, origin: Origin): Boolean {
+        followers?.forEach {
+            it.onDispatchSignal(property, origin)
         }
         return true
     }
 
-    override fun isConcernedSignal(signal: Int, signalOrigin: Origin): Boolean {
-        val list = managers.filter { it.isConcernedSignal(signal, signalOrigin) }.toList()
-        concernedSerialManagers = list
+    override fun isCareSignal(signal: Int, origin: Origin): Boolean {
+        val list = managers.filter { it.isCareSignal(signal, origin) }.toList()
+        followers = list
         return list.isNotEmpty()
     }
 
-    override fun getConcernedSignal(signalOrigin: Origin): Set<Int> {
+    override fun getOriginSignal(origin: Origin): Set<Int> {
         val hashSet = HashSet<Int>()
         managers.forEach { manager ->
-            manager.getConcernedSignal(signalOrigin).let {
+            manager.getOriginSignal(origin).let {
                 if (it.isNotEmpty()) {
                     hashSet.addAll(it)
                 }
@@ -69,15 +67,13 @@ class AudioManager private constructor() : BaseManager(), ITabStore {
         return hashSet
     }
 
-    override val concernedSerials: Map<Origin, Set<Int>> by lazy {
+    override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
-            val keySet = managers.flatMap {
-                it.concernedSerials.keys
-            }.toSet()
+            val keySet = managers.flatMap { it.careSerials.keys }.toSet()
             keySet.forEach { key ->
                 val hashSet = HashSet<Int>()
                 managers.forEach { manager ->
-                    hashSet.addAll(manager.getConcernedSignal(key))
+                    hashSet.addAll(manager.getOriginSignal(key))
                 }
                 put(key, hashSet)
             }

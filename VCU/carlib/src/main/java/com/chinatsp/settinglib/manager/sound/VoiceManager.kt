@@ -18,6 +18,7 @@ import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author : luohong
@@ -43,32 +44,78 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         this.manager = audioManager
     }
 
+    override val careSerials: Map<Origin, Set<Int>> by lazy {
+        HashMap<Origin, Set<Int>>().apply {
+            val mcuSet = HashSet<Int>().apply {
+                /**【反馈】返回设置音源音量信息*/
+                add(CarMcuManager.ID_AUDIO_VOL_SETTING_INFO)
+            }
+            put(Origin.MCU, mcuSet)
+            val cabinSet = HashSet<Int>().apply {
+//                add(CarCabinManager.ID_AMP_LOUD_SW_STS)
+                add(SwitchNode.AUDIO_SOUND_TONE.get.signal)
+                add(SwitchNode.AUDIO_SOUND_HUAWEI.get.signal)
+                add(SwitchNode.SPEED_VOLUME_OFFSET.get.signal)
+                add(SwitchNode.AUDIO_SOUND_LOUDNESS.get.signal)
+
+                add(RadioNode.ICM_VOLUME_LEVEL.get.signal)
+                add(RadioNode.NAVI_AUDIO_MIXING.get.signal)
+                add(RadioNode.SPEED_VOLUME_OFFSET.get.signal)
+            }
+            put(Origin.CABIN, cabinSet)
+        }
+    }
+
     private val toneAtomic: AtomicBoolean by lazy {
         val node = SwitchNode.AUDIO_SOUND_TONE
         AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, result)
+            val value = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, value)
         }
     }
     private val huaweiAtomic: AtomicBoolean by lazy {
         val node = SwitchNode.AUDIO_SOUND_HUAWEI
         AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, result)
+            val value = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, value)
         }
     }
     private val offsetAtomic: AtomicBoolean by lazy {
-        val node = SwitchNode.AUDIO_SOUND_OFFSET
+        val node = SwitchNode.SPEED_VOLUME_OFFSET
         AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, result)
+            val value = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, value)
         }
     }
     private val loudnessAtomic: AtomicBoolean by lazy {
         val node = SwitchNode.AUDIO_SOUND_LOUDNESS
         AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, result)
+            val value = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, value)
+        }
+    }
+
+    private val icmVolumeLevel: AtomicInteger by lazy {
+        val node = RadioNode.ICM_VOLUME_LEVEL
+        AtomicInteger(node.default).apply {
+            val value = readIntValue(node)
+            doUpdateRadioValue(node, this, value)
+        }
+    }
+
+    private val naviAudioMixing: AtomicInteger by lazy {
+        val node = RadioNode.NAVI_AUDIO_MIXING
+        AtomicInteger(node.default).apply {
+            val value = readIntValue(node)
+            doUpdateRadioValue(node, this, value)
+        }
+    }
+
+    private val speedVolumeOffset: AtomicInteger by lazy {
+        val node = RadioNode.SPEED_VOLUME_OFFSET
+        AtomicInteger(node.default).apply {
+            val value = readIntValue(node)
+            doUpdateRadioValue(node, this, value)
         }
     }
 
@@ -92,25 +139,12 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         initVolume(Volume.Type.SYSTEM)
     }
 
-    override val concernedSerials: Map<Origin, Set<Int>> by lazy {
-        HashMap<Origin, Set<Int>>().apply {
-            val mcuSet = HashSet<Int>().apply {
-                /**【反馈】返回设置音源音量信息*/
-                add(CarMcuManager.ID_AUDIO_VOL_SETTING_INFO)
-            }
-            put(Origin.MCU, mcuSet)
-            val cabinSet = HashSet<Int>().apply {
-                add(CarCabinManager.ID_AMP_LOUD_SW_STS)
-            }
-            put(Origin.CABIN, cabinSet)
-        }
+    private fun readIntValue(node: RadioNode): Int {
+        return readIntProperty(node.get.signal, node.get.origin, node.area)
     }
 
-    override fun onHandleConcernedSignal(
-        property: CarPropertyValue<*>,
-        signalOrigin: Origin
-    ): Boolean {
-        when (signalOrigin) {
+    override fun onHandleSignal(property: CarPropertyValue<*>, origin: Origin): Boolean {
+        when (origin) {
             Origin.CABIN -> {
                 onCabinPropertyChanged(property)
             }
@@ -144,7 +178,7 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         val value = property.value
         value?.let {
             if (it is Array<*>) {
-                it.forEachIndexed { index, any -> LogManager.d("luohong", "index[$index]=$any") }
+//                it.forEachIndexed { index, any -> LogManager.d(TAG, "index[$index]=$any") }
                 if (it.size >= 5) {
                     updateVolumePosition(mediaVolume, it.elementAt(0) as Int)
                     updateVolumePosition(phoneVolume, it.elementAt(1) as Int)
@@ -168,24 +202,20 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
                     val listener = it.value.get()
                     if (listener is ISoundListener) {
                         listener.onSoundVolumeChanged(
-                            navi = naviVolume,
-                            media = mediaVolume,
-                            phone = phoneVolume,
-                            voice = voiceVolume,
-                            system = systemVolume
+                            naviVolume, mediaVolume, phoneVolume, voiceVolume, systemVolume
                         )
                     }
                 }
         }
     }
 
-    override fun isConcernedSignal(signal: Int, signalOrigin: Origin): Boolean {
-        val signals = getConcernedSignal(signalOrigin)
+    override fun isCareSignal(signal: Int, origin: Origin): Boolean {
+        val signals = getOriginSignal(origin)
         return signals.contains(signal)
     }
 
-    override fun getConcernedSignal(signalOrigin: Origin): Set<Int> {
-        return concernedSerials[signalOrigin] ?: HashSet()
+    override fun getOriginSignal(origin: Origin): Set<Int> {
+        return careSerials[origin] ?: HashSet()
     }
 
     override fun onRegisterVcuListener(priority: Int, listener: IBaseListener): Int {
@@ -198,11 +228,33 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
     }
 
     override fun doGetRadioOption(node: RadioNode): Int {
-        TODO("Not yet implemented")
+        return when (node) {
+            RadioNode.ICM_VOLUME_LEVEL -> {
+                icmVolumeLevel.get()
+            }
+            RadioNode.NAVI_AUDIO_MIXING -> {
+                naviAudioMixing.get()
+            }
+            RadioNode.SPEED_VOLUME_OFFSET -> {
+                speedVolumeOffset.get()
+            }
+            else -> -1
+        }
     }
 
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
-        TODO("Not yet implemented")
+        return when (node) {
+            RadioNode.ICM_VOLUME_LEVEL -> {
+                writeProperty(node, value, icmVolumeLevel)
+            }
+            RadioNode.NAVI_AUDIO_MIXING -> {
+                writeProperty(node, value, naviAudioMixing)
+            }
+            RadioNode.SPEED_VOLUME_OFFSET -> {
+                writeProperty(node, value, speedVolumeOffset)
+            }
+            else -> false
+        }
     }
 
     override fun doGetSwitchOption(node: SwitchNode): Boolean {
@@ -213,7 +265,7 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
             SwitchNode.AUDIO_SOUND_HUAWEI -> {
                 huaweiAtomic.get()
             }
-            SwitchNode.AUDIO_SOUND_OFFSET -> {
+            SwitchNode.SPEED_VOLUME_OFFSET -> {
                 offsetAtomic.get()
             }
             SwitchNode.AUDIO_SOUND_LOUDNESS -> {
@@ -231,7 +283,7 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
             SwitchNode.AUDIO_SOUND_HUAWEI -> {
                 writeProperty(node.set.signal, node.value(status), node.set.origin, node.area)
             }
-            SwitchNode.AUDIO_SOUND_OFFSET -> {
+            SwitchNode.SPEED_VOLUME_OFFSET -> {
                 writeProperty(node.set.signal, node.value(status), node.set.origin, node.area)
             }
             SwitchNode.AUDIO_SOUND_LOUDNESS -> {
@@ -295,6 +347,27 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
 
     override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
+            SwitchNode.SPEED_VOLUME_OFFSET.get.signal -> {
+                onSwitchChanged(SwitchNode.SPEED_VOLUME_OFFSET, offsetAtomic, property)
+            }
+            SwitchNode.AUDIO_SOUND_TONE.get.signal -> {
+                onSwitchChanged(SwitchNode.AUDIO_SOUND_TONE, toneAtomic, property)
+            }
+            SwitchNode.AUDIO_SOUND_LOUDNESS.get.signal -> {
+                onSwitchChanged(SwitchNode.AUDIO_SOUND_LOUDNESS, loudnessAtomic, property)
+            }
+            SwitchNode.AUDIO_SOUND_HUAWEI.get.signal -> {
+                onSwitchChanged(SwitchNode.AUDIO_SOUND_HUAWEI, huaweiAtomic, property)
+            }
+            RadioNode.SPEED_VOLUME_OFFSET.get.signal -> {
+                onRadioChanged( RadioNode.SPEED_VOLUME_OFFSET, speedVolumeOffset, property)
+            }
+            RadioNode.NAVI_AUDIO_MIXING.get.signal -> {
+                onRadioChanged( RadioNode.NAVI_AUDIO_MIXING, naviAudioMixing, property)
+            }
+            RadioNode.ICM_VOLUME_LEVEL.get.signal -> {
+                onRadioChanged( RadioNode.ICM_VOLUME_LEVEL, icmVolumeLevel, property)
+            }
             else -> {}
         }
     }
@@ -386,5 +459,17 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         }
         return -1
     }
+
+    private fun writeProperty(node: RadioNode, value: Int, atomic: AtomicInteger): Boolean {
+        val success = node.isValid(value, false)
+                && writeProperty(node.set.signal, value, node.set.origin)
+        if (success && develop) {
+            doUpdateRadioValue(node, atomic, value) { _node, _value ->
+                doRadioChanged(_node, _value)
+            }
+        }
+        return success
+    }
+
 
 }

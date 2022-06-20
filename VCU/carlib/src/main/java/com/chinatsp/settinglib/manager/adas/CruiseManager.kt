@@ -1,4 +1,4 @@
-package com.chinatsp.settinglib.manager.assistance
+package com.chinatsp.settinglib.manager.adas
 
 import android.car.hardware.CarPropertyValue
 import com.chinatsp.settinglib.listener.IBaseListener
@@ -6,7 +6,6 @@ import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.ISignal
-import com.chinatsp.settinglib.optios.Area
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
@@ -18,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * @author : luohong
  * @e-mail : luohong1@bdstar.com
  * @date   : 2022/6/2 11:34
- * @desc   :
+ * @desc   : 智能巡航
  * @version: 1.0
  */
 class CruiseManager : BaseManager(), IOptionManager {
@@ -30,70 +29,68 @@ class CruiseManager : BaseManager(), IOptionManager {
         }
     }
 
-    private val cruiseAssistFunction: AtomicBoolean by lazy {
-        val switchNode = SwitchNode.ADAS_IACC
-        AtomicBoolean(switchNode.isOn()).apply {
-            val result = readIntProperty(switchNode.get.signal, switchNode.get.origin)
-            doUpdateSwitchValue(switchNode, this, result)
+    private val iaccFunction: AtomicBoolean by lazy {
+        val node = SwitchNode.ADAS_IACC
+        AtomicBoolean(node.isOn()).apply {
+            val value = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, value)
         }
     }
     private val targetPromptFunction: AtomicBoolean by lazy {
-        val switchNode = SwitchNode.ADAS_TARGET_PROMPT
-        AtomicBoolean(switchNode.isOn()).apply {
-            val result = readIntProperty(switchNode.get.signal, switchNode.get.origin)
-            doUpdateSwitchValue(switchNode, this, result)
+        val node = SwitchNode.ADAS_TARGET_PROMPT
+        AtomicBoolean(node.isOn()).apply {
+            val value = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, value)
         }
     }
 
     private val limberLeaveFunction: AtomicBoolean by lazy {
-        val switchNode = SwitchNode.ADAS_LIMBER_LEAVE
-        AtomicBoolean(switchNode.isOn()).apply {
-            val result = readIntProperty(switchNode.get.signal, switchNode.get.origin)
-            doUpdateSwitchValue(switchNode, this, result)
+        val node = SwitchNode.ADAS_LIMBER_LEAVE
+        AtomicBoolean(node.isOn()).apply {
+            val value = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, value)
         }
     }
 
     private val limberLeaveRadio: AtomicInteger by lazy {
-        AtomicInteger(-1).apply {
-            val signal = -1
-            val result = readIntProperty(signal, Origin.CABIN, Area.GLOBAL)
-            set(result)
+        val node = RadioNode.ADAS_LIMBER_LEAVE
+        AtomicInteger(node.default).apply {
+            val value = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateRadioValue(node, this, value)
         }
     }
 
 
-    override val concernedSerials: Map<Origin, Set<Int>> by lazy {
+    override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int>().apply {
+                add(SwitchNode.ADAS_IACC.get.signal)
+                add(SwitchNode.ADAS_TARGET_PROMPT.get.signal)
+                add(SwitchNode.ADAS_LIMBER_LEAVE.get.signal)
+                add(RadioNode.ADAS_LIMBER_LEAVE.get.signal)
             }
             put(Origin.CABIN, cabinSet)
         }
     }
 
-    override fun onHandleConcernedSignal(
-        property: CarPropertyValue<*>,
-        signalOrigin: Origin
-    ): Boolean {
-        when (signalOrigin) {
-            Origin.CABIN -> {
-                onCabinPropertyChanged(property)
+
+    override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
+        when (property.propertyId) {
+            SwitchNode.ADAS_IACC.get.signal -> {
+                onSwitchChanged(SwitchNode.ADAS_IACC, iaccFunction, property)
             }
-            Origin.HVAC -> {
-                onHvacPropertyChanged(property)
+            SwitchNode.ADAS_TARGET_PROMPT.get.signal -> {
+                onSwitchChanged(SwitchNode.ADAS_TARGET_PROMPT, targetPromptFunction, property)
             }
-            else -> {}
+            SwitchNode.ADAS_LIMBER_LEAVE.get.signal -> {
+                onSwitchChanged(SwitchNode.ADAS_LIMBER_LEAVE, limberLeaveFunction, property)
+            }
+            RadioNode.ADAS_LIMBER_LEAVE.get.signal -> {
+                onRadioChanged(RadioNode.ADAS_LIMBER_LEAVE, limberLeaveRadio, property)
+            }
         }
-        return true
     }
 
-    override fun isConcernedSignal(signal: Int, signalOrigin: Origin): Boolean {
-        val signals = getConcernedSignal(signalOrigin)
-        return signals.contains(signal)
-    }
-
-    override fun getConcernedSignal(signalOrigin: Origin): Set<Int> {
-        return concernedSerials[signalOrigin] ?: HashSet()
-    }
 
     override fun doGetRadioOption(node: RadioNode): Int {
         return when (node) {
@@ -107,8 +104,7 @@ class CruiseManager : BaseManager(), IOptionManager {
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
         return when (node) {
             RadioNode.ADAS_LIMBER_LEAVE -> {
-                val signal = -1
-                writeProperty(signal, value, Origin.CABIN)
+                node.isValid(value, false) && writeProperty(node.set.signal, value, node.set.origin)
             }
             else -> false
         }
@@ -130,7 +126,7 @@ class CruiseManager : BaseManager(), IOptionManager {
     override fun doGetSwitchOption(node: SwitchNode): Boolean {
         return when (node) {
             SwitchNode.ADAS_IACC -> {
-                cruiseAssistFunction.get()
+                iaccFunction.get()
             }
             SwitchNode.ADAS_TARGET_PROMPT -> {
                 targetPromptFunction.get()
@@ -156,4 +152,5 @@ class CruiseManager : BaseManager(), IOptionManager {
             else -> false
         }
     }
+
 }

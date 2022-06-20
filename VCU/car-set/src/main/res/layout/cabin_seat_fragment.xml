@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -32,6 +31,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.common.xui.widget.button.switchbutton.SwitchButton
+                    android:id="@+id/seat_main_meet_switch"
                     style="@style/switch_button_style"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -70,6 +70,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
+                        android:id="@+id/seat_fork_meet_tv"
                         style="@style/click_row_option_style"
                         android:layout_gravity="center_vertical"
                         android:text="@string/cabin_seat_close" />
@@ -113,6 +114,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
+                        android:id="@+id/seat_seat_heat_tv"
                         style="@style/click_row_option_style"
                         android:layout_gravity="center_vertical"
                         android:text="@string/cabin_seat_close" />

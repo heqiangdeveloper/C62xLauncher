@@ -2,12 +2,11 @@ package com.chinatsp.settinglib.manager.access
 
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
-import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.ISwitchListener
-import com.chinatsp.settinglib.listener.access.IWindowListener
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
+import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.optios.Area
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
@@ -23,7 +22,7 @@ import java.util.concurrent.atomic.AtomicBoolean
  */
 
 
-class WindowManager private constructor() : BaseManager(), IWindowManager {
+class WindowManager private constructor() : BaseManager(), ISwitchManager {
 
 
     private val autoCloseWinInRain: AtomicBoolean by lazy {
@@ -49,7 +48,7 @@ class WindowManager private constructor() : BaseManager(), IWindowManager {
         }
     }
 
-    override val concernedSerials: Map<Origin, Set<Int>> by lazy {
+    override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int> ().apply {
                 /**雨天自动关窗*/
@@ -61,11 +60,11 @@ class WindowManager private constructor() : BaseManager(), IWindowManager {
         }
     }
 
-    override fun onHandleConcernedSignal(
+    override fun onHandleSignal(
         property: CarPropertyValue<*>,
-        signalOrigin: Origin
+        origin: Origin
     ): Boolean {
-        when (signalOrigin) {
+        when (origin) {
             Origin.CABIN -> {
                 onCabinPropertyChanged(property)
             }
@@ -77,13 +76,13 @@ class WindowManager private constructor() : BaseManager(), IWindowManager {
         return true
     }
 
-    override fun isConcernedSignal(signal: Int, signalOrigin: Origin): Boolean {
-        val signals = getConcernedSignal(signalOrigin)
+    override fun isCareSignal(signal: Int, origin: Origin): Boolean {
+        val signals = getOriginSignal(origin)
         return signals.contains(signal)
     }
 
-    override fun getConcernedSignal(signalOrigin: Origin): Set<Int> {
-        return concernedSerials[signalOrigin] ?: HashSet()
+    override fun getOriginSignal(origin: Origin): Set<Int> {
+        return careSerials[origin] ?: HashSet()
     }
 
     override fun doGetSwitchOption(node: SwitchNode): Boolean {
@@ -108,18 +107,8 @@ class WindowManager private constructor() : BaseManager(), IWindowManager {
         }
     }
 
-    override fun unRegisterVcuListener(serial: Int, callSerial: Int): Boolean {
-        LogManager.d(TAG, "unRegisterVcuListener serial:$serial, callSerial:$callSerial")
-        synchronized(listenerStore) {
-            listenerStore.let {
-                if (it.containsKey(serial)) it else null
-            }?.remove(serial)
-        }
-        return true
-    }
-
     override fun onRegisterVcuListener(priority: Int, listener: IBaseListener): Int {
-        if (listener is IWindowListener) {
+        if (listener is ISwitchManager) {
             val serial: Int = System.identityHashCode(listener)
             synchronized(listenerStore) {
                 unRegisterVcuListener(serial, identity)

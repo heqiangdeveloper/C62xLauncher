@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -32,10 +31,9 @@
                     android:text="@string/drive_auto_lock" />
 
                 <com.common.xui.widget.tabbar.TabControlView
-                    android:id="@+id/car_doors_drive_lock_option"
+                    android:id="@+id/door_automatic_lock_radio"
                     style="@style/tdv_common_style"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tcv_defaultSelection="1"
                     app:tcv_items="@array/drive_auto_lock_door_option_titles"
                     app:tcv_values="@array/drive_auto_lock_door_option_values" />
             </LinearLayout>
@@ -61,10 +59,10 @@
                     android:text="@string/acc_off_auto_unlock" />
 
                 <com.common.xui.widget.tabbar.TabControlView
-                    android:id="@+id/auto_unlock_door_options"
+                    android:id="@+id/door_automatic_unlock_radio"
                     style="@style/tdv_common_style"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tcv_defaultSelection="3"
+                    app:tcv_defaultSelection="1"
                     app:tcv_items="@array/auto_unlock_door_options"
                     app:tcv_values="@array/auto_unlock_door_option_values" />
             </LinearLayout>
@@ -76,7 +74,7 @@
                 app:layout_constraintTop_toBottomOf="@id/acc_off_unlock" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cabin_whell_automatic_heating"
+                android:id="@+id/wheel_automatic_heating"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/switch_item_option_height"
                 android:orientation="horizontal"
@@ -91,7 +89,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.common.xui.widget.button.switchbutton.SwitchButton
-                    android:id="@+id/cabin_ac_auto_demist_swb"
+                    android:id="@+id/door_smart_access_switch"
                     style="@style/switch_button_style"
                     android:checked="true"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -104,7 +102,7 @@
                 android:id="@+id/line3"
                 style="@style/line"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cabin_whell_automatic_heating" />
+                app:layout_constraintTop_toBottomOf="@id/wheel_automatic_heating" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

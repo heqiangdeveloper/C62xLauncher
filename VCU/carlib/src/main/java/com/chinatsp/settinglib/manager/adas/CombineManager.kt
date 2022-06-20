@@ -1,5 +1,6 @@
-package com.chinatsp.settinglib.manager.assistance
+package com.chinatsp.settinglib.manager.adas
 
+import android.car.hardware.CarPropertyValue
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.manager.BaseManager
@@ -42,11 +43,25 @@ class CombineManager : BaseManager(), ISwitchManager {
         }
     }
 
-    override val concernedSerials: Map<Origin, Set<Int>> by lazy {
+    override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int> ().apply {
+                add(SwitchNode.ADAS_HMA.get.signal)
+                add(SwitchNode.ADAS_SLA.get.signal)
             }
             put(Origin.CABIN, cabinSet)
+        }
+    }
+
+    override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
+        when (property.propertyId) {
+            SwitchNode.ADAS_HMA.get.signal -> {
+                onSwitchChanged(SwitchNode.ADAS_HMA, hmaValue, property)
+            }
+            SwitchNode.ADAS_SLA.get.signal -> {
+                onSwitchChanged(SwitchNode.ADAS_SLA, slaValue, property)
+            }
+            else -> {}
         }
     }
 

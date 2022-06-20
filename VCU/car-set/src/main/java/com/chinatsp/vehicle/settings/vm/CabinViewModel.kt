@@ -19,5 +19,4 @@ import javax.inject.Inject
 @HiltViewModel
 class CabinViewModel @Inject constructor(app: Application, model: BaseModel): BaseViewModel(app, model) {
 
-    val tabLocationLiveData: MutableLiveData<Int> by lazy { MutableLiveData(CabinManager.instance.getTabSerial()) }
 }

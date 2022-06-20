@@ -5,17 +5,23 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.manager.lamp.LampManager
 import com.chinatsp.vehicle.settings.R
+import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.chinatsp.vehicle.settings.databinding.LightingManageFragmentBinding
-import com.chinatsp.vehicle.settings.vm.LightingViewModel
 import com.common.library.frame.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class LightingManageFragment : BaseFragment<LightingViewModel, LightingManageFragmentBinding>() {
-    var selectOption: View? = null
+class LightingManageFragment : BaseFragment<BaseViewModel, LightingManageFragmentBinding>() {
+
     private lateinit var tabOptions: List<View>
+
+    private val manager: LampManager
+        get() = LampManager.instance
+
+    private val tabLocation: MutableLiveData<Int> by lazy { MutableLiveData(manager.getTabSerial()) }
 
     override fun getLayoutId(): Int {
         return R.layout.lighting_manage_fragment
@@ -23,10 +29,10 @@ class LightingManageFragment : BaseFragment<LightingViewModel, LightingManageFra
 
     override fun initData(savedInstanceState: Bundle?) {
         initTabOptions()
-        viewModel.tabLocationLiveData.observe(this) {
+        tabLocation.observe(this) {
             updateSelectTabOption(it)
         }
-        viewModel.tabLocationLiveData.let {
+        tabLocation.let {
             if (it.value == -1) {
                 it.value = R.id.lighting_tab
             } else {
@@ -36,7 +42,7 @@ class LightingManageFragment : BaseFragment<LightingViewModel, LightingManageFra
     }
 
     private fun onClick(view: View) {
-        viewModel.tabLocationLiveData.takeIf { it.value != view.id }?.value = view.id
+        tabLocation.takeIf { it.value != view.id }?.value = view.id
     }
 
     private fun initTabOptions() {
@@ -58,7 +64,7 @@ class LightingManageFragment : BaseFragment<LightingViewModel, LightingManageFra
     private fun updateDisplayFragment(serial: Int) {
         var fragment: Fragment? = checkOutFragment(serial)
         tabOptions.first { it.id == serial }.isSelected = true
-        LampManager.instance.setTabSerial(serial)
+        manager.setTabSerial(serial)
         fragment?.let {
             val manager: FragmentManager = childFragmentManager
             val transaction: FragmentTransaction = manager.beginTransaction()
@@ -74,7 +80,7 @@ class LightingManageFragment : BaseFragment<LightingViewModel, LightingManageFra
                 fragment = LightingFragment()
             }
             R.id.lighting_atmosphere -> {
-                fragment = LightingAtmosphereFragment()
+                fragment = AmbientLightingFragment()
             }
             R.id.lighting_screen -> {
                 fragment = LightingScreenFragment()

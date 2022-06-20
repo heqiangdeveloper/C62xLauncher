@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -30,6 +29,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.common.xui.widget.button.switchbutton.SwitchButton
+                android:id="@+id/ambient_front_lighting_switch"
                 style="@style/switch_button_style"
                 android:layout_marginStart="@dimen/x10"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -53,6 +53,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.common.xui.widget.button.switchbutton.SwitchButton
+                android:id="@+id/ambient_back_lighting_switch"
                 style="@style/switch_button_style"
                 android:layout_marginStart="@dimen/x10"
                 app:layout_constraintBottom_toBottomOf="parent"

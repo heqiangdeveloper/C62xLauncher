@@ -12,5 +12,5 @@ import com.chinatsp.settinglib.listener.IBaseListener
  */
 interface ISoundListener: IBaseListener {
 
-    fun onSoundVolumeChanged(navi: Volume, media: Volume, phone: Volume, voice: Volume, system: Volume)
+    fun onSoundVolumeChanged(vararg array: Volume)
 }

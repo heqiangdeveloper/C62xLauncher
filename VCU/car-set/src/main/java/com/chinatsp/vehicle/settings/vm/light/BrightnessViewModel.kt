@@ -4,9 +4,7 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.IProgressManager
 import com.chinatsp.settinglib.bean.Volume
-import com.chinatsp.settinglib.manager.assistance.LaneManager
 import com.chinatsp.settinglib.manager.lamp.BrightnessManager
-import com.chinatsp.settinglib.manager.lamp.LampManager
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.common.library.frame.base.BaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel

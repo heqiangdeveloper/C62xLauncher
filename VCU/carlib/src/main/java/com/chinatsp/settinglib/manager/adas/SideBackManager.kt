@@ -1,5 +1,6 @@
-package com.chinatsp.settinglib.manager.assistance
+package com.chinatsp.settinglib.manager.adas
 
+import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.IOptionListener
@@ -29,19 +30,24 @@ class SideBackManager : BaseManager(), IOptionManager {
         }
     }
 
-    override val concernedSerials: Map<Origin, Set<Int>> by lazy {
+    override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int>().apply {
+                add(SwitchNode.ADAS_DOW.get.signal)
+                add(SwitchNode.ADAS_BSC.get.signal)
+                add(SwitchNode.ADAS_BSD.get.signal)
+                add(SwitchNode.ADAS_GUIDES.get.signal)
+                add(RadioNode.ADAS_SIDE_BACK_SHOW_AREA.get.signal)
             }
             put(Origin.CABIN, cabinSet)
         }
     }
 
     private val showAreaValue: AtomicInteger by lazy {
-        AtomicInteger(1).apply {
-            val signal = CarCabinManager.ID_LKS_SENSITIVITY
-            val value = readIntProperty(signal, Origin.CABIN)
-            set(value)
+        val node = RadioNode.ADAS_SIDE_BACK_SHOW_AREA
+        AtomicInteger(node.default).apply {
+            val value = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateRadioValue(node, this, value)
         }
     }
 
@@ -77,6 +83,27 @@ class SideBackManager : BaseManager(), IOptionManager {
         }
     }
 
+    override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
+        when (property.propertyId) {
+            SwitchNode.ADAS_DOW.get.signal -> {
+                onSwitchChanged(SwitchNode.ADAS_DOW, dowValue, property)
+            }
+            SwitchNode.ADAS_BSC.get.signal -> {
+                onSwitchChanged(SwitchNode.ADAS_BSC, bscValue, property)
+            }
+            SwitchNode.ADAS_BSD.get.signal -> {
+                onSwitchChanged(SwitchNode.ADAS_BSD, bsdValue, property)
+            }
+            SwitchNode.ADAS_GUIDES.get.signal -> {
+                onSwitchChanged(SwitchNode.ADAS_GUIDES, guidesValue, property)
+            }
+            RadioNode.ADAS_SIDE_BACK_SHOW_AREA.get.signal -> {
+                onRadioChanged(RadioNode.ADAS_SIDE_BACK_SHOW_AREA, showAreaValue, property)
+            }
+            else -> {}
+        }
+
+    }
 
     override fun doGetRadioOption(node: RadioNode): Int {
         return when (node) {
@@ -90,8 +117,7 @@ class SideBackManager : BaseManager(), IOptionManager {
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
         return when (node) {
             RadioNode.ADAS_SIDE_BACK_SHOW_AREA -> {
-                val signal = -1
-                writeProperty(signal, value, Origin.CABIN)
+                node.isValid(value, false) && writeProperty(node.set.signal, value, node.set.origin)
             }
             else -> false
         }
@@ -132,19 +158,32 @@ class SideBackManager : BaseManager(), IOptionManager {
     override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
         return when (node) {
             SwitchNode.ADAS_DOW -> {
-                writeProperty(node.set.signal, node.value(status), node.set.origin)
+//                writeProperty(node.set.signal, node.value(status), node.set.origin)
+                doSetSwitchOption(node, status, dowValue)
             }
             SwitchNode.ADAS_BSD -> {
-                writeProperty(node.set.signal, node.value(status), node.set.origin)
+//                writeProperty(node.set.signal, node.value(status), node.set.origin)
+                doSetSwitchOption(node, status, bsdValue)
             }
             SwitchNode.ADAS_BSC -> {
-                writeProperty(node.set.signal, node.value(status), node.set.origin)
+//                writeProperty(node.set.signal, node.value(status), node.set.origin)
+                doSetSwitchOption(node, status, bscValue)
             }
             SwitchNode.ADAS_GUIDES -> {
-                writeProperty(node.set.signal, node.value(status), node.set.origin)
+                doSetSwitchOption(node, status, guidesValue)
             }
             else -> false
         }
+    }
+
+    fun doSetSwitchOption(node: SwitchNode, status: Boolean, atomic: AtomicBoolean): Boolean {
+        val success = writeProperty(node.set.signal, node.value(status), node.set.origin)
+        if (success && develop) {
+            doUpdateSwitchValue(node, atomic, status) {_node, _status ->
+                doSwitchChanged(_node, _status)
+            }
+        }
+        return success
     }
 
 }

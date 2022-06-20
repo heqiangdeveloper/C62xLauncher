@@ -1,10 +1,9 @@
-package com.chinatsp.vehicle.settings.vm
+package com.chinatsp.vehicle.settings.vm.sound
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.sound.ISoundListener
-import com.chinatsp.settinglib.manager.sound.AudioManager
 import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.common.library.frame.base.BaseModel
@@ -12,12 +11,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
+class VolumeViewModel @Inject constructor(app: Application, model: BaseModel) :
     BaseViewModel(app, model), ISoundListener {
 
     val manager: VoiceManager by lazy { VoiceManager.instance }
-
-    val tabLocationLiveData: MutableLiveData<Int> by lazy { MutableLiveData(AudioManager.instance.getTabSerial()) }
 
     override fun onCreate() {
         super.onCreate()
@@ -59,21 +56,30 @@ class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
         }
     }
 
-    override fun onSoundVolumeChanged(
-        navi: Volume,
-        media: Volume,
-        phone: Volume,
-        voice: Volume,
-        system: Volume
-    ) {
-        updateVolume(naviVolume, navi)
-        updateVolume(mediaVolume, media)
-        updateVolume(phoneVolume, phone)
-        updateVolume(voiceVolume, voice)
-        updateVolume(systemVolume, system)
+    override fun onSoundVolumeChanged(vararg array: Volume) {
+        array.forEach {
+            when (it.type) {
+                Volume.Type.NAVI -> {
+                    updateVolume(naviVolume, it)
+                }
+                Volume.Type.MEDIA -> {
+                    updateVolume(mediaVolume, it)
+                }
+                Volume.Type.VOICE -> {
+                    updateVolume(voiceVolume, it)
+                }
+                Volume.Type.PHONE -> {
+                    updateVolume(phoneVolume, it)
+                }
+                Volume.Type.SYSTEM -> {
+                    updateVolume(systemVolume, it)
+                }
+                else -> {}
+            }
+        }
     }
 
-    fun updateVolume(target: MutableLiveData<Volume>, expect: Volume) {
+    private fun updateVolume(target: MutableLiveData<Volume>, expect: Volume) {
         target.takeIf { it.value?.type == expect.type }?.let {
             it.takeUnless { it.value == expect }?.let { liveData ->
                 liveData.value?.pos = expect.pos
@@ -81,6 +87,5 @@ class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
             }
         }
     }
-
 
 }

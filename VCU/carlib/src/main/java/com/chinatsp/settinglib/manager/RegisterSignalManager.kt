@@ -3,6 +3,9 @@ package com.chinatsp.settinglib.manager
 import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.hvac.CarHvacManager
 import android.car.hardware.mcu.CarMcuManager
+import com.chinatsp.settinglib.optios.RadioNode
+import com.chinatsp.settinglib.optios.SwitchNode
+import com.chinatsp.settinglib.sign.Origin
 
 /**
  * @author : luohong
@@ -41,6 +44,13 @@ class RegisterSignalManager private constructor() {
                     add(CarCabinManager.ID_CUTOFF_UNLOCK_DOORS_STATUE)
                     /**车门智能进入*/
                     add(CarCabinManager.ID_SMART_ENTRY_STS)
+
+                    SwitchNode.values().filter { it.get.origin == Origin.CABIN }.forEach {
+                        add(it.get.signal)
+                    }
+                    RadioNode.values().filter { it.get.origin == Origin.CABIN }.forEach {
+                        add(it.get.signal)
+                    }
                 }
             }
 
@@ -48,6 +58,12 @@ class RegisterSignalManager private constructor() {
             get() {
                 return HashSet<Int>().apply {
                     add(CarHvacManager.FAN_DIRECTION_FACE)
+                    SwitchNode.values().filter { it.get.origin == Origin.HVAC }.forEach {
+                        add(it.get.signal)
+                    }
+                    RadioNode.values().filter { it.get.origin == Origin.HVAC }.forEach {
+                        add(it.get.signal)
+                    }
                 }
             }
 
@@ -63,6 +79,12 @@ class RegisterSignalManager private constructor() {
                     add(CarMcuManager.ID_VENDOR_LIGHT_NIGHT_MODE_STATE)
                     add(CarMcuManager.ID_NIGHT_MODE)
                     add(CarMcuManager.ID_VENDOR_PHOTO_REQ)
+                    SwitchNode.values().filter { it.get.origin == Origin.MCU }.forEach {
+                        add(it.get.signal)
+                    }
+                    RadioNode.values().filter { it.get.origin == Origin.MCU }.forEach {
+                        add(it.get.signal)
+                    }
                 }
             }
 

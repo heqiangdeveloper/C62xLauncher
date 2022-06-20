@@ -1,10 +1,12 @@
 package com.chinatsp.settinglib.manager.cabin
 
-import android.car.VehicleAreaSeat
 import android.car.hardware.CarPropertyValue
-import com.chinatsp.settinglib.listener.cabin.IACListener
+import com.chinatsp.settinglib.bean.Volume
+import com.chinatsp.settinglib.listener.sound.ISoundListener
+import com.chinatsp.settinglib.listener.sound.ISoundManager
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
+import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import java.util.concurrent.atomic.AtomicBoolean
@@ -18,108 +20,174 @@ import java.util.concurrent.atomic.AtomicInteger
  * @version: 1.0
  */
 
-class SeatManager private constructor(): BaseManager() {
+class SeatManager private constructor() : BaseManager(), ISoundManager {
 
-
-    val aridStatus: AtomicBoolean by lazy {
-        AtomicBoolean(false)
+    companion object : ISignal {
+        override val TAG: String = SeatManager::class.java.simpleName
+        val instance: SeatManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+            SeatManager()
+        }
     }
 
-    val demistStatus: AtomicBoolean by lazy {
-        AtomicBoolean(false)
+    private val mainMeetFunction: AtomicBoolean by lazy {
+        val node = SwitchNode.SEAT_MAIN_DRIVE_MEET
+        AtomicBoolean(node.isOn()).apply {
+            val result = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, result)
+        }
     }
 
-    val windStatus: AtomicBoolean by lazy {
-        AtomicBoolean(false)
+    private val forkMeetFunction: AtomicBoolean by lazy {
+        val node = SwitchNode.SEAT_FORK_DRIVE_MEET
+        AtomicBoolean(node.isOn()).apply {
+            val result = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, result)
+        }
     }
 
-    val version: AtomicInteger by lazy { AtomicInteger(0) }
+    private val seatHeatFunction: AtomicBoolean by lazy {
+        val node = SwitchNode.SEAT_HEAT_ALL
+        AtomicBoolean(node.isOn()).apply {
+            val result = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, result)
+        }
+    }
 
-    override val concernedSerials: Map<Origin, Set<Int>> by lazy {
+    private val seatHeatStartTemp: Volume by lazy {
+        initVolume(Volume.Type.SEAT_SILL_TEMP)
+    }
+
+
+    override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
-            val cabinSet = HashSet<Int> ().apply {
+            val cabinSet = HashSet<Int>().apply {
+                add(SwitchNode.SEAT_MAIN_DRIVE_MEET.get.signal)
+                add(SwitchNode.SEAT_FORK_DRIVE_MEET.get.signal)
+                add(SwitchNode.SEAT_HEAT_ALL.get.signal)
+                add(Volume.Type.SEAT_SILL_TEMP.id)
             }
             put(Origin.CABIN, cabinSet)
         }
     }
 
+    private fun initVolume(type: Volume.Type): Volume {
+        val pos = 20
+        val max = 30
+        return Volume(type, 10, max, pos)
+    }
 
-    override fun onHandleConcernedSignal(
-        property: CarPropertyValue<*>,
-        signalOrigin: Origin
-    ): Boolean {
+    override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
+        when (property.propertyId) {
+            SwitchNode.SEAT_MAIN_DRIVE_MEET.get.signal -> {
+                onSwitchChanged(SwitchNode.SEAT_MAIN_DRIVE_MEET, mainMeetFunction, property)
+            }
+            SwitchNode.SEAT_FORK_DRIVE_MEET.get.signal -> {
+                onSwitchChanged(SwitchNode.SEAT_FORK_DRIVE_MEET, forkMeetFunction, property)
+            }
+            SwitchNode.SEAT_HEAT_ALL.get.signal -> {
+                onSwitchChanged(SwitchNode.SEAT_HEAT_ALL, seatHeatFunction, property)
+            }
+            else -> {}
+        }
+    }
 
+
+    override fun doGetRadioOption(node: RadioNode): Int {
+        return -1
+    }
+
+    override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
         return false
     }
 
-    override fun isConcernedSignal(signal: Int, signalOrigin: Origin): Boolean {
-        val signals = getConcernedSignal(signalOrigin)
-        return signals.contains(signal)
-    }
 
-    override fun getConcernedSignal(signalOrigin: Origin): Set<Int> {
-        return concernedSerials[signalOrigin] ?: HashSet()
-    }
-
-    /**
-     *
-     * @param node 开关选项
-     * @param status 开关期望状态
-     */
-    fun doSwitchOption(node: SwitchNode, status: Boolean): Boolean {
+    override fun doGetSwitchOption(node: SwitchNode): Boolean {
         return when (node) {
             SwitchNode.SEAT_MAIN_DRIVE_MEET -> {
-                writeProperty(node.set.signal, node.value(status), node.set.origin, VehicleAreaSeat.SEAT_DRIVER)
+                mainMeetFunction.get()
             }
             SwitchNode.SEAT_FORK_DRIVE_MEET -> {
-                writeProperty(node.set.signal, node.value(status), node.set.origin, VehicleAreaSeat.SEAT_PASSENGER)
+                forkMeetFunction.get()
             }
-            SwitchNode.SEAT_HEAT_F_L -> {
-                writeProperty(node.set.signal, node.value(status), node.set.origin, VehicleAreaSeat.SEAT_ROW_1_LEFT)
-            }
-            SwitchNode.SEAT_HEAT_F_R -> {
-                writeProperty(node.set.signal, node.value(status), node.set.origin, VehicleAreaSeat.SEAT_ROW_1_RIGHT)
-            }
-            SwitchNode.SEAT_HEAT_T_L -> {
-                writeProperty(node.set.signal, node.value(status), node.set.origin, VehicleAreaSeat.SEAT_ROW_2_LEFT)
-            }
-            SwitchNode.SEAT_HEAT_T_R -> {
-                writeProperty(node.set.signal, node.value(status), node.set.origin, VehicleAreaSeat.SEAT_ROW_2_RIGHT)
+            SwitchNode.SEAT_HEAT_ALL -> {
+                seatHeatFunction.get()
             }
             else -> false
         }
     }
 
-    override fun onHvacPropertyChanged(property: CarPropertyValue<*>) {
-
+    override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
+        return when (node) {
+            SwitchNode.SEAT_MAIN_DRIVE_MEET -> {
+                writeProperty(node, status, mainMeetFunction)
+            }
+            SwitchNode.SEAT_FORK_DRIVE_MEET -> {
+                writeProperty(node, status, forkMeetFunction)
+            }
+            SwitchNode.SEAT_HEAT_ALL -> {
+                writeProperty(node, status, seatHeatFunction)
+            }
+            else -> false
+        }
     }
 
-    override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
-
+    override fun doGetVolume(type: Volume.Type): Volume? {
+        return when (type) {
+            Volume.Type.SEAT_SILL_TEMP -> {
+                seatHeatStartTemp
+            }
+            else -> null
+        }
     }
 
+    override fun doSetVolume(type: Volume.Type, position: Int): Boolean {
+        return when (type) {
+            Volume.Type.SEAT_SILL_TEMP -> {
+                writeProperty(seatHeatStartTemp, position)
+            }
+            else -> false
+        }
+    }
 
+    private fun writeProperty(volume: Volume, value: Int): Boolean {
+        val success = volume.isValid(value) && writeProperty(volume.type.id, value, Origin.CABIN)
+        if (success && develop) {
+            volume.pos = value
+            doRangeChanged(volume)
+        }
+        return success
+    }
 
-    private fun notifySwitchStatus(status: Boolean, type: SwitchNode) {
+    private fun writeProperty(node: SwitchNode, status: Boolean, atomic: AtomicBoolean): Boolean {
+        val success = writeProperty(node.set.signal, node.value(status), node.set.origin)
+        if (success && develop) {
+            doUpdateSwitchValue(node, atomic, status) { _node, _status ->
+                doSwitchChanged(_node, _status)
+            }
+        }
+        return success
+    }
+
+    private fun writeProperty(node: RadioNode, value: Int, atomic: AtomicInteger): Boolean {
+        val success = node.isValid(value, false)
+                && writeProperty(node.set.signal, value, node.set.origin)
+        if (success && develop) {
+            doUpdateRadioValue(node, atomic, value) { _node, _value ->
+                doRadioChanged(_node, _value)
+            }
+        }
+        return success
+    }
+
+    private fun doRangeChanged(vararg array: Volume) {
         synchronized(listenerStore) {
-            listenerStore.filter { null != it.value.get() }
-                .forEach {
-                    val listener = it.value.get()
-                    if (listener is IACListener) {
-//                        listener.onACSwitchStatusChanged(status, type)
-                    }
+            listenerStore.forEach { (_, ref) ->
+                val listener = ref.get()
+                if (null != listener && listener is ISoundListener) {
+                    listener.onSoundVolumeChanged(*array)
                 }
+            }
         }
-    }
-
-    companion object: ISignal{
-
-        override val TAG: String = SeatManager::class.java.simpleName
-
-        val instance: SeatManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
-            SeatManager()
-        }
-
     }
 
 }

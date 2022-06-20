@@ -26,24 +26,24 @@ class AccessManager private constructor() : BaseManager(), ITabStore {
         AtomicInteger(-1)
     }
 
-    override fun onHandleConcernedSignal(
+    override fun onHandleSignal(
         property: CarPropertyValue<*>,
-        signalOrigin: Origin
+        origin: Origin
     ): Boolean {
         concernedSerialManagers?.forEach {
-            it.onDispatchSignal(property.propertyId, property, signalOrigin)
+            it.onDispatchSignal(property, origin)
         }
         return true
     }
 
-    override fun isConcernedSignal(signal: Int, signalOrigin: Origin): Boolean {
-        val list = managers.filter { it.isConcernedSignal(signal, signalOrigin) }.toList()
+    override fun isCareSignal(signal: Int, origin: Origin): Boolean {
+        val list = managers.filter { it.isCareSignal(signal, origin) }.toList()
         concernedSerialManagers = list
         return list.isNotEmpty()
     }
 
-    override fun getConcernedSignal(signalOrigin: Origin): Set<Int> {
-        return concernedSerials[signalOrigin] ?: HashSet()
+    override fun getOriginSignal(origin: Origin): Set<Int> {
+        return careSerials[origin] ?: HashSet()
     }
 
     companion object : ISignal {
@@ -65,15 +65,15 @@ class AccessManager private constructor() : BaseManager(), ITabStore {
 
     }
 
-    override val concernedSerials: Map<Origin, Set<Int>> by lazy {
+    override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
             val keySet = managers.flatMap {
-                it.concernedSerials.keys
+                it.careSerials.keys
             }.toSet()
             keySet.forEach { key ->
                 val hashSet = HashSet<Int>()
                 managers.forEach { manager ->
-                    hashSet.addAll(manager.getConcernedSignal(key))
+                    hashSet.addAll(manager.getOriginSignal(key))
                 }
                 put(key, hashSet)
             }

@@ -63,7 +63,7 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
     }
 
 
-    override val concernedSerials: Map<Origin, Set<Int>> by lazy {
+    override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int>().apply {
             }
@@ -71,11 +71,11 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
         }
     }
 
-    override fun onHandleConcernedSignal(
+    override fun onHandleSignal(
         property: CarPropertyValue<*>,
-        signalOrigin: Origin
+        origin: Origin
     ): Boolean {
-        when (signalOrigin) {
+        when (origin) {
             Origin.CABIN -> {
                 onCabinPropertyChanged(property)
             }
@@ -87,13 +87,13 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
         return true
     }
 
-    override fun isConcernedSignal(signal: Int, signalOrigin: Origin): Boolean {
-        val signals = getConcernedSignal(signalOrigin)
+    override fun isCareSignal(signal: Int, origin: Origin): Boolean {
+        val signals = getOriginSignal(origin)
         return signals.contains(signal)
     }
 
-    override fun getConcernedSignal(signalOrigin: Origin): Set<Int> {
-        return concernedSerials[signalOrigin] ?: HashSet()
+    override fun getOriginSignal(origin: Origin): Set<Int> {
+        return careSerials[origin] ?: HashSet()
     }
 
     override fun doGetRadioOption(node: RadioNode): Int {
@@ -114,16 +114,6 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
             result = doUpdateSternDoorOption(value)
         } while (false)
         return result
-    }
-
-    override fun unRegisterVcuListener(serial: Int, callSerial: Int): Boolean {
-        LogManager.d(TAG, "unRegisterVcuListener serial:$serial, callSerial:$callSerial")
-        synchronized(listenerStore) {
-            listenerStore.let {
-                if (it.containsKey(serial)) it else null
-            }?.remove(serial)
-        }
-        return true
     }
 
     override fun onRegisterVcuListener(priority: Int, listener: IBaseListener): Int {
