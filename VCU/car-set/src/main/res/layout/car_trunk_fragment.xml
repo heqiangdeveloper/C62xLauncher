@@ -134,12 +134,13 @@
                 app:layout_constraintTop_toBottomOf="@id/car_trunk_buzzer_alarms" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/right_car_nol_trunkoff"
+        <ImageView
+            android:id="@+id/iv_car_trunk"
+            android:layout_width="@dimen/x550"
+            android:layout_height="@dimen/x360"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/trunk_door_animation"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
