@@ -4,10 +4,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import com.chinatsp.apppanel.bean.LocationBean;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -209,7 +213,38 @@ public class MyAppDB extends SQLiteOpenHelper {
         return titleLists;
     }
 
+    /*
+    * 获取最大的parentIndex值
+     */
+    public int getMaxParentIndex(){
+        int num = -1;
+        if(!isTableExist()){
+            num = -1;
+        }else {
+            String sql = "select max(" + PARENTINDEX + ") from " + LOCATION_TABLE;
+            Cursor cursor = db.rawQuery(sql,null);
+            cursor.moveToFirst();
+            if(cursor != null){
+                num = cursor.getInt(0);
+                cursor.close();
+            }else {
+                num = -1;
+            }
+        }
+        return num;
+    }
+
     public void insertLocation(LocationBean locationBean){
+        if(locationBean.getImgByte() == null){
+            Drawable drawable = locationBean.getImgDrawable();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            drawable.draw(canvas);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            locationBean.setImgByte(baos.toByteArray());
+        }
         String sql = "INSERT into " + LOCATION_TABLE + "(" +
                 PARENTINDEX + "," +
                 CHILDINDEX + "," +
@@ -263,6 +298,11 @@ public class MyAppDB extends SQLiteOpenHelper {
 //                locationBean.getChildIndex() + ",package = " + locationBean.getPackageName());
     }
 
+    public void deleteLocation(String packageName){
+        String sql = "delete from " + LOCATION_TABLE + " where " + PACKAGENAMELOCATION + " = '" + packageName + "'";
+        db.execSQL(sql);
+    }
+
     public void updateTitle(LocationBean locationBean){
         String sql = "update " + LOCATION_TABLE + " set " +
                 TITLE + " = ?" +
@@ -271,6 +311,9 @@ public class MyAppDB extends SQLiteOpenHelper {
         db.execSQL(sql,new Object[]{locationBean.getTitle(),locationBean.getPackageName()});
     }
 
+    /*
+    *返回的非0，则说明存在此应用，否则说明不存在此应用
+     */
     public int isExistPackage(String packageName){
         int num = 0;
         if(!isTableExist()){

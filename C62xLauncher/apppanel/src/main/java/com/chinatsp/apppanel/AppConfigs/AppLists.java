@@ -47,4 +47,31 @@ public class AppLists {
             systemSettings,
             vehicleSettings
     );
+
+    /*
+     *  判断某个应用是否属于黑名单中的应用
+     */
+    public static boolean isInBlackListApp(String packageName){
+        for (String packages:AppLists.blackListApps) {
+            if(packages.equals(packageName)){
+                return true;
+            }
+        }
+        return false;
+    }
+    /*
+     * 指定应用是否可卸载
+     * @packageName 包名
+     * @return 1可卸载,0不可卸载
+     */
+    public static int packageUninstallStatus(String packageName){
+        int status = 1;
+        for(String packages:AppLists.cannotUninstallListApps){
+            if(packages.equals(packageName)){
+                status = 0;
+                break;
+            }
+        }
+        return status;
+    }
 }

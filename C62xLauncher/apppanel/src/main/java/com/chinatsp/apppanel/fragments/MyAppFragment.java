@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.anarchy.classifyview.ClassifyView;
 import com.anarchy.classifyview.adapter.MainRecyclerViewCallBack;
+import com.anarchy.classifyview.event.AppInstallStatusEvent;
 import com.anarchy.classifyview.event.ChangeTitleEvent;
 import com.anarchy.classifyview.event.Event;
 import com.anarchy.classifyview.event.HideSubContainerEvent;
@@ -57,6 +58,7 @@ public class MyAppFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private static final String TAG = "MyAppFragment";
     private TextView loadingTv;
     private ClassifyView appInfoClassifyView;
     private AddAppAdapter adapter;
@@ -68,6 +70,7 @@ public class MyAppFragment extends Fragment {
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
     private MyAppInfoAdapter mMyAppInfoAdapter;
+    private List<List<LocationBean>> data;
     public MyAppFragment() {
         // Required empty public constructor
     }
@@ -111,7 +114,7 @@ public class MyAppFragment extends Fragment {
         loadingTv.setVisibility(View.VISIBLE);
         appInfoClassifyView = (ClassifyView) view.findViewById(R.id.classify_view);
         //adapter = new AppInfoAdapter(getContext(),getApps());
-        List<List<LocationBean>> data = new ArrayList<>();
+        data = new ArrayList<>();
 
         LocationBean locationBean = null;
         Log.d("hqtest","db.countLocation() = " + db.countLocation());
@@ -129,7 +132,7 @@ public class MyAppFragment extends Fragment {
                 locationBean.setImgDrawable(drawable);
                 locationBean.setName((info.activityInfo.loadLabel(getContext().getPackageManager())).toString());
                 locationBean.setTitle("");
-                locationBean.setCanuninstalled(packageUninstallStatus(info.activityInfo.packageName));
+                locationBean.setCanuninstalled(AppLists.packageUninstallStatus(info.activityInfo.packageName));
                 inner.add(locationBean);
                 data.add(inner);
             }
@@ -149,6 +152,33 @@ public class MyAppFragment extends Fragment {
             mMyAppInfoAdapter.changeTitle((ChangeTitleEvent)event);
         }else if(event instanceof HideSubContainerEvent){
             appInfoClassifyView.hideSubContainer();
+        }else if(event instanceof AppInstallStatusEvent){
+            int status = ((AppInstallStatusEvent) event).getStatus();
+            String packageName = ((AppInstallStatusEvent) event).getPackageName();
+            Log.d(TAG,"status = " + status + ",pacakageName is: " + packageName);
+            if(status == 1){//安装
+                data = db.getData1();
+                mMyAppInfoAdapter = new MyAppInfoAdapter(getContext(), data);
+                appInfoClassifyView.setAdapter(mMyAppInfoAdapter);
+            }else {//卸载
+                if(!AppLists.isInBlackListApp(packageName)){
+                    A:for(List<LocationBean> lists:data){
+                        if(lists != null && lists.size() < 2 && lists.get(0) != null &&
+                                lists.get(0).getPackageName().equals(packageName)){
+                            data.remove(lists);
+                            mMyAppInfoAdapter = new MyAppInfoAdapter(getContext(), data);
+                            appInfoClassifyView.setAdapter(mMyAppInfoAdapter);
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    db.deleteLocation(packageName);
+                                }
+                            }).start();
+                            break A;
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -176,22 +206,6 @@ public class MyAppFragment extends Fragment {
             }
         }
         return allApps;
-    }
-
-    /*
-    * 指定应用是否可卸载
-    * @packageName 包名
-    * @return 1可卸载,0不可卸载
-     */
-    private int packageUninstallStatus(String packageName){
-        int status = 1;
-        for(String packages:AppLists.cannotUninstallListApps){
-            if(packages.equals(packageName)){
-                status = 0;
-                break;
-            }
-        }
-        return status;
     }
 
     @Override

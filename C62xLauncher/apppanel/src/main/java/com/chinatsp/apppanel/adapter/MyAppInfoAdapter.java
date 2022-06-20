@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -285,8 +286,12 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
      * @param packageName包名
      */
     private void launchApp(String packageName){
-        Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
-        context.startActivity(intent);
+        try {
+            Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+            context.startActivity(intent);
+        }catch (Exception e){
+            Toast.makeText(context,"该应用还未下载",Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
