@@ -1,7 +1,7 @@
 package com.chinatsp.vehicle.settings.fragment.doors
 
 import android.os.Bundle
-import android.util.Log
+import android.view.View
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.access.SternDoorManager
@@ -17,32 +17,10 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBinding>() {
-    private var animationDrawable: AnimationDrawable = AnimationDrawable()
-    private var animationDrawable1: AnimationDrawable = AnimationDrawable()
-    private var res: List<Int> = listOf(
-        R.drawable.trunk_door_00,
-        R.drawable.trunk_door_01,
-        R.drawable.trunk_door_02,
-        R.drawable.trunk_door_03,
-        R.drawable.trunk_door_04,
-        R.drawable.trunk_door_05,
-        R.drawable.trunk_door_06,
-        R.drawable.trunk_door_07,
-        R.drawable.trunk_door_08,
-        R.drawable.trunk_door_09
-    )
-    private var res1: List<Int> = listOf(
-        R.drawable.trunk_door_09,
-        R.drawable.trunk_door_08,
-        R.drawable.trunk_door_07,
-        R.drawable.trunk_door_06,
-        R.drawable.trunk_door_05,
-        R.drawable.trunk_door_04,
-        R.drawable.trunk_door_03,
-        R.drawable.trunk_door_02,
-        R.drawable.trunk_door_01,
-        R.drawable.trunk_door_00
-    )
+    private var animationOpenDoor: AnimationDrawable = AnimationDrawable()
+    private var animationCloseDoor: AnimationDrawable = AnimationDrawable()
+    private var animationFlashAlarm: AnimationDrawable = AnimationDrawable()
+    private var animationBuzzerAlarms: AnimationDrawable = AnimationDrawable()
 
     private val manager: SternDoorManager
         get() = SternDoorManager.instance
@@ -52,13 +30,25 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-        animationDrawable.setAnimation(
-            binding.ivCarTrunk,
-            res
+        animationOpenDoor.setAnimation(
+            activity,
+            R.drawable.trunk_door_animation,
+            binding.ivCarTrunk
         )
-        animationDrawable1.setAnimation(
-            binding.ivCarTrunk,
-            res1
+        animationCloseDoor.setAnimation(
+            activity,
+            R.drawable.trunk_door_close_animation,
+            binding.ivCarTrunk
+        )
+        animationFlashAlarm.setAnimation(
+            activity,
+            R.drawable.flash_alarm_animation,
+            binding.ivFlashAlarm
+        )
+        animationBuzzerAlarms.setAnimation(
+            activity,
+            R.drawable.buzzer_alarms_animation,
+            binding.ivBuzzerAlarms
         )
         initSwitchOption()
         addSwitchLiveDataListener()
@@ -70,7 +60,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         binding.accessSternElectricSw.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.AS_STERN_ELECTRIC, buttonView, isChecked)
             if (isChecked) {
-                animationDrawable.start(false, 40, object : AnimationDrawable.AnimationLisenter {
+                animationOpenDoor.start(false, 50, object : AnimationDrawable.AnimationLisenter {
                     override fun startAnimation() {
                     }
 
@@ -78,7 +68,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
                     }
                 })
             } else {
-                animationDrawable1.start(false, 40, object : AnimationDrawable.AnimationLisenter {
+                animationCloseDoor.start(false, 50, object : AnimationDrawable.AnimationLisenter {
                     override fun startAnimation() {
                     }
 
@@ -89,9 +79,35 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         }
         binding.accessSternLightAlarmSw.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.AS_STERN_LIGHT_ALARM, buttonView, isChecked)
+            if (isChecked) {
+                binding.ivFlashAlarm.visibility = View.VISIBLE
+                animationFlashAlarm.start(false, 50, object : AnimationDrawable.AnimationLisenter {
+                    override fun startAnimation() {
+                    }
+
+                    override fun endAnimation() {
+                        binding.ivFlashAlarm.visibility = View.GONE
+                    }
+                })
+            }
         }
         binding.accessSternAudioAlarmSw.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.AS_STERN_AUDIO_ALARM, buttonView, isChecked)
+            if (isChecked) {
+                binding.ivBuzzerAlarms.visibility = View.VISIBLE
+                animationBuzzerAlarms.start(
+                    false,
+                    50,
+                    object : AnimationDrawable.AnimationLisenter {
+                        override fun startAnimation() {
+                        }
+
+                        override fun endAnimation() {
+                            binding.ivBuzzerAlarms.visibility = View.GONE
+                        }
+                    })
+            }
+
         }
     }
 

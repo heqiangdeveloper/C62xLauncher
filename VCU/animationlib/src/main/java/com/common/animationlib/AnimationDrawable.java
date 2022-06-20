@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.widget.ImageView;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -136,15 +135,11 @@ public class AnimationDrawable {
      */
     public void start(boolean loop, int duration, AnimationLisenter lisenter) {
         this.lisenter = lisenter;
-        Log.i("ttttt","mResourceIdList stop");
         stop();
-        Log.i("ttttt","mResourceIdList start");
         if (mResourceIdList == null || mResourceIdList.size() == 0) {
-            Log.i("ttttt","mResourceIdList null");
             return;
         }
         if (mTimer == null) {
-            Log.i("ttttt","Timer null");
             mTimer = new Timer();
         }
         isLooping = loop;

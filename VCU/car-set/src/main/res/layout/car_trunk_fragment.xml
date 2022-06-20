@@ -12,6 +12,7 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_content"
             style="@style/constraintLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -134,13 +135,34 @@
                 app:layout_constraintTop_toBottomOf="@id/car_trunk_buzzer_alarms" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <ImageView
+
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_car_trunk"
             android:layout_width="@dimen/x550"
             android:layout_height="@dimen/x360"
+            android:src="@drawable/trunk_door_animation"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_flash_alarm"
+            android:layout_width="@dimen/x560"
+            android:layout_height="@dimen/x300"
+            android:src="@drawable/flash_alarm_40"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_buzzer_alarms"
+            android:layout_width="@dimen/x860"
+            android:layout_height="@dimen/x160"
+            app:layout_constraintLeft_toRightOf="@+id/layout_content"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/trunk_door_animation"/>
+            android:visibility="gone"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

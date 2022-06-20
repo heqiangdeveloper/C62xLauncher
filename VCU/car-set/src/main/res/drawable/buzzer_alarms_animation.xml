@@ -1,0 +1,303 @@
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <item
+        android:drawable="@drawable/buzzer_alarms_000"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_001"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_002"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_003"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_004"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_005"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_006"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_007"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_008"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_009"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_010"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_011"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_012"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_013"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_014"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_015"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_016"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_017"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_018"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_019"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_020"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_021"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_022"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_023"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_024"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_025"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_026"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_027"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_028"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_029"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_030"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_031"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_032"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_033"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_034"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_035"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_036"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_037"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_038"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_039"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_040"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_041"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_042"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_043"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_044"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_045"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_046"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_047"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_048"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_049"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_050"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_051"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_052"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_053"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_054"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_055"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_056"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_057"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_058"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_059"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_060"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_061"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_062"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_063"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_064"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_065"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_066"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_067"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_068"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_069"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_070"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_071"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_072"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_073"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_074"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_075"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_076"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_077"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_078"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_079"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_080"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_081"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_082"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_083"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_084"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_085"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_086"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_087"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_088"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_089"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_090"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_091"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_092"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_093"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_094"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_095"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_096"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_097"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_098"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/buzzer_alarms_099"
+        android:duration="50" />
+</animation-list>
