@@ -1,0 +1,663 @@
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <item
+        android:drawable="@drawable/turn_signal_000"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_001"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_002"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_003"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_004"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_005"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_007"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_008"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_009"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_010"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_011"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_012"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_013"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_014"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_015"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_016"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_017"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_018"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_019"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_020"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_021"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_022"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_023"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_024"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_025"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_026"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_027"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_028"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_029"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_030"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_031"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_032"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_033"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_034"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_035"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_036"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_037"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_038"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_039"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_040"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_041"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_042"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_043"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_044"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_045"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_046"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_047"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_048"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_049"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_050"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_051"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_052"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_053"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_054"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_055"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_056"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_057"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_058"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_059"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_060"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_061"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_062"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_063"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_064"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_065"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_066"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_067"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_068"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_069"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_070"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_071"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_072"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_073"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_074"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_075"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_076"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_077"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_078"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_079"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_080"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_081"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_082"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_083"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_084"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_085"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_086"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_087"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_088"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_089"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_090"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_091"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_092"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_093"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_094"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_095"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_096"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_097"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_098"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_099"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_100"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_101"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_102"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_103"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_104"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_105"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_106"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_107"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_108"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_109"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_110"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_111"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_112"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_113"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_114"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_115"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_116"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_117"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_118"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_119"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_120"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_121"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_122"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_123"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_124"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_125"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_126"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_127"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_128"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_129"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_130"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_131"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_132"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_133"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_134"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_135"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_136"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_137"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_138"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_139"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_140"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_141"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_142"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_143"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_144"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_145"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_146"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_147"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_148"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_149"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_150"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_151"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_152"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_153"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_154"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_155"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_156"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_157"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_158"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_159"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_160"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_161"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_162"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_163"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_164"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_165"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_166"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_167"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_168"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_169"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_170"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_171"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_172"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_173"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_174"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_175"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_176"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_177"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_178"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_179"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_180"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_181"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_182"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_183"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_184"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_185"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_186"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_187"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_188"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_189"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_190"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_191"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_192"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_193"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_194"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_195"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_196"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_197"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_198"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_199"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_200"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_201"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_202"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_203"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_204"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_205"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_206"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_207"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_208"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_209"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_210"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_211"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_212"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_213"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_214"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_215"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_216"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_217"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_218"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_219"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/turn_signal_220"
+        android:duration="50" />
+</animation-list>
