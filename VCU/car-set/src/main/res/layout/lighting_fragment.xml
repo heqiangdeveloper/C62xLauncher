@@ -258,5 +258,28 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/welcome_lamp_iv"
+            android:layout_width="@dimen/x172"
+            android:layout_height="@dimen/x50"
+            android:layout_marginEnd="@dimen/x130"
+            android:src="@drawable/welcome_lamp_animation"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/turn_signal_iv"
+            android:layout_width="@dimen/x194"
+            android:layout_height="@dimen/x72"
+            android:layout_marginTop="@dimen/x60"
+            android:layout_marginEnd="@dimen/x145"
+            android:src="@drawable/turn_signal_animation"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

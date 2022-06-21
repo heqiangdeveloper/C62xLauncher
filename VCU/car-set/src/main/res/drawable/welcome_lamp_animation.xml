@@ -1,0 +1,249 @@
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <item
+        android:drawable="@drawable/welcome_lamp_00"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_01"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_02"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_03"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_04"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_05"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_06"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_07"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_08"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_09"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_10"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_11"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_12"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_13"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_14"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_15"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_16"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_17"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_18"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_19"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_20"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_21"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_22"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_23"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_24"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_25"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_26"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_27"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_28"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_29"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_30"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_31"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_32"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_33"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_34"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_35"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_36"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_37"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_38"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_39"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_40"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_41"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_42"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_43"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_44"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_45"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_46"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_47"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_48"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_49"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_50"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_51"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_52"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_53"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_54"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_55"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_56"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_57"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_58"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_59"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_60"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_61"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_62"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_63"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_64"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_65"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_66"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_67"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_68"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_69"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_70"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_71"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_72"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_73"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_74"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_75"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_76"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_77"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_78"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_79"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_80"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/welcome_lamp_81"
+        android:duration="50" />
+</animation-list>

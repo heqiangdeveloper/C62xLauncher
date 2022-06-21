@@ -21,6 +21,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding>() {
     private var animationHomeOpen: AnimationDrawable = AnimationDrawable()
     private var animationHomeClose: AnimationDrawable = AnimationDrawable()
+    private var animationWelcomeLamp: AnimationDrawable = AnimationDrawable()
+    private var animationTurnSignal: AnimationDrawable = AnimationDrawable()
 
     private val manager: IOptionManager
         get() = LightManager.instance
@@ -57,6 +59,16 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
             R.drawable.home_close_animation,
             binding.homeOpenIv
         )
+        animationWelcomeLamp.setAnimation(
+            activity,
+            R.drawable.welcome_lamp_animation,
+            binding.welcomeLampIv
+        )
+        animationTurnSignal.setAnimation(
+            activity,
+            R.drawable.turn_signal_animation,
+            binding.turnSignalIv
+        )
     }
 
     private fun addRadioLiveDataListener() {
@@ -80,6 +92,7 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
                         object : AnimationDrawable.AnimationLisenter {
                             override fun startAnimation() {
                             }
+
                             override fun endAnimation() {
                                 binding.homeOpenIv.visibility = View.GONE
                             }
@@ -92,6 +105,7 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
                         object : AnimationDrawable.AnimationLisenter {
                             override fun startAnimation() {
                             }
+
                             override fun endAnimation() {
                                 //binding.homeOpenIv.visibility = View.GONE
                             }
@@ -102,6 +116,18 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
         binding.lightFlickerRadio.let {
             it.setOnTabSelectionChangedListener { _, value ->
                 doUpdateRadio(RadioNode.LIGHT_FLICKER, value, viewModel.lightFlicker, it)
+                binding.turnSignalIv.visibility = View.VISIBLE
+                animationTurnSignal.start(
+                    false,
+                    50,
+                    object : AnimationDrawable.AnimationLisenter {
+                        override fun startAnimation() {
+                        }
+
+                        override fun endAnimation() {
+                            binding.homeOpenIv.visibility = View.GONE
+                        }
+                    })
             }
         }
     }
@@ -193,6 +219,22 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
         }
         binding.lightInsideMeetSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.LIGHT_INSIDE_MEET, buttonView, isChecked)
+            if (isChecked) {
+                binding.welcomeLampIv.visibility = View.VISIBLE
+                animationWelcomeLamp.start(
+                    false,
+                    50,
+                    object : AnimationDrawable.AnimationLisenter {
+                        override fun startAnimation() {
+                        }
+
+                        override fun endAnimation() {
+                            //binding.homeOpenIv.visibility = View.GONE
+                        }
+                    })
+            } else {
+                binding.welcomeLampIv.visibility = View.GONE
+            }
         }
     }
 
