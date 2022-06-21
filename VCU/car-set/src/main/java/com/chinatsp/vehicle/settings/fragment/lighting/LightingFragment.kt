@@ -1,6 +1,7 @@
 package com.chinatsp.vehicle.settings.fragment.lighting
 
 import android.os.Bundle
+import android.view.View
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.IOptionManager
@@ -10,23 +11,26 @@ import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.LightingFragmentBinding
 import com.chinatsp.vehicle.settings.vm.light.LightingViewModel
+import com.common.animationlib.AnimationDrawable
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class LightingFragment:BaseFragment<LightingViewModel,LightingFragmentBinding>() {
-
+class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding>() {
+    private var animationHomeOpen: AnimationDrawable = AnimationDrawable()
+    private var animationHomeClose: AnimationDrawable = AnimationDrawable()
 
     private val manager: IOptionManager
         get() = LightManager.instance
 
     override fun getLayoutId(): Int {
-      return R.layout.lighting_fragment
+        return R.layout.lighting_fragment
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+        initAnimation()
         initSwitchOption()
         addSwitchLiveDataListener()
         setSwitchListener()
@@ -42,6 +46,19 @@ class LightingFragment:BaseFragment<LightingViewModel,LightingFragmentBinding>()
         initRadioOption(RadioNode.LIGHT_FLICKER, viewModel.lightFlicker)
     }
 
+    private fun initAnimation() {
+        animationHomeOpen.setAnimation(
+            activity,
+            R.drawable.home_open_animation,
+            binding.homeOpenIv
+        )
+        animationHomeClose.setAnimation(
+            activity,
+            R.drawable.home_close_animation,
+            binding.homeOpenIv
+        )
+    }
+
     private fun addRadioLiveDataListener() {
         viewModel.lightOutDelayed.observe(this) {
             doUpdateRadio(RadioNode.LIGHT_DELAYED_OUT, it, false)
@@ -55,6 +72,31 @@ class LightingFragment:BaseFragment<LightingViewModel,LightingFragmentBinding>()
         binding.lightDelayBlackOutRadio.let {
             it.setOnTabSelectionChangedListener { _, value ->
                 doUpdateRadio(RadioNode.LIGHT_DELAYED_OUT, value, viewModel.lightOutDelayed, it)
+                if (value.equals("8")) {
+                    binding.homeOpenIv.visibility = View.VISIBLE
+                    animationHomeClose.start(
+                        false,
+                        50,
+                        object : AnimationDrawable.AnimationLisenter {
+                            override fun startAnimation() {
+                            }
+                            override fun endAnimation() {
+                                binding.homeOpenIv.visibility = View.GONE
+                            }
+                        })
+                } else {
+                    binding.homeOpenIv.visibility = View.VISIBLE
+                    animationHomeOpen.start(
+                        false,
+                        50,
+                        object : AnimationDrawable.AnimationLisenter {
+                            override fun startAnimation() {
+                            }
+                            override fun endAnimation() {
+                                //binding.homeOpenIv.visibility = View.GONE
+                            }
+                        })
+                }
             }
         }
         binding.lightFlickerRadio.let {
@@ -79,7 +121,12 @@ class LightingFragment:BaseFragment<LightingViewModel,LightingFragmentBinding>()
         tabView.takeIf { !result }?.setSelection(liveData.value.toString(), true)
     }
 
-    private fun doUpdateRadio(node: RadioNode, value: Int, immediately: Boolean = false, isInit: Boolean = false) {
+    private fun doUpdateRadio(
+        node: RadioNode,
+        value: Int,
+        immediately: Boolean = false,
+        isInit: Boolean = false
+    ) {
         val tabView = when (node) {
             RadioNode.LIGHT_DELAYED_OUT -> binding.lightDelayBlackOutRadio
             RadioNode.LIGHT_FLICKER -> binding.lightFlickerRadio
