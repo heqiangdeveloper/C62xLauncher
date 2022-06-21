@@ -302,7 +302,9 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         ImageView iv = (ImageView) relativeLayout.getChildAt(1);
         TextView tv = (TextView) relativeLayout.getChildAt(2);
         if(tv.getText().toString().trim().equals(context.getString(R.string.add))){
-            showAddDialog(parentIndex);
+            if(isTimeEnabled()){//防抖处理
+                showAddDialog(parentIndex);
+            }
         }else {
             if(iv.getVisibility() == View.VISIBLE){//如果删除按钮显示了，执行删除应用逻辑
                 hideDeleteIcon((RecyclerView) relativeLayout.getParent());
@@ -368,6 +370,12 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
                 *           方案：用被遗弃的应用替换新增的应用在桌面上原来的位置，不够的使用空数组代替，并更新sub
                  */
                 List<LocationBean> selectedLists = addAppAdapter.getSelectdItems();//确认添加的应用list
+                List<LocationBean> childLists = mData.get(parentIndex);
+                childLists.removeAll(Collections.singleton(null));
+                //如果数据没有变化，则不处理
+                if(childLists.size() == selectedLists.size() && childLists.containsAll(selectedLists)){
+                    return;
+                }
                 if(selectedLists.size() == 0){
                     EventBus.getDefault().post(new HideSubContainerEvent());//通知ClassifyView隐藏subContainer
                     //将sub中第一个应用替换该parentIndex位置，其余的应用添加在桌面最后
@@ -584,6 +592,18 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             }
         });
         dialog.show();
+    }
+
+    private static long lastTimeMillis;
+    private static final long MIN_CLICK_INTERVAL = 1000;
+    //dialog防抖
+    protected boolean isTimeEnabled() {
+        long currentTimeMillis = System.currentTimeMillis();
+        if ((currentTimeMillis - lastTimeMillis) > MIN_CLICK_INTERVAL) {
+            lastTimeMillis = currentTimeMillis;
+            return true;
+        }
+        return false;
     }
 
     private List<LocationBean> getAddAppLists(int parentIndex,TextView tv){
