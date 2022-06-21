@@ -1,0 +1,219 @@
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <item
+        android:drawable="@drawable/flash_alarm_00"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_01"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_02"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_03"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_04"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_05"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_06"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_07"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_08"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_09"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_10"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_11"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_12"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_13"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_14"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_15"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_16"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_17"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_18"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_19"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_20"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_21"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_22"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_23"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_24"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_25"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_26"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_27"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_28"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_29"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_30"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_31"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_32"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_33"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_34"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_35"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_36"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_37"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_38"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_39"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_40"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_41"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_42"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_43"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_44"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_45"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_46"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_47"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_48"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_49"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_50"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_51"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_52"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_53"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_54"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_55"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_56"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_57"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_58"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_59"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_60"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_61"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_62"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_63"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_64"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_65"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_66"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_67"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_68"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_69"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_70"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flash_alarm_71"
+        android:duration="50" />
+</animation-list>
