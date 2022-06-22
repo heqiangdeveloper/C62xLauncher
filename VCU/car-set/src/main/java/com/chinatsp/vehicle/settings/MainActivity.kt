@@ -148,6 +148,13 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
     }
 
     override fun onTabSelected(tab: TabLayout.Tab?) {
+        if (tab != null) {
+            if (tab.text?.equals("常用") == true) {
+                binding.constraint.setBackgroundResource(R.drawable.bg_changyong_1920)
+            } else {
+                binding.constraint.setBackgroundResource(R.drawable.bg)
+            }
+        }
         GlobalManager.instance.tabSerial.set(binding.tabLayout.selectedTabPosition)
     }
 

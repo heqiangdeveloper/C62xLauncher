@@ -30,6 +30,14 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+        initAnimation()
+        initSwitchOption()
+        addSwitchLiveDataListener()
+        setSwitchListener()
+        setRadioListener()
+    }
+
+    private fun initAnimation() {
         animationOpenDoor.setAnimation(
             activity,
             R.drawable.trunk_door_animation,
@@ -50,10 +58,6 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
             R.drawable.buzzer_alarms_animation,
             binding.ivBuzzerAlarms
         )
-        initSwitchOption()
-        addSwitchLiveDataListener()
-        setSwitchListener()
-        setRadioListener()
     }
 
     private fun setSwitchListener() {

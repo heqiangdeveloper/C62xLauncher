@@ -1,6 +1,7 @@
 package com.chinatsp.vehicle.settings.fragment.doors
 
 import android.os.Bundle
+import android.view.View
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.IOptionManager
@@ -10,6 +11,7 @@ import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CarDoorsFragmentBinding
 import com.chinatsp.vehicle.settings.vm.DoorsViewModel
+import com.common.animationlib.AnimationDrawable
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.tabbar.TabControlView
@@ -17,7 +19,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>() {
-
+    private var animationOpenLock: AnimationDrawable = AnimationDrawable()
+    private var animationCloseLock: AnimationDrawable = AnimationDrawable()
     private val manager: IOptionManager
         get() = DoorManager.instance
 
@@ -26,6 +29,7 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+        initAnimation()
         initSwitchOption()
         addSwitchLiveDataListener()
         setSwitchListener()
@@ -39,7 +43,18 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
         initRadioOption(RadioNode.DOOR_DRIVE_LOCK, viewModel.automaticDoorLock)
         initRadioOption(RadioNode.DOOR_FLAMEOUT_UNLOCK, viewModel.automaticDoorUnlock)
     }
-
+    private fun initAnimation() {
+        animationOpenLock.setAnimation(
+            activity,
+            R.drawable.lock_animation,
+            binding.lockIv
+        )
+        animationCloseLock.setAnimation(
+            activity,
+            R.drawable.close_lock_animation,
+            binding.lockIv
+        )
+    }
     private fun addRadioLiveDataListener() {
         viewModel.automaticDoorLock.observe(this) {
             doUpdateRadio(RadioNode.DOOR_DRIVE_LOCK, it, false)
@@ -58,6 +73,33 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
         binding.doorAutomaticUnlockRadio.let {
             it.setOnTabSelectionChangedListener { _, value ->
                 doUpdateRadio(RadioNode.DOOR_FLAMEOUT_UNLOCK, value, viewModel.automaticDoorUnlock, it)
+                if (value.equals("3")) {
+                    binding.rightCarDoorlock.visibility = View.GONE
+                    animationCloseLock.start(
+                        false,
+                        50,
+                        object : AnimationDrawable.AnimationLisenter {
+                            override fun startAnimation() {
+                            }
+
+                            override fun endAnimation() {
+                            }
+                        })
+                } else if (value.equals("1")) {
+                    binding.rightCarDoorlock.visibility = View.GONE
+                    animationOpenLock.start(
+                        false,
+                        50,
+                        object : AnimationDrawable.AnimationLisenter {
+                            override fun startAnimation() {
+                            }
+
+                            override fun endAnimation() {
+                            }
+                        })
+                } else {
+                    binding.rightCarDoorlock.visibility = View.VISIBLE
+                }
             }
         }
     }
