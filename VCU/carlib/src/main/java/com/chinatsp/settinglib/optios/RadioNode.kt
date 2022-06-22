@@ -37,7 +37,7 @@ enum class RadioNode(
      * set -> 0x1: off 0x2: 5km/h    0x3: 10km/h    0x4: 15km/h   0x5: 20km/h
      * get -> 0x0: Inactive 0x1: off 0x2: 5km/h 0x3: 10km/h  0x4: 15km/h 0x5: 20km/h(default)
      */
-    ACCESS_DOOR_DRIVE_LOCK(
+    DOOR_DRIVE_LOCK(
         get = RNorm(
             values = intArrayOf(0x1, 0x2, 0x3, 0x4, 0x5),
             signal = CarCabinManager.ID_VSPEED_LOCKING_STATUE
@@ -54,7 +54,7 @@ enum class RadioNode(
      * set -> 0x1: unlock FL door 0x2: unlock all doors(default)   0x3: FunctionDisable
      * get -> 0x0: Inactive 0x1: unlock FL door 0x2: unlock all doors(default) 0x3: FunctionDisable
      */
-    ACCESS_DOOR_FLAMEOUT_UNLOCK(
+    DOOR_FLAMEOUT_UNLOCK(
         get = RNorm(
             values = intArrayOf(0x3, 0x1, 0x2),
             signal = CarCabinManager.ID_CUTOFF_UNLOCK_DOORS_STATUE
@@ -71,11 +71,12 @@ enum class RadioNode(
      * set -> 0x1: OFF    0x2: On Mode 1  0x3: On Mode 2
      * get -> 0x0: Reserved 0x1: OFF  0x2: On Mode 1  0x3: On Mode 2 0x4~0x6: Reserved 0x7: Invalid
      */
-    ACCESS_STERN_SMART_ENTER(
+    STERN_SMART_ENTER(
 //        get = RNorm(values = intArrayOf(0x1, 0x2, 0x3), signal = CarCabinManager.ID_PTM_SMART_ENTRY_PTM_STS),
         get = RNorm(
             values = intArrayOf(0x1, 0x2, 0x3),
             signal = -1
+//            signal = CarCabinManager.ID_PTM_SMART_ENTRY_PTM_STS
         ),//Jar 没有更新，暂时无 ID_PTM_SMART_ENTRY_PTM_STS
         set = RNorm(
             values = intArrayOf(0x1, 0x2, 0x3),
@@ -226,29 +227,49 @@ enum class RadioNode(
 
     /**
      * 灯光--灯光--伴我回家
+     * set -> 0x1: off 0x2: 10s    0x3: 20s    0x4: 30s(default)   0x5: 60s    0x6: 120s
+     * get -> 0x0: Inactive 0x1: off 0x2: 10s 0x3: 20s 0x4: 30s(default) 0x5: 60s 0x6: 120s 0x7: reserved
      */
     LIGHT_DELAYED_OUT(
-        get = RNorm(values = intArrayOf(0x8, 0x9, 0x2, 0x3, 0x4, 0x5), signal = -1),
-        set = RNorm(values = intArrayOf(0x8, 0x9, 0x2, 0x3, 0x4, 0x5), signal = -1),
-        default = 0x8
+        get = RNorm(
+            values = intArrayOf(0x1, 0x2, 0x3, 0x4, 0x5, 0x6),
+            signal = CarCabinManager.ID_FOLLOW_ME_HOME_STATUE
+        ),
+        set = RNorm(
+            values = intArrayOf(0x1, 0x2, 0x3, 0x4, 0x5, 0x6),
+            signal = CarCabinManager.ID_FOLLOW_ME_HOME_SET
+        ),
+        default = 0x4
     ),
 
     /**
      * 灯光--灯光--转向灯变道闪烁次数
+     * set -> 0x1: off 0x2: 3 flasher(default) 0x3: 5 flasher  0x4: 7 flasher
+     * get -> 0x0:Inactive
+            0x1: off
+            0x2: 3 flasher(default)
+            0x3: 5 flasher
+            0x4: 7 flasher
      */
     LIGHT_FLICKER(
-        get = RNorm(values = intArrayOf(0x8, 0x9, 0x7), signal = -1),
-        set = RNorm(values = intArrayOf(0x8, 0x9, 0x7), signal = -1),
-        default = 0x8
+        get = RNorm(
+            values = intArrayOf(0x2, 0x3, 0x4),
+            signal = CarCabinManager.ID_TURNLIGHT_FOR_LANE_CHANGE_STATUE
+        ),
+        set = RNorm(
+            values = intArrayOf(0x2, 0x3, 0x4),
+            signal = CarCabinManager.ID_TURNLIGHT_FOR_LANE_CHANGE_SET
+        ),
+        default = 0x2
     ),
 
     /**
      * 车辆音效--声音--仪表报警音量等级
      * set -> 仪表报警音量等级开关触发[0x1,0,0x0,0x3]
-    0x0: Inactive
-    0x1: High
-    0x2: medium
-    0x3: Low
+            0x0: Inactive
+            0x1: High
+            0x2: medium
+            0x3: Low
      */
     ICM_VOLUME_LEVEL(
         get = RNorm(
@@ -264,6 +285,12 @@ enum class RadioNode(
 
     /**
      * 车辆音效--声音--导航混音
+     * set -> 车机混音策略[0x1,-1,0x0,0x3]
+    0x0:not used
+    0x1: MIX0((default))
+    0x2: Mix1
+    0x3: Mix2
+    0x4~0x7: reserved
      */
     NAVI_AUDIO_MIXING(
         get = RNorm(
@@ -272,7 +299,7 @@ enum class RadioNode(
         ),
         set = RNorm(
             values = intArrayOf(0x1, 0x2),
-            signal = -1
+            signal = CarCabinManager.ID_HUM_SOUND_MIX
         ),
         default = 0x1
     ),

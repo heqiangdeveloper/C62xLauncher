@@ -33,7 +33,7 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
             doUpdateSwitch(SwitchNode.AS_STERN_ELECTRIC, it)
         }
         viewModel.aebFunction.observe(this) {
-            doUpdateSwitch(SwitchNode.AS_STERN_LIGHT_ALARM, it)
+            doUpdateSwitch(SwitchNode.STERN_LIGHT_ALARM, it)
         }
     }
 

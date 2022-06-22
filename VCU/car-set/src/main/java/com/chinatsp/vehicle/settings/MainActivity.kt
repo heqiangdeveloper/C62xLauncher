@@ -50,7 +50,7 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
             binding.viewPager.adapter = mAdapter
             binding.viewPager.isUserInputEnabled = false
             // 设置缓存的数量
-//        viewPager!!.offscreenPageLimit = 1
+            binding.viewPager.offscreenPageLimit = 1
             val childAt: RecyclerView = binding.viewPager.getChildAt(0) as RecyclerView
             childAt.setItemViewCacheSize(0)
             childAt.layoutManager?.isItemPrefetchEnabled = false
@@ -109,26 +109,26 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
                 val title = page.description
                 val position = page.position
                 if (position == 0) {
-                    val fragment = AccessFragment()
-                    fragment.userVisibleHint = true
+                    val fragment = AccessFragment::class.java
+//                    fragment.userVisibleHint = true
                     mAdapter.addFragment(fragment, title)
                 } else if (position == 1) {
-                    val fragment = DoorsManageFragment();
+                    val fragment = DoorsManageFragment::class.java
                     mAdapter.addFragment(fragment, title)
                 } else if (position == 2) {
-                    val fragment = LightingManageFragment();
+                    val fragment = LightingManageFragment::class.java
                     mAdapter.addFragment(fragment, title)
                 } else if (position == 3) {
-                    val fragment = SoundManageFragment();
+                    val fragment = SoundManageFragment::class.java
                     mAdapter.addFragment(fragment, title)
                 } else if (position == 4) {
-                    val fragment = CabinManagerFragment()
+                    val fragment = CabinManagerFragment::class.java
                     mAdapter.addFragment(fragment, title)
                 } else if (position == 5) {
-                    val fragment = DriveManageFragment()
+                    val fragment = DriveManageFragment::class.java
                     mAdapter.addFragment(fragment, title)
                 } else {
-                    mAdapter.addFragment(SimpleTabFragment.newInstance(title), title)
+                    mAdapter.addFragment(SimpleTabFragment::class.java, title)
                 }
             }
             mAdapter.notifyDataSetChanged()

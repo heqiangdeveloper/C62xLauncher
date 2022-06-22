@@ -30,7 +30,7 @@ class LamplightManager : BaseManager(), ISwitchManager {
         HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int>().apply {
                 add(SwitchNode.ADAS_HMA.get.signal)
-                add(SwitchNode.ADAS_SLA.get.signal)
+                add(SwitchNode.ADAS_TSR.get.signal)
             }
             put(Origin.CABIN, cabinSet)
         }
@@ -45,7 +45,7 @@ class LamplightManager : BaseManager(), ISwitchManager {
     }
 
     private val tsrValue: AtomicBoolean by lazy {
-        val node = SwitchNode.ADAS_SLA
+        val node = SwitchNode.ADAS_TSR
         AtomicBoolean(node.isOn()).apply {
             val result = readIntProperty(node.get.signal, node.get.origin)
             doUpdateSwitchValue(node, this, result)
@@ -58,7 +58,7 @@ class LamplightManager : BaseManager(), ISwitchManager {
             SwitchNode.ADAS_HMA -> {
                 hmaValue.get()
             }
-            SwitchNode.ADAS_SLA -> {
+            SwitchNode.ADAS_TSR -> {
                 tsrValue.get()
             }
             else -> false

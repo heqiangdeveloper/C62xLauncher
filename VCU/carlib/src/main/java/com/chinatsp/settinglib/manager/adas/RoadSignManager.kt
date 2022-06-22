@@ -42,7 +42,7 @@ class RoadSignManager: BaseManager(), ISwitchManager {
 
     override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
         return when (node) {
-            SwitchNode.ADAS_SLA -> {
+            SwitchNode.ADAS_TSR -> {
                 writeProperty(node.set.signal, node.value(status), node.set.origin, VehicleAreaSeat.SEAT_DRIVER)
             }
             else -> false

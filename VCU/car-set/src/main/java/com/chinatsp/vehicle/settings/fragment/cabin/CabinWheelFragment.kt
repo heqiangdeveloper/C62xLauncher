@@ -114,6 +114,7 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
     private fun setCheckedChangeListener() {
         binding.wheelCustomKeys.setOnClickListener {
             val fragment = SteeringKeysDialogFragment()
+            fragment.widthRatio = 880f / 1920f
             activity?.supportFragmentManager?.let {
                 fragment.show(it, fragment::javaClass.name)
             }

@@ -28,14 +28,14 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-        initSwitchOption(SwitchNode.AS_BACK_MIRROR_FOLD, foldSwitchStatus)
+        initSwitchOption(SwitchNode.BACK_MIRROR_FOLD, foldSwitchStatus)
         setSwitchListener()
         addSwitchLiveDataListener()
     }
 
     private fun setSwitchListener() {
         mirrorFoldSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            val node = SwitchNode.AS_BACK_MIRROR_FOLD
+            val node = SwitchNode.BACK_MIRROR_FOLD
             val result = manager.doSetSwitchOption(node, isChecked)
             takeUnless { result }?.doUpdateSwitch(buttonView as SwitchButton, !isChecked, false)
         }
@@ -43,7 +43,7 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
 
     private fun addSwitchLiveDataListener() {
         foldSwitchStatus.observe(this) {
-            doUpdateSwitch(SwitchNode.AS_BACK_MIRROR_FOLD, it!!)
+            doUpdateSwitch(SwitchNode.BACK_MIRROR_FOLD, it!!)
         }
     }
 
@@ -54,7 +54,7 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
 
     private fun doUpdateSwitch(node: SwitchNode, status: Boolean, immediately: Boolean = false) {
         val swb = when (node) {
-            SwitchNode.AS_BACK_MIRROR_FOLD -> {
+            SwitchNode.BACK_MIRROR_FOLD -> {
                 mirrorFoldSwitch
             }
             else -> null

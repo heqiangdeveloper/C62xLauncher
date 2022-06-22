@@ -31,12 +31,12 @@ class DriveTrafficFragment : BaseFragment<CombineViewModel, DriveTrafficFragment
 
 
     private fun initSwitchOption() {
-        initSwitchOption(SwitchNode.ADAS_SLA, viewModel.slaValue)
+        initSwitchOption(SwitchNode.ADAS_TSR, viewModel.slaValue)
     }
 
     private fun addSwitchLiveDataListener() {
         viewModel.slaValue.observe(this) {
-            doUpdateSwitch(SwitchNode.ADAS_SLA, it)
+            doUpdateSwitch(SwitchNode.ADAS_TSR, it)
         }
     }
 
@@ -47,7 +47,7 @@ class DriveTrafficFragment : BaseFragment<CombineViewModel, DriveTrafficFragment
 
     private fun doUpdateSwitch(node: SwitchNode, status: Boolean, immediately: Boolean = false) {
         val swb = when (node) {
-            SwitchNode.ADAS_SLA -> binding.adasTrafficSlaSwitch
+            SwitchNode.ADAS_TSR -> binding.adasTrafficSlaSwitch
             else -> null
         }
         takeIf { null != swb }?.doUpdateSwitch(swb!!, status, immediately)
@@ -63,7 +63,7 @@ class DriveTrafficFragment : BaseFragment<CombineViewModel, DriveTrafficFragment
 
     private fun setSwitchListener() {
         binding.adasTrafficSlaSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            doUpdateSwitchOption(SwitchNode.ADAS_SLA, buttonView, isChecked)
+            doUpdateSwitchOption(SwitchNode.ADAS_TSR, buttonView, isChecked)
         }
     }
 

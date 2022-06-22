@@ -2,6 +2,8 @@ package com.chinatsp.settinglib.manager.adas
 
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
+import com.chinatsp.settinglib.BaseApp
+import com.chinatsp.settinglib.SettingUtils
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.manager.BaseManager
@@ -46,7 +48,11 @@ class SideBackManager : BaseManager(), IOptionManager {
     private val showAreaValue: AtomicInteger by lazy {
         val node = RadioNode.ADAS_SIDE_BACK_SHOW_AREA
         AtomicInteger(node.default).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
+            val value = SettingUtils.getInt(
+                BaseApp.instance,
+                SettingUtils.SHOW_AREA,
+                node.get.values[0]
+            )
             doUpdateRadioValue(node, this, value)
         }
     }
@@ -78,7 +84,11 @@ class SideBackManager : BaseManager(), IOptionManager {
     private val guidesValue: AtomicBoolean by lazy {
         val node = SwitchNode.ADAS_GUIDES
         AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
+            val result = SettingUtils.getInt(
+                BaseApp.instance,
+                SettingUtils.AUXILIARY_LINE,
+                node.get.on
+            )
             doUpdateSwitchValue(node, this, result)
         }
     }
@@ -117,7 +127,11 @@ class SideBackManager : BaseManager(), IOptionManager {
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
         return when (node) {
             RadioNode.ADAS_SIDE_BACK_SHOW_AREA -> {
-                node.isValid(value, false) && writeProperty(node.set.signal, value, node.set.origin)
+                node.isValid(value, false) && SettingUtils.putInt(
+                    BaseApp.instance,
+                    SettingUtils.SHOW_AREA,
+                    value
+                )
             }
             else -> false
         }
@@ -158,19 +172,20 @@ class SideBackManager : BaseManager(), IOptionManager {
     override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
         return when (node) {
             SwitchNode.ADAS_DOW -> {
-//                writeProperty(node.set.signal, node.value(status), node.set.origin)
                 doSetSwitchOption(node, status, dowValue)
             }
             SwitchNode.ADAS_BSD -> {
-//                writeProperty(node.set.signal, node.value(status), node.set.origin)
                 doSetSwitchOption(node, status, bsdValue)
             }
             SwitchNode.ADAS_BSC -> {
-//                writeProperty(node.set.signal, node.value(status), node.set.origin)
                 doSetSwitchOption(node, status, bscValue)
             }
             SwitchNode.ADAS_GUIDES -> {
-                doSetSwitchOption(node, status, guidesValue)
+                SettingUtils.putInt(
+                    BaseApp.instance,
+                    SettingUtils.AUXILIARY_LINE,
+                    node.value(status)
+                )
             }
             else -> false
         }
@@ -179,7 +194,7 @@ class SideBackManager : BaseManager(), IOptionManager {
     fun doSetSwitchOption(node: SwitchNode, status: Boolean, atomic: AtomicBoolean): Boolean {
         val success = writeProperty(node.set.signal, node.value(status), node.set.origin)
         if (success && develop) {
-            doUpdateSwitchValue(node, atomic, status) {_node, _status ->
+            doUpdateSwitchValue(node, atomic, status) { _node, _status ->
                 doSwitchChanged(_node, _status)
             }
         }

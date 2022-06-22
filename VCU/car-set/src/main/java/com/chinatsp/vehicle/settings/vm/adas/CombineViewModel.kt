@@ -31,7 +31,7 @@ class CombineViewModel @Inject constructor(app: Application, model: BaseModel) :
     val slaValue: LiveData<Boolean> by lazy { _slaValue }
 
     private val _slaValue: MutableLiveData<Boolean> by lazy {
-        val switchNode = SwitchNode.ADAS_SLA
+        val switchNode = SwitchNode.ADAS_TSR
         MutableLiveData(switchNode.isOn()).apply {
             value = manager.doGetSwitchOption(switchNode)
         }
@@ -52,7 +52,7 @@ class CombineViewModel @Inject constructor(app: Application, model: BaseModel) :
             SwitchNode.ADAS_HMA -> {
                 _hmaValue.value = status
             }
-            SwitchNode.ADAS_SLA -> {
+            SwitchNode.ADAS_TSR -> {
                 _slaValue.value = status
             }
             else -> {}

@@ -23,24 +23,24 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class DoorManager private constructor() : BaseManager(), IOptionManager {
 
-    val smartEnterStatus: AtomicBoolean by lazy {
-        val node = SwitchNode.AS_SMART_ENTER_DOOR
+    private val smartAccess: AtomicBoolean by lazy {
+        val node = SwitchNode.DOOR_SMART_ENTER
         AtomicBoolean(node.isOn()).apply {
             val value = readIntProperty(node.get.signal, node.get.origin)
             doUpdateSwitchValue(node, this, value)
         }
     }
 
-    val driveLockOption: AtomicInteger by lazy {
-        val node = RadioNode.ACCESS_DOOR_DRIVE_LOCK
+    private val driveAutoLock: AtomicInteger by lazy {
+        val node = RadioNode.DOOR_DRIVE_LOCK
         AtomicInteger(node.default).apply {
             val value = readIntProperty(node.get.signal, node.get.origin)
             doUpdateRadioValue(node, this, value)
         }
     }
 
-    val shutDownUnlockOption: AtomicInteger by lazy {
-        val node = RadioNode.ACCESS_DOOR_FLAMEOUT_UNLOCK
+    private val flameoutAutoUnlock: AtomicInteger by lazy {
+        val node = RadioNode.DOOR_FLAMEOUT_UNLOCK
         AtomicInteger(node.default).apply {
             val value = readIntProperty(node.get.signal, node.get.origin)
             doUpdateRadioValue(node, this, value)
@@ -58,11 +58,11 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
         HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int>().apply {
                 /**行车自动落锁*/
-                add(RadioNode.ACCESS_DOOR_DRIVE_LOCK.get.signal)
+                add(RadioNode.DOOR_DRIVE_LOCK.get.signal)
                 /**熄火自动解锁*/
-                add(RadioNode.ACCESS_DOOR_FLAMEOUT_UNLOCK.get.signal)
+                add(RadioNode.DOOR_FLAMEOUT_UNLOCK.get.signal)
                 /**车门智能进入*/
-                add(SwitchNode.AS_SMART_ENTER_DOOR.get.signal)
+                add(SwitchNode.DOOR_SMART_ENTER.get.signal)
             }
             put(Origin.CABIN, cabinSet)
         }
@@ -79,8 +79,8 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
 
     override fun doGetSwitchOption(node: SwitchNode): Boolean {
         return when (node) {
-            SwitchNode.AS_SMART_ENTER_DOOR -> {
-                smartEnterStatus.get()
+            SwitchNode.DOOR_SMART_ENTER -> {
+                smartAccess.get()
             }
             else -> false
         }
@@ -88,7 +88,7 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
 
     override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
         return when (node) {
-            SwitchNode.AS_SMART_ENTER_DOOR -> {
+            SwitchNode.DOOR_SMART_ENTER -> {
                 writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
             else -> false
@@ -97,11 +97,11 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
 
     override fun doGetRadioOption(node: RadioNode): Int {
         return when (node) {
-            RadioNode.ACCESS_DOOR_DRIVE_LOCK -> {
-                driveLockOption.get()
+            RadioNode.DOOR_DRIVE_LOCK -> {
+                driveAutoLock.get()
             }
-            RadioNode.ACCESS_DOOR_FLAMEOUT_UNLOCK -> {
-                shutDownUnlockOption.get()
+            RadioNode.DOOR_FLAMEOUT_UNLOCK -> {
+                flameoutAutoUnlock.get()
             }
             else -> -1
         }
@@ -109,10 +109,10 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
 
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
         return when (node) {
-            RadioNode.ACCESS_DOOR_DRIVE_LOCK -> {
+            RadioNode.DOOR_DRIVE_LOCK -> {
                 node.isValid(value, false) && writeProperty(node.set.signal, value, node.set.origin)
             }
-            RadioNode.ACCESS_DOOR_FLAMEOUT_UNLOCK -> {
+            RadioNode.DOOR_FLAMEOUT_UNLOCK -> {
                 node.isValid(value, false) && writeProperty(node.set.signal, value, node.set.origin)
             }
             else -> false
@@ -127,81 +127,19 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
     }
 
     override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
-//        when (property.propertyId) {
-//            /**熄火自动解锁*/
-//            CarCabinManager.ID_CUTOFF_UNLOCK_DOORS_STATUE -> {
-//                doShutDownAutoUnlockOptionChanged(property)
-//            }
-//            CarCabinManager.ID_VSPEED_LOCKING_STATUE -> {
-//                doDriveAutoLockOptionChanged(property)
-//            }
-//            CarCabinManager.ID_SMART_ENTRY_STS -> {
-//                onSwitchOptionChanged(SwitchNode.AS_SMART_ENTER_DOOR, property)
-//            }
-//            else -> {}
-//        }
         when (property.propertyId) {
             /**熄火自动解锁*/
-            SwitchNode.AS_SMART_ENTER_DOOR.get.signal -> {
-                onSwitchChanged(SwitchNode.AS_SMART_ENTER_DOOR, smartEnterStatus, property)
+            SwitchNode.DOOR_SMART_ENTER.get.signal -> {
+                onSwitchChanged(SwitchNode.DOOR_SMART_ENTER, smartAccess, property)
             }
-            RadioNode.ACCESS_DOOR_DRIVE_LOCK.get.signal-> {
-                onRadioChanged(RadioNode.ACCESS_DOOR_DRIVE_LOCK, driveLockOption, property)
+            RadioNode.DOOR_DRIVE_LOCK.get.signal-> {
+                onRadioChanged(RadioNode.DOOR_DRIVE_LOCK, driveAutoLock, property)
             }
-            RadioNode.ACCESS_DOOR_FLAMEOUT_UNLOCK.get.signal-> {
-                onRadioChanged(RadioNode.ACCESS_DOOR_FLAMEOUT_UNLOCK, shutDownUnlockOption, property)
+            RadioNode.DOOR_FLAMEOUT_UNLOCK.get.signal-> {
+                onRadioChanged(RadioNode.DOOR_FLAMEOUT_UNLOCK, flameoutAutoUnlock, property)
             }
             else -> {}
         }
     }
-//
-//    private fun onSwitchOptionChanged(switchNode: SwitchNode, property: CarPropertyValue<*>) {
-//        val value = property.value
-//        if (value is Int) {
-//            val status = switchNode.isOn(value)
-//            if (smartEnterStatus.get() xor status) {
-//                smartEnterStatus.set(status)
-//                synchronized(listenerStore) {
-//                    listenerStore.filterValues { null != it.get() }.forEach {
-//                        it.value.get()?.let { listener ->
-//                            if (listener is IDoorListener) {
-//                                listener.onSwitchOptionChanged(status, switchNode)
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//    private fun doShutDownAutoUnlockOptionChanged(property: CarPropertyValue<*>) {
-//        val value = property.value
-//        if (value is Int) {
-//            synchronized(listenerStore) {
-//                listenerStore.filterValues { null != it.get() }.forEach {
-//                    it.value.get()?.let { listener ->
-//                        if (listener is IDoorListener) {
-//                            listener.onShutDownAutoUnlockOptionChanged(value)
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//    private fun doDriveAutoLockOptionChanged(property: CarPropertyValue<*>) {
-//        val value = property.value
-//        if (value is Int) {
-//            synchronized(listenerStore) {
-//                listenerStore.filterValues { null != it.get() }.forEach {
-//                    it.value.get()?.let { listener ->
-//                        if (listener is IDoorListener) {
-//                            listener.onDriveAutoLockOptionChanged(value)
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
 
 }

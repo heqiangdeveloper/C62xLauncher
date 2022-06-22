@@ -28,7 +28,7 @@ class CombineManager : BaseManager(), ISwitchManager {
     }
 
     private val slaValue: AtomicBoolean by lazy {
-        val node = SwitchNode.ADAS_SLA
+        val node = SwitchNode.ADAS_TSR
         AtomicBoolean(node.isOn()).apply {
             val result = readIntProperty(node.get.signal, node.get.origin)
             doUpdateSwitchValue(node, this, result)
@@ -47,7 +47,7 @@ class CombineManager : BaseManager(), ISwitchManager {
         HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int> ().apply {
                 add(SwitchNode.ADAS_HMA.get.signal)
-                add(SwitchNode.ADAS_SLA.get.signal)
+                add(SwitchNode.ADAS_TSR.get.signal)
             }
             put(Origin.CABIN, cabinSet)
         }
@@ -58,8 +58,8 @@ class CombineManager : BaseManager(), ISwitchManager {
             SwitchNode.ADAS_HMA.get.signal -> {
                 onSwitchChanged(SwitchNode.ADAS_HMA, hmaValue, property)
             }
-            SwitchNode.ADAS_SLA.get.signal -> {
-                onSwitchChanged(SwitchNode.ADAS_SLA, slaValue, property)
+            SwitchNode.ADAS_TSR.get.signal -> {
+                onSwitchChanged(SwitchNode.ADAS_TSR, slaValue, property)
             }
             else -> {}
         }
@@ -71,7 +71,7 @@ class CombineManager : BaseManager(), ISwitchManager {
             SwitchNode.ADAS_HMA -> {
                 hmaValue.get()
             }
-            SwitchNode.ADAS_SLA -> {
+            SwitchNode.ADAS_TSR -> {
                 slaValue.get()
             }
             else -> false
@@ -83,7 +83,7 @@ class CombineManager : BaseManager(), ISwitchManager {
             SwitchNode.ADAS_HMA -> {
                 writeProperty(node.set.signal, node.value(status), node.set.origin, node.area)
             }
-            SwitchNode.ADAS_SLA -> {
+            SwitchNode.ADAS_TSR -> {
                 writeProperty(node.set.signal, node.value(status), node.set.origin, node.area)
             }
             else -> false

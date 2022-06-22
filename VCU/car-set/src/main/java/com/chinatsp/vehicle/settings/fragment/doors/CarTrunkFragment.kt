@@ -78,7 +78,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
             }
         }
         binding.accessSternLightAlarmSw.setOnCheckedChangeListener { buttonView, isChecked ->
-            doUpdateSwitchOption(SwitchNode.AS_STERN_LIGHT_ALARM, buttonView, isChecked)
+            doUpdateSwitchOption(SwitchNode.STERN_LIGHT_ALARM, buttonView, isChecked)
             if (isChecked) {
                 binding.ivFlashAlarm.visibility = View.VISIBLE
                 animationFlashAlarm.start(false, 50, object : AnimationDrawable.AnimationLisenter {
@@ -92,7 +92,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
             }
         }
         binding.accessSternAudioAlarmSw.setOnCheckedChangeListener { buttonView, isChecked ->
-            doUpdateSwitchOption(SwitchNode.AS_STERN_AUDIO_ALARM, buttonView, isChecked)
+            doUpdateSwitchOption(SwitchNode.STERN_AUDIO_ALARM, buttonView, isChecked)
             if (isChecked) {
                 binding.ivBuzzerAlarms.visibility = View.VISIBLE
                 animationBuzzerAlarms.start(
@@ -107,14 +107,13 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
                         }
                     })
             }
-
         }
     }
 
     private fun setRadioListener() {
         binding.accessSternSmartEnterRadio.setOnTabSelectionChangedListener { _, value ->
             val result = isCanToInt(value) && manager.doSetRadioOption(
-                RadioNode.ACCESS_STERN_SMART_ENTER, value.toInt()
+                RadioNode.STERN_SMART_ENTER, value.toInt()
             )
             if (!result) {
                 val oldValue = viewModel.sternSmartEnterFunction.value
@@ -140,17 +139,17 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
             doUpdateSwitch(SwitchNode.AS_STERN_ELECTRIC, it)
         }
         viewModel.lightAlarmFunction.observe(this) {
-            doUpdateSwitch(SwitchNode.AS_STERN_LIGHT_ALARM, it)
+            doUpdateSwitch(SwitchNode.STERN_LIGHT_ALARM, it)
         }
         viewModel.audioAlarmFunction.observe(this) {
-            doUpdateSwitch(SwitchNode.AS_STERN_AUDIO_ALARM, it)
+            doUpdateSwitch(SwitchNode.STERN_AUDIO_ALARM, it)
         }
     }
 
     private fun initSwitchOption() {
         initSwitchOption(SwitchNode.AS_STERN_ELECTRIC, viewModel.electricFunction)
-        initSwitchOption(SwitchNode.AS_STERN_LIGHT_ALARM, viewModel.lightAlarmFunction)
-        initSwitchOption(SwitchNode.AS_STERN_AUDIO_ALARM, viewModel.audioAlarmFunction)
+        initSwitchOption(SwitchNode.STERN_LIGHT_ALARM, viewModel.lightAlarmFunction)
+        initSwitchOption(SwitchNode.STERN_AUDIO_ALARM, viewModel.audioAlarmFunction)
     }
 
     private fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {
@@ -163,10 +162,10 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
             SwitchNode.AS_STERN_ELECTRIC -> {
                 binding.accessSternElectricSw
             }
-            SwitchNode.AS_STERN_LIGHT_ALARM -> {
+            SwitchNode.STERN_LIGHT_ALARM -> {
                 binding.accessSternLightAlarmSw
             }
-            SwitchNode.AS_STERN_AUDIO_ALARM -> {
+            SwitchNode.STERN_AUDIO_ALARM -> {
                 binding.accessSternAudioAlarmSw
             }
             else -> null

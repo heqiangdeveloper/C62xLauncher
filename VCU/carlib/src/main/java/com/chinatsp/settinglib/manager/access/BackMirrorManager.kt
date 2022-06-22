@@ -2,7 +2,6 @@ package com.chinatsp.settinglib.manager.access
 
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
-import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.manager.BaseManager
@@ -26,7 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 class BackMirrorManager private constructor() : BaseManager(), ISwitchManager {
 
     private val backMirrorFold: AtomicBoolean by lazy {
-        val node = SwitchNode.AS_BACK_MIRROR_FOLD
+        val node = SwitchNode.BACK_MIRROR_FOLD
         AtomicBoolean(node.isOn()).apply {
             val result = readIntProperty(node.get.signal, node.get.origin, Area.GLOBAL)
             doUpdateSwitchValue(node, this, result)
@@ -51,7 +50,7 @@ class BackMirrorManager private constructor() : BaseManager(), ISwitchManager {
 
     override fun doGetSwitchOption(node: SwitchNode): Boolean {
         return when (node) {
-            SwitchNode.AS_BACK_MIRROR_FOLD -> {
+            SwitchNode.BACK_MIRROR_FOLD -> {
                 backMirrorFold.get()
             }
             else -> false
@@ -60,7 +59,7 @@ class BackMirrorManager private constructor() : BaseManager(), ISwitchManager {
 
     override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
         return when (node) {
-            SwitchNode.AS_BACK_MIRROR_FOLD -> {
+            SwitchNode.BACK_MIRROR_FOLD -> {
                 writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
             else -> false
@@ -89,7 +88,7 @@ class BackMirrorManager private constructor() : BaseManager(), ISwitchManager {
         /**雨天自动关窗*/
         when (property.propertyId) {
             CarCabinManager.ID_MIRROR_FADE_IN_OUT_STATUE -> {
-                onSwitchChanged(SwitchNode.AS_BACK_MIRROR_FOLD, backMirrorFold, property)
+                onSwitchChanged(SwitchNode.BACK_MIRROR_FOLD, backMirrorFold, property)
             }
             else -> {}
         }

@@ -16,9 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class DoorsManageFragment : BaseTabFragment<BaseViewModel, DoorsManageFragmentBinding>() {
 
-    var selectOption: View? = null
-
-    private lateinit var tabOptions: List<View>
+    private lateinit var tabOptions: MutableList<View>
 
     private val manager: AccessManager
         get() = AccessManager.instance
@@ -55,7 +53,7 @@ class DoorsManageFragment : BaseTabFragment<BaseViewModel, DoorsManageFragmentBi
             val child = tabOptionLayout.getChildAt(it)
             child.apply { setOnClickListener { onClick(this) } }
             child
-        }.toList()
+        }.toMutableList()
     }
 
     private fun updateSelectTabOption(viewId: Int) {
@@ -64,7 +62,7 @@ class DoorsManageFragment : BaseTabFragment<BaseViewModel, DoorsManageFragmentBi
     }
 
     private fun updateDisplayFragment(serial: Int) {
-        var fragment: Fragment? = checkOutFragment(serial)
+        val fragment: Fragment? = checkOutFragment(serial)
         tabOptions.first { it.id == serial }.isSelected = true
         manager.setTabSerial(serial)
         fragment?.let {
@@ -94,5 +92,10 @@ class DoorsManageFragment : BaseTabFragment<BaseViewModel, DoorsManageFragmentBi
             }
         }
         return fragment
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        tabOptions.clear()
     }
 }

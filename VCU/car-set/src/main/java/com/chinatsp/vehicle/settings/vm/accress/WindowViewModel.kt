@@ -19,7 +19,7 @@ class WindowViewModel @Inject constructor(app: Application, model: BaseModel):
         get() = WindowManager.instance
 
     val remoteRiseFallStatus: MutableLiveData<Boolean> by lazy {
-        val switchNode = SwitchNode.AS_WIN_REMOTE_CONTROL
+        val switchNode = SwitchNode.WIN_REMOTE_CONTROL
         MutableLiveData(switchNode.isOn()).apply {
             this.value = doGetSwitchStatus(switchNode)
         }

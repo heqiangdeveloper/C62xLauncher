@@ -18,9 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class AccessManager private constructor() : BaseManager(), ITabStore {
 
-    private var concernedSerialManagers: List<out BaseManager>? = null
-
-    private val doorManager: DoorManager by lazy { DoorManager.instance }
+    private var followers: List<BaseManager>? = null
 
     override val tabSerial: AtomicInteger by lazy {
         AtomicInteger(-1)
@@ -30,7 +28,7 @@ class AccessManager private constructor() : BaseManager(), ITabStore {
         property: CarPropertyValue<*>,
         origin: Origin
     ): Boolean {
-        concernedSerialManagers?.forEach {
+        followers?.forEach {
             it.onDispatchSignal(property, origin)
         }
         return true
@@ -38,7 +36,7 @@ class AccessManager private constructor() : BaseManager(), ITabStore {
 
     override fun isCareSignal(signal: Int, origin: Origin): Boolean {
         val list = managers.filter { it.isCareSignal(signal, origin) }.toList()
-        concernedSerialManagers = list
+        followers = list
         return list.isNotEmpty()
     }
 
@@ -54,7 +52,7 @@ class AccessManager private constructor() : BaseManager(), ITabStore {
             AccessManager()
         }
 
-        val managers: List<out BaseManager> by lazy {
+        val managers: List<BaseManager> by lazy {
             ArrayList<BaseManager>().apply {
                 add(DoorManager.instance)
                 add(WindowManager.instance)

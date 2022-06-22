@@ -36,28 +36,28 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
     }
 
     private fun initRadioOption() {
-        initRadioOption(RadioNode.ACCESS_DOOR_DRIVE_LOCK, viewModel.automaticDoorLock)
-        initRadioOption(RadioNode.ACCESS_DOOR_FLAMEOUT_UNLOCK, viewModel.automaticDoorUnlock)
+        initRadioOption(RadioNode.DOOR_DRIVE_LOCK, viewModel.automaticDoorLock)
+        initRadioOption(RadioNode.DOOR_FLAMEOUT_UNLOCK, viewModel.automaticDoorUnlock)
     }
 
     private fun addRadioLiveDataListener() {
         viewModel.automaticDoorLock.observe(this) {
-            doUpdateRadio(RadioNode.ACCESS_DOOR_DRIVE_LOCK, it, false)
+            doUpdateRadio(RadioNode.DOOR_DRIVE_LOCK, it, false)
         }
         viewModel.automaticDoorUnlock.observe(this) {
-            doUpdateRadio(RadioNode.ACCESS_DOOR_FLAMEOUT_UNLOCK, it, false)
+            doUpdateRadio(RadioNode.DOOR_FLAMEOUT_UNLOCK, it, false)
         }
     }
 
     private fun setRadioListener() {
         binding.doorAutomaticLockRadio.let {
             it.setOnTabSelectionChangedListener { _, value ->
-                doUpdateRadio(RadioNode.ACCESS_DOOR_DRIVE_LOCK, value, viewModel.automaticDoorLock, it)
+                doUpdateRadio(RadioNode.DOOR_DRIVE_LOCK, value, viewModel.automaticDoorLock, it)
             }
         }
         binding.doorAutomaticUnlockRadio.let {
             it.setOnTabSelectionChangedListener { _, value ->
-                doUpdateRadio(RadioNode.ACCESS_DOOR_FLAMEOUT_UNLOCK, value, viewModel.automaticDoorUnlock, it)
+                doUpdateRadio(RadioNode.DOOR_FLAMEOUT_UNLOCK, value, viewModel.automaticDoorUnlock, it)
             }
         }
     }
@@ -74,8 +74,8 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
 
     private fun doUpdateRadio(node: RadioNode, value: Int, immediately: Boolean = false) {
         val tabView = when (node) {
-            RadioNode.ACCESS_DOOR_DRIVE_LOCK -> binding.doorAutomaticLockRadio
-            RadioNode.ACCESS_DOOR_FLAMEOUT_UNLOCK -> binding.doorAutomaticUnlockRadio
+            RadioNode.DOOR_DRIVE_LOCK -> binding.doorAutomaticLockRadio
+            RadioNode.DOOR_FLAMEOUT_UNLOCK -> binding.doorAutomaticUnlockRadio
             else -> null
         }
         takeIf { null != tabView }?.doUpdateRadio(tabView!!, value, immediately)
@@ -87,12 +87,12 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
 
 
     private fun initSwitchOption() {
-        initSwitchOption(SwitchNode.AS_SMART_ENTER_DOOR, viewModel.smartDoorAccess)
+        initSwitchOption(SwitchNode.DOOR_SMART_ENTER, viewModel.smartDoorAccess)
     }
 
     private fun addSwitchLiveDataListener() {
         viewModel.smartDoorAccess.observe(this) {
-            doUpdateSwitch(SwitchNode.AS_SMART_ENTER_DOOR, it)
+            doUpdateSwitch(SwitchNode.DOOR_SMART_ENTER, it)
         }
     }
 
@@ -103,7 +103,7 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
 
     private fun doUpdateSwitch(node: SwitchNode, status: Boolean, immediately: Boolean = false) {
         val swb = when (node) {
-            SwitchNode.AS_SMART_ENTER_DOOR -> binding.doorSmartAccessSwitch
+            SwitchNode.DOOR_SMART_ENTER -> binding.doorSmartAccessSwitch
             else -> null
         }
         takeIf { null != swb }?.doUpdateSwitch(swb!!, status, immediately)
@@ -119,7 +119,7 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
 
     private fun setSwitchListener() {
         binding.doorSmartAccessSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            doUpdateSwitchOption(SwitchNode.AS_SMART_ENTER_DOOR, buttonView, isChecked)
+            doUpdateSwitchOption(SwitchNode.DOOR_SMART_ENTER, buttonView, isChecked)
         }
     }
 

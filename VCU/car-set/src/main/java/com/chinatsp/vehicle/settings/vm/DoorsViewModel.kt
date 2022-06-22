@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.listener.IOptionListener
-import com.chinatsp.settinglib.manager.access.AccessManager
 import com.chinatsp.settinglib.manager.access.DoorManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -24,7 +23,7 @@ class DoorsViewModel @Inject constructor(app: Application, model: BaseModel) :
         get() = _automaticDoorLock
 
     private val _automaticDoorLock: MutableLiveData<Int> by lazy {
-        val node = RadioNode.ACCESS_DOOR_DRIVE_LOCK
+        val node = RadioNode.DOOR_DRIVE_LOCK
         MutableLiveData(node.default).apply {
             val value = manager.doGetRadioOption(node)
             this.value = value
@@ -35,7 +34,7 @@ class DoorsViewModel @Inject constructor(app: Application, model: BaseModel) :
         get() = _automaticDoorUnlock
 
     private val _automaticDoorUnlock: MutableLiveData<Int> by lazy {
-        val node = RadioNode.ACCESS_DOOR_FLAMEOUT_UNLOCK
+        val node = RadioNode.DOOR_FLAMEOUT_UNLOCK
         MutableLiveData(node.default).apply {
             val value = manager.doGetRadioOption(node)
             this.value = value
@@ -46,7 +45,7 @@ class DoorsViewModel @Inject constructor(app: Application, model: BaseModel) :
         get() = _smartDoorAccess
 
     private val _smartDoorAccess: MutableLiveData<Boolean> by lazy {
-        val node = SwitchNode.AS_SMART_ENTER_DOOR
+        val node = SwitchNode.DOOR_SMART_ENTER
         MutableLiveData(node.default).apply {
             value = manager.doGetSwitchOption(node)
         }
@@ -64,7 +63,7 @@ class DoorsViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {
-            SwitchNode.AS_SMART_ENTER_DOOR -> {
+            SwitchNode.DOOR_SMART_ENTER -> {
                 _smartDoorAccess.takeIf { status xor (it.value == true) }?.value = status
             }
         }
@@ -72,12 +71,12 @@ class DoorsViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     override fun onRadioOptionChanged(node: RadioNode, value: Int) {
         when (node) {
-            RadioNode.ACCESS_DOOR_DRIVE_LOCK -> {
+            RadioNode.DOOR_DRIVE_LOCK -> {
                 _automaticDoorLock.takeIf {
                     node.isValid(value) && (value != it.value)
                 }?.value = value
             }
-            RadioNode.ACCESS_DOOR_FLAMEOUT_UNLOCK -> {
+            RadioNode.DOOR_FLAMEOUT_UNLOCK -> {
                 _automaticDoorUnlock.takeIf {
                     node.isValid(value) && (value != it.value)
                 }?.value = value
