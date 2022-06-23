@@ -142,27 +142,29 @@
             android:layout_height="@dimen/x360"
             android:src="@drawable/trunk_door_animation"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_flash_alarm"
-            android:layout_width="@dimen/x560"
-            android:layout_height="@dimen/x300"
-            android:src="@drawable/flash_alarm_40"
+            android:layout_width="@dimen/x40"
+            android:layout_height="@dimen/x50"
+            android:layout_marginEnd="@dimen/x201"
+            android:layout_marginBottom="@dimen/x111"
+            android:src="@drawable/flash_alarm_animation"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_buzzer_alarms"
-            android:layout_width="@dimen/x860"
-            android:layout_height="@dimen/x160"
-            app:layout_constraintLeft_toRightOf="@+id/layout_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:visibility="gone"/>
+            android:layout_width="@dimen/x110"
+            android:layout_height="@dimen/x75"
+            android:layout_marginEnd="@dimen/x246"
+            android:layout_marginBottom="@dimen/x150"
+            android:src="@drawable/buzzer_alarms_animation"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

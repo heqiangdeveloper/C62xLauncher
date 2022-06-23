@@ -244,15 +244,14 @@
             android:layout_height="wrap_content"
             android:src="@drawable/right_car"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/home_open_iv"
-            android:layout_width="@dimen/x450"
+            android:layout_width="@dimen/x400"
             android:layout_height="@dimen/x176"
-            android:layout_marginTop="@dimen/x160"
-            android:layout_marginEnd="@dimen/x140"
+            android:layout_marginTop="@dimen/x155"
+            android:layout_marginEnd="@dimen/x155"
             android:src="@drawable/home_open_animation"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -261,9 +260,10 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/welcome_lamp_iv"
-            android:layout_width="@dimen/x172"
-            android:layout_height="@dimen/x50"
-            android:layout_marginEnd="@dimen/x130"
+            android:layout_width="@dimen/x140"
+            android:layout_height="@dimen/x45"
+            android:layout_marginTop="@dimen/x10"
+            android:layout_marginEnd="@dimen/x140"
             android:src="@drawable/welcome_lamp_animation"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -272,10 +272,10 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/turn_signal_iv"
-            android:layout_width="@dimen/x194"
-            android:layout_height="@dimen/x72"
+            android:layout_width="@dimen/x154"
+            android:layout_height="@dimen/x77"
             android:layout_marginTop="@dimen/x60"
-            android:layout_marginEnd="@dimen/x145"
+            android:layout_marginEnd="@dimen/x172"
             android:src="@drawable/turn_signal_animation"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"

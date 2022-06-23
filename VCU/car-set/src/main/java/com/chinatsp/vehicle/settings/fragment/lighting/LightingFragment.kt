@@ -84,7 +84,7 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
         binding.lightDelayBlackOutRadio.let {
             it.setOnTabSelectionChangedListener { _, value ->
                 doUpdateRadio(RadioNode.LIGHT_DELAYED_OUT, value, viewModel.lightOutDelayed, it)
-                if (value.equals("8")) {
+                if (value.equals("1")) {
                     binding.homeOpenIv.visibility = View.VISIBLE
                     animationHomeClose.start(
                         false,

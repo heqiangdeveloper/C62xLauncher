@@ -150,8 +150,9 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/lock_iv"
+            android:layout_width="@dimen/x35"
+            android:layout_height="@dimen/x25"
             android:layout_marginTop="@dimen/x64"
             android:layout_marginEnd="@dimen/x58"
             android:src="@drawable/win_lock_red_48"
@@ -159,10 +160,10 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/x20"
-            android:layout_marginEnd="@dimen/x140"
+            android:layout_width="@dimen/x85"
+            android:layout_height="@dimen/x35"
+            android:layout_marginTop="@dimen/x15"
+            android:layout_marginEnd="@dimen/x150"
             android:src="@drawable/right_car_winlock"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
