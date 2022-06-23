@@ -46,8 +46,8 @@
     <ImageView
         android:id="@+id/ivCardDriveOilIcon"
         android:src="@drawable/card_drive_icon_oil"
-        android:layout_width="@dimen/card_icon_size_lv4"
-        android:layout_height="@dimen/card_icon_size_lv4"
+        android:layout_width="@dimen/card_icon_size_lv5"
+        android:layout_height="@dimen/card_icon_size_lv5"
         app:layout_constraintStart_toStartOf="@id/guidelineContentLeft"
         app:layout_constraintTop_toTopOf="@id/guidelineContentTop"
         />
@@ -67,8 +67,8 @@
     <ImageView
         android:id="@+id/ivCardDriveTimeIcon"
         android:src="@drawable/card_drive_icon_time"
-        android:layout_width="@dimen/card_icon_size_lv4"
-        android:layout_height="@dimen/card_icon_size_lv4"
+        android:layout_width="@dimen/card_icon_size_lv5"
+        android:layout_height="@dimen/card_icon_size_lv5"
         app:layout_constraintStart_toStartOf="@id/guidelineContentLeft"
         app:layout_constraintTop_toBottomOf="@id/ivCardDriveOilIcon"
         android:layout_marginTop="38px"
@@ -89,8 +89,8 @@
     <ImageView
         android:id="@+id/ivCardDriveDistanceIcon"
         android:src="@drawable/card_drive_icon_distance"
-        android:layout_width="@dimen/card_icon_size_lv4"
-        android:layout_height="@dimen/card_icon_size_lv4"
+        android:layout_width="@dimen/card_icon_size_lv5"
+        android:layout_height="@dimen/card_icon_size_lv5"
         app:layout_constraintStart_toStartOf="@id/guidelineContentLeft"
         app:layout_constraintTop_toBottomOf="@id/ivCardDriveTimeIcon"
         android:layout_marginTop="38px"

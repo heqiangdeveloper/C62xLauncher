@@ -229,7 +229,7 @@ public class DragHelper {
     private void moveTargetViewToNewPosition(DragViewWrapper targetViewWrapper, boolean diffRcv) {
         if (targetViewWrapper != null) {
             targetViewWrapper.getView().setVisibility(View.INVISIBLE);
-            int[] newLocation = computeTargetNewLocation(targetViewWrapper);
+            int[] newLocation = computeTargetNewLocation(targetViewWrapper, diffRcv);
             mSwipeTargetView.animate()
                     .scaleX(mScaleX)
                     .scaleY(mScaleY)
@@ -243,16 +243,16 @@ public class DragHelper {
     /**
      * 计算 目标View即将被交换到新位置的坐标
      */
-    private int[] computeTargetNewLocation(DragViewWrapper targetViewWrapper) {
+    private int[] computeTargetNewLocation(DragViewWrapper targetViewWrapper, boolean diffRcv) {
         View targetView = targetViewWrapper.getView();
         int[] newLocation = new int[2];
         mSelectedView.getLocationInWindow(newLocation);
-        boolean diffRcv = targetViewWrapper.getRecyclerView() != mDragView.getRecyclerView();
+        newLocation[1] = newLocation[1]  - mContainerY;
         if (!diffRcv) {
             return newLocation;
         }
         newLocation[0] = newLocation[0] + (mSelectedView.getWidth() - mTargetItemView.getWidth()) / 2;
-        newLocation[1] = newLocation[1] + (mSelectedView.getHeight() - mTargetItemView.getHeight()) / 2 - mContainerY;
+        newLocation[1] = newLocation[1] + (mSelectedView.getHeight() - mTargetItemView.getHeight()) / 2;
         return newLocation;
     }
 

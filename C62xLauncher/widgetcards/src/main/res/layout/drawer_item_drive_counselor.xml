@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="498px">
+
+    <ImageView
+        android:layout_width="@dimen/card_icon_size_lv3"
+        android:layout_height="@dimen/card_icon_size_lv3"
+        android:src="@drawable/card_icon_arrow_right_48"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        style="@style/CardLv2TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="42px"
+        android:layout_marginTop="3px"
+        android:text="行车顾问"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/frame1"
+        android:layout_width="match_parent"
+        android:layout_height="209px"
+        android:layout_marginTop="16px"
+        android:background="@drawable/drawer_bg_common"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle">
+
+        <TextView
+            style="@style/CardLv4TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="42px"
+            android:layout_marginStart="18px"
+            android:layout_marginTop="18px"
+            android:text="车辆健康评价"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            style="@style/CardLv4TextView"
+            android:layout_width="58px"
+            android:layout_height="58px"
+            android:layout_marginStart="17px"
+            android:layout_marginTop="60px"
+            android:includeFontPadding="false"
+            android:text="-"
+            android:textSize="58px"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+
+            />
+
+        <ImageView
+            android:layout_width="429px"
+            android:layout_height="209px"
+            android:src="@drawable/drawer_drive_counselor_car_1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="260px"
+        android:layout_height="209px"
+        android:layout_marginTop="22px"
+        android:background="@drawable/drawer_bg_common"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/frame1">
+
+        <com.chinatsp.drawer.drive.DistanceCircleProgress
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20px"
+            android:layout_marginEnd="20px"
+            android:layout_marginTop="25px"
+            android:layout_marginBottom="25px"
+            />
+
+        <TextView
+            style="@style/CardLv4TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="63px"
+            android:text="剩余里程保养"
+            android:textSize="22px"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvDrawerDriveDistance"
+            style="@style/CardLv4TextView"
+            android:layout_width="150px"
+            android:layout_height="61px"
+            android:layout_marginBottom="46px"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="20000"
+            android:textSize="52px"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+
+            />
+
+        <TextView
+            style="@style/CardLv4TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="千米"
+            android:textSize="22px"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvDrawerDriveDistance" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="260px"
+        android:layout_height="209px"
+        android:layout_marginTop="22px"
+        android:background="@drawable/drawer_bg_common"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/frame1">
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

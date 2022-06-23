@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/CardLv2TextView"
-        android:text="登录火山车娱\n发现更多好内容"
+        android:text="@string/doutiao_unlogin_slogon"
         android:lineSpacingMultiplier="1.5"
         android:letterSpacing="0.1"
         app:layout_constraintStart_toStartOf="@id/ivCardDouyinUnlogin"

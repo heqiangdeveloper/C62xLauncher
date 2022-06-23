@@ -12,7 +12,8 @@
     <dimen name="card_icon_size_lv1">80px</dimen>
     <dimen name="card_icon_size_lv2">64px</dimen>
     <dimen name="card_icon_size_lv3">48px</dimen>
-    <dimen name="card_icon_size_lv4">36px</dimen>
+    <dimen name="card_icon_size_lv4">40px</dimen>
+    <dimen name="card_icon_size_lv5">36px</dimen>
 
     <dimen name="card_text_size_lv0">36px</dimen>
     <dimen name="card_text_size_lv1">32px</dimen>
@@ -24,4 +25,5 @@
     <dimen name="card_weather_temperature_width">46px</dimen>
     <dimen name="card_edit_btn_width">228px</dimen>
     <dimen name="card_edit_btn_height">74px</dimen>
+
 </resources>
