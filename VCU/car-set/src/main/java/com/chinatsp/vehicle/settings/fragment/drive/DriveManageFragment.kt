@@ -5,19 +5,30 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.chinatsp.settinglib.manager.assistance.AssistanceManager
+import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.manager.access.AccessManager
+import com.chinatsp.settinglib.manager.adas.AdasManager
 import com.chinatsp.vehicle.settings.R
+import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.chinatsp.vehicle.settings.databinding.DriveManageFragmentBinding
 import com.chinatsp.vehicle.settings.vm.DriveViewModel
 import com.common.library.frame.base.BaseFragment
+import com.common.library.frame.base.BaseTabFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DriveManageFragment : BaseFragment<DriveViewModel, DriveManageFragmentBinding>() {
-    var selectOption: View? = null
+class DriveManageFragment : BaseTabFragment<BaseViewModel, DriveManageFragmentBinding>() {
+
     private lateinit var tabOptions: List<View>
+
+    private val manager: AdasManager
+        get() = AdasManager.instance
+
+    override val tabLocation: MutableLiveData<Int> by lazy { MutableLiveData(manager.getTabSerial()) }
+
+
     private fun onClick(view: View) {
-        viewModel.tabLocationLiveData.takeIf { it.value != view.id }?.value = view.id
+        tabLocation.takeIf { it.value != view.id }?.value = view.id
     }
 
     override fun getLayoutId(): Int {
@@ -26,11 +37,10 @@ class DriveManageFragment : BaseFragment<DriveViewModel, DriveManageFragmentBind
 
     override fun initData(savedInstanceState: Bundle?) {
         initTabOptions()
-
-        viewModel.tabLocationLiveData.observe(this) {
+        tabLocation.observe(this) {
             updateSelectTabOption(it)
         }
-        viewModel.tabLocationLiveData.let {
+        tabLocation.let {
             if (it.value == -1) {
                 it.value = R.id.drive_intelligent_cruise
             } else {
@@ -58,7 +68,7 @@ class DriveManageFragment : BaseFragment<DriveViewModel, DriveManageFragmentBind
     private fun updateDisplayFragment(serial: Int) {
         val fragment: Fragment? = checkOutFragment(serial)
         tabOptions.first { it.id == serial }.isSelected = true
-        AssistanceManager.instance.setTabSerial(serial)
+        manager.setTabSerial(serial)
         fragment?.let {
             val manager: FragmentManager = childFragmentManager
             val transaction: FragmentTransaction = manager.beginTransaction()

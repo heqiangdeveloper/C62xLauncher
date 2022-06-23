@@ -1,7 +1,5 @@
 package com.chinatsp.settinglib.sign
 
-import com.chinatsp.settinglib.manager.cabin.ACManager
-
 /**
  * @author : luohong
  * @e-mail : luohong1@bdstar.com

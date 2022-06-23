@@ -5,12 +5,12 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.chinatsp.settinglib.LogManager
+import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.manager.cabin.CabinManager
 import com.chinatsp.vehicle.settings.R
+import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.chinatsp.vehicle.settings.databinding.CabinFragmentBinding
-import com.chinatsp.vehicle.settings.vm.CabinViewModel
-import com.common.library.frame.base.BaseFragment
+import com.common.library.frame.base.BaseTabFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -21,26 +21,29 @@ import dagger.hilt.android.AndroidEntryPoint
  * @version: 1.0
  */
 @AndroidEntryPoint
-class CabinManagerFragment : BaseFragment<CabinViewModel, CabinFragmentBinding>() {
+class CabinManagerFragment : BaseTabFragment<BaseViewModel, CabinFragmentBinding>() {
 
-//    var selectOption: View? = null
+    private val manager: CabinManager
+        get() = CabinManager.instance
 
     private lateinit var tabOptions: List<View>
+
+    override val tabLocation: MutableLiveData<Int> by lazy { MutableLiveData(manager.getTabSerial()) }
 
     override fun getLayoutId(): Int {
         return R.layout.cabin_fragment
     }
 
     private fun onClick(view: View) {
-        viewModel.tabLocationLiveData.takeIf { it.value != view.id }?.value = view.id
+        tabLocation.takeIf { it.value != view.id }?.value = view.id
     }
 
     override fun initData(savedInstanceState: Bundle?) {
         initTabOptions()
-        viewModel.tabLocationLiveData.observe(this) {
+        tabLocation.observe(this) {
             updateSelectTabOption(it)
         }
-        viewModel.tabLocationLiveData.let { it ->
+        tabLocation.let {
             if (tabOptions.map { item -> item.id }.contains(it.value)) {
                 it.value = it.value
             } else {
@@ -68,7 +71,7 @@ class CabinManagerFragment : BaseFragment<CabinViewModel, CabinFragmentBinding>(
 
     private fun updateDisplayFragment(serial: Int) {
         tabOptions.first { it.id == serial }.isSelected = true
-        CabinManager.instance.setTabSerial(serial)
+        manager.setTabSerial(serial)
         val fragment: Fragment? = checkOutFragment(serial)
         fragment?.let {
             val manager: FragmentManager = childFragmentManager
@@ -103,5 +106,6 @@ class CabinManagerFragment : BaseFragment<CabinViewModel, CabinFragmentBinding>(
         }
         return fragment
     }
+
 
 }

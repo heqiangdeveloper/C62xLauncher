@@ -7,14 +7,16 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="960dp"
-        android:layout_height="680dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/x15"
         android:background="@drawable/bg_sound_popup_20">
 
         <RelativeLayout
             android:id="@+id/pop_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="@dimen/x15"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -23,14 +25,12 @@
                 android:layout_width="@dimen/x28"
                 android:layout_height="@dimen/x28"
                 android:layout_marginStart="@dimen/x15"
-                android:layout_marginTop="@dimen/x15"
                 android:src="@drawable/close_56_white" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/x15"
                 android:text="@string/sound_volume_adjustment"
                 android:textColor="@color/tab_option_title_text_color"
                 android:textSize="@dimen/text_18" />
@@ -39,7 +39,6 @@
                 android:layout_width="@dimen/x28"
                 android:layout_height="@dimen/x28"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="@dimen/x15"
                 android:layout_marginEnd="@dimen/x15"
                 android:src="@drawable/icon_refresh_white_56" />
         </RelativeLayout>

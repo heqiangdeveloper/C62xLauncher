@@ -80,6 +80,8 @@ public abstract class BaseDialogFragment<VM extends BaseViewModel, VDB extends V
 
     private static final long IGNORE_INTERVAL_TIME = 500;
 
+    public float widthRatio = DEFAULT_WIDTH_RATIO;
+
 
     @Nullable
     @Override
@@ -118,7 +120,7 @@ public abstract class BaseDialogFragment<VM extends BaseViewModel, VDB extends V
         if (window != null) {
             window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             window.getAttributes().windowAnimations = R.style.common_frame_dialog_animation;
-            setWindow(window, Gravity.NO_GRAVITY, DEFAULT_WIDTH_RATIO, 0, 0, 0, 0, 0, 0);
+            setWindow(window, Gravity.NO_GRAVITY, widthRatio, 0, 0, 0, 0, 0, 0);
         }
     }
 

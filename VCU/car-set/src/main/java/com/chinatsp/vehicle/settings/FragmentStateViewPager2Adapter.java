@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class FragmentStateViewPager2Adapter extends FragmentStateAdapter {
 
-    private List<Fragment> mFragmentList = new ArrayList<>();
+    private List<Class> mFragmentList = new ArrayList<>();
 
     private List<String> mTitleList = new ArrayList<>();
 
@@ -27,10 +27,15 @@ public class FragmentStateViewPager2Adapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        return mFragmentList.get(position);
+        try {
+            return (Fragment) mFragmentList.get(position).newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Fragment();
+        }
     }
 
-    public FragmentStateViewPager2Adapter addFragment(Fragment fragment, String title) {
+    public FragmentStateViewPager2Adapter addFragment(Class fragment, String title) {
         if (fragment != null) {
             mFragmentList.add(fragment);
             mTitleList.add(title);
@@ -39,7 +44,7 @@ public class FragmentStateViewPager2Adapter extends FragmentStateAdapter {
         return this;
     }
 
-    public FragmentStateViewPager2Adapter addFragment(int index, Fragment fragment, String title) {
+    public FragmentStateViewPager2Adapter addFragment(int index, Class fragment, String title) {
         if (fragment != null && index >= 0 && index <= mFragmentList.size()) {
             mFragmentList.add(index, fragment);
             mTitleList.add(index, title);
@@ -86,4 +91,5 @@ public class FragmentStateViewPager2Adapter extends FragmentStateAdapter {
     public boolean containsItem(long itemId) {
         return mIds.contains(itemId);
     }
+
 }

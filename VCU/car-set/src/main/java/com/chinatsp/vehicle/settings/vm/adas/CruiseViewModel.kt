@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.listener.IOptionListener
-import com.chinatsp.settinglib.manager.assistance.CruiseManager
+import com.chinatsp.settinglib.manager.adas.CruiseManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
@@ -55,17 +55,21 @@ class CruiseViewModel @Inject constructor(app: Application, model: BaseModel) :
         }
     }
 
+    override fun onCreate() {
+        super.onCreate()
+        keySerial = manager.onRegisterVcuListener(0, this)
+    }
+
+    override fun onDestroy() {
+        manager.unRegisterVcuListener(keySerial, keySerial)
+        super.onDestroy()
+    }
+
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {
-            SwitchNode.ADAS_IACC -> {
-                _cruiseAssistFunction.value = status
-            }
-            SwitchNode.ADAS_TARGET_PROMPT -> {
-                _targetPromptFunction.value = status
-            }
-            SwitchNode.ADAS_LIMBER_LEAVE -> {
-                _limberLeaveFunction.value = status
-            }
+            SwitchNode.ADAS_IACC -> _cruiseAssistFunction.value = status
+            SwitchNode.ADAS_TARGET_PROMPT -> _targetPromptFunction.value = status
+            SwitchNode.ADAS_LIMBER_LEAVE -> _limberLeaveFunction.value = status
             else -> {}
         }
     }

@@ -58,6 +58,8 @@ public class VSeekBar extends View {
     private static final float DEFAULT_SMALL_SCALE_WITH = 1.0f;
 
     private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint paint = new Paint();
+
     private int mLineStartX;
     private int mLineEndX;
     private int mLineLength;
@@ -173,7 +175,12 @@ public class VSeekBar extends View {
         }
 
         mRange = mMax - mMin;
+        initPaint();
+    }
 
+    private void initPaint() {
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        paint.setColor(Color.WHITE);
     }
 
 
@@ -266,19 +273,18 @@ public class VSeekBar extends View {
         left = normalRectF.right - xOffset - bitmap.getWidth();
         canvas.drawBitmap(bitmap, left, top, null);
 
-        float dis = 46;
-        float pointRangeWidth = normalRectF.width() - 2 * normalRectF.height() - 2 * dis;
+        float dis = 80;
+        float pointRangeWidth = normalRectF.width() - 2 * normalRectF.height() - dis;
         int count = (int) (pointRangeWidth / dis);
         float spare = pointRangeWidth % dis;
         float append = spare / (float) count;
-        float locationX = normalRectF.left + normalRectF.height();
+        float locationX = normalRectF.left + normalRectF.height() + dis / 2;
         float locationY = normalRectF.top + (normalRectF.height() / 2);
-        float offset = dis;
-        Paint paint = new Paint();
-        paint.setStyle(Paint.Style.FILL_AND_STROKE);
-        paint.setColor(Color.WHITE);
-        for (int index = 0; index < count; index++) {
-            canvas.drawCircle(locationX + index * (dis + spare) + offset, locationY, 2, paint);
+        float offset = -2;
+
+        for (int index = 0; index < count + 1; index++) {
+            offset = (dis + append) * index - 2;
+            canvas.drawCircle(locationX + offset, locationY, 2, paint);
         }
 
     }

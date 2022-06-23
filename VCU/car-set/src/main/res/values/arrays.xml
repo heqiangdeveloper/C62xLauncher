@@ -92,25 +92,29 @@
         <item>3</item>
     </string-array>
     <string-array name="drive_intelligent_options">
+        <item>关闭</item>
         <item>识别提示</item>
         <item>消失提示</item>
         <item>识别消失均提示</item>
     </string-array>
     <string-array name="adas_cruise_limber_leave_values">
+        <item>4</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>
     </string-array>
 
     <string-array name="adas_lane_assist_option_titles">
+        <item>关闭</item>
         <item>智能车道居中</item>
         <item>偏离预警</item>
         <item>偏离辅助</item>
     </string-array>
     <string-array name="adas_lane_assist_option_values">
-        <item>3</item>
-        <item>1</item>
+        <item>0</item>
         <item>2</item>
+        <item>1</item>
+        <item>3</item>
     </string-array>
     <string-array name="drive_alarm_way_options">
         <item>图示</item>
@@ -123,10 +127,12 @@
         <item>3</item>
     </string-array>
     <string-array name="drive_sensitivity_options">
+        <item>关闭</item>
         <item>高</item>
         <item>低</item>
     </string-array>
     <string-array name="adas_ldw_sensitivity_option_values">
+        <item>0</item>
         <item>1</item>
         <item>2</item>
     </string-array>

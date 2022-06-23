@@ -21,14 +21,14 @@ class MirrorViewModel @Inject constructor(app: Application, model: BaseModel):
     val mirrorFoldFunction: LiveData<Boolean> by lazy { _mirrorFoldFunction }
 
     private val _mirrorFoldFunction: MutableLiveData<Boolean> by lazy {
-        val switchNode = SwitchNode.AS_BACK_MIRROR_FOLD
+        val switchNode = SwitchNode.BACK_MIRROR_FOLD
         MutableLiveData(switchNode.isOn()).apply {
             value = manager.doGetSwitchOption(switchNode)
         }
     }
     
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
-        node.takeIf { it == SwitchNode.AS_BACK_MIRROR_FOLD }?.let {
+        node.takeIf { it == SwitchNode.BACK_MIRROR_FOLD }?.let {
             _mirrorFoldFunction.value = status
         }
     }

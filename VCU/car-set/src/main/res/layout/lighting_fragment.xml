@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -53,6 +52,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <com.common.xui.widget.tabbar.TabControlView
+                            android:id="@+id/light_delay_black_out_radio"
                             style="@style/tdv_common_style"
                             android:layout_marginTop="@dimen/x11"
                             app:layout_constraintStart_toStartOf="parent"
@@ -86,6 +86,7 @@
 
 
                         <com.common.xui.widget.tabbar.TabControlView
+                            android:id="@+id/light_flicker_radio"
                             style="@style/tdv_common_style"
                             android:layout_marginTop="@dimen/x11"
                             app:layout_constraintStart_toStartOf="parent"
@@ -193,6 +194,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <com.common.xui.widget.button.switchbutton.SwitchButton
+                            android:id="@+id/light_outside_meet_switch"
                             style="@style/switch_button_style"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -221,6 +223,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <com.common.xui.widget.button.switchbutton.SwitchButton
+                            android:id="@+id/light_inside_meet_switch"
                             style="@style/switch_button_style"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -240,6 +243,41 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/right_car"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/home_open_iv"
+            android:layout_width="@dimen/x450"
+            android:layout_height="@dimen/x176"
+            android:layout_marginTop="@dimen/x160"
+            android:layout_marginEnd="@dimen/x140"
+            android:src="@drawable/home_open_animation"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/welcome_lamp_iv"
+            android:layout_width="@dimen/x172"
+            android:layout_height="@dimen/x50"
+            android:layout_marginEnd="@dimen/x130"
+            android:src="@drawable/welcome_lamp_animation"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/turn_signal_iv"
+            android:layout_width="@dimen/x194"
+            android:layout_height="@dimen/x72"
+            android:layout_marginTop="@dimen/x60"
+            android:layout_marginEnd="@dimen/x145"
+            android:src="@drawable/turn_signal_animation"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

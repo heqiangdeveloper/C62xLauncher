@@ -5,19 +5,23 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.manager.sound.AudioManager
 import com.chinatsp.vehicle.settings.R
+import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.chinatsp.vehicle.settings.databinding.SoundManageFragmentBinding
-import com.chinatsp.vehicle.settings.fragment.lighting.LightingAtmosphereFragment
-import com.chinatsp.vehicle.settings.fragment.lighting.LightingFragment
-import com.chinatsp.vehicle.settings.vm.SoundViewModel
-import com.common.library.frame.base.BaseFragment
+import com.common.library.frame.base.BaseTabFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SoundManageFragment : BaseFragment<SoundViewModel, SoundManageFragmentBinding>() {
-    var selectOption: View? = null
+class SoundManageFragment : BaseTabFragment<BaseViewModel, SoundManageFragmentBinding>() {
+
     private lateinit var tabOptions: List<View>
+
+    private val manager: AudioManager
+        get() = AudioManager.instance
+
+    override val tabLocation: MutableLiveData<Int> by lazy { MutableLiveData(manager.getTabSerial()) }
 
     override fun getLayoutId(): Int {
         return R.layout.sound_manage_fragment
@@ -25,10 +29,10 @@ class SoundManageFragment : BaseFragment<SoundViewModel, SoundManageFragmentBind
 
     override fun initData(savedInstanceState: Bundle?) {
         initTabOptions()
-        viewModel.tabLocationLiveData.observe(this) {
+        tabLocation.observe(this) {
             updateSelectTabOption(it)
         }
-        viewModel.tabLocationLiveData.let {
+        tabLocation.let {
             if (it.value == -1) {
                 it.value = R.id.sound_tab
             } else {
@@ -38,7 +42,7 @@ class SoundManageFragment : BaseFragment<SoundViewModel, SoundManageFragmentBind
     }
 
     private fun onClick(view: View) {
-        viewModel.tabLocationLiveData.takeIf { it.value != view.id }?.value = view.id
+        tabLocation.takeIf { it.value != view.id }?.value = view.id
     }
 
     private fun initTabOptions() {
@@ -59,7 +63,7 @@ class SoundManageFragment : BaseFragment<SoundViewModel, SoundManageFragmentBind
     private fun updateDisplayFragment(serial: Int) {
         var fragment: Fragment? = checkOutFragment(serial)
         tabOptions.first { it.id == serial }.isSelected = true
-        AudioManager.instance.setTabSerial(serial)
+        manager.setTabSerial(serial)
         fragment?.let {
             val manager: FragmentManager = childFragmentManager
             val transaction: FragmentTransaction = manager.beginTransaction()

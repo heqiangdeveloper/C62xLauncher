@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
@@ -19,8 +20,10 @@ import android.widget.RadioGroup;
 
 import com.common.xui.R;
 import com.common.xui.XUI;
+import com.common.xui.utils.ColorUtils;
 import com.common.xui.utils.ResUtils;
 import com.common.xui.utils.ThemeUtils;
+import com.common.xui.utils.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -108,6 +111,8 @@ public class TabControlView extends RadioGroup implements HasTypeface {
     int middleOptionSelected;
     int rightOption;
     int rightOptionSelected;
+
+    public CharSequence[] nameArray;
     /**
      * Used to pass along the selection change event
      * Calls onSelectionChangedListener with mIdentifier and value of selected segment
@@ -172,6 +177,7 @@ public class TabControlView extends RadioGroup implements HasTypeface {
             rightOptionSelected = attributes.getResourceId(R.styleable.TabControlView_tcv_right_option_selected, R.drawable.tcv_right_option_selected);
             //Item and value arrays need to be of the same length
             setItems(itemArray, valueArray);
+            nameArray = itemArray;
         } finally {
             attributes.recycle();
         }
@@ -603,6 +609,22 @@ public class TabControlView extends RadioGroup implements HasTypeface {
     protected void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         update();
+    }
+
+    public void updateEnable(boolean isEnable) {
+        int count = getChildCount();
+        for (int index = 0; index < count; index++) {
+            getChildAt(index).setEnabled(isEnable);
+        }
+        this.setAlpha(isEnable ? 1.0f : 0.5f);
+    }
+
+    public void cleanChecked() {
+        int count = getChildCount();
+        for (int index = 0; index < count; index++) {
+            RadioButton radioButton = (RadioButton) getChildAt(index);
+            if (radioButton.isChecked()) radioButton.setChecked(false);
+        }
     }
 
     /**

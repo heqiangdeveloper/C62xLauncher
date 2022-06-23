@@ -1,58 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="880dp"
-    android:layout_height="600dp"
-    android:background="@drawable/bg_sound_popup_20">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
-        android:id="@+id/pop_title"
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:background="@drawable/bg_sound_popup_20">
+
+        <RelativeLayout
+            android:id="@+id/pop_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/x15"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/close_dialog"
+                style="@style/close_dialog" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/dialog_title"
+                android:text="@string/cabin_wheel_custom_button" />
+        </RelativeLayout>
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/close_dialog"
-            style="@style/close_dialog" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/csd_fxp_new_popup"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/dialog_title"
-            android:text="@string/cabin_wheel_custom_button" />
-    </RelativeLayout>
+            android:id="@+id/privacy_mode"
+            style="@style/model_txt_dialog"
+            android:layout_marginStart="@dimen/x38"
+            android:layout_marginTop="@dimen/x49"
+            android:text="@string/cabin_wheel_press_key_tv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pop_title" />
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/csd_fxp_new_popup"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/turn_screen"
+            style="@style/model_txt_dialog"
+            android:layout_marginStart="@dimen/x38"
+            android:layout_marginTop="@dimen/x25"
+            android:text="@string/cabin_wheel_turn_screen"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/privacy_mode" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/privacy_mode"
-        style="@style/model_txt_dialog"
-        android:layout_marginStart="@dimen/x38"
-        android:layout_marginTop="@dimen/x49"
-        android:text="@string/cabin_wheel_press_key_tv"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/pop_title" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/navigation"
+            style="@style/model_txt_dialog"
+            android:layout_marginStart="@dimen/x38"
+            android:layout_marginTop="@dimen/x25"
+            android:text="@string/cabin_wheel_navigation"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/turn_screen" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/turn_screen"
-        style="@style/model_txt_dialog"
-        android:layout_marginStart="@dimen/x38"
-        android:layout_marginTop="@dimen/x25"
-        android:text="@string/cabin_wheel_turn_screen"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/privacy_mode" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/navigation"
-        style="@style/model_txt_dialog"
-        android:layout_marginStart="@dimen/x38"
-        android:layout_marginTop="@dimen/x25"
-        android:text="@string/cabin_wheel_navigation"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/turn_screen" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

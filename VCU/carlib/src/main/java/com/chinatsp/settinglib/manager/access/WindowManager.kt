@@ -2,12 +2,11 @@ package com.chinatsp.settinglib.manager.access
 
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
-import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.ISwitchListener
-import com.chinatsp.settinglib.listener.access.IWindowListener
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
+import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.optios.Area
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
@@ -23,11 +22,11 @@ import java.util.concurrent.atomic.AtomicBoolean
  */
 
 
-class WindowManager private constructor() : BaseManager(), IWindowManager {
+class WindowManager private constructor() : BaseManager(), ISwitchManager {
 
 
     private val autoCloseWinInRain: AtomicBoolean by lazy {
-        val switchNode = SwitchNode.AS_CLOSE_WIN_WHILE_RAIN
+        val switchNode = SwitchNode.WIN_CLOSE_WHILE_RAIN
         AtomicBoolean(switchNode.isOn()).apply {
             val result = readIntProperty(switchNode.get.signal, switchNode.get.origin)
             doUpdateSwitchValue(switchNode, this, result)
@@ -35,7 +34,7 @@ class WindowManager private constructor() : BaseManager(), IWindowManager {
     }
 
     private val autoCloseWinAtLock: AtomicBoolean by lazy {
-        val switchNode = SwitchNode.AS_CLOSE_WIN_WHILE_LOCK
+        val switchNode = SwitchNode.WIN_CLOSE_FOLLOW_LOCK
         AtomicBoolean(switchNode.isOn()).apply {
             val result = readIntProperty(switchNode.get.signal, switchNode.get.origin)
             doUpdateSwitchValue(switchNode, this, result)
@@ -49,7 +48,7 @@ class WindowManager private constructor() : BaseManager(), IWindowManager {
         }
     }
 
-    override val concernedSerials: Map<Origin, Set<Int>> by lazy {
+    override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int> ().apply {
                 /**雨天自动关窗*/
@@ -61,11 +60,11 @@ class WindowManager private constructor() : BaseManager(), IWindowManager {
         }
     }
 
-    override fun onHandleConcernedSignal(
+    override fun onHandleSignal(
         property: CarPropertyValue<*>,
-        signalOrigin: Origin
+        origin: Origin
     ): Boolean {
-        when (signalOrigin) {
+        when (origin) {
             Origin.CABIN -> {
                 onCabinPropertyChanged(property)
             }
@@ -77,13 +76,13 @@ class WindowManager private constructor() : BaseManager(), IWindowManager {
         return true
     }
 
-    override fun isConcernedSignal(signal: Int, signalOrigin: Origin): Boolean {
-        val signals = getConcernedSignal(signalOrigin)
+    override fun isCareSignal(signal: Int, origin: Origin): Boolean {
+        val signals = getOriginSignal(origin)
         return signals.contains(signal)
     }
 
-    override fun getConcernedSignal(signalOrigin: Origin): Set<Int> {
-        return concernedSerials[signalOrigin] ?: HashSet()
+    override fun getOriginSignal(origin: Origin): Set<Int> {
+        return careSerials[origin] ?: HashSet()
     }
 
     override fun doGetSwitchOption(node: SwitchNode): Boolean {
@@ -92,34 +91,24 @@ class WindowManager private constructor() : BaseManager(), IWindowManager {
 
     override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
         return when (node) {
-            SwitchNode.AS_CLOSE_WIN_WHILE_RAIN -> {
+            SwitchNode.WIN_CLOSE_WHILE_RAIN -> {
                 writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
-            SwitchNode.AS_CLOSE_WIN_WHILE_LOCK -> {
+            SwitchNode.WIN_CLOSE_FOLLOW_LOCK -> {
                 writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
-            SwitchNode.AS_WIN_REMOTE_CONTROL -> {
+            SwitchNode.WIN_REMOTE_CONTROL -> {
                 writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
-            SwitchNode.AS_RAIN_WIPER_REPAIR -> {
+            SwitchNode.RAIN_WIPER_REPAIR -> {
                 writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
             else -> false
         }
     }
 
-    override fun unRegisterVcuListener(serial: Int, callSerial: Int): Boolean {
-        LogManager.d(TAG, "unRegisterVcuListener serial:$serial, callSerial:$callSerial")
-        synchronized(listenerStore) {
-            listenerStore.let {
-                if (it.containsKey(serial)) it else null
-            }?.remove(serial)
-        }
-        return true
-    }
-
     override fun onRegisterVcuListener(priority: Int, listener: IBaseListener): Int {
-        if (listener is IWindowListener) {
+        if (listener is ISwitchManager) {
             val serial: Int = System.identityHashCode(listener)
             synchronized(listenerStore) {
                 unRegisterVcuListener(serial, identity)
@@ -164,22 +153,22 @@ class WindowManager private constructor() : BaseManager(), IWindowManager {
      */
     fun doGetSwitchStatus(switchNode: SwitchNode): Boolean {
         return when (switchNode) {
-            SwitchNode.AS_CLOSE_WIN_WHILE_RAIN -> {
+            SwitchNode.WIN_CLOSE_WHILE_RAIN -> {
                 val signal = CarCabinManager.ID_BCM_RAIN_WIN_CLOSE_FUN_STS
                 val value = readIntProperty(signal, Origin.CABIN, switchNode.area)
                 switchNode.isOn(value)
             }
-            SwitchNode.AS_CLOSE_WIN_WHILE_LOCK -> {
+            SwitchNode.WIN_CLOSE_FOLLOW_LOCK -> {
                 val signal = CarCabinManager.ID_BCM_WIN_CLOSE_FUN_STS
                 val value = readIntProperty(signal, Origin.CABIN, switchNode.area)
                 switchNode.isOn(value)
             }
-            SwitchNode.AS_WIN_REMOTE_CONTROL -> {
+            SwitchNode.WIN_REMOTE_CONTROL -> {
                 val signal = CarCabinManager.ID_BCM_RAIN_WIN_CLOSE_FUN_STS
                 val value = readIntProperty(signal, Origin.CABIN, switchNode.area)
                 switchNode.isOn(value)
             }
-            SwitchNode.AS_RAIN_WIPER_REPAIR -> {
+            SwitchNode.RAIN_WIPER_REPAIR -> {
                 val signal = CarCabinManager.ID_BCM_RAIN_WIN_CLOSE_FUN_STS
                 val value = readIntProperty(signal, Origin.CABIN, switchNode.area)
                 switchNode.isOn(value)
@@ -192,10 +181,10 @@ class WindowManager private constructor() : BaseManager(), IWindowManager {
         /**雨天自动关窗*/
         when (property.propertyId) {
             CarCabinManager.ID_BCM_RAIN_WIN_CLOSE_FUN_STS -> {
-                onSwitchChanged(SwitchNode.AS_CLOSE_WIN_WHILE_RAIN, property)
+                onSwitchChanged(SwitchNode.WIN_CLOSE_WHILE_RAIN, property)
             }
             CarCabinManager.ID_BCM_WIN_CLOSE_FUN_STS -> {
-                onSwitchChanged(SwitchNode.AS_CLOSE_WIN_WHILE_LOCK, property)
+                onSwitchChanged(SwitchNode.WIN_CLOSE_FOLLOW_LOCK, property)
             }
             else -> {}
         }
@@ -208,7 +197,7 @@ class WindowManager private constructor() : BaseManager(), IWindowManager {
              * 0x0: Disable
              * 0x1: Enable
              */
-            SwitchNode.AS_CLOSE_WIN_WHILE_RAIN -> {
+            SwitchNode.WIN_CLOSE_WHILE_RAIN -> {
                 var value = property.value
                 if (value is Int) {
                     value += 1
@@ -223,7 +212,7 @@ class WindowManager private constructor() : BaseManager(), IWindowManager {
              * 0x2: reserved
              * 0x3: Reserved
              */
-            SwitchNode.AS_CLOSE_WIN_WHILE_LOCK -> {
+            SwitchNode.WIN_CLOSE_FOLLOW_LOCK -> {
                 var value = property.value
                 if (value is Int) {
                     value += 1

@@ -1,8 +1,5 @@
 package com.chinatsp.settinglib.manager
 
-import com.chinatsp.settinglib.listener.IManager
-import com.chinatsp.settinglib.optios.RadioNode
-
 /**
  * @author : luohong
  * @e-mail : luohong1@bdstar.com

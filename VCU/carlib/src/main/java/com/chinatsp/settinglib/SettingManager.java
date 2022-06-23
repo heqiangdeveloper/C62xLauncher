@@ -50,6 +50,7 @@ import com.chinatsp.settinglib.sign.TabSignManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -206,6 +207,7 @@ public class SettingManager {
 //                    Set<Integer> signals = GlobalManager.Companion.getInstance().getConcernedSignal(SignalOrigin.CABIN_SIGNAL);
                 Set<Integer> signals = RegisterSignalManager.Companion.getCabinSignal();
                 int[] signalArray = signals.stream().mapToInt(Integer::intValue).toArray();
+                Arrays.stream(signalArray).forEach(value -> LogManager.Companion.d("register cabin: property:" + value));
                 mCarCabinManager.registerCallback(cabinEventListener, signalArray);
             }
         } catch (Exception e) {
@@ -217,8 +219,8 @@ public class SettingManager {
         @Override
         public void onChangeEvent(CarPropertyValue property) {
             int propertyId = property.getPropertyId();
-            LogManager.Companion.d(TAG, "Cabin onChangeEvent propertyId:" + propertyId);
-            GlobalManager.Companion.getInstance().onDispatchSignal(propertyId, property, Origin.CABIN);
+            LogManager.Companion.d(TAG, "Cabin onChangeEvent propertyId:" + propertyId + ", value:" + property.getValue());
+            GlobalManager.Companion.getInstance().onDispatchSignal(property, Origin.CABIN);
         }
 
         @Override
@@ -232,7 +234,7 @@ public class SettingManager {
         public void onChangeEvent(CarPropertyValue property) {
             int propertyId = property.getPropertyId();
             LogManager.Companion.d(TAG, "Hvac onChangeEvent:propertyId:" + propertyId);
-            GlobalManager.Companion.getInstance().onDispatchSignal(propertyId, property, Origin.HVAC);
+            GlobalManager.Companion.getInstance().onDispatchSignal(property, Origin.HVAC);
         }
 
         @Override
@@ -246,7 +248,7 @@ public class SettingManager {
         public void onChangeEvent(CarPropertyValue property) {
             int propertyId = property.getPropertyId();
             LogManager.Companion.d(TAG, "Mcu onChangeEvent:propertyId:" + propertyId);
-            GlobalManager.Companion.getInstance().onDispatchSignal(propertyId, property, Origin.MCU);
+            GlobalManager.Companion.getInstance().onDispatchSignal(property, Origin.MCU);
 //            switch (property.getPropertyId()) {
 //                case CarMcuManager.ID_VENDOR_MCU_POWER_MODE://电源状态
 //                    int powerStatus = (Integer) property.getValue();
@@ -549,9 +551,8 @@ public class SettingManager {
     public boolean doSetCabinProperty(int id, int value, int areaValue) {
         if (null != mCarCabinManager) {
             try {
-                LogManager.Companion.d(TAG, "doSetCabinProperty b hex propertyId:" + Integer.toHexString(id) + ", value:" + value);
+                LogManager.Companion.d(TAG, "setCabinValue b hex propertyId:" + Integer.toHexString(id) + ", dec propertyId:" + id + ", value:" + value);
                 mCarCabinManager.setIntProperty(id, areaValue, value);
-                LogManager.Companion.d(TAG, "doSetCabinProperty e dec propertyId:" + id + ", value:" + value);
                 return true;
             } catch (CarNotConnectedException e) {
                 e.printStackTrace();
@@ -563,9 +564,8 @@ public class SettingManager {
     public boolean doSetHvacProperty(int id, int value, int areaValue) {
         if (null != hvacManager) {
             try {
-                LogManager.Companion.d(TAG, "doSetHvacProperty b hex propertyId:" + Integer.toHexString(id) + ", value:" + value);
+                LogManager.Companion.d(TAG, "setHvacValue b hex propertyId:" + Integer.toHexString(id) + ", dec propertyId:" + id + ", value:" + value);
                 hvacManager.setIntProperty(id, areaValue, value);
-                LogManager.Companion.d(TAG, "doSetHvacProperty e dec propertyId:" + id + ", value:" + value);
                 return true;
             } catch (CarNotConnectedException e) {
                 e.printStackTrace();
@@ -1342,7 +1342,6 @@ public class SettingManager {
             onRegisterCabinListener();
             onRegisterHvacListener();
             onRegisterPowerListener();
-
             updateAdapterConnect();
             LogManager.Companion.d(TAG, "onServiceConnected end");
         }
@@ -1384,7 +1383,6 @@ public class SettingManager {
             if (null == mCarAudioManager) {
                 try {
                     mCarAudioManager = (CarAudioManager) mCarApi.getCarManager(Car.AUDIO_SERVICE);
-//                    SoundManager.getInstance().initAudioManager(mCarAudioManager);
                     VoiceManager.Companion.getInstance().injectAudioManager(mCarAudioManager);
                 } catch (CarNotConnectedException e) {
                     e.printStackTrace();
@@ -1419,12 +1417,6 @@ public class SettingManager {
 
     private void initCarManager() {
         try {
-//            if (null == mCarAudioManager) {
-//                mCarAudioManager = (CarAudioManager) mCarApi.getCarManager(Car.AUDIO_SERVICE);
-//            }
-//            if (null == mCarPowerManager) {
-//                mCarPowerManager = (CarPowerManager) mCarApi.getCarManager(Car.POWER_SERVICE);
-//            }
             if (null == mBoxManager) {
                 mBoxManager = (TboxManager) mCarApi.getCarManager(Car.TBOX_SERVICE);
             }

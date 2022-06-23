@@ -1,6 +1,8 @@
 package com.chinatsp.apppanel;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -14,6 +16,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.chinatsp.apppanel.fragments.AppStoreFragment;
 import com.chinatsp.apppanel.fragments.MyAppFragment;
+import com.chinatsp.apppanel.receiver.AppInstallStatusReceiver;
 
 import java.util.List;
 

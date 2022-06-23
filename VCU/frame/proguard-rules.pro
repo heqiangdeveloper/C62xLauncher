@@ -272,9 +272,9 @@
 -dontwarn org.jetbrains.annotations.**
 
 #
--keep class com.king.frame.** { *; }
--keep interface com.king.frame.** { *; }
--dontwarn com.king.frame.**
+-keep class com.common.library.frame.** { *; }
+-keep interface com.common.library.frame.** { *; }
+-dontwarn com.common.library.frame.**
 
 # RetrofitHelper
 -keep class com.king.retrofit.** { *; }

@@ -4,13 +4,11 @@ import android.os.Bundle
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.IOptionManager
-import com.chinatsp.settinglib.manager.assistance.LaneManager
-import com.chinatsp.settinglib.manager.assistance.SideBackManager
+import com.chinatsp.settinglib.manager.adas.SideBackManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.DriveRearFragmentBinding
-import com.chinatsp.vehicle.settings.vm.DriveViewModel
 import com.chinatsp.vehicle.settings.vm.adas.SideViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
@@ -29,23 +27,107 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
 
 
     override fun initData(savedInstanceState: Bundle?) {
-        initSwitchOptions()
-        initRadioOptions()
+        initSwitchOption()
+        addSwitchLiveDataListener()
+        setSwitchListener()
 
-        observeRadioLiveData()
-        observeSwitchLiveData()
-
-        observeRadioOptionChange()
-        observeSwitchOptionChange()
+        initRadioOption()
+        addRadioLiveDataListener()
+        setRadioListener()
     }
 
-    private fun observeRadioLiveData() {
+    private fun initRadioOption() {
+        initRadioOption(RadioNode.ADAS_SIDE_BACK_SHOW_AREA, viewModel.showAreaValue)
+    }
+
+    private fun addRadioLiveDataListener() {
         viewModel.showAreaValue.observe(this) {
-            updateRadioOption(RadioNode.ADAS_SIDE_BACK_SHOW_AREA, it, false)
+            doUpdateRadio(RadioNode.ADAS_SIDE_BACK_SHOW_AREA, it, false)
         }
     }
 
-    private fun observeSwitchOptionChange() {
+    private fun setRadioListener() {
+        binding.adasSideShowAreaRadio.let {
+            it.setOnTabSelectionChangedListener { _, value ->
+                doUpdateRadio(RadioNode.ADAS_SIDE_BACK_SHOW_AREA, value, viewModel.showAreaValue, it)
+            }
+        }
+    }
+
+    private fun initRadioOption(node: RadioNode, liveData: LiveData<Int>) {
+        val value = liveData.value ?: node.default
+        doUpdateRadio(node, value)
+    }
+
+    private fun doUpdateRadio(
+        node: RadioNode,
+        value: String,
+        liveData: LiveData<Int>,
+        tabView: TabControlView
+    ) {
+        val result = isCanToInt(value) && manager.doSetRadioOption(node, value.toInt())
+        tabView.takeIf { !result }?.setSelection(liveData.value.toString(), true)
+    }
+
+    private fun doUpdateRadio(node: RadioNode, value: Int, immediately: Boolean = false) {
+        val tabView = when (node) {
+            RadioNode.ADAS_SIDE_BACK_SHOW_AREA -> binding.adasSideShowAreaRadio
+            else -> null
+        }
+        takeIf { null != tabView }?.doUpdateRadio(tabView!!, value, immediately)
+    }
+
+    private fun doUpdateRadio(tabView: TabControlView, value: Int, immediately: Boolean = false) {
+        tabView.setSelection(value.toString(), true)
+    }
+
+    private fun initSwitchOption() {
+        initSwitchOption(SwitchNode.ADAS_DOW, viewModel.dowValue)
+        initSwitchOption(SwitchNode.ADAS_BSC, viewModel.bscValue)
+        initSwitchOption(SwitchNode.ADAS_BSD, viewModel.bsdValue)
+        initSwitchOption(SwitchNode.ADAS_GUIDES, viewModel.guidesValue)
+    }
+
+    private fun addSwitchLiveDataListener() {
+        viewModel.dowValue.observe(this) {
+            doUpdateSwitch(SwitchNode.ADAS_DOW, it)
+        }
+        viewModel.bscValue.observe(this) {
+            doUpdateSwitch(SwitchNode.ADAS_BSC, it)
+        }
+        viewModel.bsdValue.observe(this) {
+            doUpdateSwitch(SwitchNode.ADAS_BSD, it)
+        }
+        viewModel.guidesValue.observe(this) {
+            doUpdateSwitch(SwitchNode.ADAS_GUIDES, it)
+        }
+    }
+
+    private fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {
+        val status = liveData.value ?: node.default
+        doUpdateSwitch(node, status, true)
+    }
+
+    private fun doUpdateSwitch(node: SwitchNode, status: Boolean, immediately: Boolean = false) {
+        val swb = when (node) {
+            SwitchNode.ADAS_DOW -> binding.adasSideDowSwitch
+            SwitchNode.ADAS_BSC -> binding.adasSideBscSwitch
+            SwitchNode.ADAS_BSD -> binding.adasSideBsdSwitch
+            SwitchNode.ADAS_GUIDES -> binding.adasSideGuidesSwitch
+            else -> null
+        }
+        takeIf { null != swb }?.doUpdateSwitch(swb!!, status, immediately)
+    }
+
+    private fun doUpdateSwitch(swb: SwitchButton, status: Boolean, immediately: Boolean = false) {
+        if (!immediately) {
+            swb.setCheckedNoEvent(status)
+        } else {
+            swb.setCheckedImmediatelyNoEvent(status)
+        }
+    }
+
+    private fun setSwitchListener() {
         binding.adasSideDowSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.ADAS_DOW, buttonView, isChecked)
         }
@@ -60,38 +142,10 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
         }
     }
 
-    private fun observeRadioOptionChange() {
-        listeningRadioOption(
-            binding.adasSideShowAreaRadio,
-            viewModel.showAreaValue,
-            RadioNode.ADAS_SIDE_BACK_SHOW_AREA
-        )
-    }
-
-    private fun listeningRadioOption(
-        tabView: TabControlView,
-        liveData: LiveData<Int>,
-        radioNode: RadioNode
-    ) {
-        tabView.setOnTabSelectionChangedListener { _, value ->
-            val result = isCanToInt(value) && manager.doSetRadioOption(radioNode, value.toInt())
-            if (!result) {
-                val oldValue = liveData.value!!
-//                tabView.setSelection(oldValue.toString(), false)
-                updateRadioOption(radioNode, oldValue, false)
-            }
-        }
-    }
-
-
-    private fun doUpdateSwitchOption(
-        switchNode: SwitchNode,
-        buttonView: CompoundButton,
-        status: Boolean
-    ) {
-        val result = manager.doSetSwitchOption(switchNode, status)
-        if (!result && buttonView is SwitchButton) {
-            buttonView.setCheckedImmediatelyNoEvent(!status)
+    private fun doUpdateSwitchOption(node: SwitchNode, button: CompoundButton, status: Boolean) {
+        val result = manager.doSetSwitchOption(node, status)
+        if (!result && button is SwitchButton) {
+            button.setCheckedImmediatelyNoEvent(!status)
         }
     }
 
@@ -99,67 +153,4 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
         return null != value && value.isNotBlank() && value.matches(Regex("\\d+"))
     }
 
-
-    private fun observeSwitchLiveData() {
-        viewModel.dowValue.observe(this) {
-            updateSwitchOption(SwitchNode.ADAS_DOW, it)
-        }
-        viewModel.bscValue.observe(this) {
-            updateSwitchOption(SwitchNode.ADAS_BSC, it)
-        }
-        viewModel.bsdValue.observe(this) {
-            updateSwitchOption(SwitchNode.ADAS_BSD, it)
-        }
-        viewModel.guidesValue.observe(this) {
-            updateSwitchOption(SwitchNode.ADAS_GUIDES, it)
-        }
-    }
-
-    private fun initSwitchOptions() {
-        updateSwitchOption(SwitchNode.ADAS_DOW, viewModel.dowValue.value!!, true)
-        updateSwitchOption(SwitchNode.ADAS_BSC, viewModel.bscValue.value!!, true)
-        updateSwitchOption(SwitchNode.ADAS_BSD, viewModel.bsdValue.value!!, true)
-        updateSwitchOption(SwitchNode.ADAS_GUIDES, viewModel.guidesValue.value!!, true)
-    }
-
-    private fun initRadioOptions() {
-        updateRadioOption(RadioNode.ADAS_SIDE_BACK_SHOW_AREA, viewModel.showAreaValue.value!!, true)
-    }
-
-    private fun updateSwitchOption(node: SwitchNode, value: Boolean, immediately: Boolean = false) {
-        val switchButton = when (node) {
-            SwitchNode.ADAS_DOW -> {
-                binding.adasSideDowSwitch
-            }
-            SwitchNode.ADAS_BSC -> {
-                binding.adasSideBscSwitch
-            }
-            SwitchNode.ADAS_BSD -> {
-                binding.adasSideBsdSwitch
-            }
-            SwitchNode.ADAS_GUIDES -> {
-                binding.adasSideGuidesSwitch
-            }
-            else -> null
-        }
-        switchButton?.let {
-            if (!immediately) {
-                it.setCheckedNoEvent(value)
-            } else {
-                it.setCheckedImmediatelyNoEvent(value)
-            }
-        }
-    }
-
-    private fun updateRadioOption(node: RadioNode, value: Int, immediately: Boolean = false) {
-        val tabView = when (node) {
-            RadioNode.ADAS_SIDE_BACK_SHOW_AREA -> {
-                binding.adasSideShowAreaRadio
-            }
-            else -> null
-        }
-        tabView?.let {
-            it.setSelection(value.toString(), false)
-        }
-    }
 }

@@ -1,7 +1,10 @@
 package com.chinatsp.settinglib.manager
 
+import android.car.hardware.CarPropertyValue
 import com.chinatsp.settinglib.listener.IManager
 import com.chinatsp.settinglib.optios.RadioNode
+import com.chinatsp.settinglib.sign.TabBlock
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author : luohong
@@ -24,4 +27,30 @@ interface IRadioManager : IManager {
      * @return  返回接口调用是否成功
      */
     fun doSetRadioOption(node: RadioNode, value: Int): Boolean
+
+    fun onRadioChanged(node: RadioNode, atomic: AtomicInteger, p: CarPropertyValue<*>) {
+        val value = p.value
+        if (value is Int) {
+            onRadioChanged(node, atomic, value, this::doUpdateRadioValue) {
+                    radioNode, newValue -> doRadioChanged(radioNode, newValue)
+            }
+        }
+    }
+
+    fun onRadioChanged(
+        node: RadioNode, atomic: AtomicInteger, value: Int,
+        update: ((RadioNode, AtomicInteger, Int, ((RadioNode, Int) -> Unit)) -> Unit),
+        block: ((RadioNode, Int) -> Unit)
+    ) {
+        update(node, atomic, value, block)
+    }
+
+    fun doUpdateRadioValue(node: RadioNode, atomic: AtomicInteger, value: Int, block: ((RadioNode, Int) -> Unit)? = null)
+            : AtomicInteger {
+        if (node.isValid(value) && atomic.get() != value) {
+            atomic.set(value)
+            block?.let { it(node, value) }
+        }
+        return atomic
+    }
 }

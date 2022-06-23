@@ -32,7 +32,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.common.xui.widget.button.switchbutton.SwitchButton
-                    android:id="@+id/cabin_ac_auto_dry_swb"
+                    android:id="@+id/cabin_safe_fortify_switch"
                     style="@style/switch_button_style"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -61,7 +61,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.common.xui.widget.button.switchbutton.SwitchButton
-                    android:id="@+id/cabin_ac_advance_wind_swb"
+                    android:id="@+id/cabin_safe_movie_switch"
                     style="@style/switch_button_style"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

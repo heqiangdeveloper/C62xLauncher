@@ -18,8 +18,8 @@
             android:id="@+id/close_window"
             android:layout_width="@dimen/x94"
             android:layout_height="@dimen/x94"
-            android:layout_marginStart="@dimen/x136"
-            android:layout_marginTop="@dimen/x88"
+            android:layout_marginStart="@dimen/x76"
+            android:layout_marginTop="@dimen/x82"
             android:background="@drawable/ac_tab_bg_selector"
             android:orientation="vertical"
             app:layout_constraintStart_toStartOf="parent"
@@ -47,7 +47,7 @@
             android:layout_width="@dimen/x94"
             android:layout_height="@dimen/x94"
             android:layout_marginStart="@dimen/x20"
-            android:layout_marginTop="@dimen/x88"
+            android:layout_marginTop="@dimen/x82"
             android:background="@drawable/ac_tab_bg_selector"
             android:orientation="vertical"
             app:layout_constraintLeft_toRightOf="@+id/close_window"
@@ -73,7 +73,8 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/right_car"
+            android:layout_marginStart="@dimen/x62"
+            android:src="@drawable/car"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/open_window" />
 

@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.listener.IOptionListener
-import com.chinatsp.settinglib.manager.assistance.SideBackManager
+import com.chinatsp.settinglib.manager.adas.SideBackManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
@@ -56,11 +56,21 @@ class SideViewModel @Inject constructor(app: Application, model: BaseModel) :
     val showAreaValue: LiveData<Int> by lazy { _showAreaValue }
 
     private val _showAreaValue: MutableLiveData<Int> by lazy {
-        MutableLiveData(-1).apply {
-            value = manager.doGetRadioOption(RadioNode.ADAS_SIDE_BACK_SHOW_AREA)
+        val node = RadioNode.ADAS_SIDE_BACK_SHOW_AREA
+        MutableLiveData(node.default).apply {
+            value = manager.doGetRadioOption(node)
         }
     }
 
+    override fun onCreate() {
+        super.onCreate()
+        keySerial = manager.onRegisterVcuListener(0, this)
+    }
+
+    override fun onDestroy() {
+        manager.unRegisterVcuListener(keySerial, keySerial)
+        super.onDestroy()
+    }
 
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {

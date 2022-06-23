@@ -4,8 +4,7 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.listener.IOptionListener
-import com.chinatsp.settinglib.manager.assistance.CombineManager
-import com.chinatsp.settinglib.manager.assistance.SideBackManager
+import com.chinatsp.settinglib.manager.adas.CombineManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
@@ -32,10 +31,20 @@ class CombineViewModel @Inject constructor(app: Application, model: BaseModel) :
     val slaValue: LiveData<Boolean> by lazy { _slaValue }
 
     private val _slaValue: MutableLiveData<Boolean> by lazy {
-        val switchNode = SwitchNode.ADAS_SLA
+        val switchNode = SwitchNode.ADAS_TSR
         MutableLiveData(switchNode.isOn()).apply {
             value = manager.doGetSwitchOption(switchNode)
         }
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        keySerial = manager.onRegisterVcuListener(listener = this)
+    }
+
+    override fun onDestroy() {
+        manager.unRegisterVcuListener(keySerial)
+        super.onDestroy()
     }
 
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
@@ -43,7 +52,7 @@ class CombineViewModel @Inject constructor(app: Application, model: BaseModel) :
             SwitchNode.ADAS_HMA -> {
                 _hmaValue.value = status
             }
-            SwitchNode.ADAS_SLA -> {
+            SwitchNode.ADAS_TSR -> {
                 _slaValue.value = status
             }
             else -> {}

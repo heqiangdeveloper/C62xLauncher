@@ -2,7 +2,7 @@ package com.chinatsp.vehicle.settings.vm.accress
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
-import com.chinatsp.settinglib.listener.access.IWindowListener
+import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.manager.access.WindowManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
@@ -12,14 +12,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WindowViewModel @Inject constructor(app: Application, model: BaseModel):
-    BaseViewModel(app, model), IWindowListener{
+    BaseViewModel(app, model), ISwitchListener{
     val tabLocationLiveData: MutableLiveData<Int> by lazy { MutableLiveData(-1) }
 
     private val windowManager:WindowManager
         get() = WindowManager.instance
 
     val remoteRiseFallStatus: MutableLiveData<Boolean> by lazy {
-        val switchNode = SwitchNode.AS_WIN_REMOTE_CONTROL
+        val switchNode = SwitchNode.WIN_REMOTE_CONTROL
         MutableLiveData(switchNode.isOn()).apply {
             this.value = doGetSwitchStatus(switchNode)
         }

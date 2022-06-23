@@ -95,6 +95,39 @@ public abstract class BaseMainAdapter<VH extends RecyclerView.ViewHolder, Sub ex
     }
 
 
+//    @Override
+//    public int getCurrentState(View selectedView, View targetView, int x, int y,
+//                               VelocityTracker velocityTracker, int selectedPosition,
+//                               int targetPosition) {
+//        if (velocityTracker == null) return ClassifyView.STATE_NONE;
+//        int left = x;
+//        int top = y;
+//        int right = left + selectedView.getWidth();
+//        int bottom = top + selectedView.getHeight();
+//        if (canMergeItem(selectedPosition, targetPosition)) {
+//            if ((Math.abs(left - targetView.getLeft()) + Math.abs(right - targetView.getRight()) +
+//                    Math.abs(top - targetView.getTop()) + Math.abs(bottom - targetView.getBottom()))
+//                    < (targetView.getWidth() + targetView.getHeight()
+//            ) / 3) {
+//                return ClassifyView.STATE_MERGE;
+//            }
+//        }
+//        if ((Math.abs(left - targetView.getLeft()) + Math.abs(right - targetView.getRight()) +
+//                Math.abs(top - targetView.getTop()) + Math.abs(bottom - targetView.getBottom()))
+//                < (targetView.getWidth() + targetView.getHeight()
+//        ) / 2) {
+//            velocityTracker.computeCurrentVelocity(100);
+//            float xVelocity = velocityTracker.getXVelocity();
+//            float yVelocity = velocityTracker.getYVelocity();
+//            float limit = getVelocity(targetView.getContext());
+//            if (xVelocity < limit && yVelocity < limit) {
+//                return ClassifyView.STATE_MOVE;
+//            }
+//        }
+//        return ClassifyView.STATE_NONE;
+//    }
+
+    //改进距离算法https://blog.csdn.net/zou249014591/article/details/105013075
     @Override
     public int getCurrentState(View selectedView, View targetView, int x, int y,
                                VelocityTracker velocityTracker, int selectedPosition,
@@ -102,29 +135,61 @@ public abstract class BaseMainAdapter<VH extends RecyclerView.ViewHolder, Sub ex
         if (velocityTracker == null) return ClassifyView.STATE_NONE;
         int left = x;
         int top = y;
-        int right = left + selectedView.getWidth();
-        int bottom = top + selectedView.getHeight();
-        if (canMergeItem(selectedPosition, targetPosition)) {
-            if ((Math.abs(left - targetView.getLeft()) + Math.abs(right - targetView.getRight()) +
-                    Math.abs(top - targetView.getTop()) + Math.abs(bottom - targetView.getBottom()))
-                    < (targetView.getWidth() + targetView.getHeight()
-            ) / 3) {
-                return ClassifyView.STATE_MERGE;
+        int selectX= left + selectedView.getWidth()/2;
+        int selectY= top + selectedView.getHeight()/2;
+        int targetX= targetView.getLeft() + targetView.getWidth()/2;
+        int targetY= targetView.getTop() + targetView.getHeight()/2;
+        /**
+         * 距离算法：
+         * 屏幕太小 速度很难控制
+         * 假设一个正方形A从左到右依次靠近并离开另一个正方形B。
+         * 状态依次是 None>merge>move>None
+         */
+        boolean canMerge = canMergeItem(selectedPosition, targetPosition);
+        int distance = getDistance(selectX, selectY, targetX, targetY);
+        //距离小于1/3宽度
+        if(canMerge && distance < targetView.getWidth()/3){
+            return ClassifyView.STATE_MERGE;
+        }
+        //距离大于1/3宽度小于1/2宽度
+        if(distance < targetView.getWidth()/2){
+            if(selectedPosition <= targetPosition){
+                //select原位置在target左上方
+                if(canMerge && (targetX-selectX+targetY-selectY) > 0){
+                    //select目前在target左上方
+                    return ClassifyView.STATE_NONE;
+                }else {
+                    return ClassifyView.STATE_MOVE;
+                }
+            }else {
+                //selectet原位置在target右下方
+                if(canMerge && (targetX-selectX+targetY-selectY) < 0){
+                    //select目前在target右下方
+                    return ClassifyView.STATE_NONE;
+                }else {
+                    return ClassifyView.STATE_MOVE;
+                }
             }
         }
-        if ((Math.abs(left - targetView.getLeft()) + Math.abs(right - targetView.getRight()) +
-                Math.abs(top - targetView.getTop()) + Math.abs(bottom - targetView.getBottom()))
-                < (targetView.getWidth() + targetView.getHeight()
-        ) / 2) {
-            velocityTracker.computeCurrentVelocity(100);
-            float xVelocity = velocityTracker.getXVelocity();
-            float yVelocity = velocityTracker.getYVelocity();
-            float limit = getVelocity(targetView.getContext());
-            if (xVelocity < limit && yVelocity < limit) {
-                return ClassifyView.STATE_MOVE;
+        //距离大于1/2宽度小于宽度
+        if(distance < targetView.getWidth()){
+            if(selectedPosition <= targetPosition){
+                if((selectX-targetX+selectY-targetY) > 0){
+                    //select原位置在target左上方,目前在target右下方
+                    return ClassifyView.STATE_MOVE;
+                }
+            }else {
+                if((targetX-selectX+targetY-selectY) > 0){
+                    //select原位置在target右下方,目前在target左上方
+                    return ClassifyView.STATE_MOVE;
+                }
             }
         }
         return ClassifyView.STATE_NONE;
+    }
+
+    private int getDistance(int selectX,int selectY,int targetX,int targetY){
+        return (int) Math.hypot(selectX-targetX,selectY-targetY);
     }
 
     @Override

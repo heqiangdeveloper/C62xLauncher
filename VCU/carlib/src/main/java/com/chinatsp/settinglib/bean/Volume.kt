@@ -24,7 +24,16 @@ data class Volume(val type: Type, var min: Int, var max: Int, var pos:Int): Comp
         SYSTEM(AudioAttributes.USAGE_ASSISTANT),
         CAR_SCREEN(-1),
         METER_SCREEN(-1),
-        AC_SCREEN(-1)
+        AC_SCREEN(-1),
+        SEAT_SILL_TEMP(-1),
+        STEERING_SILL_TEMP(-1);
+
+    }
+
+
+    fun isValid(value: Int): Boolean {
+
+        return value in min..max
     }
 
     override fun compareTo(other: Volume): Int {

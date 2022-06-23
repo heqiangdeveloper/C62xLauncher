@@ -4,7 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.SoundEffectFragmentBinding
-import com.chinatsp.vehicle.settings.vm.SoundViewModel
+import com.chinatsp.vehicle.settings.vm.sound.SoundViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.smooth.SmoothLineChartView
 import dagger.hilt.android.AndroidEntryPoint

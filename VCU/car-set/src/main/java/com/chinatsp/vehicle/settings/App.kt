@@ -1,6 +1,7 @@
 package com.chinatsp.vehicle.settings
 
 import android.app.Application
+import com.chinatsp.settinglib.BaseApp
 import com.chinatsp.settinglib.SettingManager
 import com.chinatsp.settinglib.manager.VehicleManager
 import com.chinatsp.vehicle.settings.app.Constants
@@ -31,11 +32,11 @@ import kotlin.properties.Delegates
  *
  */
 @HiltAndroidApp
-class App : Application() {
+class App : BaseApp() {
 
     override fun onCreate() {
         super.onCreate()
-        instance = this
+        BaseApp.instance = this
         initLogger()
 
         /**
@@ -91,7 +92,4 @@ class App : Application() {
         })
     }
 
-    companion object {
-        var instance: App by Delegates.notNull()
-    }
 }

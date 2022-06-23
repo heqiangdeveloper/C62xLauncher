@@ -1,73 +1,87 @@
 package com.chinatsp.vehicle.settings.vm
 
 import android.app.Application
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.chinatsp.settinglib.listener.access.IDoorListener
-import com.chinatsp.settinglib.manager.access.AccessManager
+import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.manager.access.DoorManager
+import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
-import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.common.library.frame.base.BaseModel
-import com.common.xui.utils.ResUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class DoorsViewModel @Inject constructor(app: Application, model: BaseModel):
-    BaseViewModel(app, model), IDoorListener{
+class DoorsViewModel @Inject constructor(app: Application, model: BaseModel) :
+    BaseViewModel(app, model), IOptionListener {
 
-    val tabLocationLiveData: MutableLiveData<Int> by lazy { MutableLiveData(AccessManager.instance.getTabSerial()) }
-
-    private val doorManager:DoorManager
+    private val manager: DoorManager
         get() = DoorManager.instance
 
-    val liveDataAutoLockDoor: MutableLiveData<String> by lazy {
-        MutableLiveData<String>().apply {
-            val value = doorManager.driveLockOption.get()
-            this.value = value.toString()
+    val automaticDoorLock: LiveData<Int>
+        get() = _automaticDoorLock
+
+    private val _automaticDoorLock: MutableLiveData<Int> by lazy {
+        val node = RadioNode.DOOR_DRIVE_LOCK
+        MutableLiveData(node.default).apply {
+            val value = manager.doGetRadioOption(node)
+            this.value = value
         }
     }
 
-    val liveDataAutoUnlockOption: MutableLiveData<String> by lazy {
-        MutableLiveData<String>().apply {
-            val value = doorManager.shutDownUnlockOption.get()
-            this.value = value.toString()
+    val automaticDoorUnlock: LiveData<Int>
+        get() = _automaticDoorUnlock
+
+    private val _automaticDoorUnlock: MutableLiveData<Int> by lazy {
+        val node = RadioNode.DOOR_FLAMEOUT_UNLOCK
+        MutableLiveData(node.default).apply {
+            val value = manager.doGetRadioOption(node)
+            this.value = value
         }
     }
 
-    val liveDataAutoAccessSwitch: MutableLiveData<Boolean> by lazy {
-        MutableLiveData<Boolean>().apply {
-           value = doorManager.smartEnterStatus.get()
+    val smartDoorAccess: LiveData<Boolean>
+        get() = _smartDoorAccess
+
+    private val _smartDoorAccess: MutableLiveData<Boolean> by lazy {
+        val node = SwitchNode.DOOR_SMART_ENTER
+        MutableLiveData(node.default).apply {
+            value = manager.doGetSwitchOption(node)
         }
     }
 
-
-    override fun onDriveAutoLockOptionChanged(value: Int) {
-        val toInt = liveDataAutoLockDoor.value?.toInt()
-        if (toInt != value) {
-            val stringArray = ResUtils.getStringArray(R.array.drive_auto_lock_door_option_values)
-            val toIntArray = stringArray.map { it.toInt() }.toIntArray()
-            if (toIntArray.contains(value)) {
-                liveDataAutoLockDoor.value = value.toString()
-            }
-        }
+    override fun onCreate() {
+        super.onCreate()
+        keySerial = manager.onRegisterVcuListener(listener = this)
     }
 
-    override fun onShutDownAutoUnlockOptionChanged(value: Int) {
-        val toInt = liveDataAutoUnlockOption.value?.toInt()
-        if (toInt != value) {
-            val stringArray = ResUtils.getStringArray(R.array.auto_unlock_door_option_values)
-            val toIntArray = stringArray.map { it.toInt() }.toIntArray()
-            if (toIntArray.contains(value)) {
-                liveDataAutoUnlockOption.value = value.toString()
-            }
-        }
+    override fun onDestroy() {
+        manager.unRegisterVcuListener(keySerial)
+        super.onDestroy()
     }
 
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
-        if (status xor (liveDataAutoAccessSwitch.value == true)) {
-            liveDataAutoAccessSwitch.value = status
+        when (node) {
+            SwitchNode.DOOR_SMART_ENTER -> {
+                _smartDoorAccess.takeIf { status xor (it.value == true) }?.value = status
+            }
+        }
+    }
+
+    override fun onRadioOptionChanged(node: RadioNode, value: Int) {
+        when (node) {
+            RadioNode.DOOR_DRIVE_LOCK -> {
+                _automaticDoorLock.takeIf {
+                    node.isValid(value) && (value != it.value)
+                }?.value = value
+            }
+            RadioNode.DOOR_FLAMEOUT_UNLOCK -> {
+                _automaticDoorUnlock.takeIf {
+                    node.isValid(value) && (value != it.value)
+                }?.value = value
+            }
+            else -> {}
         }
     }
 
