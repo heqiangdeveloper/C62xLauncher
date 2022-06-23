@@ -44,11 +44,20 @@ public class ApppanelActivity extends AppCompatActivity implements View.OnClickL
         myAppLine = (ImageView) findViewById(R.id.my_app_line);
         appStoreLine = (ImageView) findViewById(R.id.app_store_line);
         appPanelClose = (ImageView) findViewById(R.id.apppanel_close);
-        myAppLayout.setOnClickListener(this);
-        appStoreLayout.setOnClickListener(this);
+        //myAppLayout.setOnClickListener(this);
+        //appStoreLayout.setOnClickListener(this);
         appPanelClose.setOnClickListener(this);
 
-        myAppLayout.callOnClick();
+        //myAppLayout.callOnClick();
+        loadData();
+    }
+
+    private void loadData(){
+        myAppLine.setVisibility(View.VISIBLE);
+        myAppFragment = new MyAppFragment();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.fragment_container, myAppFragment);
+        ft.commit();
     }
 
     @Override

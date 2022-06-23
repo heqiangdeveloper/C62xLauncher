@@ -200,13 +200,15 @@ public class ClassifyView extends FrameLayout {
                 //mSubCallBack.removeItem(mSubRecyclerView.getChildCount() - 1);
                 mMainCallBack = (MainRecyclerViewCallBack) mMainRecyclerView.getAdapter();
                 List list = mMainCallBack.explodeItem(position, null);
-                for(int i = list.size() - 1; i >= 0; i--){
-                    if(list.get(i) == null){
-                        list.remove(i);
-                        break;
+                if(null != list){
+                    for(int i = list.size() - 1; i >= 0; i--){
+                        if(list.get(i) == null){
+                            list.remove(i);
+                            break;
+                        }
                     }
+                    mSubCallBack.initData(position,list);
                 }
-                mSubCallBack.initData(position,list);
             }
         });
         mMainShadowView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
