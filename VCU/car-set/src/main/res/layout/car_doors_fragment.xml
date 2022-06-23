@@ -127,15 +127,15 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/right_car_doorlock"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/x70"
-            android:layout_marginEnd="@dimen/x130"
+            android:layout_width="@dimen/x78"
+            android:layout_height="@dimen/x70"
+            android:layout_marginTop="@dimen/x60"
+            android:layout_marginEnd="@dimen/x133"
             android:src="@drawable/right_car_doorlock"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:visibility="gone"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -151,8 +151,10 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
         if (tab != null) {
             if (tab.text?.equals("常用") == true) {
                 binding.constraint.setBackgroundResource(R.drawable.bg_changyong_1920)
-            } else {
+            }else  if (tab.text?.equals("驾驶辅助") == true) {
                 binding.constraint.setBackgroundResource(R.drawable.bg)
+            } else {
+                binding.constraint.setBackgroundResource(R.drawable.right_bg)
             }
         }
         GlobalManager.instance.tabSerial.set(binding.tabLayout.selectedTabPosition)
