@@ -8,8 +8,10 @@ import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 import android.view.View;
 
+import com.chinatsp.drawer.DrawerCreator;
 import com.chinatsp.widgetcards.home.CardIndicator;
 import com.chinatsp.widgetcards.home.ExpandStateManager;
 import com.chinatsp.widgetcards.manager.CardManager;
@@ -37,6 +39,8 @@ public class CardHomeFragment extends BaseFragment {
         mCardIndicator = rootView.findViewById(R.id.cardIndicator);
         mCardIndicator.setIndex(0);
 
+        DrawerCreator drawerCreator = new DrawerCreator(rootView.findViewById(R.id.rcvDrawerContent));
+        drawerCreator.initDrawerRcv();
     }
 
     private void initObservers() {
