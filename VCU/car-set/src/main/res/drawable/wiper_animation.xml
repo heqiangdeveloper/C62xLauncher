@@ -1,0 +1,52 @@
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <item
+        android:drawable="@drawable/wiper_00"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/wiper_01"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/wiper_02"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/wiper_03"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/wiper_04"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/wiper_05"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/wiper_06"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/wiper_07"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/wiper_08"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/wiper_09"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/wiper_10"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/wiper_11"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/wiper_12"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/wiper_13"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/wiper_14"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/wiper_15"
+        android:duration="50" />
+
+</animation-list>

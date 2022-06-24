@@ -99,17 +99,7 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
                         })
                 } else {
                     binding.homeOpenIv.visibility = View.VISIBLE
-                    animationHomeOpen.start(
-                        false,
-                        50,
-                        object : AnimationDrawable.AnimationLisenter {
-                            override fun startAnimation() {
-                            }
-
-                            override fun endAnimation() {
-                                //binding.homeOpenIv.visibility = View.GONE
-                            }
-                        })
+                    animationHomeOpen.start(false, 50, null)
                 }
             }
         }
@@ -221,17 +211,7 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
             doUpdateSwitchOption(SwitchNode.LIGHT_INSIDE_MEET, buttonView, isChecked)
             if (isChecked) {
                 binding.welcomeLampIv.visibility = View.VISIBLE
-                animationWelcomeLamp.start(
-                    false,
-                    50,
-                    object : AnimationDrawable.AnimationLisenter {
-                        override fun startAnimation() {
-                        }
-
-                        override fun endAnimation() {
-                            //binding.homeOpenIv.visibility = View.GONE
-                        }
-                    })
+                animationWelcomeLamp.start(false, 50, null)
             } else {
                 binding.welcomeLampIv.visibility = View.GONE
             }

@@ -54,8 +54,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/right_car"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/txt_prompt_style"

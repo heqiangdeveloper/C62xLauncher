@@ -64,21 +64,9 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         binding.accessSternElectricSw.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.AS_STERN_ELECTRIC, buttonView, isChecked)
             if (isChecked) {
-                animationOpenDoor.start(false, 50, object : AnimationDrawable.AnimationLisenter {
-                    override fun startAnimation() {
-                    }
-
-                    override fun endAnimation() {
-                    }
-                })
+                animationOpenDoor.start(false, 50, null)
             } else {
-                animationCloseDoor.start(false, 50, object : AnimationDrawable.AnimationLisenter {
-                    override fun startAnimation() {
-                    }
-
-                    override fun endAnimation() {
-                    }
-                })
+                animationCloseDoor.start(false, 50, null)
             }
         }
         binding.accessSternLightAlarmSw.setOnCheckedChangeListener { buttonView, isChecked ->

@@ -112,8 +112,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/right_car"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/lock_iv"
@@ -127,11 +126,21 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/right_car_doorlock"
-            android:layout_width="@dimen/x78"
-            android:layout_height="@dimen/x70"
-            android:layout_marginTop="@dimen/x60"
-            android:layout_marginEnd="@dimen/x133"
-            android:src="@drawable/right_car_doorlock"
+            android:layout_width="@dimen/x79"
+            android:layout_height="@dimen/x85"
+            android:layout_marginEnd="@dimen/x103"
+            android:src="@drawable/car_door_animation"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/right_flameout"
+            android:layout_width="@dimen/x79"
+            android:layout_height="@dimen/x85"
+            android:layout_marginEnd="@dimen/x105"
+            android:src="@drawable/flameout_animation"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
