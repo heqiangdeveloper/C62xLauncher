@@ -243,8 +243,10 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         super.onBindSubViewHolder(holder, mainPosition, subPosition);
         if(subPosition < mData.get(mainPosition).size()){
             if(mData.get(mainPosition).get(subPosition) == null){
+                holder.tvName.setVisibility(View.GONE);
                 holder.tvName.setText(context.getString(R.string.add));
             }else {
+                holder.tvName.setVisibility(View.VISIBLE);
                 holder.tvName.setText(mData.get(mainPosition).get(subPosition).getName());
                 Log.d("hqtest","onBindSubViewHolder package is: " + mData.get(mainPosition).get(subPosition).getPackageName() + ",parent = " + mainPosition + ",child = " + subPosition);
             }
@@ -257,7 +259,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         ImageView iconIv = (ImageView) view.findViewById(R.id.icon_iv);
         if(subPosition < mData.get(mainPosition).size()){
             if(mData.get(mainPosition).get(subPosition) == null){
-                iconIv.setImageResource(R.drawable.ic_add_black_24dp);
+                iconIv.setImageResource(R.drawable.add_app_icon);
             }else{
                 if(null == mData.get(mainPosition).get(subPosition).getImgDrawable()){
                     byte[] b = mData.get(mainPosition).get(subPosition).getImgByte();
