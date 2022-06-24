@@ -32,6 +32,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -757,10 +758,13 @@ public class ClassifyView extends FrameLayout {
                             WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
                             //L.d("getX " + e.getX(0) + "," + e.getX() + "," + e.getRawX() + ",");
 
+                            LinearLayout rootLl = (LinearLayout) dialog.getWindow().findViewById(R.id.root_ll);
                             if((mSelectedPosition + 1) % mMainSpanCount == 0){
-                                params.x = (int) (mInitialTouchX - width / 2 - 300 / 2);//300是params.width
+                                params.x = (int) (mInitialTouchX - width / 2 - 300 / 2) - 50;//300是params.width
+                                rootLl.setBackgroundResource(R.drawable.edit_folder_bg_left);
                             }else{
-                                params.x = (int) (mInitialTouchX + 20);
+                                params.x = (int) (mInitialTouchX + 20) + 20;
+                                rootLl.setBackgroundResource(R.drawable.edit_folder_bg_right);
                             }
                             params.y = (int) (mInitialTouchY);
                             params.width = 300;
