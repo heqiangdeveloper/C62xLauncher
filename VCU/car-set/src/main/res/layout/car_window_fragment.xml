@@ -146,8 +146,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/right_car"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/lock_iv"
@@ -160,13 +159,23 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="@dimen/x85"
-            android:layout_height="@dimen/x35"
-            android:layout_marginTop="@dimen/x15"
-            android:layout_marginEnd="@dimen/x150"
-            android:src="@drawable/right_car_winlock"
+            android:id="@+id/car_window_iv"
+            android:layout_width="@dimen/x102"
+            android:layout_height="@dimen/x39"
+            android:layout_marginEnd="@dimen/x118"
+            android:layout_marginBottom="@dimen/x151"
+            android:src="@drawable/car_window_animation"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/car_winper"
+            android:layout_width="@dimen/x62"
+            android:layout_height="@dimen/x33"
+            android:layout_marginEnd="@dimen/x192"
+            android:layout_marginBottom="@dimen/x147"
+            android:src="@drawable/car_window_animation"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

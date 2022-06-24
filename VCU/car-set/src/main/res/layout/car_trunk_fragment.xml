@@ -139,7 +139,7 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_car_trunk"
             android:layout_width="@dimen/x550"
-            android:layout_height="@dimen/x360"
+            android:layout_height="@dimen/x270"
             android:src="@drawable/trunk_door_animation"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

@@ -1,0 +1,51 @@
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <item
+        android:drawable="@drawable/flameout_00"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flameout_01"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flameout_02"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flameout_03"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flameout_04"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flameout_05"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flameout_06"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flameout_07"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flameout_08"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flameout_09"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flameout_10"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flameout_11"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flameout_12"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flameout_13"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flameout_14"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/flameout_15"
+        android:duration="50" />
+</animation-list>
