@@ -101,8 +101,13 @@ public class ClassifyView extends FrameLayout {
 
     //添加按钮
     private View addView;
+    private RelativeLayout rl;
+    private TextView nameTv;
+    private InsertAbleGridView iag;
 
     private View mMainShadowView;
+    private View oldPositionView;//添加占位图标
+    private View oldPositionViewSub;//sub中添加占位图标
     private RecyclerView mMainRecyclerView;
     private RecyclerView mSubRecyclerView;
     private EditText titleEt;
@@ -192,6 +197,15 @@ public class ClassifyView extends FrameLayout {
         mMainShadowView = new View(context);
         mMainShadowView.setBackgroundColor(mShadowColor);
         mMainShadowView.setVisibility(View.GONE);
+
+        //添加占位图标
+        oldPositionView = new View(context);
+        oldPositionView.setBackgroundResource(R.drawable.location_bg);
+        oldPositionView.setVisibility(View.GONE);
+        //sub中添加占位图标
+        oldPositionViewSub = new View(context);
+        oldPositionViewSub.setBackgroundResource(R.drawable.location_bg);
+        oldPositionViewSub.setVisibility(View.GONE);
         mMainShadowView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -214,6 +228,8 @@ public class ClassifyView extends FrameLayout {
         });
         mMainShadowView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         mMainContainer.addView(mMainShadowView);
+        oldPositionView.setLayoutParams(new LayoutParams(120,120));
+        mMainContainer.addView(oldPositionView);
         //mSubRecyclerView.setLayoutParams(new LayoutParams(600,600));
         mSubRecyclerView.setPadding(0,100,0,0);
 
@@ -227,6 +243,8 @@ public class ClassifyView extends FrameLayout {
         );
 
         mSubContainer.addView(mSubRecyclerView,subRecyclerViewSize);
+        oldPositionViewSub.setLayoutParams(new LayoutParams(120,120));
+        mSubContainer.addView(oldPositionViewSub);
         //设置文件夹名称
         titleEt = new EditText(context);
         titleEt.setSingleLine(true);
@@ -722,6 +740,11 @@ public class ClassifyView extends FrameLayout {
             switch (action) {
                 case DragEvent.ACTION_DRAG_STARTED:
                     if (inMainRegion) {
+                        //rl.setBackgroundColor(Color.GREEN);
+                        oldPositionView.setX(mSelected.getX() + mSelected.getWidth()/2 - 60);//图片大小是120*120
+                        oldPositionView.setY(mSelected.getY() + mSelected.getHeight()/2 - 60);
+                        oldPositionView.setVisibility(View.VISIBLE);
+
                         L.d("ACTION_DRAG_STARTED");
                         obtainVelocityTracker();
                         restoreDragView();
@@ -955,10 +978,19 @@ public class ClassifyView extends FrameLayout {
             float marginTop = getHeight() - mSubContainer.getHeight();
             float marginLeft = mSubContainer.getWidth();
             //获取添加按钮
-            addView = mSubRecyclerView.getChildAt(mSubRecyclerView.getChildCount() - 1);
+            rl = (RelativeLayout)mSubRecyclerView.getChildAt(mSubRecyclerView.getChildCount() - 1);
+            nameTv = (TextView) rl.getChildAt(2);
+            if(nameTv.getText().equals("添加")){
+                addView = mSubRecyclerView.getChildAt(mSubRecyclerView.getChildCount() - 1);
+            }
+
             //添加按钮不可拖动
-            if(mSelectedPosition == mSubRecyclerView.getChildCount() - 1){
-                L.d("Long press addView");
+//            if(mSelectedPosition == mSubRecyclerView.getChildCount() - 1){
+//                L.d("Long press addView");
+//                return true;
+//            }
+            //如果是添加按钮，不往下执行
+            if(mSelected == addView){
                 return true;
             }
             switch (action) {
@@ -966,6 +998,11 @@ public class ClassifyView extends FrameLayout {
                     if (inSubRegion) {
                         L.d("Sub ACTION_DRAG_STARTED");
                         L.d("x： " + mDragView.getX() + ",y: " + mDragView.getY());
+
+                        oldPositionViewSub.setX(mSelected.getX() + mSelected.getWidth()/2 - 60);//图片大小是120*120
+                        oldPositionViewSub.setY(mSelected.getY() + mSelected.getHeight()/2 - 60);
+                        oldPositionViewSub.setVisibility(View.VISIBLE);
+
                         obtainVelocityTracker();
                         restoreDragView();
                         mDragView.setBackgroundDrawable(getDragDrawable(mSelected));
@@ -977,10 +1014,11 @@ public class ClassifyView extends FrameLayout {
                         mDragView.setY(mInitialTouchY - height  + marginTop);
                         mDragView.bringToFront();
                         mElevationHelper.floatView(mSubRecyclerView, mDragView);
-                        addView.setVisibility(View.GONE);
+                        if(null != addView) addView.setVisibility(View.GONE);
                     }
                     break;
                 case DragEvent.ACTION_DRAG_LOCATION:
+                    if(null != addView) addView.setVisibility(View.GONE);
                     L.d("Sub ACTION_DRAG_LOCATION");
                     L.d("x： " + mDragView.getX() + ",y: " + mDragView.getY());
                     mVelocityTracker.addMovement(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(),
@@ -1001,8 +1039,6 @@ public class ClassifyView extends FrameLayout {
                         doRecoverAnimation();
                     }
                     releaseVelocityTracker();
-
-                    int addViewIndex = mSubRecyclerView.indexOfChild(addView);
                     break;
                 case DragEvent.ACTION_DRAG_EXITED://拖拽到main
                     if (mSubCallBack.canDragOut(mSelectedPosition)) {
@@ -1076,6 +1112,9 @@ public class ClassifyView extends FrameLayout {
             restoreToInitial();
             //显示添加按钮
             if(addView != null) addView.setVisibility(View.VISIBLE);
+            //隐藏占位图片
+            if(oldPositionView != null) oldPositionView.setVisibility(View.GONE);
+            if(oldPositionViewSub != null) oldPositionViewSub.setVisibility(View.GONE);
         }
     };
 
@@ -1091,6 +1130,9 @@ public class ClassifyView extends FrameLayout {
             mMainCallBack.setDragPosition(-1);
             inMainRegion = false;
         }
+        //隐藏占位图片
+        if(oldPositionView != null) oldPositionView.setVisibility(View.GONE);
+        if(oldPositionViewSub != null) oldPositionViewSub.setVisibility(View.GONE);
     }
 
     private void restoreDragView() {
