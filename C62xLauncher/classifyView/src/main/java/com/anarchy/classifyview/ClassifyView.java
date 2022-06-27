@@ -49,6 +49,7 @@ import com.anarchy.classifyview.adapter.MainRecyclerViewCallBack;
 import com.anarchy.classifyview.adapter.SubAdapterReference;
 import com.anarchy.classifyview.adapter.SubRecyclerViewCallBack;
 import com.anarchy.classifyview.event.ChangeTitleEvent;
+import com.anarchy.classifyview.event.ReStoreDataEvent;
 import com.anarchy.classifyview.simple.BaseSimpleAdapter;
 import com.anarchy.classifyview.simple.widget.InsertAbleGridView;
 import com.anarchy.classifyview.util.L;
@@ -850,7 +851,7 @@ public class ClassifyView extends FrameLayout {
                     }
                     break;
                 case DragEvent.ACTION_DRAG_LOCATION:
-                    L.d("ACTION_DRAG_LOCATION x = " + x + ",y = " + y);
+                    //L.d("ACTION_DRAG_LOCATION x = " + x + ",y = " + y);
 //                    L.d("ACTION_DRAG_LOCATION lastX = " + lastX + ",lastY = " + lastY);
                     if(Math.abs(x - lastX) >= 5 || Math.abs(y - lastY) > 5){
                         if(dialog != null && dialog.isShowing()) {
@@ -1019,8 +1020,8 @@ public class ClassifyView extends FrameLayout {
                     break;
                 case DragEvent.ACTION_DRAG_LOCATION:
                     if(null != addView) addView.setVisibility(View.GONE);
-                    L.d("Sub ACTION_DRAG_LOCATION");
-                    L.d("x： " + mDragView.getX() + ",y: " + mDragView.getY());
+                    //L.d("Sub ACTION_DRAG_LOCATION");
+                    //L.d("x： " + mDragView.getX() + ",y: " + mDragView.getY());
                     mVelocityTracker.addMovement(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(),
                             MotionEvent.ACTION_MOVE, x, y, 0));
 //                    mDragView.setX(centerX);
@@ -1035,6 +1036,8 @@ public class ClassifyView extends FrameLayout {
                     invalidate();
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
+                    L.d("sub ACTION_DRAG_ENDED");
+                    EventBus.getDefault().post(new ReStoreDataEvent());//通知存储数据
                     if (inSubRegion) {
                         doRecoverAnimation();
                     }
@@ -1064,6 +1067,7 @@ public class ClassifyView extends FrameLayout {
                     }
                     break;
                 case DragEvent.ACTION_DROP:
+                    L.d("sub DragEvent.ACTION_DROP");
                     break;
             }
             return true;

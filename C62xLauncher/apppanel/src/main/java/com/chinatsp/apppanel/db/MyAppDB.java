@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyAppDB extends SQLiteOpenHelper {
+    private static final String TAG = "MyAppDB";
     private static int DATABASE_VERSION = 1;
     private static String DATABASE_NAME = "myapp.db";
     private static String LOCATION_TABLE = "location";
@@ -128,68 +129,74 @@ public class MyAppDB extends SQLiteOpenHelper {
      */
     public List<List<LocationBean>> getData1(){
         List<List<LocationBean>> data = new ArrayList<>();
-        List<LocationBean> lists = new ArrayList<>();
-        //select * from (select * from location order by child_index asc) order by parent_index asc
-        String sql = "select * from " + "(select * from " + LOCATION_TABLE + " order by " +
-                CHILDINDEX + " asc) order by " + PARENTINDEX + " asc";
-        Cursor cursor = db.rawQuery(sql,null);
-        cursor.moveToFirst();
-        if(null != cursor && cursor.moveToFirst()) {
-            while (!cursor.isAfterLast()) {
-                LocationBean locationBean = new LocationBean();
-                locationBean.setParentIndex(cursor.getInt(cursor.getColumnIndex(PARENTINDEX)));
-                locationBean.setChildIndex(cursor.getInt(cursor.getColumnIndex(CHILDINDEX)));
-                locationBean.setTitle(cursor.getString(cursor.getColumnIndex(TITLE)));
-                locationBean.setPackageName(cursor.getString(cursor.getColumnIndex(PACKAGENAMELOCATION)));
-                locationBean.setImgByte(cursor.getBlob(cursor.getColumnIndex(IMAGE)));
-                locationBean.setImgDrawable(null);
-                locationBean.setName(cursor.getString(cursor.getColumnIndex(NAME)));
-                locationBean.setAddBtn(cursor.getInt(cursor.getColumnIndex(ADDBTN)));
-                locationBean.setStatus(cursor.getInt(cursor.getColumnIndex(STATUS)));
-                locationBean.setPriority(cursor.getInt(cursor.getColumnIndex(PRIORITY)));
-                locationBean.setInstalled(cursor.getInt(cursor.getColumnIndex(INSTALLED)));
-                locationBean.setCanuninstalled(cursor.getInt(cursor.getColumnIndex(CANUNINSTALLED)));
-                lists.add(locationBean);
-                cursor.moveToNext();
+        try{
+            List<LocationBean> lists = new ArrayList<>();
+            //select * from (select * from location order by child_index asc) order by parent_index asc
+            String sql = "select * from " + "(select * from " + LOCATION_TABLE + " order by " +
+                    CHILDINDEX + " asc) order by " + PARENTINDEX + " asc";
+            Cursor cursor = db.rawQuery(sql,null);
+            cursor.moveToFirst();
+            if(null != cursor && cursor.moveToFirst()) {
+                while (!cursor.isAfterLast()) {
+                    LocationBean locationBean = new LocationBean();
+                    locationBean.setParentIndex(cursor.getInt(cursor.getColumnIndex(PARENTINDEX)));
+                    locationBean.setChildIndex(cursor.getInt(cursor.getColumnIndex(CHILDINDEX)));
+                    locationBean.setTitle(cursor.getString(cursor.getColumnIndex(TITLE)));
+                    locationBean.setPackageName(cursor.getString(cursor.getColumnIndex(PACKAGENAMELOCATION)));
+                    locationBean.setImgByte(cursor.getBlob(cursor.getColumnIndex(IMAGE)));
+                    locationBean.setImgDrawable(null);
+                    locationBean.setName(cursor.getString(cursor.getColumnIndex(NAME)));
+                    locationBean.setAddBtn(cursor.getInt(cursor.getColumnIndex(ADDBTN)));
+                    locationBean.setStatus(cursor.getInt(cursor.getColumnIndex(STATUS)));
+                    locationBean.setPriority(cursor.getInt(cursor.getColumnIndex(PRIORITY)));
+                    locationBean.setInstalled(cursor.getInt(cursor.getColumnIndex(INSTALLED)));
+                    locationBean.setCanuninstalled(cursor.getInt(cursor.getColumnIndex(CANUNINSTALLED)));
+                    lists.add(locationBean);
+                    cursor.moveToNext();
+                }
             }
-        }
-        cursor.close();
+            cursor.close();
 
-        int lastParentIndex = -1;
-        List<LocationBean> inner = null;
-        LocationBean locationBean;
-        int parentIndex = -1;
-        for(int i = 0; i < lists.size(); i++){
-            locationBean = lists.get(i);
-            parentIndex = locationBean.getParentIndex();
-            if(parentIndex == lastParentIndex){//parentIndex == lastParentIndex说明是同一个文件夹下的应用
-                if(locationBean.getChildIndex() == 0){
-                    inner = new ArrayList<>();
-                }
-                inner.add(locationBean);
-                lastParentIndex = parentIndex;
-                if(i == lists.size() - 1){//最后一个
-                    data.add(inner);
-                }
-            }else {
-                //parentIndex != lastParentIndex说明是一个新的文件夹或应用
-                if(inner != null) {
-                    data.add(inner);
-                    inner = null;
-                }
-                if(locationBean.getChildIndex() == -1){//如果childIndex=-1说明不是文件夹
-                    List<LocationBean> inner2 = new ArrayList<>();
-                    inner2.add(locationBean);
-                    data.add(inner2);
-                }else {
-                    if(locationBean.getChildIndex() == 0){//如果childIndex=0说明是文件夹
+            int lastParentIndex = -1;
+            List<LocationBean> inner = null;
+            LocationBean locationBean;
+            int parentIndex = -1;
+            for(int i = 0; i < lists.size(); i++){
+                locationBean = lists.get(i);
+                parentIndex = locationBean.getParentIndex();
+                if(parentIndex == lastParentIndex){//parentIndex == lastParentIndex说明是同一个文件夹下的应用
+                    if(locationBean.getChildIndex() == 0){
                         inner = new ArrayList<>();
                     }
                     inner.add(locationBean);
+                    lastParentIndex = parentIndex;
+                    if(i == lists.size() - 1){//最后一个
+                        data.add(inner);
+                    }
+                }else {
+                    //parentIndex != lastParentIndex说明是一个新的文件夹或应用
+                    if(inner != null) {
+                        data.add(inner);
+                        inner = null;
+                    }
+                    if(locationBean.getChildIndex() == -1){//如果childIndex=-1说明不是文件夹
+                        List<LocationBean> inner2 = new ArrayList<>();
+                        inner2.add(locationBean);
+                        data.add(inner2);
+                    }else {
+                        if(locationBean.getChildIndex() == 0){//如果childIndex=0说明是文件夹
+                            inner = new ArrayList<>();
+                        }
+                        inner.add(locationBean);
+                    }
+                    lastParentIndex = parentIndex;
                 }
-                lastParentIndex = parentIndex;
             }
+        }catch (Exception e){
+            Log.d(TAG,"read db exception");
+            data.clear();
         }
+
         return data;
     }
 

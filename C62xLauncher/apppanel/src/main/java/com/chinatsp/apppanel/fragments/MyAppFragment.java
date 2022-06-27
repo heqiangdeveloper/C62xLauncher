@@ -26,6 +26,7 @@ import com.anarchy.classifyview.event.AppInstallStatusEvent;
 import com.anarchy.classifyview.event.ChangeTitleEvent;
 import com.anarchy.classifyview.event.Event;
 import com.anarchy.classifyview.event.HideSubContainerEvent;
+import com.anarchy.classifyview.event.ReStoreDataEvent;
 import com.anarchy.classifyview.util.MyConfigs;
 import com.chinatsp.apppanel.AppConfigs.AppLists;
 import com.chinatsp.apppanel.R;
@@ -119,31 +120,39 @@ public class MyAppFragment extends Fragment {
         LocationBean locationBean = null;
         Log.d("hqtest","db.countLocation() = " + db.countLocation());
         if(db.countLocation() == 0){//没有数据记录
-            List<ResolveInfo> allApps = getApps();
-            allApps = getAvailabelApps(allApps);
-            for(ResolveInfo info : allApps){
-                //L.d("name: " + info.activityInfo.loadLabel(getContext().getPackageManager()) + "," + info.activityInfo.packageName);
-                List<LocationBean> inner = new ArrayList<>();
-                locationBean = new LocationBean();
-                locationBean.setPackageName(info.activityInfo.packageName);
-                drawable = info.activityInfo.loadIcon(getContext().getPackageManager());
-
-                locationBean.setImgByte(null);
-                locationBean.setImgDrawable(drawable);
-                locationBean.setName((info.activityInfo.loadLabel(getContext().getPackageManager())).toString());
-                locationBean.setTitle("");
-                locationBean.setCanuninstalled(AppLists.packageUninstallStatus(info.activityInfo.packageName));
-                inner.add(locationBean);
-                data.add(inner);
-            }
+            getOriginalData();
         }else {
             data = db.getData1();
+            if(data.size() == 0){
+                getOriginalData();
+            }
         }
 
         loadingTv.setVisibility(View.GONE);
         mMyAppInfoAdapter = new MyAppInfoAdapter(view.getContext(), data);
         appInfoClassifyView.setAdapter(mMyAppInfoAdapter);
         return view;
+    }
+
+    private void getOriginalData(){
+        Log.d("hqtest","getOriginalData");
+        List<ResolveInfo> allApps = getApps();
+        allApps = getAvailabelApps(allApps);
+        for(ResolveInfo info : allApps){
+            //L.d("name: " + info.activityInfo.loadLabel(getContext().getPackageManager()) + "," + info.activityInfo.packageName);
+            List<LocationBean> inner = new ArrayList<>();
+            locationBean = new LocationBean();
+            locationBean.setPackageName(info.activityInfo.packageName);
+            drawable = info.activityInfo.loadIcon(getContext().getPackageManager());
+
+            locationBean.setImgByte(null);
+            locationBean.setImgDrawable(drawable);
+            locationBean.setName((info.activityInfo.loadLabel(getContext().getPackageManager())).toString());
+            locationBean.setTitle("");
+            locationBean.setCanuninstalled(AppLists.packageUninstallStatus(info.activityInfo.packageName));
+            inner.add(locationBean);
+            data.add(inner);
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -158,6 +167,9 @@ public class MyAppFragment extends Fragment {
             Log.d(TAG,"status = " + status + ",pacakageName is: " + packageName);
             if(status == 1){//安装
                 data = db.getData1();
+                if(data.size() == 0){
+                    getOriginalData();
+                }
                 mMyAppInfoAdapter = new MyAppInfoAdapter(getContext(), data);
                 appInfoClassifyView.setAdapter(mMyAppInfoAdapter);
             }else {//卸载
@@ -179,6 +191,8 @@ public class MyAppFragment extends Fragment {
                     }
                 }
             }
+        }else if(event instanceof ReStoreDataEvent){
+            storeData();
         }
     }
 
@@ -215,9 +229,14 @@ public class MyAppFragment extends Fragment {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        Log.d("heqq","myAppFragment onStop");
+    public void onPause() {
+        super.onPause();
+        Log.d("heqq","myAppFragment onPause");
+        storeData();
+    }
+
+    public void storeData(){
+        Log.d(TAG,"storeData");
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -225,9 +244,6 @@ public class MyAppFragment extends Fragment {
 //                if(db.countLocation() != 0){
 //                    db.deleteLocation();
 //                }
-                editor.putBoolean(MyConfigs.SHOWDELETE,false);
-                editor.putInt(MyConfigs.SHOWDELETEPOSITION,-1);
-                editor.commit();
                 MainRecyclerViewCallBack mainAdapter = (MainRecyclerViewCallBack) appInfoClassifyView.getMainRecyclerView().getAdapter();
                 Log.d("heqq","is MainRecyclerViewCallBack");
 
@@ -313,6 +329,12 @@ public class MyAppFragment extends Fragment {
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         Log.d("heqq","myAppFragment onDestroyView");
@@ -327,7 +349,10 @@ public class MyAppFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
         Log.d("heqq","myAppFragment onDestroy");
+        EventBus.getDefault().unregister(this);
+        editor.putBoolean(MyConfigs.SHOWDELETE,false);
+        editor.putInt(MyConfigs.SHOWDELETEPOSITION,-1);
+        editor.commit();
     }
 }
