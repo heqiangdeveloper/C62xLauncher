@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.manager.access.AccessManager
+import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.chinatsp.vehicle.settings.databinding.DoorsManageFragmentBinding
@@ -16,10 +17,11 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class DoorsManageFragment : BaseTabFragment<BaseViewModel, DoorsManageFragmentBinding>() {
 
-    private lateinit var tabOptions: MutableList<View>
-
     private val manager: AccessManager
         get() = AccessManager.instance
+
+    override val nodeId: Int
+        get() = 1
 
     override val tabLocation: MutableLiveData<Int> by lazy { MutableLiveData(manager.getTabSerial()) }
 
@@ -34,26 +36,43 @@ class DoorsManageFragment : BaseTabFragment<BaseViewModel, DoorsManageFragmentBi
 
     override fun initData(savedInstanceState: Bundle?) {
         initTabOptions()
-        tabLocation.observe(this) {
-            updateSelectTabOption(it)
-        }
+        initTabLocation()
+    }
+
+    private fun initTabLocation() {
         tabLocation.let {
-            if (it.value == -1) {
-                it.value = R.id.car_doors
-            } else {
-                it.value = it.value
+            it.observe(this) { location ->
+                updateSelectTabOption(location)
             }
+            initTabLocation(it, R.id.car_doors)
+        }
+    }
+
+    private fun initTabLocation(it: MutableLiveData<Int>, default: Int) {
+        if (it.value == -1) {
+            it.value = default
+        } else {
+            it.value = it.value
         }
     }
 
     private fun initTabOptions() {
-        val tabOptionLayout = binding.doorsManagerLeftTab
-        val range = 0 until tabOptionLayout.childCount
+        val tab = binding.doorsManagerLeftTab
+        val range = 0 until tab.childCount
         tabOptions = range.map {
-            val child = tabOptionLayout.getChildAt(it)
-            child.apply { setOnClickListener { onClick(this) } }
-            child
-        }.toMutableList()
+            val child = tab.getChildAt(it)
+            child.apply { setOnClickListener { onClick(this) } } }.toList()
+        initRouteListener()
+    }
+
+    private fun initRouteListener() {
+        if (activity is IRoute) {
+            val iroute = activity as IRoute
+            val liveData = iroute.obtainLevelLiveData()
+            liveData.observe(this) {
+                initRouteLocation(it)
+            }
+        }
     }
 
     private fun updateSelectTabOption(viewId: Int) {
@@ -94,8 +113,4 @@ class DoorsManageFragment : BaseTabFragment<BaseViewModel, DoorsManageFragmentBi
         return fragment
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        tabOptions.clear()
-    }
 }

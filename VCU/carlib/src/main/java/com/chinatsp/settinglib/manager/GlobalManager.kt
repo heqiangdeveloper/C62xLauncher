@@ -1,6 +1,7 @@
 package com.chinatsp.settinglib.manager
 
 import android.car.hardware.CarPropertyValue
+import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.manager.access.AccessManager
 import com.chinatsp.settinglib.manager.adas.AdasManager
 import com.chinatsp.settinglib.manager.cabin.CabinManager
@@ -26,9 +27,25 @@ class GlobalManager private constructor() : BaseManager() {
         }
     }
 
-    val tabSerial: AtomicInteger by lazy {
+    private val tabSerial: AtomicInteger by lazy {
         AtomicInteger(0)
     }
+
+//    val level1: AtomicInteger by lazy {
+//        AtomicInteger(Constant.INVALID)
+//    }
+//
+//    val level2: AtomicInteger by lazy {
+//        AtomicInteger(Constant.INVALID)
+//    }
+//
+//    val level3: AtomicInteger by lazy {
+//        AtomicInteger(Constant.INVALID)
+//    }
+
+    fun getTabSerial() = tabSerial.get()
+
+    fun setTabSerial(serial: Int) = tabSerial.set(serial)
 
     val managers: List<BaseManager> by lazy {
         ArrayList<BaseManager>().apply {

@@ -19,6 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding>() {
+
     private var animationHomeOpen: AnimationDrawable = AnimationDrawable()
     private var animationHomeClose: AnimationDrawable = AnimationDrawable()
     private var animationWelcomeLamp: AnimationDrawable = AnimationDrawable()

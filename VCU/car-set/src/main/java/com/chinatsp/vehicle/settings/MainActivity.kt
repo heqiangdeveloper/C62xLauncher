@@ -5,29 +5,46 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
+import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.manager.GlobalManager
+import com.chinatsp.settinglib.navigation.RouterSerial
+import com.chinatsp.vehicle.settings.bean.TabPage
 import com.chinatsp.vehicle.settings.databinding.MainActivityTablayoutBinding
-import com.chinatsp.vehicle.settings.fragment.AccessFragment
+import com.chinatsp.vehicle.settings.fragment.CommonlyFragment
+import com.chinatsp.vehicle.settings.fragment.SystemFragment
 import com.chinatsp.vehicle.settings.fragment.cabin.CabinManagerFragment
-import com.chinatsp.vehicle.settings.fragment.SimpleTabFragment
 import com.chinatsp.vehicle.settings.fragment.doors.DoorsManageFragment
 import com.chinatsp.vehicle.settings.fragment.drive.DriveManageFragment
 import com.chinatsp.vehicle.settings.fragment.lighting.LightingManageFragment
 import com.chinatsp.vehicle.settings.fragment.sound.SoundManageFragment
 import com.chinatsp.vehicle.settings.vm.MainViewModel
 import com.common.library.frame.base.BaseActivity
+import com.common.xui.utils.ViewUtils
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
-import com.common.xui.utils.ViewUtils
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>(),
-    OnTabSelectedListener {
+    OnTabSelectedListener, IRoute {
+
+    val manager: GlobalManager
+        get() = GlobalManager.instance
+
+    var firstCreate = true
+
+    private val tabLocation: MutableLiveData<Int> by lazy { MutableLiveData(manager.getTabSerial()) }
+
+    private val level2Node: MutableLiveData<Node> by lazy { MutableLiveData(Node()) }
+
+    private val popupLiveData: MutableLiveData<String> by lazy { MutableLiveData("") }
 
     private val mAdapter: FragmentStateViewPager2Adapter by lazy {
         FragmentStateViewPager2Adapter(this)
@@ -40,7 +57,44 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
     override fun isBinding(): Boolean = true
 
     override fun initData(savedInstanceState: Bundle?) {
+        checkOutRoute(intent)
         initTabLayout()
+        tabLocation.observe(this) {
+            if (it != binding.tabLayout.selectedTabPosition) {
+                binding.viewPager.setCurrentItem(it, false)
+//                binding.tabLayout.selectTab(binding.tabLayout.getTabAt(it), false)
+            }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        checkOutRoute(intent)
+    }
+
+    private fun checkOutRoute(intent: Intent?) {
+        intent?.let {
+            val value = it.getIntExtra(Constant.ROUTE_SERIAL, Constant.INVALID)
+            if (Constant.INVALID != value) {
+                val level1 = RouterSerial.getLevel(value, 1)
+                val level2 = RouterSerial.getLevel(value, 2)
+                val level3 = RouterSerial.getLevel(value, 3)
+//                node = Node(level1)
+                val node2 = level2Node.value
+                node2?.id = level2
+                node2?.presentId = level1
+                node2?.valid = true
+//                manager.level1.set(level1)
+//                manager.level2.set(level2)
+//                manager.level3.set(level3)
+
+                val value = it.getStringExtra("POPUP")
+
+                tabLocation.value = level1
+                level2Node.value = node2
+                popupLiveData.value = value ?: ""
+            }
+        }
     }
 
     private fun initTabLayout() {
@@ -50,16 +104,13 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
             binding.viewPager.adapter = mAdapter
             binding.viewPager.isUserInputEnabled = false
             // 设置缓存的数量
-            binding.viewPager.offscreenPageLimit = 1
+//            binding.viewPager.offscreenPageLimit = 1
             val childAt: RecyclerView = binding.viewPager.getChildAt(0) as RecyclerView
             childAt.setItemViewCacheSize(0)
             childAt.layoutManager?.isItemPrefetchEnabled = false
             TabLayoutMediator(
-                binding.tabLayout,
-                binding.viewPager,
-                true,
-                false
-            ) { tab: TabLayout.Tab, position: Int ->
+                binding.tabLayout, binding.viewPager, true, false)
+            { tab: TabLayout.Tab, position: Int ->
                 tab.text = mAdapter.getPageTitle(position)
             }.attach()
             refreshAdapter(true)
@@ -105,11 +156,11 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
     private fun refreshAdapter(isShow: Boolean) {
         if (isShow) {
             // 动态加载选项卡内容
-            for (page in viewModel.liveDataTabPage.value!!) {
+            for (page in TabPage.values()) {
                 val title = page.description
                 val position = page.position
                 if (position == 0) {
-                    val fragment = AccessFragment::class.java
+                    val fragment = CommonlyFragment::class.java
 //                    fragment.userVisibleHint = true
                     mAdapter.addFragment(fragment, title)
                 } else if (position == 1) {
@@ -128,11 +179,13 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
                     val fragment = DriveManageFragment::class.java
                     mAdapter.addFragment(fragment, title)
                 } else {
-                    mAdapter.addFragment(SimpleTabFragment::class.java, title)
+                    val fragment = SystemFragment::class.java
+                    mAdapter.addFragment(fragment, title)
                 }
             }
+            binding.viewPager.offscreenPageLimit = mAdapter.itemCount
             mAdapter.notifyDataSetChanged()
-            binding.viewPager.setCurrentItem(GlobalManager.instance.tabSerial.get(), false)
+            binding.viewPager.setCurrentItem(tabLocation.value!!, true)
         } else {
             mAdapter.clear()
         }
@@ -151,13 +204,17 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
         if (tab != null) {
             if (tab.text?.equals("常用") == true) {
                 binding.constraint.setBackgroundResource(R.drawable.bg_changyong_1920)
-            }else  if (tab.text?.equals("驾驶辅助") == true) {
+            } else if (tab.text?.equals("驾驶辅助") == true) {
                 binding.constraint.setBackgroundResource(R.drawable.bg)
             } else {
                 binding.constraint.setBackgroundResource(R.drawable.right_bg)
             }
         }
-        GlobalManager.instance.tabSerial.set(binding.tabLayout.selectedTabPosition)
+        if (firstCreate) {
+            firstCreate = false
+            return
+        }
+        manager.setTabSerial(binding.tabLayout.selectedTabPosition)
     }
 
     override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -167,4 +224,32 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
     override fun onTabReselected(tab: TabLayout.Tab?) {
 
     }
+
+    override fun onDestroy() {
+        manager.setTabSerial(tabLocation.value!!)
+        super.onDestroy()
+    }
+
+    override fun obtainLevelLiveData(): LiveData<Node> {
+        return level2Node
+    }
+
+    override fun obtainPopupLiveData(): LiveData<String> {
+        return popupLiveData
+    }
+
+    override fun cleanPopupLiveDate(serial: String): Boolean {
+        if (serial.equals(popupLiveData.value)) {
+            popupLiveData.value = ""
+            return true
+        }
+        return false
+    }
+
+
+//    override fun isSelfLevel(id: Int): Boolean {
+//
+//
+//        return false
+//    }
 }

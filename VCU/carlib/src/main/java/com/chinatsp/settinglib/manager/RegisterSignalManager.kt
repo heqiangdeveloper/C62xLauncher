@@ -51,6 +51,7 @@ class RegisterSignalManager private constructor() {
                     RadioNode.values().filter { it.get.origin == Origin.CABIN }.forEach {
                         add(it.get.signal)
                     }
+                    this.remove(-1)
                 }
             }
 

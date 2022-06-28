@@ -1,6 +1,7 @@
 package com.chinatsp.vehicle.settings.fragment.drive
 
 import android.os.Bundle
+import android.view.View
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.adas.LaneManager
@@ -91,7 +92,10 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
 
     private fun doUpdateRadio(node: RadioNode, value: Int, immediately: Boolean = false, isInit: Boolean = false) {
         val tabView = when (node) {
-            RadioNode.ADAS_LANE_ASSIST_MODE -> binding.adasLaneLaneAssistRadio
+            RadioNode.ADAS_LANE_ASSIST_MODE -> {
+                binding.adasLaneLaneAssistRadio.getChildAt(0).visibility = View.GONE
+                binding.adasLaneLaneAssistRadio
+            }
             RadioNode.ADAS_LDW_STYLE -> binding.adasLaneLdwStyleRadio
             RadioNode.ADAS_LDW_SENSITIVITY -> binding.adasLaneLdwSensitivityRadio
             else -> null

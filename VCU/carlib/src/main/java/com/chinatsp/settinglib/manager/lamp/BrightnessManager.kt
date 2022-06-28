@@ -1,12 +1,15 @@
 package com.chinatsp.settinglib.manager.lamp
 
+import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.power.CarPowerManager
-import com.chinatsp.settinglib.IProgressManager
-import com.chinatsp.settinglib.LogManager
+import android.os.SystemThirdScreenBA
+import com.chinatsp.settinglib.*
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
+import com.chinatsp.settinglib.optios.Area
 import com.chinatsp.settinglib.sign.Origin
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author : luohong
@@ -17,7 +20,19 @@ import com.chinatsp.settinglib.sign.Origin
  */
 class BrightnessManager : BaseManager(), IProgressManager {
 
-    var manager: CarPowerManager? = null
+    private var manager: CarPowerManager? = null
+    private var thirdScreenService: SystemThirdScreenBA? = null
+
+    private val topicNode: Int
+        get() {
+            try {
+                return readIntProperty(
+                    CarCabinManager.ID_VENDOR_LIGHT_NIGHT_AUTOMODE_REPORT, Origin.CABIN, Area.GLOBAL)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            return Constant.LIGHT_TOPIC
+        }
 
     companion object : ISignal {
 
@@ -31,6 +46,7 @@ class BrightnessManager : BaseManager(), IProgressManager {
 
     fun injectManager(manager: CarPowerManager) {
         this.manager = manager
+        thirdScreenService = SystemThirdScreenBA(BaseApp.instance.applicationContext)
     }
 
     private val acVolume: Volume by lazy {
@@ -71,18 +87,20 @@ class BrightnessManager : BaseManager(), IProgressManager {
 
     override fun doSetVolume(type: Volume.Type, position: Int): Boolean {
         LogManager.d(TAG, "doSetVolume position:$position")
+        val value = position * 10
         return when (type) {
             Volume.Type.AC_SCREEN -> {
-                manager?.brightness = position * 10
+                manager?.brightness = value
                 true
             }
             Volume.Type.CAR_SCREEN -> {
-                manager?.brightness = position * 10
+//                manager?.brightness = value
+                thirdScreenService?.setThirdScreenBrightness(1, position)
                 doUpdateProgress(carVolume, position, true)
                 true
             }
             Volume.Type.METER_SCREEN -> {
-                manager?.brightness = position * 10
+                manager?.brightness = value
                 true
             }
             else -> {

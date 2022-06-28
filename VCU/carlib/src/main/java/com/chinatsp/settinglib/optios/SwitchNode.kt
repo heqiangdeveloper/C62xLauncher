@@ -58,6 +58,13 @@ enum class SwitchNode(
 
     /**
      * 空调自干燥
+     * set ->
+        自干燥使能开关Self-desiccation Switch
+        0x0: Inactive
+        0x1: Enabled
+        0x2: Disabled
+        0x3: Reserved
+     * get -> self-desiccation 自干燥功能状态显示 0x0:ON 0x1:OFF
      */
 //    AC_AUTO_ARID(Norm(), SignalOrigin.HVAC_SIGNAL, set = CarHvacManager.ID_HVAC_AVN_SELF_DESICAA_SWT),
     AC_AUTO_ARID(
@@ -68,7 +75,7 @@ enum class SwitchNode(
             signal = CarCabinManager.ID_ACSELFSTSDISP
         ),
         set = Norm(
-            on = 0x0, off = 0x1,
+            on = 0x1, off = 0x2,
             origin = Origin.HVAC,
             signal = CarHvacManager.ID_HVAC_AVN_SELF_DESICAA_SWT
         )
@@ -77,7 +84,7 @@ enum class SwitchNode(
     /**
      * 自动除雾
      * set -> 前除霜if not set ,the value of signal is 0x0(inactive)
-    0x0: Inactive; 0x1: ON; 0x2: OFF; 0x3: Not used
+        0x0: Inactive; 0x1: ON; 0x2: OFF; 0x3: Not used
      * get -> 前除霜显示图标 0x0: Not display; 0x1: Display; 0x2: Reserved; 0x3: Error
      */
 //    AC_AUTO_DEMIST(Norm(on = 1, off = 0, uon = 1, uoff = 2, def = false), SignalOrigin.HVAC_SIGNAL, set = CarHvacManager.ID_HVAC_AVN_KEY_DEFROST, get = CarHvacManager.ID_HAVC_AC_DIS_DEFROST),
@@ -100,10 +107,10 @@ enum class SwitchNode(
     /**
      * 预通风功能
      * set -> 解锁主动换气使能开关
-    0x0: Inactive
-    0x1: Enabled
-    0x2: Disabled
-    0x3: Reserved
+        0x0: Inactive
+        0x1: Enabled
+        0x2: Disabled
+        0x3: Reserved
      * get -> 解锁预通风功能开启状态 0x0:ON 0x1:OFF
      */
     AC_ADVANCE_WIND(

@@ -1,9 +1,11 @@
 package com.chinatsp.vehicle.settings.fragment.cabin
 
 import android.os.Bundle
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.cabin.WheelManager
 import com.chinatsp.settinglib.optios.RadioNode
+import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CabinWhellFragmentBinding
 import com.chinatsp.vehicle.settings.fragment.cabin.dialog.SteeringHeatDialogFragment
@@ -31,6 +33,12 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
         return R.layout.cabin_whell_fragment
     }
 
+    private val steeringKeysCustom: String
+        get() = "STEERING_KEYS_CUSTOM"
+
+    private val steeringAutoHeating: String
+        get() = "STEERING_AUTO_HEATING"
+
     override fun initData(savedInstanceState: Bundle?) {
         setCheckedChangeListener()
         initSwitchOption()
@@ -39,6 +47,8 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
         initRadioOption()
         addRadioLiveDataListener()
         setRadioListener()
+
+        initRouteListener()
     }
 
     private fun initSwitchOption() {
@@ -113,21 +123,49 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
 
     private fun setCheckedChangeListener() {
         binding.wheelCustomKeys.setOnClickListener {
-            val fragment = SteeringKeysDialogFragment()
-            fragment.widthRatio = 880f / 1920f
-            activity?.supportFragmentManager?.let {
-                fragment.show(it, fragment::javaClass.name)
-            }
+            showDialogFragment(steeringKeysCustom)
         }
         binding.wheelAutomaticHeating.setOnClickListener {
-            val fragment = SteeringHeatDialogFragment()
-            activity?.supportFragmentManager?.let {
-                fragment.show(it, fragment::javaClass.name)
-            }
+            showDialogFragment(steeringAutoHeating)
+        }
+    }
+
+    private fun showDialogFragment(serial: String) {
+        var fragment: DialogFragment? = null
+        if (steeringKeysCustom == serial) {
+            cleanPopupSerial(serial)
+            fragment = SteeringKeysDialogFragment()
+        } else if (steeringAutoHeating == serial) {
+            cleanPopupSerial(serial)
+            fragment = SteeringHeatDialogFragment()
+        }
+        activity?.supportFragmentManager?.let {
+            fragment?.show(it, fragment::javaClass.name)
         }
     }
 
     private fun isCanToInt(value: String?): Boolean {
         return null != value && value.isNotBlank() && value.matches(Regex("\\d+"))
+    }
+
+    private fun cleanPopupSerial(serial: String) {
+        if (activity is IRoute) {
+            val iroute = activity as IRoute
+            iroute.cleanPopupLiveDate(serial)
+        }
+    }
+
+    private fun initRouteListener() {
+        if (activity is IRoute) {
+            val iroute = activity as IRoute
+            val liveData = iroute.obtainPopupLiveData()
+            liveData.observe(this) {
+                if (it.equals(steeringKeysCustom)) {
+                    showDialogFragment(it)
+                } else if (it.equals(steeringAutoHeating)) {
+                    showDialogFragment(it)
+                }
+            }
+        }
     }
 }

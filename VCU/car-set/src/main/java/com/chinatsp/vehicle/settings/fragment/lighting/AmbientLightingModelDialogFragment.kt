@@ -18,4 +18,9 @@ class AmbientLightingModelDialogFragment : BaseDialogFragment<AmbientLightingSet
 
     }
 
+    override fun getWidthRatio(): Float {
+//        return 0.68f
+        return 0.62f
+    }
+
 }

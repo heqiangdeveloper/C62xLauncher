@@ -6,22 +6,28 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.Constant
+import com.chinatsp.settinglib.LogManager
+import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.lamp.LampManager
+import com.chinatsp.vehicle.settings.IRoute
+import com.chinatsp.vehicle.settings.Node
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.chinatsp.vehicle.settings.databinding.LightingManageFragmentBinding
-import com.common.library.frame.base.BaseFragment
+import com.common.library.frame.base.BaseTabFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class LightingManageFragment : BaseFragment<BaseViewModel, LightingManageFragmentBinding>() {
-
-    private lateinit var tabOptions: List<View>
+class LightingManageFragment : BaseTabFragment<BaseViewModel, LightingManageFragmentBinding>() {
 
     private val manager: LampManager
         get() = LampManager.instance
 
-    private val tabLocation: MutableLiveData<Int> by lazy { MutableLiveData(manager.getTabSerial()) }
+    override val nodeId: Int
+        get() = 2
+
+    override val tabLocation: MutableLiveData<Int> by lazy { MutableLiveData(manager.getTabSerial()) }
 
     override fun getLayoutId(): Int {
         return R.layout.lighting_manage_fragment
@@ -29,15 +35,23 @@ class LightingManageFragment : BaseFragment<BaseViewModel, LightingManageFragmen
 
     override fun initData(savedInstanceState: Bundle?) {
         initTabOptions()
-        tabLocation.observe(this) {
-            updateSelectTabOption(it)
-        }
+        initTabLocation()
+    }
+
+    private fun initTabLocation() {
         tabLocation.let {
-            if (it.value == -1) {
-                it.value = R.id.lighting_tab
-            } else {
-                it.value = it.value
+            it.observe(this) { location ->
+                updateSelectTabOption(location)
             }
+            initTabLocation(it, R.id.lighting_tab)
+        }
+    }
+
+    private fun initTabLocation(it: MutableLiveData<Int>, default: Int) {
+        if (it.value == -1) {
+            it.value = default
+        } else {
+            it.value = it.value
         }
     }
 
@@ -53,6 +67,7 @@ class LightingManageFragment : BaseFragment<BaseViewModel, LightingManageFragmen
             child.apply { setOnClickListener { onClick(this) } }
             child
         }.toList()
+        initRouteListener()
     }
 
     private fun updateSelectTabOption(viewId: Int) {
@@ -62,7 +77,7 @@ class LightingManageFragment : BaseFragment<BaseViewModel, LightingManageFragmen
     }
 
     private fun updateDisplayFragment(serial: Int) {
-        var fragment: Fragment? = checkOutFragment(serial)
+        val fragment: Fragment? = checkOutFragment(serial)
         tabOptions.first { it.id == serial }.isSelected = true
         manager.setTabSerial(serial)
         fragment?.let {
@@ -90,4 +105,16 @@ class LightingManageFragment : BaseFragment<BaseViewModel, LightingManageFragmen
         }
         return fragment
     }
+
+    private fun initRouteListener() {
+        if (activity is IRoute) {
+            val iroute = activity as IRoute
+            val liveData = iroute.obtainLevelLiveData()
+            liveData.observe(this) {
+                initRouteLocation(it)
+            }
+        }
+    }
+
+
 }

@@ -6,23 +6,22 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.MutableLiveData
-import com.chinatsp.settinglib.manager.access.AccessManager
 import com.chinatsp.settinglib.manager.adas.AdasManager
+import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.chinatsp.vehicle.settings.databinding.DriveManageFragmentBinding
-import com.chinatsp.vehicle.settings.vm.DriveViewModel
-import com.common.library.frame.base.BaseFragment
 import com.common.library.frame.base.BaseTabFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class DriveManageFragment : BaseTabFragment<BaseViewModel, DriveManageFragmentBinding>() {
 
-    private lateinit var tabOptions: List<View>
-
     private val manager: AdasManager
         get() = AdasManager.instance
+
+    override val nodeId: Int
+        get() = 5
 
     override val tabLocation: MutableLiveData<Int> by lazy { MutableLiveData(manager.getTabSerial()) }
 
@@ -37,26 +36,43 @@ class DriveManageFragment : BaseTabFragment<BaseViewModel, DriveManageFragmentBi
 
     override fun initData(savedInstanceState: Bundle?) {
         initTabOptions()
-        tabLocation.observe(this) {
-            updateSelectTabOption(it)
-        }
+        initTabLocation()
+    }
+
+    private fun initTabLocation() {
         tabLocation.let {
-            if (it.value == -1) {
-                it.value = R.id.drive_intelligent_cruise
-            } else {
-                it.value = it.value
+            it.observe(this) { location ->
+                updateSelectTabOption(location)
             }
+            initTabLocation(it, R.id.drive_intelligent_cruise)
+        }
+    }
+
+    private fun initTabLocation(it: MutableLiveData<Int>, default: Int) {
+        if (it.value == -1) {
+            it.value = default
+        } else {
+            it.value = it.value
         }
     }
 
     private fun initTabOptions() {
-        val tabOptionLayout = binding.driveManagerLeftTab
-        val range = 0 until tabOptionLayout.childCount
+        val tab = binding.driveManagerLeftTab
+        val range = 0 until tab.childCount
         tabOptions = range.map {
-            val child = tabOptionLayout.getChildAt(it)
-            child.apply { setOnClickListener { onClick(this) } }
-            child
-        }.toList()
+            val child = tab.getChildAt(it)
+            child.apply { setOnClickListener { onClick(this) } } }.toList()
+        initRouteListener()
+    }
+
+    private fun initRouteListener() {
+        if (activity is IRoute) {
+            val iroute = activity as IRoute
+            val liveData = iroute.obtainLevelLiveData()
+            liveData.observe(this) {
+                initRouteLocation(it)
+            }
+        }
     }
 
     private fun updateSelectTabOption(viewId: Int) {

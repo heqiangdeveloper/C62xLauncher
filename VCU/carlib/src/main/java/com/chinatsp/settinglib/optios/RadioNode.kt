@@ -36,6 +36,7 @@ enum class RadioNode(
      * 车门与车窗--车门--行车自动落锁
      * set -> 0x1: off 0x2: 5km/h    0x3: 10km/h    0x4: 15km/h   0x5: 20km/h
      * get -> 0x0: Inactive 0x1: off 0x2: 5km/h 0x3: 10km/h  0x4: 15km/h 0x5: 20km/h(default)
+     * UE 黑夜关闭
      */
     DOOR_DRIVE_LOCK(
         get = RNorm(
@@ -46,13 +47,14 @@ enum class RadioNode(
             values = intArrayOf(0x1, 0x2, 0x3, 0x4, 0x5),
             signal = CarCabinManager.ID_VSPEED_LOCK
         ),
-        default = 0x5
+        default = 0x1
     ),
 
     /**
      * 车门与车窗--车门--熄火自动解锁
      * set -> 0x1: unlock FL door 0x2: unlock all doors(default)   0x3: FunctionDisable
      * get -> 0x0: Inactive 0x1: unlock FL door 0x2: unlock all doors(default) 0x3: FunctionDisable
+     * UE 黑夜关闭
      */
     DOOR_FLAMEOUT_UNLOCK(
         get = RNorm(
@@ -63,7 +65,7 @@ enum class RadioNode(
             values = intArrayOf(0x3, 0x1, 0x2),
             signal = CarCabinManager.ID_CUT_OFF_UNLOCK_DOORS
         ),
-        default = 0x2
+        default = 0x1
     ),
 
     /**
@@ -72,7 +74,6 @@ enum class RadioNode(
      * get -> 0x0: Reserved 0x1: OFF  0x2: On Mode 1  0x3: On Mode 2 0x4~0x6: Reserved 0x7: Invalid
      */
     STERN_SMART_ENTER(
-//        get = RNorm(values = intArrayOf(0x1, 0x2, 0x3), signal = CarCabinManager.ID_PTM_SMART_ENTRY_PTM_STS),
         get = RNorm(
             values = intArrayOf(0x1, 0x2, 0x3),
             signal = -1

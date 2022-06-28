@@ -41,14 +41,14 @@ android {
         }
     }
 
-    android.applicationVariants.all { variant ->
-        variant.outputs.all { output ->
-//            variant.getPackageApplication().outputDirectory
-//                    = new File(project.rootDir.absolutePath + File.separator + "outputs")
-            def newName = "${CAR_SET_NAME}_${versionCode}_${versionName}.apk"
-            output.outputFileName = newName
-        }
-    }
+//    android.applicationVariants.all { variant ->
+//        variant.outputs.all { output ->
+////            variant.getPackageApplication().outputDirectory
+////                    = new File(project.rootDir.absolutePath + File.separator + "outputs")
+//            def newName = "${CAR_SET_NAME}_${versionCode}_${versionName}.apk"
+//            output.outputFileName = newName
+//        }
+//    }
 
     buildFeatures {
         dataBinding = true

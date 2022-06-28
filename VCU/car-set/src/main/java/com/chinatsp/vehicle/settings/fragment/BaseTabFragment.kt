@@ -1,7 +1,9 @@
 package com.common.library.frame.base
 
+import android.view.View
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.vehicle.settings.Node
 
 /**
  * 框架基于 Google 官方的 JetPack 构建，在使用  时，需遵循一些规范：
@@ -22,6 +24,17 @@ import androidx.lifecycle.MutableLiveData
  */
 abstract class BaseTabFragment<VM : BaseViewModel<*>, VDB : ViewDataBinding> : BaseFragment<VM, VDB>() {
 
+    lateinit var tabOptions: List<View>
+
     abstract val tabLocation: MutableLiveData<Int>
+
+    abstract val nodeId: Int
+
+    protected fun initRouteLocation(it: Node) {
+        if (it.valid && it.presentId == nodeId && it.id in tabOptions.indices) {
+            tabLocation.value = tabOptions[it.id].id
+            it.valid = false
+        }
+    }
 
 }

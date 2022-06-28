@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
+import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.SoundFragmentBinding
 import com.chinatsp.vehicle.settings.vm.sound.SoundViewModel
@@ -18,6 +19,9 @@ import dagger.hilt.android.AndroidEntryPoint
 class SoundFragment : BaseFragment<SoundViewModel, SoundFragmentBinding>() {
 
     private val manager: VoiceManager by lazy { VoiceManager.instance }
+
+    private val volumeControl: String
+        get() = "volumeControl"
 
     override fun getLayoutId(): Int {
         return R.layout.sound_fragment
@@ -32,6 +36,8 @@ class SoundFragment : BaseFragment<SoundViewModel, SoundFragmentBinding>() {
         initRadioOption()
         addRadioLiveDataListener()
         setRadioListener()
+
+        initRouteListener()
     }
 
     private fun initRadioOption() {
@@ -65,9 +71,7 @@ class SoundFragment : BaseFragment<SoundViewModel, SoundFragmentBinding>() {
         }
         binding.soundSpeedOffsetRadio.let {
             it.setOnTabSelectionChangedListener { _, value ->
-                doUpdateRadio(
-                    RadioNode.SPEED_VOLUME_OFFSET, value, viewModel.volumeOffset, it
-                )
+                doUpdateRadio(RadioNode.SPEED_VOLUME_OFFSET, value, viewModel.volumeOffset, it)
             }
         }
 
@@ -181,11 +185,35 @@ class SoundFragment : BaseFragment<SoundViewModel, SoundFragmentBinding>() {
 
     private fun setCheckedChangeListener() {
         binding.soundVolumeAdjustment.setOnClickListener {
-            val volumeDialog = VolumeDialogFragment()
-            activity?.supportFragmentManager?.let { it ->
-                volumeDialog.show(it, volumeDialog.javaClass.simpleName)
+            showVolumeFragment()
+        }
+    }
+
+    private fun cleanPopupSerial(serial: String) {
+        if (activity is IRoute) {
+            val iroute = activity as IRoute
+            iroute.cleanPopupLiveDate(serial)
+        }
+    }
+
+    private fun initRouteListener() {
+        if (activity is IRoute) {
+            val iroute = activity as IRoute
+            val liveData = iroute.obtainPopupLiveData()
+            liveData.observe(this) {
+                if (it.equals(volumeControl)) {
+                    showVolumeFragment()
+                }
             }
         }
+    }
+
+    private fun showVolumeFragment() {
+        val fragment = VolumeDialogFragment()
+        activity?.supportFragmentManager?.let { it ->
+            fragment.show(it, fragment.javaClass.simpleName)
+        }
+        cleanPopupSerial(volumeControl)
     }
 
 }

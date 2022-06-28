@@ -3,18 +3,22 @@ package com.chinatsp.vehicle.settings.fragment.cabin
 import android.os.Bundle
 import android.widget.CompoundButton
 import android.widget.TextView
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.listener.sound.ISoundManager
 import com.chinatsp.settinglib.manager.cabin.SeatManager
 import com.chinatsp.settinglib.optios.SwitchNode
+import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CabinSeatFragmentBinding
 import com.chinatsp.vehicle.settings.fragment.cabin.dialog.CopilotGuestsDialogFragment
 import com.chinatsp.vehicle.settings.fragment.cabin.dialog.SeatHeatingDialogFragment
 import com.chinatsp.vehicle.settings.vm.cabin.SeatViewModel
+import com.common.library.frame.base.BaseDialogFragment
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import dagger.hilt.android.AndroidEntryPoint
+import java.lang.ref.WeakReference
 
 /**
  * @author : luohong
@@ -106,17 +110,16 @@ class CabinSeatFragment : BaseFragment<SeatViewModel, CabinSeatFragmentBinding>(
 
     private fun setCheckedChangeListener() {
         binding.cabinSeatAutomaticHeating.setOnClickListener {
-            val fragment = SeatHeatingDialogFragment()
             activity?.supportFragmentManager?.let {
-                fragment.show(it, fragment.javaClass.simpleName)
+                showDialogFragment(SeatHeatingDialogFragment())
             }
         }
 
         binding.cabinSeatCopilotGuests.setOnClickListener {
-            val fragment = CopilotGuestsDialogFragment()
             activity?.supportFragmentManager?.let {
-                fragment.show(it, fragment.javaClass.simpleName)
+                showDialogFragment(CopilotGuestsDialogFragment())
             }
         }
     }
+
 }

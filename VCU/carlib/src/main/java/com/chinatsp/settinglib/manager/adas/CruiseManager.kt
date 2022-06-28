@@ -73,7 +73,6 @@ class CruiseManager : BaseManager(), IOptionManager {
         }
     }
 
-
     override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             SwitchNode.ADAS_IACC.get.signal -> {

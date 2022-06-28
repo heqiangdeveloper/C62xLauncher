@@ -30,6 +30,10 @@ class SteeringKeysDialogFragment :
         }
     }
 
+    override fun getWidthRatio(): Float {
+        return 880f / 1920f
+    }
+
 
 }
 

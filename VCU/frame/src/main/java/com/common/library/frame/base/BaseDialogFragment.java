@@ -80,9 +80,6 @@ public abstract class BaseDialogFragment<VM extends BaseViewModel, VDB extends V
 
     private static final long IGNORE_INTERVAL_TIME = 500;
 
-    public float widthRatio = DEFAULT_WIDTH_RATIO;
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -113,14 +110,17 @@ public abstract class BaseDialogFragment<VM extends BaseViewModel, VDB extends V
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setCanceledOnTouchOutside(true);
         }
+    }
 
+    protected float getWidthRatio() {
+        return DEFAULT_WIDTH_RATIO;
     }
 
     protected void initWindow(Window window) {
         if (window != null) {
             window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             window.getAttributes().windowAnimations = R.style.common_frame_dialog_animation;
-            setWindow(window, Gravity.NO_GRAVITY, widthRatio, 0, 0, 0, 0, 0, 0);
+            setWindow(window, Gravity.NO_GRAVITY, getWidthRatio(), 0, 0, 0, 0, 0, 0);
         }
     }
 

@@ -21,7 +21,7 @@ import java.lang.ref.WeakReference
 abstract class BaseManager : IManager {
 
     private val signalService: SettingManager
-        get() = SettingManager.getInstance()
+        get() = SettingManager.instance
 
     protected val identity by lazy { System.identityHashCode(this) }
 

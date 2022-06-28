@@ -51,6 +51,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/switch_item_option_height"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/line1">
 
@@ -73,6 +74,7 @@
             <View
                 android:id="@+id/line2"
                 style="@style/line"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cabin_ac_auto_demist_layout" />
 

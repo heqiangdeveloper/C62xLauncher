@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.manager.cabin.CabinManager
+import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.chinatsp.vehicle.settings.databinding.CabinFragmentBinding
@@ -26,7 +27,8 @@ class CabinManagerFragment : BaseTabFragment<BaseViewModel, CabinFragmentBinding
     private val manager: CabinManager
         get() = CabinManager.instance
 
-    private lateinit var tabOptions: List<View>
+    override val nodeId: Int
+        get() = 4
 
     override val tabLocation: MutableLiveData<Int> by lazy { MutableLiveData(manager.getTabSerial()) }
 
@@ -40,29 +42,44 @@ class CabinManagerFragment : BaseTabFragment<BaseViewModel, CabinFragmentBinding
 
     override fun initData(savedInstanceState: Bundle?) {
         initTabOptions()
-        tabLocation.observe(this) {
-            updateSelectTabOption(it)
-        }
+        initTabLocation()
+    }
+
+    private fun initTabLocation() {
         tabLocation.let {
-            if (tabOptions.map { item -> item.id }.contains(it.value)) {
-                it.value = it.value
-            } else {
-                it.value = R.id.cabin_wheel
+            it.observe(this) { location ->
+                updateSelectTabOption(location)
             }
+            initTabLocation(it, R.id.cabin_wheel)
+        }
+    }
+
+    private fun initTabLocation(it: MutableLiveData<Int>, default: Int) {
+        if (it.value == -1) {
+            it.value = default
+        } else {
+            it.value = it.value
         }
     }
 
     private fun initTabOptions() {
-        val tabOptionLayout = binding.cabinManagerLeftTab
-        val range = 0 until tabOptionLayout.childCount
+        val tab = binding.cabinManagerLeftTab
+        val range = 0 until tab.childCount
         tabOptions = range.map {
-            val child = tabOptionLayout.getChildAt(it)
-            child.isSelected = false
-            child.apply { setOnClickListener { onClick(this) } }
-            child
-        }.toList()
+            val child = tab.getChildAt(it)
+            child.apply { setOnClickListener { onClick(this) } } }.toList()
+        initRouteListener()
     }
 
+    private fun initRouteListener() {
+        if (activity is IRoute) {
+            val iroute = activity as IRoute
+            val liveData = iroute.obtainLevelLiveData()
+            liveData.observe(this) {
+                initRouteLocation(it)
+            }
+        }
+    }
     private fun updateSelectTabOption(viewId: Int) {
         tabOptions.forEach { it.isSelected = false }
         updateDisplayFragment(viewId)
@@ -72,12 +89,18 @@ class CabinManagerFragment : BaseTabFragment<BaseViewModel, CabinFragmentBinding
     private fun updateDisplayFragment(serial: Int) {
         tabOptions.first { it.id == serial }.isSelected = true
         manager.setTabSerial(serial)
-        val fragment: Fragment? = checkOutFragment(serial)
-        fragment?.let {
-            val manager: FragmentManager = childFragmentManager
-            val transaction: FragmentTransaction = manager.beginTransaction()
-            transaction.replace(R.id.cabin_manager_layout, it, it::class.simpleName)
-            transaction.commitAllowingStateLoss()
+        val manager: FragmentManager = childFragmentManager
+        val clazz = getFragmentClass(serial)
+        if (null != clazz) {
+            val cache = manager.findFragmentByTag(clazz.simpleName)
+            if (null == cache) {
+                val fragment: Fragment? = checkOutFragment(serial)
+                fragment?.let {
+                    val transaction: FragmentTransaction = manager.beginTransaction()
+                    transaction.replace(R.id.cabin_manager_layout, it, it::class.simpleName)
+                    transaction.commitAllowingStateLoss()
+                }
+            }
         }
     }
 
@@ -106,6 +129,33 @@ class CabinManagerFragment : BaseTabFragment<BaseViewModel, CabinFragmentBinding
         }
         return fragment
     }
+
+    private fun getFragmentClass(serial: Int): Class<*>? {
+        var fragment: Class<*>? = null
+        when (serial) {
+            R.id.cabin_wheel -> {
+                fragment = CabinWheelFragment::class.java
+            }
+            R.id.cabin_seat -> {
+                fragment = CabinSeatFragment::class.java
+            }
+            R.id.cabin_air_conditioner -> {
+                fragment = CabinACFragment::class.java
+            }
+            R.id.cabin_safety -> {
+                fragment = CabinSafeFragment::class.java
+            }
+            R.id.cabin_instrument -> {
+                fragment = CabinMeterFragment::class.java
+            }
+            R.id.cabin_other -> {
+                fragment = CabinOtherFragment::class.java
+            }
+            else -> {}
+        }
+        return fragment
+    }
+
 
 
 }

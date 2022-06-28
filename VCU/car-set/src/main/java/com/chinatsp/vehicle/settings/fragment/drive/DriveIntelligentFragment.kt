@@ -1,6 +1,7 @@
 package com.chinatsp.vehicle.settings.fragment.drive
 
 import android.os.Bundle
+import android.view.View
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.adas.CruiseManager
@@ -55,7 +56,7 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
 
     private fun initRadioOption(node: RadioNode, liveData: LiveData<Int>) {
         val value = liveData.value ?: node.default
-        doUpdateRadio(node, value)
+        doUpdateRadio(node, value, isInit = true)
     }
 
     private fun doUpdateRadio(node: RadioNode, value: String,  liveData: LiveData<Int>, tabView: TabControlView) {
@@ -63,12 +64,26 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
         tabView.takeIf { !result }?.setSelection(liveData.value.toString(), true)
     }
 
-    private fun doUpdateRadio(node: RadioNode, value: Int, immediately: Boolean = false) {
+    private fun doUpdateRadio(node: RadioNode, value: Int, immediately: Boolean = false, isInit: Boolean = false) {
         val tabView = when (node) {
-            RadioNode.ADAS_LIMBER_LEAVE -> binding.accessCruiseLimberLeaveRadio
+            RadioNode.ADAS_LIMBER_LEAVE -> {
+                binding.accessCruiseLimberLeaveRadio.getChildAt(0).visibility = View.GONE
+                binding.accessCruiseLimberLeaveRadio
+            }
             else -> null
         }
-        takeIf { null != tabView }?.doUpdateRadio(tabView!!, value, immediately)
+        takeIf { null != tabView }?.let {
+            bindRadioData(node, tabView!!, isInit)
+            doUpdateRadio(tabView!!, value, immediately)
+        }
+    }
+
+    private fun bindRadioData(node: RadioNode, tabView: TabControlView, isInit: Boolean) {
+        if (isInit) {
+            val names = tabView.nameArray.map { it.toString() }.toTypedArray()
+            val values = node.get.values.map { it.toString() }.toTypedArray()
+            tabView.setItems(names, values)
+        }
     }
 
     private fun doUpdateRadio(tabView: TabControlView, value: Int, immediately: Boolean = false) {
