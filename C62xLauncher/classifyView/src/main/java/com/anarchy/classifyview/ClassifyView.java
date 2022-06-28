@@ -882,6 +882,7 @@ public class ClassifyView extends FrameLayout {
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
                     L.d("ACTION_DRAG_ENDED");
+                    EventBus.getDefault().post(new ReStoreDataEvent());//通知存储数据
                     if (mergeSuccess) {
                         mergeSuccess = false;
                         break;
