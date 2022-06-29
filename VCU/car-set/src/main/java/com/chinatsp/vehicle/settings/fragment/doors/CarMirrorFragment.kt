@@ -35,6 +35,11 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
 
     private fun setSwitchListener() {
         mirrorFoldSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                binding.rearviewMirror.setText(R.string.car_mirror_automatic_folding_open)
+            } else {
+                binding.rearviewMirror.setText(R.string.car_mirror_automatic_folding_close)
+            }
             val node = SwitchNode.BACK_MIRROR_FOLD
             val result = manager.doSetSwitchOption(node, isChecked)
             takeUnless { result }?.doUpdateSwitch(buttonView as SwitchButton, !isChecked, false)
@@ -49,6 +54,11 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
 
     private fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {
         val status = liveData.value ?: false
+        if (status) {
+            binding.rearviewMirror.setText(R.string.car_mirror_automatic_folding_open)
+        } else {
+            binding.rearviewMirror.setText(R.string.car_mirror_automatic_folding_close)
+        }
         doUpdateSwitch(node, status, true)
     }
 

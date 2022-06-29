@@ -1,6 +1,7 @@
 package com.chinatsp.vehicle.settings.fragment.lighting
 
 import android.os.Bundle
+import android.view.View
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.ISwitchManager
@@ -116,6 +117,22 @@ class AmbientLightingFragment :
         }
 
         )
+        binding.brightnessLayout.setOnClickListener {
+            binding.lightingTitleLayout.visibility = View.GONE
+            binding.brightnessAdjust.visibility = View.VISIBLE
+        }
+        binding.closeIv.setOnClickListener {
+            binding.lightingTitleLayout.visibility = View.VISIBLE
+            binding.brightnessAdjust.visibility = View.GONE
+        }
+        binding.colorLayout.setOnClickListener {
+            binding.lightingTitleLayout.visibility = View.GONE
+            binding.pickerLayout.visibility = View.VISIBLE
+        }
+        binding.pickerCloseIv.setOnClickListener {
+            binding.lightingTitleLayout.visibility = View.VISIBLE
+            binding.pickerLayout.visibility = View.GONE
+        }
     }
 
     private fun showModeFragment() {

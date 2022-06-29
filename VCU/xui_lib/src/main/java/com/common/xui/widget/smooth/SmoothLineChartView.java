@@ -249,7 +249,7 @@ public class SmoothLineChartView extends View {
             mShadowPaint = new Paint();
             mShadowPaint.setStyle(Paint.Style.FILL);
             mShadowPaint.setAntiAlias(true);
-            shader = new LinearGradient(getWidth() / 2, getHeight(), getWidth() / 2, 0, mContext.getResources().getColor(R.color.xui_config_color_pure_black), mContext.getResources().getColor(R.color.xui_config_color_link), Shader.TileMode.MIRROR);
+            shader = new LinearGradient(getWidth() / 2, getHeight(), getWidth() / 2, 0, mContext.getResources().getColor(R.color.smooth_bg_color_end), mContext.getResources().getColor(R.color.smooth_bg_color_start), Shader.TileMode.MIRROR);
             mShadowPaint.setShader(shader);
             mPath.lineTo(mPoints.get(size - 1).x, height + mBorder);
             mPath.lineTo(mPoints.get(0).x, height + mBorder);
@@ -280,14 +280,14 @@ public class SmoothLineChartView extends View {
         }
         //绘制圆环内圆填充
         if (mNodeStyle == NODE_STYLE_RING) {
-            mPaint.setColor(mContext.getResources().getColor(R.color.xui_config_color_blue));
+            mPaint.setColor(mContext.getResources().getColor(R.color.smooth_bg_color_node));
             mPaint.setStyle(Paint.Style.FILL);
             for (int i = 0; i < mPoints.size(); i++) {
                 if (mSelectedNode != -1) {
                     if (mPoints.get(mSelectedNode).equals(mPoints.get(i))) {
                         mPaint.setColor(mInnerCircleColor);
                     } else {
-                        mPaint.setColor(mContext.getResources().getColor(R.color.xui_config_color_blue));
+                        mPaint.setColor(mContext.getResources().getColor(R.color.smooth_bg_color_node));
                     }
                 }
                 canvas.drawCircle(mPoints.get(i).x, mPoints.get(i).y, (mCircleSize - STROKE_SIZE) / 2, mPaint);

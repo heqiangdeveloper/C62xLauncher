@@ -1,28 +1,24 @@
-package com.chinatsp.vehicle.settings.fragment.sound
+package com.chinatsp.vehicle.settings.fragment.doors.dialog
 
 import android.graphics.Color
 import android.os.Bundle
 import com.chinatsp.vehicle.settings.R
-import com.chinatsp.vehicle.settings.databinding.SoundEffectFragmentBinding
-import com.chinatsp.vehicle.settings.fragment.doors.dialog.EqualizerDialogFragment
-import com.chinatsp.vehicle.settings.fragment.doors.dialog.VolumeDialogFragment
+import com.chinatsp.vehicle.settings.databinding.EqualizerDialogFragmetBinding
 import com.chinatsp.vehicle.settings.vm.sound.SoundViewModel
-import com.common.library.frame.base.BaseFragment
+import com.common.library.frame.base.BaseDialogFragment
 import com.common.xui.widget.smooth.SmoothLineChartView
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.ArrayList
 
 @AndroidEntryPoint
-class SoundEffectFragment : BaseFragment<SoundViewModel, SoundEffectFragmentBinding>() {
+class EqualizerDialogFragment: BaseDialogFragment<SoundViewModel, EqualizerDialogFragmetBinding>() {
     override fun getLayoutId(): Int {
-        return R.layout.sound_effect_fragment
+        return R.layout.equalizer_dialog_fragmet
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-        initView()
-        setCheckedChangeListener()
+        initView();
     }
-
     private fun initView() {
         binding.smoothChartView.isCustomBorder = true
         binding.smoothChartView.setTagDrawable(R.drawable.ac_blue_52)
@@ -33,9 +29,9 @@ class SoundEffectFragment : BaseFragment<SoundViewModel, SoundEffectFragmentBind
         binding.smoothChartView.maxY = 58F
         binding.smoothChartView.enableShowTag(false)
         binding.smoothChartView.enableDrawArea(true)
-        binding.smoothChartView.lineColor = resources.getColor(R.color.md_material_blue_600)
+        binding.smoothChartView.lineColor = resources.getColor(R.color.smooth_bg_color_start)
         binding.smoothChartView.circleColor =
-            resources.getColor(R.color.default_shadow_button_color_pressed)
+            resources.getColor(R.color.smooth_bg_color_end)
         binding.smoothChartView.innerCircleColor = Color.parseColor("#ffffff")
         binding.smoothChartView.nodeStyle = SmoothLineChartView.NODE_STYLE_RING
         var data: MutableList<Float> = ArrayList()
@@ -52,20 +48,4 @@ class SoundEffectFragment : BaseFragment<SoundViewModel, SoundEffectFragmentBind
         x.add("3-16")
         binding.smoothChartView.setData(data, x)
     }
-
-    private fun setCheckedChangeListener() {
-        binding.soundEqualizerCompensation.setOnClickListener {
-            val fragment = EqualizerDialogFragment()
-            activity?.supportFragmentManager?.let {
-                fragment.show(it, fragment.javaClass.simpleName)
-            }
-        }
-        binding.soundVolumeBalanceCompensation.setOnClickListener{
-            val fragment = VolumeDialogFragment()
-            activity?.supportFragmentManager?.let {
-                fragment.show(it, fragment.javaClass.simpleName)
-            }
-        }
-    }
-
 }

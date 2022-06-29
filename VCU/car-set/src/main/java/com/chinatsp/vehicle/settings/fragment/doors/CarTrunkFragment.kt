@@ -65,14 +65,19 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
             doUpdateSwitchOption(SwitchNode.AS_STERN_ELECTRIC, buttonView, isChecked)
             if (isChecked) {
                 animationOpenDoor.start(false, 50, null)
+                binding.carTrunkDoorHeight.visibility = View.VISIBLE
             } else {
                 animationCloseDoor.start(false, 50, null)
+                binding.carTrunkDoorHeight.visibility = View.GONE
+                binding.intelligenceInto.visibility = View.GONE
             }
         }
         binding.accessSternLightAlarmSw.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.STERN_LIGHT_ALARM, buttonView, isChecked)
             if (isChecked) {
                 binding.ivFlashAlarm.visibility = View.VISIBLE
+                binding.carTrunkDoorHeight.visibility = View.VISIBLE
+                binding.carTrunkDoorHeight.setText(R.string.car_trunk_light_open)
                 animationFlashAlarm.start(false, 50, object : AnimationDrawable.AnimationLisenter {
                     override fun startAnimation() {
                     }
@@ -81,12 +86,16 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
                         binding.ivFlashAlarm.visibility = View.GONE
                     }
                 })
+            } else {
+                binding.carTrunkDoorHeight.setText(R.string.car_trunk_light_close)
             }
         }
         binding.accessSternAudioAlarmSw.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.STERN_AUDIO_ALARM, buttonView, isChecked)
             if (isChecked) {
                 binding.ivBuzzerAlarms.visibility = View.VISIBLE
+                binding.carTrunkDoorHeight.visibility = View.VISIBLE
+                binding.carTrunkDoorHeight.setText(R.string.car_trunk_buzzer_open)
                 animationBuzzerAlarms.start(
                     false,
                     50,
@@ -98,12 +107,26 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
                             binding.ivBuzzerAlarms.visibility = View.GONE
                         }
                     })
+            } else {
+                binding.carTrunkDoorHeight.setText(R.string.car_trunk_buzzer_close)
             }
         }
     }
 
     private fun setRadioListener() {
         binding.accessSternSmartEnterRadio.setOnTabSelectionChangedListener { _, value ->
+            if (value.equals("1")) {
+                binding.carTrunkDoorHeight.visibility = View.GONE
+                binding.intelligenceInto.visibility = View.GONE
+            } else if (value.equals("2")) {
+                binding.carTrunkDoorHeight.visibility = View.VISIBLE
+                binding.intelligenceInto.visibility = View.VISIBLE
+                binding.carTrunkDoorHeight.setText(R.string.car_trunk_keep_unlock)
+            } else {
+                binding.carTrunkDoorHeight.visibility = View.VISIBLE
+                binding.intelligenceInto.visibility = View.VISIBLE
+                binding.carTrunkDoorHeight.setText(R.string.car_trunk_action_unlock)
+            }
             val result = isCanToInt(value) && manager.doSetRadioOption(
                 RadioNode.STERN_SMART_ENTER, value.toInt()
             )
@@ -174,5 +197,4 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
             swb.setCheckedImmediatelyNoEvent(status)
         }
     }
-
 }

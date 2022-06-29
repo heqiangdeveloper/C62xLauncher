@@ -83,6 +83,11 @@
         <item>5次</item>
         <item>7次</item>
     </string-array>
+    <string-array name="lighting_external_lighting_options">
+        <item>混响</item>
+        <item>共鸣</item>
+        <item>独奏</item>
+    </string-array>
     <string-array name="remix_option_title">
         <item>导航优先</item>
         <item>直接混音</item>
@@ -152,5 +157,11 @@
         <item>打击</item>
         <item>摇滚</item>
         <item>自定义</item>
+    </string-array>
+    <string-array name="sound_environmental_option">
+        <item>自然</item>
+        <item>俱乐部</item>
+        <item>现场</item>
+        <item>休闲</item>
     </string-array>
 </resources>

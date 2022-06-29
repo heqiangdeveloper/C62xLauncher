@@ -149,4 +149,16 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_marginLeft">@dimen/x30</item>
     </style>
+
+    <style name="label_txt">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">@dimen/x10</item>
+        <item name="android:paddingRight">@dimen/x10</item>
+        <item name="android:paddingTop">@dimen/x4</item>
+        <item name="android:paddingBottom">@dimen/x4</item>
+        <item name="android:textColor">@color/xui_config_color_white</item>
+        <item name="android:textSize">@dimen/text_14</item>
+        <item name="android:background">@drawable/bg_label_txt</item>
+    </style>
 </resources>

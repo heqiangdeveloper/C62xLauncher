@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingDefaultResource">
+
+    <data></data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_sound_popup_20"
+        android:paddingTop="@dimen/x15"
+        android:paddingBottom="40px">
+
+        <RelativeLayout
+            android:id="@+id/pop_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/close_dialog"
+                style="@style/close_dialog" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/dialog_title"
+                android:text="@string/sound_volume_balance" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/refresh_dialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/x15"
+                android:src="@drawable/dialog_refresh_selector" />
+        </RelativeLayout>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/x8"
+            android:src="@drawable/right_car_vioce"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pop_title" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/x50"
+            android:layout_marginStart="@dimen/x8"
+            android:src="@drawable/shengchang"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pop_title" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

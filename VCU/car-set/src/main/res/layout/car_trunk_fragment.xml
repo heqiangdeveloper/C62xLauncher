@@ -125,7 +125,8 @@
                     style="@style/switch_button_style"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:background="@color/transparent"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <View
@@ -162,6 +163,27 @@
             android:layout_marginEnd="@dimen/x246"
             android:layout_marginBottom="@dimen/x150"
             android:src="@drawable/buzzer_alarms_animation"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/car_trunk_door_height"
+            style="@style/label_txt"
+            android:layout_marginTop="@dimen/x12"
+            android:layout_marginEnd="@dimen/x161"
+            android:text="@string/car_trunk_door_height"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/intelligence_into"
+            android:layout_width="@dimen/x112"
+            android:layout_height="@dimen/x100"
+            android:layout_marginEnd="@dimen/x220"
+            android:layout_marginBottom="@dimen/x76"
+            android:src="@drawable/img_weimen_key"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
