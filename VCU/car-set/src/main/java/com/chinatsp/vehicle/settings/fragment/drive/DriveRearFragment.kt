@@ -1,6 +1,7 @@
 package com.chinatsp.vehicle.settings.fragment.drive
 
 import android.os.Bundle
+import android.view.View
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.IOptionManager
@@ -49,7 +50,12 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
     private fun setRadioListener() {
         binding.adasSideShowAreaRadio.let {
             it.setOnTabSelectionChangedListener { _, value ->
-                doUpdateRadio(RadioNode.ADAS_SIDE_BACK_SHOW_AREA, value, viewModel.showAreaValue, it)
+                doUpdateRadio(
+                    RadioNode.ADAS_SIDE_BACK_SHOW_AREA,
+                    value,
+                    viewModel.showAreaValue,
+                    it
+                )
             }
         }
     }
@@ -120,6 +126,7 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
     }
 
     private fun doUpdateSwitch(swb: SwitchButton, status: Boolean, immediately: Boolean = false) {
+        dynamicEffect(swb.id, status)
         if (!immediately) {
             swb.setCheckedNoEvent(status)
         } else {
@@ -129,15 +136,19 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
 
     private fun setSwitchListener() {
         binding.adasSideDowSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            dynamicEffect(buttonView.id, isChecked)
             doUpdateSwitchOption(SwitchNode.ADAS_DOW, buttonView, isChecked)
         }
         binding.adasSideBscSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            dynamicEffect(buttonView.id, isChecked)
             doUpdateSwitchOption(SwitchNode.ADAS_BSC, buttonView, isChecked)
         }
         binding.adasSideBsdSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            dynamicEffect(buttonView.id, isChecked)
             doUpdateSwitchOption(SwitchNode.ADAS_BSD, buttonView, isChecked)
         }
         binding.adasSideGuidesSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            dynamicEffect(buttonView.id, isChecked)
             doUpdateSwitchOption(SwitchNode.ADAS_GUIDES, buttonView, isChecked)
         }
     }
@@ -153,4 +164,31 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
         return null != value && value.isNotBlank() && value.matches(Regex("\\d+"))
     }
 
+    private fun dynamicEffect(viewId: Int, status: Boolean) {
+        if (viewId == binding.adasSideDowSwitch.id) {
+            if (status) {
+                binding.dowIv.visibility = View.VISIBLE
+            } else {
+                binding.dowIv.visibility = View.GONE
+            }
+        } else if (viewId == binding.adasSideBsdSwitch.id) {
+            if (status) {
+                binding.bsdIv.visibility = View.VISIBLE
+            } else {
+                binding.bsdIv.visibility = View.GONE
+            }
+        } else if (viewId == binding.adasSideBscSwitch.id) {
+            if (status) {
+                binding.auxiliary.visibility = View.VISIBLE
+            } else {
+                binding.auxiliary.visibility = View.GONE
+            }
+        } else if (viewId == binding.adasSideGuidesSwitch.id) {
+            if (status) {
+                binding.auxiliaryLine.visibility = View.VISIBLE
+            } else {
+                binding.auxiliaryLine.visibility = View.GONE
+            }
+        }
+    }
 }

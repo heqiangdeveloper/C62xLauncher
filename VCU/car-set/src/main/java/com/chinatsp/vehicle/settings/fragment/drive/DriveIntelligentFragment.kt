@@ -59,12 +59,22 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
         doUpdateRadio(node, value, isInit = true)
     }
 
-    private fun doUpdateRadio(node: RadioNode, value: String,  liveData: LiveData<Int>, tabView: TabControlView) {
+    private fun doUpdateRadio(
+        node: RadioNode,
+        value: String,
+        liveData: LiveData<Int>,
+        tabView: TabControlView
+    ) {
         val result = isCanToInt(value) && manager.doSetRadioOption(node, value.toInt())
         tabView.takeIf { !result }?.setSelection(liveData.value.toString(), true)
     }
 
-    private fun doUpdateRadio(node: RadioNode, value: Int, immediately: Boolean = false, isInit: Boolean = false) {
+    private fun doUpdateRadio(
+        node: RadioNode,
+        value: Int,
+        immediately: Boolean = false,
+        isInit: Boolean = false
+    ) {
         val tabView = when (node) {
             RadioNode.ADAS_LIMBER_LEAVE -> {
                 binding.accessCruiseLimberLeaveRadio.getChildAt(0).visibility = View.GONE
@@ -130,10 +140,24 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
         } else {
             swb.setCheckedImmediatelyNoEvent(status)
         }
+        if (status) {
+            if (swb.id == binding.accessCruiseCruiseAssist.id) {
+                binding.roadBlue.visibility = View.VISIBLE
+            }
+        } else {
+            if (swb.id == binding.accessCruiseCruiseAssist.id) {
+                binding.roadBlue.visibility = View.GONE
+            }
+        }
     }
 
     private fun setSwitchListener() {
         binding.accessCruiseCruiseAssist.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                binding.roadBlue.visibility = View.VISIBLE
+            } else {
+                binding.roadBlue.visibility = View.GONE
+            }
             doUpdateSwitchOption(SwitchNode.ADAS_IACC, buttonView, isChecked)
         }
         binding.accessCruiseTargetPrompt.setOnCheckedChangeListener { buttonView, isChecked ->

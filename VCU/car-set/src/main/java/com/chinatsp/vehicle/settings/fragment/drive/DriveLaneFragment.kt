@@ -3,6 +3,7 @@ package com.chinatsp.vehicle.settings.fragment.drive
 import android.os.Bundle
 import android.view.View
 import android.widget.CompoundButton
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.adas.LaneManager
 import com.chinatsp.settinglib.optios.RadioNode
@@ -68,7 +69,8 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
         }
         binding.adasLaneLdwSensitivityRadio.let {
             it.setOnTabSelectionChangedListener { _, value ->
-                doUpdateRadio(RadioNode.ADAS_LDW_SENSITIVITY, value, viewModel.ldwSensitivity, it
+                doUpdateRadio(
+                    RadioNode.ADAS_LDW_SENSITIVITY, value, viewModel.ldwSensitivity, it
                 )
             }
         }
@@ -90,7 +92,12 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
         tabView.takeIf { !result }?.setSelection(liveData.value.toString(), true)
     }
 
-    private fun doUpdateRadio(node: RadioNode, value: Int, immediately: Boolean = false, isInit: Boolean = false) {
+    private fun doUpdateRadio(
+        node: RadioNode,
+        value: Int,
+        immediately: Boolean = false,
+        isInit: Boolean = false
+    ) {
         val tabView = when (node) {
             RadioNode.ADAS_LANE_ASSIST_MODE -> {
                 binding.adasLaneLaneAssistRadio.getChildAt(0).visibility = View.GONE
@@ -143,6 +150,9 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
     }
 
     private fun doUpdateSwitch(swb: SwitchButton, status: Boolean, immediately: Boolean = false) {
+        if (swb.id == binding.adasLaneLaneAssistSwitch.id) {
+            dynamicEffect(status)
+        }
         if (!immediately) {
             swb.setCheckedNoEvent(status)
         } else {
@@ -152,6 +162,7 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
 
     private fun setSwitchListener() {
         binding.adasLaneLaneAssistSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            dynamicEffect(isChecked)
             doUpdateSwitchOption(SwitchNode.ADAS_LANE_ASSIST, buttonView, isChecked)
         }
     }
@@ -167,5 +178,16 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
         return null != value && value.isNotBlank() && value.matches(Regex("\\d+"))
     }
 
+    private fun dynamicEffect(status: Boolean) {
+        if (status) {
+            binding.roadRed.visibility = View.VISIBLE
+            binding.carIvJust.visibility = View.GONE
+            binding.carIv.visibility = View.VISIBLE
+        } else {
+            binding.roadRed.visibility = View.GONE
+            binding.carIvJust.visibility = View.VISIBLE
+            binding.carIv.visibility = View.GONE
+        }
+    }
 }
 

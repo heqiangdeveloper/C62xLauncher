@@ -1,7 +1,9 @@
 package com.chinatsp.vehicle.settings.fragment.drive
 
 import android.os.Bundle
+import android.view.View
 import android.widget.CompoundButton
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.adas.ForwardManager
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -64,13 +66,40 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
         } else {
             swb.setCheckedImmediatelyNoEvent(status)
         }
+        if(status){
+            if (swb.id == binding.adasForwardFcwSwitch.id) {
+                binding.warningIv.visibility = View.VISIBLE
+            } else if (swb.id == binding.adasForwardAebSwitch.id) {
+                binding.smallCar.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.acccar_rad) })
+                binding.lightRedIv.visibility = View.VISIBLE
+            }
+        }else{
+            if (swb.id == binding.adasForwardFcwSwitch.id) {
+                binding.warningIv.visibility = View.GONE
+            } else if (swb.id == binding.adasForwardAebSwitch.id) {
+                binding.smallCar.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.acccar_white) })
+                binding.lightRedIv.visibility = View.GONE
+            }
+        }
     }
 
     private fun setSwitchListener() {
         binding.adasForwardFcwSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                binding.warningIv.visibility = View.VISIBLE
+            } else {
+                binding.warningIv.visibility = View.GONE
+            }
             doUpdateSwitchOption(SwitchNode.ADAS_FCW, buttonView, isChecked)
         }
         binding.adasForwardAebSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                binding.smallCar.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.acccar_rad) })
+                binding.lightRedIv.visibility = View.VISIBLE
+            } else {
+                binding.smallCar.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.acccar_white) })
+                binding.lightRedIv.visibility = View.GONE
+            }
             doUpdateSwitchOption(SwitchNode.ADAS_AEB, buttonView, isChecked)
         }
     }
