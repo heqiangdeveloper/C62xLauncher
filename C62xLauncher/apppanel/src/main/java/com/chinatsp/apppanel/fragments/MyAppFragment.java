@@ -258,19 +258,19 @@ public class MyAppFragment extends Fragment {
                         locationBean.setChildIndex(-1);
                         locationBean.setTitle("");
 
-                        baos = new ByteArrayOutputStream();
-                        if(null == locationBean.getImgDrawable()){
-                            byte[] b = locationBean.getImgByte();
-                            drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length));
-                        }else {
-                            drawable = locationBean.getImgDrawable();
-                        }
-                        bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-                        Canvas canvas = new Canvas(bitmap);
-                        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-                        drawable.draw(canvas);
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                        locationBean.setImgByte(baos.toByteArray());
+//                        baos = new ByteArrayOutputStream();
+//                        if(null == locationBean.getImgDrawable()){
+//                            byte[] b = locationBean.getImgByte();
+//                            drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length));
+//                        }else {
+//                            drawable = locationBean.getImgDrawable();
+//                        }
+//                        bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+//                        Canvas canvas = new Canvas(bitmap);
+//                        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+//                        drawable.draw(canvas);
+//                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+//                        locationBean.setImgByte(baos.toByteArray());
 //                        locationBean.setName(appInfo.getName());
 //                        locationBean.setAddBtn(0);
 //                        locationBean.setStatus(0);
@@ -282,7 +282,8 @@ public class MyAppFragment extends Fragment {
                         if(num == 0){
                             db.insertLocation(locationBean);
                         }else {
-                            db.updateLocation(locationBean);
+                            //db.updateLocation(locationBean);
+                            db.updateIndex(locationBean);
                         }
                     } else {//文件夹
                         for(int j = 0; j < list.size(); j++){
@@ -295,19 +296,19 @@ public class MyAppFragment extends Fragment {
 //                            locationBean.setTitle(appInfo.getTitle());
 //                            locationBean.setPackageName(appInfo.getPackageName());
 
-                            baos = new ByteArrayOutputStream();
-                            if(null == locationBean.getImgDrawable()){
-                                byte[] b = locationBean.getImgByte();
-                                drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length));
-                            }else {
-                                drawable = locationBean.getImgDrawable();
-                            }
-                            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-                            Canvas canvas = new Canvas(bitmap);
-                            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-                            drawable.draw(canvas);
-                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                            locationBean.setImgByte(baos.toByteArray());
+//                            baos = new ByteArrayOutputStream();
+//                            if(null == locationBean.getImgDrawable()){
+//                                byte[] b = locationBean.getImgByte();
+//                                drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length));
+//                            }else {
+//                                drawable = locationBean.getImgDrawable();
+//                            }
+//                            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+//                            Canvas canvas = new Canvas(bitmap);
+//                            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+//                            drawable.draw(canvas);
+//                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+//                            locationBean.setImgByte(baos.toByteArray());
 //                            locationBean.setName(appInfo.getName());
 //                            locationBean.setAddBtn(0);
 //                            locationBean.setStatus(0);
@@ -319,7 +320,8 @@ public class MyAppFragment extends Fragment {
                             if(num == 0){
                                 db.insertLocation(locationBean);
                             }else {
-                                db.updateLocation(locationBean);
+                                //db.updateLocation(locationBean);
+                                db.updateIndex(locationBean);
                             }
                         }
                     }
