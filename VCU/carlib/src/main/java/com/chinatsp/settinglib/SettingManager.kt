@@ -18,7 +18,6 @@ import android.car.hardware.property.CarPropertyManager
 import android.car.media.CarAudioManager
 import android.car.tbox.TboxManager
 import android.car.tbox.TboxManager.TboxChangedListener
-import android.car.tbox.aidl.INetworkCallBack
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -48,6 +47,7 @@ import com.chinatsp.settinglib.sign.TabBlock
 import com.chinatsp.settinglib.sign.TabSignManager
 import java.util.*
 import java.util.concurrent.Executors
+
 
 /**
  * @author
@@ -201,7 +201,7 @@ class SettingManager private constructor() {
                 val signalArray =
                     signals.stream().filter { it != -1 }.mapToInt { obj: Int -> obj }.toArray()
                 Arrays.stream(signalArray).forEach { value: Int ->
-                    d("register cabin: property:$value")
+                    d(TAG, "register cabin: property:$value")
                 }
                 mCarCabinManager!!.registerCallback(cabinEventListener, signalArray)
             }
@@ -420,35 +420,35 @@ class SettingManager private constructor() {
         private set
 
     fun setMobileNetSwitch(on: Boolean, iMobileState: IMobileState) {
-        mBoxManager!!.addTBoxChangedListener(object : TboxChangedListener {
-            override fun onCallStatusChanged(i: Int, i1: Int) {}
-            override fun onTboxMobileSignalChanged(i: Int, i1: Int, i2: Int) {}
-            override fun onTboxMobileSwitchStateChanged(i: Int) {}
-            override fun onWifiStateChanged(s: String, i: Int, s1: String) {}
-        })
-        //view.setEnabled(false);
-        executorService.submit {
-            mBoxManager!!.setMobileState(on, object : INetworkCallBack {
-                @Synchronized
-                override fun onCompleted(i: Int, s: String) {
-                    d(TAG, "setMobileState onCompleted $i $s")
-                    if (i == 1) {
-                        isMobileNetworkON = on
-                    }
-                    mHandler.post {
-                        if (i == 1) {
-                            iMobileState.onMobileStateChange(on)
-                        }
-                    }
-                }
-
-                @Synchronized
-                override fun onException(i: Int, s: String) {
-                    d(TAG, "setMobileState onException $i $s")
-                    mHandler.postDelayed({ iMobileState.onMobileStateError() }, 1000)
-                }
-            })
-        }
+//        mBoxManager!!.addTBoxChangedListener(object : TboxChangedListener {
+//            override fun onCallStatusChanged(i: Int, i1: Int) {}
+//            override fun onTboxMobileSignalChanged(i: Int, i1: Int, i2: Int) {}
+//            override fun onTboxMobileSwitchStateChanged(i: Int) {}
+//            override fun onWifiStateChanged(s: String, i: Int, s1: String) {}
+//        })
+//        //view.setEnabled(false);
+//        executorService.submit {
+//            mBoxManager!!.setMobileState(on, object : INetworkCallBack {
+//                @Synchronized
+//                override fun onCompleted(i: Int, s: String) {
+//                    d(TAG, "setMobileState onCompleted $i $s")
+//                    if (i == 1) {
+//                        isMobileNetworkON = on
+//                    }
+//                    mHandler.post {
+//                        if (i == 1) {
+//                            iMobileState.onMobileStateChange(on)
+//                        }
+//                    }
+//                }
+//
+//                @Synchronized
+//                override fun onException(i: Int, s: String) {
+//                    d(TAG, "setMobileState onException $i $s")
+//                    mHandler.postDelayed({ iMobileState.onMobileStateError() }, 1000)
+//                }
+//            })
+//        }
     }
 
     fun doSetProperty(id: Int, value: Int, origin: Origin?, area: Area): Boolean {
@@ -550,19 +550,19 @@ class SettingManager private constructor() {
 
     private var boxChangedListener: TboxChangedListener? = null
     fun addMobileNetListener(iMobileState: IMobileState?) {
-        boxChangedListener = object : TboxChangedListener {
-            override fun onCallStatusChanged(i: Int, i1: Int) {}
-            override fun onTboxMobileSignalChanged(i: Int, i1: Int, i2: Int) {}
-            override fun onTboxMobileSwitchStateChanged(i: Int) {
-                d(TAG, "onTboxMobileSwitchStateChanged $i")
-                iMobileState?.onMobileStateChange(i == 1)
-            }
-
-            override fun onWifiStateChanged(s: String, i: Int, s1: String) {
-                d(TAG, "onWifiStateChanged $s $i $s1")
-            }
-        }
-        mBoxManager!!.addTBoxChangedListener(boxChangedListener)
+//        boxChangedListener = object : TboxChangedListener {
+//            override fun onCallStatusChanged(i: Int, i1: Int) {}
+//            override fun onTboxMobileSignalChanged(i: Int, i1: Int, i2: Int) {}
+//            override fun onTboxMobileSwitchStateChanged(i: Int) {
+//                d(TAG, "onTboxMobileSwitchStateChanged $i")
+//                iMobileState?.onMobileStateChange(i == 1)
+//            }
+//
+//            override fun onWifiStateChanged(s: String, i: Int, s1: String) {
+//                d(TAG, "onWifiStateChanged $s $i $s1")
+//            }
+//        }
+//        mBoxManager!!.addTBoxChangedListener(boxChangedListener)
     }
 
     fun removeMobileNetListener() {
@@ -574,18 +574,18 @@ class SettingManager private constructor() {
     fun getMobileNetSwitch(iMobileState: IMobileState?) {
         d(TAG, "getMobileState")
         executorService.submit {
-            mBoxManager!!.getMobileState(object : INetworkCallBack {
-                override fun onCompleted(i: Int, s: String) {
-                    d(TAG, "getMobileState onCompleted $i $s")
-                    isMobileNetworkON = i == 1
-                    mHandler.post { iMobileState?.onMobileStateChange(i == 1) }
-                }
-
-                override fun onException(i: Int, s: String) {
-                    d(TAG, "getMobileState onException $i $s")
-                    mHandler.post { iMobileState?.onMobileStateError() }
-                }
-            })
+//            mBoxManager!!.getMobileState(object : INetworkCallBack {
+//                override fun onCompleted(i: Int, s: String) {
+//                    d(TAG, "getMobileState onCompleted $i $s")
+//                    isMobileNetworkON = i == 1
+//                    mHandler.post { iMobileState?.onMobileStateChange(i == 1) }
+//                }
+//
+//                override fun onException(i: Int, s: String) {
+//                    d(TAG, "getMobileState onException $i $s")
+//                    mHandler.post { iMobileState?.onMobileStateError() }
+//                }
+//            })
         }
     }//LanguageUtils.updateLanguage(locale);// 需要系统应用权限
 
@@ -972,16 +972,20 @@ class SettingManager private constructor() {
         }
     }
 
-    val audioBalance: Int
-        get() {
-            try {
-                mBalanceLevelValue = mCarAudioManager!!.balanceTowardRight
-                return mBalanceLevelValue
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            return -100
+    fun getAudioVoice(id: Int): Int {
+        var result = -1
+        try {
+            result = mCarAudioManager!!.getAudioVoice(id)
+            d(
+                TAG,
+                "setAudioVoice result:$id result=$result"
+            )
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+            d(TAG, "e=" + e.message)
         }
+        return result
+    }
 
     //-7,7
     val audioFade: Int
@@ -994,47 +998,30 @@ class SettingManager private constructor() {
             }
             return -100
         }
-    var audioEQ: Int
-        get() {
-            var result = -1
-            try {
-                val mode = mCarAudioManager!!.eqMode
-                when (mode) {
-                    CarAudioManager.EQ_MODE_FLAT -> result = EQ_MODE_STANDARD
-                    CarAudioManager.EQ_MODE_POP -> result = EQ_MODE_POP
-                    CarAudioManager.EQ_MODE_ROCK -> result = EQ_MODE_ROCK
-                    CarAudioManager.EQ_MODE_JAZZ -> result = EQ_MODE_JAZZ
-                    CarAudioManager.EQ_MODE_CLASSIC -> result = EQ_MODE_CLASSIC
-                    CarAudioManager.EQ_MODE_VOCAL -> result = EQ_MODE_PEOPLE
-                    CarAudioManager.EQ_MODE_CUSTOM -> result = EQ_MODE_CUSTOM
-                }
-                d(TAG, "getEqMode:$result")
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            return result
-        }
-        set(mode) {
-            var m = CarAudioManager.EQ_MODE_FLAT
+
+    fun getAudioEQ(): Int {
+        var result = -1
+        try {
+            val mode = mCarAudioManager!!.eqMode
             when (mode) {
-                EQ_MODE_STANDARD -> m = CarAudioManager.EQ_MODE_FLAT
-                EQ_MODE_POP -> m = CarAudioManager.EQ_MODE_POP
-                EQ_MODE_ROCK -> m = CarAudioManager.EQ_MODE_ROCK
-                EQ_MODE_JAZZ -> m = CarAudioManager.EQ_MODE_JAZZ
-                EQ_MODE_CLASSIC -> m = CarAudioManager.EQ_MODE_CLASSIC
-                EQ_MODE_PEOPLE -> m = CarAudioManager.EQ_MODE_VOCAL
-                EQ_MODE_CUSTOM -> m = CarAudioManager.EQ_MODE_CUSTOM
+                CarAudioManager.EQ_MODE_FLAT -> result = EQ_MODE_STANDARD
+                CarAudioManager.EQ_MODE_POP -> result = CarAudioManager.EQ_MODE_POP
+                CarAudioManager.EQ_MODE_ROCK -> result = CarAudioManager.EQ_MODE_ROCK
+                CarAudioManager.EQ_MODE_JAZZ -> result = CarAudioManager.EQ_MODE_JAZZ
+                CarAudioManager.EQ_MODE_CLASSIC -> result = CarAudioManager.EQ_MODE_CLASSIC
+                CarAudioManager.EQ_MODE_VOCAL -> result = EQ_MODE_PEOPLE
+                CarAudioManager.EQ_MODE_CUSTOM -> result = CarAudioManager.EQ_MODE_CUSTOM
             }
-            try {
-                mCarAudioManager!!.eqMode = m
-                d(TAG, "setEqMode:$mode")
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+            d(TAG, "getEqMode:$result")
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
         }
+        return result
+    }
 
     fun setAudioCustomHML(high: Int, mid: Int, low: Int) {
-        audioEQ = EQ_MODE_CUSTOM
+      //  audioEQ = EQ_MODE_CUSTOM
+
         d(TAG, "setAudioCustomHML:$high $mid $low")
         audioHighVoice = high
         audioMidVoice = mid
@@ -1068,57 +1055,105 @@ class SettingManager private constructor() {
 
     var audioLowVoice: Int
         get() {
-            try {
-                return mCarAudioManager!!.audioLowVoice
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+//            try {
+//                return mCarAudioManager!!.audioLowVoice
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//            }
             return -1
         }
         set(value) {
-            try {
-                mCarAudioManager!!.audioLowVoice = value
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+//            try {
+//                mCarAudioManager!!.audioLowVoice = value
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//            }
         }
     var audioMidVoice: Int
         get() {
-            try {
-                return mCarAudioManager!!.audioMidVoice
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+//            try {
+//                return mCarAudioManager!!.audioMidVoice
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//            }
             return -1
         }
         set(value) {
-            try {
-                mCarAudioManager!!.audioMidVoice = value
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+//            try {
+//                mCarAudioManager!!.audioMidVoice = value
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//            }
         }
     var audioHighVoice: Int
         get() {
-            try {
-                return mCarAudioManager!!.audioHighVoice
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+//            try {
+//                return mCarAudioManager!!.audioHighVoice
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//            }
             return -1
         }
         set(value) {
-            try {
-                mCarAudioManager!!.audioHighVoice = value
-            } catch (e: Exception) {
-                e.printStackTrace()
+//            try {
+//                mCarAudioManager!!.audioHighVoice = value
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//            }
+        }
+
+    fun setAudioEQ(mode: Int, lev1: Int, lev2: Int, lev3: Int, lev4: Int, lev5: Int) {
+        var m = CarAudioManager.EQ_MODE_FLAT
+        when (mode) {
+            EQ_MODE_STANDARD -> m = CarAudioManager.EQ_MODE_FLAT
+            CarAudioManager.EQ_MODE_POP -> m = CarAudioManager.EQ_MODE_POP
+            CarAudioManager.EQ_MODE_ROCK -> m = CarAudioManager.EQ_MODE_ROCK
+            CarAudioManager.EQ_MODE_JAZZ -> m = CarAudioManager.EQ_MODE_JAZZ
+            CarAudioManager.EQ_MODE_CLASSIC -> m = CarAudioManager.EQ_MODE_CLASSIC
+            EQ_MODE_PEOPLE -> m = CarAudioManager.EQ_MODE_VOCAL
+            CarAudioManager.EQ_MODE_CUSTOM -> {
+                m = CarAudioManager.EQ_MODE_CUSTOM
+                d(
+                    TAG,
+                    "setAudioVoice:$lev1 $lev2 $lev3 $lev4 $lev5"
+                )
+                setAudioVoice(VOICE_LEVEL1, lev1)
+                setAudioVoice(VOICE_LEVEL2, lev2)
+                setAudioVoice(VOICE_LEVEL3, lev3)
+                setAudioVoice(VOICE_LEVEL4, lev4)
+                setAudioVoice(VOICE_LEVEL5, lev5)
             }
         }
+        try {
+            mCarAudioManager!!.eqMode = m
+            d(TAG, "setEqMode:$m")
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+    fun setAudioVoice(id: Int, value: Int) {
+        try {
+            mCarAudioManager!!.setAudioVoice(id, value)
+            d(TAG, "setAudioVoice:$id ")
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
     var isMicMute: Boolean
         get() = mAudioManager.isMicrophoneMute
         set(on) {
             mAudioManager.isMicrophoneMute = on
         }
+
+    fun getAudioBalance(): Int {
+        try {
+            mBalanceLevelValue = mCarAudioManager!!.balanceTowardRight
+            return mBalanceLevelValue
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+        return -100
+    }
 
     private inner class CarServiceConnection : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
@@ -1233,7 +1268,7 @@ class SettingManager private constructor() {
     }
 
     companion object {
-        const val TAG = "CarManager"
+        const val TAG = "CarCabinManager"
 
         val context: Context by lazy {
             BaseApp.instance.applicationContext
@@ -1279,6 +1314,15 @@ class SettingManager private constructor() {
         const val EQ_MODE_PEOPLE = 5
         const val EQ_MODE_CUSTOM = 6
         const val EQ_MODE_TECHNO = 7 //电子
+
+
+        //0XFF
+        const val VOICE_LEVEL1 = CarAudioManager.EQ_AUDIO_VOICE_LEVEL1
+        const val VOICE_LEVEL2 = CarAudioManager.EQ_AUDIO_VOICE_LEVEL2
+        const val VOICE_LEVEL3 = CarAudioManager.EQ_AUDIO_VOICE_LEVEL3
+        const val VOICE_LEVEL4 = CarAudioManager.EQ_AUDIO_VOICE_LEVEL4
+        const val VOICE_LEVEL5 = CarAudioManager.EQ_AUDIO_VOICE_LEVEL5
+
     }
 
     init {

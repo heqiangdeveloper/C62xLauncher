@@ -2,18 +2,21 @@ package com.chinatsp.vehicle.settings.fragment.sound
 
 import android.graphics.Color
 import android.os.Bundle
+import com.chinatsp.settinglib.SettingManager
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.SoundEffectFragmentBinding
 import com.chinatsp.vehicle.settings.fragment.doors.dialog.EqualizerDialogFragment
 import com.chinatsp.vehicle.settings.fragment.doors.dialog.VolumeDialogFragment
+import com.chinatsp.vehicle.settings.vm.sound.SoundEffectViewModel
 import com.chinatsp.vehicle.settings.vm.sound.SoundViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.smooth.SmoothLineChartView
+import com.king.base.util.LogUtils
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.ArrayList
 
 @AndroidEntryPoint
-class SoundEffectFragment : BaseFragment<SoundViewModel, SoundEffectFragmentBinding>() {
+class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragmentBinding>() {
     override fun getLayoutId(): Int {
         return R.layout.sound_effect_fragment
     }
@@ -51,6 +54,7 @@ class SoundEffectFragment : BaseFragment<SoundViewModel, SoundEffectFragmentBind
         x.add("3-15")
         x.add("3-16")
         binding.smoothChartView.setData(data, x)
+        binding.smoothChartView.setOnChartClickListener { position, _ -> viewModel?.setAudioEQ(position) }
     }
 
     private fun setCheckedChangeListener() {
