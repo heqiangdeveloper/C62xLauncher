@@ -242,6 +242,9 @@ public class MyAppDB extends SQLiteOpenHelper {
     }
 
     public void insertLocation(LocationBean locationBean){
+        if(locationBean == null){
+            return;
+        }
         if(locationBean.getImgByte() == null){
             Drawable drawable = locationBean.getImgDrawable();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -278,6 +281,19 @@ public class MyAppDB extends SQLiteOpenHelper {
     }
 
     public void updateLocation(LocationBean locationBean){
+        if(locationBean == null){
+            return;
+        }
+        if(locationBean.getImgByte() == null){
+            Drawable drawable = locationBean.getImgDrawable();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            drawable.draw(canvas);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            locationBean.setImgByte(baos.toByteArray());
+        }
         String sql = "update " + LOCATION_TABLE + " set " +
                 PARENTINDEX + " = ?," +
                 CHILDINDEX + " = ?," +
@@ -316,6 +332,18 @@ public class MyAppDB extends SQLiteOpenHelper {
                 " where " +
                 PACKAGENAMELOCATION + " = ?";
         db.execSQL(sql,new Object[]{locationBean.getTitle(),locationBean.getPackageName()});
+    }
+
+    public void updateIndex(LocationBean locationBean){
+        if(locationBean == null){
+            return;
+        }
+        String sql = "update " + LOCATION_TABLE + " set " +
+                PARENTINDEX + " = ?," +
+                CHILDINDEX + " = ?" +
+                " where " +
+                PACKAGENAMELOCATION + " = ?";
+        db.execSQL(sql,new Object[]{locationBean.getParentIndex(),locationBean.getChildIndex(),locationBean.getPackageName()});
     }
 
     /*

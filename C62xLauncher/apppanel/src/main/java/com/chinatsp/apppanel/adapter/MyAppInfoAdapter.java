@@ -118,23 +118,23 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
                 holder.deleteIv.setTag(lb.getCanuninstalled());
 //                locationBean.setParentIndex(position);
 //                locationBean.setChildIndex(i);
-                //infos.get(i).setTitle(titleStr);
+                  //infos.get(i).setTitle(titleStr);
 //                locationBean.setPackageName(infos.get(i).getPackageName());
 //
-                Drawable drawable;
-                if(null == lb.getImgDrawable()){
-                    byte[] b = lb.getImgByte();
-                    drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length));
-                }else {
-                    drawable = lb.getImgDrawable();
-                }
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-                Canvas canvas = new Canvas(bitmap);
-                drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-                drawable.draw(canvas);
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                lb.setImgByte(baos.toByteArray());
+//                Drawable drawable;
+//                if(null == lb.getImgDrawable()){
+//                    byte[] b = lb.getImgByte();
+//                    drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length));
+//                }else {
+//                    drawable = lb.getImgDrawable();
+//                }
+//                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//                Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+//                Canvas canvas = new Canvas(bitmap);
+//                drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+//                drawable.draw(canvas);
+//                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+//                lb.setImgByte(baos.toByteArray());
 //                locationBean.setName(infos.get(i).getName());
 //                locationBean.setAddBtn(0);
 //                locationBean.setStatus(0);
@@ -171,20 +171,20 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
 //            locationBean.setChildIndex(-1);
             locationBean.setTitle("");
 //            locationBean.setPackageName(mData.get(position).get(0).getPackageName());
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            Drawable drawable;
-            if(null == locationBean.getImgDrawable()){
-                byte[] b = locationBean.getImgByte();
-                drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length));
-            }else {
-                drawable = mData.get(position).get(0).getImgDrawable();
-            }
-            Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(bitmap);
-            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-            drawable.draw(canvas);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-            locationBean.setImgByte(baos.toByteArray());
+//            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//            Drawable drawable;
+//            if(null == locationBean.getImgDrawable()){
+//                byte[] b = locationBean.getImgByte();
+//                drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length));
+//            }else {
+//                drawable = mData.get(position).get(0).getImgDrawable();
+//            }
+//            Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+//            Canvas canvas = new Canvas(bitmap);
+//            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+//            drawable.draw(canvas);
+//            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+//            locationBean.setImgByte(baos.toByteArray());
 //            locationBean.setName(mData.get(position).get(0).getName());
             locationBean.setAddBtn(0);
             locationBean.setStatus(0);
@@ -279,6 +279,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         for(LocationBean locationBean : infos){
             if(locationBean != null){
                 locationBean.setTitle(event.getTitle());
+                db.updateTitle(locationBean);
             }
         }
     }
