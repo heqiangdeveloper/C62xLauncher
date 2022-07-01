@@ -72,6 +72,7 @@ public class MyAppFragment extends Fragment {
     private SharedPreferences.Editor editor;
     private MyAppInfoAdapter mMyAppInfoAdapter;
     private List<List<LocationBean>> data;
+    private boolean isStoringData = false;
     public MyAppFragment() {
         // Required empty public constructor
     }
@@ -192,7 +193,7 @@ public class MyAppFragment extends Fragment {
                 }
             }
         }else if(event instanceof ReStoreDataEvent){
-            storeData();
+            if(!isStoringData) storeData();
         }
     }
 
@@ -232,11 +233,12 @@ public class MyAppFragment extends Fragment {
     public void onPause() {
         super.onPause();
         Log.d("heqq","myAppFragment onPause");
-        storeData();
+        //storeData();
     }
 
     public void storeData(){
         Log.d(TAG,"storeData");
+        isStoringData = true;
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -244,6 +246,7 @@ public class MyAppFragment extends Fragment {
 //                if(db.countLocation() != 0){
 //                    db.deleteLocation();
 //                }
+
                 MainRecyclerViewCallBack mainAdapter = (MainRecyclerViewCallBack) appInfoClassifyView.getMainRecyclerView().getAdapter();
                 Log.d("heqq","is MainRecyclerViewCallBack");
 
@@ -326,6 +329,7 @@ public class MyAppFragment extends Fragment {
                         }
                     }
                 }
+                isStoringData = false;
             }
         }).start();
     }

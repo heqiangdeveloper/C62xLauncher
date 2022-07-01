@@ -80,6 +80,7 @@ public abstract class SimpleAdapter<T, VH extends SimpleAdapter.ViewHolder> impl
 
 
     public void notifyDataSetChanged(){
+        Log.d("MyAppFragment","notifyDataSetChanged ReStoreDataEvent");
         mSimpleMainAdapter.notifyDataSetChanged();
         EventBus.getDefault().post(new ReStoreDataEvent());//通知存储数据
     }
@@ -191,6 +192,7 @@ public abstract class SimpleAdapter<T, VH extends SimpleAdapter.ViewHolder> impl
             }else {
                 notifyItemChanged(targetPosition);
             }
+            Log.d("MyAppFragment","onMerged ReStoreDataEvent");
             EventBus.getDefault().post(new ReStoreDataEvent());//通知存储数据
         }
 

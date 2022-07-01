@@ -882,6 +882,7 @@ public class ClassifyView extends FrameLayout {
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
                     L.d("ACTION_DRAG_ENDED");
+                    Log.d("MyAppFragment","main drag ACTION_DRAG_ENDED ReStoreDataEvent");
                     EventBus.getDefault().post(new ReStoreDataEvent());//通知存储数据
                     if (mergeSuccess) {
                         mergeSuccess = false;
@@ -1038,6 +1039,7 @@ public class ClassifyView extends FrameLayout {
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
                     L.d("sub ACTION_DRAG_ENDED");
+                    Log.d("MyAppFragment","sub drag ACTION_DRAG_ENDED ReStoreDataEvent");
                     EventBus.getDefault().post(new ReStoreDataEvent());//通知存储数据
                     if (inSubRegion) {
                         doRecoverAnimation();
