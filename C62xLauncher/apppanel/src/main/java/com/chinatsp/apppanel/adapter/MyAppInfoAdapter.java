@@ -1,9 +1,11 @@
 package com.chinatsp.apppanel.adapter;
 
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInstaller;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -116,8 +118,9 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
                 }
                 LocationBean lb = infos.get(i);
                 holder.deleteIv.setTag(lb.getCanuninstalled());
-//                locationBean.setParentIndex(position);
-//                locationBean.setChildIndex(i);
+                //必须要存储ParentIndex，ChildIndex
+                locationBean.setParentIndex(position);
+                locationBean.setChildIndex(i);
                   //infos.get(i).setTitle(titleStr);
 //                locationBean.setPackageName(infos.get(i).getPackageName());
 //
@@ -167,8 +170,9 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             }
 
             locationBean = mData.get(position).get(0);
-//            locationBean.setParentIndex(position);
-//            locationBean.setChildIndex(-1);
+            //必须要存储ParentIndex，ChildIndex
+            locationBean.setParentIndex(position);
+            locationBean.setChildIndex(-1);
             locationBean.setTitle("");
 //            locationBean.setPackageName(mData.get(position).get(0).getPackageName());
 //            ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -311,7 +315,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         }else {
             if(iv.getVisibility() == View.VISIBLE){//如果删除按钮显示了，执行删除应用逻辑
                 hideDeleteIcon((RecyclerView) relativeLayout.getParent());
-                showDeleteDialog(tv.getText().toString());
+                showDeleteDialog(tv.getText().toString(),mData.get(parentIndex).get(0).getPackageName());
             }else {
                 hideDeleteIcon((RecyclerView) relativeLayout.getParent());
                 String packageName = "";
@@ -631,7 +635,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         return addAppLists;
     }
 
-    private void showDeleteDialog(String name){
+    private void showDeleteDialog(String name,String packageName){
         Dialog dialog = new Dialog(context, com.anarchy.classifyview.R.style.mydialog);
         dialog.setContentView(R.layout.uninstall_dialog);
         WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
@@ -644,6 +648,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         positiveTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                uninstall(packageName);
                 dialog.dismiss();
             }
         });
@@ -654,6 +659,16 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             }
         });
         dialog.show();
+    }
+
+    // 卸载APK
+    private void uninstall(String packageName) {
+        Intent intent = new Intent();
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent sender = PendingIntent.getActivity(context, 0, intent, 0);
+        PackageInstaller mPackageInstaller = context.getPackageManager().getPackageInstaller();
+        //权限已添加在app manifest中
+        mPackageInstaller.uninstall(packageName, sender.getIntentSender());
     }
 
     private void hideDeleteIcon(RecyclerView recyclerView){

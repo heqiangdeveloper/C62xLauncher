@@ -12,6 +12,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -150,7 +151,7 @@ public class MyAppFragment extends Fragment {
             locationBean.setImgDrawable(drawable);
             locationBean.setName((info.activityInfo.loadLabel(getContext().getPackageManager())).toString());
             locationBean.setTitle("");
-            locationBean.setCanuninstalled(AppLists.packageUninstallStatus(info.activityInfo.packageName));
+            locationBean.setCanuninstalled(AppLists.isSystemApplication(getContext(),info.activityInfo.packageName) ? 0:1);
             inner.add(locationBean);
             data.add(inner);
         }

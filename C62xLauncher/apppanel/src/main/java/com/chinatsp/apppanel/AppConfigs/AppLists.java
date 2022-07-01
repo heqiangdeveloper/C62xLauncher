@@ -1,5 +1,9 @@
 package com.chinatsp.apppanel.AppConfigs;
 
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -73,5 +77,28 @@ public class AppLists {
             }
         }
         return status;
+    }
+
+    /*
+     * 指定应用是否是系统应用
+     * @packageName 包名
+     * @return true是 false不是
+     */
+    public static boolean isSystemApplication(Context context, String packageName) {
+        if (context == null) {
+            return false;
+        }
+        PackageManager packageManager = context.getPackageManager();
+        if (packageManager == null || packageName == null || packageName.length() == 0) {
+            return false;
+        }
+
+        try {
+            ApplicationInfo app = packageManager.getApplicationInfo(packageName, 0);
+            return (app != null && (app.flags & ApplicationInfo.FLAG_SYSTEM) > 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
