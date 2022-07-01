@@ -61,7 +61,7 @@ public class AppInstallStatusReceiver extends BroadcastReceiver {
                             locationBean.setStatus(0);
                             locationBean.setPriority(0);
                             locationBean.setInstalled(1);
-                            locationBean.setCanuninstalled(AppLists.packageUninstallStatus(info.activityInfo.packageName));
+                            locationBean.setCanuninstalled(AppLists.isSystemApplication(context,info.activityInfo.packageName) ? 0:1);
                             break A;
                         }
                     }
