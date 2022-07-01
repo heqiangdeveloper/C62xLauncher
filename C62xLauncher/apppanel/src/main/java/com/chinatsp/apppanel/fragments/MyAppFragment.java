@@ -140,10 +140,14 @@ public class MyAppFragment extends Fragment {
         Log.d("hqtest","getOriginalData");
         List<ResolveInfo> allApps = getApps();
         allApps = getAvailabelApps(allApps);
-        for(ResolveInfo info : allApps){
+        ResolveInfo info;
+        for(int i = 0; i < allApps.size();i++){
             //L.d("name: " + info.activityInfo.loadLabel(getContext().getPackageManager()) + "," + info.activityInfo.packageName);
             List<LocationBean> inner = new ArrayList<>();
+            info = allApps.get(i);
             locationBean = new LocationBean();
+            locationBean.setParentIndex(i);
+            locationBean.setChildIndex(-1);
             locationBean.setPackageName(info.activityInfo.packageName);
             drawable = info.activityInfo.loadIcon(getContext().getPackageManager());
 
@@ -152,6 +156,7 @@ public class MyAppFragment extends Fragment {
             locationBean.setName((info.activityInfo.loadLabel(getContext().getPackageManager())).toString());
             locationBean.setTitle("");
             locationBean.setCanuninstalled(AppLists.isSystemApplication(getContext(),info.activityInfo.packageName) ? 0:1);
+            db.insertLocation(locationBean);
             inner.add(locationBean);
             data.add(inner);
         }

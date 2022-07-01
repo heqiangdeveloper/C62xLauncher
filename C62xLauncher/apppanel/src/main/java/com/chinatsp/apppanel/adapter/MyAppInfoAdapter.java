@@ -118,9 +118,9 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
                 }
                 LocationBean lb = infos.get(i);
                 holder.deleteIv.setTag(lb.getCanuninstalled());
-                //必须要存储ParentIndex，ChildIndex
-                locationBean.setParentIndex(position);
-                locationBean.setChildIndex(i);
+                //这个地方position不可靠，在MyAppFragment getOriginalData保存index
+//                locationBean.setParentIndex(position);
+//                locationBean.setChildIndex(i);
                   //infos.get(i).setTitle(titleStr);
 //                locationBean.setPackageName(infos.get(i).getPackageName());
 //
@@ -170,9 +170,9 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             }
 
             locationBean = mData.get(position).get(0);
-            //必须要存储ParentIndex，ChildIndex
-            locationBean.setParentIndex(position);
-            locationBean.setChildIndex(-1);
+            //这个地方position不可靠，在MyAppFragment getOriginalData保存index
+//            locationBean.setParentIndex(position);
+//            locationBean.setChildIndex(-1);
             locationBean.setTitle("");
 //            locationBean.setPackageName(mData.get(position).get(0).getPackageName());
 //            ByteArrayOutputStream baos = new ByteArrayOutputStream();
