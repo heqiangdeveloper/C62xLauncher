@@ -1,9 +1,8 @@
 package com.chinatsp.settinglib.listener.cabin
 
-import com.chinatsp.settinglib.listener.ISwitchListener
+import com.chinatsp.settinglib.listener.IOptionListener
 
-interface IACListener: ISwitchListener {
+interface IACListener: IOptionListener {
 
-    fun onAcComfortOptionChanged(location: Int)
 
 }

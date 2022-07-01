@@ -503,7 +503,8 @@ enum class SwitchNode(
     ADAS_DOW(
         get = Norm(on = 0x3, off = 0x1, signal = CarCabinManager.ID_AVM_DOW_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_APA_AVM_DOW_SWT),
-        default = true
+        default = true,
+        careOn = false
     ),
 
     /**

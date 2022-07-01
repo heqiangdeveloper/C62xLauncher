@@ -35,12 +35,12 @@ class LightManager private constructor() : BaseManager(), IOptionManager {
     override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int>().apply {
-                /**空调自干燥*/
-                add(CarCabinManager.ID_ACSELFSTSDISP)
-                /**预通风功能*/
-                add(CarCabinManager.ID_ACPREVENTNDISP)
-                /**空调舒适性状态显示*/
-                add(CarCabinManager.ID_ACCMFTSTSDISP)
+//                /**空调自干燥*/
+//                add(CarCabinManager.ID_ACSELFSTSDISP)
+//                /**预通风功能*/
+//                add(CarCabinManager.ID_ACPREVENTNDISP)
+//                /**空调舒适性状态显示*/
+//                add(CarCabinManager.ID_ACCMFTSTSDISP)
             }
             put(Origin.CABIN, cabinSet)
         }

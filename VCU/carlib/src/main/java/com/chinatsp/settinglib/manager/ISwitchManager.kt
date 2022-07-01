@@ -1,6 +1,7 @@
 package com.chinatsp.settinglib.manager
 
 import android.car.hardware.CarPropertyValue
+import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.listener.IManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import java.util.concurrent.atomic.AtomicBoolean
@@ -32,6 +33,7 @@ interface ISwitchManager : IManager {
     fun onSwitchChanged(node: SwitchNode, atomic: AtomicBoolean, p: CarPropertyValue<*>) {
         val value = p.value
         if (value is Int) {
+            LogManager.d("luohong", "$node, value:$value, isON:${node.isOn(value)}")
             onSwitchChanged(node, atomic, value, this::doUpdateSwitchValue) { newNode, newValue ->
                 doSwitchChanged(newNode, newValue)
             }
@@ -54,10 +56,10 @@ interface ISwitchManager : IManager {
         value: Int,
         block: ((SwitchNode, Boolean) -> Unit)? = null
     ): AtomicBoolean {
-        if (node.isValid(value)) {
+//        if (node.isValid(value)) {
             val status = node.isOn(value)
             doUpdateSwitchValue(node, atomic, status, block)
-        }
+//        }
         return atomic
     }
 

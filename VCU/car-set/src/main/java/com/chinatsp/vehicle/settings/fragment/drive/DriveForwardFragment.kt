@@ -32,10 +32,10 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
 
     private fun addSwitchLiveDataListener() {
         viewModel.fcwFunction.observe(this) {
-            doUpdateSwitch(SwitchNode.AS_STERN_ELECTRIC, it)
+            doUpdateSwitch(SwitchNode.ADAS_FCW, it)
         }
         viewModel.aebFunction.observe(this) {
-            doUpdateSwitch(SwitchNode.STERN_LIGHT_ALARM, it)
+            doUpdateSwitch(SwitchNode.ADAS_AEB, it)
         }
     }
 

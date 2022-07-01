@@ -2,8 +2,10 @@ package com.chinatsp.settinglib.manager.access
 
 import android.car.hardware.CarPropertyValue
 import com.chinatsp.settinglib.ITabStore
+import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
+import com.chinatsp.settinglib.manager.cabin.CabinManager
 import com.chinatsp.settinglib.sign.Origin
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -24,13 +26,21 @@ class AccessManager private constructor() : BaseManager(), ITabStore {
         AtomicInteger(-1)
     }
 
+    override fun onDispatchSignal(property: CarPropertyValue<*>, origin: Origin): Boolean {
+        managers.forEach {
+            LogManager.d(CabinManager.TAG, "AccessManager onDispatchSignal ${it::class.java.simpleName}")
+            it.onDispatchSignal(property, origin)
+        }
+        return true
+    }
+
     override fun onHandleSignal(
         property: CarPropertyValue<*>,
         origin: Origin
     ): Boolean {
-        followers?.forEach {
-            it.onDispatchSignal(property, origin)
-        }
+//        followers?.forEach {
+//            it.onDispatchSignal(property, origin)
+//        }
         return true
     }
 

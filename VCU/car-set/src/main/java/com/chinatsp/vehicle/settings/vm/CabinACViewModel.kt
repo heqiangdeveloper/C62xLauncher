@@ -87,8 +87,13 @@ class CabinACViewModel @Inject constructor(app: Application, model: BaseModel) :
         liveData?.takeIf { it.value!! xor status }?.value = status
     }
 
-    override fun onAcComfortOptionChanged(location: Int) {
-        _comfortLiveData.value = location
+    override fun onRadioOptionChanged(node: RadioNode, value: Int) {
+        when (node) {
+            RadioNode.AC_COMFORT -> {
+                _comfortLiveData.value = value
+            }
+            else -> {}
+        }
     }
 
 }

@@ -216,17 +216,14 @@ class ACManager private constructor() : BaseManager(), IAcManager {
         when (property.propertyId) {
             //空调自干燥
             SwitchNode.AC_AUTO_ARID.get.signal -> {
-//                onSwitchOptionChanged(SwitchNode.AC_AUTO_ARID, property.value)
                 onSwitchChanged(SwitchNode.AC_AUTO_ARID, aridStatus, property)
             }
             //预通风功能
-            SwitchNode.WIN_CLOSE_WHILE_RAIN.get.signal -> {
-//                onSwitchOptionChanged(SwitchNode.AC_ADVANCE_WIND, property.value)
+            SwitchNode.AC_ADVANCE_WIND.get.signal -> {
                 onSwitchChanged(SwitchNode.AC_ADVANCE_WIND, windStatus, property)
             }
             //自动空调舒适性
             RadioNode.AC_COMFORT.get.signal -> {
-//                onRadioOptionChanged(RadioNode.AC_COMFORT, property.value)
                 onRadioChanged(RadioNode.AC_COMFORT, comfortOption, property)
             }
             else -> {}

@@ -140,9 +140,11 @@ class SettingManager private constructor() {
             if (null != mCarMcuManager) {
 //                Set<Integer> signals = GlobalManager.Companion.getInstance().getConcernedSignal(SignalOrigin.MCU_SIGNAL);
                 val signals = mcuSignal
-                val signalArray = signals.stream().mapToInt { obj: Int -> obj }.toArray()
+                val signalArray = signals.stream().filter { it != -1 }.mapToInt { obj: Int -> obj }.toArray()
+                Arrays.stream(signalArray).forEach {
+                    d(TAG, "register MCU: hex propertyId:${Integer.toHexString(it)},  dec propertyId:$it")
+                }
                 mCarMcuManager!!.registerCallback(mcuEventListener, signalArray)
-                d(TAG, "registerCallback ok")
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -160,15 +162,15 @@ class SettingManager private constructor() {
     //是否打开了自动泊车
     val isApaOn = false
     private fun obtainSignals(type: Origin): Set<Int> {
-        val values: Collection<TabBlock> = TabSignManager.instance.tabSignMap.values
+//        val values: Collection<TabBlock> = TabSignManager.instance.tabSignMap.values
         val signalSet: MutableSet<Int> = HashSet()
-        values.stream().forEach { tab: TabBlock ->
-            tab.signals.stream().forEach { carSign: CarSign ->
-                if (type === carSign.type) {
-                    signalSet.addAll(carSign.signals)
-                }
-            }
-        }
+//        values.stream().forEach { tab: TabBlock ->
+//            tab.signals.stream().forEach { carSign: CarSign ->
+//                if (type === carSign.type) {
+//                    signalSet.addAll(carSign.signals)
+//                }
+//            }
+//        }
         return signalSet
     }
 
@@ -200,8 +202,8 @@ class SettingManager private constructor() {
                 val signals = cabinSignal
                 val signalArray =
                     signals.stream().filter { it != -1 }.mapToInt { obj: Int -> obj }.toArray()
-                Arrays.stream(signalArray).forEach { value: Int ->
-                    d(TAG, "register cabin: property:$value")
+                Arrays.stream(signalArray).forEach {
+                    d(TAG, "register cabin: hex propertyId:${Integer.toHexString(it)},  dec propertyId:$it")
                 }
                 mCarCabinManager!!.registerCallback(cabinEventListener, signalArray)
             }
@@ -212,8 +214,8 @@ class SettingManager private constructor() {
 
     private val cabinEventListener = object : CarCabinManager.CarCabinEventCallback {
         override fun onChangeEvent(property: CarPropertyValue<*>) {
-            val propertyId = property.propertyId
-            d(TAG, "Cabin onChangeEvent propertyId:" + propertyId + ", value:" + property.value)
+            val id = property.propertyId
+            d(TAG, "Cabin onChangeEvent propertyId hex:${Integer.toHexString(id)}, dec:$id value:${property.value}")
             GlobalManager.instance.onDispatchSignal(property, Origin.CABIN)
         }
 
@@ -224,8 +226,8 @@ class SettingManager private constructor() {
 
     private val mcuEventListener = object : CarMcuEventCallback {
         override fun onChangeEvent(property: CarPropertyValue<*>) {
-            val propertyId = property.propertyId
-            d(TAG, "Mcu onChangeEvent:propertyId:$propertyId")
+            val id = property.propertyId
+            d(TAG, "MCU onChangeEvent propertyId hex:${Integer.toHexString(id)}, dec:$id value:${property.value}")
             GlobalManager.instance.onDispatchSignal(property, Origin.MCU)
 //            switch (property.getPropertyId()) {
 //                case CarMcuManager.ID_VENDOR_MCU_POWER_MODE://电源状态
@@ -290,8 +292,8 @@ class SettingManager private constructor() {
 
     private val hvacEventListener = object : CarHvacEventCallback {
         override fun onChangeEvent(property: CarPropertyValue<*>) {
-            val propertyId = property.propertyId
-            d(TAG, "Hvac onChangeEvent:propertyId:$propertyId")
+            val id = property.propertyId
+            d(TAG, "Hvac onChangeEvent propertyId hex:${Integer.toHexString(id)}, dec:$id value:${property.value}")
             GlobalManager.instance.onDispatchSignal(property, Origin.HVAC)
         }
 

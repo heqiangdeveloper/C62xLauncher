@@ -52,10 +52,10 @@ class ForwardViewModel @Inject constructor(app: Application, model: BaseModel):
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {
             SwitchNode.ADAS_FCW -> {
-                _fcwFunction.value = status
+                _fcwFunction.postValue(status)
             }
             SwitchNode.ADAS_AEB -> {
-                _aebFunction.value = status
+                _aebFunction.postValue(status)
             }
             else -> {}
         }
