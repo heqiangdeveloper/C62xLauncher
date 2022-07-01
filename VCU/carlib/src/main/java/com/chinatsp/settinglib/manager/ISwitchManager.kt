@@ -33,7 +33,7 @@ interface ISwitchManager : IManager {
     fun onSwitchChanged(node: SwitchNode, atomic: AtomicBoolean, p: CarPropertyValue<*>) {
         val value = p.value
         if (value is Int) {
-            LogManager.d("luohong", "$node, value:$value, isON:${node.isOn(value)}")
+            LogManager.d("doSwitchChanged", "$node, value:$value, isON:${node.isOn(value)}")
             onSwitchChanged(node, atomic, value, this::doUpdateSwitchValue) { newNode, newValue ->
                 doSwitchChanged(newNode, newValue)
             }

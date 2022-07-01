@@ -28,19 +28,8 @@ class AccessManager private constructor() : BaseManager(), ITabStore {
 
     override fun onDispatchSignal(property: CarPropertyValue<*>, origin: Origin): Boolean {
         managers.forEach {
-            LogManager.d(CabinManager.TAG, "AccessManager onDispatchSignal ${it::class.java.simpleName}")
             it.onDispatchSignal(property, origin)
         }
-        return true
-    }
-
-    override fun onHandleSignal(
-        property: CarPropertyValue<*>,
-        origin: Origin
-    ): Boolean {
-//        followers?.forEach {
-//            it.onDispatchSignal(property, origin)
-//        }
         return true
     }
 

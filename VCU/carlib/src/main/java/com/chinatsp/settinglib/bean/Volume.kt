@@ -15,18 +15,18 @@ data class Volume(val type: Type, var min: Int, var max: Int, var pos:Int): Comp
         return super.equals(other)
     }
 
-    enum class Type(val id: Int) {
+    enum class Type(val id: Int = -1, val signal: Int = -1) {
         NAVI(AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE),
 //        VOICE(AudioAttributes.USAGE_NOTIFICATION_EVENT),
         VOICE(AudioAttributes.USAGE_ASSISTANT),
         MEDIA(AudioAttributes.USAGE_MEDIA),
         PHONE(AudioAttributes.USAGE_VOICE_COMMUNICATION),
         SYSTEM(AudioAttributes.USAGE_ASSISTANT),
-        CAR_SCREEN(-1),
-        METER_SCREEN(-1),
-        AC_SCREEN(-1),
-        SEAT_SILL_TEMP(-1),
-        STEERING_SILL_TEMP(-1);
+        CAR_SCREEN,
+        METER_SCREEN,
+        AC_SCREEN,
+        SEAT_SILL_TEMP,
+        STEERING_SILL_TEMP;
 
     }
 

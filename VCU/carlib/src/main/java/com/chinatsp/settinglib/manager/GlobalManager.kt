@@ -1,7 +1,6 @@
 package com.chinatsp.settinglib.manager
 
 import android.car.hardware.CarPropertyValue
-import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.manager.access.AccessManager
 import com.chinatsp.settinglib.manager.adas.AdasManager
 import com.chinatsp.settinglib.manager.cabin.CabinManager
@@ -61,10 +60,10 @@ class GlobalManager private constructor() : BaseManager() {
 
     override fun onDispatchSignal(property: CarPropertyValue<*>, origin: Origin): Boolean {
 //        if (property.status == CarPropertyValue.STATUS_AVAILABLE) {
-            managers.forEach {
-                it.onDispatchSignal(property, origin)
-            }
-            return true
+        managers.forEach {
+            it.onDispatchSignal(property, origin)
+        }
+        return true
 //        }
         return false
     }

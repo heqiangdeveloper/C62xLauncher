@@ -82,7 +82,6 @@ class SternDoorViewModel @Inject constructor(app: Application, model: BaseModel)
     }
 
     override fun onRadioOptionChanged(node: RadioNode, value: Int) {
-        LogManager.d("luohong", "=========================22=================node:$node")
         if (RadioNode.STERN_SMART_ENTER == node) {
             _sternSmartEnterFunction.value = value
         }

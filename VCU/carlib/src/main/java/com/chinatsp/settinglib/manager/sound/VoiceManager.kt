@@ -178,7 +178,6 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         val value = property.value
         value?.let {
             if (it is Array<*>) {
-//                it.forEachIndexed { index, any -> LogManager.d(TAG, "index[$index]=$any") }
                 if (it.size >= 5) {
                     updateVolumePosition(mediaVolume, it.elementAt(0) as Int)
                     updateVolumePosition(phoneVolume, it.elementAt(1) as Int)

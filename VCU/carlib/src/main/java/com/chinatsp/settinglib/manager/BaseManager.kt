@@ -152,7 +152,7 @@ abstract class BaseManager : IManager {
                 val listener = ref.get()
                 if (null != listener && listener is ISwitchListener) {
                     listener.onSwitchOptionChanged(status, node)
-                    LogManager.d("luohong", "$node, status:$status, listener:${listener::class.java.simpleName}")
+                    LogManager.d("doSwitchChanged", "$node, status:$status, listener:${listener::class.java.simpleName}")
                 }
             }
         }

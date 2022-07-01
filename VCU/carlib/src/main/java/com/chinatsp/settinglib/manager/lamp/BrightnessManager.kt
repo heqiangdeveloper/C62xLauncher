@@ -95,6 +95,7 @@ class BrightnessManager : BaseManager(), IProgressManager {
             }
             Volume.Type.CAR_SCREEN -> {
 //                manager?.brightness = value
+                //iBAMode:白天黑夜模式，现传1就好, value：亮度值
                 thirdScreenService?.setThirdScreenBrightness(1, position)
                 doUpdateProgress(carVolume, position, true)
                 true

@@ -38,9 +38,11 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
     val manager: GlobalManager
         get() = GlobalManager.instance
 
-    var firstCreate = true
+    private var firstCreate = true
 
-    private val tabLocation: MutableLiveData<Int> by lazy { MutableLiveData(manager.getTabSerial()) }
+    private val tabLocation: MutableLiveData<Int> by lazy {
+        MutableLiveData(manager.getTabSerial())
+    }
 
     private val level2Node: MutableLiveData<Node> by lazy { MutableLiveData(Node()) }
 
@@ -60,9 +62,9 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
         checkOutRoute(intent)
         initTabLayout()
         tabLocation.observe(this) {
+            manager.setTabSerial(it)
             if (it != binding.tabLayout.selectedTabPosition) {
                 binding.viewPager.setCurrentItem(it, false)
-//                binding.tabLayout.selectTab(binding.tabLayout.getTabAt(it), false)
             }
         }
     }
@@ -84,12 +86,7 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
                 node2?.id = level2
                 node2?.presentId = level1
                 node2?.valid = true
-//                manager.level1.set(level1)
-//                manager.level2.set(level2)
-//                manager.level3.set(level3)
-
                 val value = it.getStringExtra("POPUP")
-
                 tabLocation.value = level1
                 level2Node.value = node2
                 popupLiveData.value = value ?: ""
@@ -109,7 +106,8 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
             childAt.setItemViewCacheSize(0)
             childAt.layoutManager?.isItemPrefetchEnabled = false
             TabLayoutMediator(
-                binding.tabLayout, binding.viewPager, true, false)
+                binding.tabLayout, binding.viewPager, true, false
+            )
             { tab: TabLayout.Tab, position: Int ->
                 tab.text = mAdapter.getPageTitle(position)
             }.attach()
@@ -214,7 +212,7 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
             firstCreate = false
             return
         }
-        manager.setTabSerial(binding.tabLayout.selectedTabPosition)
+        tabLocation.postValue(binding.tabLayout.selectedTabPosition)
     }
 
     override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -246,10 +244,4 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
         return false
     }
 
-
-//    override fun isSelfLevel(id: Int): Boolean {
-//
-//
-//        return false
-//    }
 }
