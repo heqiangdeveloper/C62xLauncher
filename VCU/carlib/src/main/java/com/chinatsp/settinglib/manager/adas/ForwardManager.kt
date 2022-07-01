@@ -58,10 +58,10 @@ class ForwardManager : BaseManager(), ISwitchManager {
 
     override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
-            CarCabinManager.ID_FCW_STATUS -> {
+            SwitchNode.ADAS_FCW.get.signal -> {
                 onSwitchChanged(SwitchNode.ADAS_FCW, fcwStatus, property)
             }
-            CarCabinManager.ID_AEB_STATUS -> {
+            SwitchNode.ADAS_AEB.get.signal -> {
                 onSwitchChanged(SwitchNode.ADAS_AEB, aebStatus, property)
             }
             else -> {}

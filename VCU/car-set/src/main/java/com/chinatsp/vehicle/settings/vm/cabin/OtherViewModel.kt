@@ -3,9 +3,11 @@ package com.chinatsp.vehicle.settings.vm.cabin
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.listener.IRadioListener
 import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.manager.cabin.MeterManager
+import com.chinatsp.settinglib.manager.cabin.OtherManager
 import com.chinatsp.settinglib.manager.cabin.SafeManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -26,7 +28,7 @@ import javax.inject.Inject
 class OtherViewModel @Inject constructor(app: Application, model: BaseModel) :
     BaseViewModel(app, model), ISwitchListener {
 
-    private val manager: SafeManager by lazy { SafeManager.instance }
+    private val manager: OtherManager by lazy { OtherManager.instance }
 
     val trailerRemind: LiveData<Boolean>
         get() = _trailerRemind
@@ -77,7 +79,7 @@ class OtherViewModel @Inject constructor(app: Application, model: BaseModel) :
         liveData: MutableLiveData<Boolean>,
         value: Boolean
     ): MutableLiveData<Boolean> {
-        liveData.takeIf { value xor (liveData.value == true) }?.value = value
+        liveData.takeIf { value xor liveData.value!! }?.postValue(value)
         return liveData
     }
 
@@ -107,6 +109,7 @@ class OtherViewModel @Inject constructor(app: Application, model: BaseModel) :
             SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP -> {
                 updateLiveData(_wirelessChargingLamp, status)
             }
+            else -> {}
         }
     }
 

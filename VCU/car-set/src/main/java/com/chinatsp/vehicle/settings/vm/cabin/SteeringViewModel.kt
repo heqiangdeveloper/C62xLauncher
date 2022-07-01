@@ -76,8 +76,9 @@ class SteeringViewModel @Inject constructor(app: Application, model: BaseModel) 
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {
             SwitchNode.DRIVE_WHEEL_AUTO_HEAT -> {
-                _swhFunction.takeIf { it.value != status }?.value = status
+                _swhFunction.takeIf { it.value != status }?.postValue(status)
             }
+            else ->{}
         }
     }
 

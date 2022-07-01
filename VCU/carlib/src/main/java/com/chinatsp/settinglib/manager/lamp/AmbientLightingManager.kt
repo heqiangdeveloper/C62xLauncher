@@ -42,6 +42,7 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
                 add(SwitchNode.ALC_BREATHE_HINT.get.signal)
                 add(SwitchNode.ALC_COMING_HINT.get.signal)
                 add(SwitchNode.ALC_RELATED_TOPICS.get.signal)
+                add(SwitchNode.ALC_SMART_MODE.get.signal)
             }
             put(Origin.CABIN, cabinSet)
         }
@@ -98,6 +99,14 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
         }
     }
 
+    private val alcSmartMode: AtomicBoolean by lazy {
+        val node = SwitchNode.ALC_SMART_MODE
+        AtomicBoolean(node.isOn()).apply {
+            val value = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, value)
+        }
+    }
+
 
     override fun doGetRadioOption(node: RadioNode): Int {
         return when (node) {
@@ -144,6 +153,9 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
             SwitchNode.BACK_AMBIENT_LIGHTING -> {
                 backLighting.get()
             }
+            SwitchNode.ALC_SMART_MODE -> {
+                alcSmartMode.get()
+            }
             else -> false
         }
     }
@@ -170,6 +182,9 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
             }
             SwitchNode.BACK_AMBIENT_LIGHTING -> {
                 writeProperty(node, status, backLighting)
+            }
+            SwitchNode.ALC_SMART_MODE -> {
+                writeProperty(node, status, alcSmartMode)
             }
             else -> false
         }
@@ -203,6 +218,9 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
             }
             SwitchNode.BACK_AMBIENT_LIGHTING.get.signal -> {
                 onSwitchChanged(SwitchNode.BACK_AMBIENT_LIGHTING, backLighting, property)
+            }
+            SwitchNode.ALC_SMART_MODE.get.signal -> {
+                onSwitchChanged(SwitchNode.ALC_SMART_MODE, alcSmartMode, property)
             }
             else -> {}
         }

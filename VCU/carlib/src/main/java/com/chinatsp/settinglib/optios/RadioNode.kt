@@ -76,7 +76,7 @@ enum class RadioNode(
     STERN_SMART_ENTER(
         get = RNorm(
             values = intArrayOf(0x1, 0x2, 0x3),
-            signal = -1
+            signal = CarCabinManager.ID_PTM_SMART_ENTRY_PTM_STS
 //            signal = CarCabinManager.ID_PTM_SMART_ENTRY_PTM_STS
         ),//Jar 没有更新，暂时无 ID_PTM_SMART_ENTRY_PTM_STS
         set = RNorm(
@@ -275,7 +275,7 @@ enum class RadioNode(
     ICM_VOLUME_LEVEL(
         get = RNorm(
             values = intArrayOf(0x1, 0x2, 0x3),
-            signal = CarCabinManager.ID_HUM_ICM_VOLUME_LEVEL
+            signal = -1
         ),
         set = RNorm(
             values = intArrayOf(0x1, 0x2, 0x3),
@@ -318,9 +318,7 @@ enum class RadioNode(
             signal = -1
         ),
         default = 0x1
-    )
-
-    ;
+    );
 
     fun isValid(value: Int, isGet: Boolean = true): Boolean {
         return if (isGet) {

@@ -2,8 +2,10 @@ package com.chinatsp.settinglib.manager.lamp
 
 import android.car.hardware.CarPropertyValue
 import com.chinatsp.settinglib.ITabStore
+import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
+import com.chinatsp.settinglib.manager.cabin.CabinManager
 import com.chinatsp.settinglib.sign.Origin
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -23,10 +25,19 @@ class LampManager private constructor() : BaseManager(), ITabStore {
     override val tabSerial: AtomicInteger by lazy {
         AtomicInteger(-1)
     }
-    override fun onHandleSignal(property: CarPropertyValue<*>, origin: Origin): Boolean {
-        followers?.forEach {
+
+    override fun onDispatchSignal(property: CarPropertyValue<*>, origin: Origin): Boolean {
+        managers.forEach {
+            LogManager.d(CabinManager.TAG, "LampManager onDispatchSignal ${it::class.java.simpleName}")
             it.onDispatchSignal(property, origin)
         }
+        return true
+    }
+
+    override fun onHandleSignal(property: CarPropertyValue<*>, origin: Origin): Boolean {
+//        followers?.forEach {
+//            it.onDispatchSignal(property, origin)
+//        }
         return true
     }
 
@@ -51,6 +62,7 @@ class LampManager private constructor() : BaseManager(), ITabStore {
         val managers: List<out BaseManager> by lazy {
             ArrayList<BaseManager>().apply {
                 add(LightManager.instance)
+                add(AmbientLightingManager.instance)
             }
         }
 

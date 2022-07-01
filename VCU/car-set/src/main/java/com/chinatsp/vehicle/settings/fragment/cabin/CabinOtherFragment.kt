@@ -18,7 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBinding>() {
 
-    private val manager: ISwitchManager
+    private val manager: OtherManager
         get() = OtherManager.instance
 
     override fun getLayoutId(): Int {
@@ -51,17 +51,17 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
     private fun addSwitchLiveDataListener() {
         viewModel.batteryOptimize.let { ld ->
             ld.observe(this) {
-                updateSwitchTextHint(binding.otherBatteryOptimizeSwitch, ld)
+                doUpdateSwitch(SwitchNode.DRIVE_BATTERY_OPTIMIZE, it)
             }
         }
         viewModel.wirelessCharging.let { ld ->
             ld.observe(this) {
-                updateSwitchTextHint(binding.otherWirelessChargingSwitch, ld)
+                doUpdateSwitch(SwitchNode.DRIVE_WIRELESS_CHARGING, it)
             }
         }
         viewModel.wirelessChargingLamp.let { ld ->
             ld.observe(this) {
-                updateSwitchTextHint(binding.otherWirelessChargingLampSwitch, ld)
+                doUpdateSwitch(SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP, it)
             }
         }
 

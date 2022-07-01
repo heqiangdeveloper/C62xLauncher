@@ -72,7 +72,7 @@ class SteeringHeatDialogFragment :
 
     private fun addSwitchLiveDataListener() {
         viewModel.swhFunction.observe(this) {
-            doUpdateSwitch(SwitchNode.ADAS_DOW, it)
+            doUpdateSwitch(SwitchNode.DRIVE_WHEEL_AUTO_HEAT, it)
         }
     }
 

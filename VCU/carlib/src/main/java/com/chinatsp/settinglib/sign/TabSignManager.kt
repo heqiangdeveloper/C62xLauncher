@@ -17,9 +17,9 @@ class TabSignManager private constructor() {
         }
     }
 
-    companion object {
-        val instance: TabSignManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
-            TabSignManager()
-        }
-    }
+//    companion object {
+//        val instance: TabSignManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+//            TabSignManager()
+//        }
+//    }
 }
