@@ -3,7 +3,6 @@ package com.chinatsp.vehicle.settings.fragment.drive
 import android.os.Bundle
 import android.view.View
 import android.widget.CompoundButton
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.adas.LaneManager
 import com.chinatsp.settinglib.optios.RadioNode

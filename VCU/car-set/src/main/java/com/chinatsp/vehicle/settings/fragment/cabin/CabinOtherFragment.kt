@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.widget.CompoundButton
 import android.widget.TextView
 import androidx.lifecycle.LiveData
-import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.cabin.OtherManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.R

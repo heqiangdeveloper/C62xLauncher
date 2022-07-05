@@ -103,7 +103,7 @@ class AmbientLightingFragment :
         binding.picker.setOnColorPickerChangeListener(object :
             ColorPickerView.OnColorPickerChangeListener {
             override fun onColorChanged(picker: ColorPickerView?, color: Int) {
-                binding.picker.indicatorColor = color
+                binding.picker.indicatorColor =color
             }
 
             override fun onStartTrackingTouch(picker: ColorPickerView?) {
@@ -174,3 +174,5 @@ class AmbientLightingFragment :
 
 
 }
+
+
