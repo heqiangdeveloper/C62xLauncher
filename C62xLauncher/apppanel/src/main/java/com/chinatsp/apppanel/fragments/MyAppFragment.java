@@ -120,11 +120,12 @@ public class MyAppFragment extends Fragment {
         data = new ArrayList<>();
 
         LocationBean locationBean = null;
-        Log.d("hqtest","db.countLocation() = " + db.countLocation());
+        Log.d(TAG,"db.countLocation() = " + db.countLocation());
         if(db.countLocation() == 0){//没有数据记录
             getOriginalData();
         }else {
             data = db.getData1();
+            Log.d(TAG,"data.size = " + data.size());
             if(data.size() == 0){
                 getOriginalData();
             }
@@ -141,6 +142,7 @@ public class MyAppFragment extends Fragment {
         List<ResolveInfo> allApps = getApps();
         allApps = getAvailabelApps(allApps);
         ResolveInfo info;
+        int num = 0;
         for(int i = 0; i < allApps.size();i++){
             //L.d("name: " + info.activityInfo.loadLabel(getContext().getPackageManager()) + "," + info.activityInfo.packageName);
             List<LocationBean> inner = new ArrayList<>();
@@ -156,7 +158,13 @@ public class MyAppFragment extends Fragment {
             locationBean.setName((info.activityInfo.loadLabel(getContext().getPackageManager())).toString());
             locationBean.setTitle("");
             locationBean.setCanuninstalled(AppLists.isSystemApplication(getContext(),info.activityInfo.packageName) ? 0:1);
-            db.insertLocation(locationBean);
+//            db.insertLocation(locationBean);
+            num = db.isExistPackage(locationBean.getPackageName());
+            if(num == 0){
+                db.insertLocation(locationBean);
+            }else {
+                db.updateIndex(locationBean);
+            }
             inner.add(locationBean);
             data.add(inner);
         }
