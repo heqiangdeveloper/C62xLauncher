@@ -41,10 +41,7 @@ import com.chinatsp.settinglib.manager.RegisterSignalManager.Companion.mcuSignal
 import com.chinatsp.settinglib.manager.lamp.BrightnessManager
 import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.settinglib.optios.Area
-import com.chinatsp.settinglib.sign.CarSign
 import com.chinatsp.settinglib.sign.Origin
-import com.chinatsp.settinglib.sign.TabBlock
-import com.chinatsp.settinglib.sign.TabSignManager
 import java.util.*
 import java.util.concurrent.Executors
 
@@ -982,7 +979,7 @@ class SettingManager private constructor() {
                 TAG,
                 "setAudioVoice result:$id result=$result"
             )
-        } catch (e: java.lang.Exception) {
+        } catch (e: Throwable) {
             e.printStackTrace()
             d(TAG, "e=" + e.message)
         }
@@ -1156,6 +1153,8 @@ class SettingManager private constructor() {
         }
         return -100
     }
+
+    //-7,7
 
     private inner class CarServiceConnection : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {

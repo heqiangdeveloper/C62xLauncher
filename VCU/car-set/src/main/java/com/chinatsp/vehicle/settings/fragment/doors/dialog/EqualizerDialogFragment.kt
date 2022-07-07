@@ -2,16 +2,17 @@ package com.chinatsp.vehicle.settings.fragment.doors.dialog
 
 import android.graphics.Color
 import android.os.Bundle
+import com.chinatsp.settinglib.SettingManager
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.EqualizerDialogFragmetBinding
-import com.chinatsp.vehicle.settings.vm.sound.SoundViewModel
+import com.chinatsp.vehicle.settings.vm.sound.SoundEffectViewModel
 import com.common.library.frame.base.BaseDialogFragment
 import com.common.xui.widget.smooth.SmoothLineChartView
+import com.king.base.util.LogUtils
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.ArrayList
 
 @AndroidEntryPoint
-class EqualizerDialogFragment: BaseDialogFragment<SoundViewModel, EqualizerDialogFragmetBinding>() {
+class EqualizerDialogFragment: BaseDialogFragment<SoundEffectViewModel, EqualizerDialogFragmetBinding>() {
     override fun getLayoutId(): Int {
         return R.layout.equalizer_dialog_fragmet
     }
@@ -47,5 +48,31 @@ class EqualizerDialogFragment: BaseDialogFragment<SoundViewModel, EqualizerDialo
         x.add("3-15")
         x.add("3-16")
         binding.smoothChartView.setData(data, x)
+      //  binding.smoothChartView.setOnChartClickListener { position, _ -> viewModel?.setAudioEQ(position) }
+
+        binding.adasSideShowAreaRadio.setOnTabSelectionChangedListener { title, value ->
+            val  opt =   context?.resources?.getStringArray(R.array.sound_equalizer_option)
+            val x =   opt?.indexOf(value)
+            LogUtils.d("value=$value title=$title x=$x")
+            var postion = 0;
+            x?.let {
+                if(x!=-1){
+                    postion = x;
+                }
+            }
+            viewModel?.setAudioEQ(postion)
+        }
+        val index: Int? = viewModel?.getAudioEQ()
+        index?.let {
+            LogUtils.d(" index=${index}")
+            var postion = 0;
+            if(index!=-1){
+                postion = index;
+            }
+            LogUtils.d(" postion=${postion}")
+
+            binding.adasSideShowAreaRadio.setDefaultSelection(postion)
+
+        }
     }
 }

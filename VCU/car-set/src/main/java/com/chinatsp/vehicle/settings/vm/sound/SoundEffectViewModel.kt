@@ -27,8 +27,11 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
     fun getAudioBalance(): Int {
         return manager?.getAudioBalance()
     }
+     fun getAudioFade(): Int {
+        return manager?.audioFade
+    }
 
-    private fun getAudioEQ(): Int  {
+     fun getAudioEQ(): Int  {
         return manager?.getAudioEQ()
     }
 
