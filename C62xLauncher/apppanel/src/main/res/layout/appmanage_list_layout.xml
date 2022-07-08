@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:id="@+id/container_ll">
+    <FrameLayout
+        android:layout_width="160dp"
+        android:layout_height="160dp">
+        <ImageView
+            android:layout_gravity="center"
+            android:id="@+id/icon_iv"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/ic_launcher"/>
+        <ImageView
+            android:id="@+id/delete_iv"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="top|right"
+            android:background="@mipmap/appmanage_delete"/>
+
+    </FrameLayout>
+    <TextView
+        android:id="@+id/name_tv"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="应用"
+        android:gravity="center"
+        android:singleLine="true"
+        android:textColor="#fff"
+        android:maxLines="1"
+        android:textSize="30px"/>
+
+</LinearLayout>
