@@ -28,6 +28,9 @@ public class AppLists {
     private static final String filemanager = "com.chinatsp.filemanager";//文件管理
     private static final String systemSettings = "com.chinatsp.vehiclesetting";//系统设置
     private static final String vehicleSettings = "com.chinatsp.vehicle.settings";//车辆设置
+    private static final String buryPoint = "com.oushang.datastat";
+
+    public static final String APPMANAGEMENT = "com.chinatsp.appmanagement";//应用管理，自定义的包名，实际不存在此应用
     //不显示在桌面的应用名单
     public static List<String> blackListApps = Arrays.asList(
             aospSettings,
@@ -42,14 +45,15 @@ public class AppLists {
             b561Radio
     );
 
-    //不可删除的应用名单
+    //不可删除的应用名单，其他的应用根据是否是系统应用来判断
     public static List<String> cannotUninstallListApps = Arrays.asList(
-            appstore,
-            settings,
-            btPhone,
-            filemanager,
-            systemSettings,
-            vehicleSettings
+            APPMANAGEMENT
+    );
+
+    //不出现在应用管理中的应用名单
+    public static List<String> notInAppManageListApps = Arrays.asList(
+            launcher,
+            buryPoint
     );
 
     /*
@@ -87,6 +91,9 @@ public class AppLists {
     public static boolean isSystemApplication(Context context, String packageName) {
         if (context == null) {
             return false;
+        }
+        if(cannotUninstallListApps.contains(packageName)){
+            return true;
         }
         PackageManager packageManager = context.getPackageManager();
         if (packageManager == null || packageName == null || packageName.length() == 0) {

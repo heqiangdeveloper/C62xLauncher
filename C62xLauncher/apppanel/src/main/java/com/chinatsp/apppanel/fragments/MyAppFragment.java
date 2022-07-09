@@ -6,13 +6,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -141,6 +137,8 @@ public class MyAppFragment extends Fragment {
         Log.d("hqtest","getOriginalData");
         List<ResolveInfo> allApps = getApps();
         allApps = getAvailabelApps(allApps);
+        //此处第一个位置留给应用管理
+        allApps.add(0,null);
         ResolveInfo info;
         int num = 0;
         for(int i = 0; i < allApps.size();i++){
@@ -150,15 +148,20 @@ public class MyAppFragment extends Fragment {
             locationBean = new LocationBean();
             locationBean.setParentIndex(i);
             locationBean.setChildIndex(-1);
-            locationBean.setPackageName(info.activityInfo.packageName);
-            drawable = info.activityInfo.loadIcon(getContext().getPackageManager());
-
+            if(info == null){//说明是应用管理，特殊处理
+                Log.d(TAG,"command appmanagement");
+                locationBean.setPackageName(AppLists.APPMANAGEMENT);
+                drawable = getResources().getDrawable(R.mipmap.ic_appmanagement);
+                locationBean.setName(getResources().getString(R.string.appmanagement_name));
+            }else {
+                locationBean.setPackageName(info.activityInfo.packageName);
+                drawable = info.activityInfo.loadIcon(getContext().getPackageManager());
+                locationBean.setName((info.activityInfo.loadLabel(getContext().getPackageManager())).toString());
+            }
+            locationBean.setCanuninstalled(AppLists.isSystemApplication(getContext(),locationBean.getPackageName()) ? 0:1);
+            locationBean.setTitle("");
             locationBean.setImgByte(null);
             locationBean.setImgDrawable(drawable);
-            locationBean.setName((info.activityInfo.loadLabel(getContext().getPackageManager())).toString());
-            locationBean.setTitle("");
-            locationBean.setCanuninstalled(AppLists.isSystemApplication(getContext(),info.activityInfo.packageName) ? 0:1);
-//            db.insertLocation(locationBean);
             num = db.isExistPackage(locationBean.getPackageName());
             if(num == 0){
                 db.insertLocation(locationBean);
