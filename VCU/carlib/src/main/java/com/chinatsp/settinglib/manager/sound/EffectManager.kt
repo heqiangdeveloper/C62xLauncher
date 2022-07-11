@@ -151,11 +151,22 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
     }
 
     override fun doGetRadioOption(node: RadioNode): Int {
-        TODO("Not yet implemented")
+        return when (node) {
+            RadioNode.SYSTEM_SOUND_EFFECT -> {
+                readIntProperty(node.get.signal, node.get.origin)
+            }
+            else -> -1
+        }
     }
 
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
-        TODO("Not yet implemented")
+        when (node) {
+            RadioNode.SYSTEM_SOUND_EFFECT -> {
+                writeProperty(node.set.signal, value, node.set.origin)
+            }
+            else -> -1
+        }
+        return true
     }
 
     override fun doGetSwitchOption(node: SwitchNode): Boolean {

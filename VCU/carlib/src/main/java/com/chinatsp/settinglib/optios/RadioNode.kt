@@ -318,7 +318,23 @@ enum class RadioNode(
             signal = -1
         ),
         default = 0x1
-    );
+    ),
+
+    /**
+     * 车辆音效--音效--均衡器
+     */
+    SYSTEM_SOUND_EFFECT(
+        get = RNorm(
+            values = intArrayOf(0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7),
+            signal = -1
+        ),
+        set = RNorm(
+            values = intArrayOf(0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7),
+            signal = -1
+        ),
+        default = 0x1
+    )
+    ;
 
     fun isValid(value: Int, isGet: Boolean = true): Boolean {
         return if (isGet) {

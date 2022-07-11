@@ -1,8 +1,5 @@
 package com.common.library.frame.base;
 
-/**
- *
- */
 public interface ILoading {
     /**
      * 显示加载

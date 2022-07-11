@@ -51,6 +51,7 @@
         <item name="swb_animationDuration">200</item>
         <item name="swb_backDrawable">@drawable/switch_track_selector</item>
         <item name="swb_thumbDrawable">@drawable/switch_thumb_selector</item>
+        <item name="swb_thumbRangeRatio">2.1</item>
     </style>
 
     <style name="click_row_option_style">

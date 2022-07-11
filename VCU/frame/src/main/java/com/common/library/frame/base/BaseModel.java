@@ -48,8 +48,8 @@ public class BaseModel implements IModel {
     /**
      * 传入Class 获得{@link retrofit2.Retrofit#create(Class)} 对应的Class
      *
-     * @param service
-     * @param <T>
+     * @param service service
+     * @param <T> T
      * @return {@link retrofit2.Retrofit#create(Class)}
      */
     public <T> T getRetrofitService(Class<T> service) {
@@ -60,8 +60,8 @@ public class BaseModel implements IModel {
     /**
      * 传入Class 通过{@link Room#databaseBuilder},{@link RoomDatabase.Builder<T>#build()}获得对应的Class
      *
-     * @param database
-     * @param <T>
+     * @param database database
+     * @param <T> T
      * @return {@link RoomDatabase.Builder<T>#build()}
      */
     public <T extends RoomDatabase> T getRoomDatabase(@NonNull Class<T> database) {
@@ -71,9 +71,9 @@ public class BaseModel implements IModel {
     /**
      * 传入Class 通过{@link Room#databaseBuilder},{@link RoomDatabase.Builder<T>#build()}获得对应的Class
      *
-     * @param database
-     * @param dbName
-     * @param <T>
+     * @param database database
+     * @param dbName dbName
+     * @param <T> T
      * @return {@link RoomDatabase.Builder<T>#build()}
      */
     public <T extends RoomDatabase> T getRoomDatabase(@NonNull Class<T> database, @Nullable String dbName) {

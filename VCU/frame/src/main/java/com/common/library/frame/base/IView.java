@@ -7,8 +7,6 @@ import androidx.annotation.Nullable;
 
 /**
  * 用来规范 {@link BaseActivity} 和 {@link BaseFragment} 风格。
- *
- *
  */
 public interface IView<VM extends IViewModel> {
 

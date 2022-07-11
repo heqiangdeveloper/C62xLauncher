@@ -1124,7 +1124,7 @@ class SettingManager private constructor() {
             }
         }
         try {
-            mCarAudioManager!!.eqMode = m
+            mCarAudioManager?.eqMode = m
             d(TAG, "setEqMode:$m")
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
