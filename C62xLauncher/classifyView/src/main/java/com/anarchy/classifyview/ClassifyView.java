@@ -882,8 +882,8 @@ public class ClassifyView extends FrameLayout {
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
                     L.d("ACTION_DRAG_ENDED");
-                    Log.d("MyAppFragment","main drag ACTION_DRAG_ENDED ReStoreDataEvent");
-                    EventBus.getDefault().post(new ReStoreDataEvent());//通知存储数据
+//                    Log.d("MyAppFragment","main drag ACTION_DRAG_ENDED ReStoreDataEvent");
+//                    EventBus.getDefault().post(new ReStoreDataEvent());//通知存储数据
                     if (mergeSuccess) {
                         mergeSuccess = false;
                         break;
@@ -930,6 +930,9 @@ public class ClassifyView extends FrameLayout {
                         //mDragView.animate().x(targetX).y(targetY).scaleX(scaleX).scaleY(scaleY).setListener(mMergeAnimListener).setDuration(mAnimationDuration).start();
                         mDragView.animate().x(targetX).y(targetY).scaleX(1f).scaleY(1f).setListener(mMergeAnimListener).setDuration(mAnimationDuration).start();
                         mergeSuccess = true;
+                    }else {
+                        Log.d("MyAppFragment","main drag ACTION_DROP ReStoreDataEvent");
+                        EventBus.getDefault().post(new ReStoreDataEvent());//通知存储数据
                     }
                     break;
             }

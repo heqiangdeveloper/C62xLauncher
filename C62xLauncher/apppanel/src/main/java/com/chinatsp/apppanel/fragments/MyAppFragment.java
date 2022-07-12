@@ -69,7 +69,7 @@ public class MyAppFragment extends Fragment {
     private SharedPreferences.Editor editor;
     private MyAppInfoAdapter mMyAppInfoAdapter;
     private List<List<LocationBean>> data;
-    private boolean isStoringData = false;
+    private static boolean isStoringData = false;
     public MyAppFragment() {
         // Required empty public constructor
     }
