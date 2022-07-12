@@ -1,6 +1,7 @@
 package com.chinatsp.vehicle.settings.fragment.cabin
 
 import android.os.Bundle
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.cabin.MeterManager
@@ -9,7 +10,6 @@ import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CabinMeterFragmentBinding
 import com.chinatsp.vehicle.settings.vm.cabin.MeterViewModel
 import com.common.library.frame.base.BaseFragment
-import com.common.xui.utils.ResUtils
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -134,9 +134,9 @@ class CabinMeterFragment : BaseFragment<MeterViewModel, CabinMeterFragmentBindin
             return@filterIndexed result
         }
         if (selectIndex == 1) {
-            binding.ivMeasurement.setImageDrawable(resources.getDrawable(R.drawable.company_mph))
+            binding.ivMeasurement.setImageDrawable(activity?.let { ContextCompat.getDrawable(it,R.drawable.company_mph) })
         } else {
-            binding.ivMeasurement.setImageDrawable(resources.getDrawable(R.drawable.company_km))
+            binding.ivMeasurement.setImageDrawable(activity?.let { ContextCompat.getDrawable(it,R.drawable.company_km) })
         }
     }
 

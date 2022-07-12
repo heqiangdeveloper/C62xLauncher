@@ -115,8 +115,8 @@ class EqualizerDialogFragment :
         binding.smoothChartView.textColor = Color.TRANSPARENT
         binding.smoothChartView.textSize = 20
         binding.smoothChartView.textOffset = 4
-        binding.smoothChartView.minY = 10f
-        binding.smoothChartView.maxY = 80f
+        binding.smoothChartView.minY = -7F
+        binding.smoothChartView.maxY = 7F
         binding.smoothChartView.enableShowTag(false)
         binding.smoothChartView.enableDrawArea(true)
         binding.smoothChartView.lineColor = resources.getColor(R.color.smooth_bg_color_start)
@@ -124,6 +124,7 @@ class EqualizerDialogFragment :
             resources.getColor(R.color.smooth_bg_color_end)
         binding.smoothChartView.innerCircleColor = Color.parseColor("#ffffff")
         binding.smoothChartView.nodeStyle = SmoothLineChartView.NODE_STYLE_RING
+        binding.smoothChartView.setOnChartClickListener { position, _ -> viewModel?.setAudioEQ(position) }
         val values = viewModel.getEffectValues(SoundEffect.getEffect(viewModel.currentEffect.value!!))
         val toList = values.map { it.toFloat() }.toList()
         binding.smoothChartView.setData(toList, xValue)
