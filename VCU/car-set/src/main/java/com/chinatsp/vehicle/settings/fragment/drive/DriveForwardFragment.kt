@@ -9,6 +9,7 @@ import com.chinatsp.settinglib.manager.adas.ForwardManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.DriveForwardFragmentBinding
+import com.chinatsp.vehicle.settings.fragment.drive.dialog.CloseBrakeDialogFragment
 import com.chinatsp.vehicle.settings.vm.adas.ForwardViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
@@ -99,6 +100,10 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
             } else {
                 binding.smallCar.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.acccar_white) })
                 binding.lightRedIv.visibility = View.GONE
+                val fragment = CloseBrakeDialogFragment()
+                activity?.supportFragmentManager?.let {
+                    fragment.show(it, fragment.javaClass.simpleName)
+                }
             }
             doUpdateSwitchOption(SwitchNode.ADAS_AEB, buttonView, isChecked)
         }

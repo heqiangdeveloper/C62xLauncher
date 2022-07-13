@@ -117,7 +117,7 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
         if (isInit) {
             val names = tabView.nameArray.map { it.toString() }.toTypedArray()
             val values = node.get.values.map { it.toString() }.toTypedArray()
-            tabView.setItems(names, values)
+            //tabView.setItems(names, values)
         }
     }
 

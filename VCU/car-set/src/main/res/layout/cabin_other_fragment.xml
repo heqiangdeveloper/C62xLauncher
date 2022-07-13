@@ -107,6 +107,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/notes_users"
                     style="@style/image_prompt"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="@+id/cabin_other_wireless_charging_title"

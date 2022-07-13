@@ -26,7 +26,7 @@
 
                 <TextView
                     style="@style/switch_row_option_style"
-                    android:text="@string/cabin_safe_fortify_tone"
+                    android:text="@string/cabin_safe_lock_car"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

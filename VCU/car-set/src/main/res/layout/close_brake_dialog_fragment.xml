@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_sound_popup_20"
+        android:paddingTop="40px"
+        android:paddingBottom="40px">
+
+        <RelativeLayout
+            android:id="@+id/pop_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/dialog_title"
+                android:text="@string/drive_close_brake" />
+        </RelativeLayout>
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/drive_close_brake_content"
+            style="@style/txt_prompt_style"
+            android:layout_marginTop="@dimen/x30"
+            android:gravity="center"
+            android:lineSpacingExtra="@dimen/x2"
+            android:text="@string/drive_close_brake_content"
+            android:textSize="@dimen/text_15"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pop_title" />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/x33"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/drive_close_brake_content">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/drive_agree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/choice_218"
+                android:gravity="center"
+                android:text="@string/drive_agree"
+                android:textColor="@color/xui_config_color_white"
+                android:textSize="@dimen/text_14" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/drive_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/x35"
+                android:background="@drawable/disable_218"
+                android:gravity="center"
+                android:text="@string/drive_cancel"
+                android:textColor="@color/xui_config_color_white"
+                android:textSize="@dimen/text_14" />
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

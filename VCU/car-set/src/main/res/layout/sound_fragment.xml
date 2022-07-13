@@ -197,12 +197,41 @@
                         app:layout_constraintTop_toBottomOf="@id/sound_system_prompt" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/sound_loudness_control"
+                        android:id="@+id/sound_touch_prompt"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/switch_item_option_height"
                         android:orientation="horizontal"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/line5">
+
+                        <TextView
+                            style="@style/switch_row_option_style"
+                            android:text="@string/sound_touch_prompt"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.common.xui.widget.button.switchbutton.SwitchButton
+                            android:id="@+id/sound_touch_prompt_switch"
+                            style="@style/switch_button_style"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/line6"
+                        style="@style/line"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/sound_touch_prompt" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/sound_loudness_control"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/switch_item_option_height"
+                        android:orientation="horizontal"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/line6">
 
                         <TextView
                             style="@style/switch_row_option_style"
@@ -220,7 +249,7 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <View
-                        android:id="@+id/line6"
+                        android:id="@+id/line7"
                         style="@style/line"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/sound_loudness_control" />
@@ -231,7 +260,8 @@
                         android:layout_height="@dimen/switch_item_option_height"
                         android:orientation="horizontal"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/line6">
+                        app:layout_constraintTop_toBottomOf="@id/line7"
+                        android:visibility="gone">
 
                         <TextView
                             style="@style/switch_row_option_style"
@@ -249,10 +279,11 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <View
-                        android:id="@+id/line7"
+                        android:id="@+id/line8"
                         style="@style/line"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/sound_huawei_sound" />
+                        app:layout_constraintTop_toBottomOf="@id/sound_huawei_sound"
+                        android:visibility="gone"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
         </com.common.xui.widget.XUIWrapContentScrollView>

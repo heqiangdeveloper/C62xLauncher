@@ -8,7 +8,8 @@ import com.chinatsp.settinglib.manager.cabin.OtherManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CabinOtherFragmentBinding
-import com.chinatsp.vehicle.settings.fragment.cabin.dialog.CopilotGuestsDialogFragment
+import com.chinatsp.vehicle.settings.fragment.cabin.dialog.NoteUsersDialogFragment
+import com.chinatsp.vehicle.settings.fragment.cabin.dialog.TrailerRemindDialogFragment
 import com.chinatsp.vehicle.settings.vm.cabin.OtherViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
@@ -112,7 +113,13 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
 
     private fun setCheckedChangeListener() {
         binding.cabinOtherTrailerRemind.setOnClickListener {
-            val fragment = CopilotGuestsDialogFragment()
+            val fragment = TrailerRemindDialogFragment()
+            activity?.supportFragmentManager?.let {
+                fragment.show(it, fragment.javaClass.simpleName)
+            }
+        }
+        binding.notesUsers.setOnClickListener {
+            val fragment = NoteUsersDialogFragment()
             activity?.supportFragmentManager?.let {
                 fragment.show(it, fragment.javaClass.simpleName)
             }
