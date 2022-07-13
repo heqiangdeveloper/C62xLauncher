@@ -32,8 +32,8 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
         binding.smoothChartView.textColor = Color.TRANSPARENT
         binding.smoothChartView.textSize = 20
         binding.smoothChartView.textOffset = 4
-        binding.smoothChartView.minY = 40F
-        binding.smoothChartView.maxY = 58F
+        binding.smoothChartView.minY = -7F
+        binding.smoothChartView.maxY = 7F
         binding.smoothChartView.enableShowTag(false)
         binding.smoothChartView.enableDrawArea(true)
         binding.smoothChartView.lineColor = resources.getColor(R.color.md_material_blue_600)
@@ -42,11 +42,11 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
         binding.smoothChartView.innerCircleColor = Color.parseColor("#ffffff")
         binding.smoothChartView.nodeStyle = SmoothLineChartView.NODE_STYLE_RING
         var data: MutableList<Float> = ArrayList()
-        data.add(55f)
-        data.add(54f)
-        data.add(51f)
-        data.add(49f)
-        data.add(51f)
+        data.add(3f)
+        data.add(-7f)
+        data.add(1f)
+        data.add(7f)
+        data.add(-3f)
         var x: MutableList<String> = ArrayList()
         x.add("3-12")
         x.add("3-13")
