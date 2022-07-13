@@ -26,7 +26,7 @@
     <string name="table2">灯光设置</string>
     <string name="table3">车辆音效</string>
     <string name="table4">驾驶辅助</string>
-    <string name="table5">行车</string>
+    <string name="table5">座舱</string>
     <string name="table6">BEIJING OS</string>
     <string name="back_navigation">返回</string>
     <string name="car_door">车门</string>
@@ -107,6 +107,7 @@
 
     <string name="ac_open_window">一键开窗</string>
     <string name="ac_close_window">一键关窗</string>
+    <string name="ac_refresh_window">一键重置</string>
 
     <string name="drive_tab_intelligent_cruise">智能巡航</string>
     <string name="drive_tab_forward_assist">前向辅助</string>
