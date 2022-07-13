@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.ClipData;
@@ -58,6 +59,7 @@ import com.anarchy.classifyview.util.MyConfigs;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -267,6 +269,15 @@ public class ClassifyView extends FrameLayout {
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
         );
         titleEt.setSingleLine(true);
+        //使用反射来设置光标样式
+        try {
+            @SuppressLint("SoonBlockedPrivateApi")
+            Field f = TextView.class.getDeclaredField("mCursorDrawableRes");
+            f.setAccessible(true);
+            f.set(titleEt, R.drawable.input_cursor_line);
+        } catch (Exception e) {
+            L.d("set titleEt cursor exception: " + e);
+        }
         titleEt.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)}); //即限定最大输入字符数为12个
         titleEt.setText("");
         titleEtParams.addRule(RelativeLayout.CENTER_IN_PARENT);
