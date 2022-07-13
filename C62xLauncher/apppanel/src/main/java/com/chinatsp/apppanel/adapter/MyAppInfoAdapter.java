@@ -362,6 +362,10 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         rv.setAdapter(addAppAdapter);
         rv.setLayoutManager(new GridLayoutManager(context, 3));
 
+        //修改重命名时调整sub中个数为0或1时，显示了删除按钮
+        editor.putBoolean(MyConfigs.SHOWDELETE,false);
+        editor.commit();
+
         positiveTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -594,6 +598,8 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
                     }
                     mData.get(newIndex).add(null);//新增添加按钮
                     getSubAdapter().initData(newIndex,mData.get(newIndex));//更新sub
+                    editor.putInt(MyConfigs.PARENTINDEX,newIndex);
+                    editor.commit();
                 }
             }
         });
