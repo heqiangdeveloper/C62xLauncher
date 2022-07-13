@@ -1,6 +1,7 @@
 package com.anarchy.classifyview.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.VelocityTracker;
 import android.view.View;
 
