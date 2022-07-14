@@ -1,3 +1,13 @@
 <resources>
     <string name="symbol_celsius">℃</string>
+    <string name="weather_desc_sunny">晴</string>
+    <string name="weather_desc_cloudy">多云</string>
+    <string name="weather_desc_rain">雨</string>
+    <string name="weather_desc_fog">雾</string>
+    <string name="weather_desc_snow">雪</string>
+    <string name="weather_desc_thunder_shower">雷阵雨</string>
+    <string name="weather_desc_overcast">阴</string>
+    <string name="weather_desc_smog">雾霾</string>
+    <string name="weather_desc_windy">风</string>
+    <string name="weather_desc_unknown">未知</string>
 </resources>

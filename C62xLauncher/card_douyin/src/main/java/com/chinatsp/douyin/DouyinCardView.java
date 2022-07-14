@@ -46,4 +46,9 @@ public class DouyinCardView extends ConstraintLayout implements ICardStyleChange
     public void collapse() {
 
     }
+
+    @Override
+    public boolean hideDefaultTitle() {
+        return false;
+    }
 }

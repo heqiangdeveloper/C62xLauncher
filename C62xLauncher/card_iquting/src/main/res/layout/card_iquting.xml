@@ -5,29 +5,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-    <ImageView
-        android:id="@+id/ivCardIQuTingLogo"
-        android:layout_width="@dimen/card_icon_size_lv0"
-        android:layout_height="@dimen/card_icon_size_lv0"
-        android:src="@drawable/card_iquting_icon_logo"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="194px"
-        android:layout_marginTop="155px"
-        />
-
-    <TextView
-
+    <include
+        android:id="@+id/layoutSmallCardView"
+        layout="@layout/card_iquting_small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/CardLv2TextView"
-        android:text="@string/iquting_unlogin_slogan"
-        android:lineSpacingMultiplier="1.5"
-        android:letterSpacing="0.1"
-        app:layout_constraintStart_toStartOf="@id/ivCardIQuTingLogo"
-        app:layout_constraintEnd_toEndOf="@id/ivCardIQuTingLogo"
-        app:layout_constraintTop_toBottomOf="@id/ivCardIQuTingLogo"
-        android:layout_marginTop="35px"
+        android:visibility="visible"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

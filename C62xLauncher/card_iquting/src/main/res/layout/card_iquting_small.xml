@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/card_width"
+    android:layout_height="@dimen/card_height">
+
+
+    <ImageView
+        android:id="@+id/ivCardIQuTingLogo"
+        android:layout_width="@dimen/card_icon_size_lv0"
+        android:layout_height="@dimen/card_icon_size_lv0"
+        android:layout_marginStart="194px"
+        android:layout_marginTop="155px"
+        android:src="@drawable/card_iquting_icon_logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvCardIQuTingTip"
+        style="@style/CardLv2TextView"
+        android:layout_width="222px"
+        android:layout_height="92px"
+        android:layout_marginTop="35px"
+        android:gravity="bottom|center"
+        android:letterSpacing="0.01"
+        android:lineSpacingMultiplier="1.5"
+        android:text="@string/iquting_unlogin_slogan"
+        app:layout_constraintEnd_toEndOf="@id/ivCardIQuTingLogo"
+        app:layout_constraintStart_toStartOf="@id/ivCardIQuTingLogo"
+        app:layout_constraintTop_toBottomOf="@id/ivCardIQuTingLogo" />
+
+    <ImageView
+        android:id="@+id/ivCardIQuTingButton"
+        android:layout_width="@dimen/card_icon_size_lv1"
+        android:layout_height="@dimen/card_icon_size_lv1"
+        android:layout_marginTop="43px"
+        android:src="@drawable/card_common_left_in_selector"
+        app:layout_constraintEnd_toEndOf="@id/ivCardIQuTingLogo"
+        app:layout_constraintStart_toStartOf="@id/ivCardIQuTingLogo"
+        app:layout_constraintTop_toBottomOf="@+id/tvCardIQuTingTip" />
+
+    <!--==========================  正常模式UI  ===========================================-->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutIQuTingNormalSmall"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        >
+
+        <ImageView
+            android:id="@+id/ivIQuTingPlayStateIcon"
+            android:layout_width="@dimen/card_icon_size_lv3"
+            android:layout_height="@dimen/card_icon_size_lv3"
+            android:layout_marginStart="88px"
+            android:layout_marginTop="89px"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvIQuTingPlayStateValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="播放中"
+            style="@style/CardLv3TextView"
+            android:textColor="@color/card_blue_default"
+            app:layout_constraintTop_toTopOf="@id/ivIQuTingPlayStateIcon"
+            app:layout_constraintBottom_toBottomOf="@id/ivIQuTingPlayStateIcon"
+            app:layout_constraintStart_toEndOf="@id/ivIQuTingPlayStateIcon"
+            />
+
+        <ImageView
+            android:id="@+id/ivIQuTingCover"
+            android:layout_width="196px"
+            android:layout_height="196px"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="149px"
+            android:layout_marginStart="146px"
+
+            />
+
+        <ImageView
+            android:id="@+id/ivIQuTingPlayPauseBtn"
+            android:layout_width="@dimen/card_icon_size_lv0"
+            android:layout_height="@dimen/card_icon_size_lv0"
+            android:src="@drawable/card_iquting_icon_pause"
+            app:layout_constraintTop_toTopOf="@id/ivIQuTingCover"
+            app:layout_constraintStart_toStartOf="@id/ivIQuTingCover"
+            app:layout_constraintBottom_toBottomOf="@id/ivIQuTingCover"
+            app:layout_constraintEnd_toEndOf="@id/ivIQuTingCover"
+
+            />
+
+        <ImageView
+            android:id="@+id/ivIQuTingPreBtn"
+            android:src="@drawable/card_iquting_icon_pre"
+            android:layout_width="@dimen/card_icon_size_lv1"
+            android:layout_height="@dimen/card_icon_size_lv1"
+            app:layout_constraintTop_toTopOf="@id/ivIQuTingCover"
+            app:layout_constraintBottom_toBottomOf="@id/ivIQuTingCover"
+            app:layout_constraintEnd_toStartOf="@id/ivIQuTingCover"
+            android:layout_marginEnd="33px"
+            />
+
+        <ImageView
+            android:id="@+id/ivIQuTingNextBtn"
+            android:src="@drawable/card_iquting_icon_next"
+            android:layout_width="@dimen/card_icon_size_lv1"
+            android:layout_height="@dimen/card_icon_size_lv1"
+            app:layout_constraintTop_toTopOf="@id/ivIQuTingCover"
+            app:layout_constraintBottom_toBottomOf="@id/ivIQuTingCover"
+            app:layout_constraintStart_toEndOf="@id/ivIQuTingCover"
+            android:layout_marginStart="33px"
+            />
+
+        <TextView
+            android:id="@+id/ivIQuTingMediaName"
+            android:layout_width="316px"
+            android:layout_height="46px"
+            android:text="给我一首歌的时间—周杰伦"
+            android:maxLines="1"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            style="@style/CardLv3TextView"
+            app:layout_constraintTop_toBottomOf="@id/ivIQuTingCover"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="53px"
+            android:layout_marginTop="44px"
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

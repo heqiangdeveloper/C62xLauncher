@@ -39,16 +39,16 @@
         android:text="晴"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_weather_word"
-        app:layout_constraintStart_toEndOf="@id/ivCardWeatherType"
-        app:layout_constraintTop_toTopOf="@id/ivCardWeatherType" />
+        app:layout_constraintStart_toEndOf="@id/ivCardWeatherIcon"
+        app:layout_constraintTop_toTopOf="@id/ivCardWeatherIcon" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="272px"
         android:layout_height="90px"
         android:layout_marginStart="36px"
         android:background="@drawable/rect_round_12"
-        app:layout_constraintBottom_toBottomOf="@id/ivCardWeatherType"
-        app:layout_constraintStart_toEndOf="@id/ivCardWeatherType">
+        app:layout_constraintBottom_toBottomOf="@id/ivCardWeatherIcon"
+        app:layout_constraintStart_toEndOf="@id/ivCardWeatherIcon">
 
         <TextView
             android:id="@+id/tvCardWeatherAirValue"
@@ -112,12 +112,12 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
-        android:id="@+id/ivCardWeatherType"
+        android:id="@+id/ivCardWeatherIcon"
         android:layout_width="@dimen/card_icon_size_weather_sun"
         android:layout_height="@dimen/card_icon_size_weather_sun"
         android:layout_marginStart="239px"
         android:layout_marginTop="117px"
-        android:src="@drawable/card_weather_sunshine"
+        android:src="@drawable/weather_icon_sunny"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

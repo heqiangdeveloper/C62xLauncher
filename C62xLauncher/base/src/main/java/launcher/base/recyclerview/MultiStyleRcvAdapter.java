@@ -34,10 +34,10 @@ public abstract class MultiStyleRcvAdapter<T extends BaseEntity> extends Recycle
     public BaseViewHolder<T> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         BaseEntity baseEntity = mViewTypeMap.get(viewType);
         if (baseEntity == null) {
-            return createViewHolder(new View(mContext));
+            return createViewHolder(new View(mContext), viewType);
         }
         View view = mLayoutInflater.inflate(baseEntity.getItemLayoutId(), parent, false);
-        return createViewHolder(view);
+        return createViewHolder(view, viewType);
     }
 
     @Override
@@ -67,5 +67,6 @@ public abstract class MultiStyleRcvAdapter<T extends BaseEntity> extends Recycle
         }
     }
 
-    protected abstract BaseViewHolder<T> createViewHolder(View view);
+    protected abstract BaseViewHolder<T> createViewHolder(View view, int viewType);
+
 }

@@ -45,4 +45,9 @@ public class NaviCardView extends ConstraintLayout implements ICardStyleChange {
     public void collapse() {
 
     }
+
+    @Override
+    public boolean hideDefaultTitle() {
+        return false;
+    }
 }

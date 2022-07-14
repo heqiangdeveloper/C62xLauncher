@@ -1,11 +1,15 @@
 package launcher.base.utils.collection;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import java.util.Collection;
 import java.util.List;
 
 public class ListKit {
+    private static final String TAG = "ListKit";
+
     public static <T> void swipeElement(List<T> list, int p1, int p2) {
         if (list == null) {
             throw new NullPointerException("swipeElement error, param collection is null.");
@@ -15,6 +19,28 @@ public class ListKit {
         }
         T t1 = list.get(p1);
         T t2 = list.get(p2);
+        list.set(p1, t2);
+        list.set(p2, t1);
+    }
+    public static <T> void swipeElement(List<T> list, T t1, T t2) {
+        if (list == null) {
+            throw new NullPointerException("swipeElement error, param collection is null.");
+        }
+        if (t1 == null) {
+            throw new NullPointerException("swipeElement error, param t1 is null.");
+        }
+        if (t2 == null) {
+            throw new NullPointerException("swipeElement error, param t2 is null.");
+        }
+        if (t1 == t2) {
+            Log.w(TAG, "Nothing to do because t1 == t2.");
+            return;
+        }
+        int p1 = list.indexOf(t1);
+        int p2 = list.indexOf(t2);
+        if (IndexCheck.indexOutOfArray(list, p1) || IndexCheck.indexOutOfArray(list, p2)) {
+            throw new ArrayIndexOutOfBoundsException("swipeElement error, p1: " + p1 + " , p2:" + p2);
+        }
         list.set(p1, t2);
         list.set(p2, t1);
     }
@@ -61,5 +87,42 @@ public class ListKit {
             }
         }
         return true;
+    }
+
+    public static <T> T findNext(T item, List<T> list) {
+        if (list == null) {
+            throw new NullPointerException("findNext error, param list is null.");
+        }
+        if (item == null) {
+            throw new NullPointerException("findNext error, param item is null.");
+        }
+        boolean foundNext = false;
+        for (T t : list) {
+            if (!foundNext) {
+                if (t == item) {
+                    foundNext = true;
+                }
+            } else {
+                return t;
+            }
+        }
+        return null;
+    }
+
+    public static <T> T findPrev(T item, List<T> list) {
+        if (list == null) {
+            throw new NullPointerException("findPrev error, param list is null.");
+        }
+        if (item == null) {
+            throw new NullPointerException("findPrev error, param item is null.");
+        }
+        T prev = null;
+        for (T t : list) {
+            if (t == item) {
+                return prev;
+            }
+            prev = t;
+        }
+        return null;
     }
 }
