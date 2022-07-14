@@ -2,12 +2,12 @@ package com.common.library.frame.config;
 
 import android.content.Context;
 
+import androidx.room.RoomDatabase;
+
 import com.common.library.frame.di.module.ConfigModule;
 import com.common.library.frame.http.InterceptorConfig;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import androidx.room.RoomDatabase;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -15,17 +15,14 @@ import retrofit2.Retrofit;
 
 /**
  * 为框架提供一些配置参数入口
- *
- *
- * @see <a href="https://github.com/bumptech/glide/blob/f7d860412f061e059aa84a42f2563a01ac8c303b/library/src/main/java/com/bumptech/glide/module/AppliesOptions.java">Glide</a>
  */
 public interface AppliesOptions {
 
     /**
      * 为框架提供一些配置参数入口
      *
-     * @param context
-     * @param builder
+     * @param context context
+     * @param builder builder
      */
     void applyOptions(Context context, ConfigModule.Builder builder);
 

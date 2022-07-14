@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/right_car_vioce">
+
+    <ImageView 
+        android:id="@+id/imgSoundLineH"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:src="@drawable/audio_heng_line" />
+
+    <ImageView
+        android:id="@+id/imgSoundLineV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:src="@drawable/audio_shu_line" />
+
+    <ImageView
+        android:id="@+id/imgSouncPoint22"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:src="@drawable/audio_point" />
+
+    <ImageView
+        android:id="@+id/imgSouncPoint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/shengchang" />
+</RelativeLayout>

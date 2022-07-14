@@ -1,11 +1,13 @@
 package com.chinatsp.vehicle.settings.fragment.lighting
 
 import android.os.Bundle
+import android.view.View
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.lamp.AmbientLightingManager
 import com.chinatsp.settinglib.optios.SwitchNode
+import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.LightingAtmosphereFragmentBinding
 import com.chinatsp.vehicle.settings.vm.light.AmbientLightingViewModel
@@ -25,11 +27,18 @@ class AmbientLightingFragment :
         return R.layout.lighting_atmosphere_fragment
     }
 
+    private val modeFragmentSerial: String
+        get() = "AmbientLightingMode"
+
+    private val settingFragmentSerial: String
+        get() = "AmbientLightingSetting"
+
     override fun initData(savedInstanceState: Bundle?) {
         setCheckedChangeListener()
         initSwitchOption()
         addSwitchLiveDataListener()
         setSwitchListener()
+        initRouteListener()
     }
 
     private fun initSwitchOption() {
@@ -86,22 +95,15 @@ class AmbientLightingFragment :
 
     private fun setCheckedChangeListener() {
         binding.lightingInstall.setOnClickListener {
-            val fragment = AmbientLightingSettingDialogFragment()
-            activity?.supportFragmentManager?.let {
-                fragment.show(it, fragment::javaClass.name)
-            }
+            showSettingFragment()
         }
         binding.lightingIntelligentModel.setOnClickListener {
-            val fragment = AmbientLightingModelDialogFragment()
-            activity?.supportFragmentManager?.let {
-                fragment.widthRatio = 0.68f
-                fragment.show(it, fragment::javaClass.name)
-            }
+            showModeFragment()
         }
         binding.picker.setOnColorPickerChangeListener(object :
             ColorPickerView.OnColorPickerChangeListener {
             override fun onColorChanged(picker: ColorPickerView?, color: Int) {
-                binding.picker.indicatorColor = color
+                binding.picker.indicatorColor =color
             }
 
             override fun onStartTrackingTouch(picker: ColorPickerView?) {
@@ -115,7 +117,62 @@ class AmbientLightingFragment :
         }
 
         )
+        binding.brightnessLayout.setOnClickListener {
+            binding.lightingTitleLayout.visibility = View.GONE
+            binding.brightnessAdjust.visibility = View.VISIBLE
+        }
+        binding.closeIv.setOnClickListener {
+            binding.lightingTitleLayout.visibility = View.VISIBLE
+            binding.brightnessAdjust.visibility = View.GONE
+        }
+        binding.colorLayout.setOnClickListener {
+            binding.lightingTitleLayout.visibility = View.GONE
+            binding.pickerLayout.visibility = View.VISIBLE
+        }
+        binding.pickerCloseIv.setOnClickListener {
+            binding.lightingTitleLayout.visibility = View.VISIBLE
+            binding.pickerLayout.visibility = View.GONE
+        }
+    }
+
+    private fun showModeFragment() {
+        val fragment = AmbientLightingModelDialogFragment()
+        activity?.supportFragmentManager?.let {
+            fragment.show(it, fragment::javaClass.name)
+        }
+        cleanPopupSerial(modeFragmentSerial)
+    }
+
+    private fun showSettingFragment() {
+        val fragment = AmbientLightingSettingDialogFragment()
+        activity?.supportFragmentManager?.let {
+            fragment.show(it, fragment::javaClass.name)
+        }
+        cleanPopupSerial(settingFragmentSerial)
+    }
+
+    private fun cleanPopupSerial(serial: String) {
+        if (activity is IRoute) {
+            val iroute = activity as IRoute
+            iroute.cleanPopupLiveDate(serial)
+        }
+    }
+
+    private fun initRouteListener() {
+        if (activity is IRoute) {
+            val iroute = activity as IRoute
+            val liveData = iroute.obtainPopupLiveData()
+            liveData.observe(this) {
+                if (it.equals(modeFragmentSerial)) {
+                    showModeFragment()
+                } else if (it.equals(settingFragmentSerial)) {
+                    showSettingFragment()
+                }
+            }
+        }
     }
 
 
 }
+
+

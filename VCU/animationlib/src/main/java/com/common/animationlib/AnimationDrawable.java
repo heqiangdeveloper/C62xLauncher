@@ -48,9 +48,9 @@ public class AnimationDrawable {
      */
     public void setAnimation(ImageView imageview, List<Integer> resourceIdList) {
         mImageView = imageview;
-        if(mResourceIdList==null){
+        if (mResourceIdList == null) {
             mResourceIdList = new ArrayList<Integer>();
-        }else{
+        } else {
             mResourceIdList.clear();
         }
         mResourceIdList.addAll(resourceIdList);
@@ -61,9 +61,9 @@ public class AnimationDrawable {
      */
     public void setAnimation(Context context, int resourceId, ImageView imageview) {
         this.mImageView = imageview;
-        if(mResourceIdList==null){
+        if (mResourceIdList == null) {
             mResourceIdList = new ArrayList<Integer>();
-        }else{
+        } else {
             mResourceIdList.clear();
         }
 
@@ -147,7 +147,9 @@ public class AnimationDrawable {
         mState = STATE_RUNNING;
         mTimeTask = new AnimTimerTask();
         mTimer.schedule(mTimeTask, 0, duration);
-        lisenter.startAnimation();
+        if (lisenter != null) {
+            lisenter.startAnimation();
+        }
     }
 
     /**
@@ -206,7 +208,7 @@ public class AnimationDrawable {
                 case MSG_START: {
                     if (mFrameIndex >= 0 && mFrameIndex < mResourceIdList.size() && mState == STATE_RUNNING) {
                         //这里不能使用image.setImageResource 因为源码中也是创建了bitmap 所以这里我们自己创建
-                        Bitmap bitmap=readBitMap(mImageView.getContext(),mResourceIdList.get(mFrameIndex));
+                        Bitmap bitmap = readBitMap(mImageView.getContext(), mResourceIdList.get(mFrameIndex));
                         mImageView.setImageBitmap(bitmap);
                         mFrameIndex++;
                     }
@@ -219,7 +221,9 @@ public class AnimationDrawable {
                         mTimeTask.cancel();
                         mState = STATE_STOP;
                         mTimeTask = null;
-                        lisenter.endAnimation();
+                        if (lisenter != null) {
+                            lisenter.endAnimation();
+                        }
                         if (isLooping) {
                             mImageView.setImageResource(0);
                         }

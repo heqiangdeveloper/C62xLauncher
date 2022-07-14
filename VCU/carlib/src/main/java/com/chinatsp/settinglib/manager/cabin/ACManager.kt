@@ -108,33 +108,6 @@ class ACManager private constructor() : BaseManager(), IAcManager {
         }
     }
 
-
-    override fun onHandleSignal(
-        property: CarPropertyValue<*>,
-        origin: Origin
-    ): Boolean {
-        when (origin) {
-            Origin.CABIN -> {
-                onCabinPropertyChanged(property)
-            }
-            Origin.HVAC -> {
-                onHvacPropertyChanged(property)
-            }
-            else -> {}
-        }
-        return true
-    }
-
-    override fun isCareSignal(signal: Int, origin: Origin): Boolean {
-        val signals = getOriginSignal(origin)
-        return signals.contains(signal)
-    }
-
-    override fun getOriginSignal(origin: Origin): Set<Int> {
-        return careSerials[origin] ?: HashSet()
-    }
-
-
     override fun doGetRadioOption(node: RadioNode): Int {
         return when (node) {
             RadioNode.AC_COMFORT -> {
@@ -242,18 +215,15 @@ class ACManager private constructor() : BaseManager(), IAcManager {
     override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             //空调自干燥
-            cabinAridSignal -> {
-//                onSwitchOptionChanged(SwitchNode.AC_AUTO_ARID, property.value)
+            SwitchNode.AC_AUTO_ARID.get.signal -> {
                 onSwitchChanged(SwitchNode.AC_AUTO_ARID, aridStatus, property)
             }
             //预通风功能
-            cabinWindSignal -> {
-//                onSwitchOptionChanged(SwitchNode.AC_ADVANCE_WIND, property.value)
+            SwitchNode.AC_ADVANCE_WIND.get.signal -> {
                 onSwitchChanged(SwitchNode.AC_ADVANCE_WIND, windStatus, property)
             }
             //自动空调舒适性
-            CarCabinManager.ID_ACCMFTSTSDISP -> {
-//                onRadioOptionChanged(RadioNode.AC_COMFORT, property.value)
+            RadioNode.AC_COMFORT.get.signal -> {
                 onRadioChanged(RadioNode.AC_COMFORT, comfortOption, property)
             }
             else -> {}

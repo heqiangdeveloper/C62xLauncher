@@ -1,6 +1,7 @@
 package com.chinatsp.vehicle.settings.fragment.drive
 
 import android.os.Bundle
+import android.view.View
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.ISwitchManager
@@ -55,6 +56,7 @@ class DriveLightingFragment : BaseFragment<CombineViewModel, DriveLightingFragme
     }
 
     private fun doUpdateSwitch(swb: SwitchButton, status: Boolean, immediately: Boolean = false) {
+        dynamicEffect(status)
         if (!immediately) {
             swb.setCheckedNoEvent(status)
         } else {
@@ -64,6 +66,7 @@ class DriveLightingFragment : BaseFragment<CombineViewModel, DriveLightingFragme
 
     private fun setSwitchListener() {
         binding.adasLightHmaSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            dynamicEffect(isChecked)
             doUpdateSwitchOption(SwitchNode.ADAS_HMA, buttonView, isChecked)
         }
     }
@@ -72,6 +75,14 @@ class DriveLightingFragment : BaseFragment<CombineViewModel, DriveLightingFragme
         val result = manager.doSetSwitchOption(node, status)
         if (!result && button is SwitchButton) {
             button.setCheckedImmediatelyNoEvent(!status)
+        }
+    }
+
+    private fun dynamicEffect(status: Boolean) {
+        if (status) {
+            binding.carLight.visibility = View.VISIBLE
+        } else {
+            binding.carLight.visibility = View.GONE
         }
     }
 }

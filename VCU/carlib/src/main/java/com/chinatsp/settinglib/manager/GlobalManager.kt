@@ -26,9 +26,25 @@ class GlobalManager private constructor() : BaseManager() {
         }
     }
 
-    val tabSerial: AtomicInteger by lazy {
+    private val tabSerial: AtomicInteger by lazy {
         AtomicInteger(0)
     }
+
+//    val level1: AtomicInteger by lazy {
+//        AtomicInteger(Constant.INVALID)
+//    }
+//
+//    val level2: AtomicInteger by lazy {
+//        AtomicInteger(Constant.INVALID)
+//    }
+//
+//    val level3: AtomicInteger by lazy {
+//        AtomicInteger(Constant.INVALID)
+//    }
+
+    fun getTabSerial() = tabSerial.get()
+
+    fun setTabSerial(serial: Int) = tabSerial.set(serial)
 
     val managers: List<BaseManager> by lazy {
         ArrayList<BaseManager>().apply {
@@ -43,12 +59,12 @@ class GlobalManager private constructor() : BaseManager() {
         get() = EnumMap(Origin::class.java)
 
     override fun onDispatchSignal(property: CarPropertyValue<*>, origin: Origin): Boolean {
-        if (property.status == CarPropertyValue.STATUS_AVAILABLE) {
-            managers.forEach {
-                it.onDispatchSignal(property, origin)
-            }
-            return true
+//        if (property.status == CarPropertyValue.STATUS_AVAILABLE) {
+        managers.forEach {
+            it.onDispatchSignal(property, origin)
         }
+        return true
+//        }
         return false
     }
 

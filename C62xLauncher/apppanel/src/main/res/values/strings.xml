@@ -8,4 +8,7 @@
     <string name="add_dialog_positive">确认</string>
     <string name="add_dialog_negative">取消</string>
     <string name="add_dialog_title">添加（%s）</string>
+    <string name="appmanagement_name">应用管理</string>
+    <string name="clear_all">一键清除</string>
+    <string name="no_recent_apps">最近无运行应用</string>
 </resources>

@@ -209,14 +209,11 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
      * 注册状态监听
      */
     protected void registerLoadingEvent() {
-        mViewModel.getLoadingEvent().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(@Nullable Boolean isLoading) {
-                if (isLoading != null && isLoading) {
-                    showLoading();
-                } else {
-                    hideLoading();
-                }
+        mViewModel.getLoadingEvent().observe(getViewLifecycleOwner(), (Observer<Boolean>) isLoading -> {
+            if (isLoading != null && isLoading) {
+                showLoading();
+            } else {
+                hideLoading();
             }
         });
     }

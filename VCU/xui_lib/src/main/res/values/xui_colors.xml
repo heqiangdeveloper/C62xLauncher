@@ -9,6 +9,7 @@
 
     <!-- ShadowButton -->
     <color name="default_shadow_button_color_pressed">#9C000000</color>
+
     <color name="default_shadow_button_ripple_color">#FFEEEEEE</color>
     <!-- GuideCaseView -->
     <color name="default_guide_case_view_background_color">#801B2939</color>
@@ -47,6 +48,7 @@
     <color name="md_divider_white">#10FFFFFF</color>
 
     <color name="md_material_blue_600">#2196F3</color>
+    <color name="md_material_blue">#00A9FF</color>
     <color name="md_material_blue_800">#1565C0</color>
 
     <color name="cookie_bar_default_bg_color">#323232</color>
@@ -183,5 +185,9 @@
     <color name="xui_config_color_edittext_stroke">@color/xui_config_color_control_normal</color>
     <!--不可输入的填充颜色-->
     <color name="xui_config_color_edittext_disable">#EDF2F7</color>
-
+    <!--SmoothLineChartView-->
+    <color name="smooth_bg_color_start">#00A9FF</color>
+    <color name="smooth_bg_color_end">#020307</color>
+    <color name="smooth_bg_color_node">#478BB3</color>
+    <color name="smooth_bg_color_node_outside">#232939</color>
 </resources>

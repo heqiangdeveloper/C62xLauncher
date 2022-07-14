@@ -1,0 +1,51 @@
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <item
+        android:drawable="@drawable/car_door_00"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_door_01"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_door_02"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_door_03"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_door_04"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_door_05"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_door_06"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_door_07"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_door_08"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_door_09"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_door_10"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_door_11"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_door_12"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_door_13"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_door_14"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_door_16"
+        android:duration="50" />
+</animation-list>

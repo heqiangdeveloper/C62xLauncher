@@ -1,14 +1,22 @@
 package com.chinatsp.apppanel.adapter;
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInstaller;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Debug;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -22,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anarchy.classifyview.event.ChangeTitleEvent;
@@ -30,17 +39,22 @@ import com.anarchy.classifyview.simple.SimpleAdapter;
 import com.anarchy.classifyview.simple.widget.InsertAbleGridView;
 import com.anarchy.classifyview.util.L;
 import com.anarchy.classifyview.util.MyConfigs;
+import com.chinatsp.apppanel.AppConfigs.AppLists;
 import com.chinatsp.apppanel.R;
 import com.chinatsp.apppanel.bean.InfoBean;
 import com.chinatsp.apppanel.bean.LocationBean;
 import com.chinatsp.apppanel.db.MyAppDB;
+import com.chinatsp.apppanel.decoration.AppManageDecoration;
+import com.chinatsp.apppanel.event.DeletedCallback;
 import com.chinatsp.apppanel.event.SelectedCallback;
+import com.chinatsp.apppanel.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -62,6 +76,8 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
     private String title;
     private boolean showDelete;
     private int selectSize = 0;
+    private List<HashMap<String,Object>> appInfos = new ArrayList<HashMap<String,Object>>();
+    private final int MAX_RECENT_APPS = 20;
 
     public MyAppInfoAdapter(Context context, List<List<LocationBean>> mData) {
         super(mData);
@@ -116,25 +132,26 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
                 }
                 LocationBean lb = infos.get(i);
                 holder.deleteIv.setTag(lb.getCanuninstalled());
+                //这个地方position不可靠，在MyAppFragment getOriginalData保存index
 //                locationBean.setParentIndex(position);
 //                locationBean.setChildIndex(i);
-                //infos.get(i).setTitle(titleStr);
+                  //infos.get(i).setTitle(titleStr);
 //                locationBean.setPackageName(infos.get(i).getPackageName());
 //
-                Drawable drawable;
-                if(null == lb.getImgDrawable()){
-                    byte[] b = lb.getImgByte();
-                    drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length));
-                }else {
-                    drawable = lb.getImgDrawable();
-                }
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-                Canvas canvas = new Canvas(bitmap);
-                drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-                drawable.draw(canvas);
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                lb.setImgByte(baos.toByteArray());
+//                Drawable drawable;
+//                if(null == lb.getImgDrawable()){
+//                    byte[] b = lb.getImgByte();
+//                    drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length));
+//                }else {
+//                    drawable = lb.getImgDrawable();
+//                }
+//                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//                Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+//                Canvas canvas = new Canvas(bitmap);
+//                drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+//                drawable.draw(canvas);
+//                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+//                lb.setImgByte(baos.toByteArray());
 //                locationBean.setName(infos.get(i).getName());
 //                locationBean.setAddBtn(0);
 //                locationBean.setStatus(0);
@@ -167,24 +184,25 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             }
 
             locationBean = mData.get(position).get(0);
+            //这个地方position不可靠，在MyAppFragment getOriginalData保存index
 //            locationBean.setParentIndex(position);
 //            locationBean.setChildIndex(-1);
             locationBean.setTitle("");
 //            locationBean.setPackageName(mData.get(position).get(0).getPackageName());
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            Drawable drawable;
-            if(null == locationBean.getImgDrawable()){
-                byte[] b = locationBean.getImgByte();
-                drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length));
-            }else {
-                drawable = mData.get(position).get(0).getImgDrawable();
-            }
-            Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(bitmap);
-            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-            drawable.draw(canvas);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-            locationBean.setImgByte(baos.toByteArray());
+//            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//            Drawable drawable;
+//            if(null == locationBean.getImgDrawable()){
+//                byte[] b = locationBean.getImgByte();
+//                drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length));
+//            }else {
+//                drawable = mData.get(position).get(0).getImgDrawable();
+//            }
+//            Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+//            Canvas canvas = new Canvas(bitmap);
+//            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+//            drawable.draw(canvas);
+//            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+//            locationBean.setImgByte(baos.toByteArray());
 //            locationBean.setName(mData.get(position).get(0).getName());
             locationBean.setAddBtn(0);
             locationBean.setStatus(0);
@@ -243,8 +261,10 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         super.onBindSubViewHolder(holder, mainPosition, subPosition);
         if(subPosition < mData.get(mainPosition).size()){
             if(mData.get(mainPosition).get(subPosition) == null){
+                holder.tvName.setVisibility(View.GONE);
                 holder.tvName.setText(context.getString(R.string.add));
             }else {
+                holder.tvName.setVisibility(View.VISIBLE);
                 holder.tvName.setText(mData.get(mainPosition).get(subPosition).getName());
                 Log.d("hqtest","onBindSubViewHolder package is: " + mData.get(mainPosition).get(subPosition).getPackageName() + ",parent = " + mainPosition + ",child = " + subPosition);
             }
@@ -257,7 +277,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         ImageView iconIv = (ImageView) view.findViewById(R.id.icon_iv);
         if(subPosition < mData.get(mainPosition).size()){
             if(mData.get(mainPosition).get(subPosition) == null){
-                iconIv.setImageResource(R.drawable.ic_add_black_24dp);
+                iconIv.setImageResource(R.drawable.add_app_icon);
             }else{
                 if(null == mData.get(mainPosition).get(subPosition).getImgDrawable()){
                     byte[] b = mData.get(mainPosition).get(subPosition).getImgByte();
@@ -277,20 +297,8 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         for(LocationBean locationBean : infos){
             if(locationBean != null){
                 locationBean.setTitle(event.getTitle());
+                db.updateTitle(locationBean);
             }
-        }
-    }
-
-    /*
-     *打开应用
-     * @param packageName包名
-     */
-    private void launchApp(String packageName){
-        try {
-            Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
-            context.startActivity(intent);
-        }catch (Exception e){
-            Toast.makeText(context,"该应用还未下载",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -305,10 +313,14 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             if(isTimeEnabled()){//防抖处理
                 showAddDialog(parentIndex);
             }
+        }else if(tv.getText().toString().trim().equals(context.getString(R.string.appmanagement_name))){
+            if(isTimeEnabled()) {//防抖处理
+                showAppManagementDialog();
+            }
         }else {
             if(iv.getVisibility() == View.VISIBLE){//如果删除按钮显示了，执行删除应用逻辑
                 hideDeleteIcon((RecyclerView) relativeLayout.getParent());
-                showDeleteDialog(tv.getText().toString());
+                showDeleteDialog(tv.getText().toString(),mData.get(parentIndex).get(0).getPackageName());
             }else {
                 hideDeleteIcon((RecyclerView) relativeLayout.getParent());
                 String packageName = "";
@@ -321,7 +333,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
                         return;
                     }
                 }
-                launchApp(packageName);
+                Utils.launchApp(context,packageName);
             }
         }
     }
@@ -349,6 +361,10 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         });
         rv.setAdapter(addAppAdapter);
         rv.setLayoutManager(new GridLayoutManager(context, 3));
+
+        //修改重命名时调整sub中个数为0或1时，显示了删除按钮
+        editor.putBoolean(MyConfigs.SHOWDELETE,false);
+        editor.commit();
 
         positiveTv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -582,6 +598,8 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
                     }
                     mData.get(newIndex).add(null);//新增添加按钮
                     getSubAdapter().initData(newIndex,mData.get(newIndex));//更新sub
+                    editor.putInt(MyConfigs.PARENTINDEX,newIndex);
+                    editor.commit();
                 }
             }
         });
@@ -592,6 +610,168 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             }
         });
         dialog.show();
+    }
+
+    private void showAppManagementDialog(){
+        Dialog dialog = new Dialog(context, com.anarchy.classifyview.R.style.mydialog);
+        dialog.setContentView(R.layout.appmanage_dialog_layout);
+        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+        dialog.getWindow().setGravity(Gravity.CENTER);
+        dialog.getWindow().setAttributes(params);
+        TextView clearTv = (TextView) dialog.getWindow().findViewById(R.id.clear_tv);
+        ImageView closeIv = (ImageView) dialog.getWindow().findViewById(R.id.close_iv);
+        RecyclerView rv = (RecyclerView) dialog.getWindow().findViewById(R.id.appmanage_recyclerview);
+        TextView warnTv = (TextView) dialog.getWindow().findViewById(R.id.warn_tv);
+        getRecentApps(appInfos,MAX_RECENT_APPS);
+        if(appInfos.size() == 0){
+            warnTv.setVisibility(View.VISIBLE);
+            clearTv.setVisibility(View.GONE);
+        }else {
+            warnTv.setVisibility(View.GONE);
+            clearTv.setVisibility(View.VISIBLE);
+        }
+        AppManageAdapter appManageAdapter = new AppManageAdapter(context, appInfos, new DeletedCallback() {
+            @Override
+            public void onDeleted() {
+                dialog.dismiss();
+            }
+        });
+        rv.setAdapter(appManageAdapter);
+        rv.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,false));
+        rv.addItemDecoration(new AppManageDecoration(100,0));
+        clearTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                long size = getMemorySize() * 1024;//单位byte
+                Toast.makeText(context, "已释放 " + Utils.byte2Format(size) + "内存", Toast.LENGTH_SHORT).show();
+                List<HashMap<String,Object>> infos = appManageAdapter.getInfos();
+                for(int i = 0; i < infos.size(); i++){
+                    Utils.forceStopPackage(context,(String) infos.get(i).get("packageName"));
+                }
+            }
+        });
+        closeIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setCancelable(true);
+        dialog.show();
+    }
+
+    private int getMemorySize() {
+        int memSize = 0;
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        // 通过调用ActivityManager的getRunningAppProcesses()方法获得系统里所有正在运行的进程
+        List<ActivityManager.RunningAppProcessInfo> appProcessList = am.getRunningAppProcesses();
+        //去掉不会显示的应用
+        for(int i = 0; i < appProcessList.size(); i++){
+            if(appProcessList.get(i) != null &&
+                    AppLists.notInAppManageListApps.contains(appProcessList.get(i).processName)){
+                appProcessList.remove(i);
+                i--;
+            }
+        }
+        for (ActivityManager.RunningAppProcessInfo appProcessInfo : appProcessList) {
+            // 进程ID号
+            int pid = appProcessInfo.pid;
+            // 用户ID 类似于Linux的权限不同，ID也就不同 比如 root等
+            int uid = appProcessInfo.uid;
+            // 进程名，默认是包名或者由属性android：process=""指定
+            String processName = appProcessInfo.processName;
+            // 获得该进程占用的内存
+            int[] myMempid = new int[]{pid};
+            // 此MemoryInfo位于android.os.Debug.MemoryInfo包中，用来统计进程的内存信息
+            Debug.MemoryInfo[] memoryInfo = am.getProcessMemoryInfo(myMempid);
+            // 获取进程占内存用信息 kb单位
+            memSize = memoryInfo[0].dalvikPrivateDirty;
+
+            Log.i("hqinfo", "processName: " + processName + "  pid: " + pid
+                    + " uid:" + uid + " memorySize is -->" + memSize + "kb");
+        }
+        return memSize;
+    }
+
+    /**
+     * 核心方法，加载最近启动的应用程序 注意：这里我们取出的最近任务为 MAX_RECENT_TASKS +
+     * 1个，因为有可能最近任务中包好Launcher2。 这样可以保证我们展示出来的 最近任务 为 MAX_RECENT_TASKS 个
+     * 通过以下步骤，可以获得近期任务列表，并将其存放在了appInfos这个list中，接下来就是展示这个list的工作了。
+     */
+    public void getRecentApps(List<HashMap<String, Object>> appInfos, int appNumber) {
+        int MAX_RECENT_TASKS = appNumber; // allow for some discards
+        int repeatCount = appNumber;// 保证上面两个值相等,设定存放的程序个数
+
+        /* 每次加载必须清空list中的内容 */
+        appInfos.removeAll(appInfos);
+
+        // 得到包管理器和activity管理器
+        final PackageManager pm = context.getPackageManager();
+        final ActivityManager am = (ActivityManager) context
+                .getSystemService(Context.ACTIVITY_SERVICE);
+
+        // 从ActivityManager中取出用户最近launch过的 MAX_RECENT_TASKS + 1 个，以从早到晚的时间排序，
+        // 注意这个 0x0002,它的值在launcher中是用ActivityManager.RECENT_IGNORE_UNAVAILABLE
+        // 但是这是一个隐藏域，因此我把它的值直接拷贝到这里
+        final List<ActivityManager.RecentTaskInfo> recentTasks = am
+                .getRecentTasks(MAX_RECENT_TASKS + 1, 0x0002);
+
+        List<ActivityManager.AppTask> appTasks = am.getAppTasks();
+        List<ActivityManager.RunningTaskInfo> runningTaskInfoList = am.getRunningTasks(MAX_RECENT_TASKS + 1);
+
+        // 这个activity的信息是我们的launcher
+        ActivityInfo homeInfo = new Intent(Intent.ACTION_MAIN).addCategory(
+                Intent.CATEGORY_HOME).resolveActivityInfo(pm, 0);
+        //去掉不会显示的应用
+        for(int i = 0; i < recentTasks.size(); i++){
+            if(recentTasks.get(i) != null &&
+                    AppLists.notInAppManageListApps.contains(recentTasks.get(i).baseIntent.getComponent().getPackageName())){
+                recentTasks.remove(i);
+                i--;
+            }
+        }
+        int numTasks = recentTasks.size();
+        for (int i = 0; i < numTasks && (i < MAX_RECENT_TASKS); i++) {
+            HashMap<String, Object> singleAppInfo = new HashMap<String, Object>();// 当个启动过的应用程序的信息
+            final ActivityManager.RecentTaskInfo info = recentTasks.get(i);
+
+            Intent intent = new Intent(info.baseIntent);
+            if (info.origActivity != null) {
+                intent.setComponent(info.origActivity);
+            }
+            /**
+             * 如果找到是launcher，直接continue，后面的appInfos.add操作就不会发生了
+             * info.id == -1表示未打开过
+             */
+            if (homeInfo != null) {
+                if ((homeInfo.packageName.equals(intent.getComponent().getPackageName())
+                        && homeInfo.name.equals(intent.getComponent().getClassName())) ||
+                        info.id == -1) {
+                    MAX_RECENT_TASKS = MAX_RECENT_TASKS + 1;
+                    continue;
+                }
+            }
+            // 设置intent的启动方式为 创建新task()【并不一定会创建】
+            intent.setFlags((intent.getFlags() & ~Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED)
+                    | Intent.FLAG_ACTIVITY_NEW_TASK);
+            // 获取指定应用程序activity的信息(按我的理解是：某一个应用程序的最后一个在前台出现过的activity。)
+            final ResolveInfo resolveInfo = pm.resolveActivity(intent, 0);
+            if (resolveInfo != null) {
+                final ActivityInfo activityInfo = resolveInfo.activityInfo;
+                final String title = activityInfo.loadLabel(pm).toString();
+                Drawable icon = activityInfo.loadIcon(pm);
+
+                if (title != null && title.length() > 0 && icon != null) {
+                    singleAppInfo.put("title", title);
+                    singleAppInfo.put("icon", icon);
+                    singleAppInfo.put("tag", intent);
+                    singleAppInfo.put("packageName", activityInfo.packageName);
+                    appInfos.add(singleAppInfo);
+                }
+            }
+        }
+        MAX_RECENT_TASKS = repeatCount;
     }
 
     private static long lastTimeMillis;
@@ -628,7 +808,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         return addAppLists;
     }
 
-    private void showDeleteDialog(String name){
+    private void showDeleteDialog(String name,String packageName){
         Dialog dialog = new Dialog(context, com.anarchy.classifyview.R.style.mydialog);
         dialog.setContentView(R.layout.uninstall_dialog);
         WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
@@ -641,6 +821,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         positiveTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                uninstall(packageName);
                 dialog.dismiss();
             }
         });
@@ -651,6 +832,16 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             }
         });
         dialog.show();
+    }
+
+    // 卸载APK
+    private void uninstall(String packageName) {
+        Intent intent = new Intent();
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent sender = PendingIntent.getActivity(context, 0, intent, 0);
+        PackageInstaller mPackageInstaller = context.getPackageManager().getPackageInstaller();
+        //权限已添加在app manifest中
+        mPackageInstaller.uninstall(packageName, sender.getIntentSender());
     }
 
     private void hideDeleteIcon(RecyclerView recyclerView){

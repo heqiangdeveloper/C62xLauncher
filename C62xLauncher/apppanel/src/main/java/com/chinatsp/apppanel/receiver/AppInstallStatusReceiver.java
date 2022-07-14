@@ -48,20 +48,20 @@ public class AppInstallStatusReceiver extends BroadcastReceiver {
                             Drawable drawable = info.activityInfo.loadIcon(context.getPackageManager());
 
                             locationBean.setImgDrawable(drawable);
-                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                            Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-                            Canvas canvas = new Canvas(bitmap);
-                            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-                            drawable.draw(canvas);
-                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                            locationBean.setImgByte(baos.toByteArray());
+//                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//                            Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+//                            Canvas canvas = new Canvas(bitmap);
+//                            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+//                            drawable.draw(canvas);
+//                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+//                            locationBean.setImgByte(baos.toByteArray());
 
                             locationBean.setTitle("");
                             locationBean.setAddBtn(0);
                             locationBean.setStatus(0);
                             locationBean.setPriority(0);
                             locationBean.setInstalled(1);
-                            locationBean.setCanuninstalled(AppLists.packageUninstallStatus(info.activityInfo.packageName));
+                            locationBean.setCanuninstalled(AppLists.isSystemApplication(context,info.activityInfo.packageName) ? 0:1);
                             break A;
                         }
                     }

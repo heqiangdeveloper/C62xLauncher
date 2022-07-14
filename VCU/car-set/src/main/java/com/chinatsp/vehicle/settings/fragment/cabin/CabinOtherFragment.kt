@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.widget.CompoundButton
 import android.widget.TextView
 import androidx.lifecycle.LiveData
-import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.cabin.OtherManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CabinOtherFragmentBinding
-import com.chinatsp.vehicle.settings.fragment.cabin.dialog.CopilotGuestsDialogFragment
+import com.chinatsp.vehicle.settings.fragment.cabin.dialog.NoteUsersDialogFragment
+import com.chinatsp.vehicle.settings.fragment.cabin.dialog.TrailerRemindDialogFragment
 import com.chinatsp.vehicle.settings.vm.cabin.OtherViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
@@ -18,7 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBinding>() {
 
-    private val manager: ISwitchManager
+    private val manager: OtherManager
         get() = OtherManager.instance
 
     override fun getLayoutId(): Int {
@@ -51,17 +51,17 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
     private fun addSwitchLiveDataListener() {
         viewModel.batteryOptimize.let { ld ->
             ld.observe(this) {
-                updateSwitchTextHint(binding.otherBatteryOptimizeSwitch, ld)
+                doUpdateSwitch(SwitchNode.DRIVE_BATTERY_OPTIMIZE, it)
             }
         }
         viewModel.wirelessCharging.let { ld ->
             ld.observe(this) {
-                updateSwitchTextHint(binding.otherWirelessChargingSwitch, ld)
+                doUpdateSwitch(SwitchNode.DRIVE_WIRELESS_CHARGING, it)
             }
         }
         viewModel.wirelessChargingLamp.let { ld ->
             ld.observe(this) {
-                updateSwitchTextHint(binding.otherWirelessChargingLampSwitch, ld)
+                doUpdateSwitch(SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP, it)
             }
         }
 
@@ -113,7 +113,13 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
 
     private fun setCheckedChangeListener() {
         binding.cabinOtherTrailerRemind.setOnClickListener {
-            val fragment = CopilotGuestsDialogFragment()
+            val fragment = TrailerRemindDialogFragment()
+            activity?.supportFragmentManager?.let {
+                fragment.show(it, fragment.javaClass.simpleName)
+            }
+        }
+        binding.notesUsers.setOnClickListener {
+            val fragment = NoteUsersDialogFragment()
             activity?.supportFragmentManager?.let {
                 fragment.show(it, fragment.javaClass.simpleName)
             }

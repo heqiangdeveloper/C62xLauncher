@@ -25,9 +25,6 @@ import dagger.hilt.components.SingletonComponent;
 import okhttp3.HttpUrl;
 
 
-/**
- *
- */
 @InstallIn(SingletonComponent.class)
 @Module
 public class ConfigModule {

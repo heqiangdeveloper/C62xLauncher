@@ -17,13 +17,13 @@ enum class Cabin(vararg signalVararg: Int) {
 //    HELM(1, 2, 4, 5),
 //    CHAIR(4, 5, 8, 9),
     AIR_CONDITIONER(
-        /**空调自干燥*/
-        CarCabinManager.ID_ACSELFSTSDISP,
-        /**预通风功能*/
-        CarCabinManager.ID_ACPREVENTNDISP,
-        /**空调舒适性状态显示*/
-        CarCabinManager.ID_ACCMFTSTSDISP
-
+//        /**空调自干燥*/
+//        CarCabinManager.ID_ACSELFSTSDISP,
+//        /**预通风功能*/
+//        CarCabinManager.ID_ACPREVENTNDISP,
+//        /**空调舒适性状态显示*/
+//        CarCabinManager.ID_ACCMFTSTSDISP
+//
 //        CarCabinManager.ID_AC_DIS_AC_MAX,
 //        CarCabinManager.ID_AC_DIS_API_INSIDE,
 //        CarCabinManager.ID_AC_DIS_INSIDE_PM2_5_DATA,

@@ -21,6 +21,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>() {
     private var animationOpenLock: AnimationDrawable = AnimationDrawable()
     private var animationCloseLock: AnimationDrawable = AnimationDrawable()
+    private var animationFlameout: AnimationDrawable = AnimationDrawable()
+    private var animationCarDoor: AnimationDrawable = AnimationDrawable()
     private val manager: IOptionManager
         get() = DoorManager.instance
 
@@ -43,6 +45,7 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
         initRadioOption(RadioNode.DOOR_DRIVE_LOCK, viewModel.automaticDoorLock)
         initRadioOption(RadioNode.DOOR_FLAMEOUT_UNLOCK, viewModel.automaticDoorUnlock)
     }
+
     private fun initAnimation() {
         animationOpenLock.setAnimation(
             activity,
@@ -54,7 +57,18 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
             R.drawable.close_lock_animation,
             binding.lockIv
         )
+        animationFlameout.setAnimation(
+            activity,
+            R.drawable.flameout_animation,
+            binding.rightFlameout
+        )
+        animationCarDoor.setAnimation(
+            activity,
+            R.drawable.car_door_animation,
+            binding.rightCarDoorlock
+        )
     }
+
     private fun addRadioLiveDataListener() {
         viewModel.automaticDoorLock.observe(this) {
             doUpdateRadio(RadioNode.DOOR_DRIVE_LOCK, it, false)
@@ -72,33 +86,25 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
         }
         binding.doorAutomaticUnlockRadio.let {
             it.setOnTabSelectionChangedListener { _, value ->
-                doUpdateRadio(RadioNode.DOOR_FLAMEOUT_UNLOCK, value, viewModel.automaticDoorUnlock, it)
+                doUpdateRadio(
+                    RadioNode.DOOR_FLAMEOUT_UNLOCK,
+                    value,
+                    viewModel.automaticDoorUnlock,
+                    it
+                )
                 if (value.equals("3")) {
                     binding.rightCarDoorlock.visibility = View.GONE
-                    animationCloseLock.start(
-                        false,
-                        50,
-                        object : AnimationDrawable.AnimationLisenter {
-                            override fun startAnimation() {
-                            }
-
-                            override fun endAnimation() {
-                            }
-                        })
+                    binding.rightFlameout.visibility = View.GONE
+                    animationCloseLock.start(false, 50, null)
                 } else if (value.equals("1")) {
                     binding.rightCarDoorlock.visibility = View.GONE
-                    animationOpenLock.start(
-                        false,
-                        50,
-                        object : AnimationDrawable.AnimationLisenter {
-                            override fun startAnimation() {
-                            }
-
-                            override fun endAnimation() {
-                            }
-                        })
+                    binding.rightFlameout.visibility = View.VISIBLE
+                    animationOpenLock.start(false, 50, null)
+                    animationFlameout.start(false, 50, null)
                 } else {
                     binding.rightCarDoorlock.visibility = View.VISIBLE
+                    binding.rightFlameout.visibility = View.GONE
+                    animationCarDoor.start(false, 50, null)
                 }
             }
         }
@@ -109,7 +115,12 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
         doUpdateRadio(node, value)
     }
 
-    private fun doUpdateRadio(node: RadioNode, value: String, liveData: LiveData<Int>, tabView: TabControlView) {
+    private fun doUpdateRadio(
+        node: RadioNode,
+        value: String,
+        liveData: LiveData<Int>,
+        tabView: TabControlView
+    ) {
         val result = isCanToInt(value) && manager.doSetRadioOption(node, value.toInt())
         tabView.takeIf { !result }?.setSelection(liveData.value.toString(), true)
     }

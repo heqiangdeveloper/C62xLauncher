@@ -51,8 +51,8 @@
 
     <string-array name="electric_stern_door_option_titles">
         <item>关闭</item>
-        <item>模式一</item>
-        <item>模式二</item>
+        <item>往返式</item>
+        <item>停留式</item>
     </string-array>
     <string-array name="electric_stern_door_option_values">
         <item>1</item>
@@ -82,6 +82,11 @@
         <item>3次</item>
         <item>5次</item>
         <item>7次</item>
+    </string-array>
+    <string-array name="lighting_external_lighting_options">
+        <item>混响</item>
+        <item>共鸣</item>
+        <item>独奏</item>
     </string-array>
     <string-array name="remix_option_title">
         <item>导航优先</item>
@@ -119,20 +124,16 @@
     <string-array name="drive_alarm_way_options">
         <item>图示</item>
         <item>图示+声音</item>
-        <item>图示+震动</item>
     </string-array>
     <string-array name="adas_ldw_style_option_values">
         <item>2</item>
         <item>1</item>
-        <item>3</item>
     </string-array>
     <string-array name="drive_sensitivity_options">
-        <item>关闭</item>
         <item>高</item>
         <item>低</item>
     </string-array>
     <string-array name="adas_ldw_sensitivity_option_values">
-        <item>0</item>
         <item>1</item>
         <item>2</item>
     </string-array>
@@ -152,5 +153,22 @@
         <item>打击</item>
         <item>摇滚</item>
         <item>自定义</item>
+    </string-array>
+    <string-array name="sound_environmental_option">
+        <item>自然</item>
+        <item>俱乐部</item>
+        <item>现场</item>
+        <item>休闲</item>
+    </string-array>
+    <string-array name="sensor_sensitivity_option">
+        <item>高</item>
+        <item>中</item>
+        <item>低</item>
+    </string-array>
+    <string-array name="trailer_remind_distance_option">
+        <item>200m</item>
+        <item>500m</item>
+        <item>1000m</item>
+        <item>2000m</item>
     </string-array>
 </resources>

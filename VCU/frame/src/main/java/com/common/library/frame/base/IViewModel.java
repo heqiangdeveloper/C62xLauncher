@@ -8,8 +8,6 @@ import androidx.lifecycle.OnLifecycleEvent;
 
 /**
  * 通过继承LifecycleObserver提供生命周期感知能力
- *
- *
  */
 public interface IViewModel extends LifecycleObserver {
 

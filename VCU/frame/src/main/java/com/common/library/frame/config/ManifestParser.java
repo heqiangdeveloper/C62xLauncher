@@ -9,10 +9,6 @@ import java.util.List;
 
 import timber.log.Timber;
 
-/**
- *
- * @see <a href="https://github.com/bumptech/glide/blob/f7d860412f061e059aa84a42f2563a01ac8c303b/library/src/main/java/com/bumptech/glide/module/ManifestParser.java">Glide</a>
- */
 public final class ManifestParser {
     private static final String CONFIG_MODULE_VALUE = "FrameConfigModule";
 

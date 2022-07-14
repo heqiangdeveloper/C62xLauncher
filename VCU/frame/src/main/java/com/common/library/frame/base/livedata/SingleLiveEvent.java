@@ -15,8 +15,6 @@ import timber.log.Timber;
 /**
  * 提供观察单个对象 {@link T} 事件：适用于一次数据更新，只通知一次的场景
  *
- *
- * @see <a href="https://github.com/googlesamples/android-architecture/blob/6419d4c523b67d020120fc400ed5a7372e5615f2/todoapp/app/src/main/java/com/example/android/architecture/blueprints/todoapp/SingleLiveEvent.java">google sample</a>
  */
 public class SingleLiveEvent<T> extends MutableLiveData<T> {
 

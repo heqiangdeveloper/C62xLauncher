@@ -1,12 +1,15 @@
 package com.chinatsp.vehicle.settings.fragment.drive
 
 import android.os.Bundle
+import android.view.View
 import android.widget.CompoundButton
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.adas.ForwardManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.DriveForwardFragmentBinding
+import com.chinatsp.vehicle.settings.fragment.drive.dialog.CloseBrakeDialogFragment
 import com.chinatsp.vehicle.settings.vm.adas.ForwardViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
@@ -30,10 +33,10 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
 
     private fun addSwitchLiveDataListener() {
         viewModel.fcwFunction.observe(this) {
-            doUpdateSwitch(SwitchNode.AS_STERN_ELECTRIC, it)
+            doUpdateSwitch(SwitchNode.ADAS_FCW, it)
         }
         viewModel.aebFunction.observe(this) {
-            doUpdateSwitch(SwitchNode.STERN_LIGHT_ALARM, it)
+            doUpdateSwitch(SwitchNode.ADAS_AEB, it)
         }
     }
 
@@ -64,13 +67,44 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
         } else {
             swb.setCheckedImmediatelyNoEvent(status)
         }
+        if(status){
+            if (swb.id == binding.adasForwardFcwSwitch.id) {
+                binding.warningIv.visibility = View.VISIBLE
+            } else if (swb.id == binding.adasForwardAebSwitch.id) {
+                binding.smallCar.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.acccar_rad) })
+                binding.lightRedIv.visibility = View.VISIBLE
+            }
+        }else{
+            if (swb.id == binding.adasForwardFcwSwitch.id) {
+                binding.warningIv.visibility = View.GONE
+            } else if (swb.id == binding.adasForwardAebSwitch.id) {
+                binding.smallCar.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.acccar_white) })
+                binding.lightRedIv.visibility = View.GONE
+            }
+        }
     }
 
     private fun setSwitchListener() {
         binding.adasForwardFcwSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                binding.warningIv.visibility = View.VISIBLE
+            } else {
+                binding.warningIv.visibility = View.GONE
+            }
             doUpdateSwitchOption(SwitchNode.ADAS_FCW, buttonView, isChecked)
         }
         binding.adasForwardAebSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                binding.smallCar.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.acccar_rad) })
+                binding.lightRedIv.visibility = View.VISIBLE
+            } else {
+                binding.smallCar.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.acccar_white) })
+                binding.lightRedIv.visibility = View.GONE
+                val fragment = CloseBrakeDialogFragment()
+                activity?.supportFragmentManager?.let {
+                    fragment.show(it, fragment.javaClass.simpleName)
+                }
+            }
             doUpdateSwitchOption(SwitchNode.ADAS_AEB, buttonView, isChecked)
         }
     }

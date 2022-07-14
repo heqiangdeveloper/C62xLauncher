@@ -13,9 +13,12 @@ import com.anarchy.classifyview.R;
 import com.anarchy.classifyview.adapter.BaseMainAdapter;
 import com.anarchy.classifyview.adapter.BaseSubAdapter;
 import com.anarchy.classifyview.adapter.SubAdapterReference;
+import com.anarchy.classifyview.event.ReStoreDataEvent;
 import com.anarchy.classifyview.simple.widget.CanMergeView;
 import com.anarchy.classifyview.util.L;
 import com.anarchy.classifyview.util.MyConfigs;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +80,9 @@ public abstract class SimpleAdapter<T, VH extends SimpleAdapter.ViewHolder> impl
 
 
     public void notifyDataSetChanged(){
+        Log.d("MyAppFragment","notifyDataSetChanged ReStoreDataEvent");
         mSimpleMainAdapter.notifyDataSetChanged();
+        EventBus.getDefault().post(new ReStoreDataEvent());//通知存储数据
     }
     /**
      * @param parentIndex
@@ -187,6 +192,8 @@ public abstract class SimpleAdapter<T, VH extends SimpleAdapter.ViewHolder> impl
             }else {
                 notifyItemChanged(targetPosition);
             }
+            Log.d("MyAppFragment","onMerged ReStoreDataEvent");
+            EventBus.getDefault().post(new ReStoreDataEvent());//通知存储数据
         }
 
         @Override

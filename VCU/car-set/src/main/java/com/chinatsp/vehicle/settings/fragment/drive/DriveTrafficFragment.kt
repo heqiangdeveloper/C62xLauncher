@@ -1,6 +1,7 @@
 package com.chinatsp.vehicle.settings.fragment.drive
 
 import android.os.Bundle
+import android.view.View
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.ISwitchManager
@@ -54,6 +55,7 @@ class DriveTrafficFragment : BaseFragment<CombineViewModel, DriveTrafficFragment
     }
 
     private fun doUpdateSwitch(swb: SwitchButton, status: Boolean, immediately: Boolean = false) {
+        dynamicEffect(status)
         if (!immediately) {
             swb.setCheckedNoEvent(status)
         } else {
@@ -63,6 +65,7 @@ class DriveTrafficFragment : BaseFragment<CombineViewModel, DriveTrafficFragment
 
     private fun setSwitchListener() {
         binding.adasTrafficSlaSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            dynamicEffect(isChecked)
             doUpdateSwitchOption(SwitchNode.ADAS_TSR, buttonView, isChecked)
         }
     }
@@ -74,5 +77,12 @@ class DriveTrafficFragment : BaseFragment<CombineViewModel, DriveTrafficFragment
         }
     }
 
+    private fun dynamicEffect(status: Boolean) {
+        if (status) {
+            binding.speedLimit.visibility = View.VISIBLE
+        } else {
+            binding.speedLimit.visibility = View.GONE
+        }
+    }
 
 }

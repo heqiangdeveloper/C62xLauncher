@@ -475,7 +475,6 @@ public class VSeekBar extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (!isEnabled()) {
-            Log.d("VSeekBar", "11111111111111111");
             return false;
         }
 

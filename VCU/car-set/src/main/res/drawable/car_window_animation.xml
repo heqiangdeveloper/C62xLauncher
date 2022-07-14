@@ -1,0 +1,52 @@
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <item
+        android:drawable="@drawable/car_window_01"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_window_02"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_window_03"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_window_04"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_window_05"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_window_06"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_window_07"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_window_08"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_window_09"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_window_10"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_window_11"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_window_12"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_window_13"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_window_14"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_window_15"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/car_window_16"
+        android:duration="50" />
+
+</animation-list>

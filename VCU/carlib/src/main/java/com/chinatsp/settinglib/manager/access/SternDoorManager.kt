@@ -12,6 +12,7 @@ import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author : luohong
@@ -24,66 +25,55 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class SternDoorManager private constructor() : BaseManager(), IOptionManager {
 
-
     companion object : ISignal {
-
         override val TAG: String = SternDoorManager::class.java.simpleName
-
         val instance: SternDoorManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             SternDoorManager()
         }
-
     }
 
     private val _electricFunction: AtomicBoolean by lazy {
-        val switchNode = SwitchNode.AS_STERN_ELECTRIC
-        AtomicBoolean(switchNode.isOn()).apply {
-            val result = readIntProperty(switchNode.get.signal, switchNode.get.origin)
-            doUpdateSwitchValue(switchNode, this, result)
+        val node = SwitchNode.AS_STERN_ELECTRIC
+        AtomicBoolean(node.isOn()).apply {
+            val result = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, result)
         }
     }
-
 
     private val _lightAlarmFunction: AtomicBoolean by lazy {
-        val switchNode = SwitchNode.STERN_LIGHT_ALARM
-        AtomicBoolean(switchNode.isOn()).apply {
-            val result = readIntProperty(switchNode.get.signal, switchNode.get.origin)
-            doUpdateSwitchValue(switchNode, this, result)
+        val node = SwitchNode.STERN_LIGHT_ALARM
+        AtomicBoolean(node.isOn()).apply {
+            val result = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, result)
         }
     }
-
 
     private val _audioAlarmFunction: AtomicBoolean by lazy {
-        val switchNode = SwitchNode.STERN_AUDIO_ALARM
-        AtomicBoolean(switchNode.isOn()).apply {
-            val result = readIntProperty(switchNode.get.signal, switchNode.get.origin)
-            doUpdateSwitchValue(switchNode, this, result)
+        val node = SwitchNode.STERN_AUDIO_ALARM
+        AtomicBoolean(node.isOn()).apply {
+            val result = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, result)
         }
     }
 
+    private val sternSmartEnter: AtomicInteger by lazy {
+        val node = RadioNode.STERN_SMART_ENTER
+        AtomicInteger(node.default).apply {
+            val result = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateRadioValue(node, this, result)
+        }
+    }
 
     override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int>().apply {
+                add(SwitchNode.AS_STERN_ELECTRIC.get.signal)
+                add(SwitchNode.STERN_LIGHT_ALARM.get.signal)
+                add(SwitchNode.STERN_AUDIO_ALARM.get.signal)
+                add(RadioNode.STERN_SMART_ENTER.get.signal)
             }
             put(Origin.CABIN, cabinSet)
         }
-    }
-
-    override fun onHandleSignal(
-        property: CarPropertyValue<*>,
-        origin: Origin
-    ): Boolean {
-        when (origin) {
-            Origin.CABIN -> {
-                onCabinPropertyChanged(property)
-            }
-            Origin.HVAC -> {
-                onHvacPropertyChanged(property)
-            }
-            else -> {}
-        }
-        return true
     }
 
     override fun isCareSignal(signal: Int, origin: Origin): Boolean {
@@ -98,21 +88,19 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
     override fun doGetRadioOption(node: RadioNode): Int {
         return when (node) {
             RadioNode.STERN_SMART_ENTER -> {
-                2
+                sternSmartEnter.get()
             }
             else -> -1
         }
     }
 
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
-        var result = false
-        do {
-            if (RadioNode.STERN_SMART_ENTER != node) {
-                break
+        return when (node) {
+            RadioNode.STERN_SMART_ENTER -> {
+                node.isValid(value, false) && writeProperty(node.set.signal, value, node.set.origin)
             }
-            result = doUpdateSternDoorOption(value)
-        } while (false)
-        return result
+            else -> false
+        }
     }
 
     override fun onRegisterVcuListener(priority: Int, listener: IBaseListener): Int {
@@ -167,6 +155,24 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
         }
         val signal = CarCabinManager.ID_PTM_SMT_ENTRY_SET
         return writeProperty(signal, value, Origin.CABIN, Area.GLOBAL)
+    }
+
+    override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
+        when (property.propertyId) {
+            SwitchNode.AS_STERN_ELECTRIC.get.signal -> {
+                onSwitchChanged(SwitchNode.AS_STERN_ELECTRIC, _electricFunction, property)
+            }
+            SwitchNode.STERN_LIGHT_ALARM.get.signal -> {
+                onSwitchChanged(SwitchNode.STERN_LIGHT_ALARM, _lightAlarmFunction, property)
+            }
+            SwitchNode.STERN_AUDIO_ALARM.get.signal -> {
+                onSwitchChanged(SwitchNode.STERN_AUDIO_ALARM, _audioAlarmFunction, property)
+            }
+            RadioNode.STERN_SMART_ENTER.get.signal -> {
+                onRadioChanged(RadioNode.STERN_SMART_ENTER, sternSmartEnter, property)
+            }
+            else -> {}
+        }
     }
 
 

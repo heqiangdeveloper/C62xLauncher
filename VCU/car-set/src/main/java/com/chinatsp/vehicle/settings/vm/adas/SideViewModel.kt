@@ -75,16 +75,16 @@ class SideViewModel @Inject constructor(app: Application, model: BaseModel) :
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {
             SwitchNode.ADAS_DOW -> {
-                _dowValue.value = status
+                _dowValue.postValue(status)
             }
             SwitchNode.ADAS_BSD -> {
-                _bsdValue.value = status
+                _bsdValue.postValue(status)
             }
             SwitchNode.ADAS_BSC -> {
-                _bscValue.value = status
+                _bscValue.postValue(status)
             }
             SwitchNode.ADAS_GUIDES -> {
-                _guidesValue.value = status
+                _guidesValue.postValue(status)
             }
             else -> {}
         }

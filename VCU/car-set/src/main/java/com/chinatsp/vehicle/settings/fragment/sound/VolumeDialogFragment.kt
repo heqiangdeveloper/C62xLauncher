@@ -6,7 +6,6 @@ import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.AudioSoundVolumeDialogBinding
-import com.chinatsp.vehicle.settings.vm.sound.SoundViewModel
 import com.chinatsp.vehicle.settings.vm.sound.VolumeViewModel
 import com.common.library.frame.base.BaseDialogFragment
 import com.common.xui.widget.picker.VerticalSeekBar

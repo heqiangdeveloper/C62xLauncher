@@ -19,6 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding>() {
+
     private var animationHomeOpen: AnimationDrawable = AnimationDrawable()
     private var animationHomeClose: AnimationDrawable = AnimationDrawable()
     private var animationWelcomeLamp: AnimationDrawable = AnimationDrawable()
@@ -84,7 +85,7 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
         binding.lightDelayBlackOutRadio.let {
             it.setOnTabSelectionChangedListener { _, value ->
                 doUpdateRadio(RadioNode.LIGHT_DELAYED_OUT, value, viewModel.lightOutDelayed, it)
-                if (value.equals("8")) {
+                if (value.equals("1")) {
                     binding.homeOpenIv.visibility = View.VISIBLE
                     animationHomeClose.start(
                         false,
@@ -99,17 +100,7 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
                         })
                 } else {
                     binding.homeOpenIv.visibility = View.VISIBLE
-                    animationHomeOpen.start(
-                        false,
-                        50,
-                        object : AnimationDrawable.AnimationLisenter {
-                            override fun startAnimation() {
-                            }
-
-                            override fun endAnimation() {
-                                //binding.homeOpenIv.visibility = View.GONE
-                            }
-                        })
+                    animationHomeOpen.start(false, 50, null)
                 }
             }
         }
@@ -221,17 +212,7 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
             doUpdateSwitchOption(SwitchNode.LIGHT_INSIDE_MEET, buttonView, isChecked)
             if (isChecked) {
                 binding.welcomeLampIv.visibility = View.VISIBLE
-                animationWelcomeLamp.start(
-                    false,
-                    50,
-                    object : AnimationDrawable.AnimationLisenter {
-                        override fun startAnimation() {
-                        }
-
-                        override fun endAnimation() {
-                            //binding.homeOpenIv.visibility = View.GONE
-                        }
-                    })
+                animationWelcomeLamp.start(false, 50, null)
             } else {
                 binding.welcomeLampIv.visibility = View.GONE
             }

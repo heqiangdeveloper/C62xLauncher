@@ -1,5 +1,6 @@
 package com.chinatsp.settinglib.manager.cabin
 
+import android.car.hardware.CarPropertyValue
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.listener.sound.ISoundListener
@@ -123,6 +124,15 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
                 writeProperty(steeringSillTemp, position)
             }
             else -> false
+        }
+    }
+
+    override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
+        when (property.propertyId) {
+            SwitchNode.DRIVE_WHEEL_AUTO_HEAT.get.signal -> {
+                onSwitchChanged(SwitchNode.DRIVE_WHEEL_AUTO_HEAT, swhFunction, property)
+            }
+            else -> {}
         }
     }
 

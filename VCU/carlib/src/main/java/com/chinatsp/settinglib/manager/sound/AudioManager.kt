@@ -2,7 +2,9 @@ package com.chinatsp.settinglib.manager.sound
 
 import android.car.hardware.CarPropertyValue
 import com.chinatsp.settinglib.ITabStore
+import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.manager.BaseManager
+import com.chinatsp.settinglib.manager.cabin.CabinManager
 import com.chinatsp.settinglib.sign.Origin
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -39,11 +41,11 @@ class AudioManager private constructor() : BaseManager(), ITabStore {
     private var followers: List<BaseManager>? = null
 
     val managers: List<BaseManager> by lazy {
-        listOf(VoiceManager.instance)
+        listOf(VoiceManager.instance, EffectManager.instance)
     }
 
-    override fun onHandleSignal(property: CarPropertyValue<*>, origin: Origin): Boolean {
-        followers?.forEach {
+    override fun onDispatchSignal(property: CarPropertyValue<*>, origin: Origin): Boolean {
+        managers.forEach {
             it.onDispatchSignal(property, origin)
         }
         return true

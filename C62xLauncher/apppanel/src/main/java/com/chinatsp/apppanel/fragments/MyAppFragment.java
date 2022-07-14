@@ -6,9 +6,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
@@ -26,6 +23,7 @@ import com.anarchy.classifyview.event.AppInstallStatusEvent;
 import com.anarchy.classifyview.event.ChangeTitleEvent;
 import com.anarchy.classifyview.event.Event;
 import com.anarchy.classifyview.event.HideSubContainerEvent;
+import com.anarchy.classifyview.event.ReStoreDataEvent;
 import com.anarchy.classifyview.util.MyConfigs;
 import com.chinatsp.apppanel.AppConfigs.AppLists;
 import com.chinatsp.apppanel.R;
@@ -71,6 +69,7 @@ public class MyAppFragment extends Fragment {
     private SharedPreferences.Editor editor;
     private MyAppInfoAdapter mMyAppInfoAdapter;
     private List<List<LocationBean>> data;
+    private static boolean isStoringData = false;
     public MyAppFragment() {
         // Required empty public constructor
     }
@@ -117,33 +116,61 @@ public class MyAppFragment extends Fragment {
         data = new ArrayList<>();
 
         LocationBean locationBean = null;
-        Log.d("hqtest","db.countLocation() = " + db.countLocation());
+        Log.d(TAG,"db.countLocation() = " + db.countLocation());
         if(db.countLocation() == 0){//没有数据记录
-            List<ResolveInfo> allApps = getApps();
-            allApps = getAvailabelApps(allApps);
-            for(ResolveInfo info : allApps){
-                //L.d("name: " + info.activityInfo.loadLabel(getContext().getPackageManager()) + "," + info.activityInfo.packageName);
-                List<LocationBean> inner = new ArrayList<>();
-                locationBean = new LocationBean();
-                locationBean.setPackageName(info.activityInfo.packageName);
-                drawable = info.activityInfo.loadIcon(getContext().getPackageManager());
-
-                locationBean.setImgByte(null);
-                locationBean.setImgDrawable(drawable);
-                locationBean.setName((info.activityInfo.loadLabel(getContext().getPackageManager())).toString());
-                locationBean.setTitle("");
-                locationBean.setCanuninstalled(AppLists.packageUninstallStatus(info.activityInfo.packageName));
-                inner.add(locationBean);
-                data.add(inner);
-            }
+            getOriginalData();
         }else {
             data = db.getData1();
+            Log.d(TAG,"data.size = " + data.size());
+            if(data.size() == 0){
+                getOriginalData();
+            }
         }
 
         loadingTv.setVisibility(View.GONE);
         mMyAppInfoAdapter = new MyAppInfoAdapter(view.getContext(), data);
         appInfoClassifyView.setAdapter(mMyAppInfoAdapter);
         return view;
+    }
+
+    private void getOriginalData(){
+        Log.d("hqtest","getOriginalData");
+        List<ResolveInfo> allApps = getApps();
+        allApps = getAvailabelApps(allApps);
+        //此处第一个位置留给应用管理
+        allApps.add(0,null);
+        ResolveInfo info;
+        int num = 0;
+        for(int i = 0; i < allApps.size();i++){
+            //L.d("name: " + info.activityInfo.loadLabel(getContext().getPackageManager()) + "," + info.activityInfo.packageName);
+            List<LocationBean> inner = new ArrayList<>();
+            info = allApps.get(i);
+            locationBean = new LocationBean();
+            locationBean.setParentIndex(i);
+            locationBean.setChildIndex(-1);
+            if(info == null){//说明是应用管理，特殊处理
+                Log.d(TAG,"command appmanagement");
+                locationBean.setPackageName(AppLists.APPMANAGEMENT);
+                drawable = getResources().getDrawable(R.mipmap.ic_appmanagement);
+                locationBean.setName(getResources().getString(R.string.appmanagement_name));
+            }else {
+                locationBean.setPackageName(info.activityInfo.packageName);
+                drawable = info.activityInfo.loadIcon(getContext().getPackageManager());
+                locationBean.setName((info.activityInfo.loadLabel(getContext().getPackageManager())).toString());
+            }
+            locationBean.setCanuninstalled(AppLists.isSystemApplication(getContext(),locationBean.getPackageName()) ? 0:1);
+            locationBean.setTitle("");
+            locationBean.setImgByte(null);
+            locationBean.setImgDrawable(drawable);
+            num = db.isExistPackage(locationBean.getPackageName());
+            if(num == 0){
+                db.insertLocation(locationBean);
+            }else {
+                db.updateIndex(locationBean);
+            }
+            inner.add(locationBean);
+            data.add(inner);
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -158,6 +185,9 @@ public class MyAppFragment extends Fragment {
             Log.d(TAG,"status = " + status + ",pacakageName is: " + packageName);
             if(status == 1){//安装
                 data = db.getData1();
+                if(data.size() == 0){
+                    getOriginalData();
+                }
                 mMyAppInfoAdapter = new MyAppInfoAdapter(getContext(), data);
                 appInfoClassifyView.setAdapter(mMyAppInfoAdapter);
             }else {//卸载
@@ -179,6 +209,8 @@ public class MyAppFragment extends Fragment {
                     }
                 }
             }
+        }else if(event instanceof ReStoreDataEvent){
+            if(!isStoringData) storeData();
         }
     }
 
@@ -215,9 +247,15 @@ public class MyAppFragment extends Fragment {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        Log.d("heqq","myAppFragment onStop");
+    public void onPause() {
+        super.onPause();
+        Log.d("heqq","myAppFragment onPause");
+        //storeData();
+    }
+
+    public void storeData(){
+        Log.d(TAG,"storeData");
+        isStoringData = true;
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -225,9 +263,7 @@ public class MyAppFragment extends Fragment {
 //                if(db.countLocation() != 0){
 //                    db.deleteLocation();
 //                }
-                editor.putBoolean(MyConfigs.SHOWDELETE,false);
-                editor.putInt(MyConfigs.SHOWDELETEPOSITION,-1);
-                editor.commit();
+
                 MainRecyclerViewCallBack mainAdapter = (MainRecyclerViewCallBack) appInfoClassifyView.getMainRecyclerView().getAdapter();
                 Log.d("heqq","is MainRecyclerViewCallBack");
 
@@ -242,19 +278,19 @@ public class MyAppFragment extends Fragment {
                         locationBean.setChildIndex(-1);
                         locationBean.setTitle("");
 
-                        baos = new ByteArrayOutputStream();
-                        if(null == locationBean.getImgDrawable()){
-                            byte[] b = locationBean.getImgByte();
-                            drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length));
-                        }else {
-                            drawable = locationBean.getImgDrawable();
-                        }
-                        bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-                        Canvas canvas = new Canvas(bitmap);
-                        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-                        drawable.draw(canvas);
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                        locationBean.setImgByte(baos.toByteArray());
+//                        baos = new ByteArrayOutputStream();
+//                        if(null == locationBean.getImgDrawable()){
+//                            byte[] b = locationBean.getImgByte();
+//                            drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length));
+//                        }else {
+//                            drawable = locationBean.getImgDrawable();
+//                        }
+//                        bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+//                        Canvas canvas = new Canvas(bitmap);
+//                        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+//                        drawable.draw(canvas);
+//                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+//                        locationBean.setImgByte(baos.toByteArray());
 //                        locationBean.setName(appInfo.getName());
 //                        locationBean.setAddBtn(0);
 //                        locationBean.setStatus(0);
@@ -266,7 +302,8 @@ public class MyAppFragment extends Fragment {
                         if(num == 0){
                             db.insertLocation(locationBean);
                         }else {
-                            db.updateLocation(locationBean);
+                            //db.updateLocation(locationBean);
+                            db.updateIndex(locationBean);
                         }
                     } else {//文件夹
                         for(int j = 0; j < list.size(); j++){
@@ -279,19 +316,19 @@ public class MyAppFragment extends Fragment {
 //                            locationBean.setTitle(appInfo.getTitle());
 //                            locationBean.setPackageName(appInfo.getPackageName());
 
-                            baos = new ByteArrayOutputStream();
-                            if(null == locationBean.getImgDrawable()){
-                                byte[] b = locationBean.getImgByte();
-                                drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length));
-                            }else {
-                                drawable = locationBean.getImgDrawable();
-                            }
-                            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-                            Canvas canvas = new Canvas(bitmap);
-                            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-                            drawable.draw(canvas);
-                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                            locationBean.setImgByte(baos.toByteArray());
+//                            baos = new ByteArrayOutputStream();
+//                            if(null == locationBean.getImgDrawable()){
+//                                byte[] b = locationBean.getImgByte();
+//                                drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length));
+//                            }else {
+//                                drawable = locationBean.getImgDrawable();
+//                            }
+//                            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+//                            Canvas canvas = new Canvas(bitmap);
+//                            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+//                            drawable.draw(canvas);
+//                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+//                            locationBean.setImgByte(baos.toByteArray());
 //                            locationBean.setName(appInfo.getName());
 //                            locationBean.setAddBtn(0);
 //                            locationBean.setStatus(0);
@@ -303,13 +340,21 @@ public class MyAppFragment extends Fragment {
                             if(num == 0){
                                 db.insertLocation(locationBean);
                             }else {
-                                db.updateLocation(locationBean);
+                                //db.updateLocation(locationBean);
+                                db.updateIndex(locationBean);
                             }
                         }
                     }
                 }
+                isStoringData = false;
             }
         }).start();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
     }
 
     @Override
@@ -327,7 +372,10 @@ public class MyAppFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
         Log.d("heqq","myAppFragment onDestroy");
+        EventBus.getDefault().unregister(this);
+        editor.putBoolean(MyConfigs.SHOWDELETE,false);
+        editor.putInt(MyConfigs.SHOWDELETEPOSITION,-1);
+        editor.commit();
     }
 }

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_sound_popup_20"
+        android:paddingTop="40px"
+        android:paddingBottom="40px">
+
+        <RelativeLayout
+            android:id="@+id/pop_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/close_dialog"
+                style="@style/close_dialog" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/dialog_title"
+                android:text="@string/cabin_other_trailer_remind" />
+        </RelativeLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cabin_other_trailer_remind"
+            style="@style/install_dialog_layout"
+            android:layout_marginTop="@dimen/x18"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pop_title">
+
+            <TextView
+                style="@style/txt_prompt_style"
+                android:text="@string/cabin_other_trailer_remind"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <com.common.xui.widget.button.switchbutton.SwitchButton
+                android:id="@+id/trailer_remind_switch"
+                style="@style/switch_button_style"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/line1"
+            style="@style/line"
+            android:layout_marginStart="@dimen/x45"
+            android:layout_marginEnd="@dimen/x45"
+            android:background="@color/pop_line_color"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cabin_other_trailer_remind" />
+
+        <LinearLayout
+            android:id="@+id/sensor_sensitivity_linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/x45"
+            android:layout_marginTop="@dimen/x11"
+            android:layout_marginEnd="@dimen/x45"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/line1">
+
+            <TextView
+                style="@style/txt_prompt_style"
+                android:layout_marginBottom="@dimen/x13"
+                android:text="@string/cabin_other_sensor_sensitivity" />
+
+            <com.common.xui.widget.tabbar.TabControlView
+                style="@style/tdv_common_style"
+                app:tcv_defaultSelection="1"
+                app:tcv_items="@array/sensor_sensitivity_option" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/x45"
+            android:layout_marginTop="@dimen/x21"
+            android:layout_marginEnd="@dimen/x45"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sensor_sensitivity_linearLayout">
+
+            <TextView
+                style="@style/txt_prompt_style"
+                android:layout_marginBottom="@dimen/x13"
+                android:text="@string/cabin_other_trailer_remind_distance" />
+
+            <com.common.xui.widget.tabbar.TabControlView
+                style="@style/tdv_common_style"
+                app:tcv_defaultSelection="1"
+                app:tcv_items="@array/trailer_remind_distance_option" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -20,13 +20,10 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(app: Application, model: BaseModel) : BaseViewModel(app, model) {
 
-    val tabSerial: AtomicInteger by lazy {
-        AtomicInteger(0).apply {
-            set(GlobalManager.instance.tabSerial.get())
-        }
-    }
 
-    val liveDataTabPage: MutableLiveData<List<TabPage>> by lazy {
+
+
+    private val liveDataTabPage: MutableLiveData<List<TabPage>> by lazy {
         MutableLiveData<List<TabPage>>().apply {
             loadTabPageArray(this)
         }

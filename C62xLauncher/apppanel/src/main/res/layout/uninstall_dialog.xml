@@ -40,7 +40,7 @@
             android:layout_width="228dp"
             android:layout_height="74dp"
             android:layout_gravity="center_horizontal"
-            android:background="@mipmap/positive_choice_bg"
+            android:background="@drawable/dialog_positive_selector"
             android:text="@string/uninstall_dialog_positive"
             android:gravity="center"
             android:textSize="28sp"

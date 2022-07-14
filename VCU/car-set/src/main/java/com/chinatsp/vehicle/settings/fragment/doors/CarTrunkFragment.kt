@@ -13,6 +13,7 @@ import com.chinatsp.vehicle.settings.vm.accress.SternDoorViewModel
 import com.common.animationlib.AnimationDrawable
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
+import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -34,6 +35,9 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         initSwitchOption()
         addSwitchLiveDataListener()
         setSwitchListener()
+
+        initRadioOption()
+        addRadioLiveDataListener()
         setRadioListener()
     }
 
@@ -60,31 +64,95 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         )
     }
 
+    private fun initRadioOption() {
+        initRadioOption(RadioNode.STERN_SMART_ENTER, viewModel.sternSmartEnterFunction)
+    }
+
+    private fun addRadioLiveDataListener() {
+        viewModel.sternSmartEnterFunction.observe(this) {
+            doUpdateRadio(RadioNode.STERN_SMART_ENTER, it, false)
+        }
+    }
+
+    private fun setRadioListener() {
+        binding.accessSternSmartEnterRadio.let {
+            it.setOnTabSelectionChangedListener { _, value ->
+                doUpdateRadio(RadioNode.STERN_SMART_ENTER, value, viewModel.sternSmartEnterFunction, it)
+                if (value.equals("1")) {
+                    binding.carTrunkDoorHeight.visibility = View.GONE
+                    binding.intelligenceInto.visibility = View.GONE
+                } else if (value.equals("2")) {
+                    binding.carTrunkDoorHeight.visibility = View.VISIBLE
+                    binding.intelligenceInto.visibility = View.VISIBLE
+                    binding.carTrunkDoorHeight.setText(R.string.car_trunk_keep_unlock)
+                } else {
+                    binding.carTrunkDoorHeight.visibility = View.VISIBLE
+                    binding.intelligenceInto.visibility = View.VISIBLE
+                    binding.carTrunkDoorHeight.setText(R.string.car_trunk_action_unlock)
+                }
+            }
+        }
+    }
+
+    private fun initRadioOption(node: RadioNode, liveData: LiveData<Int>) {
+        val value = liveData.value ?: node.default
+        doUpdateRadio(node, value, isInit = true)
+    }
+
+    private fun doUpdateRadio(
+        node: RadioNode,
+        value: String,
+        liveData: LiveData<Int>,
+        tabView: TabControlView
+    ) {
+        val result = isCanToInt(value) && manager.doSetRadioOption(node, value.toInt())
+        tabView.takeIf { !result }?.setSelection(liveData.value.toString(), true)
+    }
+
+    private fun doUpdateRadio(node: RadioNode, value: Int, immediately: Boolean = false, isInit: Boolean = false) {
+        val tabView = when (node) {
+            RadioNode.STERN_SMART_ENTER -> {
+                binding.accessSternSmartEnterRadio
+            }
+            else -> null
+        }
+        tabView?.let {
+            bindRadioData(node, tabView, isInit)
+            doUpdateRadio(it, value, immediately)
+        }
+    }
+
+
+    private fun bindRadioData(node: RadioNode, tabView: TabControlView, isInit: Boolean) {
+        if (isInit) {
+            val names = tabView.nameArray.map { it.toString() }.toTypedArray()
+            val values = node.get.values.map { it.toString() }.toTypedArray()
+            tabView.setItems(names, values)
+        }
+    }
+
+    private fun doUpdateRadio(tabView: TabControlView, value: Int, immediately: Boolean = false) {
+        tabView.setSelection(value.toString(), true)
+    }
+
     private fun setSwitchListener() {
         binding.accessSternElectricSw.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.AS_STERN_ELECTRIC, buttonView, isChecked)
             if (isChecked) {
-                animationOpenDoor.start(false, 50, object : AnimationDrawable.AnimationLisenter {
-                    override fun startAnimation() {
-                    }
-
-                    override fun endAnimation() {
-                    }
-                })
+                animationOpenDoor.start(false, 50, null)
+                binding.carTrunkDoorHeight.visibility = View.VISIBLE
             } else {
-                animationCloseDoor.start(false, 50, object : AnimationDrawable.AnimationLisenter {
-                    override fun startAnimation() {
-                    }
-
-                    override fun endAnimation() {
-                    }
-                })
+                animationCloseDoor.start(false, 50, null)
+                binding.carTrunkDoorHeight.visibility = View.GONE
+                binding.intelligenceInto.visibility = View.GONE
             }
         }
         binding.accessSternLightAlarmSw.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.STERN_LIGHT_ALARM, buttonView, isChecked)
             if (isChecked) {
                 binding.ivFlashAlarm.visibility = View.VISIBLE
+                binding.carTrunkDoorHeight.visibility = View.VISIBLE
+                binding.carTrunkDoorHeight.setText(R.string.car_trunk_light_open)
                 animationFlashAlarm.start(false, 50, object : AnimationDrawable.AnimationLisenter {
                     override fun startAnimation() {
                     }
@@ -93,12 +161,16 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
                         binding.ivFlashAlarm.visibility = View.GONE
                     }
                 })
+            } else {
+                binding.carTrunkDoorHeight.setText(R.string.car_trunk_light_close)
             }
         }
         binding.accessSternAudioAlarmSw.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.STERN_AUDIO_ALARM, buttonView, isChecked)
             if (isChecked) {
                 binding.ivBuzzerAlarms.visibility = View.VISIBLE
+                binding.carTrunkDoorHeight.visibility = View.VISIBLE
+                binding.carTrunkDoorHeight.setText(R.string.car_trunk_buzzer_open)
                 animationBuzzerAlarms.start(
                     false,
                     50,
@@ -110,18 +182,8 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
                             binding.ivBuzzerAlarms.visibility = View.GONE
                         }
                     })
-            }
-        }
-    }
-
-    private fun setRadioListener() {
-        binding.accessSternSmartEnterRadio.setOnTabSelectionChangedListener { _, value ->
-            val result = isCanToInt(value) && manager.doSetRadioOption(
-                RadioNode.STERN_SMART_ENTER, value.toInt()
-            )
-            if (!result) {
-                val oldValue = viewModel.sternSmartEnterFunction.value
-                binding.accessSternSmartEnterRadio.setSelection(oldValue.toString(), false)
+            } else {
+                binding.carTrunkDoorHeight.setText(R.string.car_trunk_buzzer_close)
             }
         }
     }
@@ -186,5 +248,4 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
             swb.setCheckedImmediatelyNoEvent(status)
         }
     }
-
 }

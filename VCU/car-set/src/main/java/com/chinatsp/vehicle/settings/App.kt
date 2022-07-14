@@ -70,8 +70,7 @@ class App : BaseApp() {
     }
 
     private fun initCarSettingManager() {
-        SettingManager.init(applicationContext)
-        SettingManager.getInstance()
+        SettingManager.instance
         VehicleManager.instance.initVehicleConnect(applicationContext)
     }
 

@@ -13,7 +13,6 @@ import android.graphics.Shader;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -117,7 +116,6 @@ public class ColorPickerView extends View {
 
         paint = new Paint();
         paint.setAntiAlias(true);
-        paint.setAlpha(200);
 
         paintForIndicator = new Paint();
         paintForIndicator.setAntiAlias(true);
@@ -355,14 +353,14 @@ public class ColorPickerView extends View {
 
     private void createIndicatorBitmap() {
         Canvas c = new Canvas(bitmapForIndicator);
-        int radius = 45;
+        int radius = 55;
 
         paintForIndicator.setColor(Color.WHITE);
-        c.drawRoundRect(new RectF(0, 0, bitmapForIndicator.getWidth(), bitmapForIndicator.getHeight()), radius, radius, paintForIndicator);
+        c.drawRoundRect(new RectF(0, 0, bitmapForIndicator.getWidth(), bitmapForIndicator.getHeight()), 35, radius, paintForIndicator);
 
         paintForIndicator.setColor(mIndicatorColor);
         //paintForIndicator.setShadowLayer(20, 20, 20, Color.WHITE);
-        c.drawRoundRect(new RectF(4, 4, bitmapForIndicator.getWidth() - 4, bitmapForIndicator.getHeight() - 4), radius, radius, paintForIndicator);
+        c.drawRoundRect(new RectF(4, 6, bitmapForIndicator.getWidth() - 4, bitmapForIndicator.getHeight() - 6), 35, radius, paintForIndicator);
         needReDrawIndicator = false;
     }
 
@@ -383,6 +381,7 @@ public class ColorPickerView extends View {
         c.drawRoundRect(rf, r, r, paint);
 
         paint.setShader(linearGradient);
+        //paint.setAlpha(126);
         c.drawRoundRect(rf, r, r, paint);
         paint.setShader(null);
 
@@ -480,7 +479,6 @@ public class ColorPickerView extends View {
     }
 
     private int pixelToColor(int pixel) {
-
         int alpha = Color.alpha(pixel);
         int red = Color.red(pixel);
         int green = Color.green(pixel);

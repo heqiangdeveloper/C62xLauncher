@@ -106,17 +106,16 @@ class CabinSeatFragment : BaseFragment<SeatViewModel, CabinSeatFragmentBinding>(
 
     private fun setCheckedChangeListener() {
         binding.cabinSeatAutomaticHeating.setOnClickListener {
-            val fragment = SeatHeatingDialogFragment()
             activity?.supportFragmentManager?.let {
-                fragment.show(it, fragment.javaClass.simpleName)
+                showDialogFragment(SeatHeatingDialogFragment())
             }
         }
 
         binding.cabinSeatCopilotGuests.setOnClickListener {
-            val fragment = CopilotGuestsDialogFragment()
             activity?.supportFragmentManager?.let {
-                fragment.show(it, fragment.javaClass.simpleName)
+                showDialogFragment(CopilotGuestsDialogFragment())
             }
         }
     }
+
 }

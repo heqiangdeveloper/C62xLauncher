@@ -23,10 +23,10 @@
 
     <string name="table0">常用</string>
     <string name="table1">车门与车窗</string>
-    <string name="table2">灯光</string>
+    <string name="table2">灯光设置</string>
     <string name="table3">车辆音效</string>
     <string name="table4">驾驶辅助</string>
-    <string name="table5">行车</string>
+    <string name="table5">座舱</string>
     <string name="table6">BEIJING OS</string>
     <string name="back_navigation">返回</string>
     <string name="car_door">车门</string>
@@ -50,6 +50,7 @@
     <string name="cabin_ac_auto_comfort">自动空调舒适性</string>
 
     <string name="cabin_safe_fortify_tone">设防提示音</string>
+    <string name="cabin_safe_lock_car">锁车提示声</string>
     <string name="cabin_safe_fortify_success_tone">设防成功提示音</string>
     <string name="cabin_safe_fortify_failure_tone">设防失败提示音</string>
     <string name="cabin_safe_video_safe_mode">视频安全模式</string>
@@ -83,6 +84,18 @@
     <string name="cabin_other_battery_optimization">蓄电池优化</string>
     <string name="cabin_other_wireless_charging">无线充电</string>
     <string name="cabin_other_wireless_charging_lamp">无线充电灯</string>
+    <string name="cabin_other_sensor_sensitivity">传感器灵敏度</string>
+    <string name="cabin_other_trailer_remind_distance">拖车提醒距离</string>
+
+    <string name="note_users_title">用户须知</string>
+    <string name="note_users_content">为了确保安全使⽤⼿机⽆线充电功能，请您务必阅读并完全理解以下注意事项并仅可按照提示使⽤该功能：\n
+1、仅可给兼容Qi⽆线充电标准的设备充电，充电设备需放置于充电槽中⼼位置即充电范围内，以免造成充电断续、充电效率下降的情况出现；\n
+2、为避免⼲扰⻋辆启动，在⻋辆认证钥匙过程中⽆线充电功能会中断，待⻋辆钥匙认证完成后⽆线充电功能即可恢复；\n
+3、请勿将⾦属物体放在或留在充电板表⾯和充电设备之间；尤其注意硬币、钥匙、戒指、⾸饰、公交卡与银⾏卡等类似物品；\n
+4、如果将不兼容Qi⽆线充电标准的设备或⾦属异物放在充电区域内，则充电可能会中断，物体会变热，进⽽可能会损坏充电板，待物体冷却后，将其移除。</string>
+    <string name="note_users_agree">同意</string>
+    <string name="note_users_cancel">取消</string>
+
 
     <string name="car_window_remote_control">遥控升窗/降窗</string>
     <string name="car_window_lock_car">锁车自动关窗</string>
@@ -93,12 +106,21 @@
     <string name="car_trunk_intelligence_into">电动尾门智能进入</string>
     <string name="car_trunk_light_flashing">灯光闪烁报警</string>
     <string name="car_trunk_buzzer_alarms">蜂鸣器报警开关</string>
+    <string name="car_trunk_door_height">尾门高度调节</string>
+    <string name="car_trunk_keep_unlock">携带钥匙在解锁区域保持解锁</string>
+    <string name="car_trunk_action_unlock">携带钥匙完成退出进入动作解锁</string>
+    <string name="car_trunk_buzzer_open">蜂鸣器报警已开启</string>
+    <string name="car_trunk_buzzer_close">蜂鸣器报警已关闭</string>
+    <string name="car_trunk_light_open">灯光闪烁报警已开启</string>
+    <string name="car_trunk_light_close">灯光闪烁报警已关闭</string>
 
     <string name="car_mirror_automatic_folding">后视镜自动折叠</string>
     <string name="car_mirror_automatic_folding_close">后视镜自动折叠已关闭</string>
+    <string name="car_mirror_automatic_folding_open">后视镜自动折叠已开启</string>
 
     <string name="ac_open_window">一键开窗</string>
     <string name="ac_close_window">一键关窗</string>
+    <string name="ac_refresh_window">一键重置</string>
 
     <string name="drive_tab_intelligent_cruise">智能巡航</string>
     <string name="drive_tab_forward_assist">前向辅助</string>
@@ -140,6 +162,10 @@
     <string name="drive_pm_display">PM2.5显示</string>
     <string name="drive_temperature_rhythm">调温律动</string>
     <string name="drive_one_hundred_twenty">120</string>
+    <string name="drive_close_brake">关闭自动紧急制动</string>
+    <string name="drive_close_brake_content">关闭自动紧急制动功能将会同时关闭集\n成式巡航辅助功能，确定关闭吗？</string>
+    <string name="drive_agree">确定</string>
+    <string name="drive_cancel">取消</string>
 
     <string name="lighting_title">灯光</string>
     <string name="lighting_atmosphere_lamp">氛围灯</string>
@@ -147,6 +173,7 @@
     <string name="lighting_go_home_title">伴我回家</string>
     <string name="lighting_go_home_content">在锁车后,近光灯会点亮一段时间再熄灭,为你照亮回家的路</string>
     <string name="lighting_turn_signal_title">转向灯变道闪烁次数</string>
+    <string name="lighting_turn_external_lighting">外部灯光仪式感</string>
     <string name="lighting_physical_switch_title">物理开关背光亮度</string>
     <string name="lighting_car_screen_title">车机屏幕亮度</string>
     <string name="lighting_instrument_screen_title">仪表屏幕亮度</string>
@@ -173,6 +200,7 @@
     <string name="sound_navigation_mixing">导航混音</string>
     <string name="sound_volume_compensation">速度音量补偿</string>
     <string name="sound_system_prompt">系统提示音</string>
+    <string name="sound_touch_prompt">触屏提示音</string>
     <string name="sound_loudness_control">响度控制</string>
     <string name="sound_huawei_sound">华为音效</string>
     <string name="sound_navigation">导航</string>
@@ -182,4 +210,6 @@
     <string name="sound_system">系统</string>
     <string name="sound_equalizer">均衡器</string>
     <string name="sound_volume_balance">音量平衡</string>
+    <string name="sound_environmental">环境音效</string>
+    <string name="sound_standard">标准</string>
 </resources>

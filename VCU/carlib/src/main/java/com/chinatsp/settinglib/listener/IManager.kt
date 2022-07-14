@@ -18,7 +18,6 @@ interface IManager {
     fun onRegisterVcuListener(priority: Int = 0, listener: IBaseListener): Int
 
     fun doSwitchChanged(node: SwitchNode, status: Boolean) {
-
     }
 
     fun doRadioChanged(node: RadioNode, value: Int) {

@@ -21,7 +21,7 @@ import java.lang.ref.WeakReference
 abstract class BaseManager : IManager {
 
     private val signalService: SettingManager
-        get() = SettingManager.getInstance()
+        get() = SettingManager.instance
 
     protected val identity by lazy { System.identityHashCode(this) }
 
@@ -152,6 +152,7 @@ abstract class BaseManager : IManager {
                 val listener = ref.get()
                 if (null != listener && listener is ISwitchListener) {
                     listener.onSwitchOptionChanged(status, node)
+                    LogManager.d("doSwitchChanged", "$node, status:$status, listener:${listener::class.java.simpleName}")
                 }
             }
         }

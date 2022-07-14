@@ -9,9 +9,7 @@ import com.common.library.frame.R;
 
 import androidx.annotation.NonNull;
 
-/**
- *
- */
+
 public class BaseProgressDialog extends Dialog {
 
     public static BaseProgressDialog newInstance(Context context) {
