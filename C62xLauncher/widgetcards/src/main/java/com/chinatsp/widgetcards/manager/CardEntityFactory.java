@@ -7,6 +7,7 @@ import com.chinatsp.douyin.DouyinCardView;
 import com.chinatsp.drivecounselor.DriveCounselorCardView;
 import com.chinatsp.econnect.EConnectCardView;
 import com.chinatsp.iquting.IQuTingCardView;
+import com.chinatsp.musiclauncher.MediaCardView;
 import com.chinatsp.navigation.NaviCardView;
 import com.chinatsp.weaher.WeatherCardView;
 import com.chinatsp.widgetcards.R;
@@ -14,6 +15,7 @@ import com.chinatsp.widgetcards.manager.CardManager;
 
 import card.base.ICardViewCreator;
 import card.base.LauncherCard;
+import launcher.base.utils.EasyLog;
 
 public class CardEntityFactory {
     public static LauncherCard create(int type) {
@@ -226,6 +228,7 @@ public class CardEntityFactory {
         cardEntity.setSelectBgRes(R.drawable.card_edit_select_media);
         cardEntity.setUnselectBgRes(R.drawable.card_edit_unselect_media);
         cardEntity.setCanExpand(true);
+        cardEntity.setCardViewCreator(CardViewCreatorFactory.create(CardManager.CardType.MEDIA));
         return cardEntity;
     }
 

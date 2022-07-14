@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/card_width"
     android:layout_height="@dimen/card_height"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/card_weather_bg_default"
     tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
@@ -11,71 +11,67 @@
         android:id="@+id/ivWeatherBg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/card_weather_bg_sunny"
-        />
+        android:src="@drawable/card_weather_bg_sunny" />
 
     <ImageView
         android:id="@+id/ivCardWeatherLocation"
-        android:src="@drawable/card_weather_icon_location"
         android:layout_width="@dimen/card_icon_size_lv2"
         android:layout_height="@dimen/card_icon_size_lv2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:layout_marginStart="62px"
         android:layout_marginTop="89px"
-        />
+        android:src="@drawable/card_weather_icon_location"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
-        android:text="深圳"
+        android:id="@+id/tvCardWeatherCity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/card_text_size_lv3"
+        android:text="北京"
         android:textColor="@color/card_weather_location"
-        app:layout_constraintTop_toTopOf="@id/ivCardWeatherLocation"
+        android:textSize="@dimen/card_text_size_lv3"
         app:layout_constraintBottom_toBottomOf="@id/ivCardWeatherLocation"
         app:layout_constraintStart_toEndOf="@id/ivCardWeatherLocation"
-        />
+        app:layout_constraintTop_toTopOf="@id/ivCardWeatherLocation" />
 
     <ImageView
-        android:id="@+id/ivCardWeatherType"
-        android:src="@drawable/card_weather_sunshine"
+        android:id="@+id/ivCardWeatherIcon"
         android:layout_width="@dimen/card_icon_size_weather_sun"
         android:layout_height="@dimen/card_icon_size_weather_sun"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:layout_marginStart="175px"
         android:layout_marginTop="133px"
-        />
+        android:src="@drawable/weather_icon_sunny"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:text="19 ~ 33 ℃"
         android:id="@+id/tvCardWeatherTemperature"
+        style="@style/CardLv2TextView"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/card_weather_temperature_width"
-        style="@style/CardLv2TextView"
-        app:layout_constraintStart_toStartOf="@id/ivCardWeatherType"
-        app:layout_constraintEnd_toEndOf="@id/ivCardWeatherType"
-        app:layout_constraintTop_toBottomOf="@id/ivCardWeatherType"
         android:layout_marginTop="19px"
-        />
+        android:text="19 ~ 33 ℃"
+        app:layout_constraintEnd_toEndOf="@id/ivCardWeatherIcon"
+        app:layout_constraintStart_toStartOf="@id/ivCardWeatherIcon"
+        app:layout_constraintTop_toBottomOf="@id/ivCardWeatherIcon" />
+
     <TextView
-        android:text="2022.5.17 周二"
         android:id="@+id/tvCardWeatherDate"
+        style="@style/CardLv2TextView"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/card_weather_temperature_width"
-        style="@style/CardLv2TextView"
-        app:layout_constraintStart_toStartOf="@id/tvCardWeatherTemperature"
+        android:text="2022.5.17 周二"
         app:layout_constraintEnd_toEndOf="@id/tvCardWeatherTemperature"
-        app:layout_constraintTop_toBottomOf="@id/tvCardWeatherTemperature"
-        />
+        app:layout_constraintStart_toStartOf="@id/tvCardWeatherTemperature"
+        app:layout_constraintTop_toBottomOf="@id/tvCardWeatherTemperature" />
 
     <ImageView
         android:id="@+id/ivCardWeatherRefresh"
-        android:src="@drawable/card_weather_icon_refresh"
         android:layout_width="@dimen/card_icon_size_lv0"
         android:layout_height="@dimen/card_icon_size_lv0"
-        app:layout_constraintStart_toStartOf="@id/tvCardWeatherDate"
-        app:layout_constraintEnd_toEndOf="@id/tvCardWeatherDate"
-        app:layout_constraintTop_toBottomOf="@id/tvCardWeatherDate"
         android:layout_marginTop="43px"
-        />
+        android:src="@drawable/card_weather_icon_refresh"
+        app:layout_constraintEnd_toEndOf="@id/tvCardWeatherDate"
+        app:layout_constraintStart_toStartOf="@id/tvCardWeatherDate"
+        app:layout_constraintTop_toBottomOf="@id/tvCardWeatherDate" />
 </androidx.constraintlayout.widget.ConstraintLayout>

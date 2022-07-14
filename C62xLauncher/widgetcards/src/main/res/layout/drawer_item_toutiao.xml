@@ -30,7 +30,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:text="@string/doutiao_unlogin_slogon"
         style="@style/CardLv4TextView"
-        android:background="@drawable/drawer_bg_common"
+        android:background="@drawable/drawer_item_bg_selector"
         />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -39,7 +39,7 @@
         android:orientation="horizontal"
         android:layout_marginTop="16px"
         android:padding="34px"
-        android:background="@drawable/drawer_bg_common"
+        android:background="@drawable/drawer_item_bg_selector"
         app:layout_constraintTop_toBottomOf="@id/tvTitle"
         app:layout_constraintStart_toStartOf="parent"
         android:visibility="gone"

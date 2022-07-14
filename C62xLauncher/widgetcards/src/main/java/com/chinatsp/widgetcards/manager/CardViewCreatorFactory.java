@@ -7,6 +7,7 @@ import com.chinatsp.douyin.DouyinCardView;
 import com.chinatsp.drivecounselor.DriveCounselorCardView;
 import com.chinatsp.econnect.EConnectCardView;
 import com.chinatsp.iquting.IQuTingCardView;
+import com.chinatsp.musiclauncher.MediaCardView;
 import com.chinatsp.navigation.NaviCardLargeView;
 import com.chinatsp.navigation.NaviCardView;
 import com.chinatsp.weaher.WeatherCardView;
@@ -107,7 +108,7 @@ public class CardViewCreatorFactory {
     }
 
     private static ICardViewCreator createMedia() {
-        return null;
+        return MediaCardView::new;
     }
 
     private static ICardViewCreator createNavi() {

@@ -12,6 +12,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/card_fullscreen_bg"
         android:paddingLeft="68px"
         android:paddingRight="68px"
         tools:context=".CardHomeFragment">

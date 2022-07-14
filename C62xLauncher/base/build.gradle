@@ -32,4 +32,5 @@ dependencies {
     implementation rootProject.ext.dependencies.constraintlayout
     api rootProject.ext.dependencies.room
     annotationProcessor rootProject.ext.dependencies.roomCompiler
+    api rootProject.ext.dependencies.glide
 }

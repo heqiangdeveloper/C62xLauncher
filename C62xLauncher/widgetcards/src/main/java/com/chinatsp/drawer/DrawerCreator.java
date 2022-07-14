@@ -1,7 +1,5 @@
 package com.chinatsp.drawer;
 
-import android.view.View;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,8 +8,6 @@ import com.chinatsp.widgetcards.R;
 import java.util.LinkedList;
 import java.util.List;
 
-import launcher.base.recyclerview.BaseEntity;
-import launcher.base.recyclerview.MultiStyleRcvAdapter;
 import launcher.base.recyclerview.SimpleRcvDecoration;
 
 public class DrawerCreator {
@@ -33,13 +29,13 @@ public class DrawerCreator {
         mDrawerContainer.setAdapter(adapter);
     }
 
-    private List<BaseEntity> createEntities() {
-        List<BaseEntity> entities = new LinkedList<>();
-        entities.add(new BaseEntity(1, R.layout.drawer_item_search));
-        entities.add(new BaseEntity(2, R.layout.drawer_item_apps));
-        entities.add(new BaseEntity(3, R.layout.drawer_item_iquting));
-        entities.add(new BaseEntity(4, R.layout.drawer_item_toutiao));
-        entities.add(new BaseEntity(5, R.layout.drawer_item_drive_counselor));
+    private List<DrawerEntity> createEntities() {
+        List<DrawerEntity> entities = new LinkedList<>();
+        entities.add(new DrawerEntity(DrawerEntity.TYPE_SEARCH, R.layout.drawer_item_search));
+        entities.add(new DrawerEntity(DrawerEntity.TYPE_APPS_AND_WEATHER, R.layout.drawer_item_apps_and_weather));
+        entities.add(new DrawerEntity(DrawerEntity.TYPE_IQUTING, R.layout.drawer_item_iquting));
+        entities.add(new DrawerEntity(DrawerEntity.TYPE_TOUTIAO, R.layout.drawer_item_toutiao));
+        entities.add(new DrawerEntity(DrawerEntity.TYPE_DRIVE_COUNSELOR, R.layout.drawer_item_drive_counselor));
         return entities;
     }
 }

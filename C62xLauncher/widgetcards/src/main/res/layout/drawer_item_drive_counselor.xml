@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="209px"
         android:layout_marginTop="16px"
-        android:background="@drawable/drawer_bg_common"
+        android:background="@drawable/drawer_item_bg_selector"
         app:layout_constraintTop_toBottomOf="@id/tvTitle">
 
         <TextView
@@ -67,7 +67,7 @@
         android:layout_width="260px"
         android:layout_height="209px"
         android:layout_marginTop="22px"
-        android:background="@drawable/drawer_bg_common"
+        android:background="@drawable/drawer_item_bg_selector"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/frame1">
 
@@ -85,7 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="63px"
-            android:text="剩余里程保养"
+            android:text="剩余保养里程"
             android:textSize="22px"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -123,10 +123,43 @@
         android:layout_width="260px"
         android:layout_height="209px"
         android:layout_marginTop="22px"
-        android:background="@drawable/drawer_bg_common"
+        android:background="@drawable/drawer_item_bg_selector"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/frame1">
 
+        <TextView
+            style="@style/CardLv4TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="车辆健康评价"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="18px"
+            android:layout_marginTop="18px"
+            />
+
+        <TextView
+
+            android:layout_width="81px"
+            android:layout_height="56px"
+            android:text="100"
+            android:textColor="#FFFFFFFF"
+            android:textSize="48px"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginLeft="18px"
+            android:layout_marginTop="54px"
+            android:includeFontPadding="false"
+            />
+
+
+        <ImageView
+            android:layout_width="210.5px"
+            android:layout_height="159px"
+            android:background="#1FCCDCFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

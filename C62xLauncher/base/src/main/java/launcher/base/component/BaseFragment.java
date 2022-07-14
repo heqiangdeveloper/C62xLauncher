@@ -8,13 +8,14 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 
 public abstract class BaseFragment extends Fragment {
+    protected View mRootView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView =  inflater.inflate(getLayoutId(), container, false);
-        initViews(rootView);
-        return rootView;
+        mRootView =  inflater.inflate(getLayoutId(), container, false);
+        initViews(mRootView);
+        return mRootView;
     }
 
     protected abstract void initViews(View rootView);

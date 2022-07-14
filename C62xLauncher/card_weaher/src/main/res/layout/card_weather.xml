@@ -11,11 +11,5 @@
         android:layout_height="wrap_content"
         android:visibility="visible"
         />
-<!--    <include-->
-<!--        android:id="@+id/layoutLargeCardView"-->
-<!--        layout="@layout/card_weather_large"-->
-<!--        android:layout_width="@dimen/card_width_large"-->
-<!--        android:layout_height="@dimen/card_height_large"-->
-<!--        android:visibility="gone"-->
-<!--        />-->
+
 </androidx.constraintlayout.widget.ConstraintLayout>

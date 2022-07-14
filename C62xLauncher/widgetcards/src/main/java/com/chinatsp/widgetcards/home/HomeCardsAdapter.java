@@ -24,7 +24,7 @@ public class HomeCardsAdapter extends RecyclerView.Adapter<CardFrameViewHolder> 
     private static final String TAG = "CardsAdapter";
     private final Context mContext;
     private final LayoutInflater mLayoutInflater;
-    private final List<LauncherCard> mCardEntityList = new LinkedList<>();
+    private List<LauncherCard> mCardEntityList = new LinkedList<>();
     private final Set<CardFrameViewHolder> mViewHolders = new HashSet<>();
     private RecyclerView mRecyclerView;
 
@@ -48,6 +48,7 @@ public class HomeCardsAdapter extends RecyclerView.Adapter<CardFrameViewHolder> 
         View innerCard = cardEntity.getLayout(layout.getContext());
         innerCard.setTag("InnerCard");
         layout.addView(innerCard,0);
+        EasyLog.d(TAG, "onCreateViewHolder: "+viewType);
         return new CardFrameViewHolder(layout, mRecyclerView, innerCard);
     }
 
@@ -59,8 +60,7 @@ public class HomeCardsAdapter extends RecyclerView.Adapter<CardFrameViewHolder> 
 
     public void setCardEntityList(List<LauncherCard> cardList) {
         if (cardList != null) {
-            mCardEntityList.clear();
-            mCardEntityList.addAll(cardList);
+            mCardEntityList = cardList;
             EasyLog.d(TAG, "setCardEntityList: "+cardList.size());
         }
     }
