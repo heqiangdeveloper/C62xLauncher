@@ -1,8 +1,10 @@
 package com.chinatsp.vehicle.settings.fragment.drive
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.CompoundButton
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.adas.CombineManager
@@ -27,11 +29,20 @@ class DriveLightingFragment : BaseFragment<CombineViewModel, DriveLightingFragme
 
     override fun initData(savedInstanceState: Bundle?) {
         initSwitchOption()
+        initVideoListener()
         addSwitchLiveDataListener()
         setSwitchListener()
     }
 
-
+    private fun initVideoListener() {
+        val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_hma
+        binding.video.setVideoURI(Uri.parse(uri));
+        binding.video.setOnErrorListener { _, _, _ ->
+            binding.videoImage.visibility = View.VISIBLE
+            binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.ic_light_auxiliary) })
+            true
+        }
+    }
     private fun initSwitchOption() {
         initSwitchOption(SwitchNode.ADAS_HMA, viewModel.hmaValue)
     }
@@ -66,7 +77,13 @@ class DriveLightingFragment : BaseFragment<CombineViewModel, DriveLightingFragme
 
     private fun setSwitchListener() {
         binding.adasLightHmaSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            dynamicEffect(isChecked)
+            if(isChecked){
+                binding.videoImage.visibility = View.GONE
+                binding.video.start()
+            }else{
+                binding.videoImage.visibility = View.VISIBLE
+                binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.intelligent_cruise) })
+            }
             doUpdateSwitchOption(SwitchNode.ADAS_HMA, buttonView, isChecked)
         }
     }
@@ -80,9 +97,9 @@ class DriveLightingFragment : BaseFragment<CombineViewModel, DriveLightingFragme
 
     private fun dynamicEffect(status: Boolean) {
         if (status) {
-            binding.carLight.visibility = View.VISIBLE
+            binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.ic_light_auxiliary) })
         } else {
-            binding.carLight.visibility = View.GONE
+            binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.intelligent_cruise) })
         }
     }
 }

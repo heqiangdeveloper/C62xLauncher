@@ -1,5 +1,6 @@
 package com.chinatsp.vehicle.settings.fragment.drive
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.CompoundButton
@@ -26,9 +27,28 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+        initVideoListener()
         initSwitchOption()
         addSwitchLiveDataListener()
         setSwitchListener()
+    }
+
+    private fun initVideoListener() {
+        val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_fcw
+        binding.video.setVideoURI(Uri.parse(uri));
+        binding.video.setOnCompletionListener {
+            dynamicEffect()
+        }
+        binding.video.setOnErrorListener { _, _, _ ->
+            binding.videoImage.visibility = View.VISIBLE
+            binding.videoImage.setImageDrawable(activity?.let {
+                ContextCompat.getDrawable(
+                    it,
+                    R.drawable.ic_emergency_braking_1
+                )
+            })
+            true
+        }
     }
 
     private fun addSwitchLiveDataListener() {
@@ -67,39 +87,29 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
         } else {
             swb.setCheckedImmediatelyNoEvent(status)
         }
-        if(status){
-            if (swb.id == binding.adasForwardFcwSwitch.id) {
-                binding.warningIv.visibility = View.VISIBLE
-            } else if (swb.id == binding.adasForwardAebSwitch.id) {
-                binding.smallCar.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.acccar_rad) })
-                binding.lightRedIv.visibility = View.VISIBLE
-            }
-        }else{
-            if (swb.id == binding.adasForwardFcwSwitch.id) {
-                binding.warningIv.visibility = View.GONE
-            } else if (swb.id == binding.adasForwardAebSwitch.id) {
-                binding.smallCar.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.acccar_white) })
-                binding.lightRedIv.visibility = View.GONE
-            }
-        }
+        dynamicEffect()
     }
 
     private fun setSwitchListener() {
         binding.adasForwardFcwSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
-                binding.warningIv.visibility = View.VISIBLE
+                binding.videoImage.visibility = View.GONE
+                val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_fcw
+                binding.video.setVideoURI(Uri.parse(uri));
+                binding.video.start()
             } else {
-                binding.warningIv.visibility = View.GONE
+                dynamicEffect()
             }
             doUpdateSwitchOption(SwitchNode.ADAS_FCW, buttonView, isChecked)
         }
         binding.adasForwardAebSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
-                binding.smallCar.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.acccar_rad) })
-                binding.lightRedIv.visibility = View.VISIBLE
+                binding.videoImage.visibility = View.GONE
+                val url = "android.resource://" + activity?.packageName + "/" + R.raw.video_abe
+                binding.video.setVideoURI(Uri.parse(url));
+                binding.video.start()
             } else {
-                binding.smallCar.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.acccar_white) })
-                binding.lightRedIv.visibility = View.GONE
+                dynamicEffect()
                 val fragment = CloseBrakeDialogFragment()
                 activity?.supportFragmentManager?.let {
                     fragment.show(it, fragment.javaClass.simpleName)
@@ -113,6 +123,39 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
         val result = manager.doSetSwitchOption(node, status)
         if (!result && button is SwitchButton) {
             button.setCheckedImmediatelyNoEvent(!status)
+        }
+    }
+
+    private fun dynamicEffect() {
+        binding.videoImage.visibility = View.VISIBLE
+        if (binding.adasForwardFcwSwitch.isChecked && binding.adasForwardAebSwitch.isChecked) {
+            binding.videoImage.setImageDrawable(activity?.let {
+                ContextCompat.getDrawable(
+                    it,
+                    R.drawable.ic_emergency_braking_1
+                )
+            })
+        } else if (!binding.adasForwardFcwSwitch.isChecked && binding.adasForwardAebSwitch.isChecked) {
+            binding.videoImage.setImageDrawable(activity?.let {
+                ContextCompat.getDrawable(
+                    it,
+                    R.drawable.ic_emergency_braking
+                )
+            })
+        } else if (binding.adasForwardFcwSwitch.isChecked && !binding.adasForwardAebSwitch.isChecked) {
+            binding.videoImage.setImageDrawable(activity?.let {
+                ContextCompat.getDrawable(
+                    it,
+                    R.drawable.ic_prior_collisio
+                )
+            })
+        } else if (!binding.adasForwardFcwSwitch.isChecked && !binding.adasForwardAebSwitch.isChecked) {
+            binding.videoImage.setImageDrawable(activity?.let {
+                ContextCompat.getDrawable(
+                    it,
+                    R.drawable.intelligent_cruise
+                )
+            })
         }
     }
 }

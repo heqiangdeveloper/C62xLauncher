@@ -1,8 +1,11 @@
 package com.chinatsp.vehicle.settings.fragment.drive
 
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.CompoundButton
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.adas.SideBackManager
@@ -29,6 +32,7 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
 
     override fun initData(savedInstanceState: Bundle?) {
         initSwitchOption()
+        initVideoListener()
         addSwitchLiveDataListener()
         setSwitchListener()
 
@@ -40,6 +44,26 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
     private fun initRadioOption() {
         initRadioOption(RadioNode.ADAS_SIDE_BACK_SHOW_AREA, viewModel.showAreaValue)
     }
+
+    private fun initVideoListener() {
+        val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_bsd
+        binding.video.setVideoURI(Uri.parse(uri));
+        binding.video.setOnCompletionListener {
+            Log.i("tttttt","222222222")
+            dynamicEffect()
+        }
+        binding.video.setOnErrorListener { _, _, _ ->
+            binding.videoImage.visibility = View.VISIBLE
+            binding.videoImage.setImageDrawable(activity?.let {
+                ContextCompat.getDrawable(
+                    it,
+                    R.drawable.ic_lientang_auxiliary_1
+                )
+            })
+            true
+        }
+    }
+
 
     private fun addRadioLiveDataListener() {
         viewModel.showAreaValue.observe(this) {
@@ -126,29 +150,46 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
     }
 
     private fun doUpdateSwitch(swb: SwitchButton, status: Boolean, immediately: Boolean = false) {
-        dynamicEffect(swb.id, status)
         if (!immediately) {
             swb.setCheckedNoEvent(status)
         } else {
             swb.setCheckedImmediatelyNoEvent(status)
         }
+        dynamicEffect()
     }
 
     private fun setSwitchListener() {
         binding.adasSideDowSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            dynamicEffect(buttonView.id, isChecked)
+            if(isChecked){
+
+                startVideo(R.raw.video_dow)
+            }else{
+                dynamicEffect()
+            }
             doUpdateSwitchOption(SwitchNode.ADAS_DOW, buttonView, isChecked)
         }
         binding.adasSideBscSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            dynamicEffect(buttonView.id, isChecked)
+            if(isChecked){
+                startVideo( R.raw.video_bsd)
+            }else{
+                dynamicEffect()
+            }
             doUpdateSwitchOption(SwitchNode.ADAS_BSC, buttonView, isChecked)
         }
         binding.adasSideBsdSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            dynamicEffect(buttonView.id, isChecked)
+            if(isChecked){
+                startVideo(R.raw.video_camera)
+            }else{
+                dynamicEffect()
+            }
             doUpdateSwitchOption(SwitchNode.ADAS_BSD, buttonView, isChecked)
         }
         binding.adasSideGuidesSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            dynamicEffect(buttonView.id, isChecked)
+            if(isChecked){
+                startVideo(R.raw.video_auxiliary_line)
+            }else{
+                dynamicEffect()
+            }
             doUpdateSwitchOption(SwitchNode.ADAS_GUIDES, buttonView, isChecked)
         }
     }
@@ -163,32 +204,37 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
     private fun isCanToInt(value: String?): Boolean {
         return null != value && value.isNotBlank() && value.matches(Regex("\\d+"))
     }
+    private fun startVideo(path:Int){
+        val url = "android.resource://" + activity?.packageName + "/" + path
+        binding.videoImage.visibility = View.GONE
+        binding.video.setVideoURI(Uri.parse(url));
+        binding.video.start()
+    }
 
-    private fun dynamicEffect(viewId: Int, status: Boolean) {
-        if (viewId == binding.adasSideDowSwitch.id) {
-            if (status) {
-                binding.dowIv.visibility = View.VISIBLE
-            } else {
-                binding.dowIv.visibility = View.GONE
-            }
-        } else if (viewId == binding.adasSideBsdSwitch.id) {
-            if (status) {
-                binding.bsdIv.visibility = View.VISIBLE
-            } else {
-                binding.bsdIv.visibility = View.GONE
-            }
-        } else if (viewId == binding.adasSideBscSwitch.id) {
-            if (status) {
-                binding.auxiliary.visibility = View.VISIBLE
-            } else {
-                binding.auxiliary.visibility = View.GONE
-            }
-        } else if (viewId == binding.adasSideGuidesSwitch.id) {
-            if (status) {
-                binding.auxiliaryLine.visibility = View.VISIBLE
-            } else {
-                binding.auxiliaryLine.visibility = View.GONE
-            }
+    private fun dynamicEffect() {
+        binding.videoImage.visibility = View.VISIBLE
+        if(binding.adasSideDowSwitch.isChecked&&binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&binding.adasSideGuidesSwitch.isChecked){
+            binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.ic_lientang_auxiliary_1) })
+        }else if(binding.adasSideDowSwitch.isChecked&&!binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&!binding.adasSideGuidesSwitch.isChecked){
+            binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.ic_lientang_auxiliary_2) })
+        }else if(binding.adasSideDowSwitch.isChecked&&binding.adasSideBsdSwitch.isChecked&&!binding.adasSideBscSwitch.isChecked&&!binding.adasSideGuidesSwitch.isChecked){
+            binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.ic_lientang_auxiliary_3) })
+        }else if(!binding.adasSideDowSwitch.isChecked&&binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&binding.adasSideGuidesSwitch.isChecked){
+            binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.ic_lientang_auxiliary_4) })
+        }else if(!binding.adasSideDowSwitch.isChecked&&binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&!binding.adasSideGuidesSwitch.isChecked){
+            binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.ic_lientang_auxiliary_5) })
+        }else if(binding.adasSideDowSwitch.isChecked&&!binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&binding.adasSideGuidesSwitch.isChecked){
+            binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.ic_lientang_auxiliary_6) })
+        }else if(!binding.adasSideDowSwitch.isChecked&&!binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&binding.adasSideGuidesSwitch.isChecked){
+            binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.ic_lientang_auxiliary_7) })
+        }else if(binding.adasSideDowSwitch.isChecked&&!binding.adasSideBsdSwitch.isChecked&&!binding.adasSideBscSwitch.isChecked&&!binding.adasSideGuidesSwitch.isChecked){
+            binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.ic_lientang_auxiliary_8) })
+        }else if(!binding.adasSideDowSwitch.isChecked&&binding.adasSideBsdSwitch.isChecked&&!binding.adasSideBscSwitch.isChecked&&!binding.adasSideGuidesSwitch.isChecked){
+            binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.ic_lientang_auxiliary_9) })
+        }else if(!binding.adasSideDowSwitch.isChecked&&!binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&!binding.adasSideGuidesSwitch.isChecked){
+            binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.ic_lientang_auxiliary_10) })
+        }else{
+            binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.intelligent_cruise) })
         }
     }
 }

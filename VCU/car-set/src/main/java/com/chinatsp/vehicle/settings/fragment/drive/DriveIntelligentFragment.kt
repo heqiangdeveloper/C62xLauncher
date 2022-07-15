@@ -49,7 +49,6 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
         binding.video.setVideoURI(Uri.parse(uri));
         binding.video.setOnErrorListener { _, _, _ ->
             binding.intelligentCruise.visibility = View.VISIBLE
-            binding.video.visibility = View.GONE
             binding.intelligentCruise.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.intelligent_cruise_open) })
             true
         }
