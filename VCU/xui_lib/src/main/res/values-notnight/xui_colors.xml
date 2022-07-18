@@ -152,7 +152,7 @@
     <color name="xui_config_color_dark_blue_gray">#223B53</color>
     <color name="xui_config_color_middle_blue_gray">#6A798E</color>
     <color name="xui_config_color_light_blue_gray">#9FABBC</color>
-    <color name="xui_config_color_light_blue">#299EE3</color>
+    <color name="xui_config_color_light_blue">#B92B31</color>
 
     <!--text color-->
     <color name="xui_config_color_title_text">@color/xui_config_color_dark_blue_gray</color>
@@ -191,6 +191,6 @@
     <color name="smooth_bg_color_node">#478BB3</color>
     <color name="smooth_bg_color_node_outside">#232939</color>
 
-    <color name="seek_end_color">#00B6FF</color>
-    <color name="seek_start_color">#A6299EEE</color>
+    <color name="seek_start_color">#B2C3CF </color>
+    <color name="seek_end_color">#FFFFFF</color>
 </resources>
