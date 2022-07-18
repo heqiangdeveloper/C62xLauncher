@@ -15,6 +15,7 @@
 
         <!--导航栏-->
         <LinearLayout
+            android:visibility="gone"
             android:id="@+id/nav_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -75,6 +76,7 @@
     </LinearLayout>
 
     <ImageView
+        android:visibility="gone"
         android:id="@+id/apppanel_close"
         android:layout_width="60px"
         android:layout_height="60px"

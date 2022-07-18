@@ -6,13 +6,23 @@
               android:layout_height="200dp"
     android:layout_marginTop="30dp">
 
-
     <com.anarchy.classifyview.simple.widget.InsertAbleGridView
+        android:id="@+id/insertAbleGridView"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_centerInParent="true">
 
     </com.anarchy.classifyview.simple.widget.InsertAbleGridView>
+
+    <!--显示下载状态-->
+    <ImageView
+        android:visibility="gone"
+        android:id="@+id/load_status_iv"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        android:scaleType="center"
+        android:src="@mipmap/apk_loading"/>
 
     <ImageView
         android:id="@+id/delete_iv"
