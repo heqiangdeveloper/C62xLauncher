@@ -36,7 +36,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/x3"
                 android:text="@string/ac_close_window"
-                android:textColor="@color/click_text_color"
+                android:textColor="@drawable/ac_txt_color_selector"
                 android:textSize="@dimen/text_13" />
         </LinearLayout>
 
@@ -64,7 +64,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/x3"
                 android:text="@string/ac_open_window"
-                android:textColor="@color/click_text_color"
+                android:textColor="@drawable/ac_txt_color_selector"
                 android:textSize="@dimen/text_13" />
         </LinearLayout>
 
@@ -92,7 +92,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/x3"
                 android:text="@string/ac_refresh_window"
-                android:textColor="@color/click_text_color"
+                android:textColor="@drawable/ac_txt_color_selector"
                 android:textSize="@dimen/text_13" />
         </LinearLayout>
 

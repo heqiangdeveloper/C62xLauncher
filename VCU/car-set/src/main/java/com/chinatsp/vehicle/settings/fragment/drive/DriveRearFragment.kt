@@ -1,8 +1,8 @@
 package com.chinatsp.vehicle.settings.fragment.drive
 
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.CompoundButton
 import androidx.core.content.ContextCompat
@@ -21,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>() {
-
+    var index:Int = 0;
     private val manager: IOptionManager
         get() = SideBackManager.instance
 
@@ -49,8 +49,12 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
         val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_bsd
         binding.video.setVideoURI(Uri.parse(uri));
         binding.video.setOnCompletionListener {
-            Log.i("tttttt","222222222")
+            binding.video.pause()
+            binding.video.seekTo(0)
             dynamicEffect()
+        }
+        binding.video.setOnPreparedListener {
+            binding.video.setBackgroundColor(Color.TRANSPARENT)
         }
         binding.video.setOnErrorListener { _, _, _ ->
             binding.videoImage.visibility = View.VISIBLE
@@ -155,47 +159,50 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
         } else {
             swb.setCheckedImmediatelyNoEvent(status)
         }
-        dynamicEffect()
+        if (index == 0) {//第一次进来加载一次
+            dynamicEffect()
+        }
     }
 
     private fun setSwitchListener() {
         binding.adasSideDowSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            doUpdateSwitchOption(SwitchNode.ADAS_DOW, buttonView, isChecked)
             if(isChecked){
-
                 startVideo(R.raw.video_dow)
             }else{
                 dynamicEffect()
             }
-            doUpdateSwitchOption(SwitchNode.ADAS_DOW, buttonView, isChecked)
         }
-        binding.adasSideBscSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+
+        binding.adasSideBsdSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            doUpdateSwitchOption(SwitchNode.ADAS_BSD, buttonView, isChecked)
             if(isChecked){
-                startVideo( R.raw.video_bsd)
+                startVideo(R.raw.video_bsd)
             }else{
                 dynamicEffect()
             }
-            doUpdateSwitchOption(SwitchNode.ADAS_BSC, buttonView, isChecked)
         }
-        binding.adasSideBsdSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+        binding.adasSideBscSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            doUpdateSwitchOption(SwitchNode.ADAS_BSC, buttonView, isChecked)
             if(isChecked){
                 startVideo(R.raw.video_camera)
             }else{
                 dynamicEffect()
             }
-            doUpdateSwitchOption(SwitchNode.ADAS_BSD, buttonView, isChecked)
         }
         binding.adasSideGuidesSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            doUpdateSwitchOption(SwitchNode.ADAS_GUIDES, buttonView, isChecked)
             if(isChecked){
                 startVideo(R.raw.video_auxiliary_line)
             }else{
                 dynamicEffect()
             }
-            doUpdateSwitchOption(SwitchNode.ADAS_GUIDES, buttonView, isChecked)
         }
     }
 
     private fun doUpdateSwitchOption(node: SwitchNode, button: CompoundButton, status: Boolean) {
         val result = manager.doSetSwitchOption(node, status)
+        index++
         if (!result && button is SwitchButton) {
             button.setCheckedImmediatelyNoEvent(!status)
         }
@@ -208,6 +215,7 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
         val url = "android.resource://" + activity?.packageName + "/" + path
         binding.videoImage.visibility = View.GONE
         binding.video.setVideoURI(Uri.parse(url));
+        binding.video.seekTo(0)
         binding.video.start()
     }
 
@@ -233,6 +241,8 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
             binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.ic_lientang_auxiliary_9) })
         }else if(!binding.adasSideDowSwitch.isChecked&&!binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&!binding.adasSideGuidesSwitch.isChecked){
             binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.ic_lientang_auxiliary_10) })
+        }else if(binding.adasSideDowSwitch.isChecked&&binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&!binding.adasSideGuidesSwitch.isChecked){
+            binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.ic_lientang_auxiliary_11) })
         }else{
             binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.intelligent_cruise) })
         }
