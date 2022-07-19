@@ -307,8 +307,8 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         //Toast.makeText(view.getContext(),"x: "+parentIndex+"\nindex: "+index,Toast.LENGTH_SHORT).show();
 
         RelativeLayout relativeLayout = (RelativeLayout) view;
-        ImageView iv = (ImageView) relativeLayout.getChildAt(1);
-        TextView tv = (TextView) relativeLayout.getChildAt(2);
+        ImageView iv = (ImageView) relativeLayout.getChildAt(2);
+        TextView tv = (TextView) relativeLayout.getChildAt(3);
         if(tv.getText().toString().trim().equals(context.getString(R.string.add))){
             if(isTimeEnabled()){//防抖处理
                 showAddDialog(parentIndex);
@@ -860,10 +860,17 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
     static class ViewHolder extends SimpleAdapter.ViewHolder {
         public TextView tvName;
         public ImageView deleteIv;
+        public InsertAbleGridView insertAbleGridView;
+        public ImageView loadStatusIv;
+        //当要显示下载状态时，修改loadStatusIv图片源和insertAbleGridView alpha即可
+        //holder.insertAbleGridView.setAlpha(0.5f);
+        //holder.loadStatusIv.setVisibility(View.VISIBLE);
         public ViewHolder(View itemView) {
             super(itemView);
             tvName = (TextView) itemView.findViewById(R.id.app_name_tv);
             deleteIv = (ImageView) itemView.findViewById(R.id.delete_iv);
+            insertAbleGridView = (InsertAbleGridView) itemView.findViewById(R.id.insertAbleGridView);
+            loadStatusIv = (ImageView) itemView.findViewById(R.id.load_status_iv);
         }
     }
 }

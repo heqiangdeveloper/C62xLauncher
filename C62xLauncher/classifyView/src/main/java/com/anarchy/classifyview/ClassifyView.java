@@ -426,7 +426,7 @@ public class ClassifyView extends FrameLayout {
                         relativeLayout = (RelativeLayout) mMainRecyclerView.getChildAt(i);
                         insertAbleGridView = (InsertAbleGridView) relativeLayout.getChildAt(0);
                         if(insertAbleGridView.getChildCount() == 1){//非文件夹
-                            ImageView iv = (ImageView) relativeLayout.getChildAt(1);
+                            ImageView iv = (ImageView) relativeLayout.getChildAt(2);
                             iv.setVisibility(View.GONE);
                         }
                     }
@@ -445,7 +445,7 @@ public class ClassifyView extends FrameLayout {
                     editRl.setVisibility(View.GONE);
                     RecyclerView.ViewHolder target = mMainRecyclerView.findViewHolderForAdapterPosition(position);
                     RelativeLayout relativeLayout = (RelativeLayout)target.itemView;
-                    TextView nameTv = (TextView) relativeLayout.getChildAt(2);
+                    TextView nameTv = (TextView) relativeLayout.getChildAt(3);
                     titleTv.setText(nameTv.getText().toString());
                     if (ViewCompat.isAttachedToWindow(mSubContainer)) {
                         //取消之前进行的动画
@@ -698,7 +698,7 @@ public class ClassifyView extends FrameLayout {
                     mOpenDirPosition = mSelectedPosition;
                     RecyclerView.ViewHolder target = mMainRecyclerView.findViewHolderForAdapterPosition(mOpenDirPosition);
                     RelativeLayout relativeLayout = (RelativeLayout)target.itemView;
-                    TextView nameTv = (TextView) relativeLayout.getChildAt(2);
+                    TextView nameTv = (TextView) relativeLayout.getChildAt(3);
                     titleEt.setText(nameTv.getText().toString());
                     titleEt.setFocusable(true);
                     titleEt.setFocusableInTouchMode(true);
@@ -755,7 +755,7 @@ public class ClassifyView extends FrameLayout {
                     }else {
                         if(!TextUtils.isEmpty(titleEt.getText().toString())){
                             RelativeLayout relativeLayout = (RelativeLayout)target.itemView;
-                            TextView nameTv = (TextView) relativeLayout.getChildAt(2);
+                            TextView nameTv = (TextView) relativeLayout.getChildAt(3);
                             nameTv.setText(titleEt.getText().toString());
                         }
                     }
@@ -824,7 +824,7 @@ public class ClassifyView extends FrameLayout {
                                 relativeLayout = (RelativeLayout) recyclerView.getChildAt(i);
                                 insertAbleGridView = (InsertAbleGridView) relativeLayout.getChildAt(0);
                                 if(insertAbleGridView.getChildCount() == 1){//非文件夹
-                                    ImageView iv = (ImageView) relativeLayout.getChildAt(1);
+                                    ImageView iv = (ImageView) relativeLayout.getChildAt(2);
                                     iv.setVisibility((int)iv.getTag() == 1 ? View.VISIBLE : View.GONE);
                                 }
                             }
@@ -833,7 +833,7 @@ public class ClassifyView extends FrameLayout {
                                 relativeLayout = (RelativeLayout) recyclerView.getChildAt(i);
                                 insertAbleGridView = (InsertAbleGridView) relativeLayout.getChildAt(0);
                                 if(insertAbleGridView.getChildCount() == 1){//非文件夹
-                                    ImageView iv = (ImageView) relativeLayout.getChildAt(1);
+                                    ImageView iv = (ImageView) relativeLayout.getChildAt(2);
                                     iv.setVisibility(View.GONE);
                                 }
                             }
@@ -898,7 +898,7 @@ public class ClassifyView extends FrameLayout {
                                         relativeLayout = (RelativeLayout) recyclerView.getChildAt(i);
                                         insertAbleGridView = (InsertAbleGridView) relativeLayout.getChildAt(0);
                                         if(insertAbleGridView.getChildCount() == 1){//非文件夹
-                                            ImageView iv = (ImageView) relativeLayout.getChildAt(1);
+                                            ImageView iv = (ImageView) relativeLayout.getChildAt(2);
                                             iv.setVisibility((int)iv.getTag() == 1 ? View.VISIBLE : View.GONE);
                                         }
                                     }
@@ -923,7 +923,7 @@ public class ClassifyView extends FrameLayout {
                             relativeLayout = (RelativeLayout) recyclerView.getChildAt(i);
                             insertAbleGridView = (InsertAbleGridView) relativeLayout.getChildAt(0);
                             if(insertAbleGridView.getChildCount() == 1){//非文件夹
-                                ImageView iv = (ImageView) relativeLayout.getChildAt(1);
+                                ImageView iv = (ImageView) relativeLayout.getChildAt(2);
                                 iv.setVisibility(View.GONE);
                             }
                         }
@@ -1046,7 +1046,7 @@ public class ClassifyView extends FrameLayout {
             float marginLeft = mSubContainer.getWidth();
             //获取添加按钮
             rl = (RelativeLayout)mSubRecyclerView.getChildAt(mSubRecyclerView.getChildCount() - 1);
-            nameTv = (TextView) rl.getChildAt(2);
+            nameTv = (TextView) rl.getChildAt(3);
             if(nameTv.getText().equals("添加")){
                 addView = mSubRecyclerView.getChildAt(mSubRecyclerView.getChildCount() - 1);
             }
