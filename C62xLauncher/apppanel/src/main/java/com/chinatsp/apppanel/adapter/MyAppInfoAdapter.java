@@ -851,7 +851,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             relativeLayout = (RelativeLayout) recyclerView.getChildAt(i);
             insertAbleGridView = (InsertAbleGridView) relativeLayout.getChildAt(0);
             if(insertAbleGridView.getChildCount() == 1){//非文件夹
-                ImageView iv = (ImageView) relativeLayout.getChildAt(1);
+                ImageView iv = (ImageView) relativeLayout.getChildAt(2);
                 iv.setVisibility(View.GONE);
             }
         }
