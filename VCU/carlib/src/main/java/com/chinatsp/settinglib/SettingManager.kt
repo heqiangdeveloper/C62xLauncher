@@ -41,6 +41,7 @@ import com.chinatsp.settinglib.manager.RegisterSignalManager.Companion.mcuSignal
 import com.chinatsp.settinglib.manager.lamp.BrightnessManager
 import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.settinglib.optios.Area
+import com.chinatsp.settinglib.optios.SoundEffect
 import com.chinatsp.settinglib.sign.Origin
 import java.util.*
 import java.util.concurrent.Executors
@@ -998,20 +999,11 @@ class SettingManager private constructor() {
             return -100
         }
 
-    fun getAudioEQ(): Int {
-        var result = -1
+    fun getAudioEQ(): SoundEffect {
+        var result = SoundEffect.POP
         try {
             val mode = mCarAudioManager!!.eqMode
-            when (mode) {
-                CarAudioManager.EQ_MODE_FLAT -> result = EQ_MODE_STANDARD
-                CarAudioManager.EQ_MODE_POP -> result = CarAudioManager.EQ_MODE_POP
-                CarAudioManager.EQ_MODE_ROCK -> result = CarAudioManager.EQ_MODE_ROCK
-                CarAudioManager.EQ_MODE_JAZZ -> result = CarAudioManager.EQ_MODE_JAZZ
-                CarAudioManager.EQ_MODE_CLASSIC -> result = CarAudioManager.EQ_MODE_CLASSIC
-                CarAudioManager.EQ_MODE_VOCAL -> result = EQ_MODE_PEOPLE
-                CarAudioManager.EQ_MODE_CUSTOM -> result = CarAudioManager.EQ_MODE_CUSTOM
-            }
-            d(TAG, "getEqMode:$result")
+            result = SoundEffect.getEffect(mode)
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
@@ -1101,6 +1093,17 @@ class SettingManager private constructor() {
 //            }
         }
 
+    fun setSoundEffect(effect: SoundEffect) {
+        mCarAudioManager?.eqMode = effect.id
+    }
+
+    fun getSoundEffect(): Int {
+        return if (null != mCarAudioManager)
+            mCarAudioManager!!.eqMode
+        else -1
+
+    }
+
     fun setAudioEQ(mode: Int, lev1: Int, lev2: Int, lev3: Int, lev4: Int, lev5: Int) {
         var m = CarAudioManager.EQ_MODE_FLAT
         when (mode) {
@@ -1123,6 +1126,7 @@ class SettingManager private constructor() {
                 setAudioVoice(VOICE_LEVEL5, lev5)
             }
         }
+
         try {
             mCarAudioManager?.eqMode = m
             d(TAG, "setEqMode:$m")

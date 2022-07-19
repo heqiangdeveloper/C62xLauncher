@@ -10,6 +10,7 @@ import android.car.media.CarAudioManager
  * @version: 1.0
  */
 enum class SoundEffect(val id: Int) {
+
     POP(CarAudioManager.EQ_MODE_FLAT),
     FLAT(CarAudioManager.EQ_MODE_POP),
     ROCK(CarAudioManager.EQ_MODE_ROCK),

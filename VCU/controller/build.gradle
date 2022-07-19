@@ -34,7 +34,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation deps.corektx
     implementation deps.kotlin
-    implementation project(':carlib')
+    implementation deps.retrofit.gson
+    implementation deps.retrofit.converter_gson
 }
 
 repositories {

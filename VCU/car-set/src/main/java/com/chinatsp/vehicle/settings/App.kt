@@ -1,9 +1,11 @@
 package com.chinatsp.vehicle.settings
 
-import android.app.Application
+import android.content.Intent
 import com.chinatsp.settinglib.BaseApp
 import com.chinatsp.settinglib.SettingManager
 import com.chinatsp.settinglib.manager.VehicleManager
+import com.chinatsp.settinglib.service.VehicleService
+import com.chinatsp.vehicle.controller.VcuOutTrader
 import com.chinatsp.vehicle.settings.app.Constants
 import com.king.retrofit.retrofithelper.RetrofitHelper
 import com.orhanobut.logger.AndroidLogAdapter
@@ -11,7 +13,6 @@ import com.orhanobut.logger.Logger
 import com.orhanobut.logger.PrettyFormatStrategy
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
-import kotlin.properties.Delegates
 
 /**
  *  框架基于 Google 官方的 JetPack 构建，在使用  时，需遵循一些规范：
@@ -67,6 +68,14 @@ class App : BaseApp() {
         //通过第二种方式初始化BaseUrl
         RetrofitHelper.getInstance().setBaseUrl(Constants.BASE_URL)
         initCarSettingManager()
+        startControlService()
+    }
+
+    private fun startControlService() {
+        val intent = Intent(applicationContext, VehicleService::class.java)
+        startService(intent)
+        VcuOutTrader.instance.initApplication(application = this)
+        VcuOutTrader.instance.bindServices()
     }
 
     private fun initCarSettingManager() {

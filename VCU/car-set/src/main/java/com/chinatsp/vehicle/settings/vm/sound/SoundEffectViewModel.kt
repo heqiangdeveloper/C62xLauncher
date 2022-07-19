@@ -3,6 +3,7 @@ package com.chinatsp.vehicle.settings.vm.sound
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.LogManager.Companion.d
 import com.chinatsp.settinglib.SettingManager
 import com.chinatsp.settinglib.SettingManager.Companion.EQ_MODE_PEOPLE
@@ -46,29 +47,36 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
     }
 
     fun getEffectValues(effect: SoundEffect): IntArray {
-        when (effect) {
-            SoundEffect.POP -> {
-                return popEffect
-            }
-            SoundEffect.FLAT -> {
-                return standardEffect
-            }
-            SoundEffect.JAZZ -> {
-                return jazzEffect
-            }
-            SoundEffect.ROCK -> {
-                return rockEffect
-            }
-            SoundEffect.VOCAL -> {
-                return peopleEffect
-            }
-            SoundEffect.CLASSIC -> {
-                return classicEffect
-            }
-            SoundEffect.CUSTOM -> {
-                return getCustomEffectValues()
-            }
+        val id = manager.getSoundEffect();
+        if (id != effect.id) {
+            manager.setSoundEffect(effect)
         }
+        return getCustomEffectValues()
+//        when (effect) {
+//            SoundEffect.POP -> {
+//
+//                return popEffect
+//            }
+//            SoundEffect.FLAT -> {
+//                return standardEffect
+//            }
+//            SoundEffect.JAZZ -> {
+//                return jazzEffect
+//            }
+//            SoundEffect.ROCK -> {
+//                return rockEffect
+//            }
+//            SoundEffect.VOCAL -> {
+//                return peopleEffect
+//            }
+//            SoundEffect.CLASSIC -> {
+//                return classicEffect
+//            }
+//            SoundEffect.CUSTOM -> {
+//                setAudioEQ()
+//                return getCustomEffectValues()
+//            }
+//        }
     }
 
     private fun getCustomEffectValues(): IntArray {
@@ -77,6 +85,8 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
         val lev3: Int = getAudioVoice(SettingManager.VOICE_LEVEL3)
         val lev4: Int = getAudioVoice(SettingManager.VOICE_LEVEL4)
         val lev5: Int = getAudioVoice(SettingManager.VOICE_LEVEL5)
+        val effect = manager.getAudioEQ()
+        LogManager.d("Effect", "getCustomEffectValues effect:$effect, lev1:$lev1, lev2:$lev2, lev3:$lev3, lev4:$lev4, lev5:$lev5")
         return intArrayOf(lev1, lev2, lev3, lev4, lev5)
     }
 
@@ -92,9 +102,6 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
         return manager?.audioFade
     }
 
-    fun getAudioEQ(): Int {
-        return manager?.getAudioEQ()
-    }
 
     fun setAudioEQ(
         position: Int,
