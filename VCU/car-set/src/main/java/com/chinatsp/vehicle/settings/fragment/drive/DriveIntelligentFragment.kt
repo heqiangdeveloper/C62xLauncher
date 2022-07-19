@@ -47,9 +47,13 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
     private fun initVideoListener() {
         val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_acc
         binding.video.setVideoURI(Uri.parse(uri));
+        binding.video.setOnCompletionListener {
+            binding.video.pause()
+            binding.video.seekTo(0)
+            dynamicEffect()
+        }
         binding.video.setOnErrorListener { _, _, _ ->
-            binding.intelligentCruise.visibility = View.VISIBLE
-            binding.intelligentCruise.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.intelligent_cruise_open) })
+            dynamicEffect()
             true
         }
 
@@ -155,15 +159,7 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
         } else {
             swb.setCheckedImmediatelyNoEvent(status)
         }
-        if (status) {
-            if (swb.id == binding.accessCruiseCruiseAssist.id) {
-                binding.intelligentCruise.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.intelligent_cruise_open) })
-            }
-        } else {
-            if (swb.id == binding.accessCruiseCruiseAssist.id) {
-                binding.intelligentCruise.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.intelligent_cruise) })
-            }
-        }
+        dynamicEffect()
     }
 
     private fun setSwitchListener() {
@@ -172,8 +168,7 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
                 binding.intelligentCruise.visibility = View.GONE
                 binding.video.start()
             } else {
-                binding.intelligentCruise.visibility = View.VISIBLE
-                binding.intelligentCruise.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.intelligent_cruise) })
+                dynamicEffect()
             }
             doUpdateSwitchOption(SwitchNode.ADAS_IACC, buttonView, isChecked)
         }
@@ -195,6 +190,13 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
     private fun isCanToInt(value: String?): Boolean {
         return null != value && value.isNotBlank() && value.matches(Regex("\\d+"))
     }
-
+    private fun dynamicEffect() {
+        binding.intelligentCruise.visibility = View.VISIBLE
+        if(binding.accessCruiseCruiseAssist.isChecked){
+            binding.intelligentCruise.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.intelligent_cruise_open) })
+        }else{
+            binding.intelligentCruise.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.intelligent_cruise) })
+        }
+    }
 }
 

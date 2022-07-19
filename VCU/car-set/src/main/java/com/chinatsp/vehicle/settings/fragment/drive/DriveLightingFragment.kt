@@ -37,9 +37,11 @@ class DriveLightingFragment : BaseFragment<CombineViewModel, DriveLightingFragme
     private fun initVideoListener() {
         val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_hma
         binding.video.setVideoURI(Uri.parse(uri));
+        binding.video.setOnCompletionListener {
+            dynamicEffect()
+        }
         binding.video.setOnErrorListener { _, _, _ ->
-            binding.videoImage.visibility = View.VISIBLE
-            binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.ic_light_auxiliary) })
+            dynamicEffect()
             true
         }
     }
@@ -67,12 +69,12 @@ class DriveLightingFragment : BaseFragment<CombineViewModel, DriveLightingFragme
     }
 
     private fun doUpdateSwitch(swb: SwitchButton, status: Boolean, immediately: Boolean = false) {
-        dynamicEffect(status)
         if (!immediately) {
             swb.setCheckedNoEvent(status)
         } else {
             swb.setCheckedImmediatelyNoEvent(status)
         }
+        dynamicEffect()
     }
 
     private fun setSwitchListener() {
@@ -81,8 +83,7 @@ class DriveLightingFragment : BaseFragment<CombineViewModel, DriveLightingFragme
                 binding.videoImage.visibility = View.GONE
                 binding.video.start()
             }else{
-                binding.videoImage.visibility = View.VISIBLE
-                binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.intelligent_cruise) })
+                dynamicEffect()
             }
             doUpdateSwitchOption(SwitchNode.ADAS_HMA, buttonView, isChecked)
         }
@@ -95,8 +96,9 @@ class DriveLightingFragment : BaseFragment<CombineViewModel, DriveLightingFragme
         }
     }
 
-    private fun dynamicEffect(status: Boolean) {
-        if (status) {
+    private fun dynamicEffect() {
+        binding.videoImage.visibility = View.VISIBLE
+        if (binding.adasLightHmaSwitch.isChecked) {
             binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.ic_light_auxiliary) })
         } else {
             binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.intelligent_cruise) })

@@ -264,7 +264,7 @@ public class SmoothLineChartView extends View {
         //绘制选中节点高亮
         if (mSelectedNode != -1 && mSelectedNode < size) {
             //mPaint.setColor((mCircleColor & 0xFFFFFF) | 0x30000000);
-            mPaint.setColor(mContext.getResources().getColor(R.color.xui_config_color_light_green));
+            mPaint.setColor(mContext.getResources().getColor(R.color.smooth_chick_color));
             mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
             final PointF point = mPoints.get(mSelectedNode);
             canvas.drawCircle(point.x, point.y, mSelectedCircleSize / 2, mPaint);

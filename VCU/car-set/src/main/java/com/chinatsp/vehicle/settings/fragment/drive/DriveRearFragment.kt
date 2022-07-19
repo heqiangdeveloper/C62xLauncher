@@ -57,13 +57,7 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
             binding.video.setBackgroundColor(Color.TRANSPARENT)
         }
         binding.video.setOnErrorListener { _, _, _ ->
-            binding.videoImage.visibility = View.VISIBLE
-            binding.videoImage.setImageDrawable(activity?.let {
-                ContextCompat.getDrawable(
-                    it,
-                    R.drawable.ic_lientang_auxiliary_1
-                )
-            })
+            dynamicEffect()
             true
         }
     }

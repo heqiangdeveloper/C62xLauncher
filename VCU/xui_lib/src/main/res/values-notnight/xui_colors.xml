@@ -142,7 +142,7 @@
     <color name="xui_config_color_waring">#FEC005</color>
     <color name="xui_config_color_pure_yellow">#FFFF00</color>
     <color name="xui_config_color_light_yellow">#FFFFC0</color>
-    <color name="xui_config_color_light_green">#00B6FF</color>
+    <color name="xui_config_color_light_green">#C8D2D9</color>
 
     <color name="xui_config_color_red">#F15C58</color>
     <color name="xui_config_color_black">#333333</color>
@@ -186,10 +186,11 @@
     <!--不可输入的填充颜色-->
     <color name="xui_config_color_edittext_disable">#EDF2F7</color>
     <!--SmoothLineChartView-->
-    <color name="smooth_bg_color_start">#00A9FF</color>
-    <color name="smooth_bg_color_end">#020307</color>
+    <color name="smooth_bg_color_start">#8CFFFFFF</color>
+    <color name="smooth_bg_color_end">#8C020307</color>
     <color name="smooth_bg_color_node">#478BB3</color>
     <color name="smooth_bg_color_node_outside">#232939</color>
+    <color name="smooth_chick_color">#B92B31</color>
 
     <color name="seek_start_color">#B2C3CF </color>
     <color name="seek_end_color">#FFFFFF</color>

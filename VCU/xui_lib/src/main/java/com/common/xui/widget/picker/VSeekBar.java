@@ -294,7 +294,7 @@ public class VSeekBar extends View {
     Rect rect = new Rect();
 
     private void drawEntireRangeLine(Canvas canvas) {
-        if (null == normalGradient) {
+       /* if (null == normalGradient) {
             normalGradient = new LinearGradient(0, 0, getWidth(), 0, Color.parseColor("#444444"), Color.parseColor("#444444"), Shader.TileMode.CLAMP);
         }
         mPaint.setShader(normalGradient);
@@ -302,14 +302,19 @@ public class VSeekBar extends View {
         normalRectF.top = mMiddleY - mOutsideRangeLineStrokeWidth / 2;
         normalRectF.right = mLineEndX;
         normalRectF.bottom = mMiddleY + mOutsideRangeLineStrokeWidth / 2;
-        canvas.drawRoundRect(normalRectF, normalRectF.height() / 2, normalRectF.height() / 2, mPaint);
+        canvas.drawRoundRect(normalRectF, normalRectF.height() / 2, normalRectF.height() / 2, mPaint);*/
 
-       /* rect.left = mLineStartX;
-        rect.top = mMiddleY;
-        rect.right = mLineEndX;
-        rect.bottom = mMiddleY;
+        normalRectF.left = mLineStartX;
+        normalRectF.top = mMiddleY - mOutsideRangeLineStrokeWidth / 2;
+        normalRectF.right = mLineEndX;
+        normalRectF.bottom = mMiddleY + mOutsideRangeLineStrokeWidth / 2;
+
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.luminance_bg_blue);
-        canvas.drawBitmap(bitmap,rect,normalRectF,mPaint);*/
+        rect.left = 0;
+        rect.top = 0;
+        rect.right = bitmap.getWidth();
+        rect.bottom =bitmap.getHeight();
+        canvas.drawBitmap(bitmap,rect,normalRectF,mPaint);
         if (mIsLineRound) {
 //            mPaint.setColor(mInsideRangeColor);
 //            canvas.drawCircle(mLineStartX, mMiddleY, mOutsideRangeLineStrokeWidth / 2, mPaint);

@@ -40,13 +40,7 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
             dynamicEffect()
         }
         binding.video.setOnErrorListener { _, _, _ ->
-            binding.videoImage.visibility = View.VISIBLE
-            binding.videoImage.setImageDrawable(activity?.let {
-                ContextCompat.getDrawable(
-                    it,
-                    R.drawable.ic_emergency_braking_1
-                )
-            })
+            dynamicEffect()
             true
         }
     }
