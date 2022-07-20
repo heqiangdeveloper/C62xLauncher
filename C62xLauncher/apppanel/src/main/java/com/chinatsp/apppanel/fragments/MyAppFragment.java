@@ -39,6 +39,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -137,6 +138,7 @@ public class MyAppFragment extends Fragment {
         Log.d("hqtest","getOriginalData");
         List<ResolveInfo> allApps = getApps();
         allApps = getAvailabelApps(allApps);
+        allApps = removeRepeatApps(allApps);
         //此处第一个位置留给应用管理
         allApps.add(0,null);
         ResolveInfo info;
@@ -238,6 +240,28 @@ public class MyAppFragment extends Fragment {
             }
         }
         return allApps;
+    }
+
+    /*
+    *  剔除重复的APP
+     */
+    private List<ResolveInfo> removeRepeatApps(List<ResolveInfo> allApps){
+        List<String> packageLists = new ArrayList<>();
+        for(int i = 0; i < allApps.size(); i++){
+            packageLists.add(allApps.get(i).activityInfo.packageName);
+        }
+        packageLists = packageLists.stream().distinct().collect(Collectors.toList());//去掉重复的包名
+
+        List listTemp = new ArrayList();
+        String packageName = "";
+        for(int i = 0; i < allApps.size(); i++){
+            packageName = allApps.get(i).activityInfo.packageName;
+            if(packageLists.contains(packageName)){
+                listTemp.add(allApps.get(i));
+                packageLists.remove(packageName);
+            }
+        }
+        return listTemp;
     }
 
     @Override

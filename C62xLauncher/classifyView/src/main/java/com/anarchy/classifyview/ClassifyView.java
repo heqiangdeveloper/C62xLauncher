@@ -480,7 +480,7 @@ public class ClassifyView extends FrameLayout {
                 View pressedView = findChildView(mMainRecyclerView, e);
                 if (pressedView == null) return;
                 //L.d("Main recycler view on long press: x: %1$s + y: %2$s", e.getX(), e.getY());
-                int position = mMainRecyclerView.getChildAdapterPosition(pressedView);
+                position = mMainRecyclerView.getChildAdapterPosition(pressedView);
 
                 int pointerId = MotionEventCompat.getPointerId(e, 0);
                 if (pointerId == mMainActivePointerId) {
