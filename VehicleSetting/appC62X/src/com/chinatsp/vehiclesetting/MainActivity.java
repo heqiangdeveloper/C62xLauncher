@@ -1,6 +1,7 @@
 package com.chinatsp.vehiclesetting;
 
 import android.content.Intent;
+import android.net.wifi.rtt.ResponderConfig;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -13,7 +14,7 @@ import com.chinatsp.vehiclesetting.databinding.ActivityMainBinding;
 public class MainActivity extends BaseActivity<ActivityMainBinding> {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@ResponderConfig.ChannelWidth Bundle savedInstanceState) {
         //setTheme(android.R.style.Theme_Wallpaper_NoTitleBar);//设置壁纸对应的背景
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);

@@ -41,6 +41,7 @@ dependencies {
     implementation deps.corektx
     //noinspection GradleDependency
     implementation deps.kotlin
+    implementation project(':controller')
 }
 
 repositories {

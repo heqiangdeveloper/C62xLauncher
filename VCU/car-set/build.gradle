@@ -106,7 +106,7 @@ dependencies {
     implementation project(':xui_lib')
     implementation project(':carlib')
     implementation project(':animationlib')
-//    implementation project(':uiwidget')
+    implementation project(':controller')
 
 
 }
