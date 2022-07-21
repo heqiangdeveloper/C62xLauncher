@@ -161,11 +161,13 @@ public class ClassifyView extends FrameLayout {
     private static final int SUBCONTAINERWIDTH = 800;//文件弹出框的宽度
     private static final int SUBCONTAINERHEIGHT = 550;//文件弹出框的度
     private int SCREENWIDTH = 0;
+    private int SCREENHEIGHT = 0;
     private InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
     private int position = 0;//点击的桌面主位置
 
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
+    private boolean isSoftKeyBoardShow = false;
     public ClassifyView(Context context) {
         super(context);
         init(context, null, 0);
@@ -199,6 +201,7 @@ public class ClassifyView extends FrameLayout {
         int height = dm.heightPixels;//屏幕高度
         L.d("screen width = " + width + ",height = " + height);//1920 * 675
         SCREENWIDTH = width;
+        SCREENHEIGHT = height;
 
         preferences = context.getSharedPreferences(MyConfigs.APPPANELSP, Context.MODE_PRIVATE);
         editor = preferences.edit();
@@ -404,6 +407,18 @@ public class ClassifyView extends FrameLayout {
      */
     public void setAdapter(BaseSimpleAdapter baseSimpleAdapter) {
         setAdapter(baseSimpleAdapter.getMainAdapter(), baseSimpleAdapter.getSubAdapter());
+    }
+
+    /*
+     * 重新设置sub的显示位置，解决重命名文件时，键盘弹出将SubContainer顶上去，收回时，SubContainer没有下来居中显示
+     */
+    public void setSoftKeyBoardStatus(boolean isShow){
+        isSoftKeyBoardShow = isShow;
+        if(mSubContainer != null){
+            FrameLayout.LayoutParams params =  (FrameLayout.LayoutParams)mSubContainer.getLayoutParams();
+            params.gravity = isShow ? Gravity.CENTER_HORIZONTAL : Gravity.CENTER;
+            mSubContainer.setLayoutParams(params);
+        }
     }
 
     public RecyclerView.LayoutManager getMainLayoutManager() {
@@ -1092,7 +1107,10 @@ public class ClassifyView extends FrameLayout {
                         mDragView.setVisibility(VISIBLE);
                         mSubCallBack.setDragPosition(mSelectedPosition);
                         mDragView.setX(mInitialTouchX - width / 2 + (SCREENWIDTH - SUBCONTAINERWIDTH) / 2);
-                        if(mSubContainer.getTop() < marginTop / 2){
+                        if(isSoftKeyBoardShow){
+                            mDragView.setY(mInitialTouchY - height / 2 - (SCREENHEIGHT - SUBCONTAINERHEIGHT) / 2);
+                        }
+                        else if(mSubContainer.getTop() < marginTop / 2){
                             mDragView.setY(mInitialTouchY - height / 2 );
                         }else {
                             mDragView.setY(mInitialTouchY - height / 2 - marginTop / 2);
@@ -1114,7 +1132,10 @@ public class ClassifyView extends FrameLayout {
 //                    mDragView.setY(centerY + marginTop);
                     mDragView.setX(centerX + + (SCREENWIDTH - SUBCONTAINERWIDTH) / 2);
 
-                    if(mSubContainer.getTop() < marginTop / 2){
+                    if(isSoftKeyBoardShow){
+                        mDragView.setY(centerY - (SCREENHEIGHT - SUBCONTAINERHEIGHT) / 2);
+                    }
+                    else if(mSubContainer.getTop() < marginTop / 2){
                         mDragView.setY(centerY);
                     }else {
                         mDragView.setY(centerY - marginTop / 2);

@@ -37,10 +37,15 @@ public class DragDrawable extends Drawable {
         if(mBitmap == null) {
             mView.draw(canvas);
         }else {
-            if(showShadow){
-                canvas.drawBitmap(mBitmap, 0, 0, mPaint);
+            //判断bitmap是否已回收
+            if(mBitmap.isRecycled()){
+                mView.draw(canvas);
             }else {
-                canvas.drawBitmap(mBitmap, 0, 0, null);
+                if(showShadow){
+                    canvas.drawBitmap(mBitmap, 0, 0, mPaint);
+                }else {
+                    canvas.drawBitmap(mBitmap, 0, 0, null);
+                }
             }
         }
     }
