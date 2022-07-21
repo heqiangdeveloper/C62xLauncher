@@ -12,6 +12,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import com.anarchy.classifyview.event.ChangeTitleEvent;
 import com.anarchy.classifyview.event.Event;
 import com.anarchy.classifyview.event.HideSubContainerEvent;
 import com.anarchy.classifyview.event.ReStoreDataEvent;
+import com.anarchy.classifyview.listener.SoftKeyBoardListener;
 import com.anarchy.classifyview.util.MyConfigs;
 import com.chinatsp.apppanel.AppConfigs.AppLists;
 import com.chinatsp.apppanel.R;
@@ -131,6 +133,17 @@ public class MyAppFragment extends Fragment {
         loadingTv.setVisibility(View.GONE);
         mMyAppInfoAdapter = new MyAppInfoAdapter(view.getContext(), data);
         appInfoClassifyView.setAdapter(mMyAppInfoAdapter);
+        SoftKeyBoardListener.setListener(getActivity(), new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+            @Override
+            public void keyBoardShow(int height) {//键盘显示
+                appInfoClassifyView.setSoftKeyBoardStatus(true);
+            }
+
+            @Override
+            public void keyBoardHide(int height) {//键盘隐藏
+                appInfoClassifyView.setSoftKeyBoardStatus(false);
+            }
+        });
         return view;
     }
 
