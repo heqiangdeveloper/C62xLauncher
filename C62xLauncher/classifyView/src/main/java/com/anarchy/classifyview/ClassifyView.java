@@ -768,6 +768,8 @@ public class ClassifyView extends FrameLayout {
 
             @Override
             public void onAnimationEnd(Animator animation) {
+                editor.putInt(MyConfigs.PARENTINDEX,-1);
+                editor.commit();
                 mMainShadowView.setVisibility(GONE);
             }
 
@@ -1164,6 +1166,12 @@ public class ClassifyView extends FrameLayout {
                         //重新刷新sub及main，,实际发现mSubRecyclerView.getChildCount()数目会变少，不采用mSubRecyclerView计算
                         //mSubCallBack.removeItem(mSubRecyclerView.getChildCount() - 1);
                         mMainCallBack = (MainRecyclerViewCallBack) mMainRecyclerView.getAdapter();
+
+                        int newIndex = preferences.getInt(MyConfigs.PARENTINDEX,-1);
+                        Log.d("dragtest","position = " + position + ",newIndex = " + newIndex);
+                        if(newIndex >= 0){
+                            position = newIndex;
+                        }
                         List list = mMainCallBack.explodeItem(position, null);
                         for(int i = list.size() - 1; i >= 0; i--){
                             if(list.get(i) == null){
