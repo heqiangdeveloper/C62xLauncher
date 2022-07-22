@@ -10,12 +10,11 @@
         style="@style/CardLv2TextView"
         android:text="@string/iquting_unlogin_slogan"
         android:lineSpacingMultiplier="1.5"
-        android:letterSpacing="0.1"
+        android:letterSpacing="0.01"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginTop="35px"
+        android:layout_marginTop="180px"
         />
 
     <include
@@ -23,6 +22,10 @@
         layout="@layout/layout_iquting_play_widget"
         android:layout_width="@dimen/iquting_play_widget_width"
         android:layout_height="@dimen/iquting_play_widget_height"
+        android:layout_marginStart="1px"
+        android:layout_marginBottom="14px"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

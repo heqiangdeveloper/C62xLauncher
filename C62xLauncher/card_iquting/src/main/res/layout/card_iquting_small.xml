@@ -50,6 +50,7 @@
 
         <ImageView
             android:id="@+id/ivIQuTingPlayStateIcon"
+            android:src="@drawable/card_iquting_icon_music"
             android:layout_width="@dimen/card_icon_size_lv3"
             android:layout_height="@dimen/card_icon_size_lv3"
             android:layout_marginStart="88px"
@@ -84,12 +85,11 @@
             android:id="@+id/ivIQuTingPlayPauseBtn"
             android:layout_width="@dimen/card_icon_size_lv0"
             android:layout_height="@dimen/card_icon_size_lv0"
-            android:src="@drawable/card_iquting_icon_pause"
+            android:src="@drawable/card_iquting_icon_pause_100"
             app:layout_constraintTop_toTopOf="@id/ivIQuTingCover"
             app:layout_constraintStart_toStartOf="@id/ivIQuTingCover"
             app:layout_constraintBottom_toBottomOf="@id/ivIQuTingCover"
             app:layout_constraintEnd_toEndOf="@id/ivIQuTingCover"
-
             />
 
         <ImageView
@@ -115,7 +115,7 @@
             />
 
         <TextView
-            android:id="@+id/ivIQuTingMediaName"
+            android:id="@+id/tvIQuTingMediaName"
             android:layout_width="316px"
             android:layout_height="46px"
             android:text="给我一首歌的时间—周杰伦"
@@ -129,6 +129,57 @@
             android:layout_marginTop="44px"
             />
 
+        <ImageView
+            android:id="@+id/ivIQuTingLike"
+            android:layout_width="@dimen/card_icon_size_lv2"
+            android:layout_height="@dimen/card_icon_size_lv2"
+            android:src="@drawable/card_iquting_icon_like"
+            app:layout_constraintTop_toTopOf="@id/tvIQuTingMediaName"
+            app:layout_constraintBottom_toBottomOf="@id/tvIQuTingMediaName"
+            app:layout_constraintStart_toEndOf="@id/tvIQuTingMediaName"
+            android:layout_marginStart="14px"
+            />
+
+
+        <TextView
+            android:id="@+id/tvIQuTingPlayPosition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="01:28"
+            android:textColor="#99C4C4C4"
+            android:textSize="24px"
+            app:layout_constraintTop_toBottomOf="@id/tvIQuTingMediaName"
+            app:layout_constraintStart_toStartOf="@id/tvIQuTingMediaName"
+            android:layout_marginTop="15px"
+            />
+
+        <launcher.base.utils.view.SimpleProgressView
+            android:id="@+id/progressHorizontalIQuTing"
+            android:layout_width="224px"
+            android:layout_height="30px"
+
+            app:progressBgColor="#999999"
+            app:progressColor="#7D85DE"
+            app:progressHeight="7px"
+            app:progressBgHeight="3px"
+            app:layout_constraintStart_toEndOf="@id/tvIQuTingPlayPosition"
+            app:layout_constraintTop_toTopOf="@id/tvIQuTingPlayPosition"
+            app:layout_constraintBottom_toBottomOf="@id/tvIQuTingPlayPosition"
+            android:layout_marginStart="12px"
+            />
+
+        <TextView
+            android:id="@+id/tvIQuTingPlayDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="03:24"
+            android:textColor="#99C4C4C4"
+            android:textSize="24px"
+            app:layout_constraintStart_toEndOf="@id/progressHorizontalIQuTing"
+            app:layout_constraintTop_toTopOf="@id/tvIQuTingPlayPosition"
+            app:layout_constraintBottom_toBottomOf="@id/tvIQuTingPlayPosition"
+            android:layout_marginStart="12px"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

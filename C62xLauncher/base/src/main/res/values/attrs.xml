@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SimpleProgressView">
+        <attr name="progressHeight" format="dimension" />
+        <attr name="progressBgHeight" format="dimension" />
+        <attr name="progressBgColor" format="color" />
+        <attr name="progressColor" format="color"/>
+    </declare-styleable>
+</resources>

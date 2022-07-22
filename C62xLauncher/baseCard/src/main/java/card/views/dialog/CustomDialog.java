@@ -1,7 +1,6 @@
 package card.views.dialog;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -14,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
 import card.service.R;
-import launcher.base.service.theme.ITheme;
+import launcher.base.service.theme.IThemeService;
 
 
 public class CustomDialog extends AlertDialog {
@@ -23,7 +22,7 @@ public class CustomDialog extends AlertDialog {
     private TextView mMessageView;
     private TextView mBtnOk;
     private TextView mBtnCancel;
-    private ITheme mShowMode ;
+    private IThemeService mShowMode ;
 
     protected CustomDialog(@NonNull Context context) {
         super(context);
