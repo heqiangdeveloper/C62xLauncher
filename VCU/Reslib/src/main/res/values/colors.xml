@@ -14,7 +14,8 @@
     <color name="tab_text_color">#FFFFFF</color>
 
     <color name="picture_tab_color_false">#503331</color>
-    <color name="normal_text_color">#FFABD3E1</color>
+    <color name="tab_color_bg">#354057</color>
+    <color name="normal_text_color">#ABD3E1</color>
     <color name="select_text_color">#FFFFFFFF</color>
 
     <color name="tcv_unselected_color">#666666</color>
@@ -29,5 +30,10 @@
     <color name="tab_option_title_text_color">@android:color/white</color>
 
     <color name="click_text_color">#ABD3E1</color>
+    <color name="click_text_color_white">#ffffff</color>
+
+    <color name="line_end_color">#4D59C3FF</color>
+    <color name="line_start_color">#4D224765</color>
+
 
 </resources>

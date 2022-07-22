@@ -45,7 +45,7 @@ public class SmoothLineChartView extends View {
     private final Path mPath;//曲线路径
     private final float mCircleSize;//节点圆直径
     private final float mSelectedCircleSize;//选中节点圆直径
-    private final float mStrokeSize = 6;
+    private final float mStrokeSize = 3;
     private float mBorder;
     private int mNodeStyle;//节点样式
     private int mLineColor;//曲线颜色
@@ -243,7 +243,9 @@ public class SmoothLineChartView extends View {
 
         //绘制曲线
         mPaint.setColor(mLineColor);
+
         mPaint.setStyle(Paint.Style.STROKE);
+        //mPaint.setShadowLayer(5,5,10, mLineColor);
         canvas.drawPath(mPath, mPaint);
 
         //绘制曲线的投影区域
@@ -253,7 +255,8 @@ public class SmoothLineChartView extends View {
             mShadowPaint = new Paint();
             mShadowPaint.setStyle(Paint.Style.FILL);
             mShadowPaint.setAntiAlias(true);
-            shader = new LinearGradient(getWidth() / 2, getHeight(), getWidth() / 2, 0, mContext.getResources().getColor(R.color.smooth_bg_color_end), mContext.getResources().getColor(R.color.smooth_bg_color_start), Shader.TileMode.MIRROR);
+            //shader = new LinearGradient(getWidth() / 2, getHeight(), getWidth() / 2, 0, mContext.getResources().getColor(R.color.smooth_bg_color_end), mContext.getResources().getColor(R.color.smooth_bg_color_start), Shader.TileMode.MIRROR);
+            shader = new LinearGradient(getWidth() / 2, getHeight(), getWidth() / 2, 0, new int[]{Color.TRANSPARENT,mContext.getResources().getColor(R.color.smooth_bg_color_end),mContext.getResources().getColor(R.color.smooth_bg_color_start)},new float[]{0.3f,0.1f,0.8f}, Shader.TileMode.CLAMP);
             mShadowPaint.setShader(shader);
             mPath.lineTo(mPoints.get(size - 1).x, height + mBorder);
             mPath.lineTo(mPoints.get(0).x, height + mBorder);
@@ -264,7 +267,7 @@ public class SmoothLineChartView extends View {
         //绘制选中节点高亮
         if (mSelectedNode != -1 && mSelectedNode < size) {
             //mPaint.setColor((mCircleColor & 0xFFFFFF) | 0x30000000);
-            mPaint.setColor(mContext.getResources().getColor(R.color.xui_config_color_light_green));
+            mPaint.setColor(mContext.getResources().getColor(R.color.smooth_chick_color));
             mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
             final PointF point = mPoints.get(mSelectedNode);
             canvas.drawCircle(point.x, point.y, mSelectedCircleSize / 2, mPaint);
@@ -277,7 +280,7 @@ public class SmoothLineChartView extends View {
         }
         //绘制网格线
         mPaint.setColor(mContext.getResources().getColor(R.color.xui_config_color_15_white));
-        mPaint.setStrokeWidth(1);
+        mPaint.setStrokeWidth(0.5f);
         mPaint.setStyle(Paint.Style.FILL);
         for (PointF point : mPoints) {
             canvas.drawLine(point.x, height / 2 - mBorder, point.x, height+mBorder, mPaint);
@@ -359,7 +362,6 @@ public class SmoothLineChartView extends View {
             case MotionEvent.ACTION_MOVE://滑动
                 float y_new = coordinateConversionY(touchY);
                 if (isMoveChange && mSelectedNode != -1 && y_new > mMinY && y_new < mMaxY) {
-                    float y = coordinateConversionY(touchY);
                     mValues.set(mSelectedNode,y_new);
                     invalidate();
                 }

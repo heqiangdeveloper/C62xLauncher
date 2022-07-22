@@ -7,7 +7,6 @@
     <data></data>
 
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -40,11 +39,11 @@
         </RelativeLayout>
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/x8"
             android:src="@drawable/right_car_vioce"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/pop_title" />
@@ -54,19 +53,20 @@
             android:id="@+id/sound_field"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/x8"
             android:layout_gravity="center_horizontal"
+            android:layout_marginStart="@dimen/x8"
+            android:layout_marginTop="50.0px"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pop_title"
-            android:layout_marginTop="50.0px" />
+            app:layout_constraintTop_toBottomOf="@+id/pop_title" />
+
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_marginTop="@dimen/x50"
             android:layout_marginStart="@dimen/x8"
+            android:layout_marginTop="@dimen/x50"
             android:src="@drawable/audio_point"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/pop_title" />

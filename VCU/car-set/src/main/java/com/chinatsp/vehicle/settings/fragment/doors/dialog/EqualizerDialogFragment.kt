@@ -115,13 +115,13 @@ class EqualizerDialogFragment :
         binding.smoothChartView.textColor = Color.TRANSPARENT
         binding.smoothChartView.textSize = 20
         binding.smoothChartView.textOffset = 4
-        binding.smoothChartView.minY = -7F
-        binding.smoothChartView.maxY = 7F
+        binding.smoothChartView.minY = 0F
+        binding.smoothChartView.maxY = 15F
         binding.smoothChartView.enableShowTag(false)
         binding.smoothChartView.enableDrawArea(true)
-        binding.smoothChartView.lineColor = resources.getColor(R.color.smooth_bg_color_start)
+        binding.smoothChartView.lineColor = resources.getColor(R.color.smooth_line_color)
         binding.smoothChartView.circleColor =
-            resources.getColor(R.color.smooth_bg_color_end)
+            resources.getColor(R.color.smooth_circle_color)
         binding.smoothChartView.innerCircleColor = Color.parseColor("#ffffff")
         binding.smoothChartView.nodeStyle = SmoothLineChartView.NODE_STYLE_RING
         binding.smoothChartView.setOnChartClickListener { position, _ -> viewModel?.setAudioEQ(position) }

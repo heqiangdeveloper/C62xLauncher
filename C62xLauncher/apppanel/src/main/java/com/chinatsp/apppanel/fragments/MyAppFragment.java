@@ -12,6 +12,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import com.anarchy.classifyview.event.ChangeTitleEvent;
 import com.anarchy.classifyview.event.Event;
 import com.anarchy.classifyview.event.HideSubContainerEvent;
 import com.anarchy.classifyview.event.ReStoreDataEvent;
+import com.anarchy.classifyview.listener.SoftKeyBoardListener;
 import com.anarchy.classifyview.util.MyConfigs;
 import com.chinatsp.apppanel.AppConfigs.AppLists;
 import com.chinatsp.apppanel.R;
@@ -39,6 +41,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -130,6 +133,17 @@ public class MyAppFragment extends Fragment {
         loadingTv.setVisibility(View.GONE);
         mMyAppInfoAdapter = new MyAppInfoAdapter(view.getContext(), data);
         appInfoClassifyView.setAdapter(mMyAppInfoAdapter);
+        SoftKeyBoardListener.setListener(getActivity(), new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+            @Override
+            public void keyBoardShow(int height) {//键盘显示
+                appInfoClassifyView.setSoftKeyBoardStatus(true);
+            }
+
+            @Override
+            public void keyBoardHide(int height) {//键盘隐藏
+                appInfoClassifyView.setSoftKeyBoardStatus(false);
+            }
+        });
         return view;
     }
 
@@ -137,6 +151,7 @@ public class MyAppFragment extends Fragment {
         Log.d("hqtest","getOriginalData");
         List<ResolveInfo> allApps = getApps();
         allApps = getAvailabelApps(allApps);
+        allApps = removeRepeatApps(allApps);
         //此处第一个位置留给应用管理
         allApps.add(0,null);
         ResolveInfo info;
@@ -238,6 +253,28 @@ public class MyAppFragment extends Fragment {
             }
         }
         return allApps;
+    }
+
+    /*
+    *  剔除重复的APP
+     */
+    private List<ResolveInfo> removeRepeatApps(List<ResolveInfo> allApps){
+        List<String> packageLists = new ArrayList<>();
+        for(int i = 0; i < allApps.size(); i++){
+            packageLists.add(allApps.get(i).activityInfo.packageName);
+        }
+        packageLists = packageLists.stream().distinct().collect(Collectors.toList());//去掉重复的包名
+
+        List listTemp = new ArrayList();
+        String packageName = "";
+        for(int i = 0; i < allApps.size(); i++){
+            packageName = allApps.get(i).activityInfo.packageName;
+            if(packageLists.contains(packageName)){
+                listTemp.add(allApps.get(i));
+                packageLists.remove(packageName);
+            }
+        }
+        return listTemp;
     }
 
     @Override

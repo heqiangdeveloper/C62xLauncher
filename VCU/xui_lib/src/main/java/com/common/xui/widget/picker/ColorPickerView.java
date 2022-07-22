@@ -3,6 +3,7 @@ package com.common.xui.widget.picker;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
@@ -363,7 +364,7 @@ public class ColorPickerView extends View {
         c.drawRoundRect(new RectF(4, 6, bitmapForIndicator.getWidth() - 4, bitmapForIndicator.getHeight() - 6), 35, radius, paintForIndicator);
         needReDrawIndicator = false;
     }
-
+    Rect rectBg = new Rect();
     private void createColorTableBitmap() {
 
         Canvas c = new Canvas(bitmapForColor);
@@ -380,11 +381,17 @@ public class ColorPickerView extends View {
         paint.setColor(Color.BLACK);
         c.drawRoundRect(rf, r, r, paint);
 
-        paint.setShader(linearGradient);
-        //paint.setAlpha(126);
-        c.drawRoundRect(rf, r, r, paint);
-        paint.setShader(null);
+        /*paint.setShader(linearGradient);
+        //paint.setAlpha(110);
+        c.drawRoundRect(rf, r, r, paint);*/
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.img_yanse_bg);
+        rectBg.left = 0;
+        rectBg.top = 0;
+        rectBg.right = bitmap.getWidth();
+        rectBg.bottom =bitmap.getHeight();
+        c.drawBitmap(bitmap,rectBg,rf,paint);
 
+        paint.setShader(null);
         needReDrawColorTable = false;
     }
 
@@ -441,7 +448,7 @@ public class ColorPickerView extends View {
 
     private boolean inBoundOfColorTable(int ex, int ey) {
         if (orientation == Orientation.HORIZONTAL) {
-            if (ex <= mLeft + mRadius || ex >= (mRight - mRadius)) {
+            if (ex <= mLeft + mRadius + 30 || ex >= (mRight - mRadius) - 20) {
                 return false;
             }
         } else {

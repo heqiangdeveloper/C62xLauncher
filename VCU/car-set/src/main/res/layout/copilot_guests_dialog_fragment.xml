@@ -106,7 +106,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/x15"
                     android:text="@string/cabin_seat_screen_modify"
-                    android:textColor="@color/text_open"
+                    android:textColor="@color/copilot_guests_txt"
                     android:textSize="@dimen/text_11" />
 
                 <androidx.appcompat.widget.AppCompatImageView
@@ -185,7 +185,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/x15"
                     android:text="@string/cabin_seat_screen_modify"
-                    android:textColor="@color/text_open"
+                    android:textColor="@color/copilot_guests_txt"
                     android:textSize="@dimen/text_11" />
 
                 <androidx.appcompat.widget.AppCompatImageView

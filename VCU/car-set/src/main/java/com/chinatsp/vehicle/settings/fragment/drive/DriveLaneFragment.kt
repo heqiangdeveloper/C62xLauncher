@@ -1,8 +1,10 @@
 package com.chinatsp.vehicle.settings.fragment.drive
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.CompoundButton
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.adas.LaneManager
 import com.chinatsp.settinglib.optios.RadioNode
@@ -28,6 +30,7 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
 
     override fun initData(savedInstanceState: Bundle?) {
         initSwitchOption()
+        initVideoListener()
         addSwitchLiveDataListener()
         setSwitchListener()
 
@@ -36,7 +39,17 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
         setRadioListener()
     }
 
-
+    private fun initVideoListener() {
+        val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_auxiliary_system
+        binding.video.setVideoURI(Uri.parse(uri));
+        binding.video.setOnCompletionListener {
+            dynamicEffect()
+        }
+        binding.video.setOnErrorListener { _, _, _ ->
+            dynamicEffect()
+            true
+        }
+    }
     private fun initRadioOption() {
         initRadioOption(RadioNode.ADAS_LANE_ASSIST_MODE, viewModel.laneAssistMode)
         initRadioOption(RadioNode.ADAS_LDW_STYLE, viewModel.ldwStyle)
@@ -149,19 +162,22 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
     }
 
     private fun doUpdateSwitch(swb: SwitchButton, status: Boolean, immediately: Boolean = false) {
-        if (swb.id == binding.adasLaneLaneAssistSwitch.id) {
-            dynamicEffect(status)
-        }
         if (!immediately) {
             swb.setCheckedNoEvent(status)
         } else {
             swb.setCheckedImmediatelyNoEvent(status)
         }
+        dynamicEffect()
     }
 
     private fun setSwitchListener() {
         binding.adasLaneLaneAssistSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            dynamicEffect(isChecked)
+           if(isChecked){
+               binding.videoImage.visibility = View.GONE
+               binding.video.start()
+           }else{
+               dynamicEffect()
+           }
             doUpdateSwitchOption(SwitchNode.ADAS_LANE_ASSIST, buttonView, isChecked)
         }
     }
@@ -177,15 +193,12 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
         return null != value && value.isNotBlank() && value.matches(Regex("\\d+"))
     }
 
-    private fun dynamicEffect(status: Boolean) {
-        if (status) {
-            binding.roadRed.visibility = View.VISIBLE
-            binding.carIvJust.visibility = View.GONE
-            binding.carIv.visibility = View.VISIBLE
+    private fun dynamicEffect() {
+        binding.videoImage.visibility = View.VISIBLE
+        if (binding.adasLaneLaneAssistSwitch.isChecked) {
+            binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.ic_lane_assist) })
         } else {
-            binding.roadRed.visibility = View.GONE
-            binding.carIvJust.visibility = View.VISIBLE
-            binding.carIv.visibility = View.GONE
+            binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.intelligent_cruise) })
         }
     }
 }

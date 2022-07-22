@@ -1,8 +1,10 @@
 package com.chinatsp.vehicle.settings.fragment.drive
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.CompoundButton
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.adas.CruiseManager
 import com.chinatsp.settinglib.optios.RadioNode
@@ -14,6 +16,7 @@ import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentFragmentBinding>() {
@@ -28,6 +31,7 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
 
     override fun initData(savedInstanceState: Bundle?) {
         initSwitchOption()
+        initVideoListener()
         addSwitchLiveDataListener()
         setSwitchListener()
 
@@ -38,6 +42,21 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
 
     private fun initRadioOption() {
         initRadioOption(RadioNode.ADAS_LIMBER_LEAVE, viewModel.limberLeaveRadio)
+    }
+
+    private fun initVideoListener() {
+        val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_acc
+        binding.video.setVideoURI(Uri.parse(uri));
+        binding.video.setOnCompletionListener {
+            binding.video.pause()
+            binding.video.seekTo(0)
+            dynamicEffect()
+        }
+        binding.video.setOnErrorListener { _, _, _ ->
+            dynamicEffect()
+            true
+        }
+
     }
 
     private fun addRadioLiveDataListener() {
@@ -140,23 +159,16 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
         } else {
             swb.setCheckedImmediatelyNoEvent(status)
         }
-        if (status) {
-            if (swb.id == binding.accessCruiseCruiseAssist.id) {
-                binding.roadBlue.visibility = View.VISIBLE
-            }
-        } else {
-            if (swb.id == binding.accessCruiseCruiseAssist.id) {
-                binding.roadBlue.visibility = View.GONE
-            }
-        }
+        dynamicEffect()
     }
 
     private fun setSwitchListener() {
         binding.accessCruiseCruiseAssist.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
-                binding.roadBlue.visibility = View.VISIBLE
+                binding.intelligentCruise.visibility = View.GONE
+                binding.video.start()
             } else {
-                binding.roadBlue.visibility = View.GONE
+                dynamicEffect()
             }
             doUpdateSwitchOption(SwitchNode.ADAS_IACC, buttonView, isChecked)
         }
@@ -178,6 +190,13 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
     private fun isCanToInt(value: String?): Boolean {
         return null != value && value.isNotBlank() && value.matches(Regex("\\d+"))
     }
-
+    private fun dynamicEffect() {
+        binding.intelligentCruise.visibility = View.VISIBLE
+        if(binding.accessCruiseCruiseAssist.isChecked){
+            binding.intelligentCruise.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.intelligent_cruise_open) })
+        }else{
+            binding.intelligentCruise.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.intelligent_cruise) })
+        }
+    }
 }
 

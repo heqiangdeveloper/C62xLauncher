@@ -291,9 +291,10 @@ public class VSeekBar extends View {
 
     RectF normalRectF = new RectF();
     RectF selectRectF = new RectF();
+    Rect rect = new Rect();
 
     private void drawEntireRangeLine(Canvas canvas) {
-        if (null == normalGradient) {
+       /* if (null == normalGradient) {
             normalGradient = new LinearGradient(0, 0, getWidth(), 0, Color.parseColor("#444444"), Color.parseColor("#444444"), Shader.TileMode.CLAMP);
         }
         mPaint.setShader(normalGradient);
@@ -301,8 +302,19 @@ public class VSeekBar extends View {
         normalRectF.top = mMiddleY - mOutsideRangeLineStrokeWidth / 2;
         normalRectF.right = mLineEndX;
         normalRectF.bottom = mMiddleY + mOutsideRangeLineStrokeWidth / 2;
-        canvas.drawRoundRect(normalRectF, normalRectF.height() / 2, normalRectF.height() / 2, mPaint);
+        canvas.drawRoundRect(normalRectF, normalRectF.height() / 2, normalRectF.height() / 2, mPaint);*/
 
+        normalRectF.left = mLineStartX;
+        normalRectF.top = mMiddleY - mOutsideRangeLineStrokeWidth / 2;
+        normalRectF.right = mLineEndX;
+        normalRectF.bottom = mMiddleY + mOutsideRangeLineStrokeWidth / 2;
+
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.luminance_bg_blue);
+        rect.left = 0;
+        rect.top = 0;
+        rect.right = bitmap.getWidth();
+        rect.bottom =bitmap.getHeight();
+        canvas.drawBitmap(bitmap,rect,normalRectF,mPaint);
         if (mIsLineRound) {
 //            mPaint.setColor(mInsideRangeColor);
 //            canvas.drawCircle(mLineStartX, mMiddleY, mOutsideRangeLineStrokeWidth / 2, mPaint);
@@ -319,8 +331,10 @@ public class VSeekBar extends View {
 //        mPaint.setStrokeWidth(mInsideRangeLineStrokeWidth);
         mPaint.setXfermode(xfermode);
         if (null == linearGradient) {
-            int startColor = Color.parseColor("#3300B6FF");
-            int endColor = Color.parseColor("#FF299EEE");
+            /*int startColor = Color.parseColor("#3300B6FF");
+            int endColor = Color.parseColor("#FF299EEE");*/
+            int startColor = getContext().getColor(R.color.seek_start_color);
+            int endColor = getContext().getColor(R.color.seek_end_color);
             linearGradient = new LinearGradient(0, 0, getWidth(), 0, startColor, endColor, Shader.TileMode.CLAMP);
         }
         mPaint.setShader(linearGradient);

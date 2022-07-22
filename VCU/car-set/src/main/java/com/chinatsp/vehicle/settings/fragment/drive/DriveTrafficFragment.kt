@@ -1,8 +1,10 @@
 package com.chinatsp.vehicle.settings.fragment.drive
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.CompoundButton
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.adas.CombineManager
@@ -26,10 +28,22 @@ class DriveTrafficFragment : BaseFragment<CombineViewModel, DriveTrafficFragment
 
     override fun initData(savedInstanceState: Bundle?) {
         initSwitchOption()
+        initVideoListener()
         addSwitchLiveDataListener()
         setSwitchListener()
     }
 
+    private fun initVideoListener() {
+        val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_sla
+        binding.video.setVideoURI(Uri.parse(uri));
+        binding.video.setOnCompletionListener {
+            dynamicEffect()
+        }
+        binding.video.setOnErrorListener { _, _, _ ->
+            dynamicEffect()
+            true
+        }
+    }
 
     private fun initSwitchOption() {
         initSwitchOption(SwitchNode.ADAS_TSR, viewModel.slaValue)
@@ -55,17 +69,22 @@ class DriveTrafficFragment : BaseFragment<CombineViewModel, DriveTrafficFragment
     }
 
     private fun doUpdateSwitch(swb: SwitchButton, status: Boolean, immediately: Boolean = false) {
-        dynamicEffect(status)
         if (!immediately) {
             swb.setCheckedNoEvent(status)
         } else {
             swb.setCheckedImmediatelyNoEvent(status)
         }
+        dynamicEffect()
     }
 
     private fun setSwitchListener() {
         binding.adasTrafficSlaSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            dynamicEffect(isChecked)
+            if(isChecked){
+                binding.videoImage.visibility = View.GONE
+                binding.video.start()
+            }else{
+                dynamicEffect()
+            }
             doUpdateSwitchOption(SwitchNode.ADAS_TSR, buttonView, isChecked)
         }
     }
@@ -77,11 +96,12 @@ class DriveTrafficFragment : BaseFragment<CombineViewModel, DriveTrafficFragment
         }
     }
 
-    private fun dynamicEffect(status: Boolean) {
-        if (status) {
-            binding.speedLimit.visibility = View.VISIBLE
+    private fun dynamicEffect() {
+        binding.videoImage.visibility = View.VISIBLE
+        if (binding.adasTrafficSlaSwitch.isChecked) {
+            binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.ic_traffic_signs) })
         } else {
-            binding.speedLimit.visibility = View.GONE
+            binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.intelligent_cruise) })
         }
     }
 

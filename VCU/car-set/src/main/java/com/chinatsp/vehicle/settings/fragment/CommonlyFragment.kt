@@ -22,8 +22,12 @@ class CommonlyFragment: BaseTabFragment<BaseViewModel, AccessFragmentBinding>() 
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-
+        setClickListener()
     }
-
+    private fun setClickListener() {
+        binding.closeWindow.setOnClickListener {  }
+        binding.openWindow.setOnClickListener {  }
+        binding.refreshWindow.setOnClickListener {  }
+    }
 
 }

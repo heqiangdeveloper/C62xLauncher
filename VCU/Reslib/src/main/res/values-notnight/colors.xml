@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <color name="text_3">#333333</color>
+    <color name="text_6">#666666</color>
+    <color name="text_9">#999999</color>
+
+    <color name="text_oil_price">#008577</color>
+
+    <color name="line_h">#f3f3f3</color>
+    <color name="tab_text_color">#FFFFFF</color>
+
+    <color name="picture_tab_color_false">#503331</color>
+    <color name="tab_color_bg">#2A3347</color>
+    <color name="normal_text_color">#C0B3B3</color>
+    <color name="select_text_color">#FFFFFFFF</color>
+
+    <color name="tcv_unselected_color">#666666</color>
+    <color name="tcv_onselected_color">#019CDD</color>
+
+    <color name="tcv_radio_select_end_color">#C43A47</color>
+    <color name="tcv_radio_select_start_color">#B92B31</color>
+
+    <color name="tcv_radio_normal_end_color">#666666</color>
+    <color name="tcv_radio_normal_start_color">#666666</color>
+
+    <color name="tab_option_title_text_color">@android:color/white</color>
+
+    <color name="click_text_color">#C0B3B3</color>
+    <color name="click_text_color_white">#ffffff</color>
+
+    <color name="line_end_color">#26FFFFFF</color>
+    <color name="line_start_color">#266A6A6A</color>
+</resources>
