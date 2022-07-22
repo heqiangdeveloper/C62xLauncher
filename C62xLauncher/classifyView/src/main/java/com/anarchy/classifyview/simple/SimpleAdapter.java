@@ -121,6 +121,7 @@ public abstract class SimpleAdapter<T, VH extends SimpleAdapter.ViewHolder> impl
         public void onBindViewHolder(VH holder, int position) {
             CanMergeView canMergeView = holder.getCanMergeView();
             if (canMergeView != null) {
+                Log.d("dragtest","onBindViewHolder position = " + position + ",mData.size() = " + mData.size());
                 canMergeView.initMain(position, mData.get(position));
             }
             mSimpleAdapter.onBindMainViewHolder(holder, position);
@@ -257,6 +258,7 @@ public abstract class SimpleAdapter<T, VH extends SimpleAdapter.ViewHolder> impl
 
         @Override
         public List<T> explodeItem(int position, View pressedView) {
+            Log.d("dragtest","position = " + position + ",mData.size() = " + mData.size());
             if (position < mData.size())
                 return mData.get(position);
             return null;
