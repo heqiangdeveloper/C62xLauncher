@@ -18,6 +18,7 @@ import com.chinatsp.ifly.aidlbean.NlpVoiceModel
 import com.chinatsp.ifly.voiceadapter.Business
 import com.chinatsp.ifly.voiceadapter.SpeechServiceAgent
 import com.chinatsp.ifly.voiceadapter.abs.SpeechControlListenerAbs
+import com.chinatsp.vehicle.controller.annotation.IStatus
 import com.chinatsp.vehicle.controller.bean.Cmd
 
 /**
@@ -116,15 +117,21 @@ class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback {
     /**
      * 小欧不做处理 播报，防止小欧发呆
      */
-    fun defaultHandleSpeech() {
+    private fun defaultHandleSpeech() {
+        audioHintActionResult("mainC14", "")
+    }
+
+    private fun audioHintActionResult(audioSerial: String, description: String) {
         val voiceName = Settings.System.getString(context.contentResolver, "aware")
         val map: MutableMap<String, String> = HashMap()
         map["#VOICENAME#"] = voiceName
+        LogManager.d(TAG, "audioHintActionResult invoke voiceName:$voiceName, " +
+                "audioSerial:$audioSerial, description:$description")
         speechService.ttsSpeakListener(
             shownIfly = false,
             secondsr = false,
             priority = 1,
-            conditionId = "mainC14",
+            conditionId = audioSerial,
             data = map,
             listener = ttsResultListener,
             listener2 = ttsStatusListener
@@ -171,8 +178,8 @@ class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback {
     inner class CmdHandleCallback : ICmdCallback.Stub() {
         override fun onCmdHandleResult(cmd: Cmd) {
             LogManager.d(TAG, "onCmdHandleResult $cmd")
+            audioHintActionResult("yydsC10", cmd.message)
         }
-
     }
 
     override fun handleMessage(msg: Message): Boolean {
@@ -199,9 +206,18 @@ class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback {
             defaultHandleSpeech()
             return
         }
-        val result = null != controller
-                && !TextUtils.isEmpty(obj.service)
-                && CommandParser().doDispatchSrAction(obj, controller!!, CmdHandleCallback())
+        var result = null != controller && !TextUtils.isEmpty(obj.service);
+        if (!result) {
+            defaultHandleSpeech()
+            return
+        }
+        result = controller!!.isEngineStatus(context.packageName)
+        if (!result) {
+            LogManager.d(TAG, "发动机没有开启，请打开发动机！")
+            audioHintActionResult("", "发动机没有开启，请打开发动机！")
+            return
+        }
+        result = CommandParser().doDispatchSrAction(obj, controller!!, CmdHandleCallback())
         if (!result) {
             defaultHandleSpeech()
         }

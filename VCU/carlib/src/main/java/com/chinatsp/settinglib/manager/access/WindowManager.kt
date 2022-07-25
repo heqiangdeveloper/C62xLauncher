@@ -2,6 +2,7 @@ package com.chinatsp.settinglib.manager.access
 
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
+import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.manager.BaseManager
@@ -9,6 +10,11 @@ import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
+import com.chinatsp.vehicle.controller.ICmdCallback
+import com.chinatsp.vehicle.controller.annotation.Action
+import com.chinatsp.vehicle.controller.annotation.IStatus
+import com.chinatsp.vehicle.controller.annotation.Model
+import com.chinatsp.vehicle.controller.bean.Cmd
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -19,9 +25,13 @@ import java.util.concurrent.atomic.AtomicBoolean
  * @desc   :
  * @version: 1.0
  */
-
-
 class WindowManager private constructor() : BaseManager(), ISwitchManager {
+//    天窗开启控制语音开启的判定条件：
+//    车速小于120KM/H(车速使用仪表的车速！！)，
+//    超速时，用户触发语音开启指令后弹窗及语音播报提示“车速过快，建议不要开启天窗” 此时不用说“好的”
+//    此功能仅针对天窗的打开信号进行判断，关闭指令不受影响
+
+    private var speed: Int = 130
 
     private val autoCloseWinInRain: AtomicBoolean by lazy {
         val node = SwitchNode.WIN_CLOSE_WHILE_RAIN
@@ -182,50 +192,37 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
         }
     }
 
-//    private fun onSwitchChanged(switchNode: SwitchNode, property: CarPropertyValue<*>) {
-//        when (switchNode) {
-//            /**
-//             * 车门车窗-车窗-雨天自动关窗 (状态下发)
-//             * 0x0: Disable
-//             * 0x1: Enable
-//             */
-//            SwitchNode.WIN_CLOSE_WHILE_RAIN -> {
-//                var value = property.value
-//                if (value is Int) {
-//                    value += 1
-//                    autoCloseWinInRain.set(switchNode.isOn(value))
-//                    onSwitchChanged(switchNode, autoCloseWinInRain.get())
-//                }
-//            }
-//            /**
-//             * 车门车窗-车窗-锁车自动关窗 (状态上报)
-//             * 0x0: No action when locking（default）
-//             * 0x1: close windows when locking door
-//             * 0x2: reserved
-//             * 0x3: Reserved
-//             */
-//            SwitchNode.WIN_CLOSE_FOLLOW_LOCK -> {
-//                var value = property.value
-//                if (value is Int) {
-//                    value += 1
-//                    autoCloseWinAtLock.set(switchNode.isOn(value))
-//                    onSwitchChanged(switchNode, autoCloseWinAtLock.get())
-//                }
-//            }
-//            else -> {}
-//        }
-//    }
-//
-//    private fun onSwitchChanged(switchNode: SwitchNode, status: Boolean) {
-//        synchronized(listenerStore) {
-//            listenerStore.filterValues { null != it.get() }
-//                .forEach{
-//                    val listener = it.value.get()
-//                    if (null != listener && listener is ISwitchListener) {
-//                        listener.onSwitchOptionChanged(status, switchNode)
-//                    }
-//                }
-//        }
-//    }
+    override fun doOuterControlCommand(cmd: Cmd, callback: ICmdCallback?) {
+        LogManager.d(TAG, "doOuterControlCommand $cmd")
+        if (Model.ACCESS_WINDOW == cmd.model) {
+            cmd.status = IStatus.RUNNING
+            doControlLouver(cmd, callback)
+        }
 
+    }
+
+    /**
+     * 天窗控制
+     */
+    private fun doControlLouver(cmd: Cmd, callback: ICmdCallback?) {
+        LogManager.d(TAG, "doControlLouver $cmd")
+        if (Action.OPEN == cmd.action) {
+            if (speed >= 120) {
+                cmd.status = IStatus.FAILED
+                cmd.message = "车速过快，建议不要开启天窗"
+                callback?.onCmdHandleResult(cmd)
+            } else {
+                TODO("打开天窗指令")
+                cmd.status = IStatus.SUCCESS
+                cmd.message = "天窗已打开"
+                callback?.onCmdHandleResult(cmd)
+            }
+        } else if (Action.CLOSE == cmd.action) {
+            TODO("关闭天窗指令")
+            cmd.status = IStatus.SUCCESS
+            cmd.message = "天窗已打开"
+            callback?.onCmdHandleResult(cmd)
+        }
+    }
+    
 }

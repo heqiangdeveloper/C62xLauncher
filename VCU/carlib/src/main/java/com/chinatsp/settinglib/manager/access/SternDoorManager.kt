@@ -1,15 +1,20 @@
 package com.chinatsp.settinglib.manager.access
 
+import android.car.VehicleAreaType
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
+import com.chinatsp.settinglib.VcuUtils
+import com.chinatsp.settinglib.constants.OffLine
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.ISignal
-import com.chinatsp.settinglib.optios.Area
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
+import com.chinatsp.vehicle.controller.ICmdCallback
+import com.chinatsp.vehicle.controller.annotation.Action
+import com.chinatsp.vehicle.controller.bean.Cmd
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -143,20 +148,6 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
         } ?: false
     }
 
-
-    /**
-     * 【设置】电动尾门感应进入设置
-     * @param value 0x1: OFF; 0x2: On Mode 1; 0x3: On Mode 2
-     */
-    private fun doUpdateSternDoorOption(value: Int): Boolean {
-        val isValid = listOf(0x01, 0x02, 0x03).any { it == value }
-        if (!isValid) {
-            return false
-        }
-        val signal = CarCabinManager.ID_PTM_SMT_ENTRY_SET
-        return writeProperty(signal, value, Origin.CABIN, Area.GLOBAL)
-    }
-
     override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             SwitchNode.AS_STERN_ELECTRIC.get.signal -> {
@@ -175,5 +166,101 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
         }
     }
 
+    override fun doOuterControlCommand(cmd: Cmd, callback: ICmdCallback?) {
+        if (Action.OPEN == cmd.action) {
+            doControlTrunk(cmd, callback, true)
+            callback?.onCmdHandleResult(cmd)
+        } else if (Action.CLOSE == cmd.action) {
+            doControlTrunk(cmd, callback, false)
+            callback?.onCmdHandleResult(cmd)
+        }
+    }
+
+    private fun doControlTrunk(cmd: Cmd, callback: ICmdCallback?, open: Boolean) {
+        if (!VcuUtils.isSupportFunction(OffLine.ETRUNK)) {
+            cmd.message = "您的爱车不支持此功能！"
+            return
+        }
+        if (open) {
+            doTrunkAction(isTrunkOpened(), isTrunkOpening(), 1)
+            cmd.message = "电动尾门已打开"
+        } else {
+            doTrunkAction(isTrunkClosed(), isTrunkClosing(), 0)
+            cmd.message = "电动尾门已关闭"
+        }
+    }
+
+    private fun doTrunkAction(complete: Boolean, running: Boolean, value: Int) {
+        if (!complete && !running) {
+            //1表示press,发起打开请求
+            writeProperty(CarCabinManager.ID_HU_BACKDOORSWITCH,
+                value, Origin.CABIN, VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL)
+        }
+    }
+
+    /**
+     * 获取电动尾门 打开的位置
+     */
+    fun getTrunkOpenLevel(): Int {
+        val signal = CarCabinManager.ID_BODY_DOOR_TRUNK_DOOR_POS;
+        //VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL
+        return readIntProperty(signal, Origin.CABIN, VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL)
+    }
+
+    /**
+     * 获取尾门状态
+     *
+     * @return 0x0=Unkonw；
+     * 0x1=FullyOpened；
+     * 0x2=FullyClosed；
+     * 0x3=Opening；
+     * 0x4=Closing；
+     * 0x5=Stop；
+     * 0x6=Reserved；
+     * 0x7=Reserved
+     */
+    private fun getTrunkStatusValue(): Int {
+        val signal = CarCabinManager.ID_BODY_DOOR_TRUNK_DOOR_STATE;
+        //VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL
+        return readIntProperty(signal, Origin.CABIN, VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL)
+    }
+
+    /**
+     * 尾门是否已经打开
+     * @return true 表示已经打开
+     */
+    fun isTrunkOpened(): Boolean {
+        val value = getTrunkStatusValue()
+        return isValidValue(value, 0x00, 0x06, 0x07) && 0x01 == value
+    }
+    /**
+     * 尾门是否正在打开中
+     * @return true 表示打开中
+     */
+    fun isTrunkOpening(): Boolean {
+        val value = getTrunkStatusValue()
+        return isValidValue(value, 0x00, 0x06, 0x07) && 0x03 == value
+    }
+
+    /**
+     * 尾门是否已经关闭
+     * @return true 表示已经关闭
+     */
+    fun isTrunkClosed(): Boolean {
+        val value = getTrunkStatusValue()
+        return isValidValue(value, 0x00, 0x06, 0x07) && 0x02 == value
+    }
+    /**
+     * 尾门是否正在关闭中
+     * @return true 表示关闭中
+     */
+    fun isTrunkClosing(): Boolean {
+        val value = getTrunkStatusValue()
+        return isValidValue(value, 0x00, 0x06, 0x07) && 0x04 == value
+    }
+
+    private fun isValidValue(value: Int, vararg arrays: Int): Boolean {
+        return !arrays.contains(value)
+    }
 
 }

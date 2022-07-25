@@ -42,6 +42,10 @@ class CabinManager private constructor() : BaseManager(), ITabStore {
         return careSerials[origin] ?: HashSet()
     }
 
+//    fun onTrailerRemindChanged(onOff: Int, level: Int, dist: Int) {
+//        OtherManager.instance.onTrailerRemindChanged(onOff, level, dist)
+//    }
+
     companion object : ISignal {
 
         override val TAG: String = CabinManager::class.java.simpleName

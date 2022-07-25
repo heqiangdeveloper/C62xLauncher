@@ -43,6 +43,8 @@ public interface ConstantsVolume {
     String WINDOW_LEFT_BACK2 = "后排左车窗";
     String WINDOW_RIGHT_BACK2 = "后排右车窗";
 
+    String[] LOUVER = {"天窗", "遮阳帘"};
+
     String PARK_AUTO = "自动泊车";
     String SLIDE_DOOR_LEFT = "左侧滑门";
     String SLIDE_DOOR_RIGHT = "右侧滑门";
@@ -108,4 +110,6 @@ public interface ConstantsVolume {
     //------------- 可见即可说热词 end -------------
 
     String[] PACKAGES = {"com.chinatsp.dvrcamera","com.onstyle.track"};
+
+
 }

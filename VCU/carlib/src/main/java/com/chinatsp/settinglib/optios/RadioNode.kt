@@ -89,14 +89,14 @@ enum class RadioNode(
     /**
      * 驾驶辅助-智能巡航-前车驶离提示
      * set ->
-    object distingguish and disappear switch,if not set'OBJ_DETECTION',
-    the value of signal is 0x0(inactive)[0x1,0,0x0,0x5]
-    0x0: Inactive
-    0x1: Detect warning
-    0x2: Disappare warning
-    0x3: Detect and disappear warning(default)
-    0x4: Warning off
-    0x5~0x7:Reserved
+        object distingguish and disappear switch,if not set'OBJ_DETECTION',
+        the value of signal is 0x0(inactive)[0x1,0,0x0,0x5]
+        0x0: Inactive
+        0x1: Detect warning
+        0x2: Disappare warning
+        0x3: Detect and disappear warning(default)
+        0x4: Warning off
+        0x5~0x7:Reserved
      */
     ADAS_LIMBER_LEAVE(
         get = RNorm(
@@ -333,6 +333,37 @@ enum class RadioNode(
             signal = -1
         ),
         default = 0x1
+    ),
+
+    /**
+     * 行车--拖车提醒--传感器灵敏度
+     * 此信号走TBOX信号 而非走CAN信号， 所以需要特殊处理
+     */
+    DEVICE_TRAILER_SENSITIVITY(
+        get = RNorm(
+            values = intArrayOf(0x1, 0x2, 0x3),
+            signal = -1
+        ),
+        set = RNorm(
+            values = intArrayOf(0x1, 0x2, 0x3),
+            signal = -1
+        ),
+        default = 0x1
+    ),
+    /**
+     * 行车--拖车提醒--拖车提醒距离
+     * 此信号走TBOX信号 而非走CAN信号， 所以需要特殊处理
+     */
+    DEVICE_TRAILER_DISTANCE(
+        get = RNorm(
+            values = intArrayOf(200, 500, 1000, 2000),
+            signal = -1
+        ),
+        set = RNorm(
+            values = intArrayOf(200, 500, 1000, 2000),
+            signal = -1
+        ),
+        default = 200
     )
     ;
 

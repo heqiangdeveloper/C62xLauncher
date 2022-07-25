@@ -552,9 +552,12 @@ enum class SwitchNode(
     //----------------行车 start ---------------------------------
     /**
      * 行车--其它--拖车提醒
+     * 此开关项走的是TBox信号而非CAN信号，所以需要特殊处理
+     * get -> 拖车开关：0：Inactive  1：ON  2：OFF
+     * set -> 拖车开关：0：Inactive  1：ON  2：OFF
      */
     DRIVE_TRAILER_REMIND(
-        get = Norm(on = 0x1, off = 0x0, signal = -1),
+        get = Norm(on = 0x1, off = 0x2, signal = -1),
         set = Norm(on = 0x1, off = 0x2, signal = -1),
         default = true
     ),

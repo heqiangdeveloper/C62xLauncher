@@ -1,15 +1,20 @@
 package com.chinatsp.settinglib.manager.cabin
 
 import android.car.hardware.CarPropertyValue
+import com.chinatsp.settinglib.LogManager
+import com.chinatsp.settinglib.SettingManager
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.manager.BaseManager
+import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.ISignal
-import com.chinatsp.settinglib.manager.ISwitchManager
+import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
+import timber.log.Timber
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author : luohong
@@ -20,12 +25,16 @@ import java.util.concurrent.atomic.AtomicBoolean
  */
 
 
-class OtherManager private constructor() : BaseManager(), ISwitchManager {
+class OtherManager private constructor() : BaseManager(), IOptionManager {
 
+    /**
+     * 拖车提醒开关（此信号走TBox 协议而非CAN信号，所以需要特殊处理）
+     */
     private val trailerRemind: AtomicBoolean by lazy {
         val node = SwitchNode.DRIVE_TRAILER_REMIND
         AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
+            val value = SettingManager.instance.getTrailerRemindSwitch()
+            val result = if (null != value) node.isOn(value) else node.default
             doUpdateSwitchValue(node, this, result)
         }
     }
@@ -51,6 +60,24 @@ class OtherManager private constructor() : BaseManager(), ISwitchManager {
         AtomicBoolean(node.isOn()).apply {
             val result = readIntProperty(node.get.signal, node.get.origin)
             doUpdateSwitchValue(node, this, result)
+        }
+    }
+
+    private val sensitivity: AtomicInteger by lazy {
+        val node = RadioNode.DEVICE_TRAILER_SENSITIVITY
+        AtomicInteger(node.default).apply {
+            val value = SettingManager.instance.getTrailerSensitivity()
+            val result = value ?: node.default
+            doUpdateRadioValue(node, this, result)
+        }
+    }
+
+    private val distance: AtomicInteger by lazy {
+        val node = RadioNode.DEVICE_TRAILER_DISTANCE
+        AtomicInteger(node.default).apply {
+            val value = SettingManager.instance.getTrailerDistance()
+            val result = value ?: node.default
+            doUpdateRadioValue(node, this, result)
         }
     }
 
@@ -103,7 +130,7 @@ class OtherManager private constructor() : BaseManager(), ISwitchManager {
     override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
         return when (node) {
             SwitchNode.DRIVE_TRAILER_REMIND -> {
-                writeProperty(node.set.signal, node.value(status), node.set.origin)
+                SettingManager.instance.setTrailerRemind(node.value(status))
             }
             SwitchNode.DRIVE_BATTERY_OPTIMIZE -> {
                 writeProperty(node.set.signal, node.value(status), node.set.origin)
@@ -113,6 +140,30 @@ class OtherManager private constructor() : BaseManager(), ISwitchManager {
             }
             SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP -> {
                 writeProperty(node.set.signal, node.value(status), node.set.origin)
+            }
+            else -> false
+        }
+    }
+
+    override fun doGetRadioOption(node: RadioNode): Int {
+        return when (node) {
+            RadioNode.DEVICE_TRAILER_DISTANCE -> {
+                distance.get()
+            }
+            RadioNode.DEVICE_TRAILER_SENSITIVITY -> {
+                sensitivity.get()
+            }
+            else -> -1
+        }
+    }
+
+    override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
+        return when (node) {
+            RadioNode.DEVICE_TRAILER_DISTANCE -> {
+                SettingManager.instance.setTrailerDistance(value)
+            }
+            RadioNode.DEVICE_TRAILER_SENSITIVITY -> {
+                SettingManager.instance.setTrailerSensitivity(value)
             }
             else -> false
         }
@@ -150,14 +201,19 @@ class OtherManager private constructor() : BaseManager(), ISwitchManager {
                 onSwitchChanged(SwitchNode.DRIVE_WIRELESS_CHARGING, wirelessCharging, property)
             }
             SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP.get.signal -> {
-                onSwitchChanged(
-                    SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP,
-                    wirelessChargingLamp,
-                    property
-                )
+                val node = SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP
+                onSwitchChanged(node, wirelessChargingLamp, property)
             }
             else -> {}
         }
     }
+
+    fun onTrailerRemindChanged(onOff: Int, level: Int, dist: Int) {
+        Timber.d("onTrailerRemindChanged statusValue:%s, level:%s, distance:%s", onOff, level, dist)
+        doUpdateSwitchValue(SwitchNode.DRIVE_TRAILER_REMIND, trailerRemind, onOff, this::doSwitchChanged)
+        doUpdateRadioValue(RadioNode.DEVICE_TRAILER_SENSITIVITY, sensitivity, level, this::doRadioChanged)
+        doUpdateRadioValue(RadioNode.DEVICE_TRAILER_DISTANCE, distance, dist, this::doRadioChanged)
+    }
+
 
 }

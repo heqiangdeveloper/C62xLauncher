@@ -20,6 +20,5 @@ annotation class Action {
         const val OPEN: Int = 2
         const val CLOSE: Int = 3
         const val OPTION: Int = 4
-
     }
 }

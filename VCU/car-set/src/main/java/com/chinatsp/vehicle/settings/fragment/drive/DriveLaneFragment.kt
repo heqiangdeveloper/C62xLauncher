@@ -29,10 +29,10 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
 
 
     override fun initData(savedInstanceState: Bundle?) {
-        initSwitchOption()
         initVideoListener()
-        addSwitchLiveDataListener()
-        setSwitchListener()
+//        initSwitchOption()
+//        addSwitchLiveDataListener()
+//        setSwitchListener()
 
         initRadioOption()
         addRadioLiveDataListener()
@@ -112,7 +112,7 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
     ) {
         val tabView = when (node) {
             RadioNode.ADAS_LANE_ASSIST_MODE -> {
-                binding.adasLaneLaneAssistRadio.getChildAt(0).visibility = View.GONE
+//                binding.adasLaneLaneAssistRadio.getChildAt(0).visibility = View.GONE
                 binding.adasLaneLaneAssistRadio
             }
             RadioNode.ADAS_LDW_STYLE -> binding.adasLaneLdwStyleRadio

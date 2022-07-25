@@ -42,6 +42,8 @@ dependencies {
     //noinspection GradleDependency
     implementation deps.kotlin
     implementation project(':controller')
+    //log
+    implementation deps.timber
 }
 
 repositories {

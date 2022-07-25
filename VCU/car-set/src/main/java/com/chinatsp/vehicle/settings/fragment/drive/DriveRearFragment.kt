@@ -205,6 +205,7 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
     private fun isCanToInt(value: String?): Boolean {
         return null != value && value.isNotBlank() && value.matches(Regex("\\d+"))
     }
+
     private fun startVideo(path:Int){
         val url = "android.resource://" + activity?.packageName + "/" + path
         binding.videoImage.visibility = View.GONE

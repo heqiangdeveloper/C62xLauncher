@@ -3,7 +3,9 @@ package com.chinatsp.settinglib.service
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.LogManager
+import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.IOuterController
 import com.chinatsp.vehicle.controller.annotation.Action
@@ -32,13 +34,19 @@ class VehicleService: Service() {
     }
 
     inner class OuterControllerImpl: IOuterController.Stub() {
-        override fun doOuterControlCommand(cmd: Cmd, callback: ICmdCallback) {
-            LogManager.d(TAG, "doOuterControlCommand cmd:$cmd")
-            if (cmd.action == Action.OPEN) {
-                cmd.status = IStatus.SUCCESS
-                cmd.message = "打开成功！！"
-            }
-            callback.onCmdHandleResult(cmd)
+
+        override fun isEngineStatus(packageName: String?): Boolean {
+            return Constant.ENGINE_STATUS
+        }
+
+        override fun doOuterControlCommand(cmd: Cmd, callback: ICmdCallback?) {
+            LogManager.d(TAG, "doOuterControlCommand -------------- cmd:$cmd")
+            GlobalManager.instance.doOuterControlCommand(cmd, callback)
+//            if (cmd.action == Action.OPEN) {
+//                cmd.status = IStatus.SUCCESS
+//                cmd.message = "打开成功！！"
+//            }
+//            callback?.onCmdHandleResult(cmd)
         }
 
 

@@ -9,6 +9,8 @@ import com.chinatsp.settinglib.optios.Area
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
+import com.chinatsp.vehicle.controller.ICmdCallback
+import com.chinatsp.vehicle.controller.bean.Cmd
 import java.lang.ref.WeakReference
 
 /**
@@ -86,6 +88,10 @@ abstract class BaseManager : IManager {
 
     fun readIntProperty(id: Int, origin: Origin, area: Area = Area.GLOBAL): Int {
         return signalService.readIntProperty(id, origin, area)
+    }
+
+    fun readIntProperty(id: Int, origin: Origin, areaValue: Int): Int {
+        return signalService.readIntProperty(id, origin, areaValue)
     }
 
 
@@ -174,6 +180,10 @@ abstract class BaseManager : IManager {
     }
 
     protected open fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
+
+    }
+
+    open fun doOuterControlCommand(cmd: Cmd, callback: ICmdCallback?) {
 
     }
 

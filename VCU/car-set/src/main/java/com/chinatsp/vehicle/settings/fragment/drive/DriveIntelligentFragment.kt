@@ -96,7 +96,7 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
     ) {
         val tabView = when (node) {
             RadioNode.ADAS_LIMBER_LEAVE -> {
-                binding.accessCruiseLimberLeaveRadio.getChildAt(0).visibility = View.GONE
+//                binding.accessCruiseLimberLeaveRadio.getChildAt(0).visibility = View.GONE
                 binding.accessCruiseLimberLeaveRadio
             }
             else -> null
@@ -123,7 +123,7 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
     private fun initSwitchOption() {
         initSwitchOption(SwitchNode.ADAS_IACC, viewModel.cruiseAssistFunction)
         initSwitchOption(SwitchNode.ADAS_TARGET_PROMPT, viewModel.targetPromptFunction)
-        initSwitchOption(SwitchNode.ADAS_LIMBER_LEAVE, viewModel.limberLeaveFunction)
+//        initSwitchOption(SwitchNode.ADAS_LIMBER_LEAVE, viewModel.limberLeaveFunction)
     }
 
     private fun addSwitchLiveDataListener() {
@@ -133,9 +133,9 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
         viewModel.targetPromptFunction.observe(this) {
             doUpdateSwitch(SwitchNode.ADAS_TARGET_PROMPT, it)
         }
-        viewModel.limberLeaveFunction.observe(this) {
-            doUpdateSwitch(SwitchNode.ADAS_LIMBER_LEAVE, it)
-        }
+//        viewModel.limberLeaveFunction.observe(this) {
+//            doUpdateSwitch(SwitchNode.ADAS_LIMBER_LEAVE, it)
+//        }
     }
 
     private fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {
@@ -147,7 +147,7 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
         val swb = when (node) {
             SwitchNode.ADAS_IACC -> binding.accessCruiseCruiseAssist
             SwitchNode.ADAS_TARGET_PROMPT -> binding.accessCruiseTargetPrompt
-            SwitchNode.ADAS_LIMBER_LEAVE -> binding.accessCruiseLimberLeave
+//            SwitchNode.ADAS_LIMBER_LEAVE -> binding.accessCruiseLimberLeave
             else -> null
         }
         takeIf { null != swb }?.doUpdateSwitch(swb!!, status, immediately)
@@ -175,9 +175,9 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
         binding.accessCruiseTargetPrompt.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.ADAS_TARGET_PROMPT, buttonView, isChecked)
         }
-        binding.accessCruiseLimberLeave.setOnCheckedChangeListener { buttonView, isChecked ->
-            doUpdateSwitchOption(SwitchNode.ADAS_LIMBER_LEAVE, buttonView, isChecked)
-        }
+//        binding.accessCruiseLimberLeave.setOnCheckedChangeListener { buttonView, isChecked ->
+//            doUpdateSwitchOption(SwitchNode.ADAS_LIMBER_LEAVE, buttonView, isChecked)
+//        }
     }
 
     private fun doUpdateSwitchOption(node: SwitchNode, button: CompoundButton, status: Boolean) {

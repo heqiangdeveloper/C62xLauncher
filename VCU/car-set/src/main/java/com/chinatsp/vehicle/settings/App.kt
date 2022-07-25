@@ -93,7 +93,7 @@ class App : BaseApp() {
 
         Timber.plant(object : Timber.DebugTree() {
             override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
-                if (BuildConfig.DEBUG) {
+                if (true) {
                     Logger.log(priority, tag, message, t)
                 }
             }

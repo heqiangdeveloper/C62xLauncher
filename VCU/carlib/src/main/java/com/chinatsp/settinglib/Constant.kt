@@ -9,6 +9,10 @@ package com.chinatsp.settinglib
  */
 object Constant {
 
+    var ENGINE_STATUS = true
+
+    val DEFAULT: Int = -1
+
     val INVALID: Int
         get() = -1
 

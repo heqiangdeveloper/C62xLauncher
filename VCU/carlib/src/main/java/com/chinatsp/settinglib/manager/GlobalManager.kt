@@ -1,12 +1,17 @@
 package com.chinatsp.settinglib.manager
 
 import android.car.hardware.CarPropertyValue
+import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.manager.access.AccessManager
 import com.chinatsp.settinglib.manager.adas.AdasManager
 import com.chinatsp.settinglib.manager.cabin.CabinManager
 import com.chinatsp.settinglib.manager.lamp.LampManager
 import com.chinatsp.settinglib.manager.sound.AudioManager
 import com.chinatsp.settinglib.sign.Origin
+import com.chinatsp.vehicle.controller.ICmdCallback
+import com.chinatsp.vehicle.controller.annotation.Model
+import com.chinatsp.vehicle.controller.bean.Cmd
+import com.chinatsp.vehicle.controller.utils.Utils
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -79,4 +84,26 @@ class GlobalManager private constructor() : BaseManager() {
         }
         return hashSet
     }
+
+    override fun doOuterControlCommand(cmd: Cmd, callback: ICmdCallback?) {
+        val modelSerial = Model.obtainEchelon(cmd.model)
+        LogManager.d(TAG, "doOuterControlCommand ------modelSerial:${Utils.toFullBinary(modelSerial)}")
+        if (Model.ACCESS == modelSerial) {
+            AccessManager.instance.doOuterControlCommand(cmd, callback)
+        } else if (Model.LIGHT == modelSerial) {
+            LampManager.instance.doOuterControlCommand(cmd, callback)
+        } else if (Model.AUDIO == modelSerial) {
+            AudioManager.instance.doOuterControlCommand(cmd, callback)
+        } else if (Model.CABIN == modelSerial) {
+            CabinManager.instance.doOuterControlCommand(cmd, callback)
+        } else if (Model.ADAS == modelSerial) {
+            AdasManager.instance.doOuterControlCommand(cmd, callback)
+        }
+    }
+
+//    fun onTrailerRemindChanged(onOff: Int, level: Int, dist: Int) {
+//        CabinManager.instance.onTrailerRemindChanged(onOff, level, dist)
+//    }
+
+
 }

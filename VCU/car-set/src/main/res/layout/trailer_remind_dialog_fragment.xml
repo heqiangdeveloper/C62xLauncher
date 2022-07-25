@@ -79,6 +79,7 @@
                 android:text="@string/cabin_other_sensor_sensitivity" />
 
             <com.common.xui.widget.tabbar.TabControlView
+                android:id="@+id/trailer_sensitivity_radio"
                 style="@style/tdv_common_style"
                 app:tcv_defaultSelection="1"
                 app:tcv_items="@array/sensor_sensitivity_option" />
@@ -100,6 +101,7 @@
                 android:text="@string/cabin_other_trailer_remind_distance" />
 
             <com.common.xui.widget.tabbar.TabControlView
+                android:id="@+id/trailer_distance_radio"
                 style="@style/tdv_common_style"
                 app:tcv_defaultSelection="1"
                 app:tcv_items="@array/trailer_remind_distance_option" />

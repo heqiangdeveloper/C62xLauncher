@@ -10,6 +10,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.common.xui.R;
 import com.common.xui.XUI;
@@ -250,6 +252,7 @@ public class TabControlView extends RadioGroup implements HasTypeface {
             rb.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize);
             rb.setTypeface(XUI.getDefaultTypeface());
             rb.setText(item.getKey());
+            rb.setSingleLine(true);
             textWidth = Math.max(rb.getPaint().measureText(item.getKey()), textWidth);
             mOptions.add(rb);
 

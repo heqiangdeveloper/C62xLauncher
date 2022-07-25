@@ -2,6 +2,8 @@ package com.chinatsp.settinglib
 
 import android.graphics.Color
 import android.util.Log
+import timber.log.Timber
+import java.util.*
 
 /**
  * @author luohong
@@ -26,7 +28,8 @@ class LogManager private constructor() {
         fun v(TAG: String, msg: String) {
             if (IS_DEBUG_MODE) {
 //            Logger.t(TAG).v(PRDFIX + msg);
-                Log.v(TAG_PR + TAG, MSG_PR + msg)
+//                Log.v(TAG_PR + TAG, MSG_PR + msg)
+                Timber.tag(TAG_PR + TAG).v("%s%s", MSG_PR, msg)
                 listener?.onAddLog(Level.VERBOSE, TAG_PR + TAG, msg)
             }
         }
@@ -34,7 +37,8 @@ class LogManager private constructor() {
         fun i(TAG: String, msg: String) {
             if (IS_DEBUG_MODE) {
 //            Logger.t(TAG).i(PRDFIX + msg);
-                Log.i(TAG_PR + TAG, MSG_PR + msg)
+//                Log.i(TAG_PR + TAG, MSG_PR + msg)
+                Timber.tag(TAG_PR + TAG).i("%s%s", MSG_PR, msg)
                 listener?.onAddLog(Level.INFO, TAG_PR + TAG, msg)
             }
         }
@@ -42,7 +46,8 @@ class LogManager private constructor() {
         fun d(TAG: String, msg: String) {
             if (IS_DEBUG_MODE) {
 //            Logger.t(TAG).d(PRDFIX + msg);
-                Log.d(TAG_PR + TAG, MSG_PR + msg)
+//                Log.d(TAG_PR + TAG, MSG_PR + msg)
+                Timber.tag(TAG_PR + TAG).d("%s%s", MSG_PR, msg)
                 listener?.onAddLog(Level.DEBUG, TAG_PR + TAG, msg)
             }
         }
@@ -50,7 +55,8 @@ class LogManager private constructor() {
         fun w(TAG: String, msg: String) {
             if (IS_DEBUG_MODE) {
 //            Logger.t(TAG).w(PRDFIX + msg);
-                Log.w(TAG_PR + TAG, MSG_PR + msg)
+//                Log.w(TAG_PR + TAG, MSG_PR + msg)
+                Timber.tag(TAG_PR + TAG).w("%s%s", MSG_PR, msg)
                 listener?.onAddLog(Level.WARNING, TAG_PR + TAG, msg)
             }
         }
@@ -58,7 +64,8 @@ class LogManager private constructor() {
         fun e(TAG: String, msg: String) {
             if (IS_DEBUG_MODE) {
 //            Logger.t(TAG).e(PRDFIX + msg);
-                Log.e(TAG_PR + TAG, MSG_PR + msg)
+//                Log.e(TAG_PR + TAG, MSG_PR + msg)
+                Timber.tag(TAG_PR + TAG).v("%s%s", MSG_PR, msg)
                 listener?.onAddLog(Level.ERROR, TAG_PR + TAG, msg)
             }
         }
@@ -71,14 +78,16 @@ class LogManager private constructor() {
         fun e(TAG: String, t: Throwable) {
             if (IS_DEBUG_MODE) {
 //            Logger.t(TAG).e(PRDFIX + t);
-                Log.e(TAG_PR + TAG, MSG_PR + t)
+//                Log.e(TAG_PR + TAG, MSG_PR + t)
+                Timber.tag(TAG_PR + TAG).e("%s%s", MSG_PR, t.message)
                 listener?.onAddLog(Level.ERROR, TAG_PR + TAG, t.toString())
             }
         }
 
-        fun e(TAG: String, msg: String?, e: Throwable?) {
+        fun e(TAG: String, msg: String, e: Throwable) {
             if (IS_DEBUG_MODE) {
 //            Logger.t(TAG).e(msg, e);
+                Timber.tag(TAG_PR + TAG).e(e)
                 listener?.onAddLog(Level.ERROR, TAG_PR + TAG, msg)
             }
         }

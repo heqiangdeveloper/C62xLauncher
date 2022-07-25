@@ -18,7 +18,7 @@ import com.google.gson.Gson
  * @version: 1.0
  */
 class CommandParser {
-    val TAG: String = "CommandDispatcher"
+    val TAG: String = "VehicleService"
     fun isMatch(arrays: Array<String>, cmd: String?): Boolean {
         return arrays.contains(cmd)
     }
@@ -37,6 +37,7 @@ class CommandParser {
                 val isOpen = isMatch(ConstantsVolume.OPT_OPENS, nlpVoiceModel.operation);
                 //true表示关闭操作，false表示未知操作
                 val isClose = !isOpen && isMatch(ConstantsVolume.OPT_CLOSES, nlpVoiceModel.operation);
+                LogManager.d(TAG, "doDispatchSrAction isOpen:$isOpen, isClose:$isClose, name:$name")
                 //TODO 目前语音无反馈 先屏蔽
                 if (TextUtils.equals(ConstantsVolume.REFUEL_MODE, name)
                     || TextUtils.equals(ConstantsVolume.REFUEL_TEXT, name)) {
@@ -80,21 +81,22 @@ class CommandParser {
                 } else if (TextUtils.equals(ConstantsVolume.MODE_DRIVE, semantic.slots.mode)) {
                     result = isOpen || isClose;
 
-                } else if (TextUtils.equals(ConstantsVolume.WINDOW, name)) {
+                } else if (ConstantsVolume.LOUVER.contains(name)) {
                     result = isOpen || isClose;
                     if (isOpen) {
-                        val cmd = Cmd(Action.OPEN, Model.WINDOW, message = "打开天窗")
+                        val cmd = Cmd(action = Action.OPEN, model = Model.ACCESS_WINDOW, message = "打开天窗")
                         controller.doOuterControlCommand(cmd, callback)
+                        LogManager.d(TAG, "execute open window!!!cmd：$cmd" )
                     }
                     if (isClose) {
-                        val cmd = Cmd(Action.CLOSE, Model.WINDOW, message = "关闭天窗")
+                        val cmd = Cmd(Action.CLOSE, Model.ACCESS_WINDOW, message = "关闭天窗")
                         controller.doOuterControlCommand(cmd, callback)
                     }
                 } else if (isMatch(ConstantsVolume.VOICE_VENT, name)) {
                     result = isOpen || isClose;
                 }
             } catch (e: Exception) {
-//                LogManager.e(TAG, " 语音解析异常 error:${e.message}")
+                LogManager.e(TAG, " 语音解析异常 error:${e.message}")
             }
         } while (false)
         return result

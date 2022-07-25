@@ -2,11 +2,12 @@ package com.chinatsp.settinglib.manager.access
 
 import android.car.hardware.CarPropertyValue
 import com.chinatsp.settinglib.ITabStore
-import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
-import com.chinatsp.settinglib.manager.cabin.CabinManager
 import com.chinatsp.settinglib.sign.Origin
+import com.chinatsp.vehicle.controller.ICmdCallback
+import com.chinatsp.vehicle.controller.annotation.Model
+import com.chinatsp.vehicle.controller.bean.Cmd
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
@@ -77,5 +78,14 @@ class AccessManager private constructor() : BaseManager(), ITabStore {
         }
     }
 
+    override fun doOuterControlCommand(cmd: Cmd, callback: ICmdCallback?) {
+        if (Model.ACCESS_WINDOW == cmd.model) {
+            WindowManager.instance.doOuterControlCommand(cmd, callback)
+        } else if (Model.ACCESS_DOOR == cmd.model) {
+            DoorManager.instance.doOuterControlCommand(cmd, callback)
+        } else if (Model.ACCESS_STERN == cmd.model) {
+            SternDoorManager.instance.doOuterControlCommand(cmd, callback)
+        }
+    }
 
 }
