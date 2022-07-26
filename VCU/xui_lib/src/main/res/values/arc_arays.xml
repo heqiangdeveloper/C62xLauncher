@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ArcSeekBar">
+        <attr name="arcStrokeWidth" format="dimension"/>
+        <attr name="arcStrokeCap" format="enum">
+            <enum name="BUTT" value="1"/>
+            <enum name="SQUARE" value="2"/>
+            <enum name="ROUND" value="3"/>
+        </attr>
+        <attr name="arcNormalColor" format="color"/>
+        <attr name="arcProgressColor" format="color"/>
+        <attr name="arcStartAngle" format="integer"/>
+        <attr name="arcSweepAngle" format="integer"/>
+        <attr name="arcMax" format="integer"/>
+        <attr name="arcProgress" format="integer"/>
+        <attr name="arcDuration" format="integer"/>
+        <attr name="arcLabelText" format="string"/>
+        <attr name="arcLabelTextColor" format="color"/>
+        <attr name="arcLabelTextSize" format="dimension"/>
+        <attr name="arcLabelPaddingTop" format="dimension"/>
+        <attr name="arcLabelPaddingBottom" format="dimension"/>
+        <attr name="arcLabelPaddingLeft" format="dimension"/>
+        <attr name="arcLabelPaddingRight" format="dimension"/>
+        <attr name="arcShowLabel" format="boolean"/>
+        <attr name="arcShowTick" format="boolean"/>
+        <attr name="arcTickStrokeWidth" format="dimension"/>
+        <attr name="arcTickPadding" format="dimension"/>
+        <attr name="arcTickSplitAngle" format="integer"/>
+        <attr name="arcBlockAngle" format="integer"/>
+        <attr name="arcTickOffsetAngle" format="integer"/>
+        <attr name="arcThumbStrokeWidth" format="dimension"/>
+        <attr name="arcThumbColor" format="color"/>
+        <attr name="arcThumbRadius" format="dimension"/>
+        <attr name="arcThumbRadiusEnlarges" format="dimension"/>
+        <attr name="arcShowThumb" format="boolean"/>
+        <attr name="arcAllowableOffsets" format="dimension"/>
+        <attr name="arcEnabledDrag" format="boolean"/>
+        <attr name="arcEnabledSingle" format="boolean"/>
+
+    </declare-styleable>
+
+    <!-- 起始角度 -->
+    <attr name="startAngle" format="float" />
+    <!-- 跨越角度 -->
+    <attr name="sweepAngle" format="float" />
+    <!-- 弧形条背景宽度 -->
+    <attr name="backgroundThickness" format="dimension" />
+    <!-- 弧形条前景宽度 -->
+    <attr name="foregroundThickness" format="dimension" />
+    <!-- 弧形条背景颜色 -->
+    <attr name="backgroundColor" format="reference|color" />
+    <!-- 弧形条前景颜色 -->
+    <attr name="foregroundColor" format="reference|color" />
+    <!-- 最大刻度 -->
+    <attr name="maxValue" format="integer" />
+    <!-- 最小刻度 -->
+    <attr name="minValue" format="integer" />
+    <!-- 拖动球宽度 -->
+    <attr name="thumbWidth" format="dimension" />
+    <!-- 拖动球颜色 -->
+    <attr name="thumbColor" format="reference|color" />
+    <!-- 文字大小 -->
+    <attr name="textSize" format="dimension" />
+    <!-- 文字颜色 -->
+    <attr name="textColor" format="reference|color" />
+
+    <declare-styleable name="CircleProgressBar">
+        <attr name="startAngle" />
+        <attr name="sweepAngle" />
+        <attr name="backgroundThickness" />
+        <attr name="foregroundThickness" />
+        <attr name="backgroundColor" />
+        <attr name="foregroundColor" />
+        <attr name="maxValue" />
+        <attr name="minValue" />
+        <attr name="thumbWidth" />
+        <attr name="thumbColor" />
+        <attr name="textSize" />
+        <attr name="textColor" />
+    </declare-styleable>
+
+</resources>

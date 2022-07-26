@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
-import com.chinatsp.vehicle.settings.databinding.AccessFragmentBinding
 import com.chinatsp.vehicle.settings.databinding.FragmentSimpleTabBinding
 import com.common.library.frame.base.BaseTabFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,7 +22,6 @@ class SystemFragment: BaseTabFragment<BaseViewModel, FragmentSimpleTabBinding>()
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-
     }
 
 
