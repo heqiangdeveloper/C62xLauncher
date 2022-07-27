@@ -23,6 +23,8 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import launcher.base.async.AsyncSchedule;
+
 public class AppInstallStatusReceiver extends BroadcastReceiver {
     private static final String TAG = "AppInstallStatusReceiver";
     private MyAppDB db;
@@ -67,13 +69,13 @@ public class AppInstallStatusReceiver extends BroadcastReceiver {
                     }
 
                     //写入数据库中
-                    new Thread(new Runnable() {
+                    AsyncSchedule.execute(new Runnable() {
                         @Override
                         public void run() {
                             db.insertLocation(locationBean);
                             EventBus.getDefault().post(new AppInstallStatusEvent(1,packageName));
                         }
-                    }).start();
+                    });
                 }else {
                     Log.d(TAG,"already installed： " + packageName);
                 }

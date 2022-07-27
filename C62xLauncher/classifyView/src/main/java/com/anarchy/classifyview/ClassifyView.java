@@ -168,6 +168,7 @@ public class ClassifyView extends FrameLayout {
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
     private boolean isSoftKeyBoardShow = false;
+    private boolean isInSubDrag = false;
     public ClassifyView(Context context) {
         super(context);
         init(context, null, 0);
@@ -414,7 +415,11 @@ public class ClassifyView extends FrameLayout {
      */
     public void setSoftKeyBoardStatus(boolean isShow){
         isSoftKeyBoardShow = isShow;
-        if(mSubContainer != null){
+        if(isShow){
+            isInSubDrag = false;
+        }
+        Log.d("hideKeyBoard","isSoftKeyBoardShow = " + isSoftKeyBoardShow + ",isInSubDrag = " + isInSubDrag);
+        if(mSubContainer != null && !isInSubDrag){
             FrameLayout.LayoutParams params =  (FrameLayout.LayoutParams)mSubContainer.getLayoutParams();
             params.gravity = isShow ? Gravity.CENTER_HORIZONTAL : Gravity.CENTER;
             mSubContainer.setLayoutParams(params);
@@ -610,6 +615,14 @@ public class ClassifyView extends FrameLayout {
             @Override
             public boolean onDown(MotionEvent e) {
                 L.d("Sub recycler view onDown: x: %1$s + y: %2$s", e.getX(), e.getY());
+                if(editRl.getVisibility() == View.VISIBLE){//文件夹编辑模式下
+                    isInSubDrag = true;
+                    //隐藏键盘
+                    if(isSoftKeyBoardShow){
+                        imm.hideSoftInputFromWindow(titleEt.getWindowToken(), 0); //强制隐藏键盘
+                    }
+                    Log.d("keyboardtest","onDown");
+                }
                 return true;
             }
 
@@ -645,6 +658,51 @@ public class ClassifyView extends FrameLayout {
                                 getShadowBuilder(pressedView), mSelected, 0);
                     }
                 }
+            }
+
+            //onFling():手指在触摸屏上迅速移动，并松开的动作(滑动的比onScroll快)
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                if(editRl.getVisibility() == View.VISIBLE){//文件夹编辑模式下
+                    Log.d("keyboardtest","onFling");
+                    isInSubDrag = false;
+                    if(mSubContainer != null){
+                        FrameLayout.LayoutParams params =  (FrameLayout.LayoutParams)mSubContainer.getLayoutParams();
+                        params.gravity = Gravity.CENTER;
+                        mSubContainer.setLayoutParams(params);
+                    }
+                }
+                return super.onFling(e1, e2, velocityX, velocityY);
+            }
+
+            //onScroll():手指在屏幕上滑动
+            @Override
+            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+                if(editRl.getVisibility() == View.VISIBLE){//文件夹编辑模式下
+                    Log.d("keyboardtest","onScroll");
+                    isInSubDrag = false;
+                    if(mSubContainer != null){
+                        FrameLayout.LayoutParams params =  (FrameLayout.LayoutParams)mSubContainer.getLayoutParams();
+                        params.gravity = Gravity.CENTER;
+                        mSubContainer.setLayoutParams(params);
+                    }
+                }
+                return super.onScroll(e1, e2, distanceX, distanceY);
+            }
+
+            //onSingleTapUp() 手指离开view那一瞬间执行
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
+                if(editRl.getVisibility() == View.VISIBLE){//文件夹编辑模式下
+                    Log.d("keyboardtest","onSingleTapUp");
+                    isInSubDrag = false;
+                    if(mSubContainer != null){
+                        FrameLayout.LayoutParams params =  (FrameLayout.LayoutParams)mSubContainer.getLayoutParams();
+                        params.gravity = Gravity.CENTER;
+                        mSubContainer.setLayoutParams(params);
+                    }
+                }
+                return super.onSingleTapUp(e);
             }
         });
         mSubItemTouchListener = new RecyclerView.OnItemTouchListener() {
@@ -1180,6 +1238,10 @@ public class ClassifyView extends FrameLayout {
                             }
                         }
                         mSubCallBack.initData(position,list);
+                        Log.d("dragtest","selectedPosition = " + mSelectedPosition +",list.size() = " + list.size());
+                        if(mSelectedPosition >= list.size()){
+                            mSelectedPosition = list.size() - 1;
+                        }
 
                         mSelectedPosition = mMainCallBack.onLeaveSubRegion(mSelectedPosition, new SubAdapterReference(mSubCallBack));
                         L.d("mSelectedPosition = " + mSelectedPosition);
@@ -1240,6 +1302,18 @@ public class ClassifyView extends FrameLayout {
             //隐藏占位图片
             if(oldPositionView != null) oldPositionView.setVisibility(View.GONE);
             if(oldPositionViewSub != null) oldPositionViewSub.setVisibility(View.GONE);
+
+            //重置sub的位置
+            if(editRl.getVisibility() == View.VISIBLE){//文件夹编辑模式下
+                isInSubDrag = false;
+                if(mSubContainer != null){
+                    FrameLayout.LayoutParams params =  (FrameLayout.LayoutParams)mSubContainer.getLayoutParams();
+                    if(params != null){
+                        params.gravity = Gravity.CENTER;
+                        mSubContainer.setLayoutParams(params);
+                    }
+                }
+            }
         }
     };
 
