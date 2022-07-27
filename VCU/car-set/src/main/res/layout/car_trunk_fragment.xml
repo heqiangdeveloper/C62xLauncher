@@ -123,10 +123,10 @@
                 <com.common.xui.widget.button.switchbutton.SwitchButton
                     android:id="@+id/access_stern_audio_alarm_sw"
                     style="@style/switch_button_style"
+                    android:background="@color/transparent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:background="@color/transparent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <View
@@ -187,6 +187,23 @@
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
+        <com.common.xui.widget.picker.ArcSeekBar
+            android:id="@+id/arcSeekBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/x90"
+            app:arcLabelPaddingBottom="10dp"
+            app:arcNormalColor="@color/acr_seek_line_color"
+            app:arcShowLabel="false"
+            app:arcShowTick="true"
+            app:arcStartAngle="150"
+            app:arcSweepAngle="60"
+            app:arcTickOffsetAngle="1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="@dimen/x80"
+            android:visibility="gone"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

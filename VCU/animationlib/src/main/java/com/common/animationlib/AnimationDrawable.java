@@ -126,6 +126,13 @@ public class AnimationDrawable {
 
     private AnimationLisenter lisenter;
 
+    /**
+     * 根据进度值更换图片
+     * @param progress 进度值
+     */
+    public void progressStart(int progress){
+
+    }
 
     /**
      * 开始播放动画
