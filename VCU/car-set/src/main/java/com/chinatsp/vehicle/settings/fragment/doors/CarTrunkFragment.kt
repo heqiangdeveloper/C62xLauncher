@@ -1,7 +1,6 @@
 package com.chinatsp.vehicle.settings.fragment.doors
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
@@ -95,13 +94,16 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
                 if (value.equals("1")) {
                     binding.carTrunkDoorHeight.visibility = View.GONE
                     binding.intelligenceInto.visibility = View.GONE
+                    binding.arcSeekBar.visibility = View.VISIBLE
                 } else if (value.equals("2")) {
                     binding.carTrunkDoorHeight.visibility = View.VISIBLE
                     binding.intelligenceInto.visibility = View.VISIBLE
+                    binding.arcSeekBar.visibility = View.GONE
                     binding.carTrunkDoorHeight.setText(R.string.car_trunk_keep_unlock)
                 } else {
                     binding.carTrunkDoorHeight.visibility = View.VISIBLE
                     binding.intelligenceInto.visibility = View.VISIBLE
+                    binding.arcSeekBar.visibility = View.GONE
                     binding.carTrunkDoorHeight.setText(R.string.car_trunk_action_unlock)
                 }
             }
@@ -182,10 +184,12 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
                 binding.carTrunkDoorHeight.setText(R.string.car_trunk_light_open)
                 animationFlashAlarm.start(false, 50, object : AnimationDrawable.AnimationLisenter {
                     override fun startAnimation() {
+                        binding.arcSeekBar.visibility = View.GONE
                     }
 
                     override fun endAnimation() {
                         binding.ivFlashAlarm.visibility = View.GONE
+                        binding.arcSeekBar.visibility = View.VISIBLE
                     }
                 })
             } else {
@@ -203,10 +207,12 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
                     50,
                     object : AnimationDrawable.AnimationLisenter {
                         override fun startAnimation() {
+                            binding.arcSeekBar.visibility = View.GONE
                         }
 
                         override fun endAnimation() {
                             binding.ivBuzzerAlarms.visibility = View.GONE
+                            binding.arcSeekBar.visibility = View.VISIBLE
                         }
                     })
             } else {
