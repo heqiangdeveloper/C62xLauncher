@@ -11,6 +11,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -132,6 +133,8 @@ public class MyAppFragment extends Fragment {
             }
         }
 
+        addPushInstalledApp();//添加通过push方式安装的应用
+        deleteUninstallApp();//删除掉未安装的应用，应用管理除外
         loadingTv.setVisibility(View.GONE);
         mMyAppInfoAdapter = new MyAppInfoAdapter(view.getContext(), data);
         appInfoClassifyView.setAdapter(mMyAppInfoAdapter);
@@ -187,6 +190,94 @@ public class MyAppFragment extends Fragment {
             }
             inner.add(locationBean);
             data.add(inner);
+        }
+    }
+
+    /*
+    *  删除掉未安装的应用，应用管理除外
+     */
+    private void deleteUninstallApp(){
+        List<ResolveInfo> allApps = getApps();
+        for (int i = 0; i < allApps.size(); i++){
+            //如果应用没有默认的MainActivity也不能点进去
+            if(TextUtils.isEmpty(allApps.get(i).activityInfo.name)){
+                allApps.remove(i);
+                i--;
+            }
+        }
+        List<String> packageLists = getInstalledPackages(allApps);
+
+        for(int i = 0; i < data.size(); i++){
+            List<LocationBean> list = data.get(i);
+            for(int j = 0; j < list.size(); j++){
+                String pkgName = list.get(j).getPackageName();
+                if(!pkgName.equals(AppLists.APPMANAGEMENT) && !packageLists.contains(pkgName)){
+                    AsyncSchedule.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            db.deleteLocation(pkgName);
+                        }
+                    });
+                    data.get(i).remove(j);
+                    j--;
+                }
+            }
+        }
+    }
+
+    /*
+    *  添加通过push方式安装的应用
+     */
+    private void addPushInstalledApp(){
+        //获取data中所有的包名
+        List<String> pkgList = new ArrayList<>();
+        String pkgName = "";
+        for(int i = 0; i < data.size(); i++){
+            List<LocationBean> list = data.get(i);
+            for(int j = 0; j < list.size(); j++){
+                pkgList.add(list.get(j).getPackageName());
+            }
+        }
+
+        List<ResolveInfo> allApps = getApps();
+        allApps = getAvailabelApps(allApps);
+        allApps = removeRepeatApps(allApps);
+        //处理系统安装的应用
+        for(int i = 0; i < allApps.size(); i++){
+            pkgName = allApps.get(i).activityInfo.packageName;
+            if(!pkgList.contains(pkgName)){
+                List<LocationBean> inner = new ArrayList<>();
+                locationBean = new LocationBean();
+                locationBean.setParentIndex(data.size());
+                locationBean.setChildIndex(-1);
+
+                locationBean.setPackageName(pkgName);
+                locationBean.setImgDrawable(allApps.get(i).activityInfo.loadIcon(getContext().getPackageManager()));
+                locationBean.setName(allApps.get(i).activityInfo.loadLabel(getContext().getPackageManager()).toString());
+
+                locationBean.setCanuninstalled(AppLists.isSystemApplication(getContext(),locationBean.getPackageName()) ? 0:1);
+                locationBean.setTitle("");
+                locationBean.setImgByte(null);
+
+                int num = db.isExistPackage(locationBean.getPackageName());
+                if(num == 0){
+                    AsyncSchedule.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            db.insertLocation(locationBean);
+                        }
+                    });
+                }else {
+                    AsyncSchedule.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            db.updateIndex(locationBean);
+                        }
+                    });
+                }
+                inner.add(locationBean);
+                data.add(inner);
+            }
         }
     }
 
@@ -261,11 +352,12 @@ public class MyAppFragment extends Fragment {
     *  剔除重复的APP
      */
     private List<ResolveInfo> removeRepeatApps(List<ResolveInfo> allApps){
-        List<String> packageLists = new ArrayList<>();
-        for(int i = 0; i < allApps.size(); i++){
-            packageLists.add(allApps.get(i).activityInfo.packageName);
-        }
-        packageLists = packageLists.stream().distinct().collect(Collectors.toList());//去掉重复的包名
+//        List<String> packageLists = new ArrayList<>();
+//        for(int i = 0; i < allApps.size(); i++){
+//            packageLists.add(allApps.get(i).activityInfo.packageName);
+//        }
+//        packageLists = packageLists.stream().distinct().collect(Collectors.toList());//去掉重复的包名
+        List<String> packageLists = getInstalledPackages(allApps);
 
         List listTemp = new ArrayList();
         String packageName = "";
@@ -279,10 +371,23 @@ public class MyAppFragment extends Fragment {
         return listTemp;
     }
 
+    /*
+    * 获取系统中所有的已安装的包名
+     */
+    private List<String> getInstalledPackages(List<ResolveInfo> list){
+        List<String> packageLists = new ArrayList<>();
+        for(int i = 0; i < list.size(); i++){
+            packageLists.add(list.get(i).activityInfo.packageName);
+        }
+        packageLists = packageLists.stream().distinct().collect(Collectors.toList());//去掉重复的包名
+        return packageLists;
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         Log.d("heqq","myAppFragment onResume");
+        storeData();
     }
 
     @Override
