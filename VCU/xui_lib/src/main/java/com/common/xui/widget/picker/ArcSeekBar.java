@@ -150,7 +150,7 @@ public class ArcSeekBar extends View {
     /**
      * 最大进度
      */
-    private int mMax = 100;
+    private int mMax = 50;
 
     /**
      * 当前进度
@@ -429,10 +429,12 @@ public class ArcSeekBar extends View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
         int defaultValue = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 220, getDisplayMetrics());
+        int defaultWidthValue = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 500, getDisplayMetrics());
 
-        int width = measureHandler(widthMeasureSpec, defaultValue);
+        int width = measureHandler(widthMeasureSpec, defaultWidthValue);
         int height = measureHandler(heightMeasureSpec, defaultValue);
-
+        //int width = getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec);
+        //int height = getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec);
         //圆心坐标
         mCircleCenterX = (width + getPaddingLeft() - getPaddingRight()) / 2.0f;
         mCircleCenterY = (height + getPaddingTop() - getPaddingBottom()) / 2.0f;
@@ -443,7 +445,6 @@ public class ArcSeekBar extends View {
         //默认着色器
         mShader = new SweepGradient(mCircleCenterX, mCircleCenterX, mShaderColors, null);
         isMeasureCircle = true;
-
         setMeasuredDimension(width, height);
 
     }
@@ -563,7 +564,7 @@ public class ArcSeekBar extends View {
             mThumbCenterX = (float) (mCircleCenterX + mRadius * Math.cos(Math.toRadians(thumbAngle)));
             mThumbCenterY = (float) (mCircleCenterY + mRadius * Math.sin(Math.toRadians(thumbAngle)));
             if (isCanDrag) {
-                mPaint.setStrokeWidth(5);
+                mPaint.setStrokeWidth(7);
                 mPaint.setColor(mContext.getResources().getColor(R.color.smooth_chick_color));
                 mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
                 canvas.drawCircle(mThumbCenterX, mThumbCenterY, mThumbRadius + mThumbRadiusEnlarges, mPaint);
@@ -936,6 +937,11 @@ public class ArcSeekBar extends View {
      * @param progress
      */
     public void setProgress(int progress) {
+        if (progress <= 50) {
+            progress = 0;
+        } else {
+            progress = progress - mMax;
+        }
         setProgress(progress, false);
     }
 
@@ -950,7 +956,7 @@ public class ArcSeekBar extends View {
         invalidate();
 
         if (mOnChangeListener != null) {
-            mOnChangeListener.onProgressChanged(mProgress, mMax, fromUser);
+            mOnChangeListener.onProgressChanged(mProgress+mMax, mMax, fromUser);
         }
     }
 

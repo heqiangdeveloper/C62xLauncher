@@ -1,6 +1,7 @@
 package com.chinatsp.vehicle.settings.fragment.doors
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
@@ -13,11 +14,13 @@ import com.chinatsp.vehicle.settings.vm.accress.SternDoorViewModel
 import com.common.animationlib.AnimationDrawable
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
+import com.common.xui.widget.picker.ArcSeekBar
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBinding>() {
+class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBinding>(),
+    ArcSeekBar.OnChangeListener {
     private var animationOpenDoor: AnimationDrawable = AnimationDrawable()
     private var animationCloseDoor: AnimationDrawable = AnimationDrawable()
     private var animationFlashAlarm: AnimationDrawable = AnimationDrawable()
@@ -31,6 +34,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+        initArcSeekBar()
         initAnimation()
         initSwitchOption()
         addSwitchLiveDataListener()
@@ -64,6 +68,11 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         )
     }
 
+    private fun initArcSeekBar() {
+        binding.arcSeekBar.progress = 75
+        binding.arcSeekBar.setOnChangeListener(this)
+    }
+
     private fun initRadioOption() {
         initRadioOption(RadioNode.STERN_SMART_ENTER, viewModel.sternSmartEnterFunction)
     }
@@ -77,7 +86,12 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     private fun setRadioListener() {
         binding.accessSternSmartEnterRadio.let {
             it.setOnTabSelectionChangedListener { _, value ->
-                doUpdateRadio(RadioNode.STERN_SMART_ENTER, value, viewModel.sternSmartEnterFunction, it)
+                doUpdateRadio(
+                    RadioNode.STERN_SMART_ENTER,
+                    value,
+                    viewModel.sternSmartEnterFunction,
+                    it
+                )
                 if (value.equals("1")) {
                     binding.carTrunkDoorHeight.visibility = View.GONE
                     binding.intelligenceInto.visibility = View.GONE
@@ -109,7 +123,12 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         tabView.takeIf { !result }?.setSelection(liveData.value.toString(), true)
     }
 
-    private fun doUpdateRadio(node: RadioNode, value: Int, immediately: Boolean = false, isInit: Boolean = false) {
+    private fun doUpdateRadio(
+        node: RadioNode,
+        value: Int,
+        immediately: Boolean = false,
+        isInit: Boolean = false
+    ) {
         val tabView = when (node) {
             RadioNode.STERN_SMART_ENTER -> {
                 binding.accessSternSmartEnterRadio
@@ -139,12 +158,20 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         binding.accessSternElectricSw.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.AS_STERN_ELECTRIC, buttonView, isChecked)
             if (isChecked) {
-                animationOpenDoor.start(false, 50, null)
+                animationOpenDoor.start(false, 50, object : AnimationDrawable.AnimationLisenter {
+                    override fun startAnimation() {
+                    }
+
+                    override fun endAnimation() {
+                        binding.arcSeekBar.visibility = View.VISIBLE
+                    }
+                })
                 binding.carTrunkDoorHeight.visibility = View.VISIBLE
             } else {
                 animationCloseDoor.start(false, 50, null)
                 binding.carTrunkDoorHeight.visibility = View.GONE
                 binding.intelligenceInto.visibility = View.GONE
+                binding.arcSeekBar.visibility = View.GONE
             }
         }
         binding.accessSternLightAlarmSw.setOnCheckedChangeListener { buttonView, isChecked ->
@@ -247,5 +274,21 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         } else {
             swb.setCheckedImmediatelyNoEvent(status)
         }
+    }
+
+    override fun onStartTrackingTouch(isCanDrag: Boolean) {
+
+    }
+
+    override fun onProgressChanged(progress: Float, max: Float, fromUser: Boolean) {
+        animationOpenDoor.progressStart(progress.toInt())
+    }
+
+    override fun onStopTrackingTouch(isCanDrag: Boolean) {
+
+    }
+
+    override fun onSingleTapUp() {
+
     }
 }
