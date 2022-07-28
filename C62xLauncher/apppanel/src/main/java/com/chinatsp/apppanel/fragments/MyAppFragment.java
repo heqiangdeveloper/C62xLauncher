@@ -43,6 +43,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import launcher.base.async.AsyncSchedule;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link MyAppFragment#newInstance} factory method to
@@ -213,12 +215,12 @@ public class MyAppFragment extends Fragment {
                             data.remove(lists);
                             mMyAppInfoAdapter = new MyAppInfoAdapter(getContext(), data);
                             appInfoClassifyView.setAdapter(mMyAppInfoAdapter);
-                            new Thread(new Runnable() {
+                            AsyncSchedule.execute(new Runnable() {
                                 @Override
                                 public void run() {
                                     db.deleteLocation(packageName);
                                 }
-                            }).start();
+                            });
                             break A;
                         }
                     }
@@ -287,15 +289,18 @@ public class MyAppFragment extends Fragment {
     public void onPause() {
         super.onPause();
         Log.d("heqq","myAppFragment onPause");
-        //storeData();
+        storeData();
     }
 
     public void storeData(){
         Log.d(TAG,"storeData");
         isStoringData = true;
-        new Thread(new Runnable() {
+        AsyncSchedule.execute(new Runnable() {
             @Override
             public void run() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
                 //先清空数据库，再保存桌面布局数据到数据库
 //                if(db.countLocation() != 0){
 //                    db.deleteLocation();
@@ -385,7 +390,8 @@ public class MyAppFragment extends Fragment {
                 }
                 isStoringData = false;
             }
-        }).start();
+//        }).start();
+        });
     }
 
     @Override
