@@ -159,7 +159,7 @@ public class ClassifyView extends FrameLayout {
     private VelocityTracker mVelocityTracker;
     private boolean isExistAdd = false;//是否存在添加按钮
     private static final int SUBCONTAINERWIDTH = 800;//文件弹出框的宽度
-    private static final int SUBCONTAINERHEIGHT = 550;//文件弹出框的度
+    private static final int SUBCONTAINERHEIGHT = 600;//文件弹出框的度
     private int SCREENWIDTH = 0;
     private int SCREENHEIGHT = 0;
     private InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -258,7 +258,7 @@ public class ClassifyView extends FrameLayout {
         mMainContainer.addView(oldPositionView);
         //mSubRecyclerView.setLayoutParams(new LayoutParams(600,600));
         //编辑框高editHeight = 50，距上边15，mSubRecyclerView与编辑框间隔5
-        mSubRecyclerView.setPadding(0,70,0,0);
+        mSubRecyclerView.setPadding(0,80,0,0);
 
         int editHeight = 50;
         FrameLayout.LayoutParams titleSize =new FrameLayout.LayoutParams(
@@ -269,7 +269,8 @@ public class ClassifyView extends FrameLayout {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
-        //subRecyclerViewSize.setMargins(0,100,0,0);
+        //由于给的背景图片四周有阴影，因此需要设置recyclerView的margin
+        subRecyclerViewSize.setMargins(50,10,50,50);
 
         mSubContainer.addView(mSubRecyclerView,subRecyclerViewSize);
         oldPositionViewSub.setLayoutParams(new LayoutParams(120,120));
@@ -279,7 +280,7 @@ public class ClassifyView extends FrameLayout {
         RelativeLayout.LayoutParams linearParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,editHeight
         );
-        linearParams.setMargins(80,15,80,0);
+        linearParams.setMargins(80,45,80,0);
         editRl.setBackgroundResource(R.drawable.input_bg);
         titleEt = new EditText(context);
         RelativeLayout.LayoutParams titleEtParams = new RelativeLayout.LayoutParams(
@@ -327,7 +328,7 @@ public class ClassifyView extends FrameLayout {
         titleTv.setText("");
         titleTv.setGravity(Gravity.CENTER_HORIZONTAL);
         titleTv.setTextSize(28);
-        titleTv.setPadding(0,30,0,0);
+        titleTv.setPadding(0,50,0,0);
         titleTv.setTextColor(Color.WHITE);
 
         //editRl.addView(titleTv,titleTvParams);
@@ -337,7 +338,8 @@ public class ClassifyView extends FrameLayout {
         editRl.setVisibility(View.GONE);
         mSubContainer.addView(editRl,linearParams);
         mSubContainer.addView(titleTv,titleSize);
-        mSubContainer.setBackgroundColor(Color.parseColor("#252C3D"));
+//        mSubContainer.setBackgroundColor(Color.parseColor("#252C3D"));
+        mSubContainer.setBackgroundResource(R.drawable.folder_app_bg);
 
         addViewInLayout(mMainContainer, 0, mMainContainer.getLayoutParams());
         mDragView = new View(context);
