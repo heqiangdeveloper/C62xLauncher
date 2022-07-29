@@ -290,7 +290,7 @@
     *                  XUI主题                       *
     **********************************************-->
     <!--平板主题-->
-    <style name="XUITheme.Tablet">
+    <style name="XUITheme.Tablet" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="xui_config_color_background">@color/xui_config_color_background_tablet</item>
         <item name="android:windowBackground">?attr/xui_config_color_background</item>
 

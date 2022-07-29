@@ -70,20 +70,25 @@ class VolumeDialogFragment : BaseDialogFragment<VolumeViewModel, AudioSoundVolum
     override fun onPointsChanged(view: VerticalSeekBar?, progress: Int) {
         when (view?.id) {
             R.id.sound_audio_navi_volume -> {
+                binding.naviVolumeTxt.text = progress.toString()
                 manager.doSetVolume(Volume.Type.NAVI, progress)
             }
             R.id.sound_audio_voice_volume -> {
+                binding.voiceVolumeTxt.text = progress.toString()
                 manager.doSetVolume(Volume.Type.VOICE, progress)
             }
             R.id.sound_audio_media_volume -> {
+                binding.mediaVolumeTxt.text=progress.toString()
                 manager.doSetVolume(Volume.Type.MEDIA, progress)
             }
             R.id.sound_audio_phone_volume -> {
+                binding.phoneVolumeTxt.text = progress.toString()
                 manager.doSetVolume(Volume.Type.PHONE, progress)
             }
-//            R.id.sound_audio_system_volume -> {
-//                manager.doSetVolume(Volume.Type.SYSTEM, progress)
-//            }
+            R.id.sound_audio_system_volume -> {
+                binding.systemVolumeTxt.text = progress.toString()
+                //manager.doSetVolume(Volume.Type.SYSTEM, progress)
+            }
             else -> {
             }
         }
@@ -109,6 +114,7 @@ class VolumeDialogFragment : BaseDialogFragment<VolumeViewModel, AudioSoundVolum
         binding.closeDialog.setOnClickListener {
             dismiss()
         }
+        binding.reset.setOnClickListener {  }
     }
 
     private fun observeSoundVolume() {

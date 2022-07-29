@@ -162,4 +162,26 @@
         <item name="android:textSize">@dimen/text_14</item>
         <item name="android:background">@drawable/bg_label_txt</item>
     </style>
+    <style name="vertical">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+       <item name="klvs_backgroundColor">@color/xui_config_color_black</item>
+       <item name="klvs_cornerRadius">45</item>
+       <item name="klvs_max">100</item>
+       <item name="klvs_progress">50</item>
+       <item name="klvs_progressColor">@color/xui_config_color_light_green</item>
+       <item name="klvs_steep">1</item>
+    </style>
+    <style name="vertical_image">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/x14</item>
+    </style>
+    <style name="vertical_txt">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">@dimen/x14</item>
+        <item name="android:textColor">@color/volume_txt_color</item>
+        <item name="android:textSize">@dimen/text_12</item>
+    </style>
 </resources>

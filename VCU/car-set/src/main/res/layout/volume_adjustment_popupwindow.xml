@@ -66,21 +66,12 @@
 
                 <com.common.xui.widget.picker.VerticalSeekBar
                     android:id="@+id/sound_audio_navi_volume"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:klvs_backgroundColor="@color/xui_config_color_black"
-                    app:klvs_cornerRadius="45"
-                    app:klvs_max="100"
-                    app:klvs_progress="50"
-                    app:klvs_progressColor="@color/xui_config_color_light_green"
-                    app:klvs_steep="1"
+                    style="@style/vertical"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"/>
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/x14"
+                   style="@style/vertical_image"
                     android:src="@drawable/vioce_daohang"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -88,11 +79,7 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/navi_volume_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/x14"
-                    android:textColor="@color/tab_option_title_text_color"
-                    android:textSize="@dimen/text_12"
+                    style="@style/vertical_txt"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
@@ -118,21 +105,12 @@
 
                 <com.common.xui.widget.picker.VerticalSeekBar
                     android:id="@+id/sound_audio_phone_volume"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:klvs_backgroundColor="@color/xui_config_color_black"
-                    app:klvs_cornerRadius="45"
-                    app:klvs_max="100"
-                    app:klvs_progress="50"
-                    app:klvs_progressColor="@color/xui_config_color_light_green"
-                    app:klvs_steep="1"
+                    style="@style/vertical"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"/>
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/x14"
+                    style="@style/vertical_image"
                     android:src="@drawable/vioce_dianhua"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -140,11 +118,7 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/phone_volume_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/x14"
-                    android:textColor="@color/tab_option_title_text_color"
-                    android:textSize="@dimen/text_12"
+                    style="@style/vertical_txt"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
@@ -170,21 +144,12 @@
 
                 <com.common.xui.widget.picker.VerticalSeekBar
                     android:id="@+id/sound_audio_voice_volume"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:klvs_backgroundColor="@color/xui_config_color_black"
-                    app:klvs_cornerRadius="45"
-                    app:klvs_max="100"
-                    app:klvs_progress="50"
-                    app:klvs_progressColor="@color/xui_config_color_light_green"
-                    app:klvs_steep="1"
+                    style="@style/vertical"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/x14"
+                    style="@style/vertical_image"
                     android:src="@drawable/vioce_mic"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -192,11 +157,7 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/voice_volume_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/x14"
-                    android:textColor="@color/tab_option_title_text_color"
-                    android:textSize="@dimen/text_12"
+                    style="@style/vertical_txt"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
@@ -222,21 +183,12 @@
 
                 <com.common.xui.widget.picker.VerticalSeekBar
                     android:id="@+id/sound_audio_media_volume"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:klvs_backgroundColor="@color/xui_config_color_black"
-                    app:klvs_cornerRadius="45"
-                    app:klvs_max="100"
-                    app:klvs_progress="50"
-                    app:klvs_progressColor="@color/xui_config_color_light_green"
-                    app:klvs_steep="1"
+                    style="@style/vertical"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/x14"
+                    style="@style/vertical_image"
                     android:src="@drawable/vioce_yule"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -244,11 +196,7 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/media_volume_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/x14"
-                    android:textColor="@color/tab_option_title_text_color"
-                    android:textSize="@dimen/text_12"
+                    style="@style/vertical_txt"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
@@ -274,21 +222,12 @@
 
                 <com.common.xui.widget.picker.VerticalSeekBar
                     android:id="@+id/sound_audio_system_volume"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:klvs_backgroundColor="@color/xui_config_color_black"
-                    app:klvs_cornerRadius="45"
-                    app:klvs_max="100"
-                    app:klvs_progress="50"
-                    app:klvs_progressColor="@color/xui_config_color_light_green"
-                    app:klvs_steep="1"
+                    style="@style/vertical"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/x14"
+                    style="@style/vertical_image"
                     android:src="@drawable/vioce_shezhi"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -296,11 +235,7 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/system_volume_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/x14"
-                    android:textColor="@color/tab_option_title_text_color"
-                    android:textSize="@dimen/text_12"
+                    style="@style/vertical_txt"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />

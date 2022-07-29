@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="@dimen/x15"
-                android:src="@drawable/dialog_refresh_selector" />
+                android:src="@drawable/reset_56_seletor" />
         </RelativeLayout>
 
         <androidx.appcompat.widget.AppCompatImageView

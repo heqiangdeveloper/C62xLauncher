@@ -3,9 +3,12 @@ package com.common.xui.widget.picker;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Region;
 import android.util.AttributeSet;
@@ -96,18 +99,26 @@ public class VerticalSeekBar extends View {
             setProgress(progress);
         }
     }
-
+    Rect rectBg = new Rect();
     private void makeCustomPaint(Canvas canvas) {
         Paint paint = new Paint();
-
+        paint.setAntiAlias(true);
         paint.setAlpha(255);
         canvas.translate(0, 0);
+        RectF rf = new RectF(0, 0, scrWidth, scrHeight);
         Path mPath = new Path();
         mPath.addRoundRect(new RectF(0, 0, scrWidth, scrHeight), cornerRadius, cornerRadius, Path.Direction.CCW);
         canvas.clipPath(mPath, Region.Op.INTERSECT);
         paint.setColor(backgroundColor);
-        paint.setAntiAlias(true);
-        canvas.drawRect(0, 0, scrWidth, scrHeight, paint);
+
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.vioce_bg_blue);
+        rectBg.left = 0;
+        rectBg.top = 0;
+        rectBg.right = bitmap.getWidth();
+        rectBg.bottom =bitmap.getHeight();
+        canvas.drawBitmap(bitmap,rectBg,rf,paint);
+
+        //canvas.drawRect(0, 0, scrWidth, scrHeight, paint);
 
         canvas.drawLine(canvas.getWidth() / 2f, canvas.getHeight(), canvas.getWidth() / 2f, progressSweep, mProgressPaint);
 
@@ -175,7 +186,6 @@ public class VerticalSeekBar extends View {
         if (this.progress != max && this.progress != min) {
             this.progress = this.progress - (this.progress % steep) + (min % steep);
         }
-
         if (mOnValuesChangeListener != null) {
             mOnValuesChangeListener
                     .onPointsChanged(this, this.progress);

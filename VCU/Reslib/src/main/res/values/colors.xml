@@ -35,5 +35,5 @@
     <color name="line_end_color">#4D59C3FF</color>
     <color name="line_start_color">#4D224765</color>
 
-
+    <color name="volume_txt_color">#ffffff</color>
 </resources>
