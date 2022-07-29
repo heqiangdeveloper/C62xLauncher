@@ -223,6 +223,14 @@ public class MyAppFragment extends Fragment {
                 }
             }
         }
+
+        //清除掉子list长度为0的
+        for(int k = 0; k < data.size(); k++){
+            if(data.get(k).size() == 0){
+                data.remove(k);
+                k--;
+            }
+        }
     }
 
     /*
