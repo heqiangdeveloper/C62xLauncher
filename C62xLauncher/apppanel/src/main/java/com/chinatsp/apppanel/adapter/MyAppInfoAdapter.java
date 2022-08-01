@@ -58,6 +58,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import launcher.base.utils.recent.RecentAppHelper;
+
 public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapter.ViewHolder> {
     public List<List<LocationBean>> mData;
     public Context context;
@@ -622,7 +624,8 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         ImageView closeIv = (ImageView) dialog.getWindow().findViewById(R.id.close_iv);
         RecyclerView rv = (RecyclerView) dialog.getWindow().findViewById(R.id.appmanage_recyclerview);
         TextView warnTv = (TextView) dialog.getWindow().findViewById(R.id.warn_tv);
-        getRecentApps(appInfos,MAX_RECENT_APPS);
+        appInfos = RecentAppHelper.getRecentApps(context,MAX_RECENT_APPS);
+        //getRecentApps(appInfos,MAX_RECENT_APPS);
         if(appInfos.size() == 0){
             warnTv.setVisibility(View.VISIBLE);
             clearTv.setVisibility(View.GONE);
@@ -669,7 +672,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         //去掉不会显示的应用
         for(int i = 0; i < appProcessList.size(); i++){
             if(appProcessList.get(i) != null &&
-                    AppLists.notInAppManageListApps.contains(appProcessList.get(i).processName)){
+                    RecentAppHelper.notInAppManageListApps.contains(appProcessList.get(i).processName)){
                 appProcessList.remove(i);
                 i--;
             }
@@ -726,7 +729,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         //去掉不会显示的应用
         for(int i = 0; i < recentTasks.size(); i++){
             if(recentTasks.get(i) != null &&
-                    AppLists.notInAppManageListApps.contains(recentTasks.get(i).baseIntent.getComponent().getPackageName())){
+                    RecentAppHelper.notInAppManageListApps.contains(recentTasks.get(i).baseIntent.getComponent().getPackageName())){
                 recentTasks.remove(i);
                 i--;
             }

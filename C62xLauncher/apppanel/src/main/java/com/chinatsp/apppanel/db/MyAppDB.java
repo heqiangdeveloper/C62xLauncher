@@ -245,7 +245,7 @@ public class MyAppDB extends SQLiteOpenHelper {
         if(locationBean == null){
             return;
         }
-        if(locationBean.getImgByte() == null){
+        if(locationBean.getImgDrawable() != null){
             Drawable drawable = locationBean.getImgDrawable();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
@@ -254,7 +254,10 @@ public class MyAppDB extends SQLiteOpenHelper {
             drawable.draw(canvas);
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
             locationBean.setImgByte(baos.toByteArray());
+        }else if(locationBean.getImgByte() == null){
+            return;
         }
+
         String sql = "INSERT into " + LOCATION_TABLE + "(" +
                 PARENTINDEX + "," +
                 CHILDINDEX + "," +

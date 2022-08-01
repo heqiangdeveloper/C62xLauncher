@@ -50,11 +50,11 @@ public class AppLists {
             APPMANAGEMENT
     );
 
-    //不出现在应用管理中的应用名单
-    public static List<String> notInAppManageListApps = Arrays.asList(
-            launcher,
-            buryPoint
-    );
+    //不出现在应用管理中的应用名单,移动至RecentAppHelper中
+//    public static List<String> notInAppManageListApps = Arrays.asList(
+//            launcher,
+//            buryPoint
+//    );
 
     /*
      *  判断某个应用是否属于黑名单中的应用

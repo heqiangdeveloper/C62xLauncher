@@ -260,31 +260,33 @@ public class MyAppFragment extends Fragment {
                 locationBean.setChildIndex(-1);
 
                 locationBean.setPackageName(pkgName);
-                locationBean.setImgDrawable(allApps.get(i).activityInfo.loadIcon(getContext().getPackageManager()));
-                locationBean.setName(allApps.get(i).activityInfo.loadLabel(getContext().getPackageManager()).toString());
+                if(allApps.get(i).activityInfo.loadIcon(getContext().getPackageManager()) != null){
+                    locationBean.setImgDrawable(allApps.get(i).activityInfo.loadIcon(getContext().getPackageManager()));
+                    locationBean.setName(allApps.get(i).activityInfo.loadLabel(getContext().getPackageManager()).toString());
 
-                locationBean.setCanuninstalled(AppLists.isSystemApplication(getContext(),locationBean.getPackageName()) ? 0:1);
-                locationBean.setTitle("");
-                locationBean.setImgByte(null);
+                    locationBean.setCanuninstalled(AppLists.isSystemApplication(getContext(),locationBean.getPackageName()) ? 0:1);
+                    locationBean.setTitle("");
+                    locationBean.setImgByte(null);
 
-                int num = db.isExistPackage(locationBean.getPackageName());
-                if(num == 0){
-                    AsyncSchedule.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            db.insertLocation(locationBean);
-                        }
-                    });
-                }else {
-                    AsyncSchedule.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            db.updateIndex(locationBean);
-                        }
-                    });
+                    int num = db.isExistPackage(locationBean.getPackageName());
+                    if(num == 0){
+                        AsyncSchedule.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                db.insertLocation(locationBean);
+                            }
+                        });
+                    }else {
+                        AsyncSchedule.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                db.updateIndex(locationBean);
+                            }
+                        });
+                    }
+                    inner.add(locationBean);
+                    data.add(inner);
                 }
-                inner.add(locationBean);
-                data.add(inner);
             }
         }
     }
