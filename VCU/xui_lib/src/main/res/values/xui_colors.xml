@@ -190,7 +190,7 @@
     <color name="smooth_bg_color_end">#00020307</color>
     <color name="smooth_bg_color_node">#478BB3</color>
     <color name="smooth_bg_color_node_outside">#232939</color>
-    <color name="smooth_chick_color">#C8D2D9</color>
+    <color name="smooth_chick_color">#26C3FE</color>
     <color name="smooth_circle_color">#232939</color>
     <color name="smooth_line_color">#26C3FE </color>
 
@@ -201,4 +201,5 @@
     <color name="acr_seek_line_color">#49505A</color>
     <color name="acr_seek_txt_color">#4Dffffff</color>
     <color name="acr_seek_txt_old_color">#ffffff</color>
+    <color name="seek_chick_color">#26C3FE</color>
 </resources>

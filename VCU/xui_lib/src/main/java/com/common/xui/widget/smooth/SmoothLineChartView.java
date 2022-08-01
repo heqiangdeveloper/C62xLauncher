@@ -14,6 +14,7 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -68,6 +69,7 @@ public class SmoothLineChartView extends View {
     private List<PointF> mPoints = new ArrayList<PointF>();
     private List<Float> mValues;//节点数据集
     private List<String> mXData;
+    private List<String> mXDataTop;
     private Bitmap mTagBitmap;
     private Bitmap mTagBitmapReverse;
     private Drawable mTagDrawable;
@@ -107,7 +109,7 @@ public class SmoothLineChartView extends View {
         mCircleColor = CHART_COLOR;
         mInnerCircleColor = Color.WHITE;
         mTextColor = Color.WHITE;
-        mTextSize = DensityUtils.sp2px(context, 12);
+        mTextSize = DensityUtils.sp2px(context, 28);
         mTextOffset = TEXT_POSITION_OFFSET;
         mNodeStyle = NODE_STYLE_CIRCLE;
         mPaint = new Paint();
@@ -121,7 +123,7 @@ public class SmoothLineChartView extends View {
     /***
      * 设置路径节点
      */
-    public void setData(List<Float> yValues, List<String> xValue) {
+    public void setData(List<Float> yValues, List<String> xValue,List<String>xValueTop) {
         if (yValues == null || xValue == null) {
             throw new IllegalArgumentException("valuse can not be null");
         } else if (yValues.size() != xValue.size()) {
@@ -142,6 +144,7 @@ public class SmoothLineChartView extends View {
             }
         }
         this.mXData = xValue;
+        this.mXDataTop = xValueTop;
         invalidate();
     }
 
@@ -273,6 +276,7 @@ public class SmoothLineChartView extends View {
             canvas.drawCircle(point.x, point.y, mSelectedCircleSize / 2, mPaint);
         }
         //绘制节点
+        mPaint.setStrokeWidth(4f);
         mPaint.setColor(mCircleColor);
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         for (PointF point : mPoints) {
@@ -331,12 +335,16 @@ public class SmoothLineChartView extends View {
 
         //绘制x刻度
         for (int i = 0; i < mPoints.size(); i++) {
-            mPaint.setTextSize(DensityUtils.sp2px(mContext, mTextSize));
+            mPaint.setTextSize(DensityUtils.sp2px(mContext, 28));
             mPaint.setStrokeWidth(0);
-            mPaint.setColor(Color.TRANSPARENT);
+            mPaint.setColor(Color.WHITE);
             final Rect textRect = new Rect();
             mPaint.getTextBounds(mXData.get(i), 0, mXData.get(i).length(), textRect);
-            canvas.drawText(mXData.get(i), 0, 4, mPoints.get(i).x - textRect.width() * 0.5f, getMeasuredHeight(), mPaint);
+            canvas.drawText(mXData.get(i), 0,  mXData.get(i).length(), mPoints.get(i).x - textRect.width() * 0.5f, getMeasuredHeight()-10, mPaint);
+
+            mPaint.setTextSize(DensityUtils.sp2px(mContext, 22));
+            mPaint.getTextBounds(mXDataTop.get(i), 0, mXDataTop.get(i).length(), textRect);
+            canvas.drawText(mXDataTop.get(i), 0,  mXDataTop.get(i).length(), mPoints.get(i).x - textRect.width() * 0.5f, 35, mPaint);
         }
 
         //绘制Y刻度
@@ -344,6 +352,7 @@ public class SmoothLineChartView extends View {
         float baseline = (fontMetrics.top - fontMetrics.bottom) / 2 - fontMetrics.top;
         final String top = mValues.get(0) + "";
         final String min = "" + mMinY;
+        mPaint.setColor(Color.TRANSPARENT);
         canvas.drawText(top, 0, top.length(), 0, mPoints.get(0).y + baseline, mPaint);
         canvas.drawText(min, 0, min.length(), 0, mBorder + height + baseline, mPaint);
     }

@@ -201,4 +201,5 @@
     <color name="acr_seek_line_color">#49505A</color>
     <color name="acr_seek_txt_color">#4Dffffff</color>
     <color name="acr_seek_txt_old_color">#ffffff</color>
+    <color name="seek_chick_color">#B92B31</color>
 </resources>

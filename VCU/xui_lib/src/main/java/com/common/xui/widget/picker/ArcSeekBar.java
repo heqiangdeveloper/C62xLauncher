@@ -559,19 +559,20 @@ public class ArcSeekBar extends View {
         if (isShowThumb) {
             mPaint.reset();
             mPaint.setAntiAlias(true);
+            mPaint.setStyle(Paint.Style.STROKE);
             float thumbAngle = mStartAngle + mSweepAngle * getRatio();
             //已知圆心，半径，角度，求圆上的点坐标
             mThumbCenterX = (float) (mCircleCenterX + mRadius * Math.cos(Math.toRadians(thumbAngle)));
             mThumbCenterY = (float) (mCircleCenterY + mRadius * Math.sin(Math.toRadians(thumbAngle)));
             if (isCanDrag) {
-                mPaint.setStrokeWidth(7);
-                mPaint.setColor(mContext.getResources().getColor(R.color.smooth_chick_color));
+                mPaint.setStrokeWidth(8);
+                mPaint.setColor(mContext.getResources().getColor(R.color.seek_chick_color));
                 mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
                 canvas.drawCircle(mThumbCenterX, mThumbCenterY, mThumbRadius + mThumbRadiusEnlarges, mPaint);
             }
 
             mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-            mPaint.setStrokeWidth(3);
+            mPaint.setStrokeWidth(6);
             mPaint.setColor(mContext.getResources().getColor(R.color.smooth_circle_color));
             canvas.drawCircle(mThumbCenterX, mThumbCenterY, mThumbRadius, mPaint);
 

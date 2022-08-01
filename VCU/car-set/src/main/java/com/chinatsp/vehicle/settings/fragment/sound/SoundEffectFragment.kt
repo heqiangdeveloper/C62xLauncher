@@ -17,6 +17,8 @@ import java.util.ArrayList
 
 @AndroidEntryPoint
 class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragmentBinding>() {
+    private val xValueTop: List<String>
+        get() = listOf("4dB", "-2dB", "4dB", "2dB", "4dB")
     override fun getLayoutId(): Int {
         return R.layout.sound_effect_fragment
     }
@@ -34,7 +36,7 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
         binding.smoothChartView.textOffset = 4
         binding.smoothChartView.minY = -7F
         binding.smoothChartView.maxY = 7F
-        binding.smoothChartView.enableShowTag(false)
+        binding.smoothChartView.enableShowTag(false )
         binding.smoothChartView.enableDrawArea(true)
         binding.smoothChartView.lineColor = resources.getColor(R.color.md_material_blue_600)
         binding.smoothChartView.circleColor =
@@ -48,12 +50,12 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
         data.add(7f)
         data.add(-3f)
         var x: MutableList<String> = ArrayList()
-        x.add("3-12")
-        x.add("3-13")
-        x.add("3-14")
-        x.add("3-15")
-        x.add("3-16")
-        binding.smoothChartView.setData(data, x)
+        x.add("高音")
+        x.add("中高音")
+        x.add("中音")
+        x.add("中低音")
+        x.add("低音")
+        binding.smoothChartView.setData(data, x,xValueTop)
         binding.smoothChartView.setOnChartClickListener { position, _ -> viewModel?.setAudioEQ(position) }
     }
 

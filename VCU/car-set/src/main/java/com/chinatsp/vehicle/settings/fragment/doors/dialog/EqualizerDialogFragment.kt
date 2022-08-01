@@ -23,14 +23,17 @@ class EqualizerDialogFragment :
         get() = EffectManager.instance
 
     private val xValue: List<String>
-        get() = listOf("3-12", "3-13", "3-14", "3-15", "3-16")
+        get() = listOf("高音", "中高音", "中音", "中低音", "低音")
+
+    private val xValueTop: List<String>
+        get() = listOf("4dB", "-2dB", "4dB", "2dB", "4dB")
 
     override fun getLayoutId(): Int {
         return R.layout.equalizer_dialog_fragmet
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-        initView();
+        initView()
         initRadioOption()
         addRadioLiveDataListener()
         setRadioListener()
@@ -102,7 +105,7 @@ class EqualizerDialogFragment :
         tabView.setSelection(value.toString(), true)
         val values = viewModel.getEffectValues(SoundEffect.getEffect(value))
         val toList = values.map { it.toFloat() }.toList()
-        binding.smoothChartView.setData(toList, xValue)
+        binding.smoothChartView.setData(toList, xValue,xValueTop)
     }
 
     private fun isCanToInt(value: String?): Boolean {
@@ -127,7 +130,7 @@ class EqualizerDialogFragment :
         binding.smoothChartView.setOnChartClickListener { position, _ -> viewModel?.setAudioEQ(position) }
         val values = viewModel.getEffectValues(SoundEffect.getEffect(viewModel.currentEffect.value!!))
         val toList = values.map { it.toFloat() }.toList()
-        binding.smoothChartView.setData(toList, xValue)
+        binding.smoothChartView.setData(toList, xValue,xValueTop)
     }
 }
 
