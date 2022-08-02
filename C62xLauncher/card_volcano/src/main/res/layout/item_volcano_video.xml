@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="428px"
+    android:layout_height="373px"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/ivVolcanoVideoItemCover"
+        android:layout_width="384px"
+        android:layout_height="216px"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="41px"
+
+        />
+
+    <TextView
+        android:id="@+id/tvVolcanoVideoItemTitle"
+        android:layout_width="0px"
+        android:layout_height="46px"
+        android:text="给我一首歌的时间"
+        style="@style/CardLv2TextView"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:gravity="center_vertical"
+        app:layout_constraintStart_toStartOf="@id/ivVolcanoVideoItemCover"
+        app:layout_constraintEnd_toEndOf="@id/ivVolcanoVideoItemCover"
+        app:layout_constraintTop_toBottomOf="@id/ivVolcanoVideoItemCover"
+        android:layout_marginStart="6px"
+        android:layout_marginTop="24px"
+        />
+    <TextView
+        android:id="@+id/tvVolcanoVideoItemArtist"
+        android:layout_width="0px"
+        android:layout_height="30px"
+        android:ellipsize="end"
+        style="@style/CardLv3TextView"
+        android:textSize="24px"
+        android:gravity="center_vertical|start"
+        android:textColor="@color/card_grey_default"
+        android:text="周杰伦"
+        app:layout_constraintTop_toBottomOf="@id/tvVolcanoVideoItemTitle"
+        app:layout_constraintStart_toStartOf="@id/tvVolcanoVideoItemTitle"
+        app:layout_constraintEnd_toEndOf="@id/tvVolcanoVideoItemTitle"
+        android:layout_marginTop="15px"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

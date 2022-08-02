@@ -34,7 +34,7 @@ dependencies {
     implementation project(path: ':card_weaher')
     api project(path: ':baseCard')
     implementation project(path: ':card_navigation')
-    implementation project(path: ':card_douyin')
+    implementation project(path: ':card_volcano')
     api project(path: ':base')
     implementation project(path: ':card_iquting')
 }

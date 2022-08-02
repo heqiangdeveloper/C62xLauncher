@@ -23,4 +23,13 @@ public class GlideHelper {
         }
         requestBuilder.into(imageView);
     }
+    public static void loadCircleImage(Context context, ImageView imageView, int res) {
+        RequestBuilder<Drawable> requestBuilder = Glide.with(context)
+                .load(res)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .override(COVER_SIZE, COVER_SIZE)
+                .circleCrop()
+                .apply(new GlideCommonRequestOption());
+        requestBuilder.into(imageView);
+    }
 }

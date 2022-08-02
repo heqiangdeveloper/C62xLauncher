@@ -4,7 +4,11 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
+import launcher.base.utils.EasyLog;
+
 public class ExpandStateManager {
+    private static final String TAG = "ExpandStateManager";
+
     private ExpandStateManager() {
     }
 
@@ -15,7 +19,7 @@ public class ExpandStateManager {
     }
 
     private final MutableLiveData<Boolean> mExpandStateLiveData = new MutableLiveData<>(false);
-
+    private CardFrameViewHolder mBigCard;
     public void setExpand(boolean expandState) {
         mExpandStateLiveData.postValue(expandState);
     }
@@ -30,5 +34,20 @@ public class ExpandStateManager {
     }
     public void unregister(Observer<? super Boolean> observer) {
         mExpandStateLiveData.removeObserver(observer);
+    }
+
+    public void setBigCard(CardFrameViewHolder cardFrameViewHolder) {
+        EasyLog.d(TAG,"setBigCard: "+ cardFrameViewHolder.getLauncherCard().getName());
+        this.mBigCard = cardFrameViewHolder;
+    }
+
+    public CardFrameViewHolder getBigCard() {
+        if (mBigCard != null) {
+            EasyLog.d(TAG, "getBigCard: " + mBigCard.getLauncherCard().getName());
+        } else {
+            EasyLog.d(TAG, "getBigCard: " + null);
+
+        }
+        return mBigCard;
     }
 }

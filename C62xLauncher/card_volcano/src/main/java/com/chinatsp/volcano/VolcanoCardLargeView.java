@@ -1,4 +1,4 @@
-package com.chinatsp.douyin;
+package com.chinatsp.volcano;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -10,25 +10,25 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-public class DouyinCardLargeView extends ConstraintLayout {
+public class VolcanoCardLargeView extends ConstraintLayout {
     private static final String TAG = "WeatherCardLargeView";
 
-    public DouyinCardLargeView(@NonNull Context context) {
+    public VolcanoCardLargeView(@NonNull Context context) {
         super(context);
         init();
     }
 
-    public DouyinCardLargeView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public VolcanoCardLargeView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public DouyinCardLargeView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public VolcanoCardLargeView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
-    public DouyinCardLargeView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public VolcanoCardLargeView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
@@ -36,6 +36,6 @@ public class DouyinCardLargeView extends ConstraintLayout {
     private RecyclerView mRcvCardWeatherWeek;
 
     private void init(){
-        LayoutInflater.from(getContext()).inflate(R.layout.card_douyin_large, this);
+        LayoutInflater.from(getContext()).inflate(R.layout.card_volcano_large, this);
     }
 }

@@ -3,19 +3,16 @@ package com.chinatsp.widgetcards.manager;
 import android.content.Context;
 import android.view.View;
 
-import com.chinatsp.douyin.DouyinCardView;
+import com.chinatsp.volcano.VolcanoCardView;
 import com.chinatsp.drivecounselor.DriveCounselorCardView;
 import com.chinatsp.econnect.EConnectCardView;
 import com.chinatsp.iquting.IQuTingCardView;
-import com.chinatsp.musiclauncher.MediaCardView;
 import com.chinatsp.navigation.NaviCardView;
 import com.chinatsp.weaher.WeatherCardView;
 import com.chinatsp.widgetcards.R;
-import com.chinatsp.widgetcards.manager.CardManager;
 
 import card.base.ICardViewCreator;
 import card.base.LauncherCard;
-import launcher.base.utils.EasyLog;
 
 public class CardEntityFactory {
     public static LauncherCard create(int type) {
@@ -198,7 +195,7 @@ public class CardEntityFactory {
         cardEntity.setCardViewCreator(new ICardViewCreator() {
             @Override
             public View createCardView(Context context) {
-                return new DouyinCardView(context);
+                return new VolcanoCardView(context);
             }
         });
         return cardEntity;

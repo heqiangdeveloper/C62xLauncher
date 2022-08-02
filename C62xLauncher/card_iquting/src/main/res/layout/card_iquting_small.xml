@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tvCardIQuTingTip"
+        android:id="@+id/tvCardIQuTingLoginTip"
         style="@style/CardLv2TextView"
         android:layout_width="222px"
         android:layout_height="92px"
@@ -37,7 +37,7 @@
         android:src="@drawable/card_common_left_in_selector"
         app:layout_constraintEnd_toEndOf="@id/ivCardIQuTingLogo"
         app:layout_constraintStart_toStartOf="@id/ivCardIQuTingLogo"
-        app:layout_constraintTop_toBottomOf="@+id/tvCardIQuTingTip" />
+        app:layout_constraintTop_toBottomOf="@+id/tvCardIQuTingLoginTip" />
 
     <!--==========================  正常模式UI  ===========================================-->
 
@@ -118,7 +118,7 @@
             android:id="@+id/tvIQuTingMediaName"
             android:layout_width="316px"
             android:layout_height="46px"
-            android:text="给我一首歌的时间—周杰伦"
+            android:text="暗里着迷—刘德华"
             android:maxLines="1"
             android:ellipsize="marquee"
             android:focusable="true"
