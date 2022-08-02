@@ -129,8 +129,8 @@ public class MyAppDB extends SQLiteOpenHelper {
      */
     public List<List<LocationBean>> getData1(){
         List<List<LocationBean>> data = new ArrayList<>();
+        List<LocationBean> lists = new ArrayList<>();
         try{
-            List<LocationBean> lists = new ArrayList<>();
             //select * from (select * from location order by child_index asc) order by parent_index asc
             String sql = "select * from " + "(select * from " + LOCATION_TABLE + " order by " +
                     CHILDINDEX + " asc) order by " + PARENTINDEX + " asc";
@@ -194,6 +194,12 @@ public class MyAppDB extends SQLiteOpenHelper {
             }
         }catch (Exception e){
             Log.d(TAG,"read db exception");
+            deleteLocation();//删除数据库
+            //将读取的数据库中的数据打印
+            for(LocationBean locationBean : lists){
+                locationBean.printLog();
+            }
+            lists.clear();
             data.clear();
         }
 

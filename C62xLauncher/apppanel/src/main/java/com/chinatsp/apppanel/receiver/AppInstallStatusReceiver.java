@@ -72,7 +72,12 @@ public class AppInstallStatusReceiver extends BroadcastReceiver {
                     AsyncSchedule.execute(new Runnable() {
                         @Override
                         public void run() {
-                            db.insertLocation(locationBean);
+                            int num = db.isExistPackage(locationBean.getPackageName());
+                            if(num == 0){
+                                db.insertLocation(locationBean);
+                            }else {
+                                db.updateIndex(locationBean);
+                            }
                             EventBus.getDefault().post(new AppInstallStatusEvent(1,packageName));
                         }
                     });

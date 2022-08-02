@@ -1,6 +1,7 @@
 package com.chinatsp.apppanel.bean;
 
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 public class LocationBean {
     private int parentIndex;
@@ -15,6 +16,7 @@ public class LocationBean {
     private int installed;
     private int canuninstalled;
     private Drawable imgDrawable;
+    private final String TAG = "LocationBean";
 
     public int getParentIndex() {
         return parentIndex;
@@ -110,5 +112,10 @@ public class LocationBean {
 
     public void setImgDrawable(Drawable imgDrawable) {
         this.imgDrawable = imgDrawable;
+    }
+
+    public void printLog(){
+        Log.d(TAG,"parentIndex = " + parentIndex + ",childIndex = " + childIndex + ",packageName = " +
+                packageName + ",name = " + name);
     }
 }
