@@ -200,9 +200,10 @@
             app:arcStartAngle="150"
             app:arcSweepAngle="60"
             app:arcTickOffsetAngle="1"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="@dimen/x80"
+            android:layout_marginEnd="@dimen/x70"
             android:visibility="gone"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

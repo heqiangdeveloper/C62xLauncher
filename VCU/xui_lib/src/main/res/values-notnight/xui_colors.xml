@@ -186,7 +186,7 @@
     <!--不可输入的填充颜色-->
     <color name="xui_config_color_edittext_disable">#EDF2F7</color>
     <!--SmoothLineChartView-->
-    <color name="smooth_bg_color_start">#24FFFFFF</color>
+    <color name="smooth_bg_color_start">#4DFFFFFF</color>
     <color name="smooth_bg_color_end">#00020307</color>
     <color name="smooth_bg_color_node">#B3B3B3</color>
     <color name="smooth_bg_color_node_outside">#232939</color>

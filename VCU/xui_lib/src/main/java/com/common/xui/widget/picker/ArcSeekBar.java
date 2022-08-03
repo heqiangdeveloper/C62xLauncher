@@ -4,7 +4,10 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.RectF;
@@ -260,7 +263,6 @@ public class ArcSeekBar extends View {
 
     private OnChangeListener mOnChangeListener;
     private Shader shader;//渐变
-    private Context mContext;
 
     public ArcSeekBar(Context context) {
         this(context, null);
@@ -284,7 +286,6 @@ public class ArcSeekBar extends View {
     private void init(Context context, AttributeSet attrs) {
         mShaderColors = new int[]{context.getResources().getColor(R.color.acr_seek_start_color), context.getResources().getColor(R.color.acr_seek_end_color)};
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ArcSeekBar);
-        mContext = context;
         DisplayMetrics displayMetrics = getDisplayMetrics();
         mStrokeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, displayMetrics);
 
@@ -294,10 +295,10 @@ public class ArcSeekBar extends View {
 
         mTickPadding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, displayMetrics);
 
-        mTickStrokeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, displayMetrics);
+        mTickStrokeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0.8f, displayMetrics);
 
 
-        mThumbRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 12, displayMetrics);
+        mThumbRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 23, displayMetrics);
 
         mThumbStrokeWidth = mThumbRadius;
 
@@ -429,7 +430,7 @@ public class ArcSeekBar extends View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
         int defaultValue = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 220, getDisplayMetrics());
-        int defaultWidthValue = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 500, getDisplayMetrics());
+        int defaultWidthValue = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 505, getDisplayMetrics());
 
         int width = measureHandler(widthMeasureSpec, defaultWidthValue);
         int height = measureHandler(heightMeasureSpec, defaultValue);
@@ -560,7 +561,7 @@ public class ArcSeekBar extends View {
             mPaint.reset();
             mPaint.setAntiAlias(true);
             mPaint.setStyle(Paint.Style.STROKE);
-            float thumbAngle = mStartAngle + mSweepAngle * getRatio();
+           /* float thumbAngle = mStartAngle + mSweepAngle * getRatio();
             //已知圆心，半径，角度，求圆上的点坐标
             mThumbCenterX = (float) (mCircleCenterX + mRadius * Math.cos(Math.toRadians(thumbAngle)));
             mThumbCenterY = (float) (mCircleCenterY + mRadius * Math.sin(Math.toRadians(thumbAngle)));
@@ -578,18 +579,15 @@ public class ArcSeekBar extends View {
 
             mPaint.setColor(mContext.getResources().getColor(R.color.smooth_bg_color_node));
             mPaint.setStyle(Paint.Style.FILL);
-            canvas.drawCircle(mThumbCenterX, mThumbCenterY, mThumbRadius, mPaint);
-
-          /* if (isCanDrag) {
-                //canvas.drawCircle(mThumbCenterX, mThumbCenterY, mThumbRadius + mThumbRadiusEnlarges, mPaint);
-               mPaint.setColor(selectedColor);
-               mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-
-               canvas.drawCircle(mThumbCenterX,mThumbCenterY, (mThumbRadius + mThumbRadiusEnlarges)/2, mPaint);
-                //canvas.drawCircle(mThumbCenterX, mThumbCenterY, mThumbRadius + mThumbRadiusEnlarges, mPaint);
-            }*/ /*else {
-                canvas.drawCircle(mThumbCenterX, mThumbCenterY, mThumbRadius, mPaint);
-            }*/
+            canvas.drawCircle(mThumbCenterX, mThumbCenterY, mThumbRadius, mPaint);*/
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.circular_click);
+            Paint paint = new Paint();
+            paint.setAntiAlias(true);
+            float thumbAngle = (mStartAngle + 5) + mSweepAngle * getRatio() + 3.5f;
+            //已知圆心，半径，角度，求圆上的点坐标
+            mThumbCenterX = (float) (mCircleCenterX + mRadius * Math.cos(Math.toRadians(thumbAngle)));
+            mThumbCenterY = (float) (mCircleCenterY + mRadius * Math.sin(Math.toRadians(thumbAngle)));
+            canvas.drawBitmap(bitmap, mThumbCenterX - thumbAngle / 2 + mRadius / 2 - 20, mThumbCenterY, mPaint);
         }
 
     }
@@ -669,9 +667,9 @@ public class ArcSeekBar extends View {
             mFiftyTextPaint.setColor(this.getResources().getColor(R.color.acr_seek_txt_old_color));
             mFiftyTextPaint.setTextSize(36);
         }
-        canvas.drawText(75 + "°", startX, textBaseY + 15, mSeventyTextPaint);
+        canvas.drawText(75 + "°", startX - 4, textBaseY + 15, mSeventyTextPaint);
         canvas.drawText(50 + "°", startX + 15, getHeight() - 10, mFiftyTextPaint);
-        canvas.drawText(100 + "°", startX + 15, 30, mOneHundredTextPaint);
+        canvas.drawText(100 + "°", startX + 5, 30, mOneHundredTextPaint);
     }
 
     /**
@@ -686,17 +684,16 @@ public class ArcSeekBar extends View {
         float startX = mCircleCenterX - mRadius;
         float startY = mCircleCenterY - mRadius;
         float diameter = mRadius * 2;
-        //RectF rectF = new RectF(0, 0,startX, startY);
         RectF rectF = new RectF(0, 0, getWidth(), getHeight());
-        RectF rectF1 = new RectF(startX + 13, startY, startX + diameter, startY + diameter);
-        //RectF rect = new RectF(getWidth()/2-mRadius+20, -20,getWidth(), getHeight());
-
-        shader = new LinearGradient(0, 0, rectF.right, 0, getResources().getColor(R.color.smooth_bg_color_start), getResources().getColor(R.color.smooth_bg_color_end), Shader.TileMode.CLAMP);
+        RectF rectF1 = new RectF(startX + 12f, startY, startX + diameter, startY + diameter);
+        int[] mColors = {this.getResources().getColor(R.color.smooth_bg_color_start),
+                this.getResources().getColor(R.color.smooth_bg_color_end),
+                this.getResources().getColor(R.color.smooth_bg_color_end),
+                Color.TRANSPARENT};
+        float[] loaction = new float[]{0.25F, 0.5F, 0.75F, 0.6F};
+        shader = new LinearGradient(0, 0, rectF.right - 20, 50, mColors, loaction, Shader.TileMode.REPEAT);
         fanShapePaint.setShader(shader);
-
         float ratio = getRatio();
-        //canvas.drawPath(mPath, fanShapePaint);
-        // canvas.drawArc(rectF1, mStartAngle, mSweepAngle * ratio, false, mPaint);
         canvas.drawArc(rectF1, mStartAngle, mSweepAngle * ratio, true, fanShapePaint);
     }
 
@@ -957,7 +954,7 @@ public class ArcSeekBar extends View {
         invalidate();
 
         if (mOnChangeListener != null) {
-            mOnChangeListener.onProgressChanged(mProgress+mMax, mMax, fromUser);
+            mOnChangeListener.onProgressChanged(mProgress + mMax, mMax, fromUser);
         }
     }
 
