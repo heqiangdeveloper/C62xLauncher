@@ -18,7 +18,8 @@ public class RecentAppHelper {
     //不出现在应用管理中的应用名单
     public static List<String> notInAppManageListApps = Arrays.asList(
             "com.chinatsp.launcher",//launcher
-            "com.oushang.datastat"//埋点
+            "com.oushang.datastat",//埋点
+            "com.chinatsp.ifly"//语音
     );
 
     /**

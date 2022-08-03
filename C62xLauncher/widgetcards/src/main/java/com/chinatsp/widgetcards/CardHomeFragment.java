@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -39,6 +40,7 @@ public class CardHomeFragment extends BaseFragment {
     private CardIndicator mCardIndicator;
     private PagerSnapHelper mSnapHelper;
     private ExpandCardsViewHolder mExpandCardsViewHolder;
+    private DrawerCreator drawerCreator;
 
     @Override
     protected void initViews(View rootView) {
@@ -47,10 +49,16 @@ public class CardHomeFragment extends BaseFragment {
         mCardIndicator = rootView.findViewById(R.id.cardIndicator);
         mCardIndicator.setIndex(0);
 
-        DrawerCreator drawerCreator = new DrawerCreator(rootView.findViewById(R.id.rcvDrawerContent));
+        drawerCreator = new DrawerCreator(rootView.findViewById(R.id.rcvDrawerContent));
         drawerCreator.initDrawerRcv();
 
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        drawerCreator.initDrawerRcv();
     }
 
     private void initObservers() {
