@@ -15,6 +15,7 @@
         app:layout_constraintStart_toStartOf="parent"
         />
     <TextView
+        android:id="@+id/tvRecentApps"
         android:layout_width="260px"
         android:layout_height="260px"
         android:layout_marginTop="16px"
@@ -23,18 +24,20 @@
         android:text="暂无内容"
         style="@style/CardLv2TextView"
         android:background="@drawable/drawer_bg_apps"
+        android:visibility="gone"
         />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcvRecentApps"
         android:layout_width="260px"
         android:layout_height="260px"
         android:orientation="horizontal"
         android:layout_marginTop="16px"
-        android:padding="34px"
+        android:padding="20px"
         android:background="@drawable/drawer_bg_apps"
         app:layout_constraintTop_toBottomOf="@id/tvTitle"
         app:layout_constraintStart_toStartOf="parent"
-        android:visibility="gone"
+
         />
 
     <androidx.constraintlayout.widget.ConstraintLayout

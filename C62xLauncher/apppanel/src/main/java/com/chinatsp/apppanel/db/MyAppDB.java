@@ -260,6 +260,8 @@ public class MyAppDB extends SQLiteOpenHelper {
             drawable.draw(canvas);
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
             locationBean.setImgByte(baos.toByteArray());
+            bitmap.recycle();
+            bitmap = null;
         }else if(locationBean.getImgByte() == null){
             return;
         }
