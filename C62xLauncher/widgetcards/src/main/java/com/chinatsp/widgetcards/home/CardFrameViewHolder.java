@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,9 +43,11 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     private View mCardLargeInner;
     private boolean mExpandState;
     private LauncherCard mLauncherCard;
+    private Resources mResources;
 
     public CardFrameViewHolder(@NonNull View itemView, RecyclerView recyclerView, View cardInner) {
         super(itemView);
+        mResources = itemView.getResources();
         this.mRecyclerView = recyclerView;
         mTvCardName = itemView.findViewById(R.id.tvCardName);
         mIvCardZoom = itemView.findViewById(R.id.ivCardZoom);
@@ -99,28 +102,26 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
             public void accept(View view) {
                 EasyLog.d(TAG, "click expand or collapse view");
                 if (view == mIvCardZoom) {
-                    changeExpandState(cardEntity);
+                    changeExpandState();
                 }
             }
         });
     }
 
-    private void changeExpandState(LauncherCard cardEntity) {
-        boolean changeSuccess = true;
+    private void changeExpandState() {
         if (mExpandState) {
-            collapse(cardEntity);
+            collapse();
             dealCollapseScroll(getAdapterPosition());
         } else {
-            changeSuccess = canExpand();
-            if (changeSuccess) {
-                expand(cardEntity);
-//                dealExpandScroll(getAdapterPosition());
+            expand();
+            CardFrameViewHolder bigCard = ExpandStateManager.getInstance().getBigCard();
+            if (bigCard != null && bigCard != this && bigCard.mExpandState) {
+                bigCard.changeExpandState();
             }
+            ExpandStateManager.getInstance().setBigCard(this);
         }
-        if (changeSuccess) {
-            mExpandState = !mExpandState;
-            ExpandStateManager.getInstance().setExpand(mExpandState);
-        }
+        mExpandState = !mExpandState;
+        ExpandStateManager.getInstance().setExpand(mExpandState);
     }
 
     private boolean scrolledInExpand = false;
@@ -159,7 +160,8 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    private void expand(LauncherCard cardEntity) {
+    private void expand() {
+//        itemView.setForeground(mResources.getDrawable(R.drawable.card_bg_large));
         itemView.setBackgroundResource(R.drawable.card_bg_large);
         mIvCardZoom.setImageResource(R.drawable.card_icon_collapse);
 
@@ -167,10 +169,10 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
             ((ICardStyleChange) mCardInner).expand();
         }
         mTvCardName.setTextColor(getColor(R.color.card_blue_lv1));
-        runExpandAnimation(cardEntity);
+        runExpandAnimation();
     }
 
-    private void runExpandAnimation(LauncherCard cardEntity) {
+    private void runExpandAnimation() {
         int largeWidth = (int) getDimension(R.dimen.card_width_large);
         int smallWidth = (int) getDimension(R.dimen.card_width);
         ViewGroup.LayoutParams layoutParams = itemView.getLayoutParams();
@@ -219,7 +221,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
         valueAnimator.start();
     }
 
-    private void collapse(LauncherCard cardEntity) {
+    private void collapse() {
         itemView.setBackgroundResource(R.drawable.card_bg_small);
         mIvCardZoom.setImageResource(R.drawable.card_icon_expand);
 
@@ -230,14 +232,6 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
         runCollapseAnimation();
     }
 
-    /**
-     * 当卡片组有任意一个卡片处于expand状态, 就不允许变大.
-     *
-     * @return 是否允许卡片变大.
-     */
-    private boolean canExpand() {
-        return !ExpandStateManager.getInstance().getExpandState();
-    }
 
     private float getDimension(int dimensionId) {
         Context applicationContext = itemView.getContext().getApplicationContext();
@@ -297,7 +291,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
                     break;
 
                 case MotionEvent.ACTION_MOVE:
-                    EasyLog.d(TAG, "ACTION_MOVE . mShouldTriggerScreenShot:" + mShouldTriggerScreenShot+",  pointX:"+pointX);
+                    EasyLog.d(TAG, "ACTION_MOVE . mShouldTriggerScreenShot:" + mShouldTriggerScreenShot + ",  pointX:" + pointX);
                     if (event.getPointerCount() == FINGER_NUM_TRIGGER_SCREEN_SHOT) {
                         mPointsDistance = Math.abs(pointX - downX) + Math.abs(pointY - downY);
 //                        for (int i = 0; i < event.getPointerCount(); i++) {
@@ -342,4 +336,9 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
         EasyLog.d(TAG, "do Swipe card.");
         EventBus.getDefault().post(createSwipeEvent(mLauncherCard));
     }
+
+    public LauncherCard getLauncherCard() {
+        return mLauncherCard;
+    }
 }
+

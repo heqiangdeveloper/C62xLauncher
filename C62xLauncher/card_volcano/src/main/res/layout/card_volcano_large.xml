@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
-        android:id="@+id/ivCardDouyinUnlogin"
+        android:id="@+id/ivCardVolcanoLogin"
         android:layout_width="@dimen/card_icon_size_lv0"
         android:layout_height="@dimen/card_icon_size_lv0"
         android:src="@drawable/card_douyin_unlogin"
@@ -15,17 +15,28 @@
         android:layout_marginStart="540px"
         />
     <TextView
-
+        android:id="@+id/tvCardVolcanoLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/CardLv2TextView"
         android:text="@string/doutiao_unlogin_slogon"
         android:lineSpacingMultiplier="1.5"
         android:letterSpacing="0.1"
-        app:layout_constraintStart_toStartOf="@id/ivCardDouyinUnlogin"
-        app:layout_constraintEnd_toEndOf="@id/ivCardDouyinUnlogin"
-        app:layout_constraintTop_toBottomOf="@id/ivCardDouyinUnlogin"
+        app:layout_constraintStart_toStartOf="@id/ivCardVolcanoLogin"
+        app:layout_constraintEnd_toEndOf="@id/ivCardVolcanoLogin"
+        app:layout_constraintTop_toBottomOf="@id/ivCardVolcanoLogin"
         android:layout_marginTop="35px"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcvCardVolcanoVideoList"
+        android:layout_width="match_parent"
+        android:layout_height="373px"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="108px"
+        android:layout_marginStart="56px"
+        android:layout_marginEnd="27px"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

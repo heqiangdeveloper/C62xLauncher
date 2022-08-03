@@ -5,24 +5,45 @@
     tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout"
     android:layout_width="@dimen/iquting_play_widget_width"
     android:layout_height="@dimen/iquting_play_widget_height"
-    android:background="#B30B304C">
+    >
 
     <ImageView
-        android:id="@+id/ivIQuTingCoverBig"
+        android:id="@+id/ivIQuTingDefaultProgressBig"
         android:src="@drawable/card_iquting_default_cycle_progress"
         android:layout_width="110px"
         android:layout_height="110px"
         app:layout_constraintStart_toStartOf="parent"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginStart="62px"
+        />
+
+    <ImageView
+        android:id="@+id/ivIQuTingCoverBig"
+        android:layout_width="94px"
+        android:layout_height="94px"
+        app:layout_constraintStart_toStartOf="@id/ivIQuTingDefaultProgressBig"
+        app:layout_constraintBottom_toBottomOf="@id/ivIQuTingDefaultProgressBig"
+        app:layout_constraintTop_toTopOf="@id/ivIQuTingDefaultProgressBig"
+        app:layout_constraintEnd_toEndOf="@id/ivIQuTingDefaultProgressBig"
+        />
+    <ImageView
+        android:id="@+id/ivIQuTingCoverProgressBig"
+        android:layout_width="105px"
+        android:layout_height="105px"
+        android:src="@drawable/iquting_ring"
+        app:layout_constraintStart_toStartOf="@id/ivIQuTingCoverBig"
+        app:layout_constraintBottom_toBottomOf="@id/ivIQuTingCoverBig"
+        app:layout_constraintTop_toTopOf="@id/ivIQuTingCoverBig"
+        app:layout_constraintEnd_toEndOf="@id/ivIQuTingCoverBig"
         />
 
     <TextView
         android:id="@+id/tvIQuTingMediaNameBig"
         android:layout_width="347px"
         android:layout_height="46px"
-        android:text="给我一首歌的时间"
+        android:text="暗里着迷"
         style="@style/CardLv2TextView"
         android:gravity="center_vertical"
         app:layout_constraintStart_toEndOf="@id/ivIQuTingCoverBig"
@@ -34,7 +55,7 @@
         android:id="@+id/tvIQuTingArtistBig"
         android:layout_width="258px"
         android:layout_height="30px"
-        android:text="周杰伦"
+        android:text="刘德华"
         android:gravity="center_vertical"
         style="@style/CardLv4TextView"
         android:textColor="#FF7B7B82"

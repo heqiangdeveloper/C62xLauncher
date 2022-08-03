@@ -5,8 +5,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/tvCardIQuTingLoginTipBig"
+        android:layout_width="222px"
+        android:layout_height="92px"
         style="@style/CardLv2TextView"
         android:text="@string/iquting_unlogin_slogan"
         android:lineSpacingMultiplier="1.5"
@@ -15,6 +16,41 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="180px"
+        />
+
+    <TextView
+        android:id="@+id/tvIQuTingDailySongs"
+        android:text="@string/iquting_tab_daily_music"
+        android:layout_width="119px"
+        android:layout_height="32px"
+        style="@style/CardLv3TextView"
+        android:textColor="@color/card_blue_lv1"
+        app:layout_constraintTop_toTopOf="@id/tvIQuTingRankSongs"
+        app:layout_constraintBottom_toBottomOf="@id/tvIQuTingRankSongs"
+        app:layout_constraintEnd_toStartOf="@id/tvIQuTingRankSongs"
+        android:layout_marginEnd="57px"
+        />
+    <TextView
+        android:id="@+id/tvIQuTingRankSongs"
+        android:text="@string/iquting_tab_rank_music"
+        android:layout_width="148px"
+        android:layout_height="32px"
+        style="@style/CardLv3TextView"
+        android:textColor="@color/card_blue_default"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="50px"
+        android:layout_marginEnd="65px"
+        />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcvCardIQuTingSongList"
+        android:layout_width="match_parent"
+        android:layout_height="274px"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="112px"
+        android:layout_marginStart="69px"
+        android:layout_marginEnd="27px"
         />
 
     <include

@@ -1,19 +1,14 @@
 package com.chinatsp.widgetcards.manager;
 
-import android.content.Context;
-import android.view.View;
-
-import com.chinatsp.douyin.DouyinCardView;
+import com.chinatsp.volcano.VolcanoCardView;
 import com.chinatsp.drivecounselor.DriveCounselorCardView;
 import com.chinatsp.econnect.EConnectCardView;
 import com.chinatsp.iquting.IQuTingCardView;
 import com.chinatsp.musiclauncher.MediaCardView;
-import com.chinatsp.navigation.NaviCardLargeView;
 import com.chinatsp.navigation.NaviCardView;
 import com.chinatsp.weaher.WeatherCardView;
 
 import card.base.ICardViewCreator;
-import card.base.LauncherCard;
 
 public class CardViewCreatorFactory {
     public static ICardViewCreator create(int type) {
@@ -68,7 +63,7 @@ public class CardViewCreatorFactory {
     }
 
     private static ICardViewCreator createVideo() {
-        return DouyinCardView::new;
+        return VolcanoCardView::new;
     }
 
     private static ICardViewCreator createIQuTing() {

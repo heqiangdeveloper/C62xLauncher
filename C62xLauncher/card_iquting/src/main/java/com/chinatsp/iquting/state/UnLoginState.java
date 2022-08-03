@@ -6,13 +6,12 @@ import android.widget.TextView;
 
 import com.chinatsp.iquting.R;
 
-public class UnLoginState implements State{
-    @Override
-    public void updateViewState(View view) {
+public class UnLoginState implements IQuTingState {
+    public void updateSmallCardState(View view) {
         view.findViewById(R.id.layoutIQuTingNormalSmall).setVisibility(View.GONE);
 
         ImageView ivCardIQuTingLogo = view.findViewById(R.id.ivCardIQuTingLogo);
-        TextView tvCardIQuTingTip = view.findViewById(R.id.tvCardIQuTingTip);
+        TextView tvCardIQuTingTip = view.findViewById(R.id.tvCardIQuTingLoginTip);
         ImageView ivCardIQuTingButton = view.findViewById(R.id.ivCardIQuTingButton);
 
         ivCardIQuTingLogo.setImageResource(R.drawable.card_iquting_icon_logo);
@@ -23,4 +22,13 @@ public class UnLoginState implements State{
         tvCardIQuTingTip.setVisibility(View.VISIBLE);
         ivCardIQuTingButton.setVisibility(View.VISIBLE);
     }
+
+    public void updateBigCardState(View view) {
+        TextView tvCardIQuTingLoginTipBig = view.findViewById(R.id.tvCardIQuTingLoginTipBig);
+        tvCardIQuTingLoginTipBig.setVisibility(View.VISIBLE);
+        tvCardIQuTingLoginTipBig.setText(R.string.iquting_unlogin_slogan);
+
+        view.findViewById(R.id.rcvCardIQuTingSongList).setVisibility(View.GONE);
+    }
+
 }
