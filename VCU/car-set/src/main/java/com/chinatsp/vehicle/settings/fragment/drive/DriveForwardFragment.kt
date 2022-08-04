@@ -1,5 +1,6 @@
 package com.chinatsp.vehicle.settings.fragment.drive
 
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -42,6 +43,13 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
         binding.video.setOnErrorListener { _, _, _ ->
             dynamicEffect()
             true
+        }
+        binding.video.setOnPreparedListener{
+            it.setOnInfoListener { _, _, _ ->
+                binding.video.setBackgroundColor(Color.TRANSPARENT);
+                binding.videoImage.visibility = View.GONE
+                true
+            }
         }
     }
 
@@ -87,7 +95,7 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
     private fun setSwitchListener() {
         binding.adasForwardFcwSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
-                binding.videoImage.visibility = View.GONE
+                //binding.videoImage.visibility = View.GONE
                 val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_fcw
                 binding.video.setVideoURI(Uri.parse(uri));
                 binding.video.start()
@@ -98,7 +106,7 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
         }
         binding.adasForwardAebSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
-                binding.videoImage.visibility = View.GONE
+                //binding.videoImage.visibility = View.GONE
                 val url = "android.resource://" + activity?.packageName + "/" + R.raw.video_abe
                 binding.video.setVideoURI(Uri.parse(url));
                 binding.video.start()
@@ -151,5 +159,11 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
                 )
             })
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.video.pause()
+        binding.video.stopPlayback()
     }
 }

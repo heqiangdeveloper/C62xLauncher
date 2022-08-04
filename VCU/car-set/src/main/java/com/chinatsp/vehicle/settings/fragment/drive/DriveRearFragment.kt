@@ -60,6 +60,13 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
             dynamicEffect()
             true
         }
+        binding.video.setOnPreparedListener{
+            it.setOnInfoListener { _, _, _ ->
+                binding.video.setBackgroundColor(Color.TRANSPARENT);
+                binding.videoImage.visibility = View.GONE
+                true
+            }
+        }
     }
 
 
@@ -208,7 +215,7 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
 
     private fun startVideo(path:Int){
         val url = "android.resource://" + activity?.packageName + "/" + path
-        binding.videoImage.visibility = View.GONE
+        //binding.videoImage.visibility = View.GONE
         binding.video.setVideoURI(Uri.parse(url));
         binding.video.seekTo(0)
         binding.video.start()

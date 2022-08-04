@@ -1,5 +1,6 @@
 package com.chinatsp.vehicle.settings.fragment.drive
 
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -55,6 +56,13 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
         binding.video.setOnErrorListener { _, _, _ ->
             dynamicEffect()
             true
+        }
+        binding.video.setOnPreparedListener{
+            it.setOnInfoListener { _, _, _ ->
+                binding.video.setBackgroundColor(Color.TRANSPARENT);
+                binding.intelligentCruise.visibility = View.GONE
+                true
+            }
         }
 
     }
@@ -165,7 +173,9 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
     private fun setSwitchListener() {
         binding.accessCruiseCruiseAssist.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
-                binding.intelligentCruise.visibility = View.GONE
+                //binding.intelligentCruise.visibility = View.GONE
+                val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_acc
+                binding.video.setVideoURI(Uri.parse(uri));
                 binding.video.start()
             } else {
                 dynamicEffect()
@@ -197,6 +207,13 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
         }else{
             binding.intelligentCruise.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.intelligent_cruise) })
         }
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.video.pause()
+        binding.video.stopPlayback()
+        binding.video.setBackgroundColor(Color.TRANSPARENT);
+        binding.intelligentCruise.visibility = View.VISIBLE
     }
 }
 

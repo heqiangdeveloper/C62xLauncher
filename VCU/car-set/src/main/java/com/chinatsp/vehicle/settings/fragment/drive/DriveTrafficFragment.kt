@@ -1,5 +1,6 @@
 package com.chinatsp.vehicle.settings.fragment.drive
 
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -43,6 +44,13 @@ class DriveTrafficFragment : BaseFragment<CombineViewModel, DriveTrafficFragment
             dynamicEffect()
             true
         }
+        binding.video.setOnPreparedListener{
+            it.setOnInfoListener { _, _, _ ->
+                binding.video.setBackgroundColor(Color.TRANSPARENT);
+                binding.videoImage.visibility = View.GONE
+                true
+            }
+        }
     }
 
     private fun initSwitchOption() {
@@ -80,7 +88,9 @@ class DriveTrafficFragment : BaseFragment<CombineViewModel, DriveTrafficFragment
     private fun setSwitchListener() {
         binding.adasTrafficSlaSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked){
-                binding.videoImage.visibility = View.GONE
+                //binding.videoImage.visibility = View.GONE
+                val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_sla
+                binding.video.setVideoURI(Uri.parse(uri));
                 binding.video.start()
             }else{
                 dynamicEffect()

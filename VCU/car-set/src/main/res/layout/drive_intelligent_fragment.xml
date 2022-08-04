@@ -68,7 +68,7 @@
 
                 <TextView
                     style="@style/switch_row_option_style"
-                    android:text="@string/drive_target_tone"
+                    android:text="@string/drive_vehicle_departure"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -100,7 +100,7 @@
                     android:id="@+id/vehicle_departure"
                     style="@style/switch_row_option_style"
                     android:layout_marginTop="@dimen/x15"
-                    android:text="@string/drive_vehicle_departure"
+                    android:text="@string/drive_target_tone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 

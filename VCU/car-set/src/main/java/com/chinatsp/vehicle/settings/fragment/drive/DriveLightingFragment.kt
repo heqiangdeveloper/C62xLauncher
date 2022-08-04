@@ -1,5 +1,6 @@
 package com.chinatsp.vehicle.settings.fragment.drive
 
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -44,6 +45,13 @@ class DriveLightingFragment : BaseFragment<CombineViewModel, DriveLightingFragme
             dynamicEffect()
             true
         }
+        binding.video.setOnPreparedListener{
+            it.setOnInfoListener { _, _, _ ->
+                binding.video.setBackgroundColor(Color.TRANSPARENT);
+                binding.videoImage.visibility = View.GONE
+                true
+            }
+        }
     }
     private fun initSwitchOption() {
         initSwitchOption(SwitchNode.ADAS_HMA, viewModel.hmaValue)
@@ -80,7 +88,9 @@ class DriveLightingFragment : BaseFragment<CombineViewModel, DriveLightingFragme
     private fun setSwitchListener() {
         binding.adasLightHmaSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked){
-                binding.videoImage.visibility = View.GONE
+                //binding.videoImage.visibility = View.GONE
+                val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_hma
+                binding.video.setVideoURI(Uri.parse(uri));
                 binding.video.start()
             }else{
                 dynamicEffect()
