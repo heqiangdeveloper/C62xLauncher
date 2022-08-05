@@ -25,8 +25,8 @@ import com.chinatsp.vehicle.settings.R;
 public class SoundFieldView extends LinearLayout {
     protected static final String TAG = "SoundFieldView";
 
-    public static final double BALANCE_MAX = 14;
-    public static final double FADE_MAX = 14;
+    public static  double BALANCE_MAX = 10;
+    public static  double FADE_MAX = 10;
     public static final int H_PADDING = 160;
     public static final int V_PADDING = 130;
 
@@ -41,8 +41,8 @@ public class SoundFieldView extends LinearLayout {
     private float mPosX = INVALID_XY_VALUE;
     private float mPosY = INVALID_XY_VALUE;
 
-    private int mBalanceValue = (int) (BALANCE_MAX / 2);
-    private int mFadeValue = (int) (FADE_MAX / 2);
+    public static int mBalanceValue = (int) (BALANCE_MAX / 2);
+    public static int mFadeValue = (int) (FADE_MAX / 2);
 
     private OnValueChangedListener mOnValueChangedListener;
 

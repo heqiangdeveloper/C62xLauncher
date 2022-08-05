@@ -35,6 +35,7 @@ import android.net.Uri
 import android.os.*
 import android.provider.Settings
 import android.text.format.DateFormat
+import android.util.Log
 import com.android.internal.app.LocalePicker
 import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.RegisterSignalManager.Companion.cabinSignal
@@ -863,6 +864,10 @@ class SettingManager private constructor() {
     val mcuVersion: String
         get() = SystemProperties.get("persist.sys.mcu_version", "")
 
+
+
+
+
     fun setMute(isMute: Boolean) {
         try {
             val carPropertyManager =
@@ -966,23 +971,26 @@ class SettingManager private constructor() {
     private var mFadeLevelValue = 0
 
     /**
-     * 传入-7到7的值
+     * 传入-9到9的值 // 1->19
+     * -5 -> 5 转化为整数  1 -> 11
      *
-     * @param uiBalanceLevelValue 传入-7到7的值
-     * @param uiFadeLevelValue    传入-7到7的值
+     * @param uiBalanceLevelValue 传入-9到9的值 // -5 -> 5
+     * @param uiFadeLevelValue    传入-9到9的值   // -5 -> 5
      */
     fun setAudioBalance(uiBalanceLevelValue: Int, uiFadeLevelValue: Int) {
         try {
-            if (uiBalanceLevelValue != mBalanceLevelValue) {
-                mCarAudioManager!!.balanceTowardRight = uiBalanceLevelValue
-                mBalanceLevelValue = uiBalanceLevelValue
-                Timber.d("setAudio Balance $uiBalanceLevelValue")
+            var muiBalanceLevelValue = 0;
+            var muiFadeLevelValue = 0;
+            if(SettingManager.getAmpType() == 1){
+                muiBalanceLevelValue = uiBalanceLevelValue+10;
+                muiFadeLevelValue = uiFadeLevelValue+10;
+            }else{
+                muiBalanceLevelValue = uiBalanceLevelValue+6;
+                muiFadeLevelValue = uiFadeLevelValue+6;
             }
-            if (uiFadeLevelValue != mFadeLevelValue) {
-                mCarAudioManager!!.fadeTowardFront = uiFadeLevelValue
-                mFadeLevelValue = uiFadeLevelValue
-                Timber.d("setAudio Fade $uiFadeLevelValue")
-            }
+            LogManager.d("setAudioBalance muiBalanceLevelValue=${muiBalanceLevelValue}  " +
+                    " muiFadeLevelValue=${muiFadeLevelValue}")
+            mCarAudioManager?.setBalFadBalance(muiBalanceLevelValue,muiFadeLevelValue)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -1380,7 +1388,16 @@ class SettingManager private constructor() {
         val instance: SettingManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             SettingManager()
         }
-
+        fun getAmpType(): Int {
+            try {
+                var type = SystemProperties.getInt("persist.vendor.vehicle.amp", 0)
+                LogManager.d("getAmpType type=${type}")
+                return type;
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            return 0;
+        }
         fun getVerName(context: Context?, pkgName: String?): String {
             val manager = context!!.packageManager
             var name = ""
