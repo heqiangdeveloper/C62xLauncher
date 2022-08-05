@@ -88,4 +88,8 @@ class VolumeViewModel @Inject constructor(app: Application, model: BaseModel) :
         }
     }
 
+    fun resetDeviceVolume() {
+        manager.resetDeviceVolume()
+    }
+
 }

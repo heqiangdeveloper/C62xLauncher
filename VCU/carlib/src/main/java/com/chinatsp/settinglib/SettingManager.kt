@@ -96,7 +96,7 @@ class SettingManager private constructor() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        Timber.d( "unbind car service")
+        Timber.d("unbind car service")
     }
 
     private fun bindVehicleService() {
@@ -106,7 +106,7 @@ class SettingManager private constructor() {
     private fun onBindService() {
         mCarApi = Car.createCar(context, CarServiceConnection())
         Optional.ofNullable(mCarApi).ifPresent { it.connect() }
-        Timber.d( "bind car service carApi:$mCarApi")
+        Timber.d("bind car service carApi:$mCarApi")
     }
 
     private val reConnectCarRunnable = Runnable {
@@ -144,7 +144,8 @@ class SettingManager private constructor() {
             if (null != mCarMcuManager) {
 //                Set<Integer> signals = GlobalManager.Companion.getInstance().getConcernedSignal(SignalOrigin.MCU_SIGNAL);
                 val signals = mcuSignal
-                val signalArray = signals.stream().filter { it != -1 }.mapToInt { obj: Int -> obj }.toArray()
+                val signalArray =
+                    signals.stream().filter { it != -1 }.mapToInt { obj: Int -> obj }.toArray()
                 Arrays.stream(signalArray).forEach {
                     Timber.d("register MCU: hex propertyId:${Integer.toHexString(it)},  dec propertyId:$it")
                 }
@@ -517,7 +518,7 @@ class SettingManager private constructor() {
         var result = Constant.DEFAULT
         try {
             result = mCarCabinManager?.getIntProperty(id, areaValue) ?: Constant.INVALID
-            Timber.d( "readCabinIntValue propertyId:$id, result:$result, manager:$mCarCabinManager")
+            Timber.d("readCabinIntValue propertyId:$id, result:$result, manager:$mCarCabinManager")
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -528,7 +529,7 @@ class SettingManager private constructor() {
         var result = Constant.DEFAULT
         try {
             result = hvacManager?.getIntProperty(id, areaValue) ?: Constant.INVALID
-            Timber.d( "readHvacIntValue propertyId:$id, result:$result, manager:$hvacManager")
+            Timber.d("readHvacIntValue propertyId:$id, result:$result, manager:$hvacManager")
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -542,7 +543,7 @@ class SettingManager private constructor() {
     fun readIntProperty(id: Int, origin: Origin, areaValue: Int): Int {
         var result = Constant.DEFAULT
         if (!connectService) {
-            Timber.d( "readIntProperty propertyId:$id, origin:$origin, connectService: false!")
+            Timber.d("readIntProperty propertyId:$id, origin:$origin, connectService: false!")
             return result
         }
         if (Origin.CABIN === origin) {
@@ -1032,7 +1033,7 @@ class SettingManager private constructor() {
     }
 
     fun setAudioCustomHML(high: Int, mid: Int, low: Int) {
-      //  audioEQ = EQ_MODE_CUSTOM
+        //  audioEQ = EQ_MODE_CUSTOM
 
         Timber.d("setAudioCustomHML:$high $mid $low")
         audioHighVoice = high
@@ -1152,6 +1153,7 @@ class SettingManager private constructor() {
             e.printStackTrace()
         }
     }
+
     fun setAudioVoice(id: Int, value: Int) {
         try {
             mCarAudioManager!!.setAudioVoice(id, value)
@@ -1160,6 +1162,7 @@ class SettingManager private constructor() {
             e.printStackTrace()
         }
     }
+
     var isMicMute: Boolean
         get() = mAudioManager.isMicrophoneMute
         set(on) {
@@ -1194,7 +1197,7 @@ class SettingManager private constructor() {
         }
 
         override fun onServiceDisconnected(name: ComponentName) {
-            Timber.e( "onServiceDisconnected")
+            Timber.e("onServiceDisconnected")
             connectService = false
             updateAdapterConnect()
             mHandler.removeCallbacks(reConnectCarRunnable)
@@ -1202,7 +1205,7 @@ class SettingManager private constructor() {
         }
 
         override fun onBindingDied(name: ComponentName) {
-            Timber.e(  "onBindingDied")
+            Timber.e("onBindingDied")
             connectService = false
             updateAdapterConnect()
         }
@@ -1318,7 +1321,7 @@ class SettingManager private constructor() {
         return null
     }
 
-    fun setTrailerRemind(value: Int): Boolean{
+    fun setTrailerRemind(value: Int): Boolean {
         try {
             val truckInformation = mBoxManager?.truckInformation
             if (null != truckInformation) {
@@ -1331,7 +1334,7 @@ class SettingManager private constructor() {
         return false
     }
 
-    fun setTrailerDistance(value: Int): Boolean{
+    fun setTrailerDistance(value: Int): Boolean {
         try {
             val truckInformation = mBoxManager?.truckInformation
             if (null != truckInformation) {
@@ -1344,7 +1347,7 @@ class SettingManager private constructor() {
         return false
     }
 
-    fun setTrailerSensitivity(value: Int): Boolean{
+    fun setTrailerSensitivity(value: Int): Boolean {
         try {
             val truckInformation = mBoxManager?.truckInformation
             if (null != truckInformation) {
@@ -1357,7 +1360,7 @@ class SettingManager private constructor() {
         return false
     }
 
-    private val boxChangedListener = object : TboxChangedListener{
+    private val boxChangedListener = object : TboxChangedListener {
         override fun onCallStatusChanged(p0: XCallInformation?) {
 
         }

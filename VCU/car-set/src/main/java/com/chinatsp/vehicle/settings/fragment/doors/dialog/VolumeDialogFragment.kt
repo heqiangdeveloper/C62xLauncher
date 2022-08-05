@@ -11,8 +11,7 @@ import com.common.library.frame.base.BaseDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class VolumeDialogFragment :
-    BaseDialogFragment<SoundEffectViewModel, VolumeDialogFragmentBinding>() {
+class VolumeDialogFragment : BaseDialogFragment<SoundEffectViewModel, VolumeDialogFragmentBinding>() {
 
     private var OFFSET = 9
 
@@ -25,7 +24,9 @@ class VolumeDialogFragment :
 
 
     override fun initData(savedInstanceState: Bundle?) {
-
+        binding.closeDialog.setOnClickListener {
+            this.dismiss()
+        }
         LogManager.d("getAmpType type=${SettingManager.getAmpType()}")
         if(SettingManager.getAmpType() == 0){
             OFFSET = 5;

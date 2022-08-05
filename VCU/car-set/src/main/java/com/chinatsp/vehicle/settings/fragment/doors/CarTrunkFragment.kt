@@ -1,8 +1,11 @@
 package com.chinatsp.vehicle.settings.fragment.doors
 
 import android.os.Bundle
+import android.util.Range
 import android.view.View
+import android.view.ViewGroup
 import android.widget.CompoundButton
+import androidx.core.util.rangeTo
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.access.SternDoorManager
 import com.chinatsp.settinglib.optios.RadioNode
@@ -159,6 +162,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     private fun setSwitchListener() {
         binding.accessSternElectricSw.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.AS_STERN_ELECTRIC, buttonView, isChecked)
+            checkDisableOtherDiv(binding.accessSternElectricSw, isChecked)
             if (isChecked) {
                 animationOpenDoor.start(false, 50, object : AnimationDrawable.AnimationLisenter {
                     override fun startAnimation() {
@@ -280,6 +284,44 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         } else {
             swb.setCheckedImmediatelyNoEvent(status)
         }
+        checkDisableOtherDiv(swb, status)
+    }
+
+    private fun checkDisableOtherDiv(swb: SwitchButton, status: Boolean) {
+        if (swb == binding.accessSternElectricSw) {
+            binding.arcSeekBar.let {
+                it.isEnabledDrag = status
+                it.alpha = if (status) 1.0f else 0.7f
+            }
+            val childCount = binding.layoutContent.childCount
+            val intRange = 0 until childCount
+            intRange.forEach{
+                val childAt = binding.layoutContent.getChildAt(it)
+                if (null != childAt && childAt != binding.carTrunkElectricFunction) {
+                    childAt.alpha = if (status) 1.0f else 0.7f
+                    updateViewEnable(childAt, status)
+                }
+            }
+        }
+    }
+
+    private fun updateViewEnable(view: View?, status: Boolean) {
+        if (null == view) {
+            return
+        }
+        if (view is SwitchButton) {
+            view.isEnabled = status
+            return
+        }
+        if (view is TabControlView) {
+            view.updateEnable(status)
+            return
+        }
+        if (view is ViewGroup) {
+            val childCount = view.childCount
+            val intRange = 0 until childCount
+            intRange.forEach{ updateViewEnable(view.getChildAt(it), status) }
+        }
     }
 
     override fun onStartTrackingTouch(isCanDrag: Boolean) {
@@ -297,4 +339,6 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     override fun onSingleTapUp() {
 
     }
+
+
 }

@@ -470,5 +470,8 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         return success
     }
 
+    fun resetDeviceVolume() {
+    }
+
 
 }

@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_checked="true" android:state_enabled="false">
         <shape>
-            <solid android:color="#b3ecbc" />
+            <solid android:color="@color/tcv_radio_select_end_color" />
             <corners android:radius="50px" />
         </shape>
     </item>
@@ -10,7 +10,7 @@
         <shape>
             <gradient android:endColor="@color/tab_color_bg" android:startColor="@color/tab_color_bg" android:type="linear" />
             <corners android:radius="50px" />
-            <stroke android:width="1.5dp" android:color="#F0F0F0" />
+            <stroke android:width="1.5dp" android:color="#00F0F0F0" />
         </shape>
     </item>
     <item android:state_checked="true">

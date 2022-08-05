@@ -285,7 +285,7 @@ enum class SwitchNode(
     SEAT_MAIN_DRIVE_MEET(
         get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_SEAT_WELCOME_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HUM_SEAT_WELCOME_EN),
-        default = true
+        default = false
     ),
 
     /**
@@ -471,16 +471,16 @@ enum class SwitchNode(
     ),
     /**
      * 驾驶辅助--灯光辅助--智能远光灯辅助 HMA
-     *  not used in C40D/C53F
-     *  HMA funtion switch signal,if not set 'HMAOnOffReq' ,the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
-     *  0x0: Inactive
-     *  0x1: On
-     *  0x2: Off
-     *  0x3: Reserved
+     * get ->
+        HMA status 0x0:HMA OFF 0x1:HMA passive 0x2:HMA active 0x3:Temporary failure
+        0x4:Camera blocked 0x5:Permanent failure 0x6: Reserved 0x7: HMA not configured
+     *  set -> not used in C40D/C53F
+        HMA funtion switch signal,if not set 'HMAOnOffReq' ,the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
+        0x0: Inactive; 0x1: On; 0x2: Off; 0x3: Reserved
      */
     ADAS_HMA(
         get = Norm(on = 0x2, off = 0x1, signal = CarCabinManager.ID_HMA_STATUS),
-        set = Norm(on = 0x2, off = 0x1, signal = CarCabinManager.ID_HMA_ON_OFF_SWT),
+        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HMA_ON_OFF_SWT),
         default = false
     ),
 
@@ -589,7 +589,7 @@ enum class SwitchNode(
      */
     DRIVE_WIRELESS_CHARGING(
         get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_WCM_SOFT_SW_STATE),
-        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_WCM_SWT),
+        set = Norm(on = 0x2, off = 0x1, signal = CarCabinManager.ID_WCM_SWT),
         default = true
     ),
 
@@ -652,7 +652,7 @@ enum class SwitchNode(
      */
     ALC_DOOR_HINT(
         get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ALC_HUM_DR_SW_RESPONSE),
-        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_ALC_HUM_ALC_DIRECT_BREAM_SW),
+        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_ALC_HUM_ALC_DOOR_REMIND_ENABLE),
         default = true
     ),
 

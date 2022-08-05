@@ -1,6 +1,7 @@
 package com.chinatsp.vehicle.settings.fragment.sound
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.manager.sound.VoiceManager
@@ -13,7 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class VolumeDialogFragment : BaseDialogFragment<VolumeViewModel, AudioSoundVolumeDialogBinding>(),
-    VerticalSeekBar.OnValuesChangeListener {
+    VerticalSeekBar.OnValuesChangeListener, View.OnClickListener {
 
     val manager: VoiceManager by lazy {
         VoiceManager.instance
@@ -29,6 +30,7 @@ class VolumeDialogFragment : BaseDialogFragment<VolumeViewModel, AudioSoundVolum
         binding.soundAudioMediaVolume.setOnBoxedPointsChangeListener(listener)
         binding.soundAudioPhoneVolume.setOnBoxedPointsChangeListener(listener)
         binding.soundAudioSystemVolume.setOnBoxedPointsChangeListener(listener)
+        binding.reset.setOnClickListener(this)
     }
 
     private fun updateVolumeValue(volume: Volume?) {
@@ -132,6 +134,12 @@ class VolumeDialogFragment : BaseDialogFragment<VolumeViewModel, AudioSoundVolum
         }
         viewModel.systemVolume.observe(this) {
             updateVolumeValue(it)
+        }
+    }
+
+    override fun onClick(v: View?) {
+        if (v == binding.reset) {
+            viewModel.resetDeviceVolume()
         }
     }
 
