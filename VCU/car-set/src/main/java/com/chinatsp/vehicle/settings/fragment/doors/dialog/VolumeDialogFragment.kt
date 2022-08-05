@@ -2,6 +2,7 @@ package com.chinatsp.vehicle.settings.fragment.doors.dialog
 
 import android.os.Bundle
 import com.chinatsp.settinglib.LogManager
+import com.chinatsp.settinglib.SettingManager
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.VolumeDialogFragmentBinding
 import com.chinatsp.vehicle.settings.vm.sound.SoundEffectViewModel
@@ -13,17 +14,25 @@ import dagger.hilt.android.AndroidEntryPoint
 class VolumeDialogFragment :
     BaseDialogFragment<SoundEffectViewModel, VolumeDialogFragmentBinding>() {
 
-    private val OFFSET = 7
+    private var OFFSET = 5
 
     private val TAG = "VolumeDialogFragment"
 
     override fun getLayoutId(): Int {
+
         return R.layout.volume_dialog_fragment
     }
 
 
     override fun initData(savedInstanceState: Bundle?) {
 
+        LogManager.d("getAmpType type=${SettingManager.getAmpType()}")
+        if(SettingManager.getAmpType() == 1){
+            OFFSET = 9;
+            SoundFieldView.BALANCE_MAX = 18.0;
+            SoundFieldView.FADE_MAX = 18.0;
+            LogManager.d("getAmpType OFFSET=${OFFSET} BALANCE_MAX= ${SoundFieldView.BALANCE_MAX}   FADE_MAX =${SoundFieldView.FADE_MAX}")
+        }
         binding?.apply {
             soundField?.onValueChangedListener =
                 SoundFieldView.OnValueChangedListener { balance, fade, x, y ->
