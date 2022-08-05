@@ -25,8 +25,8 @@ import com.chinatsp.vehicle.settings.R;
 public class SoundFieldView extends LinearLayout {
     protected static final String TAG = "SoundFieldView";
 
-    public static  double BALANCE_MAX = 10;
-    public static  double FADE_MAX = 10;
+    public static  double BALANCE_MAX = 18.0;
+    public static  double FADE_MAX = 18.0;
     public static final int H_PADDING = 160;
     public static final int V_PADDING = 130;
 

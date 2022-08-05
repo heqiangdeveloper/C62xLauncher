@@ -971,8 +971,8 @@ class SettingManager private constructor() {
     private var mFadeLevelValue = 0
 
     /**
-     * 传入-9到9的值 // 1->19
-     * -5 -> 5 转化为整数  1 -> 11
+     * 传入-9到9的值 // 1->19 内置
+     * -5 -> 5 转化为整数  1 -> 11 外置
      *
      * @param uiBalanceLevelValue 传入-9到9的值 // -5 -> 5
      * @param uiFadeLevelValue    传入-9到9的值   // -5 -> 5
@@ -981,7 +981,7 @@ class SettingManager private constructor() {
         try {
             var muiBalanceLevelValue = 0;
             var muiFadeLevelValue = 0;
-            if(SettingManager.getAmpType() == 1){
+            if(getAmpType() == 0){ //内置
                 muiBalanceLevelValue = uiBalanceLevelValue+10;
                 muiFadeLevelValue = uiFadeLevelValue+10;
             }else{
@@ -1371,7 +1371,7 @@ class SettingManager private constructor() {
                 truckInformation?.let {
                     OtherManager.instance.onTrailerRemindChanged(it.onOff, it.level, it.dist)
                 }
-            }catch (e:Throwable){
+            }catch (e:Error){
                 e.printStackTrace()
             }
 

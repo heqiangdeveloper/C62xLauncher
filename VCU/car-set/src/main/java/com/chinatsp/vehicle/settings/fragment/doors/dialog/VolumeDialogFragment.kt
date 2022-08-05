@@ -14,7 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class VolumeDialogFragment :
     BaseDialogFragment<SoundEffectViewModel, VolumeDialogFragmentBinding>() {
 
-    private var OFFSET = 5
+    private var OFFSET = 9
 
     private val TAG = "VolumeDialogFragment"
 
@@ -27,10 +27,10 @@ class VolumeDialogFragment :
     override fun initData(savedInstanceState: Bundle?) {
 
         LogManager.d("getAmpType type=${SettingManager.getAmpType()}")
-        if(SettingManager.getAmpType() == 1){
-            OFFSET = 9;
-            SoundFieldView.BALANCE_MAX = 18.0;
-            SoundFieldView.FADE_MAX = 18.0;
+        if(SettingManager.getAmpType() == 0){
+            OFFSET = 5;
+            SoundFieldView.BALANCE_MAX = 10.0;
+            SoundFieldView.FADE_MAX = 10.0;
             LogManager.d("getAmpType OFFSET=${OFFSET} BALANCE_MAX= ${SoundFieldView.BALANCE_MAX}   FADE_MAX =${SoundFieldView.FADE_MAX}")
         }
         binding?.apply {
