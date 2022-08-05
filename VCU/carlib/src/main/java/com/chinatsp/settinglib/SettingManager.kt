@@ -1367,9 +1367,14 @@ class SettingManager private constructor() {
         }
 
         override fun onTruckInfoChanged(truckInformation: TruckInformation?) {
-            truckInformation?.let {
-                OtherManager.instance.onTrailerRemindChanged(it.onOff, it.level, it.dist)
+            try {
+                truckInformation?.let {
+                    OtherManager.instance.onTrailerRemindChanged(it.onOff, it.level, it.dist)
+                }
+            }catch (e:Throwable){
+                e.printStackTrace()
             }
+
         }
 
         override fun onRemoteVedioInfoChanged(p0: RemoteVedioInformation?) {
