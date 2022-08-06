@@ -3,9 +3,13 @@ package com.chinatsp.settinglib
 import android.car.VehicleAreaType
 import android.car.hardware.cabin.CarCabinManager
 import android.os.SystemProperties
+import android.provider.Settings
+import com.chinatsp.settinglib.constants.OffLine
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.sign.Origin
+import com.chinatsp.vehicle.controller.annotation.Action
+import com.chinatsp.vehicle.controller.annotation.Level
 
 /**
  * @author : luohong
@@ -44,4 +48,17 @@ object VcuUtils {
         LogManager.d(TAG, "isSupportFunction keySerial: $keySerial, value: $value")
         return value == 1
     }
+
+    fun isCareLevel(@Level vararg levels: Int): Boolean {
+        val value = getLevelValue()
+        LogManager.d(TAG, "isCareLevel value: $value")
+        return levels.contains(value)
+    }
+
+    fun getLevelValue(): Int {
+        val value = SystemProperties.getInt(OffLine.LEVEL, Level.LEVEL3)
+        LogManager.d(TAG, "getLevelValue value: $value")
+        return value
+    }
+
 }

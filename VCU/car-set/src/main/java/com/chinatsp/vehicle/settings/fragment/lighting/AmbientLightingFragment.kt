@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.View
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.lamp.AmbientLightingManager
 import com.chinatsp.settinglib.optios.SwitchNode
+import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.LightingAtmosphereFragmentBinding
@@ -39,6 +41,15 @@ class AmbientLightingFragment :
         addSwitchLiveDataListener()
         setSwitchListener()
         initRouteListener()
+
+        initViewsDisplay()
+    }
+
+    private fun initViewsDisplay() {
+        if (VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4)) {
+            binding.lightingFrontLayout.visibility = View.GONE
+            binding.lightingBackLayout.visibility = View.GONE
+        }
     }
 
     private fun initSwitchOption() {

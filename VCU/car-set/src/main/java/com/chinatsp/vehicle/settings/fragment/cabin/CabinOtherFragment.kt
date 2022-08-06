@@ -1,11 +1,14 @@
 package com.chinatsp.vehicle.settings.fragment.cabin
 
 import android.os.Bundle
+import android.view.View
 import android.widget.CompoundButton
 import android.widget.TextView
 import androidx.lifecycle.LiveData
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.cabin.OtherManager
 import com.chinatsp.settinglib.optios.SwitchNode
+import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CabinOtherFragmentBinding
 import com.chinatsp.vehicle.settings.fragment.cabin.dialog.NoteUsersDialogFragment
@@ -30,6 +33,21 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
         initSwitchOption()
         addSwitchLiveDataListener()
         setSwitchListener()
+        initViewsDisplay()
+    }
+
+    private fun initViewsDisplay() {
+        val levelValue = VcuUtils.getLevelValue()
+        //level3, level4 配置无手机无线充电
+        if (Level.LEVEL3 == levelValue || Level.LEVEL4 == levelValue) {
+            binding.cabinOtherWirelessCharging.visibility = View.GONE
+            binding.line3.visibility = View.GONE
+        }
+        if (Level.LEVEL3 == levelValue) {
+            binding.cabinOtherWirelessChargingLamp.visibility = View.GONE
+            binding.line4.visibility = View.GONE
+        }
+
     }
 
     private fun initSwitchOption() {

@@ -91,9 +91,6 @@ object OffLine {
      */
     const val ENGTYPE = "persist.vendor.vehicle.ENGTYPE"
 
-    const val LEVEL1 = 0
-    const val LEVEL2 = 1
-    const val LEVEL3 = 2
-    const val LEVEL4 = 3
-    const val LEVEL5 = 4
+    const val LEVEL = "persist.vendor.vehicle.index"
+
 }

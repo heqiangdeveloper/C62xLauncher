@@ -1,11 +1,14 @@
 package com.chinatsp.vehicle.settings.fragment.sound
 
 import android.os.Bundle
+import android.view.View
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
+import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.SoundFragmentBinding
@@ -38,6 +41,15 @@ class SoundFragment : BaseFragment<SoundViewModel, SoundFragmentBinding>() {
         setRadioListener()
 
         initRouteListener()
+
+        initViewsDisplay()
+    }
+
+    private fun initViewsDisplay() {
+        if (VcuUtils.isCareLevel(Level.LEVEL5)) {
+            binding.soundLoudnessControl.visibility = View.GONE
+            binding.line7.visibility = View.GONE
+        }
     }
 
     private fun initRadioOption() {

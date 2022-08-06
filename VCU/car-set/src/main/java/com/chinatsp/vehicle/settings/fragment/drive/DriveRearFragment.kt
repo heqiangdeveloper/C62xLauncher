@@ -7,10 +7,12 @@ import android.view.View
 import android.widget.CompoundButton
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.adas.SideBackManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
+import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.DriveRearFragmentBinding
 import com.chinatsp.vehicle.settings.vm.adas.SideViewModel
@@ -39,6 +41,16 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
         initRadioOption()
         addRadioLiveDataListener()
         setRadioListener()
+
+        initViewsDisplay()
+    }
+
+    private fun initViewsDisplay() {
+        val isCareLevel = VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4)
+        if (isCareLevel) {
+            binding.driveDow.visibility = View.GONE
+            binding.line1.visibility = View.GONE
+        }
     }
 
     private fun initRadioOption() {

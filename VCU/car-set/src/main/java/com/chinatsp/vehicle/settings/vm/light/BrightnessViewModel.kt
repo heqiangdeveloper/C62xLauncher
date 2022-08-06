@@ -30,7 +30,7 @@ class BrightnessViewModel @Inject constructor(app: Application, model: BaseModel
         }
     }
 
-    val mesterScreenVolume: MutableLiveData<Volume> by lazy {
+    val meterScreenVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
             value = manager.doGetVolume(Volume.Type.METER_SCREEN)?.copy()
         }

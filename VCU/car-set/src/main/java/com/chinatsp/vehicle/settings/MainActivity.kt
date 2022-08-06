@@ -12,8 +12,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.chinatsp.settinglib.Constant
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.navigation.RouterSerial
+import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.bean.TabPage
 import com.chinatsp.vehicle.settings.databinding.MainActivityTablayoutBinding
 import com.chinatsp.vehicle.settings.fragment.CommonlyFragment
@@ -112,6 +114,9 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
                 tab.text = mAdapter.getPageTitle(position)
             }.attach()
             refreshAdapter(true)
+            if (VcuUtils.isCareLevel(Level.LEVEL3)) {
+                binding.tabLayout.getTabAt(0)?.view?.visibility = View.GONE
+            }
         }
     }
 
@@ -152,41 +157,41 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
 
     @SuppressLint("NotifyDataSetChanged")
     private fun refreshAdapter(isShow: Boolean) {
-        if (isShow) {
-            // 动态加载选项卡内容
-            for (page in TabPage.values()) {
-                val title = page.description
-                val position = page.position
-                if (position == 0) {
-                    val fragment = CommonlyFragment::class.java
-//                    fragment.userVisibleHint = true
-                    mAdapter.addFragment(fragment, title)
-                } else if (position == 1) {
-                    val fragment = DoorsManageFragment::class.java
-                    mAdapter.addFragment(fragment, title)
-                } else if (position == 2) {
-                    val fragment = LightingManageFragment::class.java
-                    mAdapter.addFragment(fragment, title)
-                } else if (position == 3) {
-                    val fragment = SoundManageFragment::class.java
-                    mAdapter.addFragment(fragment, title)
-                } else if (position == 4) {
-                    val fragment = CabinManagerFragment::class.java
-                    mAdapter.addFragment(fragment, title)
-                } else if (position == 5) {
-                    val fragment = DriveManageFragment::class.java
-                    mAdapter.addFragment(fragment, title)
-                } else {
-                    val fragment = SystemFragment::class.java
-                    mAdapter.addFragment(fragment, title)
-                }
-            }
-            binding.viewPager.offscreenPageLimit = mAdapter.itemCount
-            mAdapter.notifyDataSetChanged()
-            binding.viewPager.setCurrentItem(tabLocation.value!!, true)
-        } else {
+        if (!isShow) {
             mAdapter.clear()
+            return
         }
+        // 动态加载选项卡内容
+        for (page in TabPage.values()) {
+            val title = page.description
+            val position = page.position
+            if (position == 0) {
+                val fragment = CommonlyFragment::class.java
+//                    fragment.userVisibleHint = true
+                mAdapter.addFragment(fragment, title)
+            } else if (position == 1) {
+                val fragment = DoorsManageFragment::class.java
+                mAdapter.addFragment(fragment, title)
+            } else if (position == 2) {
+                val fragment = LightingManageFragment::class.java
+                mAdapter.addFragment(fragment, title)
+            } else if (position == 3) {
+                val fragment = SoundManageFragment::class.java
+                mAdapter.addFragment(fragment, title)
+            } else if (position == 4) {
+                val fragment = CabinManagerFragment::class.java
+                mAdapter.addFragment(fragment, title)
+            } else if (position == 5) {
+                val fragment = DriveManageFragment::class.java
+                mAdapter.addFragment(fragment, title)
+            } else {
+                val fragment = SystemFragment::class.java
+                mAdapter.addFragment(fragment, title)
+            }
+        }
+        binding.viewPager.offscreenPageLimit = mAdapter.itemCount
+        mAdapter.notifyDataSetChanged()
+        binding.viewPager.setCurrentItem(tabLocation.value!!, true)
     }
 
 

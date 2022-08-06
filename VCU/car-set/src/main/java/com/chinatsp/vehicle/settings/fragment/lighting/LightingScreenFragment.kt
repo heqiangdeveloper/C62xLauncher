@@ -35,7 +35,6 @@ class LightingScreenFragment : BaseFragment<BrightnessViewModel, LightingScreenF
                 seekBar.setValueNoEvent(it.pos)
             }
         }
-
     }
 
     private fun setSeekBarListener(listener: VSeekBar.OnSeekBarListener) {

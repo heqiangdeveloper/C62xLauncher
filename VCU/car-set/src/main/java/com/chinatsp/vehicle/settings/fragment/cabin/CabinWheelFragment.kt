@@ -1,10 +1,13 @@
 package com.chinatsp.vehicle.settings.fragment.cabin
 
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.cabin.WheelManager
 import com.chinatsp.settinglib.optios.RadioNode
+import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CabinWhellFragmentBinding
@@ -49,6 +52,15 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
         setRadioListener()
 
         initRouteListener()
+
+        initViewsDisplay()
+    }
+
+    private fun initViewsDisplay() {
+        if (VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4)) {
+            binding.wheelAutomaticHeating.visibility = View.GONE
+            binding.line3.visibility = View.GONE
+        }
     }
 
     private fun initSwitchOption() {

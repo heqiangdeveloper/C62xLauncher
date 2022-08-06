@@ -64,8 +64,8 @@ class BrightnessManager : BaseManager(), IProgressManager {
     private fun initVolume(type: Volume.Type): Volume {
         val max = 10
         var pos = manager?.brightness ?: 0
-        LogManager.d(TAG, "initVolume pos:$pos")
         pos /= 10
+        LogManager.d(TAG, "initVolume type:$type, pos:$pos")
         return Volume(type, 0, max, pos)
     }
 

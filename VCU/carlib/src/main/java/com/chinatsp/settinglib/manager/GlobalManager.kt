@@ -2,6 +2,7 @@ package com.chinatsp.settinglib.manager
 
 import android.car.hardware.CarPropertyValue
 import com.chinatsp.settinglib.LogManager
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.access.AccessManager
 import com.chinatsp.settinglib.manager.adas.AdasManager
 import com.chinatsp.settinglib.manager.cabin.CabinManager
@@ -9,6 +10,7 @@ import com.chinatsp.settinglib.manager.lamp.LampManager
 import com.chinatsp.settinglib.manager.sound.AudioManager
 import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.ICmdCallback
+import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.controller.annotation.Model
 import com.chinatsp.vehicle.controller.bean.Cmd
 import com.chinatsp.vehicle.controller.utils.Utils
@@ -32,7 +34,8 @@ class GlobalManager private constructor() : BaseManager() {
     }
 
     private val tabSerial: AtomicInteger by lazy {
-        AtomicInteger(0)
+        val isLevel3 = VcuUtils.isCareLevel(Level.LEVEL3)
+        AtomicInteger(if (isLevel3) 1 else 0)
     }
 
 //    val level1: AtomicInteger by lazy {
