@@ -10,11 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.chinatsp.drawer.DrawerCreator;
 import com.chinatsp.widgetcards.home.CardIndicator;
-import com.chinatsp.widgetcards.home.ExpandCardsViewHolder;
 import com.chinatsp.widgetcards.home.ExpandStateManager;
 import com.chinatsp.widgetcards.manager.CardManager;
 import com.chinatsp.widgetcards.home.HomeCardsAdapter;
@@ -39,7 +37,6 @@ public class CardHomeFragment extends BaseFragment {
     private RecyclerView mRcvCards;
     private CardIndicator mCardIndicator;
     private PagerSnapHelper mSnapHelper;
-    private ExpandCardsViewHolder mExpandCardsViewHolder;
     private DrawerCreator drawerCreator;
 
     @Override
@@ -111,10 +108,10 @@ public class CardHomeFragment extends BaseFragment {
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     private void onCardCollapse() {
-        if (mExpandCardsViewHolder == null) {
-            return;
-        }
-        mExpandCardsViewHolder.release((ViewGroup) mRootView);
+//        if (mExpandCardsViewHolder == null) {
+//            return;
+//        }
+//        mExpandCardsViewHolder.release((ViewGroup) mRootView);
     }
     Observer<List<LauncherCard>> mHomeCardsOb = new Observer<List<LauncherCard>>() {
         @SuppressLint("NotifyDataSetChanged")

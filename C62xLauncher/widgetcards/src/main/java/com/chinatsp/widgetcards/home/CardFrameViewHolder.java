@@ -161,14 +161,13 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void expand() {
-//        itemView.setForeground(mResources.getDrawable(R.drawable.card_bg_large));
         itemView.setBackgroundResource(R.drawable.card_bg_large);
         mIvCardZoom.setImageResource(R.drawable.card_icon_collapse);
 
         if (mCardInner instanceof ICardStyleChange) {
             ((ICardStyleChange) mCardInner).expand();
         }
-        mTvCardName.setTextColor(getColor(R.color.card_blue_lv1));
+        mTvCardName.setTextColor(getColor(R.color.card_title_expand));
         runExpandAnimation();
     }
 

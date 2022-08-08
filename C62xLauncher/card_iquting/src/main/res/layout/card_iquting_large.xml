@@ -24,7 +24,7 @@
         android:layout_width="119px"
         android:layout_height="32px"
         style="@style/CardLv3TextView"
-        android:textColor="@color/card_blue_lv1"
+        android:textColor="@color/card_title_expand"
         app:layout_constraintTop_toTopOf="@id/tvIQuTingRankSongs"
         app:layout_constraintBottom_toBottomOf="@id/tvIQuTingRankSongs"
         app:layout_constraintEnd_toStartOf="@id/tvIQuTingRankSongs"

@@ -4,6 +4,9 @@
 
     <application>
         <activity
+            android:name="com.chinatsp.drawer.search.LauncherSearchActivity"
+            android:exported="false" />
+        <activity
             android:name=".editor.ui.CardEditorActivity"
             android:exported="false" />
     </application>
