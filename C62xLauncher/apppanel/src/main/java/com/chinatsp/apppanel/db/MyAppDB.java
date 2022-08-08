@@ -251,17 +251,26 @@ public class MyAppDB extends SQLiteOpenHelper {
         if(locationBean == null){
             return;
         }
-        if(locationBean.getImgDrawable() != null){
-            Drawable drawable = locationBean.getImgDrawable();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(bitmap);
-            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-            drawable.draw(canvas);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-            locationBean.setImgByte(baos.toByteArray());
-            bitmap.recycle();
-            bitmap = null;
+        Drawable drawable = locationBean.getImgDrawable();
+        if(drawable != null){
+            try{
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+                Canvas canvas = new Canvas(bitmap);
+                drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+                drawable.draw(canvas);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                locationBean.setImgByte(baos.toByteArray());
+                bitmap.recycle();
+                bitmap = null;
+            }catch (Exception e){
+                Log.d(TAG,"Exception: " + e);
+                return;
+            }finally {
+                //释放drawable内存
+                drawable.setCallback(null);
+                drawable = null;
+            }
         }else if(locationBean.getImgByte() == null){
             return;
         }
