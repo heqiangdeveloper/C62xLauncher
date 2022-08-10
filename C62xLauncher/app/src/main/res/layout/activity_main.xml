@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:text="跳转到全应用页"
         android:onClick="toApppanel"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:ignore="MissingConstraints" />
 </androidx.constraintlayout.widget.ConstraintLayout>

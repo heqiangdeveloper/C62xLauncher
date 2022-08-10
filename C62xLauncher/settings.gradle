@@ -3,7 +3,7 @@ rootProject.name = "C62xLauncher"
 include ':app'
 include ':widgetcards'
 include ':apppanel'
-include ':card_weaher'
+include ':card_weather'
 include ':baseCard'
 include ':card_navigation'
 include ':card_volcano'

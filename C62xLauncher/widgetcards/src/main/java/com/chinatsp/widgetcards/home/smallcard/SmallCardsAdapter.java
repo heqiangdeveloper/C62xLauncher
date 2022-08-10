@@ -1,4 +1,4 @@
-package com.chinatsp.widgetcards.home;
+package com.chinatsp.widgetcards.home.smallcard;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chinatsp.widgetcards.R;
+import com.chinatsp.widgetcards.home.CardFrameViewHolder;
 import com.chinatsp.widgetcards.manager.CardManager;
 
 import java.util.HashSet;
@@ -19,9 +20,9 @@ import java.util.Set;
 import card.base.LauncherCard;
 import launcher.base.utils.EasyLog;
 
-public class HomeCardsAdapter extends RecyclerView.Adapter<CardFrameViewHolder> {
+public class SmallCardsAdapter extends RecyclerView.Adapter<SmallCardViewHolder> {
 
-    private static final String TAG = "CardsAdapter";
+    private static final String TAG = "SmallCardsAdapter";
     private final Context mContext;
     private final LayoutInflater mLayoutInflater;
     private List<LauncherCard> mCardEntityList = new LinkedList<>();
@@ -29,7 +30,7 @@ public class HomeCardsAdapter extends RecyclerView.Adapter<CardFrameViewHolder> 
     private RecyclerView mRecyclerView;
 
 
-    public HomeCardsAdapter(Context context, RecyclerView recyclerView) {
+    public SmallCardsAdapter(Context context, RecyclerView recyclerView) {
         mContext = context;
         mRecyclerView = recyclerView;
         mLayoutInflater = LayoutInflater.from(mContext);
@@ -37,7 +38,7 @@ public class HomeCardsAdapter extends RecyclerView.Adapter<CardFrameViewHolder> 
 
     @NonNull
     @Override
-    public CardFrameViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public SmallCardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LauncherCard cardEntity = CardManager.getInstance().findByType(viewType);
         ViewGroup layout;
         if (cardEntity.isCanExpand()) {
@@ -45,11 +46,11 @@ public class HomeCardsAdapter extends RecyclerView.Adapter<CardFrameViewHolder> 
         } else {
             layout = (ViewGroup) mLayoutInflater.inflate(R.layout.item_card_frame_locked, parent, false);
         }
-        layout.setTag(cardEntity.getName());
         View innerCard = cardEntity.getLayout(layout.getContext());
+        innerCard.setTag("InnerCard");
         layout.addView(innerCard,0);
         EasyLog.d(TAG, "onCreateViewHolder: "+viewType);
-        return new CardFrameViewHolder(layout, mRecyclerView, innerCard);
+        return new SmallCardViewHolder(layout);
     }
 
     @Override
@@ -71,7 +72,7 @@ public class HomeCardsAdapter extends RecyclerView.Adapter<CardFrameViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CardFrameViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull SmallCardViewHolder holder, int position) {
         holder.bind(position, mCardEntityList.get(position));
     }
 
