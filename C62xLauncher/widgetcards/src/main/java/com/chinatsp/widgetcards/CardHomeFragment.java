@@ -71,14 +71,24 @@ public class CardHomeFragment extends BaseFragment {
     Observer<Boolean> mExpandOb = new Observer<Boolean>() {
         @Override
         public void onChanged(Boolean expand) {
-            if (expand && mSnapHelper != null) {
-
-            }
+            onChangeExpandState(expand);
         }
+
+
     };
+    private void onChangeExpandState(Boolean expand) {
+        EasyLog.d(TAG, "onChangeExpandState: "+expand);
+        int smallCardPosition = ExpandStateManager.getInstance().getSmallCardPosition();
+        if (smallCardPosition >= 0 && smallCardPosition < mCardsAdapter.getItemCount()) {
+            mCardsAdapter.notifyItemChanged(smallCardPosition);
+        }
+        if (!expand) {
+            ExpandStateManager.getInstance().clearSmallCardPosInExpandState();
+        }
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onCardExpand(Events.SwipeEvent swipeEvent) {
+    public void swipeCard(Events.SwipeEvent swipeEvent) {
         if (swipeEvent == null) {
             return;
         }
@@ -92,27 +102,14 @@ public class CardHomeFragment extends BaseFragment {
         } else {
             smallCard = ListKit.findPrev(bigCard, homeList);
         }
-        EasyLog.d(TAG, "onCardExpand, bigCard:" + bigCard.getName() + " , inLeftSide:" + swipeEvent.mBigInLeftSide + " , smallCard:" + smallCard);
+        EasyLog.d(TAG, "swipeCard, bigCard:" + bigCard.getName() + " , inLeftSide:" + swipeEvent.mBigInLeftSide + " , smallCard:" + smallCard);
         int index = homeList.indexOf(bigCard);
         int index2 = homeList.indexOf(smallCard);
-        int start, end;
-        if (index > index2) {
-            start = index2;
-            end = index;
-        } else {
-            start = index;
-            end = index2;
-        }
         ListKit.swipeElement(homeList, index, index2);
+        ExpandStateManager.getInstance().setSmallCardPosInExpandState(index);
         mCardsAdapter.notifyDataSetChanged();
     }
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    private void onCardCollapse() {
-//        if (mExpandCardsViewHolder == null) {
-//            return;
-//        }
-//        mExpandCardsViewHolder.release((ViewGroup) mRootView);
-    }
+
     Observer<List<LauncherCard>> mHomeCardsOb = new Observer<List<LauncherCard>>() {
         @SuppressLint("NotifyDataSetChanged")
         @Override
