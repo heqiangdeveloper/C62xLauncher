@@ -109,6 +109,7 @@ public class RecentAppHelper {
     public static void launchApp(Context context, String packageName){
         try {
             Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
             context.startActivity(intent);
         }catch (Exception e){
             Toast.makeText(context,"该应用还未下载",Toast.LENGTH_SHORT).show();

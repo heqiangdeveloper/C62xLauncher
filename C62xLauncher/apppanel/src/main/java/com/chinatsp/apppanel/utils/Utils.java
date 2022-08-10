@@ -9,6 +9,8 @@ import android.widget.Toast;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 
+import launcher.base.utils.recent.RecentAppHelper;
+
 public class Utils {
     private static final String TAG = Utils.class.toString();
     /**
@@ -22,12 +24,7 @@ public class Utils {
      * @param packageName包名
      */
     public static void launchApp(Context context, String packageName){
-        try {
-            Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
-            context.startActivity(intent);
-        }catch (Exception e){
-            Toast.makeText(context,"该应用还未下载",Toast.LENGTH_SHORT).show();
-        }
+        RecentAppHelper.launchApp(context,packageName);
     }
 
     /**
