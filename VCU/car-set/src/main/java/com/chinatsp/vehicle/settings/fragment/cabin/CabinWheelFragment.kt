@@ -4,15 +4,20 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
+import com.chinatsp.settinglib.Applet
+import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.cabin.WheelManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.vehicle.controller.annotation.Level
+import com.chinatsp.vehicle.settings.HintHold
 import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
+import com.chinatsp.vehicle.settings.app.Toast
 import com.chinatsp.vehicle.settings.databinding.CabinWhellFragmentBinding
 import com.chinatsp.vehicle.settings.fragment.cabin.dialog.SteeringHeatDialogFragment
 import com.chinatsp.vehicle.settings.fragment.cabin.dialog.SteeringKeysDialogFragment
+import com.chinatsp.vehicle.settings.fragment.drive.dialog.DetailsDialogFragment
 import com.chinatsp.vehicle.settings.vm.cabin.SteeringViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.utils.ResUtils
@@ -56,6 +61,15 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
         initViewsDisplay()
     }
 
+    private fun showHintDialog(title: Int, content: Int) {
+        HintHold.setTitle(title)
+        HintHold.setContent(content)
+        val fragment = DetailsDialogFragment()
+        activity?.supportFragmentManager?.let {
+            fragment.show(it, fragment.javaClass.simpleName)
+        }
+    }
+
     private fun initViewsDisplay() {
         if (VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4)) {
             binding.wheelAutomaticHeating.visibility = View.GONE
@@ -89,7 +103,13 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
     private fun setRadioListener() {
         binding.wheelEpsModeTabView.let {
             it.setOnTabSelectionChangedListener { _, value ->
-                doUpdateRadio(RadioNode.DRIVE_EPS_MODE, value, viewModel.epsMode, it)
+                if (!Applet.isCanSwitchEps(15f)) {
+                    showHintDialog(R.string.vcu_action_switch_failed, R.string.vcu_eps_action_switch_check)
+                    it.setSelection(viewModel.epsMode.value.toString(), true)
+                } else {
+                    doUpdateRadio(RadioNode.DRIVE_EPS_MODE, value, viewModel.epsMode, it)
+                    Toast.showToast(context, getString(R.string.vcu_eps_action_switching), true)
+                }
             }
         }
     }

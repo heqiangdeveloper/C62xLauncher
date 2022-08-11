@@ -48,8 +48,8 @@ enum class SwitchNode(
      * 0x1: No sound(default)   0x2: Sound
      */
     DRIVE_SAFE_VIDEO_PLAYING(
-        get = Norm(),
-        set = Norm(),
+        get = Norm(on = 0x01, off = 0x00),
+        set = Norm(on = 0x01, off = 0x00),
         default = false
     ),
 
@@ -537,18 +537,20 @@ enum class SwitchNode(
     /**
      * 灯光--氛围灯--前排氛围灯
      * get -> 0x0:ALT OFF 0x1:ALT ON 0x2~0x3:Reserved
+     * set -> 前排氛围灯软开关[0x1,0,0x0,0x3] 0x0: Inactive 0x1: ON 0x2: OFF 0x3: Reserved
      */
     FRONT_AMBIENT_LIGHTING(
-        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ALC_AL_RESPONSE_SW),
-        set = Norm(on = 0x1, off = 0x0, signal = -1),
+        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ALC_FRONT_PART_STS),
+        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HUM_ALC_FRONT_PART_SW),
         default = false
     ),
 
     /**
      * 灯光--氛围灯--后排氛围灯
+     * get -> 后排氛围灯开关状态 0x0:OFF; 0x1:ON
      */
     BACK_AMBIENT_LIGHTING(
-        get = Norm(on = 0x1, off = 0x0, signal = -1),
+        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ALC_GEAR_PART_STS),
         set = Norm(on = 0x1, off = 0x2, signal = -1),
         default = false
     ),
@@ -611,16 +613,46 @@ enum class SwitchNode(
     /**
      * 灯光--氛围灯--智能模式
      * set -> 智能模式开关[0x1,0,0x0,0x3]
-            0x0: Inactive
-            0x1: On
-            0x2: OFF
-            0x3: Reserved
+            0x0: Inactive 0x1: On 0x2: OFF 0x3: Reserved
      * get -> 0x0: OFF 0x1: ON
      */
     ALC_SMART_MODE(
         get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ALC_INTE_MODE_SW_RESPONSE),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_ALC_HUM_ALC_INTELLIGENT_MODE_SW),
         default = true
+    ),
+
+    /**
+     * 色彩呼吸
+     * set -> 色彩呼吸模式开关[0x1,0,0x0,0x3] 0x0: Inactive; 0x1: On; 0x2: OFF; 0x3: Reserved
+     * get -> 0x0:OFF; 0x1:ON
+     */
+    COLOUR_BREATHE(
+        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ALC_COLOUR_BREAT_SW_RESPONSE),
+        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_ALC_HUM_ALC_COLOUR_BREAT_SW),
+        default = false
+    ),
+
+    /**
+     * 音乐律动
+     * set -> 音乐律动模式开关[0x1,0,0x0,0x3] 0x0: Inactive; 0x1: On; 0x2: OFF; 0x3: Reserved
+     * get -> 0x0:OFF; 0x1:ON
+     */
+    MUSIC_RHYTHM(
+        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ALC_MUSIC_RHY_SW_RESPONSE),
+        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_ALC_HUM_ALC_MUSIC_RHY_SW),
+        default = false
+    ),
+
+    /**
+     * 车速律动
+     * set -> 音乐律动模式开关[0x1,0,0x0,0x3] 0x0: Inactive; 0x1: On; 0x2: OFF; 0x3: Reserved
+     * get -> 0x0:OFF; 0x1:ON
+     */
+    SPEED_RHYTHM(
+        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ALC_VEH_SPD_RHY_SW_RESPONSE),
+        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_ALC_HUM_ALC_VEHICLE_SP_RHY_SW),
+        default = false
     ),
 
     //----------------灯光 end ---------------------------------

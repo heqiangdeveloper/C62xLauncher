@@ -1,8 +1,9 @@
 package com.chinatsp.settinglib.manager
 
 import android.car.hardware.cabin.CarCabinManager
-import android.car.hardware.hvac.CarHvacManager
 import android.car.hardware.mcu.CarMcuManager
+import com.chinatsp.settinglib.Constant
+import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
@@ -44,13 +45,21 @@ class RegisterSignalManager private constructor() {
 //                    add(CarCabinManager.ID_CUTOFF_UNLOCK_DOORS_STATUE)
 //                    /**车门智能进入*/
 //                    add(CarCabinManager.ID_SMART_ENTRY_STS)
-
-                    SwitchNode.values().filter { it.get.origin == Origin.CABIN }.forEach {
-                        add(it.get.signal)
-                    }
-                    RadioNode.values().filter { it.get.origin == Origin.CABIN }.forEach {
-                        add(it.get.signal)
-                    }
+//                    /**【反馈】全车氛围灯亮度响应反馈*/
+//                    add(CarCabinManager.ID_ALC_AL_RESPONSE_BRIGHTNESS)
+                    SwitchNode.values()
+                        .filter { it.get.origin == Origin.CABIN && it.get.signal != Constant.INVALID }
+                        .forEach {
+                            add(it.get.signal)
+                        }
+                    RadioNode.values()
+                        .filter { it.get.origin == Origin.CABIN && it.get.signal != Constant.INVALID }
+                        .forEach {
+                            add(it.get.signal)
+                        }
+                    Progress.values()
+                        .filter { it.get.origin == Origin.CABIN && it.get.signal != Constant.INVALID }
+                        .forEach { add(it.get.signal) }
                     this.remove(-1)
                 }
             }

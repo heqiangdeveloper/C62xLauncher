@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -72,12 +71,55 @@
                         app:layout_constraintTop_toBottomOf="@id/drive_dow" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/drive_bsd"
+                        android:id="@+id/adas_meb_layout"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/switch_item_option_height"
                         android:orientation="horizontal"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/line1">
+
+                        <TextView
+                            android:id="@+id/adas_meb_tv_title"
+                            style="@style/switch_row_option_style"
+                            android:text="@string/adas_meb_title"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            style="@style/image_prompt"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toRightOf="@+id/adas_meb_tv_title"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/txt_prompt"
+                            android:text="@string/adas_meb_description"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/adas_meb_tv_title" />
+
+
+                        <com.common.xui.widget.button.switchbutton.SwitchButton
+                            android:id="@+id/adas_side_meb_switch"
+                            style="@style/switch_button_style"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/line_meb"
+                        style="@style/line"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/adas_meb_layout" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/drive_bsd"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/switch_item_option_height"
+                        android:orientation="horizontal"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/line_meb">
 
                         <TextView
                             android:id="@+id/drive_bsd_title"
@@ -219,6 +261,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/drive_display" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
             </LinearLayout>
         </com.common.xui.widget.XUIWrapContentScrollView>
 

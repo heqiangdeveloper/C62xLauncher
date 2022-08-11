@@ -1,9 +1,8 @@
 package com.chinatsp.settinglib.manager.adas
 
 import android.car.hardware.CarPropertyValue
-import android.car.hardware.cabin.CarCabinManager
-import com.chinatsp.settinglib.BaseApp
-import com.chinatsp.settinglib.SettingUtils
+import com.chinatsp.settinglib.Constant
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.manager.BaseManager
@@ -48,10 +47,9 @@ class SideBackManager : BaseManager(), IOptionManager {
     private val showAreaValue: AtomicInteger by lazy {
         val node = RadioNode.ADAS_SIDE_BACK_SHOW_AREA
         AtomicInteger(node.default).apply {
-            val value = SettingUtils.getInt(
-                BaseApp.instance,
-                SettingUtils.SHOW_AREA,
-                node.get.values[0]
+            val value = VcuUtils.getInt(
+                key = Constant.SHOW_AREA,
+                value = node.get.values[0]
             )
             doUpdateRadioValue(node, this, value)
         }
@@ -84,10 +82,9 @@ class SideBackManager : BaseManager(), IOptionManager {
     private val guidesValue: AtomicBoolean by lazy {
         val node = SwitchNode.ADAS_GUIDES
         AtomicBoolean(node.isOn()).apply {
-            val result = SettingUtils.getInt(
-                BaseApp.instance,
-                SettingUtils.AUXILIARY_LINE,
-                node.get.on
+            val result = VcuUtils.getInt(
+                key = Constant.AUXILIARY_LINE,
+                value = node.get.on
             )
             doUpdateSwitchValue(node, this, result)
         }
@@ -127,11 +124,8 @@ class SideBackManager : BaseManager(), IOptionManager {
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
         return when (node) {
             RadioNode.ADAS_SIDE_BACK_SHOW_AREA -> {
-                node.isValid(value, false) && SettingUtils.putInt(
-                    BaseApp.instance,
-                    SettingUtils.SHOW_AREA,
-                    value
-                )
+                node.isValid(value, false)
+                        && VcuUtils.putInt(key = Constant.SHOW_AREA, value = value)
             }
             else -> false
         }
@@ -181,11 +175,7 @@ class SideBackManager : BaseManager(), IOptionManager {
                 doSetSwitchOption(node, status, bscValue)
             }
             SwitchNode.ADAS_GUIDES -> {
-                SettingUtils.putInt(
-                    BaseApp.instance,
-                    SettingUtils.AUXILIARY_LINE,
-                    node.value(status)
-                )
+                VcuUtils.putInt(key = Constant.AUXILIARY_LINE, value = node.value(status))
             }
             else -> false
         }

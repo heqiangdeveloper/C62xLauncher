@@ -13,8 +13,10 @@ import com.chinatsp.settinglib.manager.adas.SideBackManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
+import com.chinatsp.vehicle.settings.HintHold
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.DriveRearFragmentBinding
+import com.chinatsp.vehicle.settings.fragment.drive.dialog.DetailsDialogFragment
 import com.chinatsp.vehicle.settings.vm.adas.SideViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
@@ -43,6 +45,25 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
         setRadioListener()
 
         initViewsDisplay()
+        initDetailsClickListener()
+    }
+
+    private fun initDetailsClickListener() {
+        binding.driveBsd.setOnClickListener {
+            updateHintMessage(R.string.drive_bsd_title, R.string.bsd_details)
+        }
+        binding.driveBsdCamera.setOnClickListener{
+            updateHintMessage(R.string.drive_bsd_camera_title, R.string.bsc_details)
+        }
+    }
+
+    private fun updateHintMessage(title: Int, content: Int) {
+        HintHold.setTitle(title)
+        HintHold.setContent(content)
+        val fragment = DetailsDialogFragment()
+        activity?.supportFragmentManager?.let {
+            fragment.show(it, fragment.javaClass.simpleName)
+        }
     }
 
     private fun initViewsDisplay() {

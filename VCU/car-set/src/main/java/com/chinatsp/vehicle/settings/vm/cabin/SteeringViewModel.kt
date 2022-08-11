@@ -4,11 +4,8 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.bean.Volume
-import com.chinatsp.settinglib.listener.IRadioListener
 import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.listener.sound.ISoundListener
-import com.chinatsp.settinglib.manager.cabin.MeterManager
-import com.chinatsp.settinglib.manager.cabin.SafeManager
 import com.chinatsp.settinglib.manager.cabin.WheelManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -45,7 +42,7 @@ class SteeringViewModel @Inject constructor(app: Application, model: BaseModel) 
         get() = _sillTemp
 
     private val _sillTemp: MutableLiveData<Volume> by lazy {
-        val type = Volume.Type.STEERING_SILL_TEMP
+        val type = Volume.Type.STEERING_EDGE_TEMP
         MutableLiveData<Volume>().apply {
             value = manager.doGetVolume(type)?.copy()
         }
@@ -85,7 +82,7 @@ class SteeringViewModel @Inject constructor(app: Application, model: BaseModel) 
     override fun onSoundVolumeChanged(vararg array: Volume) {
         array.forEach {
             when (it.type) {
-                Volume.Type.STEERING_SILL_TEMP -> {
+                Volume.Type.STEERING_EDGE_TEMP -> {
                     updateVolume(_sillTemp, it)
                 }
                 else -> {}

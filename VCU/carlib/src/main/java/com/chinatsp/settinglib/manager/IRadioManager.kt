@@ -2,6 +2,7 @@ package com.chinatsp.settinglib.manager
 
 import android.car.hardware.CarPropertyValue
 import com.chinatsp.settinglib.listener.IManager
+import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.sign.TabBlock
 import java.util.concurrent.atomic.AtomicInteger
@@ -53,4 +54,14 @@ interface IRadioManager : IManager {
         }
         return atomic
     }
+
+    fun doUpdateProgress(node: Progress, atomic: AtomicInteger, value: Int, block: ((Progress, Int) -> Unit)? = null)
+            : AtomicInteger {
+        if (node.isValid(value) && atomic.get() != value) {
+            atomic.set(value)
+            block?.let { it(node, value) }
+        }
+        return atomic
+    }
+
 }

@@ -1,7 +1,8 @@
 package com.chinatsp.settinglib.manager.cabin
 
 import android.car.hardware.CarPropertyValue
-import android.car.hardware.cabin.CarCabinManager
+import com.chinatsp.settinglib.Constant
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.manager.ISwitchManager
@@ -31,7 +32,10 @@ class SafeManager private constructor() : BaseManager(), ISwitchManager {
     private val videoModeFunction: AtomicBoolean by lazy {
         val node = SwitchNode.DRIVE_SAFE_VIDEO_PLAYING
         AtomicBoolean(node.default).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
+            val result = VcuUtils.getInt(
+                key = Constant.DRIVE_VIDEO_PLAYING,
+                value = node.value(node.default)
+            )
             doUpdateSwitchValue(node, this, result)
         }
     }
@@ -109,7 +113,8 @@ class SafeManager private constructor() : BaseManager(), ISwitchManager {
                 writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
             SwitchNode.DRIVE_SAFE_VIDEO_PLAYING -> {
-                writeProperty(node.set.signal, node.value(status), node.set.origin)
+                VcuUtils.putInt(key = Constant.DRIVE_VIDEO_PLAYING, value = node.value(status))
+//                writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
             else -> false
         }

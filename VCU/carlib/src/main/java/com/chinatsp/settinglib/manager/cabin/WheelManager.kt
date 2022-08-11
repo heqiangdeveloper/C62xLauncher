@@ -2,15 +2,14 @@ package com.chinatsp.settinglib.manager.cabin
 
 import android.car.hardware.CarPropertyValue
 import com.chinatsp.settinglib.bean.Volume
-import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.listener.sound.ISoundListener
 import com.chinatsp.settinglib.listener.sound.ISoundManager
 import com.chinatsp.settinglib.manager.BaseManager
-import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
+import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -41,7 +40,7 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
     }
 
     private val steeringSillTemp: Volume by lazy {
-        initVolume(Volume.Type.STEERING_SILL_TEMP)
+        initVolume(Volume.Type.STEERING_EDGE_TEMP)
     }
 
 
@@ -56,9 +55,9 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
     }
 
     private fun initVolume(type: Volume.Type): Volume {
-        val pos = 20
-        val max = 30
-        return Volume(type, 10, max, pos)
+        val pos = readIntProperty(type.id, Origin.CABIN)
+        val max = 10
+        return Volume(type, 0, max, pos)
     }
 
 
@@ -111,7 +110,7 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
 
     override fun doGetVolume(type: Volume.Type): Volume? {
         return when (type) {
-            Volume.Type.STEERING_SILL_TEMP -> {
+            Volume.Type.STEERING_EDGE_TEMP -> {
                 steeringSillTemp
             }
             else -> null
@@ -120,8 +119,10 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
 
     override fun doSetVolume(type: Volume.Type, position: Int): Boolean {
         return when (type) {
-            Volume.Type.STEERING_SILL_TEMP -> {
-                writeProperty(steeringSillTemp, position)
+            Volume.Type.STEERING_EDGE_TEMP -> {
+                val result = writeProperty(steeringSillTemp, position)
+                Timber.d("doSetVolume type:%s, position:%s, result:%s", type, position, result)
+                result
             }
             else -> false
         }

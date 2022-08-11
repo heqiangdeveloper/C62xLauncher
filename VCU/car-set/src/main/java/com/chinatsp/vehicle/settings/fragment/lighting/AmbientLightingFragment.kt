@@ -5,8 +5,8 @@ import android.view.View
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.VcuUtils
-import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.lamp.AmbientLightingManager
+import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.IRoute
@@ -17,12 +17,14 @@ import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.picker.ColorPickerView
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class AmbientLightingFragment :
-    BaseFragment<AmbientLightingViewModel, LightingAtmosphereFragmentBinding>() {
+    BaseFragment<AmbientLightingViewModel, LightingAtmosphereFragmentBinding>(),
+    ColorPickerView.OnColorPickerChangeListener {
 
-    private val manager: ISwitchManager
+    private val manager: AmbientLightingManager
         get() = AmbientLightingManager.instance
 
     override fun getLayoutId(): Int {
@@ -43,6 +45,10 @@ class AmbientLightingFragment :
         initRouteListener()
 
         initViewsDisplay()
+
+        addSeekBarLiveDataListener()
+        initBrightnessSeekBar()
+        initColorSeekBar()
     }
 
     private fun initViewsDisplay() {
@@ -111,24 +117,7 @@ class AmbientLightingFragment :
         binding.lightingIntelligentModel.setOnClickListener {
             showModeFragment()
         }
-        binding.picker.setIndicatorIndex(64)
-        binding.picker.setOnColorPickerChangeListener(object :
-            ColorPickerView.OnColorPickerChangeListener {
-            override fun onColorChanged(picker: ColorPickerView?, color: Int, index: Int) {
-                binding.picker.setIndicatorColorIndex(index)
-            }
 
-            override fun onStartTrackingTouch(picker: ColorPickerView?) {
-
-            }
-
-            override fun onStopTrackingTouch(picker: ColorPickerView?) {
-
-            }
-
-        }
-
-        )
         binding.brightnessLayout.setOnClickListener {
             binding.lightingTitleLayout.visibility = View.GONE
             binding.brightnessAdjust.visibility = View.VISIBLE
@@ -182,6 +171,47 @@ class AmbientLightingFragment :
                 }
             }
         }
+    }
+
+    private fun initBrightnessSeekBar() {
+        val node = Progress.AMBIENT_LIGHT_BRIGHTNESS
+        binding.ambientLightingBrightness.min = node.min
+        binding.ambientLightingBrightness.max = node.max
+        binding.ambientLightingBrightness.setValueNoEvent(viewModel.ambientBrightness.value!!)
+        binding.ambientLightingBrightness.setOnSeekBarListener { _, value ->
+            viewModel.doBrightnessChanged(node, value)
+            binding.ambientLightingBrightness.setValueNoEvent(viewModel.ambientBrightness.value!!)
+        }
+    }
+
+    private fun addSeekBarLiveDataListener() {
+        viewModel.ambientBrightness.observe(this) {
+            binding.ambientLightingBrightness.setValueNoEvent(it)
+            Timber.d("addSeekBarLiveDataListener Brightness index:%s", it)
+        }
+        viewModel.ambientColor.observe(this) {
+            Timber.d("addSeekBarLiveDataListener ambientColor index:%s", it)
+            binding.picker.setIndicatorIndex(it)
+        }
+    }
+
+    private fun initColorSeekBar() {
+        binding.picker.setIndicatorIndex(viewModel.ambientColor.value!!)
+        binding.picker.setOnColorPickerChangeListener(this)
+    }
+
+    override fun onColorChanged(picker: ColorPickerView?, color: Int, index: Int) {
+        Timber.d("onColorChanged color:%s, index:%s", color, index)
+        viewModel.onAmbientColorChanged(index)
+        picker?.setIndicatorIndex(viewModel.ambientColor.value!!)
+    }
+
+    override fun onStartTrackingTouch(picker: ColorPickerView?) {
+
+    }
+
+    override fun onStopTrackingTouch(picker: ColorPickerView?) {
+
     }
 
 

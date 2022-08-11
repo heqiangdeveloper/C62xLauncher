@@ -10,8 +10,10 @@ import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.adas.CombineManager
 import com.chinatsp.settinglib.optios.SwitchNode
+import com.chinatsp.vehicle.settings.HintHold
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.DriveLightingFragmentBinding
+import com.chinatsp.vehicle.settings.fragment.drive.dialog.DetailsDialogFragment
 import com.chinatsp.vehicle.settings.vm.adas.CombineViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
@@ -33,6 +35,22 @@ class DriveLightingFragment : BaseFragment<CombineViewModel, DriveLightingFragme
         initVideoListener()
         addSwitchLiveDataListener()
         setSwitchListener()
+        initDetailsClickListener()
+    }
+
+    private fun initDetailsClickListener() {
+        binding.driveHma.setOnClickListener {
+            updateHintMessage(R.string.drive_hma_title, R.string.hma_details)
+        }
+    }
+
+    private fun updateHintMessage(title: Int, content: Int) {
+        HintHold.setTitle(title)
+        HintHold.setContent(content)
+        val fragment = DetailsDialogFragment()
+        activity?.supportFragmentManager?.let {
+            fragment.show(it, fragment.javaClass.simpleName)
+        }
     }
 
     private fun initVideoListener() {
