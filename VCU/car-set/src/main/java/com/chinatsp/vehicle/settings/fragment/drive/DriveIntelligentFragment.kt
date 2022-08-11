@@ -208,12 +208,5 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
             binding.intelligentCruise.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.intelligent_cruise) })
         }
     }
-    override fun onDestroy() {
-        super.onDestroy()
-        binding.video.pause()
-        binding.video.stopPlayback()
-        binding.video.setBackgroundColor(Color.TRANSPARENT);
-        binding.intelligentCruise.visibility = View.VISIBLE
-    }
 }
 

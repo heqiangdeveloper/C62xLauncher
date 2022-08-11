@@ -111,10 +111,11 @@ class AmbientLightingFragment :
         binding.lightingIntelligentModel.setOnClickListener {
             showModeFragment()
         }
+        binding.picker.setIndicatorIndex(64)
         binding.picker.setOnColorPickerChangeListener(object :
             ColorPickerView.OnColorPickerChangeListener {
-            override fun onColorChanged(picker: ColorPickerView?, color: Int) {
-                binding.picker.indicatorColor =color
+            override fun onColorChanged(picker: ColorPickerView?, color: Int, index: Int) {
+                binding.picker.setIndicatorColorIndex(index)
             }
 
             override fun onStartTrackingTouch(picker: ColorPickerView?) {

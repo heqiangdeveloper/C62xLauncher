@@ -19,7 +19,11 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import com.common.xui.ColorInfo;
 import com.common.xui.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ColorPickerView extends View {
     /**
@@ -91,6 +95,8 @@ public class ColorPickerView extends View {
     private int[] colors = null;
 
     private int currentColor;
+    private List<ColorInfo> colorInfoList;
+    private Context context;
 
     /**
      * 控件方向
@@ -134,7 +140,7 @@ public class ColorPickerView extends View {
 
     public ColorPickerView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
+        this.context = context;
         final TypedArray array = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ColorPickerView, defStyleAttr, 0);
         mIndicatorColor = array.getColor(R.styleable.ColorPickerView_indicatorColor, Color.WHITE);
 
@@ -144,7 +150,7 @@ public class ColorPickerView extends View {
         mIndicatorEnable = array.getBoolean(R.styleable.ColorPickerView_indicatorEnable, true);
 
         array.recycle();
-
+        addColorList();
     }
 
     @Override
@@ -183,7 +189,7 @@ public class ColorPickerView extends View {
         mRight = getMeasuredWidth() - getPaddingRight();
 
         if (curX == curY || curY == Integer.MAX_VALUE) {
-            curX = getWidth() / 2;
+            //curX = getWidth() / 2;
             curY = getHeight() / 2;
         }
 
@@ -288,7 +294,7 @@ public class ColorPickerView extends View {
 
     /**
      * 设置颜色条的渐变颜色，不支持具有 alpha 的颜色，{@link Color#TRANSPARENT}会被当成 {@link Color#BLACK}处理
-     * 如果想设置 alpha ，可以在{@link OnColorPickerChangeListener#onColorChanged(ColorPickerView, int)} 回调
+     * 如果想设置 alpha ，可以在{@link OnColorPickerChangeListener#(ColorPickerView, int)} 回调
      * 中调用{@linkolorUtils#setAlphaComponent(int, int)}方法添加 alpha 值。
      *
      * @param colors 颜色值
@@ -335,13 +341,12 @@ public class ColorPickerView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-
         if (needReDrawColorTable) {
             createColorTableBitmap();
         }
         // 绘制颜色条
         canvas.drawBitmap(bitmapForColor, null, rect, paint);
-
+        paint.setAntiAlias(true);
         if (mIndicatorEnable) {
             if (needReDrawIndicator) {
                 createIndicatorBitmap();
@@ -364,7 +369,9 @@ public class ColorPickerView extends View {
         c.drawRoundRect(new RectF(4, 6, bitmapForIndicator.getWidth() - 4, bitmapForIndicator.getHeight() - 6), 35, radius, paintForIndicator);
         needReDrawIndicator = false;
     }
+
     Rect rectBg = new Rect();
+
     private void createColorTableBitmap() {
 
         Canvas c = new Canvas(bitmapForColor);
@@ -378,28 +385,28 @@ public class ColorPickerView extends View {
             r = bitmapForColor.getWidth() / 2;
         }
         // 先绘制黑色背景，否则有 alpha 时绘制不正常
-        paint.setColor(Color.BLACK);
-        c.drawRoundRect(rf, r, r, paint);
-
-        /*paint.setShader(linearGradient);
-        //paint.setAlpha(110);
+        /*paint.setColor(Color.BLACK);
         c.drawRoundRect(rf, r, r, paint);*/
+
+        //paint.setShader(linearGradient);
+        //paint.setAlpha(110);
+        //c.drawRoundRect(rf, r, r, paint);
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.img_yanse_bg);
         rectBg.left = 0;
         rectBg.top = 0;
         rectBg.right = bitmap.getWidth();
         rectBg.bottom =bitmap.getHeight();
         c.drawBitmap(bitmap,rectBg,rf,paint);
-
+        paint.setAntiAlias(true);
         paint.setShader(null);
         needReDrawColorTable = false;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
         int ex = (int) event.getX();
         int ey = (int) event.getY();
+
         if (!inBoundOfColorTable(ex, ey)) {
             return true;
         }
@@ -411,25 +418,31 @@ public class ColorPickerView extends View {
             curX = getWidth() / 2;
             curY = ey;
         }
-
+        int index = (curX - (mLeft + mRadius + 30)) / (875 / 64);
+        if (index <= 0) {
+            index = 1;
+        } else if (index > 64) {
+            index = 64;
+        }
         if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
             if (colorPickerChangeListener != null) {
                 colorPickerChangeListener.onStartTrackingTouch(this);
                 calcuColor();
-                colorPickerChangeListener.onColorChanged(this, currentColor);
+
+                colorPickerChangeListener.onColorChanged(this, currentColor, index);
             }
 
         } else if (event.getActionMasked() == MotionEvent.ACTION_UP) { //手抬起
             if (colorPickerChangeListener != null) {
                 colorPickerChangeListener.onStopTrackingTouch(this);
                 calcuColor();
-                colorPickerChangeListener.onColorChanged(this, currentColor);
+                colorPickerChangeListener.onColorChanged(this, currentColor, index);
             }
 
         } else { //按着+拖拽
             if (colorPickerChangeListener != null) {
                 calcuColor();
-                colorPickerChangeListener.onColorChanged(this, currentColor);
+                colorPickerChangeListener.onColorChanged(this, currentColor, index);
             }
         }
 
@@ -490,8 +503,8 @@ public class ColorPickerView extends View {
         int red = Color.red(pixel);
         int green = Color.green(pixel);
         int blue = Color.blue(pixel);
-
-        return Color.argb(alpha, red, green, blue);
+        //return Color.argb(alpha, red, green, blue);
+        return Color.rgb(red, green, blue);
     }
 
     private OnColorPickerChangeListener colorPickerChangeListener;
@@ -508,7 +521,7 @@ public class ColorPickerView extends View {
          * @param picker ColorPickerView
          * @param color  颜色
          */
-        void onColorChanged(ColorPickerView picker, int color);
+        void onColorChanged(ColorPickerView picker, int color, int index);
 
         /**
          * 开始颜色选取
@@ -547,7 +560,6 @@ public class ColorPickerView extends View {
         }
         SavedState ss = (SavedState) state;
         super.onRestoreInstanceState(ss.getSuperState());
-
         curX = ss.selX;
         curY = ss.selY;
         colors = ss.colors;
@@ -607,8 +619,36 @@ public class ColorPickerView extends View {
         return mIndicatorColor;
     }
 
+    public void setIndicatorColor(int r, int g, int b) {
+        this.mIndicatorColor = Color.rgb(r, g, b);
+        needReDrawIndicator = true;
+        invalidate();
+    }
+
+    public void setIndicatorIndex(int index) {
+        if (index <= 0) {
+            index = 1;
+        } else if (index > 64) {
+            index = 64;
+        }
+        int x = (index * (959 / 64)) + (mLeft + mRadius + 30);
+        if (x > 900) {
+            curX = x + 20;
+        } else {
+            curX = x;
+        }
+        this.mIndicatorColor = Color.rgb(colorInfoList.get(index-1).getR(), colorInfoList.get(index-1).getG(), colorInfoList.get(index-1).getB());
+        needReDrawIndicator = true;
+        invalidate();
+    }
+
     public void setIndicatorColor(int color) {
         this.mIndicatorColor = color;
+        needReDrawIndicator = true;
+        invalidate();
+    }
+    public void setIndicatorColorIndex(int index) {
+        this.mIndicatorColor = Color.rgb(colorInfoList.get(index-1).getR(), colorInfoList.get(index-1).getG(), colorInfoList.get(index-1).getB());
         needReDrawIndicator = true;
         invalidate();
     }
@@ -618,5 +658,19 @@ public class ColorPickerView extends View {
         needReDrawIndicator = true;
         needReDrawColorTable = true;
         requestLayout();
+    }
+
+    private void addColorList() {
+        colorInfoList = new ArrayList<>();
+        int[] rItems = context.getResources().getIntArray(R.array.r);
+        int[] gItems = context.getResources().getIntArray(R.array.g);
+        int[] bItems = context.getResources().getIntArray(R.array.b);
+        for (int i = 0; i < rItems.length; i++) {
+            ColorInfo info = new ColorInfo();
+            info.setR(rItems[i]);
+            info.setG(gItems[i]);
+            info.setB(bItems[i]);
+            colorInfoList.add(info);
+        }
     }
 }
