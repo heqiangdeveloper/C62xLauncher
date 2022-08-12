@@ -1,5 +1,6 @@
 package com.common.xui.widget.picker;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -8,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.PaintFlagsDrawFilter;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
@@ -75,6 +77,11 @@ public class ColorPickerView extends View {
     // 默认状态下长边与短边的比例为 6 ：1
     private static final int defaultSizeShort = 160; // * 6
     private static final int defaultSizeLong = 420;
+
+    /**
+     * 颜色分区
+     */
+    private int colorIndex = 64;
 
     // 不直接绘制在 View 提供的画布上的原因是：选取颜色时需要提取 Bitmap 上的颜色，View 的 Bitmap 无法获取，
     // 而且有指示点时指示点会覆盖主颜色条(重绘颜色条的颜色)
@@ -339,6 +346,7 @@ public class ColorPickerView extends View {
         return cs;
     }
 
+    @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(Canvas canvas) {
         if (needReDrawColorTable) {
@@ -346,6 +354,7 @@ public class ColorPickerView extends View {
         }
         // 绘制颜色条
         canvas.drawBitmap(bitmapForColor, null, rect, paint);
+        ;
         paint.setAntiAlias(true);
         if (mIndicatorEnable) {
             if (needReDrawIndicator) {
@@ -353,12 +362,16 @@ public class ColorPickerView extends View {
             }
             // 绘制指示点
             rectForIndicator.set(curX - mRadius, 105 - mRadius, curX + mRadius - 15, 52 + mRadius);
+            canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG
+                    | Paint.FILTER_BITMAP_FLAG));
             canvas.drawBitmap(bitmapForIndicator, null, rectForIndicator, paint);
         }
     }
 
     private void createIndicatorBitmap() {
         Canvas c = new Canvas(bitmapForIndicator);
+        c.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG
+                | Paint.FILTER_BITMAP_FLAG));
         int radius = 55;
 
         paintForIndicator.setColor(Color.WHITE);
@@ -375,6 +388,8 @@ public class ColorPickerView extends View {
     private void createColorTableBitmap() {
 
         Canvas c = new Canvas(bitmapForColor);
+        c.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG
+                | Paint.FILTER_BITMAP_FLAG));
         RectF rf = new RectF(0, 0, bitmapForColor.getWidth(), bitmapForColor.getHeight());
 
         // 圆角大小
@@ -395,8 +410,8 @@ public class ColorPickerView extends View {
         rectBg.left = 0;
         rectBg.top = 0;
         rectBg.right = bitmap.getWidth();
-        rectBg.bottom =bitmap.getHeight();
-        c.drawBitmap(bitmap,rectBg,rf,paint);
+        rectBg.bottom = bitmap.getHeight();
+        c.drawBitmap(bitmap, rectBg, rf, paint);
         paint.setAntiAlias(true);
         paint.setShader(null);
         needReDrawColorTable = false;
@@ -418,11 +433,11 @@ public class ColorPickerView extends View {
             curX = getWidth() / 2;
             curY = ey;
         }
-        int index = (curX - (mLeft + mRadius + 30)) / (875 / 64);
+        int index = (curX - (mLeft + mRadius + 30)) / (875 / colorIndex);
         if (index <= 0) {
             index = 1;
-        } else if (index > 64) {
-            index = 64;
+        } else if (index > colorIndex) {
+            index = colorIndex;
         }
         if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
             if (colorPickerChangeListener != null) {
@@ -628,16 +643,16 @@ public class ColorPickerView extends View {
     public void setIndicatorIndex(int index) {
         if (index <= 0) {
             index = 1;
-        } else if (index > 64) {
-            index = 64;
+        } else if (index > colorIndex) {
+            index = colorIndex;
         }
-        int x = (index * (959 / 64)) + (mLeft + mRadius + 30);
+        int x = (index * (959 / colorIndex)) + (mLeft + mRadius + 70);
         if (x > 900) {
-            curX = x + 20;
+            curX = x - 40;
         } else {
-            curX = x;
+            curX = x + 10;
         }
-        this.mIndicatorColor = Color.rgb(colorInfoList.get(index-1).getR(), colorInfoList.get(index-1).getG(), colorInfoList.get(index-1).getB());
+        this.mIndicatorColor = Color.rgb(colorInfoList.get(index - 1).getR(), colorInfoList.get(index - 1).getG(), colorInfoList.get(index - 1).getB());
         needReDrawIndicator = true;
         invalidate();
     }
@@ -647,8 +662,9 @@ public class ColorPickerView extends View {
         needReDrawIndicator = true;
         invalidate();
     }
+
     public void setIndicatorColorIndex(int index) {
-        this.mIndicatorColor = Color.rgb(colorInfoList.get(index-1).getR(), colorInfoList.get(index-1).getG(), colorInfoList.get(index-1).getB());
+        this.mIndicatorColor = Color.rgb(colorInfoList.get(index - 1).getR(), colorInfoList.get(index - 1).getG(), colorInfoList.get(index - 1).getB());
         needReDrawIndicator = true;
         invalidate();
     }

@@ -191,7 +191,7 @@ class AmbientLightingFragment :
         }
         viewModel.ambientColor.observe(this) {
             Timber.d("addSeekBarLiveDataListener ambientColor index:%s", it)
-            binding.picker.setIndicatorIndex(it)
+            binding.picker.setIndicatorColorIndex(it)
         }
     }
 
@@ -203,7 +203,7 @@ class AmbientLightingFragment :
     override fun onColorChanged(picker: ColorPickerView?, color: Int, index: Int) {
         Timber.d("onColorChanged color:%s, index:%s", color, index)
         viewModel.onAmbientColorChanged(index)
-        picker?.setIndicatorIndex(viewModel.ambientColor.value!!)
+        picker?.setIndicatorColorIndex(index)
     }
 
     override fun onStartTrackingTouch(picker: ColorPickerView?) {

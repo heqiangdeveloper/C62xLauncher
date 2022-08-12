@@ -67,7 +67,7 @@
         app:xsb_insideRangeLineStrokeWidth="@dimen/seek_bar_inside_width"
         app:xsb_outsideRangeLineStrokeWidth="@dimen/seek_bar_outside_width"
         app:xsb_sliderIcon="@null"
-        app:xsb_verticalPadding="30px" />
+        app:xsb_verticalPadding="@dimen/x23" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
