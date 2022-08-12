@@ -79,7 +79,7 @@
         android:id="@+id/ivIQuTingPlayPauseBtnBig"
         android:layout_width="@dimen/card_icon_size_lv1"
         android:layout_height="@dimen/card_icon_size_lv1"
-        android:src="@drawable/card_iquting_icon_pause_80"
+        android:src="@drawable/card_iquting_icon_play_80"
         app:layout_constraintTop_toTopOf="@id/ivIQuTingNextBtnBig"
         app:layout_constraintBottom_toBottomOf="@id/ivIQuTingNextBtnBig"
         app:layout_constraintEnd_toStartOf="@id/ivIQuTingNextBtnBig"

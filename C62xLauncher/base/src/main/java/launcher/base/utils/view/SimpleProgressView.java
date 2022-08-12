@@ -47,14 +47,14 @@ public class SimpleProgressView extends View {
 
     private Paint mProgressPaint;
     private Paint mBackgroundPaint;
-    private int mMaxValue = 100;
-    private int mProgressValue = 50;
+    private long mMaxValue = 100;
+    private long mProgressValue = 0;
     private float mProgressHeight = DEFAULT_PROGRESS_HEIGHT;
     private float mBackgroundHeight = DEFAULT_PROGRESS_HEIGHT;
     private int mLineWidth;
 
     private int mWidth, mHeight;
-    private int mProgressStartX, mProgressStopX, mBgStartX, mBgStopX, mStartY;
+    private long mProgressStartX, mProgressStopX, mBgStartX, mBgStopX, mStartY;
 
     private int mColorBackground = DEFAULT_BG_COLOR;
     private int mColorProgress = DEFAULT_PROGRESS_COLOR;
@@ -105,17 +105,17 @@ public class SimpleProgressView extends View {
         Log.d(TAG, "onMeasure,  mLineWidth:" + mLineWidth + ",  mHeight:" + mHeight + ", mProgressHeight:" + mProgressHeight + ", mStartY:" + mStartY);
     }
 
-    public void setMaxValue(int maxValue) {
+    public void setMaxValue(long maxValue) {
         mMaxValue = maxValue;
     }
 
-    public void updateProgress(int progress) {
+    public void updateProgress(long progress) {
         this.mProgressValue = progress;
         computeProgressStopX(mProgressValue, mMaxValue, mLineWidth);
         postInvalidate();
     }
 
-    private void computeProgressStopX(int progressValue, int maxValue, int lineWidth) {
+    private void computeProgressStopX(long progressValue, long maxValue, long lineWidth) {
         mProgressStopX = mProgressStartX + (lineWidth * progressValue / maxValue);
     }
 }
