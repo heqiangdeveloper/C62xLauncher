@@ -21,6 +21,6 @@ public class VolcanoVideoViewHolder extends BaseViewHolder<VolcanoVideo> {
     @Override
     public void bind(int position, VolcanoVideo volcanoVideo) {
         super.bind(position, volcanoVideo);
-        GlideHelper.loadImageUrlAlbumCover(mSongCover.getContext(), mSongCover, R.drawable.card_douyin_test_cover, 10);
+        GlideHelper.loadLocalAlbumCoverRadius(mSongCover.getContext(), mSongCover, R.drawable.card_douyin_test_cover, 10);
     }
 }

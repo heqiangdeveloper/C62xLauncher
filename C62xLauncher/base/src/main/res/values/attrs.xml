@@ -6,4 +6,10 @@
         <attr name="progressBgColor" format="color" />
         <attr name="progressColor" format="color"/>
     </declare-styleable>
+    <declare-styleable name="CircleProgressView">
+        <attr name="circleProgressHeight" format="dimension" />
+        <attr name="circleProgressBgHeight" format="dimension" />
+        <attr name="circleProgressBgColor" format="color" />
+        <attr name="circleProgressColor" format="color"/>
+    </declare-styleable>
 </resources>

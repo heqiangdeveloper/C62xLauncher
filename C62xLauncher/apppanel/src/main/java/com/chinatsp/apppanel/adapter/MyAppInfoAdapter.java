@@ -174,15 +174,16 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             //是否显示删除按钮
             parentIndex = preferences.getInt(MyConfigs.SHOWDELETEPOSITION ,  -1);
             showDelete = preferences.getBoolean(MyConfigs.SHOWDELETE,false);
-            if(parentIndex != -1 && parentIndex == position){
+//            if(parentIndex != -1 && parentIndex == position){
+            if(parentIndex != -1){
                 if(showDelete){
                     holder.deleteIv.setVisibility((int)holder.deleteIv.getTag() == 1 ? View.VISIBLE : View.GONE);
                 }else {
                     holder.deleteIv.setVisibility(View.GONE);
                 }
-                editor.putBoolean(MyConfigs.SHOWDELETE,false);
-                editor.putInt(MyConfigs.SHOWDELETEPOSITION,-1);
-                editor.commit();
+//                editor.putBoolean(MyConfigs.SHOWDELETE,false);
+//                editor.putInt(MyConfigs.SHOWDELETEPOSITION,-1);
+//                editor.commit();
             }
 
             locationBean = mData.get(position).get(0);
