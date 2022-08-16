@@ -33,33 +33,38 @@ public class CardInnerListHelper {
         pagerSnapHelper.attachToRecyclerView(mRecyclerView);
     }
 
-    public void showViewPager() {
+    public void showInnerList(int currentSmallCardPosition, int bigCardPosition) {
         if (mRecyclerView == null) {
             return;
         }
         mRecyclerView.scrollToPosition(0);
         mRecyclerView.setVisibility(View.VISIBLE);
-        smallCardsAdapter.setCardEntityList(getSmallCardList());
+        List<LauncherCard> smallCardList = getSmallCardList(bigCardPosition);
+        smallCardsAdapter.setCardEntityList(smallCardList);
+        mRecyclerView.scrollToPosition(currentSmallCardPosition);
     }
 
 
-    public void hideViewPager() {
+    public void hideInnerList() {
         if (mRecyclerView == null) {
             return;
         }
         mRecyclerView.setVisibility(View.GONE);
     }
 
-    public List<LauncherCard> getSmallCardList() {
+    // 需要剔除大卡,  以及将列表位置定位到当前小卡
+    public List<LauncherCard> getSmallCardList(int bigCardPosition) {
         CardManager cardManager = CardManager.getInstance();
         List<LauncherCard> homeList = cardManager.getHomeList();
         List<LauncherCard> result = new LinkedList<>();
-        for (LauncherCard launcherCard : homeList) {
-            if (launcherCard != null) {
-//                CardFrameViewHolder bigCard = ExpandStateManager.getInstance().getBigCard();
+        int anchorIndex = 0;
+        for (int i = 0; i < homeList.size(); i++) {
+            LauncherCard launcherCard = homeList.get(i);
+            if (i != bigCardPosition) {
                 result.add(launcherCard);
             }
         }
         return result;
     }
+
 }

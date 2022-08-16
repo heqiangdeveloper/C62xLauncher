@@ -61,9 +61,9 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     public void bind(int position, LauncherCard cardEntity) {
         mLauncherCard = cardEntity;
         if (ExpandStateManager.getInstance().getSmallCardPosition() == position) {
-            showSmallCardsViewPager();
+            showSmallCardsInnerList();
         } else {
-            hideSmallCardsViewPager();
+            hideSmallCardsInnerList();
         }
         setTitle(cardEntity.getName());
         if (mOnClickListener == null) {
@@ -122,7 +122,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
             collapse();
             dealCollapseScroll(getAdapterPosition());
         } else {
-            hideSmallCardsViewPager();
+            hideSmallCardsInnerList();
             expand();
             collapseAnotherIfNeed2();
             ExpandStateManager.getInstance().setBigCardPosition(getAdapterPosition());
@@ -167,16 +167,16 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
         ExpandStateManager.getInstance().setSmallCardPosInExpandState(smallCardPosition);
     }
 
-    private void showSmallCardsViewPager() {
+    private void showSmallCardsInnerList() {
         EasyLog.d(TAG, "showSmallCardsViewPager : "+mLauncherCard.getName());
-        mCardInnerListHelper.showViewPager();
+        mCardInnerListHelper.showInnerList(getAdapterPosition(), ExpandStateManager.getInstance().getBigCardPosition());
         mCardInner.setVisibility(View.INVISIBLE);
         itemView.setBackground(null);
     }
 
-    private void hideSmallCardsViewPager() {
+    private void hideSmallCardsInnerList() {
         EasyLog.d(TAG, "hideSmallCardsViewPager : "+mLauncherCard.getName());
-        mCardInnerListHelper.hideViewPager();
+        mCardInnerListHelper.hideInnerList();
         mCardInner.setVisibility(View.VISIBLE);
         itemView.setBackgroundResource(R.drawable.card_bg_small);
 
