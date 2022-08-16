@@ -581,8 +581,8 @@ public class ArcSeekBar extends View {
             mPaint.setStyle(Paint.Style.FILL);
             canvas.drawCircle(mThumbCenterX, mThumbCenterY, mThumbRadius, mPaint);*/
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.circular_click);
-            Paint paint = new Paint();
-            paint.setAntiAlias(true);
+            //Paint paint = new Paint();
+            //paint.setAntiAlias(true);
             float thumbAngle = (mStartAngle + 5) + mSweepAngle * getRatio() + 3.5f;
             //已知圆心，半径，角度，求圆上的点坐标
             mThumbCenterX = (float) (mCircleCenterX + mRadius * Math.cos(Math.toRadians(thumbAngle)));
