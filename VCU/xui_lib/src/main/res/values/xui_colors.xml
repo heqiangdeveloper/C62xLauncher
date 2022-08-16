@@ -194,8 +194,11 @@
     <color name="smooth_circle_color">#232939</color>
     <color name="smooth_line_color">#26C3FE </color>
 
-    <color name="seek_end_color">#00B6FF</color>
+
+    <color name="v_seek_start_color">#A6299EEE</color>
+    <color name="v_seek_end_color">#00B6FF</color>
     <color name="seek_start_color">#A6299EEE</color>
+    <color name="seek_end_color">#00B6FF</color>
     <color name="acr_seek_start_color">#B7E9FF</color>
     <color name="acr_seek_end_color">#26C3FE</color>
     <color name="acr_seek_line_color">#49505A</color>

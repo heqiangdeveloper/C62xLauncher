@@ -194,6 +194,8 @@
     <color name="smooth_circle_color">#2A2A2A</color>
     <color name="smooth_line_color">#ffffff</color>
 
+    <color name="v_seek_start_color">#B2C3CF </color>
+    <color name="v_seek_end_color">#FFFFFF</color>
     <color name="seek_start_color">#232939 </color>
     <color name="seek_end_color">#FFFFFF</color>
     <color name="acr_seek_start_color">#FFFFFF</color>

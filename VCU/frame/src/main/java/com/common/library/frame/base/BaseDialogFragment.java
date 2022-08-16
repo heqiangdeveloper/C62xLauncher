@@ -108,8 +108,12 @@ public abstract class BaseDialogFragment<VM extends BaseViewModel, VDB extends V
     protected void initDialog(Dialog dialog) {
         if (dialog != null) {
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCanceledOnTouchOutside(true);
+            dialog.setCanceledOnTouchOutside(isCanceledOnTouchOutside());
         }
+    }
+
+    protected boolean isCanceledOnTouchOutside() {
+        return true;
     }
 
     protected float getWidthRatio() {

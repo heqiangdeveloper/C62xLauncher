@@ -39,7 +39,7 @@ class SteeringHeatDialogFragment :
 
     private fun setRangeListener() {
         binding.steeringHeatingStartTemperatureSeekBar.setOnSeekBarListener { seekBar, newValue ->
-            manager.doSetVolume(Volume.Type.STEERING_SILL_TEMP, newValue)
+            manager.doSetVolume(Volume.Type.STEERING_EDGE_TEMP, newValue)
         }
     }
 

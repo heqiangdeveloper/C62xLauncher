@@ -24,9 +24,38 @@ class AmbientLightingSmartModeViewModel @Inject constructor(app: Application, mo
 
     val alcSmartMode: LiveData<Boolean>
         get() = _alcSmartMode
-
     private val _alcSmartMode: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.ALC_SMART_MODE
+        MutableLiveData(node.default).apply {
+            val value = manager.doGetSwitchOption(node)
+            updateLiveData(this, value)
+        }
+    }
+
+    val colourBreathe: LiveData<Boolean>
+        get() = _colourBreathe
+    private val _colourBreathe: MutableLiveData<Boolean> by lazy {
+        val node = SwitchNode.COLOUR_BREATHE
+        MutableLiveData(node.default).apply {
+            val value = manager.doGetSwitchOption(node)
+            updateLiveData(this, value)
+        }
+    }
+
+    val musicRhythm: LiveData<Boolean>
+        get() = _musicRhythm
+    private val _musicRhythm: MutableLiveData<Boolean> by lazy {
+        val node = SwitchNode.MUSIC_RHYTHM
+        MutableLiveData(node.default).apply {
+            val value = manager.doGetSwitchOption(node)
+            updateLiveData(this, value)
+        }
+    }
+
+    val speedRhythm: LiveData<Boolean>
+        get() = _speedRhythm
+    private val _speedRhythm: MutableLiveData<Boolean> by lazy {
+        val node = SwitchNode.SPEED_RHYTHM
         MutableLiveData(node.default).apply {
             val value = manager.doGetSwitchOption(node)
             updateLiveData(this, value)
@@ -64,8 +93,31 @@ class AmbientLightingSmartModeViewModel @Inject constructor(app: Application, mo
             SwitchNode.ALC_SMART_MODE -> {
                 updateLiveData(_alcSmartMode, status)
             }
+            SwitchNode.SPEED_RHYTHM -> {
+                updateLiveData(_speedRhythm, status)
+            }
+            SwitchNode.MUSIC_RHYTHM -> {
+                updateLiveData(_musicRhythm, status)
+            }
+            SwitchNode.COLOUR_BREATHE -> {
+                updateLiveData(_colourBreathe, status)
+            }
             else -> {}
         }
+    }
+
+    fun doUpdateViewStatus(node: SwitchNode, status: Boolean): Boolean {
+        val result = manager.doSetSwitchOption(node, status)
+        if (result) {
+            val liveData = when (node) {
+                SwitchNode.SPEED_RHYTHM -> _speedRhythm
+                SwitchNode.MUSIC_RHYTHM -> _musicRhythm
+                SwitchNode.COLOUR_BREATHE -> _colourBreathe
+                else -> null
+            }
+            liveData?.value = status
+        }
+        return result
     }
 
 }

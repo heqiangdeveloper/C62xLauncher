@@ -86,6 +86,7 @@ public class AppInstallStatusReceiver extends BroadcastReceiver {
                 }
             }
         }else if(intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)){
+            Log.d(TAG,"onReceive ACTION_PACKAGE_REMOVED");
             //卸载成功
             String packageName = intent.getData().getSchemeSpecificPart();
             EventBus.getDefault().post(new AppInstallStatusEvent(0,packageName));

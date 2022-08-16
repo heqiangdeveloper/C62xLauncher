@@ -10,8 +10,10 @@ import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.adas.CruiseManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
+import com.chinatsp.vehicle.settings.HintHold
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.DriveIntelligentFragmentBinding
+import com.chinatsp.vehicle.settings.fragment.drive.dialog.DetailsDialogFragment
 import com.chinatsp.vehicle.settings.vm.adas.CruiseViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
@@ -39,6 +41,19 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
         initRadioOption()
         addRadioLiveDataListener()
         setRadioListener()
+
+        initDetailsClickListener()
+    }
+
+    private fun initDetailsClickListener() {
+        binding.driveIntelligentCruiseAssistant.setOnClickListener {
+            val fragment = DetailsDialogFragment()
+            HintHold.setTitle(R.string.drive_intelligent_cruise_assistant)
+            HintHold.setContent(R.string.iacc_details)
+            activity?.supportFragmentManager?.let {
+                fragment.show(it, fragment.javaClass.simpleName)
+            }
+        }
     }
 
     private fun initRadioOption() {
@@ -207,13 +222,6 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
         }else{
             binding.intelligentCruise.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.intelligent_cruise) })
         }
-    }
-    override fun onDestroy() {
-        super.onDestroy()
-        binding.video.pause()
-        binding.video.stopPlayback()
-        binding.video.setBackgroundColor(Color.TRANSPARENT);
-        binding.intelligentCruise.visibility = View.VISIBLE
     }
 }
 

@@ -9,8 +9,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/x15"
-        android:background="@drawable/bg_sound_popup_20">
+        android:background="@drawable/bg_sound_popup_20"
+        android:paddingBottom="@dimen/x15">
 
         <RelativeLayout
             android:id="@+id/pop_title"
@@ -54,7 +54,7 @@
             app:layout_constraintTop_toBottomOf="@id/pop_title" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/drive_colour_breathing"
+            android:id="@+id/colour_breathe"
             style="@style/model_txt_dialog"
             android:layout_marginStart="@dimen/x36"
             android:layout_marginTop="@dimen/x17"
@@ -63,29 +63,31 @@
             app:layout_constraintTop_toBottomOf="@id/model_title" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/music_rhythm"
             style="@style/model_txt_dialog"
             android:layout_marginStart="@dimen/x8"
             android:layout_marginTop="@dimen/x17"
             android:text="@string/drive_music_rhythm"
-            app:layout_constraintLeft_toRightOf="@+id/drive_colour_breathing"
+            app:layout_constraintLeft_toRightOf="@+id/colour_breathe"
             app:layout_constraintTop_toBottomOf="@id/model_title" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/drive_car_rhythm"
+            android:id="@+id/speed_rhythm"
             style="@style/model_txt_dialog"
             android:layout_marginStart="@dimen/x36"
             android:layout_marginTop="@dimen/x8"
             android:text="@string/drive_car_rhythm"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/drive_colour_breathing" />
+            app:layout_constraintTop_toBottomOf="@id/colour_breathe" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/model_txt_dialog"
             android:layout_marginStart="@dimen/x8"
             android:layout_marginTop="@dimen/x8"
             android:text="@string/drive_pm_display"
-            app:layout_constraintLeft_toRightOf="@+id/drive_car_rhythm"
-            app:layout_constraintTop_toBottomOf="@id/drive_colour_breathing" />
+            android:visibility="invisible"
+            app:layout_constraintLeft_toRightOf="@+id/speed_rhythm"
+            app:layout_constraintTop_toBottomOf="@id/colour_breathe" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/drive_temperature_rhythm"
@@ -93,7 +95,8 @@
             android:layout_marginStart="@dimen/x36"
             android:layout_marginTop="@dimen/x8"
             android:text="@string/drive_temperature_rhythm"
+            android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/drive_car_rhythm" />
+            app:layout_constraintTop_toBottomOf="@id/speed_rhythm" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

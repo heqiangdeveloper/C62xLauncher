@@ -6,6 +6,7 @@ import com.chinatsp.settinglib.SettingManager
 import com.chinatsp.settinglib.listener.*
 import com.chinatsp.settinglib.manager.cabin.ACManager
 import com.chinatsp.settinglib.optios.Area
+import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
@@ -175,17 +176,21 @@ abstract class BaseManager : IManager {
         }
     }
 
-    protected open fun onHvacPropertyChanged(property: CarPropertyValue<*>) {
-
+    override fun doProgressChanged(node: Progress, value: Int) {
+        synchronized(listenerStore) {
+            listenerStore.forEach { (_, ref) ->
+                val listener = ref.get()
+                if (null != listener && listener is IProgressListener) {
+                    listener.onProgressChanged(node, value)
+                }
+            }
+        }
     }
 
-    protected open fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
+    protected open fun onHvacPropertyChanged(property: CarPropertyValue<*>) {}
 
-    }
+    protected open fun onCabinPropertyChanged(property: CarPropertyValue<*>) {}
 
-    open fun doOuterControlCommand(cmd: Cmd, callback: ICmdCallback?) {
-
-    }
-
+    open fun doOuterControlCommand(cmd: Cmd, callback: ICmdCallback?) {}
 }
 

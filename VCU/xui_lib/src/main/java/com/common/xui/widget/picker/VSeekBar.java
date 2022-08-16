@@ -4,10 +4,13 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.PaintFlagsDrawFilter;
+import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
@@ -59,7 +62,8 @@ public class VSeekBar extends View {
 
     private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint paint = new Paint();
-
+    private Paint mShadowPaint;
+    private Paint mBorderPaint;
     private int mLineStartX;
     private int mLineEndX;
     private int mLineLength;
@@ -107,6 +111,11 @@ public class VSeekBar extends View {
     private float mRulerDividerHeight;
     private float mRulerTextMarginTop;
     private int mRulerInterval;
+    private final float mBorderWidth = 2.6f;       // 描边宽度
+    private final float mShadowRadius = 13f;
+    private LinearGradient linearGradient;
+    private final Xfermode xfermode = new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP);
+    private final Path path = new Path();
 
     public VSeekBar(Context context) {
         this(context, null);
@@ -181,6 +190,23 @@ public class VSeekBar extends View {
     private void initPaint() {
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         paint.setColor(Color.WHITE);
+
+        mPaint.setAntiAlias(true);
+        // 初始化光晕效果画笔
+        mShadowPaint = new Paint();
+        mShadowPaint.setStyle(Paint.Style.FILL);
+        mShadowPaint.setColor(getContext().getColor(R.color.v_seek_start_color));
+        mShadowPaint.setAlpha(200);
+        mShadowPaint.setMaskFilter(new BlurMaskFilter(mShadowRadius, BlurMaskFilter.Blur.OUTER));
+        // 抖动处理
+        mShadowPaint.setDither(true);
+        //描边
+        mBorderPaint = new Paint();
+        mBorderPaint.setAntiAlias(true);
+        mBorderPaint.setStrokeWidth(mBorderWidth);
+        mBorderPaint.setAlpha(170);
+        mBorderPaint.setStyle(Paint.Style.STROKE);
+        mBorderPaint.setColor(getContext().getColor(R.color.v_seek_start_color));
     }
 
 
@@ -247,12 +273,17 @@ public class VSeekBar extends View {
     }
 
     int layerId;
+    private final PaintFlagsDrawFilter paintFlagsDrawFilter = new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        canvas.setDrawFilter(paintFlagsDrawFilter);
         layerId = canvas.saveLayer(0, 0, getWidth(), getHeight(), mPaint);
+        drawSelectShadow(canvas);
         drawEntireRangeLine(canvas);
         drawSelectedRangeLine(canvas);
+        drawSelectBorder(canvas);
 //        if (mIsShowNumber) {
 ////            drawSelectedNumber(canvas);
 //        }
@@ -265,8 +296,8 @@ public class VSeekBar extends View {
 
     private void drawIcon(Canvas canvas) {
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.img_light_icon_56);
-        float xOffset =  ((normalRectF.height() - bitmap.getWidth()) / 2);
-        float yOffset =  ((normalRectF.height() - bitmap.getHeight()) / 2);
+        float xOffset = ((normalRectF.height() - bitmap.getWidth()) / 2);
+        float yOffset = ((normalRectF.height() - bitmap.getHeight()) / 2);
         float left = normalRectF.left + xOffset;
         float top = normalRectF.top + yOffset;
         canvas.drawBitmap(bitmap, left, top, null);
@@ -313,8 +344,10 @@ public class VSeekBar extends View {
         rect.left = 0;
         rect.top = 0;
         rect.right = bitmap.getWidth();
-        rect.bottom =bitmap.getHeight();
-        canvas.drawBitmap(bitmap,rect,normalRectF,mPaint);
+        rect.bottom = bitmap.getHeight();
+        canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG
+                | Paint.FILTER_BITMAP_FLAG));
+        canvas.drawBitmap(bitmap, rect, normalRectF, mPaint);
         if (mIsLineRound) {
 //            mPaint.setColor(mInsideRangeColor);
 //            canvas.drawCircle(mLineStartX, mMiddleY, mOutsideRangeLineStrokeWidth / 2, mPaint);
@@ -324,17 +357,15 @@ public class VSeekBar extends View {
         mPaint.setShader(null);
     }
 
-    LinearGradient linearGradient;
-    LinearGradient normalGradient;
-    Xfermode xfermode = new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP);
+
     private void drawSelectedRangeLine(Canvas canvas) {
 //        mPaint.setStrokeWidth(mInsideRangeLineStrokeWidth);
         mPaint.setXfermode(xfermode);
         if (null == linearGradient) {
             /*int startColor = Color.parseColor("#3300B6FF");
             int endColor = Color.parseColor("#FF299EEE");*/
-            int startColor = getContext().getColor(R.color.seek_start_color);
-            int endColor = getContext().getColor(R.color.seek_end_color);
+            int startColor = getContext().getColor(R.color.v_seek_start_color);
+            int endColor = getContext().getColor(R.color.v_seek_end_color);
             linearGradient = new LinearGradient(0, 0, getWidth(), 0, startColor, endColor, Shader.TileMode.CLAMP);
         }
         mPaint.setShader(linearGradient);
@@ -346,6 +377,65 @@ public class VSeekBar extends View {
 //        canvas.drawRoundRect(selectRectF, selectRectF.height() / 2, selectRectF.height() / 2, mPaint);
         mPaint.setShader(null);
         mPaint.setXfermode(null);
+    }
+
+    private void drawSelectShadow(Canvas canvas) {
+        if (mIsTouching) {
+            resetDrawPath();
+            canvas.drawPath(path, mShadowPaint);
+        }
+    }
+
+    private void resetDrawPath() {
+        selectRectF.left = mLineStartX;
+        selectRectF.top = mMiddleY - mOutsideRangeLineStrokeWidth / 2;
+        selectRectF.right = mMaxPosition;
+        selectRectF.bottom = mMiddleY + mOutsideRangeLineStrokeWidth / 2;
+        float closedRadius = 35f;
+        boolean isNearEnd = mMaxPosition >= mLineEndX - 12;
+        float rightRadius = isNearEnd ? closedRadius : 0f;
+        path.reset();
+        // moveTo此点为多边形的起点
+        path.moveTo(selectRectF.right - rightRadius, selectRectF.top);
+        //上X边线
+        path.lineTo(selectRectF.right - rightRadius, selectRectF.top);
+        path.lineTo(selectRectF.left + closedRadius, selectRectF.top);
+        //圆角线
+        path.quadTo(
+                selectRectF.left, selectRectF.top,
+                selectRectF.left, selectRectF.top + closedRadius
+        );
+        path.lineTo(selectRectF.left, selectRectF.bottom - closedRadius);
+        //圆角线
+        path.quadTo(selectRectF.left, selectRectF.bottom, selectRectF.left + closedRadius, selectRectF.bottom);
+        //底部X轴边线
+        path.lineTo(selectRectF.right - rightRadius, selectRectF.bottom);
+        //最右边圆角部分
+        if (isNearEnd) {
+            //上圆角边线
+            path.moveTo(selectRectF.right - rightRadius, selectRectF.top);
+            path.lineTo(selectRectF.right - closedRadius, selectRectF.top);
+            path.quadTo(
+                    selectRectF.right, selectRectF.top,
+                    selectRectF.right, selectRectF.top + closedRadius
+            );
+            //下圆角边线
+            path.moveTo(selectRectF.right - rightRadius, selectRectF.bottom);
+            path.lineTo(selectRectF.right - closedRadius, selectRectF.bottom);
+            path.quadTo(
+                    selectRectF.right, selectRectF.bottom,
+                    selectRectF.right, selectRectF.bottom - closedRadius
+            );
+        } else {
+            path.close();
+        }
+    }
+
+    private void drawSelectBorder(Canvas canvas) {
+        if (mIsTouching) {
+            resetDrawPath();
+            canvas.drawPath(path, mBorderPaint);
+        }
     }
 
     private void drawSelectedNumber(Canvas canvas) {

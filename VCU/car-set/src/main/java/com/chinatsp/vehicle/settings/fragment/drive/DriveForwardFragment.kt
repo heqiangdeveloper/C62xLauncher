@@ -5,13 +5,16 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.CompoundButton
+import androidx.annotation.StringDef
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.adas.ForwardManager
 import com.chinatsp.settinglib.optios.SwitchNode
+import com.chinatsp.vehicle.settings.HintHold
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.DriveForwardFragmentBinding
 import com.chinatsp.vehicle.settings.fragment.drive.dialog.CloseBrakeDialogFragment
+import com.chinatsp.vehicle.settings.fragment.drive.dialog.DetailsDialogFragment
 import com.chinatsp.vehicle.settings.vm.adas.ForwardViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
@@ -32,6 +35,26 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
         initSwitchOption()
         addSwitchLiveDataListener()
         setSwitchListener()
+
+        initDetailsClickListener()
+    }
+
+    private fun initDetailsClickListener() {
+        binding.driveWarningFcw.setOnClickListener {
+            updateHintMessage(R.string.drive_warning_fcw, R.string.fcw_details)
+        }
+        binding.driveAeb.setOnClickListener{
+            updateHintMessage(R.string.drive_aeb_title, R.string.aeb_details)
+        }
+    }
+
+    private fun updateHintMessage(title: Int, content: Int) {
+        HintHold.setTitle(title)
+        HintHold.setContent(content)
+        val fragment = DetailsDialogFragment()
+        activity?.supportFragmentManager?.let {
+            fragment.show(it, fragment.javaClass.simpleName)
+        }
     }
 
     private fun initVideoListener() {

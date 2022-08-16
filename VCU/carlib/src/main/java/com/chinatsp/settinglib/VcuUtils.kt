@@ -2,14 +2,15 @@ package com.chinatsp.settinglib
 
 import android.car.VehicleAreaType
 import android.car.hardware.cabin.CarCabinManager
+import android.content.Context
 import android.os.SystemProperties
 import android.provider.Settings
 import com.chinatsp.settinglib.constants.OffLine
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.sign.Origin
-import com.chinatsp.vehicle.controller.annotation.Action
 import com.chinatsp.vehicle.controller.annotation.Level
+import timber.log.Timber
 
 /**
  * @author : luohong
@@ -58,6 +59,27 @@ object VcuUtils {
     fun getLevelValue(): Int {
         val value = SystemProperties.getInt(OffLine.LEVEL, Level.LEVEL3)
         LogManager.d(TAG, "getLevelValue value: $value")
+//        return value
+        return Level.LEVEL5
+    }
+
+    fun putInt(context: Context = BaseApp.instance, key: String, value: Int): Boolean {
+        try {
+            return Settings.Global.putInt(context.contentResolver, key, value)
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+            Timber.e("putInt key:%s, value:%s, throw exception:%s", key, value, e.message)
+        }
+        return false
+    }
+
+    fun getInt(context: Context = BaseApp.instance, key: String, value: Int): Int {
+        try {
+            return Settings.Global.getInt(context.contentResolver, key, value)
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+            Timber.e("getInt key:%s, value:%s, throw exception:%s", key, value, e.message)
+        }
         return value
     }
 

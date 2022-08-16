@@ -1454,4 +1454,6 @@
     <dimen name="seek_bar_inside_width">64px</dimen>
     <dimen name="seek_bar_outside_width">64px</dimen>
     <dimen name="line_height">0.3px</dimen>
+
+    <dimen name="vcu_radius_pop_window">@dimen/x8</dimen>
 </resources>

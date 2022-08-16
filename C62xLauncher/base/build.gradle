@@ -33,4 +33,5 @@ dependencies {
     api rootProject.ext.dependencies.room
     annotationProcessor rootProject.ext.dependencies.roomCompiler
     api rootProject.ext.dependencies.glide
+    api rootProject.ext.dependencies.gson
 }

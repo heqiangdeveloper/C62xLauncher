@@ -104,7 +104,7 @@
                 app:xsb_insideRangeLineStrokeWidth="@dimen/x20"
                 app:xsb_outsideRangeLineStrokeWidth="@dimen/x20"
                 app:xsb_sliderIcon="@null"
-                app:xsb_verticalPadding="@dimen/x10" />
+                app:xsb_verticalPadding="@dimen/x23" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.appcompat.widget.AppCompatImageView

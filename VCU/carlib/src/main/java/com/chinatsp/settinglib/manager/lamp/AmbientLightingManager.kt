@@ -1,15 +1,17 @@
 package com.chinatsp.settinglib.manager.lamp
 
 import android.car.hardware.CarPropertyValue
-import android.car.hardware.cabin.CarCabinManager
-import com.chinatsp.settinglib.LogManager
+import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.IOptionManager
+import com.chinatsp.settinglib.manager.IProgressManager
 import com.chinatsp.settinglib.manager.ISignal
+import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
+import timber.log.Timber
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -23,7 +25,8 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 
 
-class AmbientLightingManager private constructor() : BaseManager(), IOptionManager {
+class AmbientLightingManager private constructor() : BaseManager(), IOptionManager,
+    IProgressManager {
 
     companion object : ISignal {
         override val TAG: String = AmbientLightingManager::class.java.simpleName
@@ -43,6 +46,9 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
                 add(SwitchNode.ALC_COMING_HINT.get.signal)
                 add(SwitchNode.ALC_RELATED_TOPICS.get.signal)
                 add(SwitchNode.ALC_SMART_MODE.get.signal)
+                /**【反馈】全车氛围灯亮度响应反馈*/
+                add(Progress.AMBIENT_LIGHT_BRIGHTNESS.get.signal)
+                add(Progress.AMBIENT_LIGHT_COLOR.get.signal)
             }
             put(Origin.CABIN, cabinSet)
         }
@@ -107,16 +113,85 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
         }
     }
 
+    private val speedRhythm: AtomicBoolean by lazy {
+        val node = SwitchNode.SPEED_RHYTHM
+        AtomicBoolean(node.isOn()).apply {
+            val value = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, value)
+        }
+    }
+
+    private val musicRhythm: AtomicBoolean by lazy {
+        val node = SwitchNode.MUSIC_RHYTHM
+        AtomicBoolean(node.isOn()).apply {
+            val value = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, value)
+        }
+    }
+
+    private val colourBreathe: AtomicBoolean by lazy {
+        val node = SwitchNode.COLOUR_BREATHE
+        AtomicBoolean(node.isOn()).apply {
+            val value = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, value)
+        }
+    }
+
+    private val ambientBrightness: AtomicInteger by lazy {
+        val node = Progress.AMBIENT_LIGHT_BRIGHTNESS
+        AtomicInteger(0).apply {
+            val value = readIntProperty(node.get.signal, node.get.origin)
+            Timber.tag(TAG).d("getBrightness signal:%s, value:%s", node.get.signal, value)
+            this.set(value)
+        }
+    }
+
+    private val ambientColor: AtomicInteger by lazy {
+        val node = Progress.AMBIENT_LIGHT_COLOR
+        AtomicInteger(1).apply {
+            val value = readIntProperty(node.get.signal, node.get.origin)
+            Timber.tag(TAG).d("getAmbientColor signal:%s, value:%s", node.get.signal, value)
+            doUpdateProgress(node, this, value, instance::doProgressChanged)
+        }
+    }
+
 
     override fun doGetRadioOption(node: RadioNode): Int {
-        return when (node) {
+        return Constant.INVALID
+    }
 
+    override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
+        return false
+    }
+
+    override fun doGetProgress(node: Progress): Int {
+        return when (node) {
+            Progress.AMBIENT_LIGHT_BRIGHTNESS -> {
+                ambientBrightness.get()
+            }
+            Progress.AMBIENT_LIGHT_COLOR -> {
+                ambientColor.get()
+            }
             else -> -1
         }
     }
 
-    override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
+    override fun doSetProgress(node: Progress, value: Int): Boolean {
         return when (node) {
+            Progress.AMBIENT_LIGHT_BRIGHTNESS -> {
+                val set = node.set
+                val result = writeProperty(set.signal, value, set.origin)
+                Timber.tag(TAG).d("setBrightness signal:%s, newValue:%s, result:%s",
+                    set.signal, value, result)
+                true
+            }
+            Progress.AMBIENT_LIGHT_COLOR -> {
+                val set = node.set
+                val result = writeProperty(set.signal, value, set.origin)
+                Timber.tag(TAG).d("setBrightness signal:%s, newValue:%s, result:%s",
+                    set.signal, value, result)
+                true
+            }
             else -> false
         }
     }
@@ -186,6 +261,15 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
             SwitchNode.ALC_SMART_MODE -> {
                 writeProperty(node, status, alcSmartMode)
             }
+            SwitchNode.SPEED_RHYTHM -> {
+                writeProperty(node, status, speedRhythm)
+            }
+            SwitchNode.MUSIC_RHYTHM -> {
+                writeProperty(node, status, musicRhythm)
+            }
+            SwitchNode.COLOUR_BREATHE -> {
+                writeProperty(node, status, colourBreathe)
+            }
             else -> false
         }
     }
@@ -222,7 +306,39 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
             SwitchNode.ALC_SMART_MODE.get.signal -> {
                 onSwitchChanged(SwitchNode.ALC_SMART_MODE, alcSmartMode, property)
             }
+
+            SwitchNode.SPEED_RHYTHM.get.signal -> {
+                onSwitchChanged(SwitchNode.SPEED_RHYTHM, speedRhythm, property)
+            }
+            SwitchNode.MUSIC_RHYTHM.get.signal -> {
+                onSwitchChanged(SwitchNode.MUSIC_RHYTHM, musicRhythm, property)
+            }
+            SwitchNode.COLOUR_BREATHE.get.signal -> {
+                onSwitchChanged(SwitchNode.COLOUR_BREATHE, colourBreathe, property)
+            }
+            Progress.AMBIENT_LIGHT_BRIGHTNESS.get.signal -> {
+                onAmbientBrightnessChanged(property)
+            }
+            Progress.AMBIENT_LIGHT_COLOR.get.signal -> {
+                onAmbientColorChanged(property)
+            }
             else -> {}
+        }
+    }
+
+    private fun onAmbientBrightnessChanged(property: CarPropertyValue<*>) {
+        val value = property.value
+        if (value is Int) {
+            Timber.d("onAmbientBrightnessChanged value%s", value)
+            doUpdateProgress(Progress.AMBIENT_LIGHT_BRIGHTNESS, ambientBrightness, value, this::doProgressChanged)
+        }
+    }
+
+    private fun onAmbientColorChanged(property: CarPropertyValue<*>) {
+        val value = property.value
+        if (value is Int) {
+            Timber.d("onAmbientBrightnessChanged value%s", value)
+            doUpdateProgress(Progress.AMBIENT_LIGHT_COLOR, ambientColor, value, this::doProgressChanged)
         }
     }
 
@@ -246,6 +362,23 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
         }
         return success
     }
+
+//    fun doGetBrightnessValue(): Int {
+//        val signal = CarCabinManager.ID_ALC_AL_RESPONSE_BRIGHTNESS
+//        val value = readIntProperty(signal, Origin.CABIN)
+//        Timber.tag(TAG).d("doGetBrightnessValue signal:%s, value:%s", signal, value)
+//        return value
+//    }
+//
+//    fun doSetBrightnessValue(newValue: Int): Boolean {
+//        val signal = CarCabinManager.ID_ALC_HUM_ALC_BRIGHTNESS_GRADE
+//        val result = writeProperty(signal, newValue, Origin.CABIN)
+//        Timber.tag(TAG).d(
+//            "doSetBrightnessValue signal:%s, newValue:%s, result:%s",
+//            signal, newValue, result
+//        )
+//        return result
+//    }
 
 
 }

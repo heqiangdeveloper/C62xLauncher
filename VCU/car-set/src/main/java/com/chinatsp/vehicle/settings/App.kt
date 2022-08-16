@@ -37,7 +37,7 @@ class App : BaseApp() {
 
     override fun onCreate() {
         super.onCreate()
-        BaseApp.instance = this
+        instance = this
         initLogger()
 
         /**

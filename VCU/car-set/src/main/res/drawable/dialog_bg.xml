@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!--    <corners android:radius="8dp" />-->
+    <!--    <gradient-->
+    <!--        android:endColor="@color/black"-->
+    <!--        android:startColor="@color/black" />-->
+    <!--    <stroke-->
+    <!--        android:width="0.5dp"-->
+    <!--        android:color="@color/xui_config_color_50_white" />-->
+
+    <corners android:radius="@dimen/vcu_radius_pop_window" />
+    <gradient
+        android:endColor="@color/vcu_bg_pop_window"
+        android:gradientRadius="700"
+        android:startColor="@color/vcu_bg_pop_window"
+        android:type="radial" />
+
+
+</shape>
