@@ -26,23 +26,28 @@ public class IQuTingSongViewHolder extends BaseViewHolder<BaseSongItemBean> {
     private TextView mTvIqutingSongItemName;
     private ImageView mIvIqutingSongVip;
     private ImageView mIvIqutingSongItemPlayBtn;
+    private View mIvIqutingCoverContainer;
     public IQuTingSongViewHolder(@NonNull View itemView) {
         super(itemView);
         mSongCover = itemView.findViewById(R.id.ivIqutingSongItemCover);
         mTvIqutingSongItemName = (TextView) itemView.findViewById(R.id.tvIqutingSongItemName);
         mIvIqutingSongVip = (ImageView) itemView.findViewById(R.id.ivIqutingSongVip);
         mIvIqutingSongItemPlayBtn = (ImageView) itemView.findViewById(R.id.ivIqutingSongItemPlayBtn);
+        mIvIqutingCoverContainer = (View) itemView.findViewById(R.id.ivIqutingCoverContainer);
     }
 
     @Override
     public void bind(int position, BaseSongItemBean baseSongItemBean) {
         super.bind(position, baseSongItemBean);
-        String url = baseSongItemBean.getItemImageUrl();
+        String url = baseSongItemBean.getAlbum_pic_300x300();
         String singer = baseSongItemBean.getSinger_name();
         String name = baseSongItemBean.getSong_name();
         boolean isVip = baseSongItemBean.getVip() == 1 ? true : false;
+        Log.d(TAG,"name = " + name + ",id = " + baseSongItemBean.getSong_id() + ",url: " + url);
         if(!TextUtils.isEmpty(url)){
             GlideHelper.loadUrlAlbumCoverRadius(mSongCover.getContext(), mSongCover, url, 10);
+        }else {
+            GlideHelper.loadLocalAlbumCoverRadius(mSongCover.getContext(),mSongCover,R.drawable.test_cover2,10);
         }
         mTvIqutingSongItemName.setText(name + "-" + singer);
         mIvIqutingSongVip.setVisibility(isVip ? View.VISIBLE : View.GONE);
@@ -56,8 +61,10 @@ public class IQuTingSongViewHolder extends BaseViewHolder<BaseSongItemBean> {
         });
         if(IQuTingCardView.itemUUID.equals(String.valueOf(baseSongItemBean.getSong_id()))){
             updateSelectItem(0,IQuTingCardView.isPlaying);
+            mIvIqutingCoverContainer.setVisibility(View.VISIBLE);
         }else {
             mIvIqutingSongItemPlayBtn.setImageResource(R.drawable.card_iquting_icon_circle_pause);
+            mIvIqutingCoverContainer.setVisibility(View.INVISIBLE);
         }
     }
 
