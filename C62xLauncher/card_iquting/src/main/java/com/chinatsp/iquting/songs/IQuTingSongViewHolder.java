@@ -14,6 +14,7 @@ import com.chinatsp.iquting.event.ControlEvent;
 import com.tencent.wecarflow.contentsdk.ContentManager;
 import com.tencent.wecarflow.contentsdk.bean.BaseSongItemBean;
 import com.tencent.wecarflow.contentsdk.callback.MediaPlayResult;
+import com.tencent.wecarflow.controlsdk.FlowPlayControl;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -57,6 +58,12 @@ public class IQuTingSongViewHolder extends BaseViewHolder<BaseSongItemBean> {
                 Log.d(TAG,"onClick: " + position);
                 updateSelectItem(0,!IQuTingCardView.isPlaying);
                 EventBus.getDefault().post(new ControlEvent(position,String.valueOf(baseSongItemBean.getSong_id())));
+            }
+        });
+        mSongCover.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FlowPlayControl.getInstance().openPlayDetail(mSongCover.getContext());
             }
         });
         if(IQuTingCardView.itemUUID.equals(String.valueOf(baseSongItemBean.getSong_id()))){
