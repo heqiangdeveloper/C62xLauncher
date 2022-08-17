@@ -46,6 +46,11 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
                 add(SwitchNode.ALC_COMING_HINT.get.signal)
                 add(SwitchNode.ALC_RELATED_TOPICS.get.signal)
                 add(SwitchNode.ALC_SMART_MODE.get.signal)
+
+                add(SwitchNode.SPEED_RHYTHM.get.signal)
+                add(SwitchNode.MUSIC_RHYTHM.get.signal)
+                add(SwitchNode.COLOUR_BREATHE.get.signal)
+
                 /**【反馈】全车氛围灯亮度响应反馈*/
                 add(Progress.AMBIENT_LIGHT_BRIGHTNESS.get.signal)
                 add(Progress.AMBIENT_LIGHT_COLOR.get.signal)

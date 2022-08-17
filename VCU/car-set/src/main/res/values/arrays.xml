@@ -132,8 +132,8 @@
         <item>低</item>
     </string-array>
     <string-array name="adas_ldw_sensitivity_option_values">
-        <item>1</item>
         <item>2</item>
+        <item>1</item>
     </string-array>
     <string-array name="drive_display_area_options">
         <item>左</item>

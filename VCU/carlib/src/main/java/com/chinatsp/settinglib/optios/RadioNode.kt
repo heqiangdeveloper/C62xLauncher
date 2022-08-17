@@ -115,12 +115,9 @@ enum class RadioNode(
      * Operation mode of LDW/RDP/LKS. The default value is 0x1 LDW in C53F,
      * 0x3 LKS in C62X. 0x0:Initial 0x1:LDW 0x2:RDP 0x3:LKS
      * set -> LDW/RDP/LKS function enable switch,if not set 'LDW_RDP_LKS_FUNC_ENABLE',
-    the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
-    C53F send the signal 0x0 all the time
-    0x0: Inactive
-    0x1: LDW Enable
-    0x2: RDP Enable
-    0x3: LKS Enable（C62 default）
+            the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
+            C53F send the signal 0x0 all the time
+            0x0: Inactive; 0x1: LDW Enable; 0x2: RDP Enable; 0x3: LKS Enable（C62 default）
      *
      */
     ADAS_LANE_ASSIST_MODE(
@@ -139,11 +136,8 @@ enum class RadioNode(
      * 驾驶辅助-车道辅助-报警方式
      * get mcu -> LDW_ENABLE_RESPONSE (暂缺中间件信号)
      * set -> LDW/LKS/TJAICA enable switch,if not set 'LDW_LKS_TJAICA_SWITCH',
-    the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
-    0x0: Inacitve
-    0x1: UI warning
-    0x2: UI and SPEAKER warning(default)
-    0x3: OFF
+            the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
+            0x0: Inacitve; 0x1: UI warning; 0x2: UI and SPEAKER warning(default); 0x3: OFF
      */
     ADAS_LDW_STYLE(
         get = RNorm(
@@ -159,22 +153,19 @@ enum class RadioNode(
 
     /**
      * 驾驶辅助-车道辅助-灵敏度
-     * get ->
-    LKS sensitivity车道保持的灵敏度 0x0:lowSensitivity 0x1:highSensitivity 0x2: Initial 0x3:reserved
-     * set ->
-    LDW/LKS sensitivity switch,if not set 'LDW_LKS_SENSITIVITY_SWITCH ',the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
-    0x0: Inacitve
-    0x1: Low Sensitivity
-    0x2: High Sensitivity(default)
-    0x3: Reserved
+     * get -> LKS sensitivity车道保持的灵敏度 0x0:lowSensitivity 0x1:highSensitivity 0x2:
+              Initial 0x3:reserved
+     * set -> LDW/LKS sensitivity switch,if not set 'LDW_LKS_SENSITIVITY_SWITCH ',
+              the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
+              0x0: Inacitve; 0x1: Low Sensitivity; 0x2: High Sensitivity(default); 0x3: Reserved
      */
     ADAS_LDW_SENSITIVITY(
         get = RNorm(
-            values = intArrayOf(0x2, 0x1, 0x0),
+            values = intArrayOf(0x1, 0x0),
             signal = CarCabinManager.ID_LKS_SENSITIVITY
         ),
         set = RNorm(
-            values = intArrayOf(0x0, 0x2, 0x1),
+            values = intArrayOf(0x2, 0x1),
             signal = CarCabinManager.ID_LDW_LKS_SENSITIVITY_SWT
         ),
         default = 0x1

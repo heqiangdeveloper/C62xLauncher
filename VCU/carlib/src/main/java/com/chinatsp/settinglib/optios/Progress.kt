@@ -21,8 +21,8 @@ enum class Progress (
      * 氛围灯亮度
      */
     AMBIENT_LIGHT_BRIGHTNESS(
-        min = 0x01,
-        max = 0x06,
+        min = 0x00,
+        max = 0x05,
         get = CanLocate(signal = CarCabinManager.ID_ALC_AL_RESPONSE_BRIGHTNESS),
         set = CanLocate(signal = CarCabinManager.ID_ALC_HUM_ALC_BRIGHTNESS_GRADE)
     ),
