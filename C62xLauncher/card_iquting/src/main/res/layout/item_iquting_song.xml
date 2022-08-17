@@ -4,14 +4,24 @@
     android:layout_height="274px"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <View
+        android:id="@+id/ivIqutingCoverContainer"
+        android:layout_width="200px"
+        android:layout_height="200px"
+        android:background="@drawable/edge"
+        android:visibility="invisible"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10px"/>
     <ImageView
         android:id="@+id/ivIqutingSongItemCover"
         android:layout_width="196px"
         android:layout_height="196px"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="10px"
+        app:layout_constraintTop_toTopOf="@id/ivIqutingCoverContainer"
+        app:layout_constraintStart_toStartOf="@id/ivIqutingCoverContainer"
+        app:layout_constraintEnd_toEndOf="@id/ivIqutingCoverContainer"
+        app:layout_constraintBottom_toBottomOf="@id/ivIqutingCoverContainer"
 
         />
 
