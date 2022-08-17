@@ -3,8 +3,8 @@ package com.chinatsp.widgetcards.manager;
 import android.content.Context;
 import android.view.View;
 
+import com.chinatsp.driveinfo.DriveCounselorCardView;
 import com.chinatsp.volcano.VolcanoCardView;
-import com.chinatsp.drivecounselor.DriveCounselorCardView;
 import com.chinatsp.econnect.EConnectCardView;
 import com.chinatsp.iquting.IQuTingCardView;
 import com.chinatsp.navigation.NaviCardView;

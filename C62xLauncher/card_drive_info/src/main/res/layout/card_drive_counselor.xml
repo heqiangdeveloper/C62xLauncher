@@ -16,6 +16,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="89px"
+        android:paddingLeft="8px"
+        android:paddingRight="10px"
+        android:paddingTop="9px"
+        android:paddingBottom="9px"
         />
 
     <TextView
@@ -186,6 +190,7 @@
         />
 
     <ImageView
+        android:id="@+id/ivCardDriveReturn"
         android:layout_width="@dimen/card_icon_size_lv1"
         android:layout_height="@dimen/card_icon_size_lv1"
         android:src="@drawable/card_icon_return"

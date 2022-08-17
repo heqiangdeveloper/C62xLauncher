@@ -1,8 +1,8 @@
 package com.chinatsp.widgetcards.manager;
 
+import com.chinatsp.driveinfo.DriveCounselorCardView;
 import com.chinatsp.usercenter.UserCenterCardView;
 import com.chinatsp.volcano.VolcanoCardView;
-import com.chinatsp.drivecounselor.DriveCounselorCardView;
 import com.chinatsp.econnect.EConnectCardView;
 import com.chinatsp.iquting.IQuTingCardView;
 import com.chinatsp.musiclauncher.MediaCardView;
