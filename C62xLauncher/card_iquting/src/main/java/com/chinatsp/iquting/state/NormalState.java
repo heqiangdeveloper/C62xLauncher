@@ -4,6 +4,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chinatsp.iquting.R;
@@ -25,7 +26,13 @@ public class NormalState implements IQuTingState {
 
     public void updateBigCardState(View view) {
         View tvCardIQuTingLoginTipBig = view.findViewById(R.id.tvCardIQuTingLoginTipBig);
+        TextView tvIQuTingDailySongs = view.findViewById(R.id.tvIQuTingDailySongs);
+        TextView tvIQuTingRankSongs = view.findViewById(R.id.tvIQuTingRankSongs);
+        ConstraintLayout cl = view.findViewById(R.id.rootLayout);
+        if(cl != null) cl.setVisibility(View.VISIBLE);
         tvCardIQuTingLoginTipBig.setVisibility(View.GONE);
+        if(tvIQuTingDailySongs != null) tvIQuTingDailySongs.setVisibility(View.VISIBLE);
+        if(tvIQuTingRankSongs != null) tvIQuTingRankSongs.setVisibility(View.VISIBLE);
 
         RecyclerView rcvCardIQuTingSongList = view.findViewById(R.id.rcvCardIQuTingSongList);
         rcvCardIQuTingSongList.setVisibility(View.VISIBLE);

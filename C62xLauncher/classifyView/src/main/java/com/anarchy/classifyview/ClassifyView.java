@@ -467,6 +467,10 @@ public class ClassifyView extends FrameLayout {
                             iv.setVisibility(View.GONE);
                         }
                     }
+                    editor.putBoolean(MyConfigs.SHOWDELETE,false);
+                    editor.putInt(MyConfigs.SHOWDELETEPOSITION,-1);
+                    editor.commit();
+
                     //如果没有添加按钮，则新增一个添加按钮,防止添加按钮不是在最末尾，先清除，再新增
                     isExistAdd = false;
                     for(int i = 0; i < list.size(); i++){
@@ -1182,6 +1186,15 @@ public class ClassifyView extends FrameLayout {
                         mDragView.bringToFront();
                         mElevationHelper.floatView(mSubRecyclerView, mDragView);
                         if(null != addView) addView.setVisibility(View.GONE);
+
+                        for(int i = 0; i < mSubRecyclerView.getChildCount(); i++){
+                            relativeLayout = (RelativeLayout) mSubRecyclerView.getChildAt(i);
+                            insertAbleGridView = (InsertAbleGridView) relativeLayout.getChildAt(0);
+                            if(insertAbleGridView.getChildCount() == 1){//非文件夹
+                                ImageView iv = (ImageView) relativeLayout.getChildAt(2);
+                                iv.setVisibility(View.VISIBLE);
+                            }
+                        }
                     }
                     break;
                 case DragEvent.ACTION_DRAG_LOCATION:
@@ -1252,6 +1265,17 @@ public class ClassifyView extends FrameLayout {
                     }
                     break;
                 case DragEvent.ACTION_DROP:
+                    if(Math.abs(x - lastX) >= 5 || Math.abs(y - lastY) > 5){
+                        isInDeleteMode = false;
+                    }else {
+                        isInDeleteMode = true;
+                    }
+                    //存储在SP中，在MyAppInfoAdapter中刷新时再判断是否显示删除按钮
+                    SharedPreferences sp = getContext().getSharedPreferences(MyConfigs.APPPANELSP,Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putBoolean(MyConfigs.SHOWDELETE,isInDeleteMode ? true : false);
+                    editor.putInt(MyConfigs.SHOWDELETEPOSITION,mSelectedPosition);
+                    editor.commit();
                     L.d("sub DragEvent.ACTION_DROP");
                     break;
             }

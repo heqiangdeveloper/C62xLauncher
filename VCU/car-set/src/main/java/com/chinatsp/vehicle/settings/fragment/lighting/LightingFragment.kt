@@ -24,6 +24,8 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
     private var animationHomeClose: AnimationDrawable = AnimationDrawable()
     private var animationWelcomeLamp: AnimationDrawable = AnimationDrawable()
     private var animationTurnSignal: AnimationDrawable = AnimationDrawable()
+    private var animationTurnSignal1: AnimationDrawable = AnimationDrawable()
+    private var animationTurnSignal2: AnimationDrawable = AnimationDrawable()
 
     private val manager: IOptionManager
         get() = LightManager.instance
@@ -70,6 +72,16 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
             R.drawable.turn_signal_animation,
             binding.turnSignalIv
         )
+        animationTurnSignal1.setAnimation(
+            activity,
+            R.drawable.turn_signal_animation_1,
+            binding.turnSignalIv1
+        )
+        animationTurnSignal2.setAnimation(
+            activity,
+            R.drawable.turn_signal_animation_2,
+            binding.turnSignalIv2
+        )
     }
 
     private fun addRadioLiveDataListener() {
@@ -107,18 +119,23 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
         binding.lightFlickerRadio.let {
             it.setOnTabSelectionChangedListener { _, value ->
                 doUpdateRadio(RadioNode.LIGHT_FLICKER, value, viewModel.lightFlicker, it)
-                binding.turnSignalIv.visibility = View.VISIBLE
-                animationTurnSignal.start(
-                    false,
-                    50,
-                    object : AnimationDrawable.AnimationLisenter {
-                        override fun startAnimation() {
-                        }
+                if(value.equals("2")){
+                    binding.turnSignalIv1.visibility = View.VISIBLE
+                    binding.turnSignalIv2.visibility = View.GONE
+                    binding.turnSignalIv.visibility = View.GONE
+                    setTurnAnimation(animationTurnSignal1,value)
+                }else if (value.equals("3")){
+                    binding.turnSignalIv2.visibility = View.VISIBLE
+                    binding.turnSignalIv1.visibility = View.GONE
+                    binding.turnSignalIv.visibility = View.GONE
+                    setTurnAnimation(animationTurnSignal2,value)
+                }else if (value.equals("4")){
+                    binding.turnSignalIv.visibility = View.VISIBLE
+                    binding.turnSignalIv2.visibility = View.GONE
+                    binding.turnSignalIv1.visibility = View.GONE
+                    setTurnAnimation(animationTurnSignal,value)
+                }
 
-                        override fun endAnimation() {
-                            binding.homeOpenIv.visibility = View.GONE
-                        }
-                    })
             }
         }
     }
@@ -228,6 +245,10 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
 
     private fun isCanToInt(value: String?): Boolean {
         return null != value && value.isNotBlank() && value.matches(Regex("\\d+"))
+    }
+
+    private fun setTurnAnimation(animationDrawable: AnimationDrawable,value: String){
+        animationDrawable.start(false, 50, null)
     }
 
 }
