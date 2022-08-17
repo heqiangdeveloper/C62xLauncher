@@ -114,7 +114,7 @@
     <string name="car_trunk_light_open">灯光闪烁报警已开启</string>
     <string name="car_trunk_light_close">灯光闪烁报警已关闭</string>
 
-    <string name="car_mirror_automatic_folding">后视镜自动折叠</string>
+    <string name="car_mirror_automatic_folding">外后视镜自动折叠</string>
     <string name="car_mirror_automatic_folding_close">后视镜自动折叠已关闭</string>
     <string name="car_mirror_automatic_folding_open">后视镜自动折叠已开启</string>
 

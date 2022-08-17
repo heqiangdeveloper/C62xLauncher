@@ -39,7 +39,7 @@ class DriveLightingFragment : BaseFragment<CombineViewModel, DriveLightingFragme
     }
 
     private fun initDetailsClickListener() {
-        binding.driveHma.setOnClickListener {
+        binding.driveHmaDetails.setOnClickListener {
             updateHintMessage(R.string.drive_hma_title, R.string.hma_details)
         }
     }

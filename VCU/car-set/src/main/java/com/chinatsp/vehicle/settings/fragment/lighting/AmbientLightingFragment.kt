@@ -1,7 +1,9 @@
 package com.chinatsp.vehicle.settings.fragment.lighting
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.VcuUtils
@@ -16,6 +18,7 @@ import com.chinatsp.vehicle.settings.vm.light.AmbientLightingViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.picker.ColorPickerView
+import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -23,7 +26,7 @@ import timber.log.Timber
 class AmbientLightingFragment :
     BaseFragment<AmbientLightingViewModel, LightingAtmosphereFragmentBinding>(),
     ColorPickerView.OnColorPickerChangeListener {
-
+    var status: Boolean = false
     private val manager: AmbientLightingManager
         get() = AmbientLightingManager.instance
 
@@ -112,10 +115,15 @@ class AmbientLightingFragment :
 
     private fun setCheckedChangeListener() {
         binding.lightingInstall.setOnClickListener {
-            showSettingFragment()
+            if(!status) {
+                showSettingFragment()
+            }
         }
         binding.lightingIntelligentModel.setOnClickListener {
-            showModeFragment()
+            if(!status){
+                showModeFragment()
+            }
+
         }
 
         binding.brightnessLayout.setOnClickListener {
@@ -127,8 +135,10 @@ class AmbientLightingFragment :
             binding.brightnessAdjust.visibility = View.GONE
         }
         binding.colorLayout.setOnClickListener {
-            binding.lightingTitleLayout.visibility = View.GONE
-            binding.pickerLayout.visibility = View.VISIBLE
+            if (!status) {
+                binding.lightingTitleLayout.visibility = View.GONE
+                binding.pickerLayout.visibility = View.VISIBLE
+            }
         }
         binding.pickerCloseIv.setOnClickListener {
             binding.lightingTitleLayout.visibility = View.VISIBLE
@@ -179,8 +189,42 @@ class AmbientLightingFragment :
         binding.ambientLightingBrightness.max = node.max
         binding.ambientLightingBrightness.setValueNoEvent(viewModel.ambientBrightness.value!!)
         binding.ambientLightingBrightness.setOnSeekBarListener { _, value ->
+            status = value == 0
+            checkDisableOtherDiv(status)
             viewModel.doBrightnessChanged(node, value)
             binding.ambientLightingBrightness.setValueNoEvent(viewModel.ambientBrightness.value!!)
+        }
+    }
+
+    private fun checkDisableOtherDiv(status: Boolean) {
+        val childCount = binding.lightingTitleLayout.childCount
+        val intRange = 0 until childCount
+        intRange.forEach {
+            val childAt = binding.lightingTitleLayout.getChildAt(it)
+            if (null != childAt && childAt != binding.brightnessLayout) {
+                childAt.alpha = if (status) 0.7f else 1.0f
+                updateViewEnable(childAt, status)
+            }
+        }
+
+    }
+
+    private fun updateViewEnable(view: View?, status: Boolean) {
+        if (null == view) {
+            return
+        }
+        if (view is SwitchButton) {
+            view.isEnabled = status
+            return
+        }
+        if (view is TabControlView) {
+            view.updateEnable(status)
+            return
+        }
+        if (view is ViewGroup) {
+            val childCount = view.childCount
+            val intRange = 0 until childCount
+            intRange.forEach { updateViewEnable(view.getChildAt(it), status) }
         }
     }
 

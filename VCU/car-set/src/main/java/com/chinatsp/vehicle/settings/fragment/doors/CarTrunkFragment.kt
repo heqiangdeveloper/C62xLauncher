@@ -180,7 +180,11 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
                     }
 
                     override fun endAnimation() {
-                        binding.arcSeekBar.visibility = View.VISIBLE
+                        if(binding.accessSternElectricSw.isChecked){
+                            binding.arcSeekBar.visibility = View.VISIBLE
+                        }else{
+                            binding.arcSeekBar.visibility = View.GONE
+                        }
                     }
                 })
                 binding.carTrunkDoorHeight.visibility = View.VISIBLE
@@ -204,7 +208,11 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
 
                     override fun endAnimation() {
                         binding.ivFlashAlarm.visibility = View.GONE
-                        binding.arcSeekBar.visibility = View.VISIBLE
+                        if(binding.accessSternElectricSw.isChecked){
+                            binding.arcSeekBar.visibility = View.VISIBLE
+                        }else{
+                            binding.arcSeekBar.visibility = View.GONE
+                        }
                     }
                 })
             } else {
@@ -226,8 +234,13 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
                         }
 
                         override fun endAnimation() {
+                            if(binding.accessSternElectricSw.isChecked){
+                                binding.arcSeekBar.visibility = View.VISIBLE
+                            }else{
+                                binding.arcSeekBar.visibility = View.GONE
+                            }
                             binding.ivBuzzerAlarms.visibility = View.GONE
-                            binding.arcSeekBar.visibility = View.VISIBLE
+
                         }
                     })
             } else {

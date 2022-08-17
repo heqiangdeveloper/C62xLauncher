@@ -44,7 +44,7 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
     }
 
     private fun initDetailsClickListener() {
-        binding.laneAssistSystem.setOnClickListener {
+        binding.laneAssistSystemDetails.setOnClickListener {
             updateHintMessage(R.string.drive_Lane_assist_system, R.string.lane_assist_details)
         }
     }

@@ -45,6 +45,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/lane_assist_system_details"
                             style="@style/image_prompt"
                             android:layout_marginTop="@dimen/x16"
                             app:layout_constraintLeft_toRightOf="@+id/lane_assist_system"

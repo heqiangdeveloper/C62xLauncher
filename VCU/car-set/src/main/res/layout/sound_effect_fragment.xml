@@ -115,12 +115,14 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <com.common.xui.widget.button.switchbutton.SwitchButton
+                        android:id="@+id/sound_environmental_sw"
                         style="@style/switch_button_style"
                         android:layout_marginTop="@dimen/x15"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <com.common.xui.widget.tabbar.TabControlView
+                        android:id="@+id/sound_environmental_tab"
                         style="@style/tdv_common_style"
                         android:layout_marginTop="@dimen/x11"
                         app:layout_constraintStart_toStartOf="parent"

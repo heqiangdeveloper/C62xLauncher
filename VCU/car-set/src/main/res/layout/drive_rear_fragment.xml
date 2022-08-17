@@ -130,6 +130,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/drive_bsd_details"
                             style="@style/image_prompt"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toRightOf="@+id/drive_bsd_title"
@@ -173,6 +174,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/drive_bsd_camera_details"
                             style="@style/image_prompt"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toRightOf="@+id/drive_bsd_camera_title"
@@ -197,7 +199,8 @@
                         android:id="@+id/line3"
                         style="@style/line"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/drive_bsd_camera" />
+                        app:layout_constraintTop_toBottomOf="@id/drive_bsd_camera"
+                        android:visibility="gone"/>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/drive_auxiliary_line"
@@ -226,7 +229,8 @@
                         android:id="@+id/line4"
                         style="@style/line"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/drive_auxiliary_line" />
+                        app:layout_constraintTop_toBottomOf="@id/drive_auxiliary_line"
+                        android:visibility="gone"/>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/drive_display"
@@ -259,7 +263,8 @@
                         android:id="@+id/line5"
                         style="@style/line"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/drive_display" />
+                        app:layout_constraintTop_toBottomOf="@id/drive_display"
+                        android:visibility="gone"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </LinearLayout>

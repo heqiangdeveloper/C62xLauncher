@@ -49,10 +49,10 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
     }
 
     private fun initDetailsClickListener() {
-        binding.driveBsd.setOnClickListener {
+        binding.driveBsdDetails.setOnClickListener {
             updateHintMessage(R.string.drive_bsd_title, R.string.bsd_details)
         }
-        binding.driveBsdCamera.setOnClickListener{
+        binding.driveBsdCameraDetails.setOnClickListener{
             updateHintMessage(R.string.drive_bsd_camera_title, R.string.bsc_details)
         }
     }
@@ -71,6 +71,11 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
         if (isCareLevel) {
             binding.driveDow.visibility = View.GONE
             binding.line1.visibility = View.GONE
+            binding.adasMebLayout.visibility = View.GONE
+            binding.lineMeb.visibility = View.GONE
+            binding.driveBsdCamera.visibility = View.GONE
+            binding.driveAuxiliaryLine.visibility = View.GONE
+            binding.driveDisplay.visibility = View.GONE
         }
     }
 
@@ -256,6 +261,15 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
 
     private fun dynamicEffect() {
         binding.videoImage.visibility = View.VISIBLE
+        val isCareLevel = VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4)
+        if (isCareLevel) {
+            if(binding.adasSideBsdSwitch.isChecked){
+                binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.ic_lientang_auxiliary_9) })
+            }else{
+                binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.intelligent_cruise) })
+            }
+            return
+         }
         if(binding.adasSideDowSwitch.isChecked&&binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&binding.adasSideGuidesSwitch.isChecked){
             binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.ic_lientang_auxiliary_1) })
         }else if(binding.adasSideDowSwitch.isChecked&&!binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&!binding.adasSideGuidesSwitch.isChecked){
