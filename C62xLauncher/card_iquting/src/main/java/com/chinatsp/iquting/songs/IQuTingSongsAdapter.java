@@ -4,12 +4,13 @@ import android.content.Context;
 import android.view.View;
 
 import com.chinatsp.iquting.R;
+import com.tencent.wecarflow.contentsdk.bean.BaseSongItemBean;
 
 import launcher.base.recyclerview.BaseRcvAdapter;
 import launcher.base.recyclerview.BaseViewHolder;
 
-public class IQuTingSongsAdapter extends BaseRcvAdapter<IQuTingSong> {
-
+public class IQuTingSongsAdapter extends BaseRcvAdapter<BaseSongItemBean> {
+    private IQuTingSongViewHolder mIQuTingSongViewHolder;
     public IQuTingSongsAdapter(Context context) {
         super(context);
     }
@@ -20,7 +21,12 @@ public class IQuTingSongsAdapter extends BaseRcvAdapter<IQuTingSong> {
     }
 
     @Override
-    protected BaseViewHolder<IQuTingSong> createViewHolder(View view) {
-        return new IQuTingSongViewHolder(view);
+    protected BaseViewHolder<BaseSongItemBean> createViewHolder(View view) {
+        mIQuTingSongViewHolder = new IQuTingSongViewHolder(view);
+        return mIQuTingSongViewHolder;
+    }
+
+    public void updatePlayStatus(int position,boolean isPlaying){
+        mIQuTingSongViewHolder.updateSelectItem(position,isPlaying);
     }
 }

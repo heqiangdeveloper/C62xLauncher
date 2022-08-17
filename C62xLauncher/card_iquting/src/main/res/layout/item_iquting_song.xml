@@ -39,10 +39,10 @@
 
     <ImageView
         android:id="@+id/ivIqutingSongItemPlayBtn"
-        android:src="@drawable/card_iquting_icon_circle_play"
+        android:src="@drawable/card_iquting_icon_circle_pause"
         android:layout_width="44px"
         android:layout_height="44px"
-        android:background="@drawable/card_iquting_icon_circle_bg"
+
         app:layout_constraintBottom_toBottomOf="@id/ivIqutingSongItemCover"
         app:layout_constraintStart_toStartOf="@id/ivIqutingSongItemCover"
         android:layout_marginBottom="12px"
@@ -50,6 +50,7 @@
         />
 
     <TextView
+        android:id="@+id/tvIqutingSongItemName"
         android:layout_width="match_parent"
         android:layout_height="46px"
         android:text="给我一首歌..."

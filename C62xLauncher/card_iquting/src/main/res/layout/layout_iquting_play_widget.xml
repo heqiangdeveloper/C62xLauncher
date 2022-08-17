@@ -5,13 +5,14 @@
     tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout"
     android:layout_width="@dimen/iquting_play_widget_width"
     android:layout_height="@dimen/iquting_play_widget_height"
+    android:id="@+id/rootLayout"
     >
 
-    <ImageView
-        android:id="@+id/ivIQuTingDefaultProgressBig"
-        android:src="@drawable/card_iquting_default_cycle_progress"
+    <launcher.base.utils.view.CircleProgressView
+        android:id="@+id/circleProgressView"
         android:layout_width="110px"
         android:layout_height="110px"
+        app:circleProgressColor="@color/card_title_expand"
         app:layout_constraintStart_toStartOf="parent"
 
         app:layout_constraintBottom_toBottomOf="parent"
@@ -23,27 +24,28 @@
         android:id="@+id/ivIQuTingCoverBig"
         android:layout_width="94px"
         android:layout_height="94px"
-        app:layout_constraintStart_toStartOf="@id/ivIQuTingDefaultProgressBig"
-        app:layout_constraintBottom_toBottomOf="@id/ivIQuTingDefaultProgressBig"
-        app:layout_constraintTop_toTopOf="@id/ivIQuTingDefaultProgressBig"
-        app:layout_constraintEnd_toEndOf="@id/ivIQuTingDefaultProgressBig"
+        app:layout_constraintStart_toStartOf="@id/circleProgressView"
+        app:layout_constraintBottom_toBottomOf="@id/circleProgressView"
+        app:layout_constraintTop_toTopOf="@id/circleProgressView"
+        app:layout_constraintEnd_toEndOf="@id/circleProgressView"
         />
-    <ImageView
-        android:id="@+id/ivIQuTingCoverProgressBig"
-        android:layout_width="105px"
-        android:layout_height="105px"
-        android:src="@drawable/iquting_ring"
-        app:layout_constraintStart_toStartOf="@id/ivIQuTingCoverBig"
-        app:layout_constraintBottom_toBottomOf="@id/ivIQuTingCoverBig"
-        app:layout_constraintTop_toTopOf="@id/ivIQuTingCoverBig"
-        app:layout_constraintEnd_toEndOf="@id/ivIQuTingCoverBig"
-        />
+<!--    <ImageView-->
+<!--        android:id="@+id/ivIQuTingCoverProgressBig"-->
+<!--        android:layout_width="105px"-->
+<!--        android:layout_height="105px"-->
+<!--        android:src="@drawable/iquting_ring"-->
+<!--        app:layout_constraintStart_toStartOf="@id/ivIQuTingCoverBig"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/ivIQuTingCoverBig"-->
+<!--        app:layout_constraintTop_toTopOf="@id/ivIQuTingCoverBig"-->
+<!--        app:layout_constraintEnd_toEndOf="@id/ivIQuTingCoverBig"-->
+<!--        />-->
 
     <TextView
         android:id="@+id/tvIQuTingMediaNameBig"
         android:layout_width="347px"
         android:layout_height="46px"
         android:text="暗里着迷"
+        android:singleLine="true"
         style="@style/CardLv2TextView"
         android:gravity="center_vertical"
         app:layout_constraintStart_toEndOf="@id/ivIQuTingCoverBig"
@@ -56,6 +58,7 @@
         android:layout_width="258px"
         android:layout_height="30px"
         android:text="刘德华"
+        android:singleLine="true"
         android:gravity="center_vertical"
         style="@style/CardLv4TextView"
         android:textColor="#FF7B7B82"

@@ -4,6 +4,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.chinatsp.iquting.R;
 
 public class NetWorkDisconnectState implements IQuTingState {
@@ -28,9 +30,17 @@ public class NetWorkDisconnectState implements IQuTingState {
     @Override
     public void updateBigCardState(View view) {
         TextView tvCardIQuTingLoginTipBig = view.findViewById(R.id.tvCardIQuTingLoginTipBig);
-        tvCardIQuTingLoginTipBig.setVisibility(View.VISIBLE);
-        tvCardIQuTingLoginTipBig.setText(R.string.iquting_disconnect_tip);
+        TextView tvIQuTingDailySongs = view.findViewById(R.id.tvIQuTingDailySongs);
+        TextView tvIQuTingRankSongs = view.findViewById(R.id.tvIQuTingRankSongs);
+        if(tvCardIQuTingLoginTipBig != null){
+            tvCardIQuTingLoginTipBig.setVisibility(View.VISIBLE);
+            tvCardIQuTingLoginTipBig.setText(R.string.iquting_disconnect_tip);
+        }
+        if(tvIQuTingDailySongs != null) tvIQuTingDailySongs.setVisibility(View.GONE);
+        if(tvIQuTingRankSongs != null) tvIQuTingRankSongs.setVisibility(View.GONE);
 
-        view.findViewById(R.id.rcvCardIQuTingSongList).setVisibility(View.GONE);
+        if(view.findViewById(R.id.rcvCardIQuTingSongList) != null){
+            view.findViewById(R.id.rcvCardIQuTingSongList).setVisibility(View.GONE);
+        }
     }
 }

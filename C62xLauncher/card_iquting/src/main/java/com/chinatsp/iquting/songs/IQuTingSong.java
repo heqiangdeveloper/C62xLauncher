@@ -1,4 +1,3 @@
 package com.chinatsp.iquting.songs;
 
-public class IQuTingSong {
-}
+public class IQuTingSong {}
