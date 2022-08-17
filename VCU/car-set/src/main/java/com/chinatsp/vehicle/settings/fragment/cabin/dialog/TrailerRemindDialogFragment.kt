@@ -99,8 +99,9 @@ class TrailerRemindDialogFragment :
         liveData: LiveData<Int>,
         tabView: TabControlView
     ) {
+        Timber.d("doUpdateRadio start node:$node, value:$value")
         val result = isCanToInt(value) && viewModel.doSetRadioOption(node, value.toInt())
-        Timber.d("doUpdateRadio node:$node, value:$value, result:$result")
+        Timber.d("doUpdateRadio end node:$node, value:$value, result:$result")
         tabView.takeIf { !result }?.setSelection(liveData.value.toString(), true)
     }
 

@@ -60,7 +60,7 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
 
     private fun initVideoListener() {
         val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_auxiliary_system
-        binding.video.setVideoURI(Uri.parse(uri));
+        binding.video.setVideoURI(Uri.parse(uri))
         binding.video.setOnCompletionListener {
             dynamicEffect()
         }
@@ -70,7 +70,7 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
         }
         binding.video.setOnPreparedListener{
             it.setOnInfoListener { _, _, _ ->
-                binding.video.setBackgroundColor(Color.TRANSPARENT);
+                binding.video.setBackgroundColor(Color.TRANSPARENT)
                 binding.videoImage.visibility = View.GONE
                 true
             }

@@ -54,7 +54,7 @@ enum class RadioNode(
      * 车门与车窗--车门--熄火自动解锁
      * set -> 0x1: unlock FL door 0x2: unlock all doors(default)   0x3: FunctionDisable
      * get -> 0x0: Inactive 0x1: unlock FL door 0x2: unlock all doors(default) 0x3: FunctionDisable
-     * UE 黑夜关闭
+     * UE 默认关闭
      */
     DOOR_FLAMEOUT_UNLOCK(
         get = RNorm(
@@ -65,7 +65,7 @@ enum class RadioNode(
             values = intArrayOf(0x3, 0x1, 0x2),
             signal = CarCabinManager.ID_CUT_OFF_UNLOCK_DOORS
         ),
-        default = 0x1
+        default = 0x3
     ),
 
     /**
@@ -77,8 +77,7 @@ enum class RadioNode(
         get = RNorm(
             values = intArrayOf(0x1, 0x2, 0x3),
             signal = CarCabinManager.ID_PTM_SMART_ENTRY_PTM_STS
-//            signal = CarCabinManager.ID_PTM_SMART_ENTRY_PTM_STS
-        ),//Jar 没有更新，暂时无 ID_PTM_SMART_ENTRY_PTM_STS
+        ),
         set = RNorm(
             values = intArrayOf(0x1, 0x2, 0x3),
             signal = CarCabinManager.ID_PTM_SMT_ENTRY_SET
@@ -88,15 +87,14 @@ enum class RadioNode(
 
     /**
      * 驾驶辅助-智能巡航-前车驶离提示
-     * set ->
-        object distingguish and disappear switch,if not set'OBJ_DETECTION',
-        the value of signal is 0x0(inactive)[0x1,0,0x0,0x5]
-        0x0: Inactive
-        0x1: Detect warning
-        0x2: Disappare warning
-        0x3: Detect and disappear warning(default)
-        0x4: Warning off
-        0x5~0x7:Reserved
+     * set -> object distingguish and disappear switch,if not set'OBJ_DETECTION',
+            the value of signal is 0x0(inactive)[0x1,0,0x0,0x5]
+            0x0: Inactive
+            0x1: Detect warning
+            0x2: Disappare warning
+            0x3: Detect and disappear warning(default)
+            0x4: Warning off
+            0x5~0x7:Reserved
      */
     ADAS_LIMBER_LEAVE(
         get = RNorm(
@@ -122,11 +120,13 @@ enum class RadioNode(
      */
     ADAS_LANE_ASSIST_MODE(
         get = RNorm(
-            values = intArrayOf(0x0, 0x2, 0x1, 0x3),
+//            values = intArrayOf(0x0, 0x2, 0x1, 0x3),
+            values = intArrayOf(0x2, 0x1, 0x3),
             signal = CarCabinManager.ID_LANE_ASSIT_TYPE
         ),
         set = RNorm(
-            values = intArrayOf(0x0, 0x2, 0x1, 0x3),
+//            values = intArrayOf(0x0, 0x2, 0x1, 0x3),
+            values = intArrayOf(0x2, 0x1, 0x3),
             signal = CarCabinManager.ID_LDW_RDP_LKS_FUNC_EN
         ),
         default = 0x1
@@ -141,14 +141,14 @@ enum class RadioNode(
      */
     ADAS_LDW_STYLE(
         get = RNorm(
-            values = intArrayOf(0x3, 0x1, 0x2),
+            values = intArrayOf(0x1, 0x2),
             signal = -1
         ),
         set = RNorm(
-            values = intArrayOf(0x3, 0x1, 0x2),
+            values = intArrayOf(0x1, 0x2),
             signal = CarCabinManager.ID_LDW_LKS_TJAICA_SWT
         ),
-        default = 0x3
+        default = 0x2
     ),
 
     /**
@@ -257,11 +257,7 @@ enum class RadioNode(
 
     /**
      * 车辆音效--声音--仪表报警音量等级
-     * set -> 仪表报警音量等级开关触发[0x1,0,0x0,0x3]
-            0x0: Inactive
-            0x1: High
-            0x2: medium
-            0x3: Low
+     * set -> 仪表报警音量等级开关触发[0x1,0,0x0,0x3] 0x0: Inactive; 0x1: High; 0x2: medium; 0x3: Low
      */
     ICM_VOLUME_LEVEL(
         get = RNorm(
@@ -272,17 +268,13 @@ enum class RadioNode(
             values = intArrayOf(0x1, 0x2, 0x3),
             signal = CarCabinManager.ID_HUM_ICM_VOLUME_LEVEL
         ),
-        default = 0x1
+        default = 0x3
     ),
 
     /**
      * 车辆音效--声音--导航混音
      * set -> 车机混音策略[0x1,-1,0x0,0x3]
-    0x0:not used
-    0x1: MIX0((default))
-    0x2: Mix1
-    0x3: Mix2
-    0x4~0x7: reserved
+              0x0:not used; 0x1: MIX0((default));  0x2: Mix1; 0x3: Mix; 0x4~0x7: reserved
      */
     NAVI_AUDIO_MIXING(
         get = RNorm(
@@ -331,14 +323,8 @@ enum class RadioNode(
      * 此信号走TBOX信号 而非走CAN信号， 所以需要特殊处理
      */
     DEVICE_TRAILER_SENSITIVITY(
-        get = RNorm(
-            values = intArrayOf(0x1, 0x2, 0x3),
-            signal = -1
-        ),
-        set = RNorm(
-            values = intArrayOf(0x1, 0x2, 0x3),
-            signal = -1
-        ),
+        get = RNorm(values = intArrayOf(0x1, 0x2, 0x3), signal = -1),
+        set = RNorm(values = intArrayOf(0x1, 0x2, 0x3), signal = -1),
         default = 0x1
     ),
     /**
@@ -346,14 +332,8 @@ enum class RadioNode(
      * 此信号走TBOX信号 而非走CAN信号， 所以需要特殊处理
      */
     DEVICE_TRAILER_DISTANCE(
-        get = RNorm(
-            values = intArrayOf(200, 500, 1000, 2000),
-            signal = -1
-        ),
-        set = RNorm(
-            values = intArrayOf(200, 500, 1000, 2000),
-            signal = -1
-        ),
+        get = RNorm(values = intArrayOf(200, 500, 1000, 2000), signal = -1),
+        set = RNorm(values = intArrayOf(200, 500, 1000, 2000), signal = -1),
         default = 200
     )
     ;
