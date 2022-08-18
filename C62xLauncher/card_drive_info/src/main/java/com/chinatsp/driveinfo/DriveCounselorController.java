@@ -1,7 +1,6 @@
 package com.chinatsp.driveinfo;
 
-import com.cihon.client.CihonManager;
-import com.cihon.client.ServiceConnectionListener;
+import com.chinatsp.driveinfo.callback.IReadDriveInfoListener;
 import com.cihon.client.SmallCardCallback;
 
 import launcher.base.utils.EasyLog;
