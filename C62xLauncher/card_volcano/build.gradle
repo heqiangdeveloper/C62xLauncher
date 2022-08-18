@@ -32,6 +32,7 @@ dependencies {
     implementation rootProject.ext.dependencies.material
     implementation rootProject.ext.dependencies.constraintlayout
     implementation project(path: ':baseCard')
+    implementation project(path: ':network')
 
     api rootProject.ext.dependencies.okhttp
     api rootProject.ext.dependencies.retrofit

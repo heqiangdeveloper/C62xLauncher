@@ -41,6 +41,7 @@
 
 
         <TextView
+            android:id="@+id/tvDrawerDriveHealthy"
             style="@style/CardLv4TextView"
             android:layout_width="58px"
             android:layout_height="58px"
@@ -72,6 +73,7 @@
         app:layout_constraintTop_toBottomOf="@id/frame1">
 
         <com.chinatsp.drawer.drive.DistanceCircleProgress
+            android:id="@+id/progressDrawerDriveDistance"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="20px"
@@ -81,6 +83,7 @@
             />
 
         <TextView
+            android:id="@+id/tvDrawerDriveDistanceLabel"
             style="@style/CardLv4TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -139,6 +142,7 @@
             />
 
         <TextView
+            android:id="@+id/tvDrawerDriveHealthyPercent"
 
             android:layout_width="81px"
             android:layout_height="56px"
