@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.access.WindowManager
 import com.chinatsp.settinglib.optios.SwitchNode
+import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CarWindowFragmentBinding
 import com.chinatsp.vehicle.settings.vm.accress.WindowViewModel
@@ -35,6 +37,19 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
         initSwitchOption()
         addSwitchLiveDataListener()
         setSwitchListener()
+
+        initViewDisplay()
+    }
+
+    private fun initViewDisplay() {
+
+        if (VcuUtils.isCareLevel(Level.LEVEL3)) {
+            binding.carWindowRainyDay.visibility = View.GONE
+            binding.line3.visibility = View.GONE
+
+            binding.carWindowLockCar.visibility = View.GONE
+            binding.line2.visibility = View.GONE
+        }
     }
 
     private fun initAnimation() {

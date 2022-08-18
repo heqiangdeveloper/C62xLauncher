@@ -56,29 +56,44 @@ enum class SwitchNode(
     /**
      * 空调自干燥
      * set ->
-        自干燥使能开关Self-desiccation Switch
-        0x0: Inactive
-        0x1: Enabled
-        0x2: Disabled
-        0x3: Reserved
+    自干燥使能开关Self-desiccation Switch
+    0x0: Inactive
+    0x1: Enabled
+    0x2: Disabled
+    0x3: Reserved
      * get -> self-desiccation 自干燥功能状态显示 0x0:ON 0x1:OFF
      */
     AC_AUTO_ARID(
         get = Norm(on = 0x0, off = 0x1, signal = CarCabinManager.ID_ACSELFSTSDISP),
-        set = Norm(on = 0x1, off = 0x2, origin = Origin.HVAC, signal = CarHvacManager.ID_HVAC_AVN_SELF_DESICAA_SWT),
+        set = Norm(
+            on = 0x1,
+            off = 0x2,
+            origin = Origin.HVAC,
+            signal = CarHvacManager.ID_HVAC_AVN_SELF_DESICAA_SWT
+        ),
         default = true
     ),
 
     /**
      * 自动除雾
      * set ->
-        前除霜if not set ,the value of signal is 0x0(inactive) 0x0: Inactive; 0x1: ON; 0x2: OFF; 0x3: Not used
+    前除霜if not set ,the value of signal is 0x0(inactive) 0x0: Inactive; 0x1: ON; 0x2: OFF; 0x3: Not used
      * get ->
-        前除霜显示图标 0x0: Not display; 0x1: Display; 0x2: Reserved; 0x3: Error
+    前除霜显示图标 0x0: Not display; 0x1: Display; 0x2: Reserved; 0x3: Error
      */
     AC_AUTO_DEMIST(
-        get = Norm(on = 0x1, off = 0x0, origin = Origin.HVAC, signal = CarHvacManager.ID_HAVC_AC_DIS_DEFROST),
-        set = Norm(on = 0x1, off = 0x2, origin = Origin.HVAC, signal = CarHvacManager.ID_HVAC_AVN_KEY_DEFROST),
+        get = Norm(
+            on = 0x1,
+            off = 0x0,
+            origin = Origin.HVAC,
+            signal = CarHvacManager.ID_HAVC_AC_DIS_DEFROST
+        ),
+        set = Norm(
+            on = 0x1,
+            off = 0x2,
+            origin = Origin.HVAC,
+            signal = CarHvacManager.ID_HVAC_AVN_KEY_DEFROST
+        ),
         default = false
     ),
 
@@ -89,7 +104,12 @@ enum class SwitchNode(
      */
     AC_ADVANCE_WIND(
         get = Norm(on = 0x0, off = 0x1, signal = CarCabinManager.ID_ACPREVENTNDISP),
-        set = Norm(on = 0x1, off = 0x2, origin = Origin.HVAC, signal = CarHvacManager.ID_HVAC_AVN_UNLOCK_BREATHABLE_ENABLE),
+        set = Norm(
+            on = 0x1,
+            off = 0x2,
+            origin = Origin.HVAC,
+            signal = CarHvacManager.ID_HVAC_AVN_UNLOCK_BREATHABLE_ENABLE
+        ),
         default = true
     ),
 
@@ -179,11 +199,13 @@ enum class SwitchNode(
 
     /**
      * 车门车窗--车窗--雨刮维修 (no signal)
+     * set -> 前雨刮维修模式开关 0x0:Initializing; 0x1:maitenance mode; 0x2:normal mode; 0x3:Invalid
      *
      */
     RAIN_WIPER_REPAIR(
+        //get MCU 信号：FRONT_WIPER_MAINTENNANCE_STS
         get = Norm(),
-        set = Norm(),
+        set = Norm(on = 0x01, off = 0x02, signal = CarCabinManager.ID_FRONT_WIPER_MAINTENNANCE_SW),
         default = false
     ),
 
@@ -236,7 +258,7 @@ enum class SwitchNode(
     /**
      * 行车--座椅--主驾迎宾
      * set ->int类型数据 座椅迎宾开关[0x1,0,0x0,0x3]
-             0x0: Inactive; 0x1: Enabled; 0x2: Disabled; 0x3: Reserved
+    0x0: Inactive; 0x1: Enabled; 0x2: Disabled; 0x3: Reserved
      * get -> 0x0：Disable 0x1：Enable
      */
     SEAT_MAIN_DRIVE_MEET(
@@ -255,12 +277,17 @@ enum class SwitchNode(
     ),
 
     /**
-     * 行车--座椅--座椅加热
+     * 行车--座椅--座椅加热 (座椅自动加热开关（高配HUM发送，低配HUM不发送此信号）)
+     * set -> 【设置】0x0: Inactive  0x1: On Press  0x2: OFF  0x3: Reserved
+     * get -> int类型数据
+                0x0:Inactive;0x1:OFF(default)
+                0x2:Level 1; 0x3:Level 2; 0x4:Level 3; 0x5:0x6:0x7:reserved
      */
     SEAT_HEAT_ALL(
-        get = Norm(on = 0x1, off = 0x2),
-        set = Norm(on = 0x1, off = 0x2),
-        default = true
+        get = Norm(on = 0x2, off = 0x1, signal = CarCabinManager.ID_HUM_SEAT_HEAT_POS),
+        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_DSM_AUTO_HEAT_SW),
+        default = true,
+        careOn = false
     ),
 
     /**
@@ -303,8 +330,8 @@ enum class SwitchNode(
     /**
      * 驾驶辅助--智能巡航--智能巡航辅助 ACC
      * set -> IACC or ACC function enable switch,if not set 'IACC_FUNC_ENABLEE',
-              the value of signal is 0x0(inactive).It is ACC function for C53F.[0x1,0,0x0,0x3]
-              0x0: Inactive; 0x1: Enable(default); 0x2: Disable; 0x3: Reserved
+    the value of signal is 0x0(inactive).It is ACC function for C53F.[0x1,0,0x0,0x3]
+    0x0: Inactive; 0x1: Enable(default); 0x2: Disable; 0x3: Reserved
      * get -> Indacating IACC or ACC function is enabled or disabled. 0x0:Disable 0x1:Enable
      */
     ADAS_IACC(
@@ -316,13 +343,13 @@ enum class SwitchNode(
     /**
      * 驾驶辅助--智能巡航--目标提示音
      * set ->
-            object distingguish and disappear switch,if not set'OBJ_DETECTION',the value of signal is 0x0(inactive)[0x1,0,0x0,0x5]
-            0x0: Inactive
-            0x1: Detect warning
-            0x2: Disappare warning
-            0x3: Detect and disappear warning(default)
-            0x4: Warning off
-            0x5~0x7:Reserved
+    object distingguish and disappear switch,if not set'OBJ_DETECTION',the value of signal is 0x0(inactive)[0x1,0,0x0,0x5]
+    0x0: Inactive
+    0x1: Detect warning
+    0x2: Disappare warning
+    0x3: Detect and disappear warning(default)
+    0x4: Warning off
+    0x5~0x7:Reserved
      */
     ADAS_TARGET_PROMPT(
         get = Norm(on = 0x1, off = 0x0, signal = -1),
@@ -333,8 +360,8 @@ enum class SwitchNode(
     /**
      * 驾驶辅助--智能巡航--前车驶离提示
      * set -> front vehicle drive away switch,if not set'FRONT_VEHICLE_DRIVE_AWAY',
-              the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
-              0x0: Inactive; 0x1: Warning on(default); 0x2: Warning off; 0x3: Reserved
+    the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
+    0x0: Inactive; 0x1: Warning on(default); 0x2: Warning off; 0x3: Reserved
      */
     ADAS_LIMBER_LEAVE(
         //get 暂时没有找到中间件信号
@@ -346,8 +373,8 @@ enum class SwitchNode(
     /**
      * 驾驶辅助--前身辅助--前车碰撞预警
      * set ->not used in C40D to switch on or off FCW warning function.The value of signal is 0x1 when every Igon .
-            if not set 'FCW_SWITCH' ,the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
-            0x0: Inactive; 0x1: On(default); 0x2: Off; 0x3: Reserved
+    if not set 'FCW_SWITCH' ,the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
+    0x0: Inactive; 0x1: On(default); 0x2: Off; 0x3: Reserved
      * get -> FCW status. 0x0:Inactive 0x1:Active 0x2:Reserved 0x3:Reserved
      */
     ADAS_FCW(
@@ -371,8 +398,8 @@ enum class SwitchNode(
      * 驾驶辅助--车道辅助--车道辅助系统
      * get -> LDW/RDP/LKS status. MPC will save the status, while the AVN will not. 0x0:Off 0x1:Standby 0x2:Active 0x3:Temporary failure 0x4:Camera blocked 0x5:Permanent failure 0x6:Reserved 0x7:Reserved
      * set -> LDW/RDP/LKS function enable switch,if not set 'LDW_RDP_LKS_FUNC_ENABLE',the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
-              C53F send the signal 0x0 all the time
-              0x0: Inactive; 0x1: LDW Enable; 0x2: RDP Enable; 0x3: LKS Enable（C62 default）
+    C53F send the signal 0x0 all the time
+    0x0: Inactive; 0x1: LDW Enable; 0x2: RDP Enable; 0x3: LKS Enable（C62 default）
      *
      */
     ADAS_LANE_ASSIST(
@@ -386,22 +413,22 @@ enum class SwitchNode(
     /**
      * 驾驶辅助--交通标志--速度限制提醒 SLA
      * set ->
-            not used in C40D/C53F
-            TSR function switch signal.if not set 'TSR_SWITCH' ,the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
-            0x0: Inacitve
-            0x1: UI warning
-            0x2: UI and SPEAKER warning(default)
-            0x3: OFF
+    not used in C40D/C53F
+    TSR function switch signal.if not set 'TSR_SWITCH' ,the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
+    0x0: Inacitve
+    0x1: UI warning
+    0x2: UI and SPEAKER warning(default)
+    0x3: OFF
      * get ->
-            Operation status of traffic sign functions.
-            0x0:Off
-            0x1:Operating Fusion mode(reserved)
-            0x2:Operating Vision only mode
-            0x3:Operating Navigation onlymode(reserved)
-            0x4:Temporary failure
-            0x5:Camera blocked
-            0x6:Permanent failure
-            0x7:TSR not configured
+    Operation status of traffic sign functions.
+    0x0:Off
+    0x1:Operating Fusion mode(reserved)
+    0x2:Operating Vision only mode
+    0x3:Operating Navigation onlymode(reserved)
+    0x4:Temporary failure
+    0x5:Camera blocked
+    0x6:Permanent failure
+    0x7:TSR not configured
      */
     ADAS_TSR(
         get = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_TSR_OPERATING_STATUS),
@@ -409,14 +436,15 @@ enum class SwitchNode(
         default = true,
         careOn = false
     ),
+
     /**
      * 驾驶辅助--灯光辅助--智能远光灯辅助 HMA
      * get ->
-        HMA status 0x0:HMA OFF 0x1:HMA passive 0x2:HMA active 0x3:Temporary failure
-        0x4:Camera blocked 0x5:Permanent failure 0x6: Reserved 0x7: HMA not configured
+    HMA status 0x0:HMA OFF 0x1:HMA passive 0x2:HMA active 0x3:Temporary failure
+    0x4:Camera blocked 0x5:Permanent failure 0x6: Reserved 0x7: HMA not configured
      *  set -> not used in C40D/C53F
-        HMA funtion switch signal,if not set 'HMAOnOffReq' ,the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
-        0x0: Inactive; 0x1: On; 0x2: Off; 0x3: Reserved
+    HMA funtion switch signal,if not set 'HMAOnOffReq' ,the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
+    0x0: Inactive; 0x1: On; 0x2: Off; 0x3: Reserved
      */
     ADAS_HMA(
         get = Norm(on = 0x2, off = 0x1, signal = CarCabinManager.ID_HMA_STATUS),
@@ -427,9 +455,9 @@ enum class SwitchNode(
     /**
      * 驾驶辅助--侧后辅助--开门预警 DOW
      * get -> 开门预警功能状态信号(高配的APA发送该信号，低配的AVM不发送)
-            0x0: Not available(缺省); 0x1: DOW off（关闭）
-            0x2: DOW standby（待机）; 0x3: DOW active（开启）;0x4: DOW failed（错误）
-            0x5: CAMERA blocked（遮挡）;0x6~0x7: reserved（预留）
+    0x0: Not available(缺省); 0x1: DOW off（关闭）
+    0x2: DOW standby（待机）; 0x3: DOW active（开启）;0x4: DOW failed（错误）
+    0x5: CAMERA blocked（遮挡）;0x6~0x7: reserved（预留）
      * set -> DOW开关 0x0: Inactive; 0x1: ON; 0x2: OFF;0x3: Invalid
      */
     ADAS_DOW(
@@ -573,7 +601,11 @@ enum class SwitchNode(
      */
     ALC_LOCK_HINT(
         get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ALC_HUM_LUCK_SW_RESPONSE),
-        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_ALC_HUM_ALC_SW_LOCK_REMIND_ENABLE),
+        set = Norm(
+            on = 0x1,
+            off = 0x2,
+            signal = CarCabinManager.ID_ALC_HUM_ALC_SW_LOCK_REMIND_ENABLE
+        ),
         default = false
     ),
 
@@ -613,12 +645,16 @@ enum class SwitchNode(
     /**
      * 灯光--氛围灯--智能模式
      * set -> 智能模式开关[0x1,0,0x0,0x3]
-            0x0: Inactive 0x1: On 0x2: OFF 0x3: Reserved
+    0x0: Inactive 0x1: On 0x2: OFF 0x3: Reserved
      * get -> 0x0: OFF 0x1: ON
      */
     ALC_SMART_MODE(
         get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ALC_INTE_MODE_SW_RESPONSE),
-        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_ALC_HUM_ALC_INTELLIGENT_MODE_SW),
+        set = Norm(
+            on = 0x1,
+            off = 0x2,
+            signal = CarCabinManager.ID_ALC_HUM_ALC_INTELLIGENT_MODE_SW
+        ),
         default = true
     ),
 
@@ -656,6 +692,26 @@ enum class SwitchNode(
     ),
 
     //----------------灯光 end ---------------------------------
+    /**
+     * 倒车后视镜下翻开关
+     * set -> int类型数据; 0x0: Inactive; 0x1: Enable; 0x2: Disable
+     * get -> 0x0：Disable 0x1：Enable
+     */
+    UNDER_REARVIEW_MIRROR(
+        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_R_MIRROR_SEE_GROUND_STS),
+        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HUM_MIRROR_SEE_G_ENABLE),
+        default = false
+    ),
+
+    /**
+     * 照地位置设置
+     * set -> int类型数据 照地位置设置[0x1,-1,0x0,0x3] 0x0: Invalid; 0x1: Inactive; 0x2: Active
+     */
+    ACCORDING_POSITION(
+        get = Norm(on = 0x1, off = 0x0, signal = -1),
+        set = Norm(on = 0x2, off = 0x1, signal = CarCabinManager.ID_HUM_MIRROR_SEE_G_SET),
+        default = false
+    ),
 
     INVALID(
         get = Norm(on = 0x1, off = 0x0, signal = -1),

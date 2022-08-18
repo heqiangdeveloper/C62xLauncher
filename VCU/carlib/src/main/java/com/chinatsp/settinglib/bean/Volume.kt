@@ -26,7 +26,7 @@ data class Volume(val type: Type, var min: Int, var max: Int, var pos:Int): Comp
         CAR_SCREEN,
         METER_SCREEN,
         AC_SCREEN,
-        SEAT_SILL_TEMP,
+        SEAT_SILL_TEMP(signal = CarCabinManager.ID_DSM_AUTO_HEAT_TEMP),
 //        STEERING_EDGE_TEMP(id = CarCabinManager.ID_SWS_AUTO_HEAT_TEMP);
         STEERING_EDGE_TEMP(id = -1);
 

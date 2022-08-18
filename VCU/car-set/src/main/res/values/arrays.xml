@@ -16,13 +16,11 @@
     </string-array>
 
     <string-array name="auto_unlock_door_options">
-        <item>关闭</item>
         <item>仅解锁左前门</item>
         <item>四门解锁</item>
     </string-array>
     <!--0x1: unlock FL door 0x2: unlock all doors(default)   0x3: FunctionDisable-->
     <string-array name="auto_unlock_door_option_values">
-        <item>3</item>
         <item>1</item>
         <item>2</item>
     </string-array>
@@ -132,8 +130,8 @@
         <item>低</item>
     </string-array>
     <string-array name="adas_ldw_sensitivity_option_values">
-        <item>1</item>
         <item>2</item>
+        <item>1</item>
     </string-array>
     <string-array name="drive_display_area_options">
         <item>左</item>

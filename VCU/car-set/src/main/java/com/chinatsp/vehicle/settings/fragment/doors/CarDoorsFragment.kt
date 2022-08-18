@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.View
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.access.DoorManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
+import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CarDoorsFragmentBinding
 import com.chinatsp.vehicle.settings.vm.DoorsViewModel
@@ -31,6 +33,7 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+        initViewsDisplay()
         initAnimation()
         initSwitchOption()
         addSwitchLiveDataListener()
@@ -40,7 +43,12 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
         addRadioLiveDataListener()
         setRadioListener()
     }
-
+    private fun initViewsDisplay() {
+        if (VcuUtils.isCareLevel(Level.LEVEL4)) {
+            binding.wheelAutomaticHeating.visibility = View.VISIBLE
+            binding.line3.visibility = View.VISIBLE
+        }
+    }
     private fun initRadioOption() {
         initRadioOption(RadioNode.DOOR_DRIVE_LOCK, viewModel.automaticDoorLock)
         initRadioOption(RadioNode.DOOR_FLAMEOUT_UNLOCK, viewModel.automaticDoorUnlock)
@@ -104,6 +112,7 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
                 } else {
                     binding.rightCarDoorlock.visibility = View.VISIBLE
                     binding.rightFlameout.visibility = View.GONE
+                    animationOpenLock.start(false, 50, null)
                     animationCarDoor.start(false, 50, null)
                 }
             }

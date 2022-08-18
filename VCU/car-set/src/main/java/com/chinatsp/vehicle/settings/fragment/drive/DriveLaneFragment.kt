@@ -44,7 +44,7 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
     }
 
     private fun initDetailsClickListener() {
-        binding.laneAssistSystem.setOnClickListener {
+        binding.laneAssistSystemDetails.setOnClickListener {
             updateHintMessage(R.string.drive_Lane_assist_system, R.string.lane_assist_details)
         }
     }
@@ -60,7 +60,7 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
 
     private fun initVideoListener() {
         val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_auxiliary_system
-        binding.video.setVideoURI(Uri.parse(uri));
+        binding.video.setVideoURI(Uri.parse(uri))
         binding.video.setOnCompletionListener {
             dynamicEffect()
         }
@@ -70,7 +70,7 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
         }
         binding.video.setOnPreparedListener{
             it.setOnInfoListener { _, _, _ ->
-                binding.video.setBackgroundColor(Color.TRANSPARENT);
+                binding.video.setBackgroundColor(Color.TRANSPARENT)
                 binding.videoImage.visibility = View.GONE
                 true
             }
@@ -156,7 +156,7 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
         if (isInit) {
             val names = tabView.nameArray.map { it.toString() }.toTypedArray()
             val values = node.get.values.map { it.toString() }.toTypedArray()
-            //tabView.setItems(names, values)
+            tabView.setItems(names, values)
         }
     }
 

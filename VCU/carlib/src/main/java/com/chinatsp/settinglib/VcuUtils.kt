@@ -59,8 +59,8 @@ object VcuUtils {
     fun getLevelValue(): Int {
         val value = SystemProperties.getInt(OffLine.LEVEL, Level.LEVEL3)
         LogManager.d(TAG, "getLevelValue value: $value")
-//        return value
-        return Level.LEVEL5
+        return value
+//        return Level.LEVEL5
     }
 
     fun putInt(context: Context = BaseApp.instance, key: String, value: Int): Boolean {

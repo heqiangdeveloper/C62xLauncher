@@ -11,21 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.common.xui.widget.picker.ArcSeekBar
-            android:id="@+id/arcSeekBar1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            app:arcLabelPaddingBottom="10dp"
-            app:arcShowLabel="false"
-            app:arcShowTick="true"
-            app:arcStartAngle="150"
-            app:arcSweepAngle="60"
-            app:arcTickOffsetAngle="1"
-            app:arcNormalColor="@color/acr_seek_line_color"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+        <com.common.xui.widget.picker.VerSeekBar
+            android:layout_width="@dimen/x30"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/x30"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             android:visibility="gone"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

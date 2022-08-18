@@ -130,7 +130,10 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
     override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
         return when (node) {
             SwitchNode.DRIVE_TRAILER_REMIND -> {
-                SettingManager.instance.setTrailerRemind(node.value(status))
+                Timber.tag("TRAILER_OPTION").d("doSetSwitchOption node:$node, status:$status start")
+                val result = SettingManager.instance.setTrailerRemind(node.value(status))
+                Timber.tag("TRAILER_OPTION").d("doSetSwitchOption node:$node, status:$status, result:$result end")
+                result
             }
             SwitchNode.DRIVE_BATTERY_OPTIMIZE -> {
                 writeProperty(node.set.signal, node.value(status), node.set.origin)
@@ -158,7 +161,8 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
     }
 
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
-        return when (node) {
+        Timber.tag("TRAILER_OPTION").d("doSetRadioOption node:$node, value:$value start")
+        val result =when (node) {
             RadioNode.DEVICE_TRAILER_DISTANCE -> {
                 SettingManager.instance.setTrailerDistance(value)
             }
@@ -167,6 +171,8 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
             }
             else -> false
         }
+        Timber.tag("TRAILER_OPTION").d("doSetRadioOption node:$node, value:$value, result:$result end")
+        return result
     }
 
     override fun onRegisterVcuListener(priority: Int, listener: IBaseListener): Int {

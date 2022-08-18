@@ -14,6 +14,7 @@ public class IQuTingSongsAdapter extends BaseRcvAdapter<BaseSongItemBean> {
     public IQuTingSongsAdapter(Context context) {
         super(context);
     }
+    private final static int MAXSONGS = 30;//最大30首
 
     @Override
     protected int getLayoutRes() {
@@ -28,5 +29,13 @@ public class IQuTingSongsAdapter extends BaseRcvAdapter<BaseSongItemBean> {
 
     public void updatePlayStatus(int position,boolean isPlaying){
         mIQuTingSongViewHolder.updateSelectItem(position,isPlaying);
+    }
+
+    @Override
+    public int getItemCount() {
+        if(getData().size() > MAXSONGS){
+            return MAXSONGS;
+        }
+        return super.getItemCount();
     }
 }

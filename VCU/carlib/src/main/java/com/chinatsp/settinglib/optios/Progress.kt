@@ -10,7 +10,7 @@ import com.chinatsp.settinglib.bean.CanLocate
  * @desc   :
  * @version: 1.0
  */
-enum class Progress (
+enum class Progress(
     var min: Int = 0,
     var max: Int = 10,
     val step: Int = 1,
@@ -21,8 +21,8 @@ enum class Progress (
      * 氛围灯亮度
      */
     AMBIENT_LIGHT_BRIGHTNESS(
-        min = 0x01,
-        max = 0x06,
+        min = 0x00,
+        max = 0x05,
         get = CanLocate(signal = CarCabinManager.ID_ALC_AL_RESPONSE_BRIGHTNESS),
         set = CanLocate(signal = CarCabinManager.ID_ALC_HUM_ALC_BRIGHTNESS_GRADE)
     ),
@@ -52,7 +52,30 @@ enum class Progress (
     CONDITIONER_SCREEN_BRIGHTNESS(
         get = CanLocate(signal = -1),
         set = CanLocate(signal = -1)
-    );
+    ),
+
+    /**
+     * 座椅自动加热起始温度 (座椅自动加热温度（高配HUM发送，低配HUM不发送此信号）)
+     * set -> 【设置】0x0~0xA: 0~10℃  0xB~0xF: Reserved
+     */
+    SEAT_ONSET_TEMPERATURE(
+        min = 0x00,
+        max = 0x0A,
+        get = CanLocate(signal = -1),
+        set = CanLocate(signal = CarCabinManager.ID_DSM_AUTO_HEAT_TEMP)
+    ),
+
+    /**
+     * 方向盘自动加热起始温度 (方向盘自动加热温度（高配HUM发送，低配HUM不发送此信号）)
+     * set -> 【设置】0x0~0xA: 0~10℃  0xB~0xF: Reserved
+     */
+    STEERING_ONSET_TEMPERATURE(
+        min = 0x00,
+        max = 0x0A,
+        get = CanLocate(signal = -1),
+        set = CanLocate(signal = CarCabinManager.ID_SWS_AUTO_HEAT_TEMP)
+    )
+    ;
 
     fun isValid(value: Int): Boolean = value in min..max
 

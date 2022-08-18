@@ -46,7 +46,7 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
     }
 
     private fun initDetailsClickListener() {
-        binding.driveIntelligentCruiseAssistant.setOnClickListener {
+        binding.cruiseAssistantDetails.setOnClickListener {
             val fragment = DetailsDialogFragment()
             HintHold.setTitle(R.string.drive_intelligent_cruise_assistant)
             HintHold.setContent(R.string.iacc_details)

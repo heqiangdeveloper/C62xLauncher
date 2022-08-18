@@ -91,11 +91,15 @@ class TrailerViewModel @Inject constructor(app: Application, model: BaseModel) :
     }
 
     fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
-        return manager.doSetRadioOption(node, value)
+        Thread{ manager.doSetRadioOption(node, value) }.start()
+        return true
+//        return manager.doSetRadioOption(node, value)
     }
 
     fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
-        return manager.doSetSwitchOption(node, status)
+        Thread{ manager.doSetSwitchOption(node, status) }.start()
+        return true
+//        return manager.doSetSwitchOption(node, status)
     }
 
 }

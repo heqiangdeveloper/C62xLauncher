@@ -40,10 +40,10 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
     }
 
     private fun initDetailsClickListener() {
-        binding.driveWarningFcw.setOnClickListener {
+        binding.driveWarningFcwDetails.setOnClickListener {
             updateHintMessage(R.string.drive_warning_fcw, R.string.fcw_details)
         }
-        binding.driveAeb.setOnClickListener{
+        binding.driveAebDetails.setOnClickListener{
             updateHintMessage(R.string.drive_aeb_title, R.string.aeb_details)
         }
     }

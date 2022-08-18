@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.View
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.lamp.LightManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
+import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.LightingFragmentBinding
 import com.chinatsp.vehicle.settings.vm.light.LightingViewModel
@@ -43,6 +45,15 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
         initRadioOption()
         addRadioLiveDataListener()
         setRadioListener()
+
+        initViewDisplay()
+    }
+
+    private fun initViewDisplay() {
+        if (VcuUtils.isCareLevel(Level.LEVEL3)) {
+            binding.lightingTurnExternal.visibility = View.GONE
+            binding.line4.visibility = View.GONE
+        }
     }
 
 
