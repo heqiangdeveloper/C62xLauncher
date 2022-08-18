@@ -1,11 +1,11 @@
 package com.chinatsp.vehicle.settings.fragment.drive
 
 import android.graphics.Color
+import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.CompoundButton
-import androidx.annotation.StringDef
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.adas.ForwardManager
@@ -59,6 +59,7 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
 
     private fun initVideoListener() {
         val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_fcw
+        binding.video.setAudioFocusRequest(AudioManager.AUDIOFOCUS_NONE)
         binding.video.setVideoURI(Uri.parse(uri));
         binding.video.setOnCompletionListener {
             dynamicEffect()

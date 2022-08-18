@@ -1,6 +1,7 @@
 package com.chinatsp.vehicle.settings.fragment.drive
 
 import android.graphics.Color
+import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -85,6 +86,7 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
 
     private fun initVideoListener() {
         val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_bsd
+        binding.video.setAudioFocusRequest(AudioManager.AUDIOFOCUS_NONE)
         binding.video.setVideoURI(Uri.parse(uri));
         binding.video.setOnCompletionListener {
             binding.video.pause()
