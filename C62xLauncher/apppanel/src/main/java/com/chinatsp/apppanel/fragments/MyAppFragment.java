@@ -351,7 +351,9 @@ public class MyAppFragment extends Fragment {
             A:for (int i = 0; i < allApps.size(); i++){
                 if(packages.equals(allApps.get(i).activityInfo.packageName)){
                     allApps.remove(i);
-                    break A;
+                    //修复： 部分应用由于集成了别的应用的aar，而aar中manifest又声明了主Activity,导致桌面上会有2个图标
+                    //break A;
+                    i--;
                 }
             }
         }
