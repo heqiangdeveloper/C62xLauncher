@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.lamp.AmbientLightingManager
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -158,6 +159,10 @@ class AmbientLightingModelDialogFragment :
         }
         if (view is TabControlView) {
             view.updateEnable(status)
+            return
+        }
+        if (view is AppCompatTextView) {
+            view.isClickable = status
             return
         }
         if (view is ViewGroup) {

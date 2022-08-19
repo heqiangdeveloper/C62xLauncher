@@ -194,6 +194,8 @@ class AmbientLightingFragment :
             viewModel.doBrightnessChanged(node, value)
             binding.ambientLightingBrightness.setValueNoEvent(viewModel.ambientBrightness.value!!)
         }
+        status = viewModel.ambientBrightness.value == 0
+        checkDisableOtherDiv(status)
     }
 
     private fun checkDisableOtherDiv(status: Boolean) {
