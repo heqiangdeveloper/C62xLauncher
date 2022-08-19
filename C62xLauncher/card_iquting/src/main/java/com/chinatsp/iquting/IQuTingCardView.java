@@ -29,14 +29,12 @@ import com.chinatsp.iquting.event.ContentConnectEvent;
 import com.chinatsp.iquting.event.ControlEvent;
 import com.chinatsp.iquting.event.Event;
 import com.chinatsp.iquting.event.PlayConnectEvent;
-import com.chinatsp.iquting.songs.IQuTingSong;
 import com.chinatsp.iquting.songs.IQuTingSongsAdapter;
 import com.chinatsp.iquting.state.NetWorkDisconnectState;
 import com.chinatsp.iquting.state.NormalState;
 import com.chinatsp.iquting.state.IQuTingState;
 import com.chinatsp.iquting.state.UnLoginState;
 import com.chinatsp.iquting.utils.ToolUtils;
-import com.tencent.wecarflow.contentsdk.ContentListener;
 import com.tencent.wecarflow.contentsdk.ContentManager;
 import com.tencent.wecarflow.contentsdk.bean.AreaContentResponseBean;
 import com.tencent.wecarflow.contentsdk.bean.BaseSongItemBean;
@@ -396,7 +394,7 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                         mTvIQuTingMediaNameBig.setText(name);
                         mTvIQuTingArtistBig.setText(artist);
                         if(!isDestroy((Activity) context)){
-                            GlideHelper.loadUrlCircleImage(context,mIvIQuTingCoverBig,iconUrl);
+                            GlideHelper.loadUrlImage(context,mIvIQuTingCoverBig,iconUrl);
                         }
 
                         mCircleProgressView.setCurrent(0);
@@ -692,7 +690,7 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                         mCircleProgressView.setMax(mediaInfo.getDuration());
                         mCircleProgressView.setCurrent(mediaInfo.getCurrentDuration() / 1000);
                         if(!TextUtils.isEmpty(iconUrl)){
-                            GlideHelper.loadUrlCircleImage(context,mIvIQuTingCoverBig,iconUrl);
+                            GlideHelper.loadUrlImage(context,mIvIQuTingCoverBig,iconUrl);
                         }else {
                             GlideHelper.loadLocalCircleImage(context,mIvIQuTingCoverBig,R.drawable.test_cover2);
                         }
@@ -871,7 +869,7 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
         mTvIQuTingMediaNameBig.setText(name);
         mTvIQuTingArtistBig.setText(artist);
         if(!TextUtils.isEmpty(iconUrl)){
-            GlideHelper.loadUrlCircleImage(getContext(),mIvIQuTingCoverBig,iconUrl);
+            GlideHelper.loadUrlImage(getContext(),mIvIQuTingCoverBig,iconUrl);
         }else {
             GlideHelper.loadLocalCircleImage(getContext(),mIvIQuTingCoverBig,R.drawable.test_cover2);
         }

@@ -55,7 +55,8 @@ public class GlideHelper {
         requestBuilder.into(imageView);
     }
 
-    public static void loadUrlCircleImage(Context context, ImageView imageView, String res) {
+
+    public static void loadUrlImage(Context context, ImageView imageView, String res) {
         if(TextUtils.isEmpty(res)){
             Log.d(TAG,"url is empty");
             return;
@@ -66,6 +67,22 @@ public class GlideHelper {
                 .override(COVER_SIZE, COVER_SIZE)
                 .circleCrop()
                 .apply(new GlideCommonRequestOption());
+        requestBuilder.into(imageView);
+    }
+    public static void loadUrlImage(Context context, ImageView imageView, String res, int width, int height, int radius) {
+        if(TextUtils.isEmpty(res)){
+            Log.d(TAG,"url is empty");
+            return;
+        }
+        RequestBuilder<Drawable> requestBuilder = Glide.with(context)
+                .load(res)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .override(width, height)
+                .apply(new GlideCommonRequestOption());
+        if (radius > 0) {
+            requestBuilder = requestBuilder.transform(
+                    new RoundBitmapTransformation(radius, radius, radius, radius));
+        }
         requestBuilder.into(imageView);
     }
 }

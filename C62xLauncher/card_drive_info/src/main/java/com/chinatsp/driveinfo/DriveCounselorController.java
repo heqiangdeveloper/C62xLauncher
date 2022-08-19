@@ -54,7 +54,8 @@ public class DriveCounselorController {
     };
 
     public void readInfo() {
-        mRepository.readDriveInfo();
+        DriveInfo driveInfo = mRepository.readDriveInfo();
+        mView.updateDriveInfo(driveInfo);
     }
 
     void attachListener() {

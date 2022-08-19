@@ -32,14 +32,6 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * @author xuyuanli
- * @description
- * @time 2021/2/2 14:58
- * @UpdateUser: xuyuanli
- * @UpdateDate: 2021/2/2 14:58
- * @UpdateRemark:
- */
 public abstract class ApiBase {
     protected Retrofit retrofit;
     private static ErrorTransformer sErrorTransformer = new ErrorTransformer();

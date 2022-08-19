@@ -5,10 +5,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
    <ImageView
-       android:id="@+id/ivCardVolcanoLogo"
+       android:id="@+id/ivCardVolcanoSourceLogo"
        android:layout_width="@dimen/card_icon_size_lv3"
        android:layout_height="@dimen/card_icon_size_lv3"
-       android:src="@drawable/card_douyin_icon_logo"
+       android:src="@drawable/card_volcano_type_toutiao"
        app:layout_constraintTop_toTopOf="parent"
        app:layout_constraintStart_toStartOf="parent"
        android:layout_marginStart="65px"
@@ -16,14 +16,15 @@
        />
 
     <TextView
+        android:id="@+id/tvCardVolcanoSource"
         android:layout_width="59px"
         android:layout_height="42px"
         style="@style/CardLv3TextView"
         android:textColor="@color/card_blue_default"
-        android:text="抖音"
-        app:layout_constraintTop_toTopOf="@id/ivCardVolcanoLogo"
-        app:layout_constraintBottom_toBottomOf="@id/ivCardVolcanoLogo"
-        app:layout_constraintStart_toEndOf="@id/ivCardVolcanoLogo"
+        android:text="头条"
+        app:layout_constraintTop_toTopOf="@id/ivCardVolcanoSourceLogo"
+        app:layout_constraintBottom_toBottomOf="@id/ivCardVolcanoSourceLogo"
+        app:layout_constraintStart_toEndOf="@id/ivCardVolcanoSourceLogo"
         android:layout_marginLeft="2px"
 
         />
@@ -33,7 +34,7 @@
         android:layout_width="384px"
         android:layout_height="216px"
         android:src="@drawable/card_douyin_test_cover"
-        app:layout_constraintTop_toBottomOf="@id/ivCardVolcanoLogo"
+        app:layout_constraintTop_toBottomOf="@id/ivCardVolcanoSourceLogo"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="54px"
         android:layout_marginTop="12px"
@@ -43,6 +44,7 @@
         android:layout_width="384px"
         android:layout_height="46px"
         android:ellipsize="end"
+        android:maxLines="1"
         style="@style/CardLv2TextView"
         android:gravity="center_vertical|start"
         android:text="给我一首歌的时间"

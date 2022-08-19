@@ -1,6 +1,9 @@
 package com.chinatsp.volcano.api.response;
 
 public class VolcanoResponse {
+
+    public static final int CODE_SUCCESS = 0;
+
     private int errno;
     private String msg;
     private VideoListData data;
@@ -28,5 +31,14 @@ public class VolcanoResponse {
 
     public void setData(VideoListData data) {
         this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return "VolcanoResponse{" +
+                "errno=" + errno +
+                ", msg='" + msg + '\'' +
+                ", data=" + data +
+                '}';
     }
 }

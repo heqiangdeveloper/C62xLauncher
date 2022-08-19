@@ -1,6 +1,5 @@
 package com.chinatsp.drawer.drive;
 
-import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -19,7 +18,7 @@ public class DrawerDriveCounselorHolder extends BaseViewHolder<DrawerEntity> {
     private TextView tvDrawerDriveHealthy;
     private TextView tvDrawerDriveDistance;
     private TextView tvDrawerDriveDistanceLabel;
-    private TextView tvDrawerDriveHealthyPercent;
+    private TextView tvDrawerDriveRanking;
     private DistanceCircleProgress progressDrawerDriveDistance;
 
 
@@ -29,7 +28,7 @@ public class DrawerDriveCounselorHolder extends BaseViewHolder<DrawerEntity> {
         tvDrawerDriveHealthy = itemView.findViewById(R.id.tvDrawerDriveHealthy);
         tvDrawerDriveDistance = itemView.findViewById(R.id.tvDrawerDriveDistance);
         tvDrawerDriveDistanceLabel = itemView.findViewById(R.id.tvDrawerDriveDistanceLabel);
-        tvDrawerDriveHealthyPercent = itemView.findViewById(R.id.tvDrawerDriveHealthyPercent);
+        tvDrawerDriveRanking = itemView.findViewById(R.id.tvDrawerDriveRanking);
         progressDrawerDriveDistance = itemView.findViewById(R.id.progressDrawerDriveDistance);
         mController.readDriveInfo();
     }
@@ -54,7 +53,7 @@ public class DrawerDriveCounselorHolder extends BaseViewHolder<DrawerEntity> {
     }
 
     public void updateRank(int rank) {
-
+        tvDrawerDriveRanking.setText(String.valueOf(rank));
     }
 
     public void updateDriveInfo(DriveInfo driveInfo, float maintenancePercent) {
