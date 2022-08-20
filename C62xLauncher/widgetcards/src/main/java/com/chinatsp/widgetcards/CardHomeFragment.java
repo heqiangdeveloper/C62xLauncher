@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Handler;
 import android.view.View;
 
 import com.chinatsp.drawer.DrawerCreator;
@@ -71,10 +72,13 @@ public class CardHomeFragment extends BaseFragment {
     Observer<Boolean> mExpandOb = new Observer<Boolean>() {
         @Override
         public void onChanged(Boolean expand) {
-            onChangeExpandState(expand);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    onChangeExpandState(expand);
+                }
+            }, 600);
         }
-
-
     };
     private void onChangeExpandState(Boolean expand) {
         EasyLog.d(TAG, "onChangeExpandState: "+expand);

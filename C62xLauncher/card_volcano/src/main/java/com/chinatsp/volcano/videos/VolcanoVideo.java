@@ -4,6 +4,7 @@ public class VolcanoVideo {
     private String title;
     private String cover_url;
     private String schema;
+    private String source;
 
     public String getTitle() {
         return title;
@@ -27,5 +28,9 @@ public class VolcanoVideo {
 
     public void setSchema(String schema) {
         this.schema = schema;
+    }
+
+    public String getSource() {
+        return source;
     }
 }

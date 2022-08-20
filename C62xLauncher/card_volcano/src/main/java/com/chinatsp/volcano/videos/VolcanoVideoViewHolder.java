@@ -2,6 +2,7 @@ package com.chinatsp.volcano.videos;
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
@@ -13,14 +14,23 @@ import launcher.base.utils.glide.GlideHelper;
 
 public class VolcanoVideoViewHolder extends BaseViewHolder<VolcanoVideo> {
     private ImageView mSongCover;
+    private TextView tvVolcanoVideoItemTitle;
+    private TextView tvVolcanoVideoItemArtist;
     public VolcanoVideoViewHolder(@NonNull View itemView) {
         super(itemView);
         mSongCover = itemView.findViewById(R.id.ivVolcanoVideoItemCover);
+        tvVolcanoVideoItemTitle = itemView.findViewById(R.id.tvVolcanoVideoItemTitle);
+        tvVolcanoVideoItemArtist = itemView.findViewById(R.id.tvVolcanoVideoItemArtist);
     }
 
     @Override
     public void bind(int position, VolcanoVideo volcanoVideo) {
         super.bind(position, volcanoVideo);
-        GlideHelper.loadLocalAlbumCoverRadius(mSongCover.getContext(), mSongCover, R.drawable.card_douyin_test_cover, 10);
+        if (volcanoVideo == null) {
+            return;
+        }
+        GlideHelper.loadUrlImage(mSongCover.getContext(), mSongCover, volcanoVideo.getCover_url(), 384,216,10);
+        tvVolcanoVideoItemTitle.setText(volcanoVideo.getTitle());
+//        tvVolcanoVideoItemArtist.setVisibility(View.INVISIBLE);
     }
 }

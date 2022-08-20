@@ -32,4 +32,14 @@ public class VideoListData {
     public void setList(List<VolcanoVideo> list) {
         this.list = list;
     }
+
+    @Override
+    public String toString() {
+        return "VideoListData{" +
+                "total=" + total +
+                ", update_interval=" + update_interval +
+                ", listSize =" + list.size() +
+                ", list  =" + list +
+                '}';
+    }
 }

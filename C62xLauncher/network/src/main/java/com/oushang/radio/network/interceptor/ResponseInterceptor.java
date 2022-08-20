@@ -79,6 +79,8 @@ public class ResponseInterceptor implements Interceptor {
         String rawJson = response.body() == null ? "" : response.body().string();
         NetworkLog.d(TAG,"intercept url=" + url);
         NetworkLog.d(TAG,"intercept rawJson=" + rawJson);
+        NetworkLog.d(TAG,"intercept header  X-Signature " +  request.headers().get("X-Signature"));
+
         return response.newBuilder().body(ResponseBody.create(response.body().contentType(), rawJson)).build();
     }
 }

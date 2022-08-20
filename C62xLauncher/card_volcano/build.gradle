@@ -27,12 +27,13 @@ android {
 }
 
 dependencies {
-    compileOnly fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
+    implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
     implementation rootProject.ext.dependencies.appcompat
     implementation rootProject.ext.dependencies.material
     implementation rootProject.ext.dependencies.constraintlayout
     implementation project(path: ':baseCard')
     implementation project(path: ':network')
+    implementation project(path: ':carservice')
 
     api rootProject.ext.dependencies.okhttp
     api rootProject.ext.dependencies.retrofit

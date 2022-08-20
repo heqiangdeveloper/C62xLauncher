@@ -28,6 +28,37 @@
         android:layout_marginTop="35px"
         />
 
+    <ImageView
+        android:id="@+id/ivCardVolcanoLogoXigua"
+        android:src="@drawable/card_volcano_type_xigua_selector"
+        android:layout_width="82px"
+        android:layout_height="82px"
+        android:layout_marginTop="30px"
+        android:layout_marginEnd="84px"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <ImageView
+        android:id="@+id/ivCardVolcanoLogoDouyin"
+        android:layout_width="82px"
+        android:layout_height="82px"
+        android:layout_marginEnd="26px"
+        android:src="@drawable/card_volcano_type_douyin_selector"
+        app:layout_constraintTop_toTopOf="@id/ivCardVolcanoLogoXigua"
+        app:layout_constraintEnd_toStartOf="@id/ivCardVolcanoLogoXigua"
+        />
+
+    <ImageView
+        android:id="@+id/ivCardVolcanoLogoToutiao"
+        android:layout_width="82px"
+        android:layout_height="82px"
+        android:src="@drawable/card_volcano_type_toutiao_selector"
+        android:layout_marginEnd="26px"
+        app:layout_constraintTop_toTopOf="@id/ivCardVolcanoLogoDouyin"
+        app:layout_constraintEnd_toStartOf="@id/ivCardVolcanoLogoDouyin"
+        />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcvCardVolcanoVideoList"
         android:layout_width="match_parent"
@@ -37,6 +68,21 @@
         android:layout_marginTop="108px"
         android:layout_marginStart="56px"
         android:layout_marginEnd="27px"
+        />
+
+    <TextView
+        android:id="@+id/viewLoading"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:text="正在加载....."
+        android:textColor="#ffffff"
+        android:textSize="32px"
+        android:background="#000000"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="@id/rcvCardVolcanoVideoList"
+        app:layout_constraintBottom_toBottomOf="@id/rcvCardVolcanoVideoList"
+        app:layout_constraintStart_toStartOf="@id/rcvCardVolcanoVideoList"
+        app:layout_constraintEnd_toEndOf="@id/rcvCardVolcanoVideoList"
         />
 
     <ImageView

@@ -118,7 +118,6 @@ public class DriveInfoRepository {
             drivingMileage = mCihonManager.getDrivingMileage();
         } catch (Exception e) {
             EasyLog.e(TAG, "readDriveInfo drivingMileage fail: " + e.getMessage());
-            e.printStackTrace();
         }
         try {
             drivingTime = mCihonManager.getDrivingTime();
@@ -129,7 +128,6 @@ public class DriveInfoRepository {
             oilConsumption = mCihonManager.getOilConsumption();
         } catch (Exception e) {
             EasyLog.e(TAG, "readDriveInfo oilConsumption fail: " + e.getMessage());
-            e.printStackTrace();
         }
         try {
             maintenanceMileage = mCihonManager.getMaintenanceMileage();

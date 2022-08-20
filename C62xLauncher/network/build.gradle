@@ -32,7 +32,6 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'com.google.guava:guava:23.3-android'
     implementation "com.squareup.okhttp3:logging-interceptor:3.8.1"
     //引入rxjava适配器，方便rxjava与retrofit的结合
     api rootProject.ext.dependencies.gson

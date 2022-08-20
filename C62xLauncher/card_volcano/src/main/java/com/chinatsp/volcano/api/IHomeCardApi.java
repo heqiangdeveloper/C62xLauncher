@@ -11,10 +11,11 @@ import retrofit2.http.Field;
 import retrofit2.http.GET;
 import retrofit2.http.HeaderMap;
 import retrofit2.http.POST;
+import retrofit2.http.QueryMap;
 
 public interface IHomeCardApi {
     public static String API_HOME_CARD = "callback/home/cards";
 
     @GET(API_HOME_CARD)
-    Observable<VolcanoResponse> uploadOrderInfo(@Field("source") String source);
+    Observable<VolcanoResponse> getHomeCards(@QueryMap Map<String, String> queryFields, @HeaderMap Map<String, String> headers);
 }
