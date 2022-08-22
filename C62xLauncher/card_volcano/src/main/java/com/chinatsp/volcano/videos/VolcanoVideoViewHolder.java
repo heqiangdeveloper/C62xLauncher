@@ -1,5 +1,7 @@
 package com.chinatsp.volcano.videos;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,5 +34,13 @@ public class VolcanoVideoViewHolder extends BaseViewHolder<VolcanoVideo> {
         GlideHelper.loadUrlImage(mSongCover.getContext(), mSongCover, volcanoVideo.getCover_url(), 384,216,10);
         tvVolcanoVideoItemTitle.setText(volcanoVideo.getTitle());
 //        tvVolcanoVideoItemArtist.setVisibility(View.INVISIBLE);
+
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(volcanoVideo.getSchema()));
+                itemView.getContext().startActivity(intent);
+            }
+        });
     }
 }

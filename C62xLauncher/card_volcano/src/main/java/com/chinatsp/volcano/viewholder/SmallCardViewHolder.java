@@ -1,5 +1,7 @@
 package com.chinatsp.volcano.viewholder;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -9,8 +11,10 @@ import com.chinatsp.volcano.api.response.VideoListData;
 import com.chinatsp.volcano.repository.VolcanoRepository;
 import com.chinatsp.volcano.videos.VolcanoVideo;
 
+import java.util.IllegalFormatCodePointException;
 import java.util.List;
 
+import launcher.base.routine.ActivityBus;
 import launcher.base.utils.glide.GlideHelper;
 
 public class SmallCardViewHolder extends VolcanoViewHolder{
@@ -19,6 +23,7 @@ public class SmallCardViewHolder extends VolcanoViewHolder{
     private TextView tvCardVolcanoVideoArtist;
     private TextView tvCardVolcanoVideoName;
     private TextView tvCardVolcanoSource;
+    private VolcanoVideo volcanoVideo;
 
     public SmallCardViewHolder(View rootView) {
         super(rootView);
@@ -27,6 +32,16 @@ public class SmallCardViewHolder extends VolcanoViewHolder{
         tvCardVolcanoVideoArtist = rootView.findViewById(R.id.tvCardVolcanoVideoArtist);
         tvCardVolcanoVideoName = rootView.findViewById(R.id.tvCardVolcanoVideoName);
         tvCardVolcanoSource = rootView.findViewById(R.id.tvCardVolcanoSource);
+
+        rootView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (volcanoVideo != null) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(volcanoVideo.getSchema()));
+                    rootView.getContext().startActivity(intent);
+                }
+            }
+        });
     }
 
     @Override
@@ -50,7 +65,7 @@ public class SmallCardViewHolder extends VolcanoViewHolder{
         if (list.isEmpty()) {
             return;
         }
-        VolcanoVideo volcanoVideo = list.get(0);
+        volcanoVideo = list.get(0);
         if (volcanoVideo == null) {
             return;
         }
