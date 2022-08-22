@@ -117,6 +117,12 @@
     <string name="car_mirror_automatic_folding">外后视镜自动折叠</string>
     <string name="car_mirror_automatic_folding_close">后视镜自动折叠已关闭</string>
     <string name="car_mirror_automatic_folding_open">后视镜自动折叠已开启</string>
+    <string name="car_mirror_automatic_under_double">倒车后视镜下翻</string>
+    <string name="car_mirror_angle">修改角度</string>
+    <string name="car_mirror_dialog_title">倒⻋后视镜⻆度设置</string>
+    <string name="car_mirror_dialog_btn">保存设置</string>
+    <string name="car_mirror_dialog_content">倒⻋请在⻋⻔的物理按键上调节，在2分钟之内完成 \n
+设置，2分钟倒计时结束后⾃动保存当前位置⻆度设置</string>
 
     <string name="ac_open_window">一键开窗</string>
     <string name="ac_close_window">一键关窗</string>

@@ -6,6 +6,7 @@ import com.chinatsp.settinglib.manager.access.BackMirrorManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CarMirrorFragmentBinding
+import com.chinatsp.vehicle.settings.fragment.doors.dialog.AngleDialogFragment
 import com.chinatsp.vehicle.settings.vm.accress.MirrorViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
@@ -31,6 +32,7 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
         initSwitchOption(SwitchNode.BACK_MIRROR_FOLD, foldSwitchStatus)
         setSwitchListener()
         addSwitchLiveDataListener()
+        setCheckedChangeListener()
     }
 
     private fun setSwitchListener() {
@@ -81,5 +83,15 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
             swb.setCheckedImmediatelyNoEvent(status)
         }
     }
-
+    private fun setCheckedChangeListener() {
+        binding.alterReverseAngle.setOnClickListener {
+            showReverseAngleFragment()
+        }
+    }
+    private fun showReverseAngleFragment() {
+        val fragment = AngleDialogFragment()
+        activity?.supportFragmentManager?.let { it ->
+            fragment.show(it, fragment.javaClass.simpleName)
+        }
+    }
 }
