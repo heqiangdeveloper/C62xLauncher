@@ -77,7 +77,6 @@
         android:text="正在加载....."
         android:textColor="#ffffff"
         android:textSize="32px"
-        android:background="#000000"
         android:gravity="center"
         app:layout_constraintTop_toTopOf="@id/rcvCardVolcanoVideoList"
         app:layout_constraintBottom_toBottomOf="@id/rcvCardVolcanoVideoList"

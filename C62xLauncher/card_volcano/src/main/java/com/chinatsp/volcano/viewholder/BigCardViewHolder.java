@@ -106,16 +106,14 @@ public class BigCardViewHolder extends VolcanoViewHolder{
 
     @Override
     public void showLoadingView() {
-        EasyLog.i(TAG, "showLoadingView");
-        rcvCardVolcanoVideoList.setVisibility(View.GONE);
+        rcvCardVolcanoVideoList.setVisibility(View.INVISIBLE);
         viewLoading.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoadingView() {
-        EasyLog.i(TAG, "hideLoadingView");
         rcvCardVolcanoVideoList.setVisibility(View.VISIBLE);
-        viewLoading.setVisibility(View.GONE);
+        viewLoading.setVisibility(View.INVISIBLE);
     }
 
     private void initBigCardView(View largeCardView) {
