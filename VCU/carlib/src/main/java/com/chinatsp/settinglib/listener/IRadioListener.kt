@@ -1,7 +1,6 @@
 package com.chinatsp.settinglib.listener
 
 import com.chinatsp.settinglib.optios.RadioNode
-import com.chinatsp.settinglib.optios.SwitchNode
 
 /**
  * @author : luohong

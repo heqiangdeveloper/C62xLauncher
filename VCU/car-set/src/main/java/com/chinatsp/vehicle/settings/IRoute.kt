@@ -1,8 +1,6 @@
 package com.chinatsp.vehicle.settings
 
-import androidx.annotation.IntRange
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 
 /**
  * @author : luohong

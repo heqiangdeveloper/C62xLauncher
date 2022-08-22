@@ -4,13 +4,11 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import com.chinatsp.settinglib.Constant
-import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.IOuterController
-import com.chinatsp.vehicle.controller.annotation.Action
-import com.chinatsp.vehicle.controller.annotation.IStatus
 import com.chinatsp.vehicle.controller.bean.Cmd
+import timber.log.Timber
 
 /**
  * @author : luohong
@@ -28,7 +26,7 @@ class VehicleService: Service() {
     override fun onBind(intent: Intent?): IBinder {
         intent?.let {
             val packageName = it.`package`
-            LogManager.d(TAG, "onBind packageName:$packageName")
+            Timber.d("onBind packageName:$packageName")
         }
         return controller
     }
@@ -40,7 +38,7 @@ class VehicleService: Service() {
         }
 
         override fun doOuterControlCommand(cmd: Cmd, callback: ICmdCallback?) {
-            LogManager.d(TAG, "doOuterControlCommand -------------- cmd:$cmd")
+            Timber.d("doOuterControlCommand -------------- cmd:$cmd")
             GlobalManager.instance.doOuterControlCommand(cmd, callback)
 //            if (cmd.action == Action.OPEN) {
 //                cmd.status = IStatus.SUCCESS

@@ -2,8 +2,8 @@ package com.chinatsp.vehicle.settings.fragment.lighting
 
 import android.os.Bundle
 import com.chinatsp.settinglib.IProgressManager
-import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.manager.lamp.BrightnessManager
+import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.LightingScreenFragmentBinding
 import com.chinatsp.vehicle.settings.vm.light.BrightnessViewModel
@@ -42,6 +42,6 @@ class LightingScreenFragment : BaseFragment<BrightnessViewModel, LightingScreenF
     }
 
     override fun onValueChanged(seekBar: VSeekBar?, newValue: Int) {
-        manager.doSetVolume(Volume.Type.CAR_SCREEN, newValue)
+        manager.doSetVolume(Progress.HOST_SCREEN_BRIGHTNESS, newValue)
     }
 }

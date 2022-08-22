@@ -3,18 +3,12 @@ package com.chinatsp.vehicle.settings.vm.cabin
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.chinatsp.settinglib.LogManager
-import com.chinatsp.settinglib.listener.IRadioListener
 import com.chinatsp.settinglib.listener.ISwitchListener
-import com.chinatsp.settinglib.manager.cabin.MeterManager
 import com.chinatsp.settinglib.manager.cabin.OtherManager
-import com.chinatsp.settinglib.manager.cabin.SafeManager
-import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.common.library.frame.base.BaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 /**

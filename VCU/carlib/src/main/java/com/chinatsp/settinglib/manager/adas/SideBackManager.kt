@@ -136,9 +136,13 @@ class SideBackManager : BaseManager(), IOptionManager {
         var result = -1
         if (listener is IOptionListener) {
             val serial: Int = System.identityHashCode(listener)
-            synchronized(listenerStore) {
+            val writeLock = readWriteLock.writeLock()
+            try {
+                writeLock.lock()
                 unRegisterVcuListener(serial, identity)
                 listenerStore.put(serial, WeakReference(listener))
+            } finally {
+                writeLock.unlock()
             }
             result = serial
         }

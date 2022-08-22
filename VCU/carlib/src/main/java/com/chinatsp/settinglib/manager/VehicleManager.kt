@@ -4,10 +4,9 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.os.Bundle
 import android.os.IBinder
-import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.service.VehicleService
+import timber.log.Timber
 
 /**
  * @author : luohong
@@ -38,15 +37,15 @@ class VehicleManager private constructor(): ServiceConnection {
     private fun bindService(intent: Intent) {
 //        intent.component = ComponentName(context, VehicleService::class.java)
         val result = context.bindService(intent, this, Context.BIND_AUTO_CREATE)
-        LogManager.d(TAG, "bindService result:$result")
+        Timber.d("bindService result:$result")
     }
 
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-        LogManager.d(TAG, "onServiceConnected !!!!!!!!!!!!!!!")
+        Timber.d("onServiceConnected !!!!!!!!!!!!!!!")
 
     }
 
     override fun onServiceDisconnected(name: ComponentName?) {
-        LogManager.d(TAG, "onServiceDisconnected !!!!!!!!!!!!!!!")
+        Timber.d("onServiceDisconnected !!!!!!!!!!!!!!!")
     }
 }

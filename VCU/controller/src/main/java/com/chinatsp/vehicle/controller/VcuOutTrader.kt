@@ -18,7 +18,6 @@ import com.chinatsp.ifly.aidlbean.NlpVoiceModel
 import com.chinatsp.ifly.voiceadapter.Business
 import com.chinatsp.ifly.voiceadapter.SpeechServiceAgent
 import com.chinatsp.ifly.voiceadapter.abs.SpeechControlListenerAbs
-import com.chinatsp.vehicle.controller.annotation.IStatus
 import com.chinatsp.vehicle.controller.bean.Cmd
 
 /**

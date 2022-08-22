@@ -84,6 +84,17 @@ class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
         }
     }
 
+    val touchToneStatus: LiveData<Boolean>
+        get() = _touchToneStatus
+
+    private val _touchToneStatus: MutableLiveData<Boolean> by lazy {
+        val node = SwitchNode.TOUCH_PROMPT_TONE
+        MutableLiveData(node.default).apply {
+            val value = manager.doGetSwitchOption(node)
+            postValue(value)
+        }
+    }
+
     override fun onCreate() {
         super.onCreate()
         keySerial = VoiceManager.instance.onRegisterVcuListener(0, this)
@@ -104,6 +115,9 @@ class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
             }
             SwitchNode.AUDIO_SOUND_HUAWEI -> {
                 _huaweiStatus.postValue(status)
+            }
+            SwitchNode.TOUCH_PROMPT_TONE -> {
+                _touchToneStatus.postValue(status)
             }
             else -> {}
         }

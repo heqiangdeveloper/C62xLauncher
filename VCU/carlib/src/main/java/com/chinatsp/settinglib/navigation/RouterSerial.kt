@@ -2,7 +2,6 @@ package com.chinatsp.settinglib.navigation
 
 import android.annotation.IntRange
 import com.chinatsp.settinglib.Constant
-import com.chinatsp.settinglib.navigation.RouterSerial
 
 /**
  * @author : luohong

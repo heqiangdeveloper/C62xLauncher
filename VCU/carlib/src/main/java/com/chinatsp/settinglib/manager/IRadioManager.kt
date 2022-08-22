@@ -4,7 +4,6 @@ import android.car.hardware.CarPropertyValue
 import com.chinatsp.settinglib.listener.IManager
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
-import com.chinatsp.settinglib.sign.TabBlock
 import java.util.concurrent.atomic.AtomicInteger
 
 /**

@@ -5,6 +5,7 @@ import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.manager.sound.VoiceManager
+import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.AudioSoundVolumeDialogBinding
 import com.chinatsp.vehicle.settings.vm.sound.VolumeViewModel
@@ -38,23 +39,23 @@ class VolumeDialogFragment : BaseDialogFragment<VolumeViewModel, AudioSoundVolum
             var seekBar: VerticalSeekBar? = null
             var textView: AppCompatTextView? = null
             when (it.type) {
-                Volume.Type.NAVI -> {
+                Progress.NAVI -> {
                     seekBar = binding.soundAudioNaviVolume
                     textView = binding.naviVolumeTxt
                 }
-                Volume.Type.VOICE -> {
+                Progress.VOICE -> {
                     seekBar = binding.soundAudioVoiceVolume
                     textView = binding.voiceVolumeTxt
                 }
-                Volume.Type.MEDIA -> {
+                Progress.MEDIA -> {
                     seekBar = binding.soundAudioMediaVolume
                     textView = binding.mediaVolumeTxt
                 }
-                Volume.Type.PHONE -> {
+                Progress.PHONE -> {
                     seekBar = binding.soundAudioPhoneVolume
                     textView = binding.phoneVolumeTxt
                 }
-                Volume.Type.SYSTEM -> {
+                Progress.SYSTEM -> {
                     seekBar = binding.soundAudioSystemVolume
                     textView = binding.systemVolumeTxt
                 }
@@ -68,28 +69,27 @@ class VolumeDialogFragment : BaseDialogFragment<VolumeViewModel, AudioSoundVolum
     }
 
 
-
     override fun onPointsChanged(view: VerticalSeekBar?, progress: Int) {
         when (view?.id) {
             R.id.sound_audio_navi_volume -> {
                 binding.naviVolumeTxt.text = progress.toString()
-                manager.doSetVolume(Volume.Type.NAVI, progress)
+                manager.doSetVolume(Progress.NAVI, progress)
             }
             R.id.sound_audio_voice_volume -> {
                 binding.voiceVolumeTxt.text = progress.toString()
-                manager.doSetVolume(Volume.Type.VOICE, progress)
+                manager.doSetVolume(Progress.VOICE, progress)
             }
             R.id.sound_audio_media_volume -> {
-                binding.mediaVolumeTxt.text=progress.toString()
-                manager.doSetVolume(Volume.Type.MEDIA, progress)
+                binding.mediaVolumeTxt.text = progress.toString()
+                manager.doSetVolume(Progress.MEDIA, progress)
             }
             R.id.sound_audio_phone_volume -> {
                 binding.phoneVolumeTxt.text = progress.toString()
-                manager.doSetVolume(Volume.Type.PHONE, progress)
+                manager.doSetVolume(Progress.PHONE, progress)
             }
             R.id.sound_audio_system_volume -> {
                 binding.systemVolumeTxt.text = progress.toString()
-                //manager.doSetVolume(Volume.Type.SYSTEM, progress)
+                manager.doSetVolume(Progress.SYSTEM, progress)
             }
             else -> {
             }
@@ -106,17 +106,17 @@ class VolumeDialogFragment : BaseDialogFragment<VolumeViewModel, AudioSoundVolum
 
 
     override fun initData(savedInstanceState: Bundle?) {
-        setSeekBarListener(this)
         updateVolumeValue(viewModel.naviVolume.value)
         updateVolumeValue(viewModel.voiceVolume.value)
         updateVolumeValue(viewModel.mediaVolume.value)
         updateVolumeValue(viewModel.phoneVolume.value)
         updateVolumeValue(viewModel.systemVolume.value)
+        setSeekBarListener(this)
         observeSoundVolume()
         binding.closeDialog.setOnClickListener {
             dismiss()
         }
-        binding.reset.setOnClickListener {  }
+        binding.reset.setOnClickListener { }
     }
 
     private fun observeSoundVolume() {

@@ -1,13 +1,10 @@
 package com.chinatsp.vehicle.settings.app;
 
 import android.content.Context;
-import android.graphics.Paint;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.chinatsp.vehicle.settings.R;

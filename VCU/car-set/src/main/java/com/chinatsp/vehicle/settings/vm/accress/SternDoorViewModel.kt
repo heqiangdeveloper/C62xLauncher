@@ -3,7 +3,6 @@ package com.chinatsp.vehicle.settings.vm.accress
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.manager.access.SternDoorManager
 import com.chinatsp.settinglib.optios.RadioNode

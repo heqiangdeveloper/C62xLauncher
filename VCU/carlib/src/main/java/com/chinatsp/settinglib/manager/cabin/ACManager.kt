@@ -128,9 +128,13 @@ class ACManager private constructor() : BaseManager(), IAcManager {
 
     override fun onRegisterVcuListener(priority: Int, listener: IBaseListener): Int {
         val serial: Int = System.identityHashCode(listener)
-        synchronized(listenerStore) {
+        val writeLock = readWriteLock.writeLock()
+        try {
+            writeLock.lock()
             unRegisterVcuListener(serial, identity)
             listenerStore.put(serial, WeakReference(listener))
+        } finally {
+            writeLock.unlock()
         }
         return serial
     }

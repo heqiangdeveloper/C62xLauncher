@@ -131,8 +131,11 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
         return when (node) {
             SwitchNode.DRIVE_TRAILER_REMIND -> {
                 Timber.tag("TRAILER_OPTION").d("doSetSwitchOption node:$node, status:$status start")
+                LogManager.d("TRAILER_OPTION", "============11111111111=========================")
                 val result = SettingManager.instance.setTrailerRemind(node.value(status))
                 Timber.tag("TRAILER_OPTION").d("doSetSwitchOption node:$node, status:$status, result:$result end")
+                LogManager.d("TRAILER_OPTION", "============2222222222222=========================")
+
                 result
             }
             SwitchNode.DRIVE_BATTERY_OPTIMIZE -> {
@@ -178,9 +181,13 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
     override fun onRegisterVcuListener(priority: Int, listener: IBaseListener): Int {
         if (listener is ISwitchListener) {
             val serial: Int = System.identityHashCode(listener)
-            synchronized(listenerStore) {
+            val writeLock = readWriteLock.writeLock()
+            try {
+                writeLock.lock()
                 unRegisterVcuListener(serial, identity)
                 listenerStore.put(serial, WeakReference(listener))
+            } finally {
+                writeLock.unlock()
             }
             return serial
         }

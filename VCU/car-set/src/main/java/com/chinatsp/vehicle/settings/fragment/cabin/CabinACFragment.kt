@@ -3,7 +3,6 @@ package com.chinatsp.vehicle.settings.fragment.cabin
 import android.os.Bundle
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
-import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.manager.cabin.ACManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode

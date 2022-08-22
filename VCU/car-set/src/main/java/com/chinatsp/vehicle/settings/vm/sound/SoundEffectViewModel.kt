@@ -3,18 +3,17 @@ package com.chinatsp.vehicle.settings.vm.sound
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.chinatsp.settinglib.LogManager
-import com.chinatsp.settinglib.LogManager.Companion.d
 import com.chinatsp.settinglib.SettingManager
-import com.chinatsp.settinglib.SettingManager.Companion.EQ_MODE_PEOPLE
-import com.chinatsp.settinglib.SettingManager.Companion.EQ_MODE_STANDARD
+import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.manager.sound.EffectManager
+import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SoundEffect
+import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.common.library.frame.base.BaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import timber.log.Timber
 import javax.inject.Inject
-import kotlin.contracts.SimpleEffect
 
 
 /**
@@ -22,7 +21,7 @@ import kotlin.contracts.SimpleEffect
  */
 @HiltViewModel
 class SoundEffectViewModel @Inject constructor(app: Application, model: BaseModel) :
-    BaseViewModel(app, model) {
+    BaseViewModel(app, model), IOptionListener {
 
     private val manager: SettingManager by lazy { SettingManager.instance }
 
@@ -46,37 +45,55 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
         MutableLiveData(1)
     }
 
+    val effectOption: LiveData<Int>
+        get() = _effectOption
+
+    private val _effectOption: MutableLiveData<Int> by lazy {
+        val node = RadioNode.AUDIO_ENVI_AUDIO
+        MutableLiveData(node.default).apply {
+            val value = EffectManager.instance.doGetRadioOption(node)
+            postValue(value)
+        }
+    }
+
+    val effectStatus: LiveData<Boolean>
+        get() = _effectStatus
+
+    private val _effectStatus: MutableLiveData<Boolean> by lazy {
+        val node = SwitchNode.AUDIO_ENVI_AUDIO
+        MutableLiveData(node.default).apply {
+            val value = EffectManager.instance.doGetSwitchOption(node)
+            postValue(value)
+        }
+    }
+
+    val audioLoudness: LiveData<Boolean>
+        get() = _audioLoudness
+
+    private val _audioLoudness: MutableLiveData<Boolean> by lazy {
+        val node = SwitchNode.AUDIO_SOUND_LOUDNESS
+        MutableLiveData(node.default).apply {
+            val value = EffectManager.instance.doGetSwitchOption(node)
+            postValue(value)
+        }
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        keySerial = EffectManager.instance.onRegisterVcuListener(listener = this)
+    }
+
+    override fun onDestroy() {
+        EffectManager.instance.unRegisterVcuListener(keySerial)
+        super.onDestroy()
+    }
+
     fun getEffectValues(effect: SoundEffect): IntArray {
         val id = manager.getSoundEffect();
         if (id != effect.id) {
             manager.setSoundEffect(effect)
         }
         return getCustomEffectValues()
-//        when (effect) {
-//            SoundEffect.POP -> {
-//
-//                return popEffect
-//            }
-//            SoundEffect.FLAT -> {
-//                return standardEffect
-//            }
-//            SoundEffect.JAZZ -> {
-//                return jazzEffect
-//            }
-//            SoundEffect.ROCK -> {
-//                return rockEffect
-//            }
-//            SoundEffect.VOCAL -> {
-//                return peopleEffect
-//            }
-//            SoundEffect.CLASSIC -> {
-//                return classicEffect
-//            }
-//            SoundEffect.CUSTOM -> {
-//                setAudioEQ()
-//                return getCustomEffectValues()
-//            }
-//        }
     }
 
     private fun getCustomEffectValues(): IntArray {
@@ -86,7 +103,7 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
         val lev4: Int = getAudioVoice(SettingManager.VOICE_LEVEL4)
         val lev5: Int = getAudioVoice(SettingManager.VOICE_LEVEL5)
         val effect = manager.getAudioEQ()
-        LogManager.d("Effect", "getCustomEffectValues effect:$effect, lev1:$lev1, lev2:$lev2, lev3:$lev3, lev4:$lev4, lev5:$lev5")
+        Timber.d("getCustomEffectValues effect:$effect, lev1:$lev1, lev2:$lev2, lev3:$lev3, lev4:$lev4, lev5:$lev5")
         return intArrayOf(lev1, lev2, lev3, lev4, lev5)
     }
 
@@ -162,6 +179,24 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
     fun doSwitchSoundEffect(value: Int) {
         if (_currentEffect.value != value) {
             _currentEffect.postValue(value)
+        }
+    }
+
+    override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
+        when (node) {
+            SwitchNode.AUDIO_ENVI_AUDIO -> {
+                _effectStatus.takeIf { it.value != status }?.postValue(status)
+            }
+            else -> {}
+        }
+    }
+
+    override fun onRadioOptionChanged(node: RadioNode, value: Int) {
+        when (node) {
+            RadioNode.AUDIO_ENVI_AUDIO -> {
+                _effectOption.takeIf { node.isValid(value) && it.value != value }?.postValue(value)
+            }
+            else -> {}
         }
     }
 }

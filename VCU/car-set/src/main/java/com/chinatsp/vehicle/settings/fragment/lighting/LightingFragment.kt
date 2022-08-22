@@ -50,7 +50,7 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
     }
 
     private fun initViewDisplay() {
-        if (VcuUtils.isCareLevel(Level.LEVEL3)) {
+        if (VcuUtils.isCareLevel(Level.LEVEL3, expect = true)) {
             binding.lightingTurnExternal.visibility = View.GONE
             binding.line4.visibility = View.GONE
         }

@@ -6,6 +6,7 @@ import com.chinatsp.settinglib.listener.sound.ISoundListener
 import com.chinatsp.settinglib.listener.sound.ISoundManager
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
+import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
@@ -40,7 +41,7 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
     }
 
     private val steeringSillTemp: Volume by lazy {
-        initVolume(Volume.Type.STEERING_EDGE_TEMP)
+        initVolume(Progress.STEERING_ONSET_TEMPERATURE)
     }
 
 
@@ -54,8 +55,8 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    private fun initVolume(type: Volume.Type): Volume {
-        val pos = readIntProperty(type.id, Origin.CABIN)
+    private fun initVolume(type: Progress): Volume {
+        val pos = readIntProperty(type.get.signal, type.get.origin)
         val max = 10
         return Volume(type, 0, max, pos)
     }
@@ -108,18 +109,18 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    override fun doGetVolume(type: Volume.Type): Volume? {
+    override fun doGetVolume(type: Progress): Volume? {
         return when (type) {
-            Volume.Type.STEERING_EDGE_TEMP -> {
+            Progress.STEERING_ONSET_TEMPERATURE -> {
                 steeringSillTemp
             }
             else -> null
         }
     }
 
-    override fun doSetVolume(type: Volume.Type, position: Int): Boolean {
+    override fun doSetVolume(type: Progress, position: Int): Boolean {
         return when (type) {
-            Volume.Type.STEERING_EDGE_TEMP -> {
+            Progress.STEERING_ONSET_TEMPERATURE -> {
                 val result = writeProperty(steeringSillTemp, position)
                 Timber.d("doSetVolume type:%s, position:%s, result:%s", type, position, result)
                 result
@@ -138,7 +139,7 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
     }
 
     private fun writeProperty(volume: Volume, value: Int): Boolean {
-        val success = volume.isValid(value) && writeProperty(volume.type.id, value, Origin.CABIN)
+        val success = volume.isValid(value) && writeProperty(volume.type.set.signal, value, Origin.CABIN)
         if (success && develop) {
             volume.pos = value
             doRangeChanged(volume)
@@ -168,13 +169,17 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
     }
 
     private fun doRangeChanged(vararg array: Volume) {
-        synchronized(listenerStore) {
+        val readLock = readWriteLock.readLock()
+        try {
+            readLock.lock()
             listenerStore.forEach { (_, ref) ->
                 val listener = ref.get()
                 if (null != listener && listener is ISoundListener) {
                     listener.onSoundVolumeChanged(*array)
                 }
             }
+        } finally {
+            readLock.unlock()
         }
     }
 

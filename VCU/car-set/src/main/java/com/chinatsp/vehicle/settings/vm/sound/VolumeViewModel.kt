@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.sound.ISoundListener
 import com.chinatsp.settinglib.manager.sound.VoiceManager
+import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.common.library.frame.base.BaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,50 +29,50 @@ class VolumeViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     val naviVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            value = manager.doGetVolume(Volume.Type.NAVI)?.copy()
+            value = manager.doGetVolume(Progress.NAVI)?.copy()
         }
     }
 
     val mediaVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            value = manager.doGetVolume(Volume.Type.MEDIA)?.copy()
+            value = manager.doGetVolume(Progress.MEDIA)?.copy()
         }
     }
 
     val phoneVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            value = manager.doGetVolume(Volume.Type.PHONE)?.copy()
+            value = manager.doGetVolume(Progress.PHONE)?.copy()
         }
     }
 
     val voiceVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            value = manager.doGetVolume(Volume.Type.VOICE)?.copy()
+            value = manager.doGetVolume(Progress.VOICE)?.copy()
         }
     }
 
     val systemVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            value = manager.doGetVolume(Volume.Type.SYSTEM)?.copy()
+            value = manager.doGetVolume(Progress.SYSTEM)?.copy()
         }
     }
 
     override fun onSoundVolumeChanged(vararg array: Volume) {
         array.forEach {
             when (it.type) {
-                Volume.Type.NAVI -> {
+                Progress.NAVI -> {
                     updateVolume(naviVolume, it)
                 }
-                Volume.Type.MEDIA -> {
+                Progress.MEDIA -> {
                     updateVolume(mediaVolume, it)
                 }
-                Volume.Type.VOICE -> {
+                Progress.VOICE -> {
                     updateVolume(voiceVolume, it)
                 }
-                Volume.Type.PHONE -> {
+                Progress.PHONE -> {
                     updateVolume(phoneVolume, it)
                 }
-                Volume.Type.SYSTEM -> {
+                Progress.SYSTEM -> {
                     updateVolume(systemVolume, it)
                 }
                 else -> {}

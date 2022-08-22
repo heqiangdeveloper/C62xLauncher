@@ -13,5 +13,7 @@ enum class Origin {
     CABIN,
     CABIN_DY,
     HVAC,
-    HVAC_DY
+    HVAC_DY,
+    ATTR,
+    SPECIAL
 }

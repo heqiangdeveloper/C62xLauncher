@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.IProgressManager
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.manager.lamp.BrightnessManager
+import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.common.library.frame.base.BaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,19 +21,19 @@ class BrightnessViewModel @Inject constructor(app: Application, model: BaseModel
 
     val acScreenVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            value = manager.doGetVolume(Volume.Type.AC_SCREEN)?.copy()
+            value = manager.doGetVolume(Progress.CONDITIONER_SCREEN_BRIGHTNESS)?.copy()
         }
     }
 
     val carScreenVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            value = manager.doGetVolume(Volume.Type.CAR_SCREEN)?.copy()
+            value = manager.doGetVolume(Progress.HOST_SCREEN_BRIGHTNESS)?.copy()
         }
     }
 
     val meterScreenVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            value = manager.doGetVolume(Volume.Type.METER_SCREEN)?.copy()
+            value = manager.doGetVolume(Progress.METER_SCREEN_BRIGHTNESS)?.copy()
         }
     }
 }

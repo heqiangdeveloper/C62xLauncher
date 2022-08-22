@@ -1,11 +1,9 @@
 package com.chinatsp.vehicle.settings.fragment.doors
 
 import android.os.Bundle
-import android.util.Range
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
-import androidx.core.util.rangeTo
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.access.SternDoorManager
@@ -52,7 +50,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     }
 
     private fun initViewDisplay() {
-        if (VcuUtils.isCareLevel(Level.LEVEL5)) {
+        if (VcuUtils.isCareLevel(Level.LEVEL5, expect = true)) {
             binding.linearLayout.visibility = View.GONE
             binding.line2.visibility = View.GONE
         }

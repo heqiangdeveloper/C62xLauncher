@@ -4,8 +4,8 @@ import android.text.TextUtils
 import com.chinatsp.ifly.aidlbean.CmdVoiceModel
 import com.chinatsp.ifly.aidlbean.NlpVoiceModel
 import com.chinatsp.vehicle.controller.annotation.Action
-import com.chinatsp.vehicle.controller.bean.Cmd
 import com.chinatsp.vehicle.controller.annotation.Model
+import com.chinatsp.vehicle.controller.bean.Cmd
 import com.chinatsp.vehicle.controller.data.Semantic
 import com.chinatsp.vehicle.controller.utils.ConstantsVolume
 import com.google.gson.Gson
@@ -29,7 +29,7 @@ class CommandParser {
             try {
                 val semantic: Semantic = Gson().fromJson(nlpVoiceModel.semantic, Semantic::class.java)
                 if (semantic.slots == null) {
-//                    LogManager.d(TAG, "onSrAction handle fail. semantic.slots is null.")
+//                    Timber.d("onSrAction handle fail. semantic.slots is null.")
                     break
                 }
                 val name: String = semantic.slots.name

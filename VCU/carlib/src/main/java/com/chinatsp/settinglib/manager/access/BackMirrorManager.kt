@@ -69,9 +69,13 @@ class BackMirrorManager private constructor() : BaseManager(), ISwitchManager {
     override fun onRegisterVcuListener(priority: Int, listener: IBaseListener): Int {
         if (listener is ISwitchListener) {
             val serial: Int = System.identityHashCode(listener)
-            synchronized(listenerStore) {
+            val writeLock = readWriteLock.writeLock()
+            try {
+                writeLock.lock()
                 unRegisterVcuListener(serial, identity)
                 listenerStore.put(serial, WeakReference(listener))
+            } finally {
+                writeLock.unlock()
             }
             return serial
         }

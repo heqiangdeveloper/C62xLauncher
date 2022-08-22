@@ -3,13 +3,16 @@ package com.chinatsp.settinglib.manager.lamp
 import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.power.CarPowerManager
 import android.os.SystemThirdScreenBA
-import com.chinatsp.settinglib.*
+import com.chinatsp.settinglib.BaseApp
+import com.chinatsp.settinglib.Constant
+import com.chinatsp.settinglib.IProgressManager
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.optios.Area
+import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.sign.Origin
-import java.util.concurrent.atomic.AtomicInteger
+import timber.log.Timber
 
 /**
  * @author : luohong
@@ -27,7 +30,8 @@ class BrightnessManager : BaseManager(), IProgressManager {
         get() {
             try {
                 return readIntProperty(
-                    CarCabinManager.ID_VENDOR_LIGHT_NIGHT_AUTOMODE_REPORT, Origin.CABIN, Area.GLOBAL)
+                    CarCabinManager.ID_VENDOR_LIGHT_NIGHT_AUTOMODE_REPORT, Origin.CABIN, Area.GLOBAL
+                )
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -50,34 +54,34 @@ class BrightnessManager : BaseManager(), IProgressManager {
     }
 
     private val acVolume: Volume by lazy {
-        initVolume(Volume.Type.AC_SCREEN)
+        initVolume(Progress.CONDITIONER_SCREEN_BRIGHTNESS)
     }
 
     private val carVolume: Volume by lazy {
-        initVolume(Volume.Type.CAR_SCREEN)
+        initVolume(Progress.HOST_SCREEN_BRIGHTNESS)
     }
 
     private val meterVolume: Volume by lazy {
-        initVolume(Volume.Type.METER_SCREEN)
+        initVolume(Progress.METER_SCREEN_BRIGHTNESS)
     }
 
-    private fun initVolume(type: Volume.Type): Volume {
+    private fun initVolume(type: Progress): Volume {
         val max = 10
         var pos = manager?.brightness ?: 0
         pos /= 10
-        LogManager.d(TAG, "initVolume type:$type, pos:$pos")
+        Timber.d("initVolume type:$type, pos:$pos")
         return Volume(type, 0, max, pos)
     }
 
-    override fun doGetVolume(type: Volume.Type): Volume? {
+    override fun doGetVolume(type: Progress): Volume? {
         return when (type) {
-            Volume.Type.AC_SCREEN -> {
+            Progress.CONDITIONER_SCREEN_BRIGHTNESS -> {
                 acVolume
             }
-            Volume.Type.CAR_SCREEN -> {
+            Progress.HOST_SCREEN_BRIGHTNESS -> {
                 carVolume
             }
-            Volume.Type.METER_SCREEN -> {
+            Progress.METER_SCREEN_BRIGHTNESS -> {
                 meterVolume
             }
             else -> null
@@ -85,22 +89,22 @@ class BrightnessManager : BaseManager(), IProgressManager {
         }
     }
 
-    override fun doSetVolume(type: Volume.Type, position: Int): Boolean {
-        LogManager.d(TAG, "doSetVolume position:$position")
+    override fun doSetVolume(type: Progress, position: Int): Boolean {
+        Timber.d("doSetVolume position:$position")
         val value = position * 10
         return when (type) {
-            Volume.Type.AC_SCREEN -> {
+            Progress.CONDITIONER_SCREEN_BRIGHTNESS -> {
                 manager?.brightness = value
                 true
             }
-            Volume.Type.CAR_SCREEN -> {
+            Progress.HOST_SCREEN_BRIGHTNESS -> {
 //                manager?.brightness = value
                 //iBAMode:白天黑夜模式，现传1就好, value：亮度值
                 thirdScreenService?.setThirdScreenBrightness(1, position)
                 doUpdateProgress(carVolume, position, true)
                 true
             }
-            Volume.Type.METER_SCREEN -> {
+            Progress.METER_SCREEN_BRIGHTNESS -> {
                 manager?.brightness = value
                 true
             }

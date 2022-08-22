@@ -1,7 +1,9 @@
 package com.chinatsp.settinglib.optios
 
 import android.car.hardware.cabin.CarCabinManager
+import android.media.AudioAttributes
 import com.chinatsp.settinglib.bean.CanLocate
+import com.chinatsp.settinglib.sign.Origin
 
 /**
  * @author : luohong
@@ -15,7 +17,7 @@ enum class Progress(
     var max: Int = 10,
     val step: Int = 1,
     val get: CanLocate,
-    val set: CanLocate
+    val set: CanLocate = get
 ) {
     /**
      * 氛围灯亮度
@@ -37,6 +39,13 @@ enum class Progress(
         set = CanLocate(signal = CarCabinManager.ID_ALC_HUM_ALC_COLOR_ADJUST)
     ),
 
+    /**
+     * 主机屏亮度
+     */
+    HOST_SCREEN_BRIGHTNESS(
+        get = CanLocate(signal = -1),
+        set = CanLocate(signal = -1)
+    ),
 
     /**
      * 仪表屏亮度
@@ -71,11 +80,38 @@ enum class Progress(
      */
     STEERING_ONSET_TEMPERATURE(
         min = 0x00,
-        max = 0x0A,
+        max = 0x1E,
         get = CanLocate(signal = -1),
         set = CanLocate(signal = CarCabinManager.ID_SWS_AUTO_HEAT_TEMP)
-    )
-    ;
+    ),
+
+    NAVI(
+        min = 0x00,
+        max = 0x1E,
+        get = CanLocate(origin = Origin.ATTR,
+            signal = AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE)
+    ),
+
+    VOICE(
+        min = 0x00,
+        max = 0x1E,
+        get = CanLocate(origin = Origin.ATTR, signal = AudioAttributes.USAGE_ASSISTANT)
+    ),
+    MEDIA(
+        min = 0x00,
+        max = 0x1E,
+        get = CanLocate(origin = Origin.ATTR, signal = AudioAttributes.USAGE_MEDIA)
+    ),
+    PHONE(
+        min = 0x00,
+        max = 0x1E,
+        get = CanLocate(origin = Origin.ATTR, signal = AudioAttributes.USAGE_VOICE_COMMUNICATION)
+    ),
+    SYSTEM(
+        min = 0x00,
+        max = 0x1E,
+        get = CanLocate(origin = Origin.ATTR, signal = AudioAttributes.USAGE_ASSISTANT)
+    );
 
     fun isValid(value: Int): Boolean = value in min..max
 

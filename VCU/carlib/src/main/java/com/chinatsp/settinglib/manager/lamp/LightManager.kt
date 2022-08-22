@@ -1,8 +1,6 @@
 package com.chinatsp.settinglib.manager.lamp
 
 import android.car.hardware.CarPropertyValue
-import android.car.hardware.cabin.CarCabinManager
-import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.IOptionManager
@@ -114,9 +112,13 @@ class LightManager private constructor() : BaseManager(), IOptionManager {
 
     override fun onRegisterVcuListener(priority: Int, listener: IBaseListener): Int {
         val serial: Int = System.identityHashCode(listener)
-        synchronized(listenerStore) {
+        val writeLock = readWriteLock.writeLock()
+        try {
+            writeLock.lock()
             unRegisterVcuListener(serial, identity)
             listenerStore.put(serial, WeakReference(listener))
+        } finally {
+            writeLock.unlock()
         }
         return serial
     }

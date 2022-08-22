@@ -5,7 +5,6 @@ import android.view.View
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.Applet
-import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.cabin.WheelManager
 import com.chinatsp.settinglib.optios.RadioNode

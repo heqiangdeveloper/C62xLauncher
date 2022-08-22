@@ -1,7 +1,5 @@
 package com.chinatsp.settinglib.sign
 
-import android.car.hardware.cabin.CarCabinManager
-
 /**
  * @author : luohong
  * @e-mail : luohong1@bdstar.com

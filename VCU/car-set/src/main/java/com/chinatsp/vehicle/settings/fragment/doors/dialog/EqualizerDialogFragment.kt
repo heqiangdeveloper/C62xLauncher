@@ -12,7 +12,6 @@ import com.chinatsp.vehicle.settings.vm.sound.SoundEffectViewModel
 import com.common.library.frame.base.BaseDialogFragment
 import com.common.xui.widget.smooth.SmoothLineChartView
 import com.common.xui.widget.tabbar.TabControlView
-import com.king.base.util.LogUtils
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

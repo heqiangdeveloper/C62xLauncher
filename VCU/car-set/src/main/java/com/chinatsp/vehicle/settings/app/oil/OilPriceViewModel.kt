@@ -2,10 +2,10 @@ package com.chinatsp.vehicle.settings.app.oil
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
-import com.common.library.frame.base.BaseModel
 import com.chinatsp.vehicle.settings.app.Constants
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.chinatsp.vehicle.settings.bean.OilPrice
+import com.common.library.frame.base.BaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.await
 import javax.inject.Inject

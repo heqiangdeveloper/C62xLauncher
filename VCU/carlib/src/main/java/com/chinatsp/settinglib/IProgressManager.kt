@@ -1,8 +1,7 @@
 package com.chinatsp.settinglib
 
 import com.chinatsp.settinglib.bean.Volume
-import com.chinatsp.settinglib.optios.RadioNode
-import java.util.concurrent.atomic.AtomicInteger
+import com.chinatsp.settinglib.optios.Progress
 
 /**
  * @author : luohong
@@ -13,9 +12,9 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 interface IProgressManager {
 
-    fun doGetVolume(type: Volume.Type): Volume?
+    fun doGetVolume(type: Progress): Volume?
 
-    fun doSetVolume(type: Volume.Type, position: Int): Boolean
+    fun doSetVolume(type: Progress, position: Int): Boolean
 
     fun doUpdateProgress(volume: Volume, value: Int, status: Boolean, block: ((Int) -> Unit)? = null): Volume {
         if (status && value != volume.pos) {
