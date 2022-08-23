@@ -12,16 +12,18 @@ import com.cihon.client.SmallCardCallback;
 import com.cihon.client.WidgetCallback;
 
 import launcher.base.utils.EasyLog;
+import launcher.base.utils.flowcontrol.PollingTask;
 
 public class DriveInfoRepository {
     private final String TAG = "DriveInfoRepository";
     private MutableLiveData<DriveInfo> mMutableLiveData = new MutableLiveData<>();
     private final CihonManager mCihonManager;
-    private boolean mServiceConnect;
+    private volatile boolean mServiceConnect;
     private DriveInfo mCacheDriveInfo;
 
     private IReadDriveInfoListener mReadDriveInfoListener;
     private IReadDriveInfoListener mDrawerReadDriveInfoListener;
+    private PollingTask mServiceConnectTask;
 
     private DriveInfoRepository() {
         mCihonManager = CihonManager.getInstance();
@@ -40,6 +42,8 @@ public class DriveInfoRepository {
         EasyLog.i(TAG, "start: bindService");
         if (mServiceConnect) {
             EasyLog.w(TAG, "start: bindService cancel : already connected.");
+            mCacheDriveInfo = readDriveInfo();
+            notifyReadOnBindService(mCacheDriveInfo);
             return;
         }
         mCihonManager.setServiceConnectionListener(new ServiceConnectionListener() {
@@ -57,7 +61,18 @@ public class DriveInfoRepository {
                 EasyLog.w(TAG, "onServiceConnected-->断开连接");
             }
         });
-        mCihonManager.bindService(context);
+        mServiceConnectTask = new PollingTask(0, 2000, TAG) {
+            @Override
+            protected void executeTask() {
+                mCihonManager.bindService(context);
+            }
+
+            @Override
+            protected boolean enableExit() {
+                return mServiceConnect;
+            }
+        };
+        mServiceConnectTask.execute();
     }
 
     private void notifyReadOnBindService(DriveInfo cacheDriveInfo) {
@@ -68,7 +83,9 @@ public class DriveInfoRepository {
             mDrawerReadDriveInfoListener.onSuccess(cacheDriveInfo);
         }
     }
+
     void setDriveInfoCallback(SmallCardCallback smallCardCallback) {
+        EasyLog.i(TAG, "setDriveInfoCallback SmallCardCallback: " + smallCardCallback.hashCode());
         mCihonManager.setSmallCardCallback(smallCardCallback);
     }
 
