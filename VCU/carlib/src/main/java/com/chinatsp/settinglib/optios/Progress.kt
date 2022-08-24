@@ -77,11 +77,23 @@ enum class Progress(
 
     /**
      * 软开关背光亮度
-     *
+     * 整车开关背光等级设置[0x1,0,0x0,0xFF]
+    0x0: Inactive
+    0x19: Level 1
+    0x33: Level 2
+    0x4C: Level 3
+    0x66: Level 4
+    0x7F: Level 5
+    0x99: Level 6
+    0xB2: Level 7
+    0xCC: Level 8
+    0xE5: Level 9
+    0xFF: Level 10
+     * get -> 0x0: Dark 0x19: Level 1 0x33: Level 2 0x4C: Level 3 0x66: Level 4 0x7F: Level 5 0x99: Level 6 0xB2: Level 7 0xCC: Level 8 0xE5: Level 9 0xFF: Level 10
      */
     SWITCH_BACKLIGHT_BRIGHTNESS(
         min = 0x00,
-        max = 0x0A,
+        max = 0x09,
         get = CanLocate(signal = CarCabinManager.ID_BCM_BACKLIGHT_LEVEL_STATUS),
         set = CanLocate(signal = CarCabinManager.ID_ALC_HUM_BACKLIGHT_LEVEL)
     ),
@@ -111,8 +123,10 @@ enum class Progress(
     NAVI(
         min = 0x00,
         max = 0x1E,
-        get = CanLocate(origin = Origin.ATTR,
-            signal = AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE)
+        get = CanLocate(
+            origin = Origin.ATTR,
+            signal = AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE
+        )
     ),
 
     VOICE(

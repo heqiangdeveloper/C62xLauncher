@@ -92,8 +92,22 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
 
     private fun initProgress(type: Progress): Volume {
         val value = readIntProperty(type.get.signal, type.get.origin)
-        Timber.d("initProgress type:$type, value:$value")
-        return Volume(type, type.min, type.max, value)
+        val position = findBacklightLevel(value)
+        Timber.d("initProgress type:$type, value:$value, position:$position")
+        return Volume(type, type.min, type.max, position)
+    }
+
+    private fun findBacklightLevel(value: Int): Int {
+        val backlightLevel = getBacklightLevel()
+        var level = 0
+        backlightLevel.forEachIndexed { index, i ->
+            if (i == value) level = index
+        }
+        return level
+    }
+
+    private fun getBacklightLevel(): IntArray {
+        return intArrayOf(0x19,  0x33, 0x4C,  0x66, 0x7F, 0x99,  0xB2, 0xCC, 0xE5, 0xFF)
     }
 
     override fun isCareSignal(signal: Int, origin: Origin): Boolean {
@@ -146,7 +160,12 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
     override fun doSetVolume(type: Progress, position: Int): Boolean {
         return when (type) {
             Progress.SWITCH_BACKLIGHT_BRIGHTNESS -> {
-                writeProperty(type.set.signal, position, type.set.origin)
+                val backlightLevel = getBacklightLevel()
+                if (position in 0..backlightLevel.size) {
+                    val value = backlightLevel[position]
+                   return writeProperty(type.set.signal, value, type.set.origin)
+                }
+                false
             }
             else -> false
         }

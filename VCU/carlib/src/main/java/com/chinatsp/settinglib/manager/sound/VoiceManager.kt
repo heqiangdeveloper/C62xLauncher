@@ -436,9 +436,9 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
             if (node.set.origin == Origin.SPECIAL) {
                 val result = manager?.let {
                     it.beepLevel = if (status) node.set.on else node.set.off
+                    Timber.d("switchTouchTone node:%s, status:%s, beepLevel:%s", node, status, it.beepLevel)
                     return@let true
                 } ?: false
-                Timber.d("switchTouchTone node:%s, status:%s, result:%s", node, status, result)
                 return result
             }
         } catch (e: Exception) {
