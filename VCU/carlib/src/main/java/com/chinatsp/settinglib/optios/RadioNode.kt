@@ -247,6 +247,23 @@ enum class RadioNode(
         ),
         default = 0x2
     ),
+
+    /**
+     * 灯光设置--灯光--外部灯光仪式感
+     * set -> 0x1: Mode 1    0x2: Mode 2 ; 0x3: Mode 3
+     * get -> 0x0:OFF 0x1:Unlock Ceremoial Sense 0x2:Lock Ceremoial Sense 0x3:Panic Ceremoial Sense 0x4~0x7:reserved
+     */
+    LIGHT_CEREMONY_SENSE(
+        get = RNorm(
+            values = intArrayOf(0x1, 0x2, 0x3),
+            signal = CarCabinManager.ID_BCM_CERE_SENSE_CMD
+        ),
+        set = RNorm(
+            values = intArrayOf(0x1, 0x2, 0x3),
+            signal = CarCabinManager.ID_HUM_CERE_SENSE_SW_SET
+        ),
+        default = 0x1
+    ),
     //-------------------灯光设置--结束-------------------
 
     /**

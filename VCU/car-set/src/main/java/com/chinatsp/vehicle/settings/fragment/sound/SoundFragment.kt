@@ -140,6 +140,7 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>() {
         initSwitchOption(SwitchNode.TOUCH_PROMPT_TONE, viewModel.touchToneStatus)
         initSwitchOption(SwitchNode.AUDIO_SOUND_LOUDNESS, viewModel.loudnessStatus)
         initSwitchOption(SwitchNode.AUDIO_SOUND_HUAWEI, viewModel.huaweiStatus)
+        initSwitchOption(SwitchNode.SPEED_VOLUME_OFFSET, viewModel.speedVolumeOffset)
     }
 
     private fun addSwitchLiveDataListener() {
@@ -155,6 +156,9 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>() {
         viewModel.touchToneStatus.observe(this) {
             doUpdateSwitch(SwitchNode.TOUCH_PROMPT_TONE, it)
         }
+        viewModel.speedVolumeOffset.observe(this) {
+            doUpdateSwitch(SwitchNode.SPEED_VOLUME_OFFSET, it)
+        }
     }
 
     private fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {
@@ -168,6 +172,7 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>() {
             SwitchNode.AUDIO_SOUND_LOUDNESS -> binding.soundLoudnessSwitch
             SwitchNode.AUDIO_SOUND_HUAWEI -> binding.soundHuaweiSwitch
             SwitchNode.TOUCH_PROMPT_TONE -> binding.soundTouchPromptSwitch
+            SwitchNode.SPEED_VOLUME_OFFSET -> binding.soundSpeedOffsetSwitch
             else -> null
         }
         takeIf { null != swb }?.doUpdateSwitch(swb!!, status, immediately)
@@ -193,6 +198,9 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>() {
         }
         binding.soundTouchPromptSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.TOUCH_PROMPT_TONE, buttonView, isChecked)
+        }
+        binding.soundSpeedOffsetSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            doUpdateSwitchOption(SwitchNode.SPEED_VOLUME_OFFSET, buttonView, isChecked)
         }
     }
 

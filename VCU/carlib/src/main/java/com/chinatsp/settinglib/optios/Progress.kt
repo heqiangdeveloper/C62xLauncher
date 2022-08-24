@@ -49,18 +49,41 @@ enum class Progress(
 
     /**
      * 仪表屏亮度
+     * set -> 仪表背光等级设置[0x1,0,0x0,0xB]
+     *        0x0: Inactive; 0x1: Level 1; 0x2: Level 2; 0x3: Level 3; 0x4: Level 4; 0x5: Level 5
+     *        0x6: Level 6; 0x7: Level 7; 0x8: Level 8; 0x9: Level 9; 0xA: Level 10; 0xB~0xF: Reserved
+     *
      */
     METER_SCREEN_BRIGHTNESS(
-        get = CanLocate(signal = -1),
-        set = CanLocate(signal = -1)
+        min = 0x00,
+        max = 0x0A,
+        get = CanLocate(signal = CarCabinManager.ID_ICM_SCR_BRI_LEVEL_STS),
+        set = CanLocate(signal = CarCabinManager.ID_ALC_ICM_SCR_BRI_LEVEL)
     ),
 
     /**
      * 空调屏亮度
+     * set -> VCS背光等级设置[0x1,0,0x0,0xB]
+     *        0x0: Inactive; 0x1: Level 1; 0x2: Level 2; 0x3: Level 3; 0x4: Level 4; 0x5: Level 5
+     *        0x6: Level 6; 0x7: Level 7; 0x8: Level 8; 0x9: Level 9; 0xA: Level 10; 0xB~0xF: Reserved
+     *
      */
     CONDITIONER_SCREEN_BRIGHTNESS(
-        get = CanLocate(signal = -1),
-        set = CanLocate(signal = -1)
+        min = 0x00,
+        max = 0x0A,
+        get = CanLocate(signal = CarCabinManager.ID_VCS_SCR_BRI_LEVEL_STS),
+        set = CanLocate(signal = CarCabinManager.ID_ALC_VCS_SCR_BRI_LEVEL)
+    ),
+
+    /**
+     * 软开关背光亮度
+     *
+     */
+    SWITCH_BACKLIGHT_BRIGHTNESS(
+        min = 0x00,
+        max = 0x0A,
+        get = CanLocate(signal = CarCabinManager.ID_BCM_BACKLIGHT_LEVEL_STATUS),
+        set = CanLocate(signal = CarCabinManager.ID_ALC_HUM_BACKLIGHT_LEVEL)
     ),
 
     /**

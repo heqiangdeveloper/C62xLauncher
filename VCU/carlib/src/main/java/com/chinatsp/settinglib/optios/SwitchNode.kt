@@ -231,10 +231,12 @@ enum class SwitchNode(
 
     /**
      * 车辆音效--声音--速度音量补偿
+     * set -> speed音量随速调节开关[0x1,0,0x0,0x2] 0x0: Inactive 0x1: ON(default) 0x2: OFF 0x3: Reserved
+     * get -> Volume switch status with speed音量随速调节开关状态 0x0: OFF 0x1: ON
      */
     SPEED_VOLUME_OFFSET(
-        get = Norm(),
-        set = Norm(),
+        get = Norm(on = 0x01, off = 0x00, signal = CarCabinManager.ID_AMP_VOL_SPEED_SW_STS),
+        set = Norm(on = 0x01, off = 0x02, signal = CarCabinManager.ID_HUM_VOL_SPEED_SW),
         default = false
     ),
 
@@ -383,6 +385,16 @@ enum class SwitchNode(
     BACK_MIRROR_FOLD(
         get = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_MIRROR_FADE_IN_OUT_STATUE),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_MIRROR_FADE_IN_OUT_SET),
+        default = true
+    ),
+    /**
+     * 车门车窗--外后视镜--外后视镜下翻
+     * set -> int类型数据 0x0: Inactive; 0x1: Enable; 0x2: Disable; 0x3: Not used
+     * get -> 0x0：Disable 0x1：Enable
+     */
+    BACK_MIRROR_DOWN(
+        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_R_MIRROR_SEE_GROUND_STS),
+        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HUM_MIRROR_SEE_G_ENABLE),
         default = true
     ),
     //----------------车门与车窗 结束--------------

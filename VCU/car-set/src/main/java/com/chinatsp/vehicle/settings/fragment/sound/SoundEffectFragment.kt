@@ -157,6 +157,9 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
             doUpdateSwitchOption(SwitchNode.AUDIO_ENVI_AUDIO, buttonView, isChecked)
             checkDisableOtherDiv(binding.soundEnvironmentalSw, buttonView.isChecked)
         }
+        binding.audioEffectLoudnessSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            doUpdateSwitchOption(SwitchNode.AUDIO_SOUND_LOUDNESS, buttonView, isChecked)
+        }
     }
 
     private fun doUpdateSwitchOption(node: SwitchNode, button: CompoundButton, status: Boolean) {
@@ -181,19 +184,18 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
                 val childAt = binding.layoutContent.getChildAt(it)
                 if (null != childAt && childAt != binding.soundEnvironmentalCompensation) {
                     childAt.alpha = if (status) 0.7f else 1.0f
-                    updateViewEnable(childAt, status)
+                    updateViewEnable(childAt, status, filterView = swb)
                 }
-
             }
         }
     }
 
-    private fun updateViewEnable(view: View?, status: Boolean) {
+    private fun updateViewEnable(view: View?, status: Boolean, filterView: View? = null) {
         if (null == view) {
             return
         }
-        if (view is SwitchButton) {
-            view.isEnabled = status
+        if (view is SwitchButton && view != filterView) {
+            view.isEnabled = !status
             return
         }
         if (view is TabControlView) {
@@ -203,7 +205,7 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
         if (view is ViewGroup) {
             val childCount = view.childCount
             val intRange = 0 until childCount
-            intRange.forEach { updateViewEnable(view.getChildAt(it), status) }
+            intRange.forEach { updateViewEnable(view.getChildAt(it), status, filterView) }
         }
     }
 

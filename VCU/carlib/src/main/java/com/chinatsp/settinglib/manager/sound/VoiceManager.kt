@@ -9,7 +9,6 @@ import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.constants.OffLine
 import com.chinatsp.settinglib.listener.IBaseListener
-import com.chinatsp.settinglib.listener.cabin.IACListener
 import com.chinatsp.settinglib.listener.sound.ISoundListener
 import com.chinatsp.settinglib.listener.sound.ISoundManager
 import com.chinatsp.settinglib.manager.BaseManager
@@ -424,10 +423,10 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
 
     private fun getPromptToneLevel(node: SwitchNode): Int {
         if (node.get.origin == Origin.SPECIAL) {
-            LogManager.d("luohong", "getPromptToneLevel: node:$node")
-            return manager?.let {
+            val result = manager?.let {
                 it.beepLevel
             } ?: node.get.off
+            Timber.d("getPromptToneLevel: node:%s, result:%s", node, result)
         }
         return -1;
     }
@@ -435,10 +434,12 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
     private fun switchTouchTone(node: SwitchNode, status: Boolean): Boolean {
         try {
             if (node.set.origin == Origin.SPECIAL) {
-                return manager?.let {
+                val result = manager?.let {
                     it.beepLevel = if (status) node.set.on else node.set.off
                     return@let true
                 } ?: false
+                Timber.d("switchTouchTone node:%s, status:%s, result:%s", node, status, result)
+                return result
             }
         } catch (e: Exception) {
             e.printStackTrace()

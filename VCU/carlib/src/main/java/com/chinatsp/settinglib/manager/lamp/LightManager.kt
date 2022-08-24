@@ -1,13 +1,17 @@
 package com.chinatsp.settinglib.manager.lamp
 
 import android.car.hardware.CarPropertyValue
+import com.chinatsp.settinglib.IProgressManager
+import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.ISignal
+import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
+import timber.log.Timber
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -21,7 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 
 
-class LightManager private constructor() : BaseManager(), IOptionManager {
+class LightManager private constructor() : BaseManager(), IOptionManager, IProgressManager {
 
     companion object : ISignal {
         override val TAG: String = LightManager::class.java.simpleName
@@ -33,12 +37,10 @@ class LightManager private constructor() : BaseManager(), IOptionManager {
     override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int>().apply {
-//                /**空调自干燥*/
-//                add(CarCabinManager.ID_ACSELFSTSDISP)
-//                /**预通风功能*/
-//                add(CarCabinManager.ID_ACPREVENTNDISP)
-//                /**空调舒适性状态显示*/
-//                add(CarCabinManager.ID_ACCMFTSTSDISP)
+                add(Progress.SWITCH_BACKLIGHT_BRIGHTNESS.get.signal)
+                add(RadioNode.LIGHT_DELAYED_OUT.get.signal)
+                add(RadioNode.LIGHT_FLICKER.get.signal)
+                add(RadioNode.LIGHT_CEREMONY_SENSE.get.signal)
             }
             put(Origin.CABIN, cabinSet)
         }
@@ -76,6 +78,23 @@ class LightManager private constructor() : BaseManager(), IOptionManager {
         }
     }
 
+    private val lightCeremonySense: AtomicInteger by lazy {
+        val node = RadioNode.LIGHT_CEREMONY_SENSE
+        AtomicInteger(node.default).apply {
+            val value = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateRadioValue(node, this, value)
+        }
+    }
+
+    private val switchBacklight: Volume by lazy {
+        initProgress(Progress.SWITCH_BACKLIGHT_BRIGHTNESS)
+    }
+
+    private fun initProgress(type: Progress): Volume {
+        val value = readIntProperty(type.get.signal, type.get.origin)
+        Timber.d("initProgress type:$type, value:$value")
+        return Volume(type, type.min, type.max, value)
+    }
 
     override fun isCareSignal(signal: Int, origin: Origin): Boolean {
         val signals = getOriginSignal(origin)
@@ -105,6 +124,29 @@ class LightManager private constructor() : BaseManager(), IOptionManager {
             }
             RadioNode.LIGHT_FLICKER -> {
                 writeProperty(node, value, lightFlicker)
+            }
+            RadioNode.LIGHT_CEREMONY_SENSE -> {
+                writeProperty(node, value, lightCeremonySense)
+            }
+            else -> false
+        }
+    }
+
+    override fun doGetVolume(type: Progress): Volume? {
+        return when (type) {
+            Progress.SWITCH_BACKLIGHT_BRIGHTNESS -> {
+                switchBacklight
+            }
+            else -> {
+                null
+            }
+        }
+    }
+
+    override fun doSetVolume(type: Progress, position: Int): Boolean {
+        return when (type) {
+            Progress.SWITCH_BACKLIGHT_BRIGHTNESS -> {
+                writeProperty(type.set.signal, position, type.set.origin)
             }
             else -> false
         }
@@ -166,6 +208,9 @@ class LightManager private constructor() : BaseManager(), IOptionManager {
             }
             RadioNode.LIGHT_FLICKER.get.signal -> {
                 onRadioChanged(RadioNode.LIGHT_FLICKER, lightFlicker, property)
+            }
+            RadioNode.LIGHT_CEREMONY_SENSE.get.signal -> {
+                onRadioChanged(RadioNode.LIGHT_CEREMONY_SENSE, lightCeremonySense, property)
             }
             else -> {}
         }

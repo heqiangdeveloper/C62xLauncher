@@ -5,8 +5,10 @@ import android.view.View
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.VcuUtils
+import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.lamp.LightManager
+import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
@@ -16,11 +18,12 @@ import com.chinatsp.vehicle.settings.vm.light.LightingViewModel
 import com.common.animationlib.AnimationDrawable
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
+import com.common.xui.widget.picker.VSeekBar
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding>() {
+class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding>(), VSeekBar.OnSeekBarListener {
 
     private var animationHomeOpen: AnimationDrawable = AnimationDrawable()
     private var animationHomeClose: AnimationDrawable = AnimationDrawable()
@@ -29,7 +32,7 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
     private var animationTurnSignal1: AnimationDrawable = AnimationDrawable()
     private var animationTurnSignal2: AnimationDrawable = AnimationDrawable()
 
-    private val manager: IOptionManager
+    private val manager: LightManager
         get() = LightManager.instance
 
     override fun getLayoutId(): Int {
@@ -46,6 +49,10 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
         addRadioLiveDataListener()
         setRadioListener()
 
+        initSeekBar()
+        setSeekBarListener(this)
+        initSeekLiveData()
+
         initViewDisplay()
     }
 
@@ -60,6 +67,7 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
     private fun initRadioOption() {
         initRadioOption(RadioNode.LIGHT_DELAYED_OUT, viewModel.lightOutDelayed)
         initRadioOption(RadioNode.LIGHT_FLICKER, viewModel.lightFlicker)
+        initRadioOption(RadioNode.LIGHT_CEREMONY_SENSE, viewModel.ceremonySense)
     }
 
     private fun initAnimation() {
@@ -102,9 +110,17 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
         viewModel.lightFlicker.observe(this) {
             doUpdateRadio(RadioNode.LIGHT_FLICKER, it, false)
         }
+        viewModel.ceremonySense.observe(this) {
+            doUpdateRadio(RadioNode.LIGHT_CEREMONY_SENSE, it, false)
+        }
     }
 
     private fun setRadioListener() {
+        binding.lightCeremonySenseRadio.let {
+            it.setOnTabSelectionChangedListener { title, value ->
+                doUpdateRadio(RadioNode.LIGHT_CEREMONY_SENSE, value, viewModel.ceremonySense, it)
+            }
+        }
         binding.lightDelayBlackOutRadio.let {
             it.setOnTabSelectionChangedListener { _, value ->
                 doUpdateRadio(RadioNode.LIGHT_DELAYED_OUT, value, viewModel.lightOutDelayed, it)
@@ -175,6 +191,7 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
         val tabView = when (node) {
             RadioNode.LIGHT_DELAYED_OUT -> binding.lightDelayBlackOutRadio
             RadioNode.LIGHT_FLICKER -> binding.lightFlickerRadio
+            RadioNode.LIGHT_CEREMONY_SENSE -> binding.lightCeremonySenseRadio
             else -> null
         }
         tabView?.let {
@@ -260,6 +277,41 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
 
     private fun setTurnAnimation(animationDrawable: AnimationDrawable,value: String){
         animationDrawable.start(false, 50, null)
+    }
+
+    private fun initSeekLiveData() {
+        viewModel.switchBacklight.observe(this) {
+            updateSeekBarValue(binding.lightSwitchBacklightSeekBar, it)
+        }
+    }
+
+    private fun updateSeekBarValue(bar: VSeekBar, volume: Volume) {
+        bar.min = volume.min
+        bar.max = volume.max
+        bar.setValueNoEvent(volume.pos)
+    }
+
+    private fun initSeekBar() {
+        binding.lightSwitchBacklightSeekBar.apply {
+            viewModel.switchBacklight.value?.let {
+                updateSeekBarValue(this, it)
+            }
+        }
+    }
+
+    private fun setSeekBarListener(listener: VSeekBar.OnSeekBarListener) {
+        binding.lightSwitchBacklightSeekBar.setOnSeekBarListener(listener)
+    }
+
+    override fun onValueChanged(seekBar: VSeekBar?, newValue: Int) {
+        seekBar?.run {
+            when (this) {
+                binding.lightSwitchBacklightSeekBar -> {
+                    manager.doSetVolume(Progress.SWITCH_BACKLIGHT_BRIGHTNESS, newValue)
+                }
+                else -> {}
+            }
+        }
     }
 
 }

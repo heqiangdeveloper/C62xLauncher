@@ -95,6 +95,17 @@ class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
         }
     }
 
+    val speedVolumeOffset: LiveData<Boolean>
+        get() = _speedVolumeOffset
+
+    private val _speedVolumeOffset: MutableLiveData<Boolean> by lazy {
+        val node = SwitchNode.SPEED_VOLUME_OFFSET
+        MutableLiveData(node.default).apply {
+            val value = manager.doGetSwitchOption(node)
+            postValue(value)
+        }
+    }
+
     override fun onCreate() {
         super.onCreate()
         keySerial = VoiceManager.instance.onRegisterVcuListener(0, this)
