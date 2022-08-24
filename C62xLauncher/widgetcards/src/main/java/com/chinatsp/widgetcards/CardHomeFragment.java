@@ -120,7 +120,6 @@ public class CardHomeFragment extends BaseFragment {
         public void onChanged(List<LauncherCard> baseCardEntities) {
             EasyLog.d(TAG,"mHomeCardsOb  onChanged : "+baseCardEntities);
             mCardsAdapter.setCardEntityList(baseCardEntities);
-            mCardsAdapter.notifyDataSetChanged();
         }
     };
     private void initCardsRcv(View rootView) {
@@ -146,7 +145,7 @@ public class CardHomeFragment extends BaseFragment {
             mRcvCards.addItemDecoration(decoration);
         }
         mCardsAdapter = new HomeCardsAdapter(getActivity(), mRcvCards);
-        mCardsAdapter.setCardEntityList(cardManager.getHomeList());
+//        mCardsAdapter.setCardEntityList(cardManager.getHomeList());
         mRcvCards.setAdapter(mCardsAdapter);
         mRcvCards.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

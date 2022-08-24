@@ -12,6 +12,8 @@ public class DriveCounselorController {
 
     public DriveCounselorController(DriveCounselorCardView view) {
         mView = view;
+        EasyLog.i(TAG, "DriveCounselorController" +
+                "  init: " + hashCode());
         mRepository = DriveInfoRepository.getInstance();
         mRepository.setReadDriveInfoListener(mReadDriveInfoListener);
         mRepository.bindService(mView.getContext().getApplicationContext());
@@ -38,7 +40,8 @@ public class DriveCounselorController {
 
         @Override
         public void onDrivingTimeChanged(int driveTime) {
-            EasyLog.i(TAG, "SmallCardCallback  DrivingTimeChanged: " + driveTime+", thread:"+Thread.currentThread().getName());
+            EasyLog.i(TAG, "SmallCardCallback  DrivingTimeChanged: "
+                    + driveTime+", thread:"+Thread.currentThread().getName()+" , hashcode:"+mSmallCardCallback.hashCode());
             if (mView != null) {
                 mView.updateDriveTime(driveTime);
             }
@@ -64,7 +67,7 @@ public class DriveCounselorController {
     }
 
     void detachListener() {
-        mRepository.setDriveInfoCallback(null);
-        mRepository.setReadDriveInfoListener(null);
+//        mRepository.setDriveInfoCallback(null);
+//        mRepository.setReadDriveInfoListener(null);
     }
 }

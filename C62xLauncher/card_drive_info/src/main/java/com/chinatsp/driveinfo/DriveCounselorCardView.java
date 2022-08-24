@@ -15,7 +15,7 @@ import launcher.base.utils.EasyLog;
 
 public class DriveCounselorCardView extends ConstraintLayout {
 
-    private final String TAG = "DriveCounselorCardView";
+    private static final String TAG = "DriveCounselorCardView";
 
     public DriveCounselorCardView(@NonNull Context context) {
         super(context);
@@ -42,8 +42,8 @@ public class DriveCounselorCardView extends ConstraintLayout {
     private DriveCounselorController mController;
 
 
-    private void init(){
-        EasyLog.i(TAG,"init , hashcode:"+this.hashCode());
+    private void init() {
+        EasyLog.i(TAG, "init , hashcode:" + this.hashCode());
         LayoutInflater.from(getContext()).inflate(R.layout.card_drive_counselor, this);
         mViewHolder = new ViewHolder(this);
         mController = new DriveCounselorController(this);
@@ -63,7 +63,7 @@ public class DriveCounselorCardView extends ConstraintLayout {
     @Override
     protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
         super.onVisibilityChanged(changedView, visibility);
-        EasyLog.d(TAG, "onVisibilityChanged : "+visibility);
+        EasyLog.d(TAG, "onVisibilityChanged : " + visibility);
     }
 
 
@@ -81,7 +81,7 @@ public class DriveCounselorCardView extends ConstraintLayout {
         mController.detachListener();
     }
 
-    private static class ViewHolder{
+    private static class ViewHolder {
         private final TextView tvCardDriveOilValue;
         private final TextView tvCardDriveTimeValue;
         private final TextView tvCardDriveDistanceValue;
@@ -104,9 +104,12 @@ public class DriveCounselorCardView extends ConstraintLayout {
         private void updateOilConsumption(float oil) {
             tvCardDriveOilValue.setText(String.valueOf(oil));
         }
+
         private void updateDriveTime(int time) {
+            EasyLog.d(TAG, "ViewHolder updateDriveTime");
             tvCardDriveTimeValue.setText(String.valueOf(time));
         }
+
         private void updateDriveMileage(float distance) {
             tvCardDriveDistanceValue.setText(String.valueOf(distance));
         }
@@ -121,6 +124,7 @@ public class DriveCounselorCardView extends ConstraintLayout {
     }
 
     void updateDriveTime(int time) {
+        EasyLog.d(TAG, "updateDriveTime: card hashcode:" + hashCode());
         post(() -> mViewHolder.updateDriveTime(time));
     }
 
