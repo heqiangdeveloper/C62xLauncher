@@ -62,6 +62,7 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
     private String mSource = VolcanoRepository.SOURCE_TOUTIAO;
 
     private void init() {
+        EasyLog.i(TAG,"InitVolcano :"+hashCode());
         LayoutInflater.from(getContext()).inflate(R.layout.card_volcano, this);
         mController = new VolcanoController(this);
         mSmallCardView = findViewById(R.id.layoutSmallCardView);

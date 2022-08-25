@@ -119,12 +119,11 @@ public class CardHomeFragment extends BaseFragment {
         @Override
         public void onChanged(List<LauncherCard> baseCardEntities) {
             EasyLog.d(TAG,"mHomeCardsOb  onChanged : "+baseCardEntities);
-            mCardsAdapter.setCardEntityList(baseCardEntities);
+            fillCards(baseCardEntities);
         }
     };
     private void initCardsRcv(View rootView) {
         EasyLog.d(TAG, "initCardsRcv");
-        CardManager cardManager = CardManager.getInstance();
         mRcvCards = rootView.findViewById(R.id.rcvCards);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity()){
             @Override
@@ -144,9 +143,7 @@ public class CardHomeFragment extends BaseFragment {
             SimpleRcvDecoration decoration = new SimpleRcvDecoration(30, layoutManager);
             mRcvCards.addItemDecoration(decoration);
         }
-        mCardsAdapter = new HomeCardsAdapter(getActivity(), mRcvCards);
-//        mCardsAdapter.setCardEntityList(cardManager.getHomeList());
-        mRcvCards.setAdapter(mCardsAdapter);
+
         mRcvCards.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -163,6 +160,19 @@ public class CardHomeFragment extends BaseFragment {
                 super.onScrollStateChanged(recyclerView, newState);
             }
         });
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void fillCards(List<LauncherCard> baseCardEntities) {
+        boolean init = mCardsAdapter == null;
+        if (mCardsAdapter == null) {
+            mCardsAdapter = new HomeCardsAdapter(getActivity(), mRcvCards);
+            mRcvCards.setAdapter(mCardsAdapter);
+        }
+        mCardsAdapter.setCardEntityList(baseCardEntities);
+        if (!init) {
+            mCardsAdapter.notifyDataSetChanged();
+        }
     }
 
     private void setItemAnimator() {
