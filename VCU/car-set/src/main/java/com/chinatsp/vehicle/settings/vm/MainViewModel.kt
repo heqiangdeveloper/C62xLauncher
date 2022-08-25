@@ -2,12 +2,10 @@ package com.chinatsp.vehicle.settings.vm
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
-import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.chinatsp.vehicle.settings.bean.TabPage
 import com.common.library.frame.base.BaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
 /**

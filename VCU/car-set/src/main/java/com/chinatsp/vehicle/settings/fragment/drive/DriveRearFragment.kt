@@ -68,8 +68,7 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
     }
 
     private fun initViewsDisplay() {
-        val isCareLevel = VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4)
-        if (isCareLevel) {
+        if (VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4, expect = true)) {
             binding.driveDow.visibility = View.GONE
             binding.line1.visibility = View.GONE
             binding.adasMebLayout.visibility = View.GONE
@@ -263,8 +262,7 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
 
     private fun dynamicEffect() {
         binding.videoImage.visibility = View.VISIBLE
-        val isCareLevel = VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4)
-        if (isCareLevel) {
+        if (VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4, expect = true)) {
             if(binding.adasSideBsdSwitch.isChecked){
                 binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.ic_lientang_auxiliary_9) })
             }else{

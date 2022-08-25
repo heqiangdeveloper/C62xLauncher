@@ -1,6 +1,5 @@
 package com.chinatsp.settinglib.manager
 
-import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.mcu.CarMcuManager
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.optios.Progress

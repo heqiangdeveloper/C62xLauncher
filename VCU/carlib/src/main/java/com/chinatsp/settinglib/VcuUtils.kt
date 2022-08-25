@@ -3,6 +3,7 @@ package com.chinatsp.settinglib
 import android.car.VehicleAreaType
 import android.car.hardware.cabin.CarCabinManager
 import android.content.Context
+import android.database.ContentObserver
 import android.os.SystemProperties
 import android.provider.Settings
 import com.chinatsp.settinglib.constants.OffLine
@@ -34,7 +35,7 @@ object VcuUtils {
         val areaValue = VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL
         val value = manager.readIntProperty(signal, Origin.CABIN, areaValue)
         val result = value == 0x0A
-        LogManager.d(TAG, "isParking invoke value:$value, result:$result")
+        Timber.d("isParking invoke value:$value, result:$result")
         return result
     }
 
@@ -45,20 +46,22 @@ object VcuUtils {
      */
     fun isSupportFunction(keySerial: String): Boolean {
         //0 无 1有
-        val value = SystemProperties.getInt(keySerial, Constant.INVALID)
-        LogManager.d(TAG, "isSupportFunction keySerial: $keySerial, value: $value")
+        val value = getConfigParameters(keySerial, Constant.INVALID)
+        Timber.d("isSupportFunction keySerial: $keySerial, value: $value")
         return value == 1
     }
 
-    fun isCareLevel(@Level vararg levels: Int): Boolean {
+    fun isCareLevel(@Level vararg levels: Int, expect: Boolean = true): Boolean {
         val value = getLevelValue()
-        LogManager.d(TAG, "isCareLevel value: $value")
-        return levels.contains(value)
+        Timber.d("isCareLevel value: $value")
+        val actual = levels.contains(value)
+        return !(actual xor expect)
+//        return false
     }
 
     fun getLevelValue(): Int {
         val value = SystemProperties.getInt(OffLine.LEVEL, Level.LEVEL3)
-        LogManager.d(TAG, "getLevelValue value: $value")
+        Timber.d( "getLevelValue value: $value")
         return value
 //        return Level.LEVEL5
     }
@@ -81,6 +84,36 @@ object VcuUtils {
             Timber.e("getInt key:%s, value:%s, throw exception:%s", key, value, e.message)
         }
         return value
+    }
+
+    fun addUriObserver(uriSerial: String, observer: ContentObserver) {
+        val uri = Settings.Global.getUriFor(uriSerial)
+        val resolver = BaseApp.instance.contentResolver
+        if (null != resolver && null != uri) {
+            resolver.registerContentObserver(uri, true, observer)
+        }
+    }
+
+    fun removeUriObserver(observer: ContentObserver) {
+        val resolver = BaseApp.instance.contentResolver
+        resolver.unregisterContentObserver(observer)
+    }
+
+    fun getConfigParameters(keySerial: String, default: Int): Int {
+        val result = SystemProperties.getInt(keySerial, default)
+        Timber.d("getConfigParameters keySerial:%s, default:%s, result:%s", keySerial, default, result)
+        return result
+    }
+
+    fun setConfigParameters(keySerial: String, value: Int): Boolean {
+        try {
+            SystemProperties.set(keySerial, value.toString())
+            Timber.d("setConfigParameters keySerial:%s, value:%s", keySerial, value)
+            return true
+        } catch (e: Exception) {
+            Timber.e(e)
+        }
+        return false
     }
 
 }

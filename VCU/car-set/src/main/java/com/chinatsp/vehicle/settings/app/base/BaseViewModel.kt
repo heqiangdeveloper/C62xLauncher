@@ -2,10 +2,10 @@ package com.chinatsp.vehicle.settings.app.base
 
 import android.app.Application
 import androidx.lifecycle.viewModelScope
-import com.common.library.frame.base.BaseModel
-import com.common.library.frame.base.DataViewModel
 import com.chinatsp.vehicle.settings.api.ApiService
 import com.chinatsp.vehicle.settings.bean.Result
+import com.common.library.frame.base.BaseModel
+import com.common.library.frame.base.DataViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber

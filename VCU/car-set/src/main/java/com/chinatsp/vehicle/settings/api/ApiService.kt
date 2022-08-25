@@ -1,7 +1,7 @@
 package com.chinatsp.vehicle.settings.api
 
-import com.chinatsp.vehicle.settings.bean.Result
 import com.chinatsp.vehicle.settings.bean.OilPrice
+import com.chinatsp.vehicle.settings.bean.Result
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query

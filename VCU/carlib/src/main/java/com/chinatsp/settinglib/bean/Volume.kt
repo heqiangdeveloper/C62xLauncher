@@ -1,7 +1,6 @@
 package com.chinatsp.settinglib.bean
 
-import android.car.hardware.cabin.CarCabinManager
-import android.media.AudioAttributes
+import com.chinatsp.settinglib.optios.Progress
 
 /**
  * @author : luohong
@@ -10,28 +9,11 @@ import android.media.AudioAttributes
  * @desc   :
  * @version: 1.0
  */
-data class Volume(val type: Type, var min: Int, var max: Int, var pos:Int): Comparable<Volume> {
+data class Volume(val type: Progress, var min: Int, var max: Int, var pos:Int): Comparable<Volume> {
 
     override fun equals(other: Any?): Boolean {
         return super.equals(other)
     }
-
-    enum class Type(val id: Int = -1, val signal: Int = -1) {
-        NAVI(AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE),
-//        VOICE(AudioAttributes.USAGE_NOTIFICATION_EVENT),
-        VOICE(AudioAttributes.USAGE_ASSISTANT),
-        MEDIA(AudioAttributes.USAGE_MEDIA),
-        PHONE(AudioAttributes.USAGE_VOICE_COMMUNICATION),
-        SYSTEM(AudioAttributes.USAGE_ASSISTANT),
-        CAR_SCREEN,
-        METER_SCREEN,
-        AC_SCREEN,
-        SEAT_SILL_TEMP(signal = CarCabinManager.ID_DSM_AUTO_HEAT_TEMP),
-//        STEERING_EDGE_TEMP(id = CarCabinManager.ID_SWS_AUTO_HEAT_TEMP);
-        STEERING_EDGE_TEMP(id = -1);
-
-    }
-
 
     fun isValid(value: Int): Boolean {
 

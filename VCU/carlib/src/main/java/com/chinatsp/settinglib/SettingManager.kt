@@ -35,7 +35,6 @@ import android.net.Uri
 import android.os.*
 import android.provider.Settings
 import android.text.format.DateFormat
-import android.util.Log
 import com.android.internal.app.LocalePicker
 import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.RegisterSignalManager.Companion.cabinSignal
@@ -199,7 +198,7 @@ class SettingManager private constructor() {
             if (null == mCarCabinManager) {
                 mCarCabinManager = mCarApi!!.getCarManager(Car.CABIN_SERVICE) as CarCabinManager
             }
-            if (null != mCarCabinManager) {
+            mCarCabinManager?.let {
 //                    int[] signalArray = Arrays.stream(Cabin.values())
 //                            .flatMapToInt(cabin -> Arrays.stream(cabin.getSignals())).distinct().toArray();
 //                    Arrays.stream(signalArray).forEach(it -> LogManager.Companion.Timber.d("value:0x" + Integer.toHexString(it).toUpperCase()));
@@ -210,7 +209,7 @@ class SettingManager private constructor() {
                 Arrays.stream(signalArray).forEach {
                     Timber.d("register cabin: hex propertyId:${Integer.toHexString(it)},  dec propertyId:$it")
                 }
-                mCarCabinManager!!.registerCallback(cabinEventListener, signalArray)
+                it.registerCallback(cabinEventListener, signalArray)
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -558,7 +557,7 @@ class SettingManager private constructor() {
         try {
             mBoxManager?.truckInformation?.onOff
         } catch (e: Exception) {
-            LogManager.e(TAG, e)
+            Timber.e(e)
         }
     }
 
@@ -865,10 +864,6 @@ class SettingManager private constructor() {
     val mcuVersion: String
         get() = SystemProperties.get("persist.sys.mcu_version", "")
 
-
-
-
-
     fun setMute(isMute: Boolean) {
         try {
             val carPropertyManager =
@@ -989,7 +984,7 @@ class SettingManager private constructor() {
                 muiBalanceLevelValue = uiBalanceLevelValue+6;
                 muiFadeLevelValue = uiFadeLevelValue+6;
             }
-            LogManager.d("setAudioBalance muiBalanceLevelValue=${muiBalanceLevelValue}  " +
+            Timber.d("setAudioBalance muiBalanceLevelValue=${muiBalanceLevelValue}  " +
                     " muiFadeLevelValue=${muiFadeLevelValue}")
             mCarAudioManager?.setBalFadBalance(muiBalanceLevelValue,muiFadeLevelValue)
         } catch (e: Exception) {
@@ -1399,7 +1394,7 @@ class SettingManager private constructor() {
         fun getAmpType(): Int {
             try {
                 var type = SystemProperties.getInt("persist.vendor.vehicle.amp", 0)
-                LogManager.d("getAmpType type=${type}")
+                Timber.d("getAmpType type=${type}")
                 return type;
             } catch (e: Exception) {
                 e.printStackTrace()

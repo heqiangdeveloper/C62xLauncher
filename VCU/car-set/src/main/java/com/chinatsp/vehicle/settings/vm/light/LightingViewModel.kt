@@ -3,9 +3,10 @@ package com.chinatsp.vehicle.settings.vm.light
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IOptionListener
-import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.lamp.LightManager
+import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
@@ -17,7 +18,7 @@ import javax.inject.Inject
 class LightingViewModel @Inject constructor(app: Application, model: BaseModel) :
     BaseViewModel(app, model), IOptionListener {
 
-    private val manager: IOptionManager
+    private val manager: LightManager
         get() = LightManager.instance
 
     val insideLightMeet: LiveData<Boolean>
@@ -64,6 +65,28 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
         }
     }
 
+    val ceremonySense: LiveData<Int>
+        get() = _ceremonySense
+
+    private val _ceremonySense: MutableLiveData<Int> by lazy {
+        val node = RadioNode.LIGHT_CEREMONY_SENSE
+        MutableLiveData(node.default).apply {
+            val value = manager.doGetRadioOption(node)
+            updateLiveData(this, value)
+        }
+    }
+
+    val switchBacklight: LiveData<Volume>
+        get() = _switchBacklight
+
+    private val _switchBacklight: MutableLiveData<Volume> by lazy {
+        val node = Progress.SWITCH_BACKLIGHT_BRIGHTNESS
+        MutableLiveData<Volume>().apply {
+            value = manager.doGetVolume(node)?.copy()
+        }
+    }
+
+
     override fun onCreate() {
         super.onCreate()
         keySerial = manager.onRegisterVcuListener(listener = this)
@@ -109,6 +132,9 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
             }
             RadioNode.LIGHT_FLICKER -> {
                 updateLiveData(_lightFlicker, value)
+            }
+            RadioNode.LIGHT_CEREMONY_SENSE -> {
+                updateLiveData(_ceremonySense, value)
             }
             else -> {}
         }

@@ -6,6 +6,7 @@ import com.chinatsp.settinglib.listener.sound.ISoundListener
 import com.chinatsp.settinglib.listener.sound.ISoundManager
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
+import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
@@ -54,7 +55,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
     }
 
     private val seatHeatStartTemp: Volume by lazy {
-        initVolume(Volume.Type.SEAT_SILL_TEMP)
+        initVolume(Progress.SEAT_ONSET_TEMPERATURE)
     }
 
 
@@ -64,16 +65,16 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
                 add(SwitchNode.SEAT_MAIN_DRIVE_MEET.get.signal)
                 add(SwitchNode.SEAT_FORK_DRIVE_MEET.get.signal)
                 add(SwitchNode.SEAT_HEAT_ALL.get.signal)
-                add(Volume.Type.SEAT_SILL_TEMP.id)
+                add(Progress.SEAT_ONSET_TEMPERATURE.get.signal)
             }
             put(Origin.CABIN, cabinSet)
         }
     }
 
-    private fun initVolume(type: Volume.Type): Volume {
+    private fun initVolume(type: Progress): Volume {
         val pos = 20
         val max = 30
-        return Volume(type, 10, max, pos)
+        return Volume(type, type.min, type.max, pos)
     }
 
     override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
@@ -131,18 +132,18 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    override fun doGetVolume(type: Volume.Type): Volume? {
+    override fun doGetVolume(type: Progress): Volume? {
         return when (type) {
-            Volume.Type.SEAT_SILL_TEMP -> {
+            Progress.SEAT_ONSET_TEMPERATURE -> {
                 seatHeatStartTemp
             }
             else -> null
         }
     }
 
-    override fun doSetVolume(type: Volume.Type, position: Int): Boolean {
+    override fun doSetVolume(type: Progress, position: Int): Boolean {
         return when (type) {
-            Volume.Type.SEAT_SILL_TEMP -> {
+            Progress.SEAT_ONSET_TEMPERATURE -> {
                 writeProperty(seatHeatStartTemp, position)
             }
             else -> false
@@ -150,7 +151,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
     }
 
     private fun writeProperty(volume: Volume, value: Int): Boolean {
-        val success = volume.isValid(value) && writeProperty(volume.type.id, value, Origin.CABIN)
+        val success = volume.isValid(value) && writeProperty(volume.type.get.signal, value, Origin.CABIN)
         if (success && develop) {
             volume.pos = value
             doRangeChanged(volume)
@@ -180,13 +181,17 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
     }
 
     private fun doRangeChanged(vararg array: Volume) {
-        synchronized(listenerStore) {
+        val readLock = readWriteLock.readLock()
+        try {
+            readLock.lock()
             listenerStore.forEach { (_, ref) ->
                 val listener = ref.get()
                 if (null != listener && listener is ISoundListener) {
                     listener.onSoundVolumeChanged(*array)
                 }
             }
+        } finally {
+            readLock.unlock()
         }
     }
 

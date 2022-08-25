@@ -38,4 +38,5 @@ dependencies {
     api project(path: ':base')
     implementation project(path: ':card_iquting')
     implementation project(path: ':card_drive_info')
+    implementation project(path: ':card_appstore')
 }

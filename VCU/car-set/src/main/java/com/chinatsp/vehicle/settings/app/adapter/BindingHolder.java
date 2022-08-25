@@ -2,10 +2,10 @@ package com.chinatsp.vehicle.settings.app.adapter;
 
 import android.view.View;
 
-import com.king.base.adapter.holder.ViewHolder;
-
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
+
+import com.king.base.adapter.holder.ViewHolder;
 
 /**
  *

@@ -6,12 +6,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.MutableLiveData
-import com.chinatsp.settinglib.Constant
-import com.chinatsp.settinglib.LogManager
-import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.lamp.LampManager
 import com.chinatsp.vehicle.settings.IRoute
-import com.chinatsp.vehicle.settings.Node
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.chinatsp.vehicle.settings.databinding.LightingManageFragmentBinding

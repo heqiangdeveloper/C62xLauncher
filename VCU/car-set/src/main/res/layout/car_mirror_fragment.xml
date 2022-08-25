@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal">
 
     <data>
@@ -47,6 +46,50 @@
                 style="@style/line"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/car_trunk_electric_function" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/reverse_angle"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/switch_item_option_height"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/line1">
+
+                <TextView
+                    android:id="@+id/title"
+                    style="@style/switch_row_option_style"
+                    android:text="@string/car_mirror_automatic_under_double"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/alter_reverse_angle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/x20"
+                    android:drawablePadding="@dimen/x5"
+                    android:text="@string/car_mirror_angle"
+                    app:drawableEndCompat="@drawable/list_item_right_selector"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/title"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:textSize="@dimen/text_10"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/tab_option_title_text_color"/>
+
+                <com.common.xui.widget.button.switchbutton.SwitchButton
+                    android:id="@+id/back_mirror_down_switch"
+                    style="@style/switch_button_style"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/line2"
+                style="@style/line"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/reverse_angle" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.appcompat.widget.AppCompatImageView

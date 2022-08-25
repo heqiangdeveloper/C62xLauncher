@@ -1,5 +1,6 @@
 package com.chinatsp.widgetcards.manager;
 
+import com.chinatsp.appstore.AppStoreCardView;
 import com.chinatsp.driveinfo.DriveCounselorCardView;
 import com.chinatsp.usercenter.UserCenterCardView;
 import com.chinatsp.volcano.VolcanoCardView;
@@ -92,7 +93,7 @@ public class CardViewCreatorFactory {
     }
 
     private static ICardViewCreator createAppStore() {
-        return null;
+        return AppStoreCardView::new;
     }
 
     private static ICardViewCreator createEmpty() {

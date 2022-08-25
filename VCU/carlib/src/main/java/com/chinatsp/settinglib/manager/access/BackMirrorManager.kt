@@ -1,7 +1,6 @@
 package com.chinatsp.settinglib.manager.access
 
 import android.car.hardware.CarPropertyValue
-import android.car.hardware.cabin.CarCabinManager
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.manager.BaseManager
@@ -32,6 +31,14 @@ class BackMirrorManager private constructor() : BaseManager(), ISwitchManager {
         }
     }
 
+    private val backMirrorDown: AtomicBoolean by lazy {
+        val node = SwitchNode.BACK_MIRROR_DOWN
+        AtomicBoolean(node.isOn()).apply {
+            val result = readIntProperty(node.get.signal, node.get.origin, Area.GLOBAL)
+            doUpdateSwitchValue(node, this, result)
+        }
+    }
+
     companion object : ISignal {
         override val TAG: String = BackMirrorManager::class.java.simpleName
         val instance: BackMirrorManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
@@ -42,7 +49,8 @@ class BackMirrorManager private constructor() : BaseManager(), ISwitchManager {
     override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int>().apply {
-                add(CarCabinManager.ID_MIRROR_FADE_IN_OUT_STATUE)
+                add(SwitchNode.BACK_MIRROR_FOLD.get.signal)
+                add(SwitchNode.BACK_MIRROR_DOWN.get.signal)
             }
             put(Origin.CABIN, cabinSet)
         }
@@ -53,6 +61,9 @@ class BackMirrorManager private constructor() : BaseManager(), ISwitchManager {
             SwitchNode.BACK_MIRROR_FOLD -> {
                 backMirrorFold.get()
             }
+            SwitchNode.BACK_MIRROR_DOWN -> {
+                backMirrorDown.get()
+            }
             else -> false
         }
     }
@@ -62,6 +73,9 @@ class BackMirrorManager private constructor() : BaseManager(), ISwitchManager {
             SwitchNode.BACK_MIRROR_FOLD -> {
                 writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
+            SwitchNode.BACK_MIRROR_DOWN -> {
+                writeProperty(node.set.signal, node.value(status), node.set.origin)
+            }
             else -> false
         }
     }
@@ -69,9 +83,13 @@ class BackMirrorManager private constructor() : BaseManager(), ISwitchManager {
     override fun onRegisterVcuListener(priority: Int, listener: IBaseListener): Int {
         if (listener is ISwitchListener) {
             val serial: Int = System.identityHashCode(listener)
-            synchronized(listenerStore) {
+            val writeLock = readWriteLock.writeLock()
+            try {
+                writeLock.lock()
                 unRegisterVcuListener(serial, identity)
                 listenerStore.put(serial, WeakReference(listener))
+            } finally {
+                writeLock.unlock()
             }
             return serial
         }
@@ -87,8 +105,11 @@ class BackMirrorManager private constructor() : BaseManager(), ISwitchManager {
     override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         /**雨天自动关窗*/
         when (property.propertyId) {
-            CarCabinManager.ID_MIRROR_FADE_IN_OUT_STATUE -> {
+            SwitchNode.BACK_MIRROR_FOLD.get.signal -> {
                 onSwitchChanged(SwitchNode.BACK_MIRROR_FOLD, backMirrorFold, property)
+            }
+            SwitchNode.BACK_MIRROR_DOWN.get.signal -> {
+                onSwitchChanged(SwitchNode.BACK_MIRROR_DOWN, backMirrorDown, property)
             }
             else -> {}
         }

@@ -5,17 +5,19 @@ import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.mcu.CarMcuManager
 import android.car.media.CarAudioManager
 import com.chinatsp.settinglib.LogManager
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.Volume
+import com.chinatsp.settinglib.constants.OffLine
 import com.chinatsp.settinglib.listener.IBaseListener
-import com.chinatsp.settinglib.listener.cabin.IACListener
 import com.chinatsp.settinglib.listener.sound.ISoundListener
 import com.chinatsp.settinglib.listener.sound.ISoundManager
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
-import com.chinatsp.settinglib.optios.Area
+import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
+import timber.log.Timber
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -73,6 +75,15 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
             doUpdateSwitchValue(node, this, value)
         }
     }
+
+    private val touchTone: AtomicBoolean by lazy {
+        val node = SwitchNode.TOUCH_PROMPT_TONE
+        AtomicBoolean(node.isOn()).apply {
+            val value = getPromptToneLevel(node)
+            doUpdateSwitchValue(node, this, value)
+        }
+    }
+
     private val huaweiAtomic: AtomicBoolean by lazy {
         val node = SwitchNode.AUDIO_SOUND_HUAWEI
         AtomicBoolean(node.isOn()).apply {
@@ -106,7 +117,7 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
     private val naviAudioMixing: AtomicInteger by lazy {
         val node = RadioNode.NAVI_AUDIO_MIXING
         AtomicInteger(node.default).apply {
-            val value = readIntValue(node)
+            val value = VcuUtils.getConfigParameters(OffLine.NAVI_MIXING, 2)
             doUpdateRadioValue(node, this, value)
         }
     }
@@ -120,23 +131,23 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
     }
 
     private val naviVolume: Volume by lazy {
-        initVolume(Volume.Type.NAVI)
+        initVolume(Progress.NAVI)
     }
 
     private val mediaVolume: Volume by lazy {
-        initVolume(Volume.Type.MEDIA)
+        initVolume(Progress.MEDIA)
     }
 
     private val voiceVolume: Volume by lazy {
-        initVolume(Volume.Type.VOICE)
+        initVolume(Progress.VOICE)
     }
 
     private val phoneVolume: Volume by lazy {
-        initVolume(Volume.Type.PHONE)
+        initVolume(Progress.PHONE)
     }
 
     private val systemVolume: Volume by lazy {
-        initVolume(Volume.Type.SYSTEM)
+        initVolume(Progress.SYSTEM)
     }
 
     private fun readIntValue(node: RadioNode): Int {
@@ -168,24 +179,21 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    private fun initVolume(type: Volume.Type): Volume {
+    private fun initVolume(type: Progress): Volume {
         val pos = getVolumePosition(type)
         val max = getVolumeMaximum(type)
-        return Volume(type, 0, max, pos)
+        return Volume(type, type.min, max, pos)
     }
 
     private fun onMcuVolumeChanged(property: CarPropertyValue<*>) {
-        val value = property.value
-        value?.let {
-            if (it is Array<*>) {
-                if (it.size >= 5) {
-                    updateVolumePosition(mediaVolume, it.elementAt(0) as Int)
-                    updateVolumePosition(phoneVolume, it.elementAt(1) as Int)
-                    updateVolumePosition(voiceVolume, it.elementAt(2) as Int)
-                    updateVolumePosition(naviVolume, it.elementAt(3) as Int)
-                    updateVolumePosition(systemVolume, it.elementAt(4) as Int)
-                    onMcuVolumeChanged()
-                }
+        property.value?.let {
+            if ((it is Array<*>) && (it.size >= 5)) {
+                updateVolumePosition(mediaVolume, it.elementAt(0) as Int)
+                updateVolumePosition(phoneVolume, it.elementAt(1) as Int)
+                updateVolumePosition(voiceVolume, it.elementAt(2) as Int)
+                updateVolumePosition(naviVolume, it.elementAt(3) as Int)
+                updateVolumePosition(systemVolume, it.elementAt(4) as Int)
+                onMcuVolumeChanged()
             }
         }
     }
@@ -195,7 +203,9 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
     }
 
     private fun onMcuVolumeChanged() {
-        synchronized(listenerStore) {
+        val readLock = readWriteLock.readLock()
+        try {
+            readLock.lock()
             listenerStore.filter { null != it.value.get() }
                 .forEach {
                     val listener = it.value.get()
@@ -205,6 +215,8 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
                         )
                     }
                 }
+        } finally {
+            readLock.unlock()
         }
     }
 
@@ -219,9 +231,13 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
 
     override fun onRegisterVcuListener(priority: Int, listener: IBaseListener): Int {
         val serial: Int = System.identityHashCode(listener)
-        synchronized(listenerStore) {
+        val writeLock = readWriteLock.writeLock()
+        try {
+            writeLock.lock()
             unRegisterVcuListener(serial, identity)
             listenerStore.put(serial, WeakReference(listener))
+        } finally {
+            writeLock.unlock()
         }
         return serial
     }
@@ -247,7 +263,7 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
                 writeProperty(node, value, icmVolumeLevel)
             }
             RadioNode.NAVI_AUDIO_MIXING -> {
-                writeProperty(node, value, naviAudioMixing)
+                writeNaviMixing(node, value, naviAudioMixing)
             }
             RadioNode.SPEED_VOLUME_OFFSET -> {
                 writeProperty(node, value, speedVolumeOffset)
@@ -270,6 +286,10 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
             SwitchNode.AUDIO_SOUND_LOUDNESS -> {
                 loudnessAtomic.get()
             }
+            SwitchNode.TOUCH_PROMPT_TONE -> {
+                touchTone.get()
+                true
+            }
             else -> false
         }
     }
@@ -288,40 +308,13 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
             SwitchNode.AUDIO_SOUND_LOUDNESS -> {
                 writeProperty(node.set.signal, node.value(status), node.set.origin, node.area)
             }
+            SwitchNode.TOUCH_PROMPT_TONE -> {
+                switchTouchTone(node, status)
+            }
             else -> false
         }
     }
 
-
-    /**
-     * 【设置】仪表报警音量等级开关触发
-     * @param value 仪表报警音量等级开关触发[0x1,0,0x0,0x3]
-    0x0: Inactive
-    0x1: High
-    0x2: medium
-    0x3: Low
-     */
-    fun doUpdateAlarmOption(value: Int): Boolean {
-        val isValid = listOf(0x01, 0x02, 0x03).any { it == value }
-        if (!isValid) {
-            return false
-        }
-        val signal = CarCabinManager.ID_HUM_ICM_VOLUME_LEVEL
-        return writeProperty(signal, value, Origin.CABIN, Area.GLOBAL)
-    }
-
-    /**
-     * 【设置】车机混音策略[0x1,-1,0x0,0x3]
-     * 车机混音策略[0x1,-1,0x0,0x3] 0x0:not used 0x1: MIX0((default)) 0x2: Mix1 0x3: Mix2 0x4~0x7: reserved
-     */
-    fun doUpdateRemixOption(value: Int): Boolean {
-        val isValid = listOf(0x01, 0x03).any { it == value }
-        if (!isValid) {
-            return false
-        }
-        val signal = CarCabinManager.ID_HUM_SOUND_MIX
-        return writeProperty(signal, value, Origin.CABIN, Area.GLOBAL)
-    }
 
     /**
      *
@@ -359,109 +352,126 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
                 onSwitchChanged(SwitchNode.AUDIO_SOUND_HUAWEI, huaweiAtomic, property)
             }
             RadioNode.SPEED_VOLUME_OFFSET.get.signal -> {
-                onRadioChanged( RadioNode.SPEED_VOLUME_OFFSET, speedVolumeOffset, property)
+                onRadioChanged(RadioNode.SPEED_VOLUME_OFFSET, speedVolumeOffset, property)
             }
             RadioNode.NAVI_AUDIO_MIXING.get.signal -> {
-                onRadioChanged( RadioNode.NAVI_AUDIO_MIXING, naviAudioMixing, property)
+                onRadioChanged(RadioNode.NAVI_AUDIO_MIXING, naviAudioMixing, property)
             }
             RadioNode.ICM_VOLUME_LEVEL.get.signal -> {
-                onRadioChanged( RadioNode.ICM_VOLUME_LEVEL, icmVolumeLevel, property)
+                onRadioChanged(RadioNode.ICM_VOLUME_LEVEL, icmVolumeLevel, property)
             }
             else -> {}
         }
     }
 
-    private fun notifySwitchStatus(status: Boolean, type: SwitchNode) {
-        synchronized(listenerStore) {
-            listenerStore.filter { null != it.value.get() }
-                .forEach {
-                    val listener = it.value.get()
-                    if (listener is IACListener) {
-                        listener.onSwitchOptionChanged(status, type)
-                    }
-                }
-        }
-    }
-
-    override fun doGetVolume(type: Volume.Type): Volume? {
+    override fun doGetVolume(type: Progress): Volume? {
         return when (type) {
-            Volume.Type.NAVI -> {
+            Progress.NAVI -> {
                 naviVolume
             }
-            Volume.Type.VOICE -> {
+            Progress.VOICE -> {
                 voiceVolume
             }
-            Volume.Type.MEDIA -> {
+            Progress.MEDIA -> {
                 mediaVolume
             }
-            Volume.Type.PHONE -> {
+            Progress.PHONE -> {
                 phoneVolume
             }
-            Volume.Type.SYSTEM -> {
+            Progress.SYSTEM -> {
                 systemVolume
             }
             else -> null
         }
     }
 
-    override fun doSetVolume(type: Volume.Type, value: Int): Boolean {
+    override fun doSetVolume(type: Progress, value: Int): Boolean {
         return when (type) {
-            Volume.Type.NAVI,
-            Volume.Type.VOICE,
-            Volume.Type.MEDIA,
-            Volume.Type.PHONE,
-            Volume.Type.SYSTEM -> {
-                setVolumePosition(type.id, value)
+            Progress.NAVI, Progress.VOICE, Progress.MEDIA,
+            Progress.PHONE, Progress.SYSTEM -> {
+                setVolumePosition(type.set.signal, value)
+                doGetVolume(type)?.pos = value
                 true
             }
             else -> false
         }
     }
 
-    private fun getVolumePosition(type: Volume.Type): Int {
-        return getVolumePosition(type.id)
+    private fun getVolumePosition(type: Progress): Int {
+        try {
+            val value = manager?.let {
+                it.getGroupVolume(it.getVolumeGroupIdForUsage(type.get.signal))
+            } ?: 12
+            Timber.d("getVolumePosition type:$type, value:$value")
+            return value
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return 12
     }
 
-    private fun getVolumeMaximum(type: Volume.Type): Int {
-        return getVolumeMaximum(type.id)
+    private fun getVolumeMaximum(type: Progress): Int {
+        try {
+            return manager?.let {
+                it.getGroupMaxVolume(it.getVolumeGroupIdForUsage(type.get.signal))
+            } ?: type.max
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return type.max
+    }
+
+    private fun getPromptToneLevel(node: SwitchNode): Int {
+        if (node.get.origin == Origin.SPECIAL) {
+            val result = manager?.let {
+                it.beepLevel
+            } ?: node.get.off
+            Timber.d("getPromptToneLevel: node:%s, result:%s", node, result)
+        }
+        return -1;
+    }
+
+    private fun switchTouchTone(node: SwitchNode, status: Boolean): Boolean {
+        try {
+            if (node.set.origin == Origin.SPECIAL) {
+                val result = manager?.let {
+                    it.beepLevel = if (status) node.set.on else node.set.off
+                    Timber.d("switchTouchTone node:%s, status:%s, beepLevel:%s", node, status, it.beepLevel)
+                    return@let true
+                } ?: false
+                return result
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return false
     }
 
     private fun setVolumePosition(type: Int, value: Int) {
         try {
             manager?.let {
                 it.setGroupVolume(it.getVolumeGroupIdForUsage(type), value, 0)
-                LogManager.d(TAG, "setVolumePosition type:$type, value:$value")
+                Timber.d("setVolumePosition type:$type, value:$value")
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    private fun getVolumePosition(type: Int): Int {
-        try {
-            return manager?.let {
-                it.getGroupVolume(it.getVolumeGroupIdForUsage(type))
-            } ?: -1
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return -1
-    }
-
-    private fun getVolumeMaximum(type: Int): Int {
-        try {
-            return manager?.let {
-                it.getGroupMaxVolume(it.getVolumeGroupIdForUsage(type))
-            } ?: -1
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return -1
-    }
-
     private fun writeProperty(node: RadioNode, value: Int, atomic: AtomicInteger): Boolean {
         val success = node.isValid(value, false)
                 && writeProperty(node.set.signal, value, node.set.origin)
+        if (success && develop) {
+            doUpdateRadioValue(node, atomic, value) { _node, _value ->
+                doRadioChanged(_node, _value)
+            }
+        }
+        return success
+    }
+
+    private fun writeNaviMixing(node: RadioNode, value: Int, atomic: AtomicInteger): Boolean {
+        val success = node.isValid(value, false)
+                && VcuUtils.setConfigParameters(OffLine.NAVI_MIXING, value)
         if (success && develop) {
             doUpdateRadioValue(node, atomic, value) { _node, _value ->
                 doRadioChanged(_node, _value)

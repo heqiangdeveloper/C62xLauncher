@@ -8,11 +8,10 @@ import com.chinatsp.settinglib.service.VehicleService
 import com.chinatsp.vehicle.controller.VcuOutTrader
 import com.chinatsp.vehicle.settings.app.Constants
 import com.king.retrofit.retrofithelper.RetrofitHelper
-import com.orhanobut.logger.AndroidLogAdapter
-import com.orhanobut.logger.Logger
-import com.orhanobut.logger.PrettyFormatStrategy
+import com.orhanobut.logger.*
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
+
 
 /**
  *  框架基于 Google 官方的 JetPack 构建，在使用  时，需遵循一些规范：
@@ -85,12 +84,14 @@ class App : BaseApp() {
 
     private fun initLogger() {
         //初始化日志打印
-        val formatStrategy = PrettyFormatStrategy.newBuilder()
-            .methodOffset(5)
-            .tag(Constants.TAG)
+        val formatStrategy: FormatStrategy = PrettyFormatStrategy.newBuilder()
+            .showThreadInfo(false) // (Optional) Whether to show thread info or not. Default true
+            .methodCount(6) // (Optional) How many method line to show. Default 2
+            .methodOffset(7) // (Optional) Hides internal method calls up to offset. Default 5
+            .logStrategy(LogcatLogStrategy()) // (Optional) Changes the log strategy to print out. Default LogCat
+            .tag(Constants.TAG) // (Optional) Global tag for every log. Default PRETTY_LOGGER
             .build()
         Logger.addLogAdapter(AndroidLogAdapter(formatStrategy))
-
         Timber.plant(object : Timber.DebugTree() {
             override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
                 if (true) {

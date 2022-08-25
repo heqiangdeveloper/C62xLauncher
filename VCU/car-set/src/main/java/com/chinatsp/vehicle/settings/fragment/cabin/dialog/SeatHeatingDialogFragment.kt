@@ -3,8 +3,8 @@ package com.chinatsp.vehicle.settings.fragment.cabin.dialog
 import android.os.Bundle
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
-import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.manager.cabin.SeatManager
+import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.SeatHeatingDialogFragmentBinding
@@ -39,7 +39,7 @@ class SeatHeatingDialogFragment :
 
     private fun setRangeListener() {
         binding.seatHeatingStartTemperatureSeekBar.setOnSeekBarListener { seekBar, newValue ->
-            manager.doSetVolume(Volume.Type.SEAT_SILL_TEMP, newValue)
+            manager.doSetVolume(Progress.SEAT_ONSET_TEMPERATURE, newValue)
         }
     }
 

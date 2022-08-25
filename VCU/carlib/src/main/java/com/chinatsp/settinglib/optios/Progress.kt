@@ -1,7 +1,9 @@
 package com.chinatsp.settinglib.optios
 
 import android.car.hardware.cabin.CarCabinManager
+import android.media.AudioAttributes
 import com.chinatsp.settinglib.bean.CanLocate
+import com.chinatsp.settinglib.sign.Origin
 
 /**
  * @author : luohong
@@ -15,7 +17,7 @@ enum class Progress(
     var max: Int = 10,
     val step: Int = 1,
     val get: CanLocate,
-    val set: CanLocate
+    val set: CanLocate = get
 ) {
     /**
      * 氛围灯亮度
@@ -37,21 +39,63 @@ enum class Progress(
         set = CanLocate(signal = CarCabinManager.ID_ALC_HUM_ALC_COLOR_ADJUST)
     ),
 
-
     /**
-     * 仪表屏亮度
+     * 主机屏亮度
      */
-    METER_SCREEN_BRIGHTNESS(
+    HOST_SCREEN_BRIGHTNESS(
         get = CanLocate(signal = -1),
         set = CanLocate(signal = -1)
     ),
 
     /**
+     * 仪表屏亮度
+     * set -> 仪表背光等级设置[0x1,0,0x0,0xB]
+     *        0x0: Inactive; 0x1: Level 1; 0x2: Level 2; 0x3: Level 3; 0x4: Level 4; 0x5: Level 5
+     *        0x6: Level 6; 0x7: Level 7; 0x8: Level 8; 0x9: Level 9; 0xA: Level 10; 0xB~0xF: Reserved
+     *
+     */
+    METER_SCREEN_BRIGHTNESS(
+        min = 0x00,
+        max = 0x0A,
+        get = CanLocate(signal = CarCabinManager.ID_ICM_SCR_BRI_LEVEL_STS),
+        set = CanLocate(signal = CarCabinManager.ID_ALC_ICM_SCR_BRI_LEVEL)
+    ),
+
+    /**
      * 空调屏亮度
+     * set -> VCS背光等级设置[0x1,0,0x0,0xB]
+     *        0x0: Inactive; 0x1: Level 1; 0x2: Level 2; 0x3: Level 3; 0x4: Level 4; 0x5: Level 5
+     *        0x6: Level 6; 0x7: Level 7; 0x8: Level 8; 0x9: Level 9; 0xA: Level 10; 0xB~0xF: Reserved
+     *
      */
     CONDITIONER_SCREEN_BRIGHTNESS(
-        get = CanLocate(signal = -1),
-        set = CanLocate(signal = -1)
+        min = 0x00,
+        max = 0x0A,
+        get = CanLocate(signal = CarCabinManager.ID_VCS_SCR_BRI_LEVEL_STS),
+        set = CanLocate(signal = CarCabinManager.ID_ALC_VCS_SCR_BRI_LEVEL)
+    ),
+
+    /**
+     * 软开关背光亮度
+     * 整车开关背光等级设置[0x1,0,0x0,0xFF]
+    0x0: Inactive
+    0x19: Level 1
+    0x33: Level 2
+    0x4C: Level 3
+    0x66: Level 4
+    0x7F: Level 5
+    0x99: Level 6
+    0xB2: Level 7
+    0xCC: Level 8
+    0xE5: Level 9
+    0xFF: Level 10
+     * get -> 0x0: Dark 0x19: Level 1 0x33: Level 2 0x4C: Level 3 0x66: Level 4 0x7F: Level 5 0x99: Level 6 0xB2: Level 7 0xCC: Level 8 0xE5: Level 9 0xFF: Level 10
+     */
+    SWITCH_BACKLIGHT_BRIGHTNESS(
+        min = 0x00,
+        max = 0x09,
+        get = CanLocate(signal = CarCabinManager.ID_BCM_BACKLIGHT_LEVEL_STATUS),
+        set = CanLocate(signal = CarCabinManager.ID_ALC_HUM_BACKLIGHT_LEVEL)
     ),
 
     /**
@@ -71,11 +115,40 @@ enum class Progress(
      */
     STEERING_ONSET_TEMPERATURE(
         min = 0x00,
-        max = 0x0A,
+        max = 0x1E,
         get = CanLocate(signal = -1),
         set = CanLocate(signal = CarCabinManager.ID_SWS_AUTO_HEAT_TEMP)
-    )
-    ;
+    ),
+
+    NAVI(
+        min = 0x00,
+        max = 0x1E,
+        get = CanLocate(
+            origin = Origin.ATTR,
+            signal = AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE
+        )
+    ),
+
+    VOICE(
+        min = 0x00,
+        max = 0x1E,
+        get = CanLocate(origin = Origin.ATTR, signal = AudioAttributes.USAGE_ASSISTANT)
+    ),
+    MEDIA(
+        min = 0x00,
+        max = 0x1E,
+        get = CanLocate(origin = Origin.ATTR, signal = AudioAttributes.USAGE_MEDIA)
+    ),
+    PHONE(
+        min = 0x00,
+        max = 0x1E,
+        get = CanLocate(origin = Origin.ATTR, signal = AudioAttributes.USAGE_VOICE_COMMUNICATION)
+    ),
+    SYSTEM(
+        min = 0x00,
+        max = 0x1E,
+        get = CanLocate(origin = Origin.ATTR, signal = AudioAttributes.USAGE_ASSISTANT)
+    );
 
     fun isValid(value: Int): Boolean = value in min..max
 

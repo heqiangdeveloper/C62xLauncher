@@ -3,8 +3,8 @@ package com.chinatsp.vehicle.settings.fragment.cabin.dialog
 import android.os.Bundle
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
-import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.manager.cabin.WheelManager
+import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.SteeringHeatingDialogFragmentBinding
@@ -39,7 +39,7 @@ class SteeringHeatDialogFragment :
 
     private fun setRangeListener() {
         binding.steeringHeatingStartTemperatureSeekBar.setOnSeekBarListener { seekBar, newValue ->
-            manager.doSetVolume(Volume.Type.STEERING_EDGE_TEMP, newValue)
+            manager.doSetVolume(Progress.STEERING_ONSET_TEMPERATURE, newValue)
         }
     }
 

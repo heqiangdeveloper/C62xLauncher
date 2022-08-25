@@ -1,6 +1,7 @@
 package com.chinatsp.settinglib
 
 import android.app.Application
+import android.os.Handler
 import kotlin.properties.Delegates
 
 /**
@@ -11,6 +12,10 @@ import kotlin.properties.Delegates
  * @version: 1.0
  */
 open class BaseApp: Application() {
+
+    val mainHandler: Handler by lazy {
+        Handler(mainLooper)
+    }
 
     companion object {
         var instance: BaseApp by Delegates.notNull()

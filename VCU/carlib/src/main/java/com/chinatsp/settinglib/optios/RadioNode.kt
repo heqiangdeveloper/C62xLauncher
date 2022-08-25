@@ -32,6 +32,7 @@ enum class RadioNode(
         default = 0x1
     ),
 
+    //-------------------车门车窗--开始-------------------
     /**
      * 车门与车窗--车门--行车自动落锁
      * set -> 0x1: off 0x2: 5km/h    0x3: 10km/h    0x4: 15km/h   0x5: 20km/h
@@ -52,7 +53,7 @@ enum class RadioNode(
 
     /**
      * 车门与车窗--车门--熄火自动解锁
-     * set -> 0x1: unlock FL door 0x2: unlock all doors(default)   0x3: FunctionDisable
+     * set -> 0x1: unlock FL door 0x2: unlock all doors(default)  0x3: FunctionDisable
      * get -> 0x0: Inactive 0x1: unlock FL door 0x2: unlock all doors(default) 0x3: FunctionDisable
      * UE 默认关闭
      */
@@ -70,7 +71,7 @@ enum class RadioNode(
 
     /**
      * 车门与车窗--电动尾门--电动尾门智能进入
-     * set -> 0x1: OFF    0x2: On Mode 1  0x3: On Mode 2
+     * set -> 0x1: OFF  0x2: On Mode 1  0x3: On Mode 2
      * get -> 0x0: Reserved 0x1: OFF  0x2: On Mode 1  0x3: On Mode 2 0x4~0x6: Reserved 0x7: Invalid
      */
     STERN_SMART_ENTER(
@@ -84,17 +85,15 @@ enum class RadioNode(
         ),
         default = 0x1
     ),
+    //-------------------车门车窗--结束-------------------
+
 
     /**
      * 驾驶辅助-智能巡航-前车驶离提示
      * set -> object distingguish and disappear switch,if not set'OBJ_DETECTION',
-            the value of signal is 0x0(inactive)[0x1,0,0x0,0x5]
-            0x0: Inactive
-            0x1: Detect warning
-            0x2: Disappare warning
-            0x3: Detect and disappear warning(default)
-            0x4: Warning off
-            0x5~0x7:Reserved
+     *       the value of signal is 0x0(inactive)[0x1,0,0x0,0x5]
+     *       0x0: Inactive;  0x1: Detect warning; 0x2: Disappare warning
+     *       0x3: Detect and disappear warning(default); 0x4: Warning off; 0x5~0x7:Reserved
      */
     ADAS_LIMBER_LEAVE(
         get = RNorm(
@@ -113,9 +112,9 @@ enum class RadioNode(
      * Operation mode of LDW/RDP/LKS. The default value is 0x1 LDW in C53F,
      * 0x3 LKS in C62X. 0x0:Initial 0x1:LDW 0x2:RDP 0x3:LKS
      * set -> LDW/RDP/LKS function enable switch,if not set 'LDW_RDP_LKS_FUNC_ENABLE',
-            the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
-            C53F send the signal 0x0 all the time
-            0x0: Inactive; 0x1: LDW Enable; 0x2: RDP Enable; 0x3: LKS Enable（C62 default）
+     *       the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
+     *       C53F send the signal 0x0 all the time
+     *       0x0: Inactive; 0x1: LDW Enable; 0x2: RDP Enable; 0x3: LKS Enable（C62 default）
      *
      */
     ADAS_LANE_ASSIST_MODE(
@@ -136,8 +135,8 @@ enum class RadioNode(
      * 驾驶辅助-车道辅助-报警方式
      * get mcu -> LDW_ENABLE_RESPONSE (暂缺中间件信号)
      * set -> LDW/LKS/TJAICA enable switch,if not set 'LDW_LKS_TJAICA_SWITCH',
-            the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
-            0x0: Inacitve; 0x1: UI warning; 0x2: UI and SPEAKER warning(default); 0x3: OFF
+     *       the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
+     *       0x0: Inacitve; 0x1: UI warning; 0x2: UI and SPEAKER warning(default); 0x3: OFF
      */
     ADAS_LDW_STYLE(
         get = RNorm(
@@ -154,10 +153,10 @@ enum class RadioNode(
     /**
      * 驾驶辅助-车道辅助-灵敏度
      * get -> LKS sensitivity车道保持的灵敏度 0x0:lowSensitivity 0x1:highSensitivity 0x2:
-              Initial 0x3:reserved
+     *        Initial 0x3:reserved
      * set -> LDW/LKS sensitivity switch,if not set 'LDW_LKS_SENSITIVITY_SWITCH ',
-              the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
-              0x0: Inacitve; 0x1: Low Sensitivity; 0x2: High Sensitivity(default); 0x3: Reserved
+     *        the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
+     *        0x0: Inacitve; 0x1: Low Sensitivity; 0x2: High Sensitivity(default); 0x3: Reserved
      */
     ADAS_LDW_SENSITIVITY(
         get = RNorm(
@@ -189,12 +188,8 @@ enum class RadioNode(
 
     /**
      * 行车--仪表--制式
-     * set ->
-    仪表公制英制切换开光触发[0x1,0,0x0,0x3]
-    0x0: Inactive
-    0x1: Metric
-    0x2: Imperial
-    0x3: Reserved
+     * set -> 仪表公制英制切换开光触发[0x1,0,0x0,0x3]
+     *        0x0: Inactive; 0x1: Metric; 0x2: Imperial; 0x3: Reserved
      */
     DRIVE_METER_SYSTEM(
         get = RNorm(
@@ -217,9 +212,11 @@ enum class RadioNode(
         default = 0x8
     ),
 
+    //-------------------灯光设置--开始-------------------
+
     /**
-     * 灯光--灯光--伴我回家
-     * set -> 0x1: off 0x2: 10s    0x3: 20s    0x4: 30s(default)   0x5: 60s    0x6: 120s
+     * 灯光设置--灯光--伴我回家
+     * set -> 0x1: off; 0x2: 10s; 0x3: 20s; 0x4: 30s(default); 0x5: 60s;  0x6: 120s
      * get -> 0x0: Inactive 0x1: off 0x2: 10s 0x3: 20s 0x4: 30s(default) 0x5: 60s 0x6: 120s 0x7: reserved
      */
     LIGHT_DELAYED_OUT(
@@ -235,13 +232,9 @@ enum class RadioNode(
     ),
 
     /**
-     * 灯光--灯光--转向灯变道闪烁次数
+     * 灯光设置--灯光--转向灯变道闪烁次数
      * set -> 0x1: off 0x2: 3 flasher(default) 0x3: 5 flasher  0x4: 7 flasher
-     * get -> 0x0:Inactive
-            0x1: off
-            0x2: 3 flasher(default)
-            0x3: 5 flasher
-            0x4: 7 flasher
+     * get -> 0x0:Inactive; 0x1: off; 0x2: 3 flasher(default);  0x3: 5 flasher; 0x4: 7 flasher
      */
     LIGHT_FLICKER(
         get = RNorm(
@@ -256,7 +249,25 @@ enum class RadioNode(
     ),
 
     /**
-     * 车辆音效--声音--仪表报警音量等级
+     * 灯光设置--灯光--外部灯光仪式感
+     * set -> 0x1: Mode 1    0x2: Mode 2 ; 0x3: Mode 3
+     * get -> 0x0:OFF 0x1:Unlock Ceremoial Sense 0x2:Lock Ceremoial Sense 0x3:Panic Ceremoial Sense 0x4~0x7:reserved
+     */
+    LIGHT_CEREMONY_SENSE(
+        get = RNorm(
+            values = intArrayOf(0x1, 0x2, 0x3),
+            signal = CarCabinManager.ID_BCM_CERE_SENSE_CMD
+        ),
+        set = RNorm(
+            values = intArrayOf(0x1, 0x2, 0x3),
+            signal = CarCabinManager.ID_HUM_CERE_SENSE_SW_SET
+        ),
+        default = 0x1
+    ),
+    //-------------------灯光设置--结束-------------------
+
+    /**
+     * 车辆音效--声音--仪表报警音量等级 (no signal)
      * set -> 仪表报警音量等级开关触发[0x1,0,0x0,0x3] 0x0: Inactive; 0x1: High; 0x2: medium; 0x3: Low
      */
     ICM_VOLUME_LEVEL(
@@ -272,9 +283,9 @@ enum class RadioNode(
     ),
 
     /**
-     * 车辆音效--声音--导航混音
+     * 车辆音效--声音--导航混音 (no signal)
      * set -> 车机混音策略[0x1,-1,0x0,0x3]
-              0x0:not used; 0x1: MIX0((default));  0x2: Mix1; 0x3: Mix; 0x4~0x7: reserved
+     *        0x0:not used; 0x1: MIX0((default));  0x2: Mix1; 0x3: Mix; 0x4~0x7: reserved
      */
     NAVI_AUDIO_MIXING(
         get = RNorm(
@@ -317,6 +328,27 @@ enum class RadioNode(
         ),
         default = 0x1
     ),
+
+    /**
+     * 车辆音效--音效--环境音效
+     * set -> 环境音效种类选择[0x1,0,0x0,0x4] 0x0: Inactive 0x1: Natural  0x2: Club 0x3: Live 0x4: Lounge 0x5: Reserved 0x6~0x7: Reserved
+     * get -> 环境音效种类选择状态 0x0:Inactive 0x1: Natural(default) 0x2: Club 0x3: Live 0x4: Lounge 0x5:Reserved 0x6~0x7: Reserved
+     */
+    AUDIO_ENVI_AUDIO(
+        get = RNorm(
+//            values = intArrayOf(0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7),
+            values = intArrayOf(0x1, 0x2, 0x3, 0x4),
+            signal = CarCabinManager.ID_AMP_ATMOS_MOD_TYPE_SW_STS
+        ),
+        set = RNorm(
+//            values = intArrayOf(0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7),
+            values = intArrayOf(0x1, 0x2, 0x3, 0x4),
+            signal = CarCabinManager.ID_HUM_ATMOS_MOD_TYPE
+        ),
+        default = 0x1
+    ),
+
+
 
     /**
      * 行车--拖车提醒--传感器灵敏度

@@ -43,7 +43,7 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
 
     private fun initViewDisplay() {
 
-        if (VcuUtils.isCareLevel(Level.LEVEL3)) {
+        if (VcuUtils.isCareLevel(Level.LEVEL3, expect = true)) {
             binding.carWindowRainyDay.visibility = View.GONE
             binding.line3.visibility = View.GONE
 

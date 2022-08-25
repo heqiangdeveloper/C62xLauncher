@@ -1,7 +1,7 @@
 package com.chinatsp.settinglib.manager
 
 import android.car.hardware.CarPropertyValue
-import com.chinatsp.settinglib.LogManager
+import android.car.hardware.cabin.CarCabinManager
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.access.AccessManager
 import com.chinatsp.settinglib.manager.adas.AdasManager
@@ -14,6 +14,7 @@ import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.controller.annotation.Model
 import com.chinatsp.vehicle.controller.bean.Cmd
 import com.chinatsp.vehicle.controller.utils.Utils
+import timber.log.Timber
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -34,7 +35,7 @@ class GlobalManager private constructor() : BaseManager() {
     }
 
     private val tabSerial: AtomicInteger by lazy {
-        val isLevel3 = VcuUtils.isCareLevel(Level.LEVEL3)
+        val isLevel3 = VcuUtils.isCareLevel(Level.LEVEL3, expect = true)
         AtomicInteger(if (isLevel3) 1 else 0)
     }
 
@@ -90,7 +91,7 @@ class GlobalManager private constructor() : BaseManager() {
 
     override fun doOuterControlCommand(cmd: Cmd, callback: ICmdCallback?) {
         val modelSerial = Model.obtainEchelon(cmd.model)
-        LogManager.d(TAG, "doOuterControlCommand ------modelSerial:${Utils.toFullBinary(modelSerial)}")
+        Timber.d("doOuterControlCommand ------modelSerial:${Utils.toFullBinary(modelSerial)}")
         if (Model.ACCESS == modelSerial) {
             AccessManager.instance.doOuterControlCommand(cmd, callback)
         } else if (Model.LIGHT == modelSerial) {
@@ -108,5 +109,20 @@ class GlobalManager private constructor() : BaseManager() {
 //        CabinManager.instance.onTrailerRemindChanged(onOff, level, dist)
 //    }
 
+    fun doSwitchWindow(status: Boolean): Boolean {
+        val value = if (status) 0xC8 else 0x00
+        Timber.d("doSwitchWindow status:%s, value:%s", status, value)
+        writeProperty(CarCabinManager.ID_FRNTLEWINPOSNSET, value, Origin.CABIN)
+        writeProperty(CarCabinManager.ID_FRNTRIWINPOSNSET, value, Origin.CABIN)
+        return true
+    }
+
+    fun resetSwitchWindow(): Boolean {
+        val value = 0xFE
+        Timber.d("resetSwitchWindow value:%s", value)
+        writeProperty(CarCabinManager.ID_FRNTLEWINPOSNSET, value, Origin.CABIN)
+        writeProperty(CarCabinManager.ID_FRNTRIWINPOSNSET, value, Origin.CABIN)
+        return true
+    }
 
 }

@@ -2,13 +2,13 @@ package com.chinatsp.vehicle.settings.app.adapter;
 
 import android.content.Context;
 
-import com.king.base.adapter.BaseRecyclerAdapter;
-import com.chinatsp.vehicle.settings.BR;
-
-import java.util.List;
-
 import androidx.annotation.LayoutRes;
 import androidx.databinding.ViewDataBinding;
+
+import com.chinatsp.vehicle.settings.BR;
+import com.king.base.adapter.BaseRecyclerAdapter;
+
+import java.util.List;
 
 /**
  *

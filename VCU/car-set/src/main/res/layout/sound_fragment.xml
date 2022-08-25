@@ -44,6 +44,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/sound_volume_views"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/list_item_right_selector"
@@ -131,7 +132,7 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/sound_volume_compensation"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/x95"
+                        android:layout_height="@dimen/switch_item_option_height"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/line3">
 
@@ -145,6 +146,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <com.common.xui.widget.button.switchbutton.SwitchButton
+                            android:id="@+id/sound_speed_offset_switch"
                             style="@style/switch_button_style"
                             android:layout_marginTop="@dimen/x15"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -157,6 +159,7 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/sound_volume_compensation_title"
                             app:tcv_defaultSelection="1"
+                            android:visibility="gone"
                             app:tcv_items="@array/drive_sensitivity_setting_options" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -172,6 +175,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/switch_item_option_height"
                         android:orientation="horizontal"
+                        android:visibility="gone"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/line4">
 
@@ -193,6 +197,7 @@
                     <View
                         android:id="@+id/line5"
                         style="@style/line"
+                        android:visibility="gone"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/sound_system_prompt" />
 

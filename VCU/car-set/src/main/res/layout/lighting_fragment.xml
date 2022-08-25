@@ -120,6 +120,7 @@
 
 
                         <com.common.xui.widget.picker.VSeekBar
+                            android:id="@+id/light_switch_backlight_seek_bar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/x11"
@@ -156,6 +157,7 @@
 
 
                         <com.common.xui.widget.tabbar.TabControlView
+                            android:id="@+id/light_ceremony_sense_radio"
                             style="@style/tdv_common_style"
                             android:layout_marginTop="@dimen/x11"
                             app:layout_constraintStart_toStartOf="parent"
@@ -245,6 +247,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/switch_item_option_height"
                         android:orientation="horizontal"
+                        android:visibility="gone"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/line6">
 
@@ -266,6 +269,7 @@
                     <View
                         android:id="@+id/line7"
                         style="@style/line"
+                        android:visibility="gone"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/lighting_car_inside" />
                 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,20 +1,19 @@
 package com.chinatsp.settinglib.manager.sound
 
 import android.car.hardware.CarPropertyValue
-import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.mcu.CarMcuManager
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IBaseListener
-import com.chinatsp.settinglib.listener.cabin.IACListener
 import com.chinatsp.settinglib.listener.sound.ISoundManager
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
-import com.chinatsp.settinglib.optios.Area
+import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author : luohong
@@ -55,6 +54,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
             doUpdateSwitchValue(node, this, result)
         }
     }
+
     private val loudnessAtomic: AtomicBoolean by lazy {
         val node = SwitchNode.AUDIO_SOUND_LOUDNESS
         AtomicBoolean(node.isOn()).apply {
@@ -63,24 +63,39 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
+    private val audioEffectStatus: AtomicBoolean by lazy {
+        val node = SwitchNode.AUDIO_ENVI_AUDIO
+        AtomicBoolean(node.isOn()).apply {
+            val result = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateSwitchValue(node, this, result)
+        }
+    }
+
+    private val audioEffectOption: AtomicInteger by lazy {
+        val node = RadioNode.AUDIO_ENVI_AUDIO
+        AtomicInteger(node.default).apply {
+            val result = readIntProperty(node.get.signal, node.get.origin)
+            doUpdateRadioValue(node, this, result)
+        }
+    }
+
     override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
-            val mcuSet = HashSet<Int>().apply {
-                /**【反馈】返回设置音源音量信息*/
-                add(CarMcuManager.ID_AUDIO_VOL_SETTING_INFO)
-            }
-            put(Origin.MCU, mcuSet)
+//            val mcuSet = HashSet<Int>().apply {
+//                /**【反馈】返回设置音源音量信息*/
+//                add(CarMcuManager.ID_AUDIO_VOL_SETTING_INFO)
+//            }
+//            put(Origin.MCU, mcuSet)
             val cabinSet = HashSet<Int>().apply {
-                add(CarCabinManager.ID_AMP_LOUD_SW_STS)
+                add(SwitchNode.AUDIO_ENVI_AUDIO.get.signal)
+                add(SwitchNode.AUDIO_SOUND_LOUDNESS.get.signal)
+                add(RadioNode.AUDIO_ENVI_AUDIO.get.signal)
             }
             put(Origin.CABIN, cabinSet)
         }
     }
 
-    override fun onHandleSignal(
-        property: CarPropertyValue<*>,
-        origin: Origin
-    ): Boolean {
+    override fun onHandleSignal(property: CarPropertyValue<*>, origin: Origin): Boolean {
         when (origin) {
             Origin.CABIN -> {
                 onCabinPropertyChanged(property)
@@ -143,9 +158,13 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
 
     override fun onRegisterVcuListener(priority: Int, listener: IBaseListener): Int {
         val serial: Int = System.identityHashCode(listener)
-        synchronized(listenerStore) {
+        val writeLock = readWriteLock.writeLock()
+        try {
+            writeLock.lock()
             unRegisterVcuListener(serial, identity)
             listenerStore.put(serial, WeakReference(listener))
+        } finally {
+            writeLock.unlock()
         }
         return serial
     }
@@ -155,6 +174,9 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
             RadioNode.SYSTEM_SOUND_EFFECT -> {
                 readIntProperty(node.get.signal, node.get.origin)
             }
+            RadioNode.AUDIO_ENVI_AUDIO -> {
+                audioEffectOption.get()
+            }
             else -> -1
         }
     }
@@ -162,6 +184,9 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
         when (node) {
             RadioNode.SYSTEM_SOUND_EFFECT -> {
+                writeProperty(node.set.signal, value, node.set.origin)
+            }
+            RadioNode.AUDIO_ENVI_AUDIO -> {
                 writeProperty(node.set.signal, value, node.set.origin)
             }
             else -> -1
@@ -183,6 +208,9 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
             SwitchNode.AUDIO_SOUND_LOUDNESS -> {
                 loudnessAtomic.get()
             }
+            SwitchNode.AUDIO_ENVI_AUDIO -> {
+                audioEffectStatus.get()
+            }
             else -> false
         }
     }
@@ -201,62 +229,19 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
             SwitchNode.AUDIO_SOUND_LOUDNESS -> {
                 writeProperty(node.set.signal, node.value(status), node.set.origin, node.area)
             }
-            else -> false
-        }
-    }
-
-    override fun doGetVolume(type: Volume.Type): Volume? {
-        TODO("Not yet implemented")
-    }
-
-    override fun doSetVolume(type: Volume.Type, position: Int): Boolean {
-        TODO("Not yet implemented")
-    }
-
-
-    /**
-     * 【设置】仪表报警音量等级开关触发
-     * @param value 仪表报警音量等级开关触发[0x1,0,0x0,0x3]
-    0x0: Inactive
-    0x1: High
-    0x2: medium
-    0x3: Low
-     */
-    fun doUpdateAlarmOption(value: Int): Boolean {
-        val isValid = listOf(0x01, 0x02, 0x03).any { it == value }
-        if (!isValid) {
-            return false
-        }
-        val signal = CarCabinManager.ID_HUM_ICM_VOLUME_LEVEL
-        return writeProperty(signal, value, Origin.CABIN, Area.GLOBAL)
-    }
-
-    /**
-     * 【设置】车机混音策略[0x1,-1,0x0,0x3]
-     * 车机混音策略[0x1,-1,0x0,0x3] 0x0:not used 0x1: MIX0((default)) 0x2: Mix1 0x3: Mix2 0x4~0x7: reserved
-     */
-    fun doUpdateRemixOption(value: Int): Boolean {
-        val isValid = listOf(0x01, 0x03).any { it == value }
-        if (!isValid) {
-            return false
-        }
-        val signal = CarCabinManager.ID_HUM_SOUND_MIX
-        return writeProperty(signal, value, Origin.CABIN, Area.GLOBAL)
-    }
-
-    /**
-     *
-     * @param switchNode 开关选项
-     * @param isStatus 开关期望状态
-     */
-    fun doSwitchOption(switchNode: SwitchNode, isStatus: Boolean): Boolean {
-        return when (switchNode) {
-            SwitchNode.AUDIO_SOUND_LOUDNESS -> {
-                val signal = CarCabinManager.ID_HUM_LOUD_SW
-                writeProperty(signal, switchNode.value(isStatus), Origin.CABIN)
+            SwitchNode.AUDIO_ENVI_AUDIO -> {
+                writeProperty(node.set.signal, node.value(status), node.set.origin, node.area)
             }
             else -> false
         }
+    }
+
+    override fun doGetVolume(type: Progress): Volume? {
+        TODO("Not yet implemented")
+    }
+
+    override fun doSetVolume(type: Progress, position: Int): Boolean {
+        TODO("Not yet implemented")
     }
 
     override fun onHvacPropertyChanged(property: CarPropertyValue<*>) {
@@ -267,19 +252,13 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
 
     override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
+            SwitchNode.AUDIO_ENVI_AUDIO.get.signal -> {
+                onSwitchChanged(SwitchNode.AUDIO_ENVI_AUDIO, audioEffectStatus, property)
+            }
+            RadioNode.AUDIO_ENVI_AUDIO.get.signal -> {
+                onRadioChanged(RadioNode.AUDIO_ENVI_AUDIO, audioEffectOption, property)
+            }
             else -> {}
-        }
-    }
-
-    private fun notifySwitchStatus(status: Boolean, type: SwitchNode) {
-        synchronized(listenerStore) {
-            listenerStore.filter { null != it.value.get() }
-                .forEach {
-                    val listener = it.value.get()
-                    if (listener is IACListener) {
-                        listener.onSwitchOptionChanged(status, type)
-                    }
-                }
         }
     }
 

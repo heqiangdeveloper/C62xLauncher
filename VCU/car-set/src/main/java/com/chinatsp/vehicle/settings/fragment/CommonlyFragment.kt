@@ -2,6 +2,7 @@ package com.chinatsp.vehicle.settings.fragment
 
 import android.os.Bundle
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.chinatsp.vehicle.settings.databinding.AccessFragmentBinding
@@ -24,10 +25,20 @@ class CommonlyFragment: BaseTabFragment<BaseViewModel, AccessFragmentBinding>() 
     override fun initData(savedInstanceState: Bundle?) {
         setClickListener()
     }
+
     private fun setClickListener() {
-        binding.closeWindow.setOnClickListener {  }
-        binding.openWindow.setOnClickListener {  }
-        binding.refreshWindow.setOnClickListener {  }
+        binding.closeWindow.setOnClickListener {
+            GlobalManager.instance.doSwitchWindow(false)
+        }
+        binding.openWindow.setOnClickListener {
+            GlobalManager.instance.doSwitchWindow(true)
+        }
+        binding.refreshWindow.setOnClickListener {
+            GlobalManager.instance.resetSwitchWindow()
+        }
     }
+
+
+
 
 }

@@ -1,7 +1,6 @@
 package com.chinatsp.vehicle.settings.fragment.lighting
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
@@ -55,7 +54,7 @@ class AmbientLightingFragment :
     }
 
     private fun initViewsDisplay() {
-        if (VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4)) {
+        if (VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4, expect = true)) {
             binding.lightingFrontLayout.visibility = View.GONE
             binding.lightingBackLayout.visibility = View.GONE
         }

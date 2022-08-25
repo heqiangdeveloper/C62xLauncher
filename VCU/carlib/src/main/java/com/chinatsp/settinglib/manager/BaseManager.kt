@@ -13,6 +13,8 @@ import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.bean.Cmd
 import java.lang.ref.WeakReference
+import java.util.concurrent.locks.ReadWriteLock
+import java.util.concurrent.locks.ReentrantReadWriteLock
 
 /**
  * @author : luohong
@@ -27,6 +29,8 @@ abstract class BaseManager : IManager {
         get() = SettingManager.instance
 
     protected val identity by lazy { System.identityHashCode(this) }
+
+    protected val readWriteLock: ReadWriteLock = ReentrantReadWriteLock()
 
     protected val listenerStore by lazy { HashMap<Int, WeakReference<IBaseListener>>() }
 
@@ -62,37 +66,49 @@ abstract class BaseManager : IManager {
 
     override fun onRegisterVcuListener(priority: Int, listener: IBaseListener): Int {
         val serial: Int = System.identityHashCode(listener)
-        synchronized(listenerStore) {
+        val writeLock = readWriteLock.writeLock()
+        try {
+            writeLock.lock()
             unRegisterVcuListener(serial, identity)
             listenerStore.put(serial, WeakReference(listener))
+        } finally {
+            writeLock.unlock()
         }
         return serial
     }
 
     override fun unRegisterVcuListener(serial: Int, callSerial: Int): Boolean {
-        synchronized(listenerStore) {
+        val writeLock = readWriteLock.writeLock()
+        try {
+            writeLock.lock()
             listenerStore.takeIf { it.containsKey(serial) }?.let {
                 LogManager.d(ACManager.TAG, "unRegisterVcuListener serial:$serial, callSerial:$callSerial")
                 it.remove(serial)
             }
+        } finally {
+            writeLock.unlock()
         }
         return true
     }
 
     fun writeProperty(id: Int, value: Int, origin: Origin, area: Area = Area.GLOBAL): Boolean {
         return signalService.doSetProperty(id, value, origin, area)
+//        return true
     }
 
     fun writeProperty(id: Int, value: Int, origin: Origin, areaValue: Int): Boolean {
         return signalService.doSetProperty(id, value, origin, areaValue)
+//        return true
     }
 
     fun readIntProperty(id: Int, origin: Origin, area: Area = Area.GLOBAL): Int {
         return signalService.readIntProperty(id, origin, area)
+//        return 1
     }
 
     fun readIntProperty(id: Int, origin: Origin, areaValue: Int): Int {
         return signalService.readIntProperty(id, origin, areaValue)
+//        return 1
     }
 
 
@@ -154,7 +170,9 @@ abstract class BaseManager : IManager {
 //    }
 
     override fun doSwitchChanged(node: SwitchNode, status: Boolean) {
-        synchronized(listenerStore) {
+        val readLock = readWriteLock.readLock()
+        try {
+            readLock.lock()
             listenerStore.forEach { (_, ref) ->
                 val listener = ref.get()
                 if (null != listener && listener is ISwitchListener) {
@@ -162,28 +180,38 @@ abstract class BaseManager : IManager {
                     LogManager.d("doSwitchChanged", "$node, status:$status, listener:${listener::class.java.simpleName}")
                 }
             }
+        } finally {
+            readLock.unlock()
         }
     }
 
     override fun doRadioChanged(node: RadioNode, value: Int) {
-        synchronized(listenerStore) {
+        val readLock = readWriteLock.readLock()
+        try {
+            readLock.lock()
             listenerStore.forEach { (_, ref) ->
                 val listener = ref.get()
                 if (null != listener && listener is IRadioListener) {
                     listener.onRadioOptionChanged(node, value)
                 }
             }
+        } finally {
+            readLock.unlock()
         }
     }
 
     override fun doProgressChanged(node: Progress, value: Int) {
-        synchronized(listenerStore) {
+        val readLock = readWriteLock.readLock()
+        try {
+            readLock.lock()
             listenerStore.forEach { (_, ref) ->
                 val listener = ref.get()
                 if (null != listener && listener is IProgressListener) {
                     listener.onProgressChanged(node, value)
                 }
             }
+        } finally {
+            readLock.unlock()
         }
     }
 

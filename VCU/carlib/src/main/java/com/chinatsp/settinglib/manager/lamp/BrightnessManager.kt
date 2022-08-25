@@ -1,15 +1,20 @@
 package com.chinatsp.settinglib.manager.lamp
 
+import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.power.CarPowerManager
 import android.os.SystemThirdScreenBA
-import com.chinatsp.settinglib.*
+import com.chinatsp.settinglib.AppExecutors
+import com.chinatsp.settinglib.BaseApp
+import com.chinatsp.settinglib.Constant
+import com.chinatsp.settinglib.IProgressManager
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.optios.Area
+import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.sign.Origin
-import java.util.concurrent.atomic.AtomicInteger
+import timber.log.Timber
 
 /**
  * @author : luohong
@@ -21,13 +26,15 @@ import java.util.concurrent.atomic.AtomicInteger
 class BrightnessManager : BaseManager(), IProgressManager {
 
     private var manager: CarPowerManager? = null
+
     private var thirdScreenService: SystemThirdScreenBA? = null
 
     private val topicNode: Int
         get() {
             try {
                 return readIntProperty(
-                    CarCabinManager.ID_VENDOR_LIGHT_NIGHT_AUTOMODE_REPORT, Origin.CABIN, Area.GLOBAL)
+                    CarCabinManager.ID_VENDOR_LIGHT_NIGHT_AUTOMODE_REPORT, Origin.CABIN, Area.GLOBAL
+                )
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -35,49 +42,60 @@ class BrightnessManager : BaseManager(), IProgressManager {
         }
 
     companion object : ISignal {
-
         override val TAG: String = BrightnessManager::class.java.simpleName
-
         val instance: BrightnessManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             BrightnessManager()
         }
-
     }
 
     fun injectManager(manager: CarPowerManager) {
         this.manager = manager
         thirdScreenService = SystemThirdScreenBA(BaseApp.instance.applicationContext)
+        this.manager?.setListener(object : CarPowerManager.CarPowerStateListener{
+            override fun onStateChanged(state: Int) {
+                Timber.d("onStateChanged state:%s", state)
+            }
+
+            override fun onBrightnessChanged(value: Int) {
+                Timber.d("onBrightnessChanged value:%s", value)
+                doUpdateProgress(carVolume, value, true, instance::doProgressChanged )
+            }
+        }, AppExecutors.get()?.singleIO())
     }
 
     private val acVolume: Volume by lazy {
-        initVolume(Volume.Type.AC_SCREEN)
+        initProgress(Progress.CONDITIONER_SCREEN_BRIGHTNESS)
     }
 
     private val carVolume: Volume by lazy {
-        initVolume(Volume.Type.CAR_SCREEN)
+        initVolume(Progress.HOST_SCREEN_BRIGHTNESS)
     }
 
     private val meterVolume: Volume by lazy {
-        initVolume(Volume.Type.METER_SCREEN)
+        initProgress(Progress.METER_SCREEN_BRIGHTNESS)
     }
 
-    private fun initVolume(type: Volume.Type): Volume {
-        val max = 10
-        var pos = manager?.brightness ?: 0
-        pos /= 10
-        LogManager.d(TAG, "initVolume type:$type, pos:$pos")
-        return Volume(type, 0, max, pos)
+    private fun initVolume(type: Progress): Volume {
+        val pos = manager?.brightness ?: type.min
+        Timber.d("initVolume type:$type, pos:$pos")
+        return Volume(type, type.min, type.max, pos)
     }
 
-    override fun doGetVolume(type: Volume.Type): Volume? {
+    private fun initProgress(type: Progress): Volume {
+        val value = readIntProperty(type.get.signal, type.get.origin)
+        Timber.d("initProgress type:$type, value:$value")
+        return Volume(type, type.min, type.max, value)
+    }
+
+    override fun doGetVolume(type: Progress): Volume? {
         return when (type) {
-            Volume.Type.AC_SCREEN -> {
+            Progress.CONDITIONER_SCREEN_BRIGHTNESS -> {
                 acVolume
             }
-            Volume.Type.CAR_SCREEN -> {
+            Progress.HOST_SCREEN_BRIGHTNESS -> {
                 carVolume
             }
-            Volume.Type.METER_SCREEN -> {
+            Progress.METER_SCREEN_BRIGHTNESS -> {
                 meterVolume
             }
             else -> null
@@ -85,24 +103,21 @@ class BrightnessManager : BaseManager(), IProgressManager {
         }
     }
 
-    override fun doSetVolume(type: Volume.Type, position: Int): Boolean {
-        LogManager.d(TAG, "doSetVolume position:$position")
-        val value = position * 10
+    override fun doSetVolume(type: Progress, position: Int): Boolean {
+        Timber.d("doSetVolume position:$position")
         return when (type) {
-            Volume.Type.AC_SCREEN -> {
-                manager?.brightness = value
-                true
+            Progress.CONDITIONER_SCREEN_BRIGHTNESS -> {
+                writeProperty(type.set.signal,position, type.set.origin)
             }
-            Volume.Type.CAR_SCREEN -> {
+            Progress.HOST_SCREEN_BRIGHTNESS -> {
 //                manager?.brightness = value
                 //iBAMode:白天黑夜模式，现传1就好, value：亮度值
                 thirdScreenService?.setThirdScreenBrightness(1, position)
-                doUpdateProgress(carVolume, position, true)
+                doUpdateProgress(carVolume, position, true, this::doProgressChanged)
                 true
             }
-            Volume.Type.METER_SCREEN -> {
-                manager?.brightness = value
-                true
+            Progress.METER_SCREEN_BRIGHTNESS -> {
+                writeProperty(type.set.signal,position, type.set.origin)
             }
             else -> {
                 false
@@ -110,19 +125,26 @@ class BrightnessManager : BaseManager(), IProgressManager {
         }
     }
 
+    override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
+        when (property.propertyId) {
+            Progress.METER_SCREEN_BRIGHTNESS.get.signal -> {
+                doUpdateProgress(meterVolume, property.value as Int, true, this::doProgressChanged )
+            }
+            Progress.CONDITIONER_SCREEN_BRIGHTNESS.get.signal -> {
+                doUpdateProgress(acVolume, property.value as Int, true, this::doProgressChanged )
+            }
+            else -> {}
+        }
+    }
+
 
     override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
-            val keySet = LampManager.managers.flatMap {
-                it.careSerials.keys
-            }.toSet()
-            keySet.forEach { key ->
-                val hashSet = HashSet<Int>()
-                LampManager.managers.forEach { manager ->
-                    hashSet.addAll(manager.getOriginSignal(key))
-                }
-                put(key, hashSet)
+            val cabinSet = HashSet<Int>().apply {
+                add(Progress.METER_SCREEN_BRIGHTNESS.get.signal)
+                add(Progress.CONDITIONER_SCREEN_BRIGHTNESS.get.signal)
             }
+            put(Origin.CABIN, cabinSet)
         }
     }
 

@@ -1,7 +1,10 @@
 //App
+def code = new Date().format("yyyyMMdd", TimeZone.getTimeZone("GMT+08"))
+def name = new Date().format("yyyyMMddHH", TimeZone.getTimeZone("GMT+08"))
+
 def app_version = [:]
-app_version.versionCode = 20220806
-app_version.versionName = "V2022080617"
+app_version.versionCode = Integer.parseInt(code)
+app_version.versionName = "V$name"
 ext.app_version = app_version
 
 //build version

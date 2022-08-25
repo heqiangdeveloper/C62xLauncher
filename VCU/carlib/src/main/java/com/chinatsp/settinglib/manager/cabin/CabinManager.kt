@@ -2,7 +2,6 @@ package com.chinatsp.settinglib.manager.cabin
 
 import android.car.hardware.CarPropertyValue
 import com.chinatsp.settinglib.ITabStore
-import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.sign.Origin

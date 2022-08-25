@@ -1,9 +1,7 @@
 package com.chinatsp.settinglib
 
 import android.graphics.Color
-import android.util.Log
 import timber.log.Timber
-import java.util.*
 
 /**
  * @author luohong
@@ -24,7 +22,7 @@ class LogManager private constructor() {
         private const val IS_DEBUG_MODE = true
         private var listener: LogListener? = null
         private const val MSG_PR = "==> "
-        private const val TAG_PR = "VCU-"
+        private const val TAG_PR = ""
         fun v(TAG: String, msg: String) {
             if (IS_DEBUG_MODE) {
 //            Logger.t(TAG).v(PRDFIX + msg);

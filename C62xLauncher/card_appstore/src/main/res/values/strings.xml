@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="iquting_unlogin_slogan">登录腾讯爱趣听\n享受出行好时光</string>
+    <string name="iquting_disconnect_tip">网络未连接</string>
+    <string name="iquting_tab_rank_music">音乐排行榜</string>
+    <string name="iquting_tab_daily_music">每日推荐</string>
+</resources>

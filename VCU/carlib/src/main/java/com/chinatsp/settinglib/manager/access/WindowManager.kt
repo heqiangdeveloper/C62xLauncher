@@ -2,7 +2,6 @@ package com.chinatsp.settinglib.manager.access
 
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
-import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.manager.BaseManager
@@ -15,6 +14,7 @@ import com.chinatsp.vehicle.controller.annotation.Action
 import com.chinatsp.vehicle.controller.annotation.IStatus
 import com.chinatsp.vehicle.controller.annotation.Model
 import com.chinatsp.vehicle.controller.bean.Cmd
+import timber.log.Timber
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -134,9 +134,13 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
     override fun onRegisterVcuListener(priority: Int, listener: IBaseListener): Int {
         if (listener is ISwitchListener) {
             val serial: Int = System.identityHashCode(listener)
-            synchronized(listenerStore) {
+            val writeLock = readWriteLock.writeLock()
+            try {
+                writeLock.lock()
                 unRegisterVcuListener(serial, identity)
                 listenerStore.put(serial, WeakReference(listener))
+            } finally {
+                writeLock.unlock()
             }
             return serial
         }
@@ -193,7 +197,7 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
     }
 
     override fun doOuterControlCommand(cmd: Cmd, callback: ICmdCallback?) {
-        LogManager.d(TAG, "doOuterControlCommand $cmd")
+        Timber.d("doOuterControlCommand $cmd")
         if (Model.ACCESS_WINDOW == cmd.model) {
             cmd.status = IStatus.RUNNING
             doControlLouver(cmd, callback)
@@ -205,7 +209,7 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
      * 天窗控制
      */
     private fun doControlLouver(cmd: Cmd, callback: ICmdCallback?) {
-        LogManager.d(TAG, "doControlLouver $cmd")
+        Timber.d("doControlLouver $cmd")
         if (Action.OPEN == cmd.action) {
             if (speed >= 120) {
                 cmd.status = IStatus.FAILED
