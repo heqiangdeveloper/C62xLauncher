@@ -1,13 +1,18 @@
 package com.chinatsp.appstore.adapter;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.chinatsp.appstore.AppStoreJump;
 import com.chinatsp.appstore.R;
 import com.chinatsp.appstore.bean.AppInfo;
 
@@ -16,7 +21,7 @@ import launcher.base.utils.glide.GlideHelper;
 import launcher.base.utils.recent.RecentAppHelper;
 
 public class AppStoreAppsViewHolder extends BaseViewHolder<AppInfo> {
-    private static final String TAG = "IQuTingSongViewHolder";
+    private static final String TAG = "AppStoreAppsViewHolder";
     private ImageView mIvAppItemIcon;
     private TextView mTvAppItemName;
     private TextView mTvAppItemDesc;
@@ -36,7 +41,7 @@ public class AppStoreAppsViewHolder extends BaseViewHolder<AppInfo> {
         if(appDesc.length() > 7){
             appDesc = appDesc.substring(0,7) + "...";
         }
-        String packageName = appInfo.getPkgName();
+        String packageName = appInfo.getPackageName();
         if(TextUtils.isEmpty(packageName)){
             packageName = appInfo.getPackageName();
         }
@@ -52,8 +57,11 @@ public class AppStoreAppsViewHolder extends BaseViewHolder<AppInfo> {
             @Override
             public void onClick(View v) {
                 Log.d(TAG,"onClick: " + finalPackageName);
-                RecentAppHelper.launchApp(mIvAppItemIcon.getContext(), finalPackageName);
+//                RecentAppHelper.launchApp(mIvAppItemIcon.getContext(), finalPackageName);
+                AppStoreJump.jumpAppMarket(finalPackageName, v.getContext());
             }
         });
     }
+
+
 }

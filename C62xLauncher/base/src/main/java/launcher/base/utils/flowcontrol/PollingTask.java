@@ -25,13 +25,14 @@ public abstract class PollingTask {
     }
 
     public void execute() {
+        EasyLog.d(mName, "PollingTask start execute name: "+mName);
         mDisposable = Observable.interval(mInitDelay, mIntervalMillieSeconds, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Consumer<Long>() {
                     @Override
                     public void accept(Long aLong) throws Exception {
                         boolean enableExit = enableExit();
-                        EasyLog.d(mName, "PollingTask execute name: "+mName + " count:" + aLong +" , "
+                        EasyLog.d(mName, "PollingTask execute name: "+mName + " count:" + aLong
                                 + " , enableExit:" + enableExit +" , thread:"+Thread.currentThread().getName());
                         if (enableExit) {
                             stopDispose();

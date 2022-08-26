@@ -60,7 +60,8 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(int position, LauncherCard cardEntity) {
         mLauncherCard = cardEntity;
-        if (ExpandStateManager.getInstance().getSmallCardPosition() == position) {
+        boolean isSmall = ExpandStateManager.getInstance().getSmallCardPosition() == position;
+        if (isSmall) {
             showSmallCardsInnerList();
         } else {
             hideSmallCardsInnerList();
@@ -175,10 +176,14 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void hideSmallCardsInnerList() {
-        EasyLog.d(TAG, "hideSmallCardsViewPager : "+mLauncherCard.getName());
+        EasyLog.d(TAG, "hideSmallCardsViewPager : "+mLauncherCard.getName()+" expand :"+mExpandState);
         mCardInnerListHelper.hideInnerList();
         mCardInner.setVisibility(View.VISIBLE);
-        itemView.setBackgroundResource(R.drawable.card_bg_small);
+        if (mExpandState) {
+            itemView.setBackgroundResource(R.drawable.card_bg_large);
+        } else {
+            itemView.setBackgroundResource(R.drawable.card_bg_small);
+        }
 
     }
     // 表示大卡是否处于

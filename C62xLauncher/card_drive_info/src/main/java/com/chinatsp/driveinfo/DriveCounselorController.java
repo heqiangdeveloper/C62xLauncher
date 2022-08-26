@@ -15,8 +15,14 @@ public class DriveCounselorController {
         EasyLog.i(TAG, "DriveCounselorController" +
                 "  init: " + hashCode());
         mRepository = DriveInfoRepository.getInstance();
+        mRepository.setDriveInfoCallback(mSmallCardCallback);
         mRepository.setReadDriveInfoListener(mReadDriveInfoListener);
-        mRepository.bindService(mView.getContext().getApplicationContext());
+
+        if (mRepository.isServiceConnect()) {
+            readInfo();
+        } else {
+            mRepository.bindServiceAsync(mView.getContext().getApplicationContext());
+        }
     }
 
     private final IReadDriveInfoListener mReadDriveInfoListener = new IReadDriveInfoListener() {
@@ -62,8 +68,7 @@ public class DriveCounselorController {
     }
 
     void attachListener() {
-        mRepository.setDriveInfoCallback(mSmallCardCallback);
-        mRepository.setReadDriveInfoListener(mReadDriveInfoListener);
+
     }
 
     void detachListener() {

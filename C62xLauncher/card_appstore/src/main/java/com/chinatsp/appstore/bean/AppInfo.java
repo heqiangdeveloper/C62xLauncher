@@ -48,15 +48,15 @@ public class AppInfo {
         this.icon = icon;
     }
 
-    public String getPkgName() {
-        return pkgName;
-    }
 
     public void setPkgName(String pkgName) {
         this.pkgName = pkgName;
     }
 
     public String getPackageName() {
+        if (pkgName != null) {
+            return pkgName;
+        }
         return packageName;
     }
 
