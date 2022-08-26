@@ -6,10 +6,14 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.chinatsp.apppanel.ApppanelActivity;
 import com.chinatsp.apppanel.receiver.AppInstallStatusReceiver;
@@ -28,6 +32,24 @@ public class CarLauncher extends AppCompatActivity {
         registerBootBroadcast();
         //注册监听APP安装卸载广播
         registerAppInstallBroadcast();
+        initVersionInfo();
+    }
+
+    private void initVersionInfo() {
+        if (!BuildConfig.DEBUG) {
+            return;
+        }
+        PackageManager pm = getPackageManager();
+        TextView tvVersionName = findViewById(R.id.tvVersionName);
+        try {
+            PackageInfo packageInfo = pm.getPackageInfo(getPackageName(), 0);
+            if (!TextUtils.isEmpty(packageInfo.versionName)) {
+                tvVersionName.setText("版本 : Version " + packageInfo.versionName +" for debug"+ " \n" + "版本码: " + packageInfo.versionCode);
+                tvVersionName.setVisibility(View.VISIBLE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void toApppanel(View view){

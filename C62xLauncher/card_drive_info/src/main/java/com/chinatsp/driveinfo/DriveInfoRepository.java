@@ -11,6 +11,7 @@ import com.cihon.client.ServiceConnectionListener;
 import com.cihon.client.SmallCardCallback;
 import com.cihon.client.WidgetCallback;
 
+import launcher.base.async.AsyncSchedule;
 import launcher.base.utils.EasyLog;
 import launcher.base.utils.flowcontrol.PollingTask;
 
@@ -18,12 +19,14 @@ public class DriveInfoRepository {
     private final String TAG = "DriveInfoRepository";
     private MutableLiveData<DriveInfo> mMutableLiveData = new MutableLiveData<>();
     private final CihonManager mCihonManager;
+
     private volatile boolean mServiceConnect;
     private DriveInfo mCacheDriveInfo;
 
     private IReadDriveInfoListener mReadDriveInfoListener;
     private IReadDriveInfoListener mDrawerReadDriveInfoListener;
     private PollingTask mServiceConnectTask;
+    private SmallCardCallback mSmallCardCallback;
 
     private DriveInfoRepository() {
         mCihonManager = CihonManager.getInstance();
@@ -38,12 +41,24 @@ public class DriveInfoRepository {
         private static DriveInfoRepository repository = new DriveInfoRepository();
     }
 
+    private volatile boolean startBindService = false;
+    public synchronized void bindServiceAsync(Context context) {
+        if (startBindService) {
+            return;
+        }
+        startBindService = true;
+        AsyncSchedule.execute(new Runnable() {
+            @Override
+            public void run() {
+                bindService(context);
+            }
+        });
+        mCihonManager.setSmallCardCallback(mOriginSmallCardCallback);
+    }
     public void bindService(Context context) {
         EasyLog.i(TAG, "start: bindService");
         if (mServiceConnect) {
             EasyLog.w(TAG, "start: bindService cancel : already connected.");
-            mCacheDriveInfo = readDriveInfo();
-            notifyReadOnBindService(mCacheDriveInfo);
             return;
         }
         mCihonManager.setServiceConnectionListener(new ServiceConnectionListener() {
@@ -75,6 +90,7 @@ public class DriveInfoRepository {
         mServiceConnectTask.execute();
     }
 
+
     private void notifyReadOnBindService(DriveInfo cacheDriveInfo) {
         if (mReadDriveInfoListener != null) {
             mReadDriveInfoListener.onSuccess(cacheDriveInfo);
@@ -84,9 +100,32 @@ public class DriveInfoRepository {
         }
     }
 
+    private SmallCardCallback mOriginSmallCardCallback = new SmallCardCallback() {
+        @Override
+        public void onOilChanged(float v) {
+            if (mSmallCardCallback != null) {
+                mSmallCardCallback.onOilChanged(v);
+            }
+        }
+
+        @Override
+        public void onDrivingTimeChanged(int i) {
+            if (mSmallCardCallback != null) {
+                mSmallCardCallback.onDrivingTimeChanged(i);
+            }
+        }
+
+        @Override
+        public void onDrivingMileageChanged(float v) {
+            if (mSmallCardCallback != null) {
+                mSmallCardCallback.onDrivingMileageChanged(v);
+            }
+        }
+    };
+
     void setDriveInfoCallback(SmallCardCallback smallCardCallback) {
         EasyLog.i(TAG, "setDriveInfoCallback SmallCardCallback: " + smallCardCallback.hashCode());
-        mCihonManager.setSmallCardCallback(smallCardCallback);
+        this.mSmallCardCallback = smallCardCallback;
     }
 
     public void setWidgetCallback(ILauncherWidgetCallback widgetCallback) {
@@ -172,4 +211,9 @@ public class DriveInfoRepository {
 
         return new DriveInfo(drivingMileage, drivingTime, oilConsumption, maintenanceMileage, healthyLevel, ranking);
     }
+
+    public boolean isServiceConnect() {
+        return mServiceConnect;
+    }
+
 }

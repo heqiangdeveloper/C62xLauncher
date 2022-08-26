@@ -2,6 +2,7 @@ package com.chinatsp.driveinfo;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -44,10 +45,18 @@ public class DriveCounselorCardView extends ConstraintLayout {
 
     private void init() {
         EasyLog.i(TAG, "init , hashcode:" + this.hashCode());
+//        printStack();
         LayoutInflater.from(getContext()).inflate(R.layout.card_drive_counselor, this);
         mViewHolder = new ViewHolder(this);
         mController = new DriveCounselorController(this);
         initViews();
+    }
+
+    private void printStack() {
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        for (int i = 0; i < stackTrace.length; i++) {
+            EasyLog.i(TAG, "printStack: "+stackTrace[i]);
+        }
     }
 
     private void initViews() {
@@ -70,14 +79,14 @@ public class DriveCounselorCardView extends ConstraintLayout {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        EasyLog.d(TAG, "onAttachedToWindow");
+        EasyLog.d(TAG, "DriveInfoXXX onAttachedToWindow: "+hashCode());
         mController.attachListener();
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        EasyLog.d(TAG, "onDetachedFromWindow");
+        EasyLog.d(TAG, "DriveInfoXXX onDetachedFromWindow: "+hashCode());
         mController.detachListener();
     }
 

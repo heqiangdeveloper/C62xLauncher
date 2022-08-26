@@ -131,9 +131,11 @@ public class AppStoreCardView extends ConstraintLayout implements ICardStyleChan
         if(v.getId() == R.id.ivAppStoreButton){//跳转至应用商城
             RecentAppHelper.launchApp(getContext(),APPSTOREPKG);
         }else if(v.getId() == R.id.ivAppIconTop){
-            RecentAppHelper.launchApp(getContext(),APPSTOREPKG);
+//            RecentAppHelper.launchApp(getContext(),APPSTOREPKG);
+            AppStoreJump.jumpAppMarket(infos.get(0).getPackageName(), v.getContext());
         }else if(v.getId() == R.id.ivAppIconBottom){
-            RecentAppHelper.launchApp(getContext(),APPSTOREPKG);
+//            RecentAppHelper.launchApp(getContext(),APPSTOREPKG);
+            AppStoreJump.jumpAppMarket(infos.get(1).getPackageName(), v.getContext());
         }
     }
 
