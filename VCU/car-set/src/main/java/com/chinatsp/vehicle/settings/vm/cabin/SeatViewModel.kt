@@ -77,7 +77,8 @@ class SeatViewModel @Inject constructor(app: Application, model: BaseModel) :
     private val _epsMode: MutableLiveData<Int> by lazy {
         val node = RadioNode.DRIVE_EPS_MODE
         MutableLiveData(node.default).apply {
-            value = manager.doGetRadioOption(node)
+            val value = manager.doGetRadioOption(node)
+            doUpdate(this, value, node.isValid(value))
         }
     }
 
@@ -96,14 +97,15 @@ class SeatViewModel @Inject constructor(app: Application, model: BaseModel) :
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {
             SwitchNode.SEAT_MAIN_DRIVE_MEET -> {
-                _mainMeetFunction.takeIf { it.value != status }?.value = status
+                doUpdate(_mainMeetFunction, status)
             }
             SwitchNode.SEAT_FORK_DRIVE_MEET -> {
-                _forkMeetFunction.takeIf { it.value != status }?.value = status
+                doUpdate(_forkMeetFunction, status)
             }
             SwitchNode.SEAT_HEAT_ALL -> {
-                _seatHeatFunction.takeIf { it.value != status }?.value = status
+                doUpdate(_seatHeatFunction, status)
             }
+            else -> {}
         }
     }
 
@@ -122,7 +124,7 @@ class SeatViewModel @Inject constructor(app: Application, model: BaseModel) :
         target.takeIf { it.value?.type == expect.type }?.let {
             it.takeUnless { it.value == expect }?.let { liveData ->
                 liveData.value?.pos = expect.pos
-                liveData.value = liveData.value
+                liveData.postValue(liveData.value)
             }
         }
     }

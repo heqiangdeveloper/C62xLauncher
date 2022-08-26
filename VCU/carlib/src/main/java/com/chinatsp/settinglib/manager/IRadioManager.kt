@@ -31,8 +31,8 @@ interface IRadioManager : IManager {
     fun onRadioChanged(node: RadioNode, atomic: AtomicInteger, p: CarPropertyValue<*>) {
         val value = p.value
         if (value is Int) {
-            onRadioChanged(node, atomic, value, this::doUpdateRadioValue) {
-                    radioNode, newValue -> doRadioChanged(radioNode, newValue)
+            onRadioChanged(node, atomic, value, this::doUpdateRadioValue) { radioNode, newValue ->
+                doRadioChanged(radioNode, newValue)
             }
         }
     }
@@ -45,8 +45,12 @@ interface IRadioManager : IManager {
         update(node, atomic, value, block)
     }
 
-    fun doUpdateRadioValue(node: RadioNode, atomic: AtomicInteger, value: Int, block: ((RadioNode, Int) -> Unit)? = null)
-            : AtomicInteger {
+    fun doUpdateRadioValue(
+        node: RadioNode,
+        atomic: AtomicInteger,
+        value: Int,
+        block: ((RadioNode, Int) -> Unit)? = null
+    ): AtomicInteger {
         if (node.isValid(value) && atomic.get() != value) {
             atomic.set(value)
             block?.let { it(node, value) }
@@ -54,8 +58,12 @@ interface IRadioManager : IManager {
         return atomic
     }
 
-    fun doUpdateProgress(node: Progress, atomic: AtomicInteger, value: Int, block: ((Progress, Int) -> Unit)? = null)
-            : AtomicInteger {
+    fun doUpdateProgress(
+        node: Progress,
+        atomic: AtomicInteger,
+        value: Int,
+        block: ((Progress, Int) -> Unit)? = null
+    ): AtomicInteger {
         if (node.isValid(value) && atomic.get() != value) {
             atomic.set(value)
             block?.let { it(node, value) }

@@ -20,6 +20,7 @@ import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>() {
@@ -30,7 +31,6 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
     override fun getLayoutId(): Int {
         return R.layout.drive_lane_fragment
     }
-
 
     override fun initData(savedInstanceState: Bundle?) {
         initVideoListener()
@@ -70,7 +70,7 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
             dynamicEffect()
             true
         }
-        binding.video.setOnPreparedListener{
+        binding.video.setOnPreparedListener {
             it.setOnInfoListener { _, _, _ ->
                 binding.video.setBackgroundColor(Color.TRANSPARENT)
                 binding.videoImage.visibility = View.GONE
@@ -78,6 +78,7 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
             }
         }
     }
+
     private fun initRadioOption() {
         initRadioOption(RadioNode.ADAS_LANE_ASSIST_MODE, viewModel.laneAssistMode)
         initRadioOption(RadioNode.ADAS_LDW_STYLE, viewModel.ldwStyle)
@@ -129,7 +130,11 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
         tabView: TabControlView
     ) {
         val result = isCanToInt(value) && manager.doSetRadioOption(node, value.toInt())
-        tabView.takeIf { !result }?.setSelection(liveData.value.toString(), true)
+        Timber.d("doUpdateRadio node:$node, valeu:$value, result:$result")
+        tabView.takeIf { !result }?.let {
+            val result = node.obtainSelectValue(liveData.value!!)
+            it.setSelection(result.toString(), true)
+        }
     }
 
     private fun doUpdateRadio(
@@ -149,7 +154,8 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
         }
         tabView?.let {
             bindRadioData(node, tabView, isInit)
-            doUpdateRadio(it, value, immediately)
+            val result = node.obtainSelectValue(value)
+            doUpdateRadio(it, result, immediately)
         }
     }
 
@@ -157,7 +163,7 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
     private fun bindRadioData(node: RadioNode, tabView: TabControlView, isInit: Boolean) {
         if (isInit) {
             val names = tabView.nameArray.map { it.toString() }.toTypedArray()
-            val values = node.get.values.map { it.toString() }.toTypedArray()
+            val values = node.set.values.map { it.toString() }.toTypedArray()
             tabView.setItems(names, values)
         }
     }
@@ -200,14 +206,15 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
 
     private fun setSwitchListener() {
         binding.adasLaneLaneAssistSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-           if(isChecked){
-               //binding.videoImage.visibility = View.GONE
-               val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_auxiliary_system
-               binding.video.setVideoURI(Uri.parse(uri));
-               binding.video.start()
-           }else{
-               dynamicEffect()
-           }
+            if (isChecked) {
+                //binding.videoImage.visibility = View.GONE
+                val uri =
+                    "android.resource://" + activity?.packageName + "/" + R.raw.video_auxiliary_system
+                binding.video.setVideoURI(Uri.parse(uri));
+                binding.video.start()
+            } else {
+                dynamicEffect()
+            }
             doUpdateSwitchOption(SwitchNode.ADAS_LANE_ASSIST, buttonView, isChecked)
         }
     }
@@ -226,9 +233,19 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
     private fun dynamicEffect() {
         binding.videoImage.visibility = View.VISIBLE
         if (binding.adasLaneLaneAssistSwitch.isChecked) {
-            binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.ic_lane_assist) })
+            binding.videoImage.setImageDrawable(activity?.let {
+                ContextCompat.getDrawable(
+                    it,
+                    R.drawable.ic_lane_assist
+                )
+            })
         } else {
-            binding.videoImage.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.intelligent_cruise) })
+            binding.videoImage.setImageDrawable(activity?.let {
+                ContextCompat.getDrawable(
+                    it,
+                    R.drawable.intelligent_cruise
+                )
+            })
         }
     }
 }

@@ -134,7 +134,10 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         tabView: TabControlView
     ) {
         val result = isCanToInt(value) && manager.doSetRadioOption(node, value.toInt())
-        tabView.takeIf { !result }?.setSelection(liveData.value.toString(), true)
+        tabView.takeIf { !result }?.let {
+            val result = node.obtainSelectValue(liveData.value!!)
+            it.setSelection(result.toString(), true)
+        }
     }
 
     private fun doUpdateRadio(
@@ -151,7 +154,8 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         }
         tabView?.let {
             bindRadioData(node, tabView, isInit)
-            doUpdateRadio(it, value, immediately)
+            val result = node.obtainSelectValue(value)
+            doUpdateRadio(it, result, immediately)
         }
     }
 
@@ -159,7 +163,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     private fun bindRadioData(node: RadioNode, tabView: TabControlView, isInit: Boolean) {
         if (isInit) {
             val names = tabView.nameArray.map { it.toString() }.toTypedArray()
-            val values = node.get.values.map { it.toString() }.toTypedArray()
+            val values = node.set.values.map { it.toString() }.toTypedArray()
             tabView.setItems(names, values)
         }
     }
@@ -169,82 +173,99 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     }
 
     private fun setSwitchListener() {
-        binding.accessSternElectricSw.setOnCheckedChangeListener { buttonView, isChecked ->
-            doUpdateSwitchOption(SwitchNode.AS_STERN_ELECTRIC, buttonView, isChecked)
-            checkDisableOtherDiv(binding.accessSternElectricSw, isChecked)
-            if (isChecked) {
-                animationOpenDoor.start(false, 50, object : AnimationDrawable.AnimationLisenter {
-                    override fun startAnimation() {
-                    }
-
-                    override fun endAnimation() {
-                        if(binding.accessSternElectricSw.isChecked){
-                            binding.arcSeekBar.visibility = View.VISIBLE
-                        }else{
-                            binding.arcSeekBar.visibility = View.GONE
-                        }
-                    }
-                })
-                binding.carTrunkDoorHeight.visibility = View.VISIBLE
-            } else {
-                animationCloseDoor.start(false, 50, null)
-                binding.carTrunkDoorHeight.visibility = View.GONE
-                binding.intelligenceInto.visibility = View.GONE
-                binding.arcSeekBar.visibility = View.GONE
+        binding.accessSternElectricSw.let {
+            it.setOnCheckedChangeListener { buttonView, isChecked ->
+                doUpdateSwitchOption(SwitchNode.AS_STERN_ELECTRIC, buttonView, isChecked)
+                checkDisableOtherDiv(it, isChecked)
+                doElectricTrunkFollowing(it.isChecked)
             }
         }
-        binding.accessSternLightAlarmSw.setOnCheckedChangeListener { buttonView, isChecked ->
-            doUpdateSwitchOption(SwitchNode.STERN_LIGHT_ALARM, buttonView, isChecked)
-            if (isChecked) {
-                binding.ivFlashAlarm.visibility = View.VISIBLE
-                binding.carTrunkDoorHeight.visibility = View.VISIBLE
-                binding.carTrunkDoorHeight.setText(R.string.car_trunk_light_open)
-                animationFlashAlarm.start(false, 50, object : AnimationDrawable.AnimationLisenter {
-                    override fun startAnimation() {
+        binding.accessSternLightAlarmSw.let {
+            it.setOnCheckedChangeListener { buttonView, isChecked ->
+                doUpdateSwitchOption(SwitchNode.STERN_LIGHT_ALARM, buttonView, isChecked)
+                doLightBlinkFollowing(it.isChecked)
+            }
+        }
+        binding.accessSternAudioAlarmSw.let {
+            it.setOnCheckedChangeListener { buttonView, isChecked ->
+                doUpdateSwitchOption(SwitchNode.STERN_AUDIO_ALARM, buttonView, isChecked)
+                doBuzzerFollowing(it.isChecked)
+            }
+        }
+    }
+
+    private fun doBuzzerFollowing(status: Boolean) {
+        if (!status) {
+            binding.carTrunkDoorHeight.setText(R.string.car_trunk_buzzer_close)
+            return
+        }
+        binding.ivBuzzerAlarms.visibility = View.VISIBLE
+        binding.carTrunkDoorHeight.visibility = View.VISIBLE
+        binding.carTrunkDoorHeight.setText(R.string.car_trunk_buzzer_open)
+        animationBuzzerAlarms.start(
+            false, 50,
+            object : AnimationDrawable.AnimationLisenter {
+                override fun startAnimation() {
+                    binding.arcSeekBar.visibility = View.GONE
+                }
+
+                override fun endAnimation() {
+                    if (binding.accessSternElectricSw.isChecked) {
+                        binding.arcSeekBar.visibility = View.VISIBLE
+                    } else {
                         binding.arcSeekBar.visibility = View.GONE
                     }
+                    binding.ivBuzzerAlarms.visibility = View.GONE
 
-                    override fun endAnimation() {
-                        binding.ivFlashAlarm.visibility = View.GONE
-                        if(binding.accessSternElectricSw.isChecked){
-                            binding.arcSeekBar.visibility = View.VISIBLE
-                        }else{
-                            binding.arcSeekBar.visibility = View.GONE
-                        }
-                    }
-                })
-            } else {
-                binding.carTrunkDoorHeight.setText(R.string.car_trunk_light_close)
-            }
+                }
+            })
+
+    }
+
+    private fun doLightBlinkFollowing(status: Boolean) {
+        if (!status) {
+            binding.carTrunkDoorHeight.setText(R.string.car_trunk_light_close)
+            return
         }
-        binding.accessSternAudioAlarmSw.setOnCheckedChangeListener { buttonView, isChecked ->
-            doUpdateSwitchOption(SwitchNode.STERN_AUDIO_ALARM, buttonView, isChecked)
-            if (isChecked) {
-                binding.ivBuzzerAlarms.visibility = View.VISIBLE
-                binding.carTrunkDoorHeight.visibility = View.VISIBLE
-                binding.carTrunkDoorHeight.setText(R.string.car_trunk_buzzer_open)
-                animationBuzzerAlarms.start(
-                    false,
-                    50,
-                    object : AnimationDrawable.AnimationLisenter {
-                        override fun startAnimation() {
-                            binding.arcSeekBar.visibility = View.GONE
-                        }
-
-                        override fun endAnimation() {
-                            if(binding.accessSternElectricSw.isChecked){
-                                binding.arcSeekBar.visibility = View.VISIBLE
-                            }else{
-                                binding.arcSeekBar.visibility = View.GONE
-                            }
-                            binding.ivBuzzerAlarms.visibility = View.GONE
-
-                        }
-                    })
-            } else {
-                binding.carTrunkDoorHeight.setText(R.string.car_trunk_buzzer_close)
+        binding.ivFlashAlarm.visibility = View.VISIBLE
+        binding.carTrunkDoorHeight.visibility = View.VISIBLE
+        binding.carTrunkDoorHeight.setText(R.string.car_trunk_light_open)
+        animationFlashAlarm.start(false, 50, object : AnimationDrawable.AnimationLisenter {
+            override fun startAnimation() {
+                binding.arcSeekBar.visibility = View.GONE
             }
+
+            override fun endAnimation() {
+                binding.ivFlashAlarm.visibility = View.GONE
+                if (binding.accessSternElectricSw.isChecked) {
+                    binding.arcSeekBar.visibility = View.VISIBLE
+                } else {
+                    binding.arcSeekBar.visibility = View.GONE
+                }
+            }
+        })
+    }
+
+    private fun doElectricTrunkFollowing(status: Boolean) {
+        if (!status) {
+            animationCloseDoor.start(false, 50, null)
+            binding.carTrunkDoorHeight.visibility = View.GONE
+            binding.intelligenceInto.visibility = View.GONE
+            binding.arcSeekBar.visibility = View.GONE
+            return
         }
+        animationOpenDoor.start(false, 50, object : AnimationDrawable.AnimationLisenter {
+            override fun startAnimation() {
+            }
+            override fun endAnimation() {
+                if (binding.accessSternElectricSw.isChecked) {
+                    binding.arcSeekBar.visibility = View.VISIBLE
+                } else {
+                    binding.arcSeekBar.visibility = View.GONE
+                }
+            }
+        })
+        binding.carTrunkDoorHeight.visibility = View.VISIBLE
     }
 
     private fun doUpdateSwitchOption(node: SwitchNode, button: CompoundButton, status: Boolean) {
@@ -262,6 +283,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     private fun addSwitchLiveDataListener() {
         viewModel.electricFunction.observe(this) {
             doUpdateSwitch(SwitchNode.AS_STERN_ELECTRIC, it)
+            doElectricTrunkFollowing(it)
         }
         viewModel.lightAlarmFunction.observe(this) {
             doUpdateSwitch(SwitchNode.STERN_LIGHT_ALARM, it)
@@ -317,7 +339,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
             }
             val childCount = binding.layoutContent.childCount
             val intRange = 0 until childCount
-            intRange.forEach{
+            intRange.forEach {
                 val childAt = binding.layoutContent.getChildAt(it)
                 if (null != childAt && childAt != binding.carTrunkElectricFunction) {
                     childAt.alpha = if (status) 1.0f else 0.7f
@@ -342,7 +364,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         if (view is ViewGroup) {
             val childCount = view.childCount
             val intRange = 0 until childCount
-            intRange.forEach{ updateViewEnable(view.getChildAt(it), status) }
+            intRange.forEach { updateViewEnable(view.getChildAt(it), status) }
         }
     }
 

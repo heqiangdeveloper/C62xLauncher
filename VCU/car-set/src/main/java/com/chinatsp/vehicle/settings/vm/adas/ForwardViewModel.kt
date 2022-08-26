@@ -23,7 +23,7 @@ class ForwardViewModel @Inject constructor(app: Application, model: BaseModel):
 
     private val _fcwFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.ADAS_FCW
-        MutableLiveData(node.isOn()).apply {
+        MutableLiveData(node.default).apply {
             value = manager.doGetSwitchOption(node)
         }
     }
@@ -33,7 +33,7 @@ class ForwardViewModel @Inject constructor(app: Application, model: BaseModel):
 
     private val _aebFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.ADAS_AEB
-        MutableLiveData(node.isOn()).apply {
+        MutableLiveData(node.default).apply {
             value = manager.doGetSwitchOption(node)
         }
     }
@@ -48,14 +48,13 @@ class ForwardViewModel @Inject constructor(app: Application, model: BaseModel):
         super.onDestroy()
     }
 
-
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {
             SwitchNode.ADAS_FCW -> {
-                _fcwFunction.postValue(status)
+                doUpdate(_fcwFunction, status)
             }
             SwitchNode.ADAS_AEB -> {
-                _aebFunction.postValue(status)
+                doUpdate(_aebFunction, status)
             }
             else -> {}
         }

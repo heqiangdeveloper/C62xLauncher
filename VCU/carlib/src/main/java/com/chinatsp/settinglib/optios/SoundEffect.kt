@@ -11,8 +11,8 @@ import android.car.media.CarAudioManager
  */
 enum class SoundEffect(val id: Int) {
 
-    POP(CarAudioManager.EQ_MODE_FLAT),
-    FLAT(CarAudioManager.EQ_MODE_POP),
+    POP(CarAudioManager.EQ_MODE_POP),
+    FLAT(CarAudioManager.EQ_MODE_FLAT),
     ROCK(CarAudioManager.EQ_MODE_ROCK),
     JAZZ(CarAudioManager.EQ_MODE_JAZZ),
     VOCAL(CarAudioManager.EQ_MODE_VOCAL),
@@ -25,6 +25,10 @@ enum class SoundEffect(val id: Int) {
                 if (it.id == value) return it
             }
             return POP
+        }
+
+        fun idArray(): IntArray {
+            return values().map { it.id }.toIntArray()
         }
     }
 

@@ -30,9 +30,12 @@ class MeterManager private constructor() : BaseManager(), IRadioManager {
 
     private val meterSystemRadioOption: AtomicInteger by lazy {
         val node = RadioNode.DRIVE_METER_SYSTEM
-        AtomicInteger(node.default).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateRadioValue(node, this, value)
+//        AtomicInteger(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateRadioValue(node, this, value)
+//        }
+        return@lazy createAtomicInteger(node) {result, value ->
+            doUpdateRadioValue(node, result, value, this::doRadioChanged)
         }
     }
 

@@ -131,7 +131,7 @@ public class SmoothLineChartView extends View {
         }
         mValues = yValues;
         mPoints.clear();
-        if (yValues != null && yValues.size() > 0) {
+        if (yValues.size() > 0) {
             mMaxY = mCustomAxisMax ? mMaxY : yValues.get(0);
             mMinY = mCustomAxisMin ? mMinY : yValues.get(0);
             for (float y : yValues) {

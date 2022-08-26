@@ -2,7 +2,6 @@ package com.chinatsp.settinglib
 
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IManager
-import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.optios.Progress
 
 /**

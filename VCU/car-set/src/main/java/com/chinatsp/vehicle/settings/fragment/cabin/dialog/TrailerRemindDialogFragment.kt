@@ -18,7 +18,8 @@ import timber.log.Timber
 
 @AndroidEntryPoint
 class TrailerRemindDialogFragment :
-    BaseDialogFragment<TrailerViewModel, TrailerRemindDialogFragmentBinding>(), IThemeChangeListener {
+    BaseDialogFragment<TrailerViewModel, TrailerRemindDialogFragmentBinding>(),
+    IThemeChangeListener {
 
     private lateinit var service: ThemeService
 
@@ -102,22 +103,25 @@ class TrailerRemindDialogFragment :
         Timber.d("doUpdateRadio start node:$node, value:$value")
         val result = isCanToInt(value) && viewModel.doSetRadioOption(node, value.toInt())
         Timber.d("doUpdateRadio end node:$node, value:$value, result:$result")
-        tabView.takeIf { !result }?.setSelection(liveData.value.toString(), true)
+        tabView.takeIf { !result }?.let {
+            val result = node.obtainSelectValue(liveData.value!!)
+            it.setSelection(result.toString(), true)
+        }
     }
 
-    private fun doUpdateRadio(node: RadioNode, value: Int, immediately: Boolean = false) {
-        val tabView = when (node) {
-            RadioNode.DEVICE_TRAILER_DISTANCE -> binding.trailerDistanceRadio
-            RadioNode.DEVICE_TRAILER_SENSITIVITY -> binding.trailerSensitivityRadio
-            else -> null
-        }
-        takeIf { null != tabView }?.doUpdateRadio(tabView!!, value, immediately)
-    }
+//    private fun doUpdateRadio(node: RadioNode, value: Int, immediately: Boolean = false) {
+//        val tabView = when (node) {
+//            RadioNode.DEVICE_TRAILER_DISTANCE -> binding.trailerDistanceRadio
+//            RadioNode.DEVICE_TRAILER_SENSITIVITY -> binding.trailerSensitivityRadio
+//            else -> null
+//        }
+//        takeIf { null != tabView }?.doUpdateRadio(tabView!!, value, immediately)
+//    }
 
     private fun bindRadioData(node: RadioNode, tabView: TabControlView, isInit: Boolean) {
         if (isInit) {
             val names = tabView.nameArray.map { it.toString() }.toTypedArray()
-            val values = node.get.values.map { it.toString() }.toTypedArray()
+            val values = node.set.values.map { it.toString() }.toTypedArray()
             tabView.setItems(names, values)
         }
     }
@@ -126,7 +130,12 @@ class TrailerRemindDialogFragment :
         tabView.setSelection(value.toString(), true)
     }
 
-    private fun doUpdateRadio(node: RadioNode, value: Int, immediately: Boolean = false, isInit: Boolean = false) {
+    private fun doUpdateRadio(
+        node: RadioNode,
+        value: Int,
+        immediately: Boolean = false,
+        isInit: Boolean = false
+    ) {
         val tabView = when (node) {
             RadioNode.DEVICE_TRAILER_DISTANCE -> binding.trailerDistanceRadio
             RadioNode.DEVICE_TRAILER_SENSITIVITY -> binding.trailerSensitivityRadio
@@ -134,7 +143,8 @@ class TrailerRemindDialogFragment :
         }
         tabView?.let {
             bindRadioData(node, tabView, isInit)
-            doUpdateRadio(it, value, immediately)
+            val result = node.obtainSelectValue(value)
+            doUpdateRadio(it, result, immediately)
         }
     }
 

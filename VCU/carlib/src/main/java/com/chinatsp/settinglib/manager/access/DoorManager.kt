@@ -25,25 +25,34 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
 
     private val smartAccess: AtomicBoolean by lazy {
         val node = SwitchNode.DOOR_SMART_ENTER
-        AtomicBoolean(node.isOn()).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, value)
+//        AtomicBoolean(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, value)
+//        }
+        return@lazy createAtomicBoolean(node) {result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val driveAutoLock: AtomicInteger by lazy {
         val node = RadioNode.DOOR_DRIVE_LOCK
-        AtomicInteger(node.default).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateRadioValue(node, this, value)
+//        AtomicInteger(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateRadioValue(node, this, value)
+//        }
+        return@lazy createAtomicInteger(node) {result, value ->
+            doUpdateRadioValue(node, result, value, this::doRadioChanged)
         }
     }
 
     private val flameoutAutoUnlock: AtomicInteger by lazy {
         val node = RadioNode.DOOR_FLAMEOUT_UNLOCK
-        AtomicInteger(node.default).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateRadioValue(node, this, value)
+//        AtomicInteger(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateRadioValue(node, this, value)
+//        }
+        return@lazy createAtomicInteger(node) {result, value ->
+            doUpdateRadioValue(node, result, value, this::doRadioChanged)
         }
     }
 

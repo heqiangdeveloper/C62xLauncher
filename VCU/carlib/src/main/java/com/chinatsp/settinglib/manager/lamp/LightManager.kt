@@ -48,41 +48,56 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
 
     private val insideMeetLight: AtomicBoolean by lazy {
         val node = SwitchNode.LIGHT_INSIDE_MEET
-        AtomicBoolean(node.isOn()).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, value)
+//        AtomicBoolean(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, value)
+//        }
+        return@lazy createAtomicBoolean(node) {result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val outsideMeetLight: AtomicBoolean by lazy {
         val node = SwitchNode.LIGHT_OUTSIDE_MEET
-        AtomicBoolean(node.isOn()).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, value)
+//        AtomicBoolean(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, value)
+//        }
+        return@lazy createAtomicBoolean(node) {result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val lightDelayOut: AtomicInteger by lazy {
         val node = RadioNode.LIGHT_DELAYED_OUT
-        AtomicInteger(node.default).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateRadioValue(node, this, value)
+//        AtomicInteger(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateRadioValue(node, this, value)
+//        }
+        return@lazy createAtomicInteger(node) {result, value ->
+            doUpdateRadioValue(node, result, value, this::doRadioChanged)
         }
     }
 
     private val lightFlicker: AtomicInteger by lazy {
         val node = RadioNode.LIGHT_FLICKER
-        AtomicInteger(node.default).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateRadioValue(node, this, value)
+//        AtomicInteger(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateRadioValue(node, this, value)
+//        }
+        return@lazy createAtomicInteger(node) {result, value ->
+            doUpdateRadioValue(node, result, value, this::doRadioChanged)
         }
     }
 
     private val lightCeremonySense: AtomicInteger by lazy {
         val node = RadioNode.LIGHT_CEREMONY_SENSE
-        AtomicInteger(node.default).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateRadioValue(node, this, value)
+//        AtomicInteger(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateRadioValue(node, this, value)
+//        }
+        return@lazy createAtomicInteger(node) {result, value ->
+            doUpdateRadioValue(node, result, value, this::doRadioChanged)
         }
     }
 
@@ -107,7 +122,7 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
     }
 
     private fun getBacklightLevel(): IntArray {
-        return intArrayOf(0x19,  0x33, 0x4C,  0x66, 0x7F, 0x99,  0xB2, 0xCC, 0xE5, 0xFF)
+        return intArrayOf(0x19, 0x33, 0x4C,  0x66, 0x7F, 0x99, 0xB2, 0xCC, 0xE5, 0xFF)
     }
 
     override fun isCareSignal(signal: Int, origin: Origin): Boolean {
@@ -177,7 +192,7 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
         try {
             writeLock.lock()
             unRegisterVcuListener(serial, identity)
-            listenerStore.put(serial, WeakReference(listener))
+            listenerStore[serial] = WeakReference(listener)
         } finally {
             writeLock.unlock()
         }
@@ -230,6 +245,10 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
             }
             RadioNode.LIGHT_CEREMONY_SENSE.get.signal -> {
                 onRadioChanged(RadioNode.LIGHT_CEREMONY_SENSE, lightCeremonySense, property)
+            }
+            Progress.SWITCH_BACKLIGHT_BRIGHTNESS.get.signal -> {
+                val level = findBacklightLevel(property.value as Int)
+                doUpdateProgress(switchBacklight, level, true, this::doProgressChanged )
             }
             else -> {}
         }

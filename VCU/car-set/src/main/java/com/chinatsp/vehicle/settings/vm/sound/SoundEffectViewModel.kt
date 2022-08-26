@@ -42,7 +42,11 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
         get() = _currentEffect
 
     private val _currentEffect: MutableLiveData<Int> by lazy {
-        MutableLiveData(1)
+        val node = RadioNode.SYSTEM_SOUND_EFFECT
+        MutableLiveData(node.default).apply {
+            val value = EffectManager.instance.doGetRadioOption(node)
+            doUpdate(this, value, node.isValid(value))
+        }
     }
 
     val effectOption: LiveData<Int>
@@ -52,7 +56,7 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
         val node = RadioNode.AUDIO_ENVI_AUDIO
         MutableLiveData(node.default).apply {
             val value = EffectManager.instance.doGetRadioOption(node)
-            postValue(value)
+            doUpdate(this, value, node.isValid(value))
         }
     }
 
@@ -63,7 +67,7 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
         val node = SwitchNode.AUDIO_ENVI_AUDIO
         MutableLiveData(node.default).apply {
             val value = EffectManager.instance.doGetSwitchOption(node)
-            postValue(value)
+            doUpdate(this, value)
         }
     }
 
@@ -74,7 +78,7 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
         val node = SwitchNode.AUDIO_SOUND_LOUDNESS
         MutableLiveData(node.default).apply {
             val value = EffectManager.instance.doGetSwitchOption(node)
-            postValue(value)
+            doUpdate(this, value)
         }
     }
 
@@ -93,15 +97,15 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
         if (id != effect.id) {
             manager.setSoundEffect(effect)
         }
-        return getCustomEffectValues()
+        return getEffectValues()
     }
 
-    private fun getCustomEffectValues(): IntArray {
-        val lev1: Int = getAudioVoice(SettingManager.VOICE_LEVEL1)
-        val lev2: Int = getAudioVoice(SettingManager.VOICE_LEVEL2)
-        val lev3: Int = getAudioVoice(SettingManager.VOICE_LEVEL3)
-        val lev4: Int = getAudioVoice(SettingManager.VOICE_LEVEL4)
-        val lev5: Int = getAudioVoice(SettingManager.VOICE_LEVEL5)
+    fun getEffectValues(): IntArray {
+        val lev1 = getAudioVoice(SettingManager.VOICE_LEVEL1)
+        val lev2 = getAudioVoice(SettingManager.VOICE_LEVEL2)
+        val lev3 = getAudioVoice(SettingManager.VOICE_LEVEL3)
+        val lev4 = getAudioVoice(SettingManager.VOICE_LEVEL4)
+        val lev5 = getAudioVoice(SettingManager.VOICE_LEVEL5)
         val effect = manager.getAudioEQ()
         Timber.d("getCustomEffectValues effect:$effect, lev1:$lev1, lev2:$lev2, lev3:$lev3, lev4:$lev4, lev5:$lev5")
         return intArrayOf(lev1, lev2, lev3, lev4, lev5)
@@ -132,30 +136,30 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
         val mode = when (position) {
             0 -> {
                 effectArray = standardEffect
-                SettingManager.EQ_MODE_STANDARD
+                SoundEffect.FLAT.id
             }
             1 -> {
                 effectArray = classicEffect
-                SettingManager.EQ_MODE_CLASSIC
+                SoundEffect.CLASSIC.id
             }
             2 -> {
                 effectArray = peopleEffect
-                SettingManager.EQ_MODE_PEOPLE
+                SoundEffect.POP.id
             }
             3 -> {
                 effectArray = jazzEffect
-                SettingManager.EQ_MODE_JAZZ
+                SoundEffect.JAZZ.id
             }
             4 -> {
                 effectArray = popEffect
-                SettingManager.EQ_MODE_POP
+                SoundEffect.POP.id
             }
             5 -> {
                 effectArray = rockEffect
-                SettingManager.EQ_MODE_ROCK
+                SoundEffect.ROCK.id
             }
             else -> {
-                SettingManager.EQ_MODE_CUSTOM
+                SoundEffect.CUSTOM.id
             }
         }
         if (null != effectArray) {
@@ -169,11 +173,7 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
     }
 
     private fun getAudioVoice(id: Int): Int {
-        return manager?.getAudioVoice(id)
-    }
-
-    fun setAudioVoice(id: Int, value: Int) {
-        manager?.setAudioVoice(id, value)
+        return manager.getAudioVoice(id)
     }
 
     fun doSwitchSoundEffect(value: Int) {
@@ -185,7 +185,7 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {
             SwitchNode.AUDIO_ENVI_AUDIO -> {
-                _effectStatus.takeIf { it.value != status }?.postValue(status)
+                doUpdate(_effectStatus, status)
             }
             else -> {}
         }
@@ -194,7 +194,7 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
     override fun onRadioOptionChanged(node: RadioNode, value: Int) {
         when (node) {
             RadioNode.AUDIO_ENVI_AUDIO -> {
-                _effectOption.takeIf { node.isValid(value) && it.value != value }?.postValue(value)
+                doUpdate(_effectOption, value)
             }
             else -> {}
         }

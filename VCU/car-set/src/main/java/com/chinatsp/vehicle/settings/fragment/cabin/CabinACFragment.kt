@@ -72,7 +72,10 @@ class CabinACFragment : BaseFragment<CabinACViewModel, CabinAcFragmentBinding>()
         tabView: TabControlView
     ) {
         val result = isCanToInt(value) && manager.doSetRadioOption(node, value.toInt())
-        tabView.takeIf { !result }?.setSelection(liveData.value.toString(), true)
+        tabView.takeIf { !result }?.let {
+            val result = node.obtainSelectValue(liveData.value!!)
+            it.setSelection(result.toString(), true)
+        }
     }
 
     private fun doUpdateRadio(
@@ -81,16 +84,22 @@ class CabinACFragment : BaseFragment<CabinACViewModel, CabinAcFragmentBinding>()
         immediately: Boolean = false,
         isInit: Boolean = false
     ) {
-        when (node) {
+        val tabView = when (node) {
             RadioNode.AC_COMFORT -> binding.cabinAcComfortOption
             else -> null
-        }?.let {
-            if (isInit) {
-                val names = it.nameArray.map { item -> item.toString() }.toTypedArray()
-                val values = node.get.values.map { item -> item.toString() }.toTypedArray()
-                it.setItems(names, values)
-            }
-            doUpdateRadio(it, value, immediately)
+        }
+        tabView?.let {
+            bindRadioData(node, tabView, isInit)
+            val result = node.obtainSelectValue(value)
+            doUpdateRadio(it, result, immediately)
+        }
+    }
+
+    private fun bindRadioData(node: RadioNode, tabView: TabControlView, isInit: Boolean) {
+        if (isInit) {
+            val names = tabView.nameArray.map { it.toString() }.toTypedArray()
+            val values = node.set.values.map { it.toString() }.toTypedArray()
+            tabView.setItems(names, values)
         }
     }
 

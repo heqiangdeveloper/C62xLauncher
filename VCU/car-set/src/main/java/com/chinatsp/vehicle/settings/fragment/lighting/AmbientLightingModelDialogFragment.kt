@@ -74,6 +74,15 @@ class AmbientLightingModelDialogFragment :
         viewModel.alcSmartMode.observe(this) {
             doUpdateSwitch(SwitchNode.ALC_SMART_MODE, it)
         }
+        viewModel.colourBreathe.observe(this) {
+            doUpdateViewSelect(SwitchNode.COLOUR_BREATHE, it)
+        }
+        viewModel.musicRhythm.observe(this) {
+            doUpdateViewSelect(SwitchNode.MUSIC_RHYTHM, it)
+        }
+        viewModel.speedRhythm.observe(this) {
+            doUpdateViewSelect(SwitchNode.SPEED_RHYTHM, it)
+        }
     }
 
     private fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {

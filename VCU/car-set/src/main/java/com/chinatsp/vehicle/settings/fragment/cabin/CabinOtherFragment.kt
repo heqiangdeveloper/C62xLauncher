@@ -82,7 +82,11 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
                 doUpdateSwitch(SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP, it)
             }
         }
-
+        viewModel.trailerRemind.let { ld ->
+            ld.observe(this) {
+                updateSwitchTextHint(binding.otherTrailerRemindTextView, ld)
+            }
+        }
     }
 
     private fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {

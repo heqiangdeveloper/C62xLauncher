@@ -6,7 +6,6 @@ import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.Volume
-import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.lamp.LightManager
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
@@ -23,7 +22,8 @@ import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding>(), VSeekBar.OnSeekBarListener {
+class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding>(),
+    VSeekBar.OnSeekBarListener {
 
     private var animationHomeOpen: AnimationDrawable = AnimationDrawable()
     private var animationHomeClose: AnimationDrawable = AnimationDrawable()
@@ -146,21 +146,21 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
         binding.lightFlickerRadio.let {
             it.setOnTabSelectionChangedListener { _, value ->
                 doUpdateRadio(RadioNode.LIGHT_FLICKER, value, viewModel.lightFlicker, it)
-                if(value.equals("2")){
+                if (value.equals("2")) {
                     binding.turnSignalIv1.visibility = View.VISIBLE
                     binding.turnSignalIv2.visibility = View.GONE
                     binding.turnSignalIv.visibility = View.GONE
-                    setTurnAnimation(animationTurnSignal1,value)
-                }else if (value.equals("3")){
+                    setTurnAnimation(animationTurnSignal1, value)
+                } else if (value.equals("3")) {
                     binding.turnSignalIv2.visibility = View.VISIBLE
                     binding.turnSignalIv1.visibility = View.GONE
                     binding.turnSignalIv.visibility = View.GONE
-                    setTurnAnimation(animationTurnSignal2,value)
-                }else if (value.equals("4")){
+                    setTurnAnimation(animationTurnSignal2, value)
+                } else if (value.equals("4")) {
                     binding.turnSignalIv.visibility = View.VISIBLE
                     binding.turnSignalIv2.visibility = View.GONE
                     binding.turnSignalIv1.visibility = View.GONE
-                    setTurnAnimation(animationTurnSignal,value)
+                    setTurnAnimation(animationTurnSignal, value)
                 }
 
             }
@@ -179,7 +179,10 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
         tabView: TabControlView
     ) {
         val result = isCanToInt(value) && manager.doSetRadioOption(node, value.toInt())
-        tabView.takeIf { !result }?.setSelection(liveData.value.toString(), true)
+        tabView.takeIf { !result }?.let {
+            val result = node.obtainSelectValue(liveData.value!!)
+            it.setSelection(result.toString(), true)
+        }
     }
 
     private fun doUpdateRadio(
@@ -196,7 +199,8 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
         }
         tabView?.let {
             bindRadioData(node, tabView, isInit)
-            doUpdateRadio(it, value, immediately)
+            val result = node.obtainSelectValue(value)
+            doUpdateRadio(it, result, immediately)
         }
     }
 
@@ -204,7 +208,7 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
     private fun bindRadioData(node: RadioNode, tabView: TabControlView, isInit: Boolean) {
         if (isInit) {
             val names = tabView.nameArray.map { it.toString() }.toTypedArray()
-            val values = node.get.values.map { it.toString() }.toTypedArray()
+            val values = node.set.values.map { it.toString() }.toTypedArray()
             tabView.setItems(names, values)
         }
     }
@@ -275,7 +279,7 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
         return null != value && value.isNotBlank() && value.matches(Regex("\\d+"))
     }
 
-    private fun setTurnAnimation(animationDrawable: AnimationDrawable,value: String){
+    private fun setTurnAnimation(animationDrawable: AnimationDrawable, value: String) {
         animationDrawable.start(false, 50, null)
     }
 

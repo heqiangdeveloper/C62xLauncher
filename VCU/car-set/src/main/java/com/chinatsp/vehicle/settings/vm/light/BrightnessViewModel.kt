@@ -1,7 +1,6 @@
 package com.chinatsp.vehicle.settings.vm.light
 
 import android.app.Application
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.IProgressManager
 import com.chinatsp.settinglib.bean.Volume

@@ -66,31 +66,11 @@ class CabinMeterFragment : BaseFragment<MeterViewModel, CabinMeterFragmentBindin
         tabView: TabControlView
     ) {
         val result = isCanToInt(value) && manager.doSetRadioOption(node, value.toInt())
-        tabView.takeIf { !result }?.setSelection(liveData.value.toString(), true)
+        tabView.takeIf { !result }?.let {
+            val result = node.obtainSelectValue(liveData.value!!)
+            it.setSelection(result.toString(), true)
+        }
     }
-
-//    private fun doUpdateRadio(node: RadioNode, value: Int, immediately: Boolean = false) {
-//        val tabView = when (node) {
-//            RadioNode.DRIVE_METER_SYSTEM -> binding.cabinMeterSystemOptions
-//            else -> null
-//        }
-//        tabView?.let {
-//            doUpdateRadio(tabView, value, immediately)
-//            var selectIndex = 0
-//            node.get.values.filterIndexed { index, valueItem ->
-//                val result = valueItem == value
-//                if (result) {
-//                    selectIndex = index
-//                }
-//                return@filterIndexed result
-//            }
-//            if (selectIndex == 1) {
-//                binding.ivMeasurement.setImageDrawable(resources.getDrawable(R.drawable.company_mph))
-//            } else {
-//                binding.ivMeasurement.setImageDrawable(resources.getDrawable(R.drawable.company_km))
-//            }
-//        }
-//    }
 
     private fun doUpdateRadio(
         node: RadioNode,
@@ -98,12 +78,14 @@ class CabinMeterFragment : BaseFragment<MeterViewModel, CabinMeterFragmentBindin
         immediately: Boolean = false,
         isInit: Boolean = false
     ) {
-        when (node) {
+        val tabView = when (node) {
             RadioNode.DRIVE_METER_SYSTEM -> binding.cabinMeterSystemOptions
             else -> null
-        }?.let {
-            bindRadioData(node, it, isInit)
-            doUpdateRadio(it, value, immediately)
+        }
+        tabView?.let {
+            bindRadioData(node, tabView, isInit)
+            val result = node.obtainSelectValue(value)
+            doUpdateRadio(it, result, immediately)
             updateSystemImage(node, value)
         }
     }
@@ -119,7 +101,7 @@ class CabinMeterFragment : BaseFragment<MeterViewModel, CabinMeterFragmentBindin
     private fun bindRadioData(node: RadioNode, tabView: TabControlView, isInit: Boolean) {
         if (isInit) {
             val names = tabView.nameArray.map { it.toString() }.toTypedArray()
-            val values = node.get.values.map { it.toString() }.toTypedArray()
+            val values = node.set.values.map { it.toString() }.toTypedArray()
             tabView.setItems(names, values)
         }
     }
@@ -134,9 +116,19 @@ class CabinMeterFragment : BaseFragment<MeterViewModel, CabinMeterFragmentBindin
             return@filterIndexed result
         }
         if (selectIndex == 1) {
-            binding.ivMeasurement.setImageDrawable(activity?.let { ContextCompat.getDrawable(it,R.drawable.company_mph) })
+            binding.ivMeasurement.setImageDrawable(activity?.let {
+                ContextCompat.getDrawable(
+                    it,
+                    R.drawable.company_mph
+                )
+            })
         } else {
-            binding.ivMeasurement.setImageDrawable(activity?.let { ContextCompat.getDrawable(it,R.drawable.company_km) })
+            binding.ivMeasurement.setImageDrawable(activity?.let {
+                ContextCompat.getDrawable(
+                    it,
+                    R.drawable.company_km
+                )
+            })
         }
     }
 

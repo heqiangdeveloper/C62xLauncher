@@ -33,7 +33,8 @@ class LaneViewModel @Inject constructor(app: Application, model: BaseModel) :
     private val _laneAssistMode: MutableLiveData<Int> by lazy {
         val node = RadioNode.ADAS_LANE_ASSIST_MODE
         MutableLiveData(node.default).apply {
-            value = manager.doGetRadioOption(node)
+            val value = manager.doGetRadioOption(node)
+            doUpdate(this, value, node.isValid(value))
         }
     }
 
@@ -42,7 +43,8 @@ class LaneViewModel @Inject constructor(app: Application, model: BaseModel) :
     private val _ldwStyle: MutableLiveData<Int> by lazy {
         val node = RadioNode.ADAS_LDW_STYLE
         MutableLiveData(node.default).apply {
-            value = manager.doGetRadioOption(node)
+            val value = manager.doGetRadioOption(node)
+            doUpdate(this, value, node.isValid(value))
         }
     }
 
@@ -51,7 +53,8 @@ class LaneViewModel @Inject constructor(app: Application, model: BaseModel) :
     private val _ldwSensitivity: MutableLiveData<Int> by lazy {
         val node = RadioNode.ADAS_LDW_SENSITIVITY
         MutableLiveData(node.default).apply {
-            value = manager.doGetRadioOption(node)
+            val value = manager.doGetRadioOption(node)
+            doUpdate(this, value, node.isValid(value))
         }
     }
 
@@ -69,7 +72,7 @@ class LaneViewModel @Inject constructor(app: Application, model: BaseModel) :
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {
             SwitchNode.ADAS_LANE_ASSIST -> {
-                _laneAssistFunction.value = status
+                doUpdate(_laneAssistFunction, status)
             }
             else -> {}
         }
@@ -78,13 +81,13 @@ class LaneViewModel @Inject constructor(app: Application, model: BaseModel) :
     override fun onRadioOptionChanged(node: RadioNode, value: Int) {
         when (node) {
             RadioNode.ADAS_LANE_ASSIST_MODE -> {
-                _laneAssistMode.value = value
+                doUpdate(_laneAssistMode, value)
             }
             RadioNode.ADAS_LDW_STYLE -> {
-                _ldwStyle.value = value
+                doUpdate(_ldwStyle, value)
             }
             RadioNode.ADAS_LDW_SENSITIVITY -> {
-                _ldwSensitivity.value = value
+                doUpdate(_ldwSensitivity, value)
             }
             else -> {}
         }

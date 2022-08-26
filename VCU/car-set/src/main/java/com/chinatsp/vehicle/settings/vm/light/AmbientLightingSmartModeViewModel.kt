@@ -88,16 +88,16 @@ class AmbientLightingSmartModeViewModel @Inject constructor(app: Application, mo
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {
             SwitchNode.ALC_SMART_MODE -> {
-                updateLiveData(_alcSmartMode, status)
+                doUpdate(_alcSmartMode, status)
             }
             SwitchNode.SPEED_RHYTHM -> {
-                updateLiveData(_speedRhythm, status)
+                doUpdate(_speedRhythm, status)
             }
             SwitchNode.MUSIC_RHYTHM -> {
-                updateLiveData(_musicRhythm, status)
+                doUpdate(_musicRhythm, status)
             }
             SwitchNode.COLOUR_BREATHE -> {
-                updateLiveData(_colourBreathe, status)
+                doUpdate(_colourBreathe, status)
             }
             else -> {}
         }

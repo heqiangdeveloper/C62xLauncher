@@ -92,16 +92,16 @@ class OtherViewModel @Inject constructor(app: Application, model: BaseModel) :
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {
             SwitchNode.DRIVE_TRAILER_REMIND -> {
-                updateLiveData(_trailerRemind, status)
+                doUpdate(_trailerRemind, status)
             }
             SwitchNode.DRIVE_BATTERY_OPTIMIZE -> {
-                updateLiveData(_batteryOptimize, status)
+                doUpdate(_batteryOptimize, status)
             }
             SwitchNode.DRIVE_WIRELESS_CHARGING -> {
-                updateLiveData(_wirelessCharging, status)
+                doUpdate(_wirelessCharging, status)
             }
             SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP -> {
-                updateLiveData(_wirelessChargingLamp, status)
+                doUpdate(_wirelessChargingLamp, status)
             }
             else -> {}
         }

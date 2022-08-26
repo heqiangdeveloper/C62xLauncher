@@ -11,13 +11,13 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class FragmentStateViewPager2Adapter extends FragmentStateAdapter {
 
-    private List<Class> mFragmentList = new ArrayList<>();
+    private final List<Class> mFragmentList = new ArrayList<>();
 
-    private List<String> mTitleList = new ArrayList<>();
+    private final List<String> mTitleList = new ArrayList<>();
 
-    private List<Long> mIds = new ArrayList<>();
+    private final List<Long> mIds = new ArrayList<>();
 
-    private AtomicLong mAtomicLong = new AtomicLong(0);
+    private final AtomicLong mAtomicLong = new AtomicLong(0);
 
     public FragmentStateViewPager2Adapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);

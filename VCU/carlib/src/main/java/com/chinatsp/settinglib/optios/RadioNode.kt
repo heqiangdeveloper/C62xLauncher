@@ -4,6 +4,7 @@ import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.hvac.CarHvacManager
 import com.chinatsp.settinglib.bean.RNorm
 import com.chinatsp.settinglib.sign.Origin
+import timber.log.Timber
 
 /**
  * @author : luohong
@@ -228,7 +229,7 @@ enum class RadioNode(
             values = intArrayOf(0x1, 0x2, 0x3, 0x4, 0x5, 0x6),
             signal = CarCabinManager.ID_FOLLOW_ME_HOME_SET
         ),
-        default = 0x4
+        default = 0x1
     ),
 
     /**
@@ -250,7 +251,7 @@ enum class RadioNode(
 
     /**
      * 灯光设置--灯光--外部灯光仪式感
-     * set -> 0x1: Mode 1    0x2: Mode 2 ; 0x3: Mode 3
+     * set -> 0x1: Mode 1; 0x2: Mode 2; 0x3: Mode 3
      * get -> 0x0:OFF 0x1:Unlock Ceremoial Sense 0x2:Lock Ceremoial Sense 0x3:Panic Ceremoial Sense 0x4~0x7:reserved
      */
     LIGHT_CEREMONY_SENSE(
@@ -319,14 +320,14 @@ enum class RadioNode(
      */
     SYSTEM_SOUND_EFFECT(
         get = RNorm(
-            values = intArrayOf(0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7),
+            values = SoundEffect.idArray(),
             signal = -1
         ),
         set = RNorm(
-            values = intArrayOf(0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7),
+            values = SoundEffect.idArray(),
             signal = -1
         ),
-        default = 0x1
+        default = SoundEffect.POP.id
     ),
 
     /**
@@ -376,6 +377,15 @@ enum class RadioNode(
         } else {
             set.isValid(value)
         }
+    }
+
+    fun obtainSelectValue(value: Int): Int {
+        var index = get.values.indexOf(value)
+        Timber.d("obtainSelectValue value:$value, index:$index, node:$this")
+        if (index !in 0..set.values.size) {
+            index = 0
+        }
+        return set.values[index]
     }
 
 }

@@ -1,7 +1,6 @@
 package com.chinatsp.settinglib.manager.cabin
 
 import android.car.hardware.CarPropertyValue
-import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.SettingManager
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.ISwitchListener
@@ -32,7 +31,7 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
      */
     private val trailerRemind: AtomicBoolean by lazy {
         val node = SwitchNode.DRIVE_TRAILER_REMIND
-        AtomicBoolean(node.isOn()).apply {
+        AtomicBoolean(node.default).apply {
             val value = SettingManager.instance.getTrailerRemindSwitch()
             val result = if (null != value) node.isOn(value) else node.default
             doUpdateSwitchValue(node, this, result)
@@ -41,25 +40,34 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
 
     private val batteryOptimize: AtomicBoolean by lazy {
         val node = SwitchNode.DRIVE_BATTERY_OPTIMIZE
-        AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, result)
+//        AtomicBoolean(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, result)
+//        }
+        return@lazy createAtomicBoolean(node) {result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val wirelessCharging: AtomicBoolean by lazy {
         val node = SwitchNode.DRIVE_WIRELESS_CHARGING
-        AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, result)
+//        AtomicBoolean(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, result)
+//        }
+        return@lazy createAtomicBoolean(node) {result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val wirelessChargingLamp: AtomicBoolean by lazy {
         val node = SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP
-        AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, result)
+//        AtomicBoolean(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, result)
+//        }
+        return@lazy createAtomicBoolean(node) {result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
@@ -130,12 +138,13 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
     override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
         return when (node) {
             SwitchNode.DRIVE_TRAILER_REMIND -> {
-                Timber.tag("TRAILER_OPTION").d("doSetSwitchOption node:$node, status:$status start")
-                LogManager.d("TRAILER_OPTION", "============11111111111=========================")
+                Timber.d("doSetSwitchOption node:$node, status:$status start")
                 val result = SettingManager.instance.setTrailerRemind(node.value(status))
-                Timber.tag("TRAILER_OPTION").d("doSetSwitchOption node:$node, status:$status, result:$result end")
-                LogManager.d("TRAILER_OPTION", "============2222222222222=========================")
-
+                if (result) {
+                    trailerRemind.set(status)
+                    doSwitchChanged(node, status)
+                }
+                Timber.d("doSetSwitchOption node:$node, status:$status, result:$result end")
                 result
             }
             SwitchNode.DRIVE_BATTERY_OPTIMIZE -> {
@@ -164,17 +173,27 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
     }
 
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
-        Timber.tag("TRAILER_OPTION").d("doSetRadioOption node:$node, value:$value start")
-        val result =when (node) {
+        Timber.d("doSetRadioOption node:$node, value:$value start")
+        val result = when (node) {
             RadioNode.DEVICE_TRAILER_DISTANCE -> {
-                SettingManager.instance.setTrailerDistance(value)
+                val result = SettingManager.instance.setTrailerDistance(value)
+                if (result) {
+                    distance.set(value)
+                    doRadioChanged(node, value)
+                }
+                result
             }
             RadioNode.DEVICE_TRAILER_SENSITIVITY -> {
-                SettingManager.instance.setTrailerSensitivity(value)
+                val result = SettingManager.instance.setTrailerSensitivity(value)
+                if (result) {
+                    distance.set(value)
+                    doRadioChanged(node, value)
+                }
+                result
             }
             else -> false
         }
-        Timber.tag("TRAILER_OPTION").d("doSetRadioOption node:$node, value:$value, result:$result end")
+        Timber.d("doSetRadioOption node:$node, value:$value, result:$result end")
         return result
     }
 
@@ -185,7 +204,7 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
             try {
                 writeLock.lock()
                 unRegisterVcuListener(serial, identity)
-                listenerStore.put(serial, WeakReference(listener))
+                listenerStore[serial] = WeakReference(listener)
             } finally {
                 writeLock.unlock()
             }

@@ -255,8 +255,10 @@ enum class SwitchNode(
      * get -> Loudness switch status响度开关状态 0x0: OFF 0x1: ON
      */
     AUDIO_SOUND_LOUDNESS(
-        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_AMP_LOUD_SW_STS),
-        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HUM_LOUD_SW),
+//        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_AMP_LOUD_SW_STS),
+        get = Norm(on = 0x1, off = 0x0, signal = -1),
+//        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HUM_LOUD_SW),
+        set = Norm(on = 0x1, off = 0x2, signal = -1),
         default = true
     ),
 
@@ -514,7 +516,7 @@ enum class SwitchNode(
      *        the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
      *        0x0: Inactive; 0x1: On; 0x2: Off; 0x3: Reserved
      */
-    ADAS_HMA(
+    ADAS_HMA(//向产品确认值
         get = Norm(on = 0x2, off = 0x1, signal = CarCabinManager.ID_HMA_STATUS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HMA_ON_OFF_SWT),
         default = false

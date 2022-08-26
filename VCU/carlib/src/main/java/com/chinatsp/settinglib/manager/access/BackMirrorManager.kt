@@ -25,17 +25,23 @@ class BackMirrorManager private constructor() : BaseManager(), ISwitchManager {
 
     private val backMirrorFold: AtomicBoolean by lazy {
         val node = SwitchNode.BACK_MIRROR_FOLD
-        AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin, Area.GLOBAL)
-            doUpdateSwitchValue(node, this, result)
+//        AtomicBoolean(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin, Area.GLOBAL)
+//            doUpdateSwitchValue(node, this, result)
+//        }
+        return@lazy createAtomicBoolean(node) {result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val backMirrorDown: AtomicBoolean by lazy {
         val node = SwitchNode.BACK_MIRROR_DOWN
-        AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin, Area.GLOBAL)
-            doUpdateSwitchValue(node, this, result)
+//        AtomicBoolean(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin, Area.GLOBAL)
+//            doUpdateSwitchValue(node, this, result)
+//        }
+        return@lazy createAtomicBoolean(node) {result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 

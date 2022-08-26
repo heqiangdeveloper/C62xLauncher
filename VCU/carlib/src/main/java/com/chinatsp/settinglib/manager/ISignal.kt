@@ -8,7 +8,5 @@ package com.chinatsp.settinglib.manager
  * @version: 1.0
  */
 interface ISignal {
-
     val TAG: String
-
 }

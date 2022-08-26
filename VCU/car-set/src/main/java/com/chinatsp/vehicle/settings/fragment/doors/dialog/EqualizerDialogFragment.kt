@@ -32,10 +32,10 @@ class EqualizerDialogFragment :
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-        initView()
         initRadioOption()
         addRadioLiveDataListener()
         setRadioListener()
+        initView()
         binding.closeDialog.setOnClickListener {
             this.dismiss()
         }
@@ -54,8 +54,8 @@ class EqualizerDialogFragment :
     private fun setRadioListener() {
         binding.soundEffectRadio.let {
             it.setOnTabSelectionChangedListener { _, value ->
-                viewModel.doSwitchSoundEffect(value.toInt())
-//                doUpdateRadio(RadioNode.SYSTEM_SOUND_EFFECT, value, viewModel.currentEffect, it)
+//                viewModel.doSwitchSoundEffect(value.toInt())
+                doUpdateRadio(RadioNode.SYSTEM_SOUND_EFFECT, value, viewModel.currentEffect, it)
             }
         }
     }
@@ -72,7 +72,11 @@ class EqualizerDialogFragment :
         tabView: TabControlView
     ) {
         val result = isCanToInt(value) && manager.doSetRadioOption(node, value.toInt())
-        tabView.takeIf { !result }?.setSelection(liveData.value.toString(), true)
+        tabView.takeIf { !result }?.let {
+//            val result = node.obtainSelectValue(liveData.value!!)
+//            it.setSelection(result.toString(), true)
+            doUpdateRadio(node, liveData.value!!, immediately = false, isInit = false)
+        }
     }
 
     private fun doUpdateRadio(
@@ -87,7 +91,8 @@ class EqualizerDialogFragment :
         }
         tabView?.let {
             bindRadioData(node, tabView, isInit)
-            doUpdateRadio(it, value, immediately)
+            val result = node.obtainSelectValue(value)
+            doUpdateRadio(it, result, immediately)
         }
     }
 
@@ -95,7 +100,7 @@ class EqualizerDialogFragment :
     private fun bindRadioData(node: RadioNode, tabView: TabControlView, isInit: Boolean) {
         if (isInit) {
             val names = tabView.nameArray.map { it.toString() }.toTypedArray()
-            val values = node.get.values.map { it.toString() }.toTypedArray()
+            val values = node.set.values.map { it.toString() }.toTypedArray()
             tabView.setItems(names, values)
         }
     }
@@ -104,7 +109,7 @@ class EqualizerDialogFragment :
         tabView.setSelection(value.toString(), true)
         val values = viewModel.getEffectValues(SoundEffect.getEffect(value))
         val toList = values.map { it.toFloat() }.toList()
-        binding.smoothChartView.setData(toList, xValue,xValueTop)
+        binding.smoothChartView.setData(toList, xValue, xValueTop)
     }
 
     private fun isCanToInt(value: String?): Boolean {
@@ -122,14 +127,16 @@ class EqualizerDialogFragment :
         binding.smoothChartView.enableShowTag(false)
         binding.smoothChartView.enableDrawArea(true)
         binding.smoothChartView.lineColor = resources.getColor(R.color.smooth_line_color)
-        binding.smoothChartView.circleColor =
-            resources.getColor(R.color.smooth_circle_color)
+        binding.smoothChartView.circleColor = resources.getColor(R.color.smooth_circle_color)
         binding.smoothChartView.innerCircleColor = Color.parseColor("#ffffff")
         binding.smoothChartView.nodeStyle = SmoothLineChartView.NODE_STYLE_RING
-        binding.smoothChartView.setOnChartClickListener { position, _ -> viewModel?.setAudioEQ(position) }
-        val values = viewModel.getEffectValues(SoundEffect.getEffect(viewModel.currentEffect.value!!))
+        binding.smoothChartView.setOnChartClickListener { position, _ ->
+            viewModel?.setAudioEQ(position)
+        }
+        val effect = SoundEffect.getEffect(viewModel.currentEffect.value!!)
+        val values = viewModel.getEffectValues(effect)
         val toList = values.map { it.toFloat() }.toList()
-        binding.smoothChartView.setData(toList, xValue,xValueTop)
+        binding.smoothChartView.setData(toList, xValue, xValueTop)
     }
 }
 

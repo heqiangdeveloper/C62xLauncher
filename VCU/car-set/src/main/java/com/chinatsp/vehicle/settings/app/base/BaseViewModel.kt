@@ -1,6 +1,7 @@
 package com.chinatsp.vehicle.settings.app.base
 
 import android.app.Application
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.chinatsp.vehicle.settings.api.ApiService
 import com.chinatsp.vehicle.settings.bean.Result
@@ -58,6 +59,28 @@ open class BaseViewModel @Inject constructor(application: Application, model: Ba
         if (showLoading) {
             hideLoading()
         }
+    }
 
+    fun doUpdate(liveData: MutableLiveData<Boolean>, status: Boolean) {
+        if (null == liveData.value) {
+            liveData.postValue(status)
+            return
+        }
+        if (liveData.value!! xor status) {
+            liveData.postValue(status)
+        }
+    }
+
+    fun doUpdate(liveData: MutableLiveData<Int>, value: Int, valid: Boolean = true) {
+        if (!valid) {
+            return
+        }
+        if (null == liveData.value) {
+            liveData.postValue(value)
+            return
+        }
+        if (liveData.value!! != value) {
+            liveData.postValue(value)
+        }
     }
 }

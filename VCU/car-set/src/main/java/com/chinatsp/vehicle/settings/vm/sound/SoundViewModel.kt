@@ -10,6 +10,7 @@ import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.common.library.frame.base.BaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,10 +25,8 @@ class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
     private val _audioMixing: MutableLiveData<Int> by lazy {
         val node = RadioNode.NAVI_AUDIO_MIXING
         MutableLiveData(node.default).apply {
-            launch {
-                val value = manager.doGetRadioOption(node)
-                postValue(value)
-            }
+            val value = manager.doGetRadioOption(node)
+            doUpdate(this, value, node.isValid(value))
         }
     }
     val volumeOffset: LiveData<Int>
@@ -38,7 +37,7 @@ class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
         MutableLiveData(node.default).apply {
             launch {
                 val value = manager.doGetRadioOption(node)
-                postValue(value)
+                doUpdate(this, value, node.isValid(value))
             }
         }
     }
@@ -50,7 +49,8 @@ class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
         MutableLiveData(node.default).apply {
             launch {
                 val value = manager.doGetRadioOption(node)
-                postValue(value)
+//                postValue(value)
+                doUpdate(this, value, node.isValid(value))
             }
         }
     }
@@ -61,7 +61,7 @@ class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
         val node = SwitchNode.AUDIO_SOUND_TONE
         MutableLiveData(node.default).apply {
             val value = manager.doGetSwitchOption(node)
-            postValue(value)
+            doUpdate(this, value)
         }
     }
     val huaweiStatus: LiveData<Boolean>
@@ -70,7 +70,7 @@ class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
         val node = SwitchNode.AUDIO_SOUND_HUAWEI
         MutableLiveData(node.default).apply {
             val value = manager.doGetSwitchOption(node)
-            postValue(value)
+            doUpdate(this, value)
         }
     }
     val loudnessStatus: LiveData<Boolean>
@@ -80,7 +80,7 @@ class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
         val node = SwitchNode.AUDIO_SOUND_LOUDNESS
         MutableLiveData(node.default).apply {
             val value = manager.doGetSwitchOption(node)
-            postValue(value)
+            doUpdate(this, value)
         }
     }
 
@@ -91,7 +91,7 @@ class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
         val node = SwitchNode.TOUCH_PROMPT_TONE
         MutableLiveData(node.default).apply {
             val value = manager.doGetSwitchOption(node)
-            postValue(value)
+            doUpdate(this, value)
         }
     }
 
@@ -102,7 +102,7 @@ class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
         val node = SwitchNode.SPEED_VOLUME_OFFSET
         MutableLiveData(node.default).apply {
             val value = manager.doGetSwitchOption(node)
-            postValue(value)
+            doUpdate(this, value)
         }
     }
 
@@ -119,16 +119,17 @@ class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {
             SwitchNode.AUDIO_SOUND_TONE -> {
-                _toneStatus.postValue(status)
+                doUpdate(_toneStatus, status)
             }
             SwitchNode.AUDIO_SOUND_LOUDNESS -> {
-                _loudnessStatus.postValue(status)
+                doUpdate(_loudnessStatus, status)
             }
             SwitchNode.AUDIO_SOUND_HUAWEI -> {
-                _huaweiStatus.postValue(status)
+                doUpdate(_huaweiStatus, status)
             }
             SwitchNode.TOUCH_PROMPT_TONE -> {
-                _touchToneStatus.postValue(status)
+                Timber.d("onSwitchOptionChanged node:$node, status:$status")
+                doUpdate(_touchToneStatus, status)
             }
             else -> {}
         }
@@ -137,13 +138,13 @@ class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
     override fun onRadioOptionChanged(node: RadioNode, value: Int) {
         when (node) {
             RadioNode.ICM_VOLUME_LEVEL -> {
-                _volumeLevel.postValue(value)
+                doUpdate(_volumeLevel, value)
             }
             RadioNode.SPEED_VOLUME_OFFSET -> {
-                _volumeOffset.postValue(value)
+                doUpdate(_volumeOffset, value)
             }
             RadioNode.NAVI_AUDIO_MIXING -> {
-                _audioMixing.postValue(value)
+                doUpdate(_audioMixing, value)
             }
             else -> {}
         }

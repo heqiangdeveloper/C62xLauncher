@@ -43,7 +43,7 @@ class TrailerViewModel @Inject constructor(app: Application, model: BaseModel) :
         val node = RadioNode.DEVICE_TRAILER_SENSITIVITY
         MutableLiveData(node.default).apply {
             val value = manager.doGetRadioOption(node)
-            setValue(value)
+            doUpdate(this, value, node.isValid(value))
         }
     }
 
@@ -54,7 +54,7 @@ class TrailerViewModel @Inject constructor(app: Application, model: BaseModel) :
         val node = RadioNode.DEVICE_TRAILER_DISTANCE
         MutableLiveData(node.default).apply {
             val value = manager.doGetRadioOption(node)
-            setValue(value)
+            doUpdate(this, value, node.isValid(value))
         }
     }
 
@@ -72,7 +72,7 @@ class TrailerViewModel @Inject constructor(app: Application, model: BaseModel) :
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {
             SwitchNode.DRIVE_TRAILER_REMIND -> {
-                _trailerFunction.takeIf { it.value != status }?.value = status
+                doUpdate(_trailerFunction, status)
             }
             else -> {}
         }
@@ -81,23 +81,23 @@ class TrailerViewModel @Inject constructor(app: Application, model: BaseModel) :
     override fun onRadioOptionChanged(node: RadioNode, value: Int) {
         when (node) {
             RadioNode.DEVICE_TRAILER_DISTANCE -> {
-                _distance.takeIf { it.value != value }?.value = value
+                doUpdate(_distance, value)
             }
             RadioNode.DEVICE_TRAILER_SENSITIVITY -> {
-                _sensitivity.takeIf { it.value != value }?.value = value
+                doUpdate(_sensitivity, value)
             }
             else -> {}
         }
     }
 
     fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
-        Thread{ manager.doSetRadioOption(node, value) }.start()
+        Thread { manager.doSetRadioOption(node, value) }.start()
         return true
 //        return manager.doSetRadioOption(node, value)
     }
 
     fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
-        Thread{ manager.doSetSwitchOption(node, status) }.start()
+        Thread { manager.doSetSwitchOption(node, status) }.start()
         return true
 //        return manager.doSetSwitchOption(node, status)
     }

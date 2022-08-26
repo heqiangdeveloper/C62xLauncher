@@ -100,10 +100,10 @@ class AmbientLightingViewModel @Inject constructor(app: Application, model: Base
     override fun onProgressChanged(node: Progress, value: Int) {
         when (node) {
             Progress.AMBIENT_LIGHT_BRIGHTNESS -> {
-                updateLiveData(_ambientBrightness, value)
+                doUpdate(_ambientBrightness, value)
             }
             Progress.AMBIENT_LIGHT_COLOR -> {
-                updateLiveData(_ambientColor, value)
+                doUpdate(_ambientColor, value)
             }
             else -> {}
         }
@@ -112,7 +112,7 @@ class AmbientLightingViewModel @Inject constructor(app: Application, model: Base
     fun onAmbientColorChanged(value: Int) {
         val result = manager.doSetProgress(Progress.AMBIENT_LIGHT_COLOR, value)
         if (result) {
-            updateLiveData(_ambientColor, value)
+            doUpdate(_ambientColor, value)
         }
         Timber.d("onAmbientColorChanged progress:AMBIENT_LIGHT_COLOR, color:%s", value)
     }

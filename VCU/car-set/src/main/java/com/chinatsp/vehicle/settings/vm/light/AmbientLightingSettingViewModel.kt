@@ -103,19 +103,19 @@ class AmbientLightingSettingViewModel @Inject constructor(app: Application, mode
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {
             SwitchNode.ALC_DOOR_HINT -> {
-                updateLiveData(_alcDoorHint, status)
+                doUpdate(_alcDoorHint, status)
             }
             SwitchNode.ALC_LOCK_HINT -> {
-                updateLiveData(_alcLockHint, status)
+                doUpdate(_alcLockHint, status)
             }
             SwitchNode.ALC_BREATHE_HINT -> {
-                updateLiveData(_alcBreatheHint, status)
+                doUpdate(_alcBreatheHint, status)
             }
             SwitchNode.ALC_COMING_HINT -> {
-                updateLiveData(_alcComingHint, status)
+                doUpdate(_alcComingHint, status)
             }
             SwitchNode.ALC_RELATED_TOPICS -> {
-                updateLiveData(_alcRelatedTopics, status)
+                doUpdate(_alcRelatedTopics, status)
             }
             else -> {}
         }

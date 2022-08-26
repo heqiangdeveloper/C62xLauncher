@@ -1,10 +1,8 @@
 package com.chinatsp.settinglib.manager
 
 import android.car.hardware.CarPropertyValue
-import com.chinatsp.settinglib.LogManager
 import com.chinatsp.settinglib.SettingManager
 import com.chinatsp.settinglib.listener.*
-import com.chinatsp.settinglib.manager.cabin.ACManager
 import com.chinatsp.settinglib.optios.Area
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
@@ -12,7 +10,10 @@ import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.bean.Cmd
+import timber.log.Timber
 import java.lang.ref.WeakReference
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.locks.ReadWriteLock
 import java.util.concurrent.locks.ReentrantReadWriteLock
 
@@ -35,6 +36,22 @@ abstract class BaseManager : IManager {
     protected val listenerStore by lazy { HashMap<Int, WeakReference<IBaseListener>>() }
 
     abstract val careSerials: Map<Origin, Set<Int>>
+
+    fun createAtomicBoolean(node: SwitchNode, block:((AtomicBoolean, Int)->Unit)): AtomicBoolean {
+        val result = AtomicBoolean(node.default)
+        readProperty(node.get.signal, node.get.origin){
+            block(result, it)
+        }
+        return result
+    }
+
+    fun createAtomicInteger(node: RadioNode, block:((AtomicInteger, Int)->Unit)): AtomicInteger {
+        val result = AtomicInteger(node.default)
+        readProperty(node.get.signal, node.get.origin){
+            block(result, it)
+        }
+        return result
+    }
 
     open fun onDispatchSignal(property: CarPropertyValue<*>, origin: Origin = Origin.CABIN): Boolean {
         if (isCareSignal(property.propertyId, origin)) {
@@ -70,7 +87,7 @@ abstract class BaseManager : IManager {
         try {
             writeLock.lock()
             unRegisterVcuListener(serial, identity)
-            listenerStore.put(serial, WeakReference(listener))
+            listenerStore[serial] = WeakReference(listener)
         } finally {
             writeLock.unlock()
         }
@@ -82,7 +99,7 @@ abstract class BaseManager : IManager {
         try {
             writeLock.lock()
             listenerStore.takeIf { it.containsKey(serial) }?.let {
-                LogManager.d(ACManager.TAG, "unRegisterVcuListener serial:$serial, callSerial:$callSerial")
+                Timber.d("unRegisterVcuListener serial:$serial, callSerial:$callSerial")
                 it.remove(serial)
             }
         } finally {
@@ -111,63 +128,13 @@ abstract class BaseManager : IManager {
 //        return 1
     }
 
+    fun readProperty(id: Int, origin: Origin, area: Area = Area.GLOBAL, block:((Int)->Unit)) {
+        signalService.readProperty(id, origin, area, block)
+    }
 
-//    protected fun doUpdateSwitchValue(
-//        node: SwitchNode,
-//        atomic: AtomicBoolean,
-//        value: Int,
-//        block: ((SwitchNode, Boolean) -> Unit)? = null
-//    ): AtomicBoolean {
-//        if (node.isValid(value)) {
-//            val status = node.isOn(value)
-//            doUpdateSwitchValue(node, atomic, status, block)
-//        }
-//        return atomic
-//    }
-//
-////    protected fun doUpdateSwitchValue(
-////        node: SwitchNode,
-////        atomic: AtomicBoolean,
-////        status: Boolean,
-////        block: ((Boolean) -> Unit)? = null
-////    ): AtomicBoolean {
-////        if (atomic.get() xor status) {
-////            atomic.set(status)
-////            block?.let { it(status) }
-////        }
-////        return atomic
-////    }
-//
-//    protected fun doUpdateSwitchValue(
-//        node: SwitchNode,
-//        atomic: AtomicBoolean,
-//        status: Boolean,
-//        block: ((SwitchNode, Boolean) -> Unit)? = null
-//    ): AtomicBoolean {
-//        if (atomic.get() xor status) {
-//            atomic.set(status)
-//            block?.let { it(node, status) }
-//        }
-//        return atomic
-//    }
-//
-////    protected fun doUpdateRadioValue(node: RadioNode, atomic: AtomicInteger, value: Int, block: ((Int) -> Unit)? = null)
-////            : AtomicInteger {
-////        if (node.isValid(value)) {
-////            atomic.set(value)
-////            block?.let { it(value) }
-////        }
-////        return atomic
-////    }
-//
-//    protected fun doUpdateRadioValue(node: RadioNode, atomic: AtomicInteger, value: Int, block: ((RadioNode, Int) -> Unit)? = null)
-//            : AtomicInteger {
-//        if (node.isValid(value) && atomic.get() != value) {
-//            atomic.set(value)
-//            block?.let { it(node, value) }
-//        }
-//        return atomic
-//    }
+    fun readProperty(id: Int, origin: Origin, areaValue: Int, block:((Int)->Unit)) {
+        signalService.readProperty(id, origin, areaValue, block)
+    }
 
     override fun doSwitchChanged(node: SwitchNode, status: Boolean) {
         val readLock = readWriteLock.readLock()
@@ -177,7 +144,7 @@ abstract class BaseManager : IManager {
                 val listener = ref.get()
                 if (null != listener && listener is ISwitchListener) {
                     listener.onSwitchOptionChanged(status, node)
-                    LogManager.d("doSwitchChanged", "$node, status:$status, listener:${listener::class.java.simpleName}")
+                    Timber.d("$node, status:$status, listener:${listener::class.java.simpleName}")
                 }
             }
         } finally {

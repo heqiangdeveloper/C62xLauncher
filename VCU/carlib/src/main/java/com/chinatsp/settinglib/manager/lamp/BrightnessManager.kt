@@ -110,7 +110,7 @@ class BrightnessManager : BaseManager(), IProgressManager {
                 writeProperty(type.set.signal,position, type.set.origin)
             }
             Progress.HOST_SCREEN_BRIGHTNESS -> {
-//                manager?.brightness = value
+                manager?.brightness = position * 10
                 //iBAMode:白天黑夜模式，现传1就好, value：亮度值
                 thirdScreenService?.setThirdScreenBrightness(1, position)
                 doUpdateProgress(carVolume, position, true, this::doProgressChanged)

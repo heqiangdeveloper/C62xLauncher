@@ -31,7 +31,7 @@ class MeterViewModel @Inject constructor(app: Application, model: BaseModel) :
         val node = RadioNode.DRIVE_METER_SYSTEM
         MutableLiveData(node.default).apply {
             val value = manager.doGetRadioOption(node)
-            setValue(value)
+            doUpdate(this, value, node.isValid(value))
         }
     }
 
@@ -49,7 +49,7 @@ class MeterViewModel @Inject constructor(app: Application, model: BaseModel) :
         when (node) {
             RadioNode.DRIVE_METER_SYSTEM -> {
                 if (node.isValid(value)) {
-                    _systemRadioOption.value = value
+                    doUpdate(_systemRadioOption, value)
                 }
             }
             else -> {}

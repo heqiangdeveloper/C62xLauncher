@@ -103,7 +103,10 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
         binding.wheelEpsModeTabView.let {
             it.setOnTabSelectionChangedListener { _, value ->
                 if (!Applet.isCanSwitchEps(15f)) {
-                    showHintDialog(R.string.vcu_action_switch_failed, R.string.vcu_eps_action_switch_check)
+                    showHintDialog(
+                        R.string.vcu_action_switch_failed,
+                        R.string.vcu_eps_action_switch_check
+                    )
                     it.setSelection(viewModel.epsMode.value.toString(), true)
                 } else {
                     doUpdateRadio(RadioNode.DRIVE_EPS_MODE, value, viewModel.epsMode, it)
@@ -125,7 +128,10 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
         tabView: TabControlView
     ) {
         val result = isCanToInt(value) && manager.doSetRadioOption(node, value.toInt())
-        tabView.takeIf { !result }?.setSelection(liveData.value.toString(), true)
+        tabView.takeIf { !result }?.let {
+            val result = node.obtainSelectValue(liveData.value!!)
+            it.setSelection(result.toString(), true)
+        }
     }
 
     private fun doUpdateRadio(
@@ -139,12 +145,17 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
             else -> null
         }
         tabView?.let {
-            if (isInit) {
-                val names = it.nameArray.map { item -> item.toString() }.toTypedArray()
-                val values = node.get.values.map { item -> item.toString() }.toTypedArray()
-                it.setItems(names, values)
-            }
-            doUpdateRadio(it, value, immediately)
+            bindRadioData(node, tabView, isInit)
+            val result = node.obtainSelectValue(value)
+            doUpdateRadio(it, result, immediately)
+        }
+    }
+
+    private fun bindRadioData(node: RadioNode, tabView: TabControlView, isInit: Boolean) {
+        if (isInit) {
+            val names = tabView.nameArray.map { it.toString() }.toTypedArray()
+            val values = node.set.values.map { it.toString() }.toTypedArray()
+            tabView.setItems(names, values)
         }
     }
 

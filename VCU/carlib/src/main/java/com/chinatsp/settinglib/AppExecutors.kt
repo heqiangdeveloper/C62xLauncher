@@ -2,7 +2,6 @@ package com.chinatsp.settinglib
 
 import android.os.Handler
 import android.os.Looper
-import com.chinatsp.settinglib.AppExecutors
 import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -12,7 +11,7 @@ import java.util.concurrent.Executors
  * desc   : 应用的全局线程池 （包括单线程池的磁盘io，多线程池的网络io和主线程）
  * author : common
  * time   : 2018/4/27 下午8:40
-</pre> *
+ * </pre>
  */
 class AppExecutors private constructor(
     /**
@@ -28,9 +27,8 @@ class AppExecutors private constructor(
     /**
      * 主线程
      */
-    private val mMainThread: Executor =
-        MainThreadExecutor()
-) {
+    private val mMainThread: Executor = MainThreadExecutor()
+    ) {
     /**
      * 获取单线程池
      * @return

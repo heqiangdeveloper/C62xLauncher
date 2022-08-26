@@ -39,33 +39,45 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
 
     private val _electricFunction: AtomicBoolean by lazy {
         val node = SwitchNode.AS_STERN_ELECTRIC
-        AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, result)
+//        AtomicBoolean(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, result)
+//        }
+        return@lazy createAtomicBoolean(node) {result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val _lightAlarmFunction: AtomicBoolean by lazy {
         val node = SwitchNode.STERN_LIGHT_ALARM
-        AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, result)
+//        AtomicBoolean(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, result)
+//        }
+        return@lazy createAtomicBoolean(node) {result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val _audioAlarmFunction: AtomicBoolean by lazy {
         val node = SwitchNode.STERN_AUDIO_ALARM
-        AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, result)
+//        AtomicBoolean(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, result)
+//        }
+        return@lazy createAtomicBoolean(node) {result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val sternSmartEnter: AtomicInteger by lazy {
         val node = RadioNode.STERN_SMART_ENTER
-        AtomicInteger(node.default).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateRadioValue(node, this, result)
+//        AtomicInteger(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateRadioValue(node, this, result)
+//        }
+        return@lazy createAtomicInteger(node) {result, value ->
+            doUpdateRadioValue(node, result, value, this::doRadioChanged)
         }
     }
 

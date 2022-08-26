@@ -68,13 +68,10 @@ class GlobalManager private constructor() : BaseManager() {
         get() = EnumMap(Origin::class.java)
 
     override fun onDispatchSignal(property: CarPropertyValue<*>, origin: Origin): Boolean {
-//        if (property.status == CarPropertyValue.STATUS_AVAILABLE) {
         managers.forEach {
             it.onDispatchSignal(property, origin)
         }
         return true
-//        }
-        return false
     }
 
     override fun getOriginSignal(origin: Origin): Set<Int> {

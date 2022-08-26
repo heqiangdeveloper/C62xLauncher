@@ -27,7 +27,7 @@ class CabinACViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _aridLiveData: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.AC_AUTO_ARID
-        MutableLiveData(node.isOn()).apply {
+        MutableLiveData(node.default).apply {
             val result = manager.doGetSwitchOption(node)
             postValue(result)
         }
@@ -37,7 +37,7 @@ class CabinACViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _demistLiveData: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.AC_AUTO_DEMIST
-        MutableLiveData(node.isOn()).apply {
+        MutableLiveData(node.default).apply {
             val result = manager.doGetSwitchOption(node)
             postValue(result)
         }
@@ -48,7 +48,7 @@ class CabinACViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _windLiveData: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.AC_ADVANCE_WIND
-        MutableLiveData(node.isOn()).apply {
+        MutableLiveData(node.default).apply {
             val result = manager.doGetSwitchOption(node)
             postValue(result)
         }
@@ -61,7 +61,8 @@ class CabinACViewModel @Inject constructor(app: Application, model: BaseModel) :
     private val _comfortLiveData: MutableLiveData<Int> by lazy {
         val node = RadioNode.AC_COMFORT
         MutableLiveData(node.default).apply {
-            value = manager.doGetRadioOption(node)
+            val value = manager.doGetRadioOption(node)
+            doUpdate(this, value, node.isValid(value))
         }
     }
 
@@ -84,13 +85,15 @@ class CabinACViewModel @Inject constructor(app: Application, model: BaseModel) :
             SwitchNode.AC_ADVANCE_WIND -> _windLiveData
             else -> null
         }
-        liveData?.takeIf { it.value!! xor status }?.value = status
+        liveData?.let {
+            doUpdate(it, status)
+        }
     }
 
     override fun onRadioOptionChanged(node: RadioNode, value: Int) {
         when (node) {
             RadioNode.AC_COMFORT -> {
-                _comfortLiveData.value = value
+                doUpdate(_comfortLiveData, value)
             }
             else -> {}
         }

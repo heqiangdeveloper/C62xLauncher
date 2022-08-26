@@ -74,7 +74,7 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
             dynamicEffect()
             true
         }
-        binding.video.setOnPreparedListener{
+        binding.video.setOnPreparedListener {
             it.setOnInfoListener { _, _, _ ->
                 binding.video.setBackgroundColor(Color.TRANSPARENT);
                 binding.intelligentCruise.visibility = View.GONE
@@ -109,7 +109,10 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
         tabView: TabControlView
     ) {
         val result = isCanToInt(value) && manager.doSetRadioOption(node, value.toInt())
-        tabView.takeIf { !result }?.setSelection(liveData.value.toString(), true)
+        tabView.takeIf { !result }?.let {
+            val result = node.obtainSelectValue(liveData.value!!)
+            it.setSelection(result.toString(), true)
+        }
     }
 
     private fun doUpdateRadio(
@@ -125,16 +128,17 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
             }
             else -> null
         }
-        takeIf { null != tabView }?.let {
-            bindRadioData(node, tabView!!, isInit)
-            doUpdateRadio(tabView!!, value, immediately)
+        tabView?.let {
+            bindRadioData(node, tabView, isInit)
+            val result = node.obtainSelectValue(value)
+            doUpdateRadio(tabView, result, immediately)
         }
     }
 
     private fun bindRadioData(node: RadioNode, tabView: TabControlView, isInit: Boolean) {
         if (isInit) {
             val names = tabView.nameArray.map { it.toString() }.toTypedArray()
-            val values = node.get.values.map { it.toString() }.toTypedArray()
+            val values = node.set.values.map { it.toString() }.toTypedArray()
             tabView.setItems(names, values)
         }
     }
@@ -216,12 +220,23 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
     private fun isCanToInt(value: String?): Boolean {
         return null != value && value.isNotBlank() && value.matches(Regex("\\d+"))
     }
+
     private fun dynamicEffect() {
         binding.intelligentCruise.visibility = View.VISIBLE
-        if(binding.accessCruiseCruiseAssist.isChecked){
-            binding.intelligentCruise.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.intelligent_cruise_open) })
-        }else{
-            binding.intelligentCruise.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.intelligent_cruise) })
+        if (binding.accessCruiseCruiseAssist.isChecked) {
+            binding.intelligentCruise.setImageDrawable(activity?.let {
+                ContextCompat.getDrawable(
+                    it,
+                    R.drawable.intelligent_cruise_open
+                )
+            })
+        } else {
+            binding.intelligentCruise.setImageDrawable(activity?.let {
+                ContextCompat.getDrawable(
+                    it,
+                    R.drawable.intelligent_cruise
+                )
+            })
         }
     }
 }

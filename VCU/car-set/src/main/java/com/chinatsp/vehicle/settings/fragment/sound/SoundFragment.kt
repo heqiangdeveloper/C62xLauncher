@@ -18,6 +18,7 @@ import com.common.xui.utils.ViewUtils
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>() {
@@ -101,7 +102,10 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>() {
         tabView: TabControlView
     ) {
         val result = isCanToInt(value) && manager.doSetRadioOption(node, value.toInt())
-        tabView.takeIf { !result }?.setSelection(liveData.value.toString(), true)
+        tabView.takeIf { !result }?.let {
+            val result = node.obtainSelectValue(liveData.value!!)
+            it.setSelection(result.toString(), true)
+        }
     }
 
     private fun doUpdateRadio(
@@ -118,7 +122,8 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>() {
         }
         tabView?.let {
             bindRadioData(node, tabView, isInit)
-            doUpdateRadio(it, value, immediately)
+            val result = node.obtainSelectValue(value)
+            doUpdateRadio(it, result, immediately)
         }
     }
 
@@ -126,7 +131,7 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>() {
     private fun bindRadioData(node: RadioNode, tabView: TabControlView, isInit: Boolean) {
         if (isInit) {
             val names = tabView.nameArray.map { it.toString() }.toTypedArray()
-            val values = node.get.values.map { it.toString() }.toTypedArray()
+            val values = node.set.values.map { it.toString() }.toTypedArray()
             tabView.setItems(names, values)
         }
     }
@@ -154,6 +159,7 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>() {
             doUpdateSwitch(SwitchNode.AUDIO_SOUND_HUAWEI, it)
         }
         viewModel.touchToneStatus.observe(this) {
+            Timber.d("addSwitchLiveDataListener node:${SwitchNode.TOUCH_PROMPT_TONE}, status:$it")
             doUpdateSwitch(SwitchNode.TOUCH_PROMPT_TONE, it)
         }
         viewModel.speedVolumeOffset.observe(this) {
@@ -163,6 +169,7 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>() {
 
     private fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {
         val status = liveData.value ?: node.default
+        Timber.d("initSwitchOption node:$node, status:$status")
         doUpdateSwitch(node, status, true)
     }
 
@@ -179,6 +186,7 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>() {
     }
 
     private fun doUpdateSwitch(swb: SwitchButton, status: Boolean, immediately: Boolean = false) {
+        Timber.d("doUpdateSwitch node:${if (swb == binding.soundTouchPromptSwitch) SwitchNode.TOUCH_PROMPT_TONE else SwitchNode.BACK_MIRROR_DOWN}, status:$status")
         if (!immediately) {
             swb.setCheckedNoEvent(status)
         } else {
@@ -206,6 +214,7 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>() {
 
     private fun doUpdateSwitchOption(node: SwitchNode, button: CompoundButton, status: Boolean) {
         val result = manager.doSetSwitchOption(node, status)
+        Timber.d("doUpdateSwitchOption node:$node, status:$status")
         if (!result && button is SwitchButton) {
             button.setCheckedImmediatelyNoEvent(!status)
         }
