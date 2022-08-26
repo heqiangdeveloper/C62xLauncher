@@ -97,11 +97,11 @@ enum class RadioNode(
      */
     ADAS_LIMBER_LEAVE(
         get = RNorm(
-            values = intArrayOf(0x4, 0x1, 0x2, 0x3),
+            values = intArrayOf( 0x1, 0x2, 0x3),
             signal = -1//暂时没有找到获取信号
         ),
         set = RNorm(
-            values = intArrayOf(0x4, 0x1, 0x2, 0x3),
+            values = intArrayOf( 0x1, 0x2, 0x3),
             signal = CarCabinManager.ID_OBJ_DETECTION_SWT
         ),
         default = 0x1

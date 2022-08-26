@@ -28,7 +28,8 @@ public class AppLists {
     private static final String filemanager = "com.chinatsp.filemanager";//文件管理
     private static final String systemSettings = "com.chinatsp.vehiclesetting";//系统设置
     private static final String vehicleSettings = "com.chinatsp.vehicle.settings";//车辆设置
-    private static final String buryPoint = "com.oushang.datastat";
+    private static final String buryPoint = "com.oushang.datastat";//埋点
+    public static final String dvr = "com.miren.dvrc62xf06";//DVR
 
     public static final String APPMANAGEMENT = "com.chinatsp.appmanagement";//应用管理，自定义的包名，实际不存在此应用
     //不显示在桌面的应用名单
