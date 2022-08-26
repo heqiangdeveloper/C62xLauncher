@@ -1,7 +1,9 @@
 package com.chinatsp.vehicle.settings.fragment.doors
 
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.LiveData
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.access.BackMirrorManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.R
@@ -11,7 +13,7 @@ import com.chinatsp.vehicle.settings.vm.accress.MirrorViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import dagger.hilt.android.AndroidEntryPoint
-
+import com.chinatsp.vehicle.controller.annotation.Level
 @AndroidEntryPoint
 class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding>() {
 
@@ -23,10 +25,18 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+        initViewsDisplay()
         initSwitchOption()
         setSwitchListener()
         addSwitchLiveDataListener()
         setCheckedChangeListener()
+    }
+
+    private fun initViewsDisplay() {
+        if (VcuUtils.isCareLevel(Level.LEVEL3)) {
+            binding.reverseAngle.visibility = View.GONE
+            binding.line2.visibility = View.GONE
+        }
     }
 
     private fun setSwitchListener() {

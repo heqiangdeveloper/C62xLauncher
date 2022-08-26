@@ -95,13 +95,11 @@
         <item>3</item>
     </string-array>
     <string-array name="drive_intelligent_options">
-        <item>关闭</item>
         <item>识别提示</item>
         <item>消失提示</item>
         <item>识别消失均提示</item>
     </string-array>
     <string-array name="adas_cruise_limber_leave_values">
-        <item>4</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>
