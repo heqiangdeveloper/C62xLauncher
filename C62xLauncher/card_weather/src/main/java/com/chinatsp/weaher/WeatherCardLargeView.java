@@ -66,7 +66,6 @@ public class WeatherCardLargeView extends ConstraintLayout {
             mRcvCardWeatherWeek.addItemDecoration(decoration);
         }
         mRcvCardWeatherWeek.setLayoutManager(layoutManager);
-        weekDayAdapter.setDayWeatherList(createTest());
         mRcvCardWeatherWeek.setAdapter(weekDayAdapter);
 
     }

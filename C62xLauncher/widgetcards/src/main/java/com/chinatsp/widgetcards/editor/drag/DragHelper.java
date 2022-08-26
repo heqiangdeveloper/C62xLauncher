@@ -343,7 +343,7 @@ public class DragHelper {
         mTargetItemView = viewWrapper.getView();
 //        EasyLog.i(TAG, "showTargetHighlight :" + mTargetRecyclerView.getChildAdapterPosition(mTargetItemView));
         if (mTargetItemView != null) {
-            mTargetItemView.setBackgroundColor(mContext.getColor(R.color.card_blue_default));
+//            mTargetItemView.setBackgroundColor(mContext.getColor(R.color.card_blue_default));
         }
     }
 

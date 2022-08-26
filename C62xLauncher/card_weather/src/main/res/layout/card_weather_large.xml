@@ -22,6 +22,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/tvCardWeatherLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="深圳"
@@ -148,7 +149,7 @@
         />
 
     <TextView
-        android:id="@+id/tvCardWeatherTemperatureDesc"
+        android:id="@+id/tvCardWeatherTemperatureRange"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:includeFontPadding="false"

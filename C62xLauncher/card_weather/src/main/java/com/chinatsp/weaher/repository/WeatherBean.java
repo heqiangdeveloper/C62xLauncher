@@ -1,4 +1,4 @@
-package com.chinatsp.weaher;
+package com.chinatsp.weaher.repository;
 
 public class WeatherBean {
 

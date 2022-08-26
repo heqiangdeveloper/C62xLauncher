@@ -1,9 +1,6 @@
 package com.chinatsp.weaher.mock;
 
-import com.chinatsp.weaher.WeatherBean;
-
-import java.util.LinkedList;
-import java.util.List;
+import com.chinatsp.weaher.repository.WeatherBean;
 
 public class WeatherMock {
     private static WeatherBean[] mWeatherBeans = new WeatherBean[]{

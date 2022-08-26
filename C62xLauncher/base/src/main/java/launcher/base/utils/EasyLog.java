@@ -30,5 +30,9 @@ public class EasyLog {
             Log.w(ORIGIN_TAG, "["+tag+"] "+msg);
         }
     }
-
+    public static void v(String tag, String msg) {
+        if (enableLog) {
+            Log.v(ORIGIN_TAG, "["+tag+"] "+msg);
+        }
+    }
 }

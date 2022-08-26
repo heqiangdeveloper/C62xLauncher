@@ -1,10 +1,9 @@
-package com.chinatsp.weaher;
+package com.chinatsp.weaher.mock;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.os.SystemClock;
 
 import com.chinatsp.weaher.mock.WeatherMock;
+import com.chinatsp.weaher.repository.WeatherBean;
 
 public class WeatherDataLoader {
     private OnLoadListener mOnLoadListener;
