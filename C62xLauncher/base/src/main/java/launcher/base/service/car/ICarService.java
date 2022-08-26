@@ -7,4 +7,6 @@ public interface ICarService {
     String getCarType();
 
     String getVinCode();
+
+    boolean isHasDVR();
 }

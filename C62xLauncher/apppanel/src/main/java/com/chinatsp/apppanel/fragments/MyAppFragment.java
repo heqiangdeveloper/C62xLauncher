@@ -45,6 +45,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import launcher.base.async.AsyncSchedule;
+import launcher.base.service.AppServiceManager;
+import launcher.base.service.car.ICarService;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -135,6 +137,7 @@ public class MyAppFragment extends Fragment {
 
         addPushInstalledApp();//添加通过push方式安装的应用
         deleteUninstallApp();//删除掉未安装的应用，应用管理除外
+        checkDVR();//检查车型DVR
         loadingTv.setVisibility(View.GONE);
         mMyAppInfoAdapter = new MyAppInfoAdapter(view.getContext(), data);
         appInfoClassifyView.setAdapter(mMyAppInfoAdapter);
@@ -286,6 +289,43 @@ public class MyAppFragment extends Fragment {
                     }
                     inner.add(locationBean);
                     data.add(inner);
+                }
+            }
+        }
+    }
+
+    /*
+    *  判断有无安装dvr
+     */
+    private void checkDVR(){
+        ICarService carService = (ICarService) AppServiceManager.getService(AppServiceManager.SERVICE_CAR);
+        if(carService.isHasDVR()){
+            //有DVR，addPushInstalledApp中已处理
+        }else {//无DVR
+            A: for(List<LocationBean> lists:data){
+                if(lists != null && lists.size() < 2 && lists.get(0) != null &&
+                        AppLists.dvr.equals(lists.get(0).getPackageName())){
+                    data.remove(lists);
+                    AsyncSchedule.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            db.deleteLocation(AppLists.dvr);
+                        }
+                    });
+                    break A;
+                }else if(lists != null && lists.size() >= 2){
+                    for(LocationBean item : lists){
+                        if(AppLists.dvr.equals(item.getPackageName())){
+                            lists.remove(item);
+                            AsyncSchedule.execute(new Runnable() {
+                                @Override
+                                public void run() {
+                                    db.deleteLocation(AppLists.dvr);
+                                }
+                            });
+                            break A;
+                        }
+                    }
                 }
             }
         }

@@ -10,6 +10,7 @@ import android.util.Log;
 public class CarPropertyUtil {
     private static final String TAG = "CarProperty";
     static String getCarModel(CarCabinManager carCabinManager) {
+        //配置字persist.vendor.vehicle.car_type
         if (carCabinManager != null) {
             try {
                 return carCabinManager.getStringProperty(CarCabinManager.ID_CAR_VEHICLE_TYPE, VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL);
