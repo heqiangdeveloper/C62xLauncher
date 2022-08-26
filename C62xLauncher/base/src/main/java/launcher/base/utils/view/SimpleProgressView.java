@@ -107,6 +107,9 @@ public class SimpleProgressView extends View {
 
     public void setMaxValue(long maxValue) {
         mMaxValue = maxValue;
+        if (mMaxValue <= 0) {
+            mMaxValue = 100;
+        }
     }
 
     public void updateProgress(long progress) {

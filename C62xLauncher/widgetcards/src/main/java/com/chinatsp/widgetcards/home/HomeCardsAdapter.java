@@ -1,6 +1,7 @@
 package com.chinatsp.widgetcards.home;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,7 @@ import launcher.base.utils.EasyLog;
 
 public class HomeCardsAdapter extends RecyclerView.Adapter<CardFrameViewHolder> {
 
-    private static final String TAG = "CardsAdapter";
+    private static final String TAG = "HomeCardsAdapter";
     private final Context mContext;
     private final LayoutInflater mLayoutInflater;
     private List<LauncherCard> mCardEntityList = new LinkedList<>();
@@ -72,6 +73,7 @@ public class HomeCardsAdapter extends RecyclerView.Adapter<CardFrameViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull CardFrameViewHolder holder, int position) {
+        EasyLog.d(TAG,"onBindViewHolder : "+mCardEntityList.get(position).getName());
         holder.bind(position, mCardEntityList.get(position));
     }
 
