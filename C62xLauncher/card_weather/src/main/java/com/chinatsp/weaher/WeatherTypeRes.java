@@ -1,5 +1,7 @@
 package com.chinatsp.weaher;
 
+import com.chinatsp.weaher.repository.WeatherBean;
+
 public class WeatherTypeRes {
 
     private int icon;

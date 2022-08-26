@@ -18,8 +18,12 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.chinatsp.weaher.repository.WeatherBean;
+import com.chinatsp.weaher.viewholder.BigCardHolder;
+import com.chinatsp.weaher.viewholder.SmallCardHolder;
 import com.chinatsp.weaher.weekday.DayWeatherBean;
 import com.chinatsp.weaher.weekday.WeekDayAdapter;
+import com.iflytek.autofly.weather.entity.WeatherInfo;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -51,7 +55,7 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
         init();
     }
 
-    private WeatherViewModel mWeatherViewModel;
+    private WeatherCardController mController;
 
     private int mSmallWidth;
     private int mLargeWidth;
@@ -59,21 +63,26 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
     private RecyclerView mRcvCardWeatherWeek;
     private View mLargeCardView;
     private View mSmallCardView;
+    private SmallCardHolder mSmallCardHolder;
+    private BigCardHolder mBigCardHolder;
+    private boolean mExpand;
     private LifecycleRegistry mLifecycleRegistry = new LifecycleRegistry(this);
 
     private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.card_weather, this);
         mSmallCardView = findViewById(R.id.layoutSmallCardView);
+        mSmallCardHolder = new SmallCardHolder(mSmallCardView);
         mSmallWidth = (int) getResources().getDimension(R.dimen.card_width);
         mLargeWidth = (int) getResources().getDimension(R.dimen.card_width_large);
-        mWeatherViewModel = WeatherViewModel.getInstance();
+        mController = new WeatherCardController(this);
         ImageView ivCardWeatherRefresh = findViewById(R.id.ivCardWeatherRefresh);
         ivCardWeatherRefresh.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mWeatherViewModel.loadWeatherData();
+                mController.requestWeatherInfo();
             }
         });
+        mController.requestWeatherInfo();
     }
 
     Observer<WeatherBean> mWeatherBeanObserver = new Observer<WeatherBean>() {
@@ -85,10 +94,12 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
 
     @Override
     public void expand() {
+        mExpand = true;
         if (mLargeCardView == null) {
             mLargeCardView = LayoutInflater.from(getContext()).inflate(R.layout.card_weather_large, this, false);
-            initWeeklyWeather();
+            mBigCardHolder = new BigCardHolder(mLargeCardView);
         }
+        mController.requestWeatherInfo();
         addView(mLargeCardView);
         mLargeCardView.setVisibility(VISIBLE);
         mSmallCardView.setVisibility(GONE);
@@ -99,10 +110,12 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
 
     @Override
     public void collapse() {
+        mExpand = false;
         mSmallCardView.setVisibility(VISIBLE);
         mLargeCardView.setVisibility(GONE);
         removeView(mLargeCardView);
         LayoutParamUtil.setWidth(mSmallWidth, this);
+        mController.requestWeatherInfo();
     }
 
     @Override
@@ -110,25 +123,7 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
         return false;
     }
 
-    private void initWeeklyWeather() {
-        mRcvCardWeatherWeek = mLargeCardView.findViewById(R.id.rcvCardWeatherWeek);
-        WeekDayAdapter weekDayAdapter = new WeekDayAdapter(getContext());
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext()) {
-            @Override
-            public boolean canScrollHorizontally() {
-                return false;
-            }
-        };
-        layoutManager.setOrientation(RecyclerView.HORIZONTAL);
-        if (mRcvCardWeatherWeek.getItemDecorationCount() == 0) {
-            SimpleRcvDecoration decoration = new SimpleRcvDecoration(44, layoutManager);
-            mRcvCardWeatherWeek.addItemDecoration(decoration);
-        }
-        mRcvCardWeatherWeek.setLayoutManager(layoutManager);
-        weekDayAdapter.setDayWeatherList(createTest());
-        mRcvCardWeatherWeek.setAdapter(weekDayAdapter);
 
-    }
 
     private void runExpandAnim() {
         ObjectAnimator.ofFloat(mLargeCardView, "translationX", -500, 0).setDuration(150).start();
@@ -146,7 +141,7 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
         return testData;
     }
 
-    private void refreshSmallCardUI(WeatherBean weatherBean) {
+    public void refreshSmallCardUI(WeatherBean weatherBean) {
         if (weatherBean == null) {
             return;
         }
@@ -184,14 +179,14 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         mLifecycleRegistry.setCurrentState(Lifecycle.State.CREATED);
-        mWeatherViewModel.register(this, mWeatherBeanObserver);
-        mWeatherViewModel.loadWeatherData();
+        mController.addDataCallback();
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mLifecycleRegistry.setCurrentState(Lifecycle.State.DESTROYED);
+        mController.removeDataCallback();
     }
 
     @Override
@@ -210,5 +205,32 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
     @Override
     public Lifecycle getLifecycle() {
         return mLifecycleRegistry;
+    }
+
+    public void refreshData(List<WeatherInfo> result) {
+        post(new Runnable() {
+            @Override
+            public void run() {
+                if (mExpand) {
+                    mBigCardHolder.updateWeather(result.get(0));
+                    mBigCardHolder.updateWeatherList(result);
+                } else {
+                    mSmallCardHolder.updateWeather(result.get(0));
+                }
+            }
+        });
+    }
+
+    public void refreshDefault() {
+        post(new Runnable() {
+            @Override
+            public void run() {
+                if (mExpand) {
+                    mBigCardHolder.updateDefault();
+                } else {
+                    mSmallCardHolder.updateDefault();
+                }
+            }
+        });
     }
 }

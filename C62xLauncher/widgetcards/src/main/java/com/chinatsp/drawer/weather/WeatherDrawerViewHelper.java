@@ -4,10 +4,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.chinatsp.weaher.WeatherBean;
+import com.chinatsp.weaher.repository.WeatherBean;
 import com.chinatsp.weaher.WeatherTypeRes;
 import com.chinatsp.weaher.WeatherUtil;
-import com.chinatsp.weaher.WeatherViewModel;
 import com.chinatsp.widgetcards.R;
 
 public class WeatherDrawerViewHelper {
@@ -19,8 +18,9 @@ public class WeatherDrawerViewHelper {
     }
 
     private void refreshUI() {
-        WeatherViewModel mWeatherViewModel = WeatherViewModel.getInstance();
-        WeatherBean todayWeather = mWeatherViewModel.getTodayWeather();
+//        WeatherViewModel mWeatherViewModel = WeatherViewModel.getInstance();
+//        WeatherBean todayWeather = mWeatherViewModel.getTodayWeather();
+        WeatherBean todayWeather = null;
         if (todayWeather == null) {
             return;
         }
