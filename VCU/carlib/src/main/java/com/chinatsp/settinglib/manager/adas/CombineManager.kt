@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicBoolean
  */
 class CombineManager : BaseManager(), ISwitchManager {
 
-    companion object: ISignal {
+    companion object : ISignal {
         override val TAG: String = CombineManager::class.java.simpleName
         val instance: CombineManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             CombineManager()
@@ -33,7 +33,7 @@ class CombineManager : BaseManager(), ISwitchManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, result)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -44,14 +44,14 @@ class CombineManager : BaseManager(), ISwitchManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, result)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
-            val cabinSet = HashSet<Int> ().apply {
+            val cabinSet = HashSet<Int>().apply {
                 add(SwitchNode.ADAS_HMA.get.signal)
                 add(SwitchNode.ADAS_TSR.get.signal)
             }

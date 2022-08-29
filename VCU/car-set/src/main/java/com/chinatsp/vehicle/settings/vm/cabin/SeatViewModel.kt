@@ -33,10 +33,7 @@ class SeatViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _mainMeetFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.SEAT_MAIN_DRIVE_MEET
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            setValue(value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val forkMeet: LiveData<Boolean>
@@ -44,10 +41,7 @@ class SeatViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _forkMeetFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.SEAT_FORK_DRIVE_MEET
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            setValue(value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val seatHeat: LiveData<Boolean>
@@ -55,10 +49,7 @@ class SeatViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _seatHeatFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.SEAT_HEAT_ALL
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            setValue(value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val sillTemp: LiveData<Volume>
@@ -76,10 +67,7 @@ class SeatViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _epsMode: MutableLiveData<Int> by lazy {
         val node = RadioNode.DRIVE_EPS_MODE
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetRadioOption(node)
-            doUpdate(this, value, node.isValid(value))
-        }
+        MutableLiveData(manager.doGetRadioOption(node))
     }
 
 

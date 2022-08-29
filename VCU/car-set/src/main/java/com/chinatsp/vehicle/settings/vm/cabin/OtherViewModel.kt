@@ -29,10 +29,7 @@ class OtherViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _trailerRemind: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.DRIVE_TRAILER_REMIND
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            updateLiveData(this, value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val batteryOptimize: LiveData<Boolean>
@@ -40,10 +37,7 @@ class OtherViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _batteryOptimize: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.DRIVE_SAFE_VIDEO_PLAYING
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            updateLiveData(this, value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val wirelessCharging: LiveData<Boolean>
@@ -51,10 +45,7 @@ class OtherViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _wirelessCharging: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.DRIVE_WIRELESS_CHARGING
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            updateLiveData(this, value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val wirelessChargingLamp: LiveData<Boolean>
@@ -62,10 +53,7 @@ class OtherViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _wirelessChargingLamp: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            updateLiveData(this, value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
 

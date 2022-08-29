@@ -29,7 +29,6 @@ import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.database.ContentObserver
 import android.hardware.automotive.vehicle.V2_0.VehicleProperty
-import android.media.AudioAttributes
 import android.media.AudioManager
 import android.net.Uri
 import android.os.*
@@ -44,6 +43,7 @@ import com.chinatsp.settinglib.manager.cabin.OtherManager
 import com.chinatsp.settinglib.manager.lamp.BrightnessManager
 import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.settinglib.optios.Area
+import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SoundEffect
 import com.chinatsp.settinglib.sign.Origin
 import timber.log.Timber
@@ -557,11 +557,11 @@ class SettingManager private constructor() {
         return result
     }
 
-    fun readProperty(id: Int, origin: Origin, area: Area, block:((Int)->Unit)) {
+    fun readProperty(id: Int, origin: Origin, area: Area, block: ((Int) -> Unit)) {
         readProperty(id, origin, area.id, block)
     }
 
-    fun readProperty(id: Int, origin: Origin, areaValue: Int, block:((Int)->Unit)) {
+    fun readProperty(id: Int, origin: Origin, areaValue: Int, block: ((Int) -> Unit)) {
         if (!connectService) {
             Timber.d("readIntProperty propertyId:$id, origin:$origin, connectService: false!")
             block(Constant.DEFAULT)
@@ -969,16 +969,18 @@ class SettingManager private constructor() {
         try {
             var muiBalanceLevelValue = 0;
             var muiFadeLevelValue = 0;
-            if(getAmpType() == 0){ //内置
-                muiBalanceLevelValue = uiBalanceLevelValue+10;
-                muiFadeLevelValue = uiFadeLevelValue+10;
-            }else{
-                muiBalanceLevelValue = uiBalanceLevelValue+6;
-                muiFadeLevelValue = uiFadeLevelValue+6;
+            if (getAmpType() == 0) { //内置
+                muiBalanceLevelValue = uiBalanceLevelValue + 10;
+                muiFadeLevelValue = uiFadeLevelValue + 10;
+            } else {
+                muiBalanceLevelValue = uiBalanceLevelValue + 6;
+                muiFadeLevelValue = uiFadeLevelValue + 6;
             }
-            Timber.d("setAudioBalance muiBalanceLevelValue=${muiBalanceLevelValue}  " +
-                    " muiFadeLevelValue=${muiFadeLevelValue}")
-            mCarAudioManager?.setBalFadBalance(muiBalanceLevelValue,muiFadeLevelValue)
+            Timber.d(
+                "setAudioBalance muiBalanceLevelValue=${muiBalanceLevelValue}  " +
+                        " muiFadeLevelValue=${muiFadeLevelValue}"
+            )
+            mCarAudioManager?.setBalFadBalance(muiBalanceLevelValue, muiFadeLevelValue)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -988,7 +990,7 @@ class SettingManager private constructor() {
         var result = Constant.INVALID
         try {
             result = mCarAudioManager?.getAudioVoice(id) ?: Constant.INVALID
-            Timber.d("setAudioVoice result:$id result=$result")
+            Timber.d("getAudioVoice id:$id result:$result")
         } catch (e: Throwable) {
             e.printStackTrace()
             Timber.d("e=" + e.message)
@@ -1019,20 +1021,8 @@ class SettingManager private constructor() {
         return result
     }
 
-    fun setAudioEQ(mode: Int, high: Int = 0, mid: Int = 0, low: Int = 0) {
-        try {
-            mCarAudioManager?.let {
-                it.eqMode = mode
-                if (CarAudioManager.EQ_MODE_CUSTOM == mode) {
-//                    it.audioHighVoice = high
-//                    it.audioMidVoice = mid
-//                    it.audioLowVoice = low
-                }
-            }
-            Timber.d("setAudioVoice:$high $mid $low")
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+    fun getEQ(): Int {
+        return mCarAudioManager?.eqMode ?: RadioNode.SYSTEM_SOUND_EFFECT.get.values[0]
     }
 
     fun setSoundEffect(effect: SoundEffect) {
@@ -1046,12 +1036,15 @@ class SettingManager private constructor() {
 
     }
 
-    fun setAudioEQ(mode: Int, lev1: Int = 0,
-                   lev2: Int = 0, lev3: Int = 0,
-                   lev4: Int = 0, lev5: Int = 0) {
+    fun setAudioEQ(
+        mode: Int, lev1: Int = 0,
+        lev2: Int = 0, lev3: Int = 0,
+        lev4: Int = 0, lev5: Int = 0
+    ) {
         try {
             mCarAudioManager?.let {
-                if (CarAudioManager.EQ_MODE_CUSTOM == mode) {
+                val isCustom = CarAudioManager.EQ_MODE_CUSTOM == mode
+                if (isCustom) {
                     setAudioVoice(VOICE_LEVEL1, lev1)
                     setAudioVoice(VOICE_LEVEL2, lev2)
                     setAudioVoice(VOICE_LEVEL3, lev3)
@@ -1059,7 +1052,12 @@ class SettingManager private constructor() {
                     setAudioVoice(VOICE_LEVEL5, lev5)
                 }
                 it.eqMode = mode
-                Timber.d("setAudioEQ mode:$mode, lev1:$lev1, lev2:$lev2, lev3:$lev3, lev4:$lev4, lev5:$lev5")
+                val builder = StringBuilder()
+                builder.append("setAudioEQ mode:$mode, isCustom:$isCustom")
+                if (isCustom) {
+                    builder.append(", lev1:$lev1, lev2:$lev2, lev3:$lev3, lev4:$lev4, lev5:$lev5")
+                }
+                Timber.d(builder.toString())
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -1303,7 +1301,7 @@ class SettingManager private constructor() {
                 truckInformation?.let {
                     OtherManager.instance.onTrailerRemindChanged(it.onOff, it.level, it.dist)
                 }
-            }catch (e:Error){
+            } catch (e: Error) {
                 e.printStackTrace()
             }
 
@@ -1325,6 +1323,7 @@ class SettingManager private constructor() {
         val instance: SettingManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             SettingManager()
         }
+
         fun getAmpType(): Int {
             try {
                 var type = SystemProperties.getInt("persist.vendor.vehicle.amp", 0)
@@ -1335,6 +1334,7 @@ class SettingManager private constructor() {
             }
             return 0;
         }
+
         fun getVerName(context: Context?, pkgName: String?): String {
             val manager = context!!.packageManager
             var name = ""
@@ -1362,16 +1362,6 @@ class SettingManager private constructor() {
             }
             return "$name $code"
         }
-
-//        const val EQ_MODE_STANDARD = 0
-//        const val EQ_MODE_POP = 1
-//        const val EQ_MODE_ROCK = 2
-//        const val EQ_MODE_JAZZ = 3
-//        const val EQ_MODE_CLASSIC = 4
-//        const val EQ_MODE_PEOPLE = 5
-//        const val EQ_MODE_CUSTOM = 6
-//        const val EQ_MODE_TECHNO = 7 //电子
-
 
         //0XFF
         const val VOICE_LEVEL1 = CarAudioManager.EQ_AUDIO_VOICE_LEVEL1

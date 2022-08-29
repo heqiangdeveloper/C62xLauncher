@@ -24,10 +24,7 @@ class DoorsViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _automaticDoorLock: MutableLiveData<Int> by lazy {
         val node = RadioNode.DOOR_DRIVE_LOCK
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetRadioOption(node)
-            doUpdate(this, value, node.isValid(value))
-        }
+        MutableLiveData(manager.doGetRadioOption(node))
     }
 
     val automaticDoorUnlock: LiveData<Int>
@@ -35,10 +32,7 @@ class DoorsViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _automaticDoorUnlock: MutableLiveData<Int> by lazy {
         val node = RadioNode.DOOR_FLAMEOUT_UNLOCK
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetRadioOption(node)
-            doUpdate(this, value, node.isValid(value))
-        }
+        MutableLiveData(manager.doGetRadioOption(node))
     }
 
     val smartDoorAccess: LiveData<Boolean>
@@ -46,9 +40,7 @@ class DoorsViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _smartDoorAccess: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.DOOR_SMART_ENTER
-        MutableLiveData(node.default).apply {
-            value = manager.doGetSwitchOption(node)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     override fun onCreate() {

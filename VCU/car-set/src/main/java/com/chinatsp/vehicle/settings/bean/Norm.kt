@@ -14,4 +14,10 @@ package com.chinatsp.vehicle.settings.bean
  * @param uoff 设置给中间伯 开关状态 开关的值
  * @param def 默认开关值
  */
-data class Norm(val don: Int = 1, val doff: Int = 2, val uon: Int = 1, val uoff: Int = 2, val def: Int = 1)
+data class Norm(
+    val don: Int = 1,
+    val doff: Int = 2,
+    val uon: Int = 1,
+    val uoff: Int = 2,
+    val def: Int = 1
+)

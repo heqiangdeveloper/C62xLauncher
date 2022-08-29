@@ -27,7 +27,7 @@ class SafeManager private constructor() : BaseManager(), ISwitchManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, result)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -38,7 +38,7 @@ class SafeManager private constructor() : BaseManager(), ISwitchManager {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, value)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }

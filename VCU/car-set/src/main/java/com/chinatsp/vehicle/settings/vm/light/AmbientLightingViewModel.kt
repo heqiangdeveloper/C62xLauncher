@@ -26,10 +26,7 @@ class AmbientLightingViewModel @Inject constructor(app: Application, model: Base
 
     private val _frontLighting: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.FRONT_AMBIENT_LIGHTING
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            updateLiveData(this, value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val backLighting: LiveData<Boolean>
@@ -37,10 +34,7 @@ class AmbientLightingViewModel @Inject constructor(app: Application, model: Base
 
     private val _backLighting: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.BACK_AMBIENT_LIGHTING
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            updateLiveData(this, value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val ambientBrightness: LiveData<Int>

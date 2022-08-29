@@ -29,7 +29,7 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, value)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -40,8 +40,8 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateRadioValue(node, this, value)
 //        }
-        return@lazy createAtomicInteger(node) {result, value ->
-            doUpdateRadioValue(node, result, value, this::doRadioChanged)
+        return@lazy createAtomicInteger(node) { result, value ->
+            doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
     }
 
@@ -51,8 +51,8 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateRadioValue(node, this, value)
 //        }
-        return@lazy createAtomicInteger(node) {result, value ->
-            doUpdateRadioValue(node, result, value, this::doRadioChanged)
+        return@lazy createAtomicInteger(node) { result, value ->
+            doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
     }
 
@@ -145,10 +145,10 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
             SwitchNode.DOOR_SMART_ENTER.get.signal -> {
                 onSwitchChanged(SwitchNode.DOOR_SMART_ENTER, smartAccess, property)
             }
-            RadioNode.DOOR_DRIVE_LOCK.get.signal-> {
+            RadioNode.DOOR_DRIVE_LOCK.get.signal -> {
                 onRadioChanged(RadioNode.DOOR_DRIVE_LOCK, driveAutoLock, property)
             }
-            RadioNode.DOOR_FLAMEOUT_UNLOCK.get.signal-> {
+            RadioNode.DOOR_FLAMEOUT_UNLOCK.get.signal -> {
                 onRadioChanged(RadioNode.DOOR_FLAMEOUT_UNLOCK, flameoutAutoUnlock, property)
             }
             else -> {}

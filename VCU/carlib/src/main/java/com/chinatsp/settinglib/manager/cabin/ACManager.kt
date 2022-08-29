@@ -51,7 +51,7 @@ class ACManager private constructor() : BaseManager(), IAcManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, result)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -62,7 +62,7 @@ class ACManager private constructor() : BaseManager(), IAcManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, result)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -73,7 +73,7 @@ class ACManager private constructor() : BaseManager(), IAcManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, result)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -84,8 +84,8 @@ class ACManager private constructor() : BaseManager(), IAcManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateRadioValue(node, this, result)
 //        }
-        return@lazy createAtomicInteger(node) {result, value ->
-            doUpdateRadioValue(node, result, value, this::doRadioChanged)
+        return@lazy createAtomicInteger(node) { result, value ->
+            doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
     }
 
@@ -101,7 +101,12 @@ class ACManager private constructor() : BaseManager(), IAcManager {
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
         return when (node) {
             RadioNode.AC_COMFORT -> {
-                node.isValid(value, false) && writeProperty(node.set.signal, value, node.set.origin, node.area)
+                node.isValid(value, false) && writeProperty(
+                    node.set.signal,
+                    value,
+                    node.set.origin,
+                    node.area
+                )
             }
             else -> false
         }

@@ -12,7 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class ForwardViewModel @Inject constructor(app: Application, model: BaseModel):
+class ForwardViewModel @Inject constructor(app: Application, model: BaseModel) :
     BaseViewModel(app, model), ISwitchListener {
 
     private val manager: ForwardManager
@@ -23,9 +23,7 @@ class ForwardViewModel @Inject constructor(app: Application, model: BaseModel):
 
     private val _fcwFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.ADAS_FCW
-        MutableLiveData(node.default).apply {
-            value = manager.doGetSwitchOption(node)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val aebFunction: LiveData<Boolean>
@@ -33,9 +31,7 @@ class ForwardViewModel @Inject constructor(app: Application, model: BaseModel):
 
     private val _aebFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.ADAS_AEB
-        MutableLiveData(node.default).apply {
-            value = manager.doGetSwitchOption(node)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     override fun onCreate() {

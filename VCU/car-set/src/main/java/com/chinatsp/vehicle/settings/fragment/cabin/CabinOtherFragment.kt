@@ -2,13 +2,14 @@ package com.chinatsp.vehicle.settings.fragment.cabin
 
 import android.os.Bundle
 import android.view.View
-import android.widget.CompoundButton
 import android.widget.TextView
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.VcuUtils
+import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.cabin.OtherManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
+import com.chinatsp.vehicle.settings.ISwitchAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CabinOtherFragmentBinding
 import com.chinatsp.vehicle.settings.fragment.cabin.dialog.NoteUsersDialogFragment
@@ -19,7 +20,8 @@ import com.common.xui.widget.button.switchbutton.SwitchButton
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBinding>() {
+class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBinding>(),
+    ISwitchAction {
 
     private val manager: OtherManager
         get() = OtherManager.instance
@@ -89,29 +91,17 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
         }
     }
 
-    private fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {
-        val status = liveData.value ?: false
-        doUpdateSwitch(node, status, true)
-    }
-
-    private fun doUpdateSwitch(node: SwitchNode, status: Boolean, immediately: Boolean = false) {
-        val swb = when (node) {
+    override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
+        return when (node) {
             SwitchNode.DRIVE_BATTERY_OPTIMIZE -> binding.otherBatteryOptimizeSwitch
             SwitchNode.DRIVE_WIRELESS_CHARGING -> binding.otherWirelessChargingSwitch
             SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP -> binding.otherWirelessChargingLampSwitch
             else -> null
         }
-        swb?.let {
-            doUpdateSwitch(it, status, immediately)
-        }
     }
 
-    private fun doUpdateSwitch(swb: SwitchButton, status: Boolean, immediately: Boolean = false) {
-        if (!immediately) {
-            swb.setCheckedNoEvent(status)
-        } else {
-            swb.setCheckedImmediatelyNoEvent(status)
-        }
+    override fun getSwitchManager(): ISwitchManager {
+        return manager
     }
 
     private fun setSwitchListener() {
@@ -123,13 +113,6 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
         }
         binding.otherWirelessChargingLampSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP, buttonView, isChecked)
-        }
-    }
-
-    private fun doUpdateSwitchOption(node: SwitchNode, button: CompoundButton, status: Boolean) {
-        val result = manager.doSetSwitchOption(node, status)
-        if (!result && button is SwitchButton) {
-            button.setCheckedImmediatelyNoEvent(!status)
         }
     }
 

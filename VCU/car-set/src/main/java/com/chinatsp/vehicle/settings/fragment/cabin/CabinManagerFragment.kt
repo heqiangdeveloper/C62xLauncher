@@ -67,7 +67,8 @@ class CabinManagerFragment : BaseTabFragment<BaseViewModel, CabinFragmentBinding
         val range = 0 until tab.childCount
         tabOptions = range.map {
             val child = tab.getChildAt(it)
-            child.apply { setOnClickListener { onClick(this) } } }.toList()
+            child.apply { setOnClickListener { onClick(this) } }
+        }.toList()
         initRouteListener()
     }
 
@@ -80,6 +81,7 @@ class CabinManagerFragment : BaseTabFragment<BaseViewModel, CabinFragmentBinding
             }
         }
     }
+
     private fun updateSelectTabOption(viewId: Int) {
         tabOptions.forEach { it.isSelected = false }
         updateDisplayFragment(viewId)
@@ -155,7 +157,6 @@ class CabinManagerFragment : BaseTabFragment<BaseViewModel, CabinFragmentBinding
         }
         return fragment
     }
-
 
 
 }

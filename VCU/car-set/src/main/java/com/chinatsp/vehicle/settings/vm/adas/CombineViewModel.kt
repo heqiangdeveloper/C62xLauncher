@@ -23,18 +23,14 @@ class CombineViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _hmaValue: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.ADAS_HMA
-        MutableLiveData(node.default).apply {
-            value = manager.doGetSwitchOption(node)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val slaValue: LiveData<Boolean> by lazy { _slaValue }
 
     private val _slaValue: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.ADAS_TSR
-        MutableLiveData(node.default).apply {
-            value = manager.doGetSwitchOption(node)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     override fun onCreate() {

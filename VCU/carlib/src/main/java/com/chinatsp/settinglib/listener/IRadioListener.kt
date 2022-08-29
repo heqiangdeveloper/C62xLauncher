@@ -9,7 +9,7 @@ import com.chinatsp.settinglib.optios.RadioNode
  * @desc   :
  * @version: 1.0
  */
-interface IRadioListener: IBaseListener {
+interface IRadioListener : IBaseListener {
 
     fun onRadioOptionChanged(node: RadioNode, value: Int)
 

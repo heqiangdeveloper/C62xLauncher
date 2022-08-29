@@ -1,11 +1,11 @@
 package com.chinatsp.vehicle.settings.fragment.cabin.dialog
 
 import android.os.Bundle
-import android.widget.CompoundButton
-import androidx.lifecycle.LiveData
+import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.cabin.WheelManager
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.SwitchNode
+import com.chinatsp.vehicle.settings.ISwitchAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.SteeringHeatingDialogFragmentBinding
 import com.chinatsp.vehicle.settings.vm.cabin.SteeringViewModel
@@ -15,7 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SteeringHeatDialogFragment :
-    BaseDialogFragment<SteeringViewModel, SteeringHeatingDialogFragmentBinding>() {
+    BaseDialogFragment<SteeringViewModel, SteeringHeatingDialogFragmentBinding>(), ISwitchAction {
 
     val manager: WheelManager by lazy {
         WheelManager.instance
@@ -76,37 +76,20 @@ class SteeringHeatDialogFragment :
         }
     }
 
-    private fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {
-        val status = liveData.value ?: node.default
-        doUpdateSwitch(node, status, true)
-    }
-
-    private fun doUpdateSwitch(node: SwitchNode, status: Boolean, immediately: Boolean = false) {
-        val swb = when (node) {
+    override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
+        return when (node) {
             SwitchNode.DRIVE_WHEEL_AUTO_HEAT -> binding.steeringAutomaticHeatingSwitch
             else -> null
         }
-        takeIf { null != swb }?.doUpdateSwitch(swb!!, status, immediately)
     }
 
-    private fun doUpdateSwitch(swb: SwitchButton, status: Boolean, immediately: Boolean = false) {
-        if (!immediately) {
-            swb.setCheckedNoEvent(status)
-        } else {
-            swb.setCheckedImmediatelyNoEvent(status)
-        }
+    override fun getSwitchManager(): ISwitchManager {
+        return manager
     }
 
     private fun setSwitchListener() {
         binding.steeringAutomaticHeatingSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.DRIVE_WHEEL_AUTO_HEAT, buttonView, isChecked)
-        }
-    }
-
-    private fun doUpdateSwitchOption(node: SwitchNode, button: CompoundButton, status: Boolean) {
-        val result = manager.doSetSwitchOption(node, status)
-        if (!result && button is SwitchButton) {
-            button.setCheckedImmediatelyNoEvent(!status)
         }
     }
 

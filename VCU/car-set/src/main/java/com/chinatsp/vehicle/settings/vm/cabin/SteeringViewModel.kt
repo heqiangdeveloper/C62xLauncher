@@ -33,10 +33,7 @@ class SteeringViewModel @Inject constructor(app: Application, model: BaseModel) 
 
     private val _swhFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.DRIVE_WHEEL_AUTO_HEAT
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            setValue(value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val sillTemp: LiveData<Volume>
@@ -54,10 +51,7 @@ class SteeringViewModel @Inject constructor(app: Application, model: BaseModel) 
 
     private val _epsMode: MutableLiveData<Int> by lazy {
         val node = RadioNode.DRIVE_EPS_MODE
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetRadioOption(node)
-            doUpdate(this, value, node.isValid(value))
-        }
+        MutableLiveData(manager.doGetRadioOption(node))
     }
 
 
@@ -77,7 +71,7 @@ class SteeringViewModel @Inject constructor(app: Application, model: BaseModel) 
             SwitchNode.DRIVE_WHEEL_AUTO_HEAT -> {
                 doUpdate(_swhFunction, status)
             }
-            else ->{}
+            else -> {}
         }
     }
 

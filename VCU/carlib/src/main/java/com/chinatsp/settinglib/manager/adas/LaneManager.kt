@@ -38,8 +38,8 @@ class LaneManager : BaseManager(), IOptionManager {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateRadioValue(node, this, value)
 //        }
-        return@lazy createAtomicInteger(node) {result, value ->
-            doUpdateRadioValue(node, result, value, this::doRadioChanged)
+        return@lazy createAtomicInteger(node) { result, value ->
+            doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
     }
 
@@ -49,8 +49,8 @@ class LaneManager : BaseManager(), IOptionManager {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateRadioValue(node, this, value)
 //        }
-        return@lazy createAtomicInteger(node) {result, value ->
-            doUpdateRadioValue(node, result, value, this::doRadioChanged)
+        return@lazy createAtomicInteger(node) { result, value ->
+            doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
     }
 
@@ -60,8 +60,8 @@ class LaneManager : BaseManager(), IOptionManager {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateRadioValue(node, this, value)
 //        }
-        return@lazy createAtomicInteger(node) {result, value ->
-            doUpdateRadioValue(node, result, value, this::doRadioChanged)
+        return@lazy createAtomicInteger(node) { result, value ->
+            doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
     }
 
@@ -71,7 +71,7 @@ class LaneManager : BaseManager(), IOptionManager {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, value)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -133,18 +133,32 @@ class LaneManager : BaseManager(), IOptionManager {
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
         return when (node) {
             RadioNode.ADAS_LANE_ASSIST_MODE -> {
-                val result = node.isValid(value, false) && writeProperty(node.set.signal, value, node.set.origin)
+                val result = node.isValid(value, false) && writeProperty(
+                    node.set.signal,
+                    value,
+                    node.set.origin
+                )
                 takeIf { result }?.doUpdateRadioValue(node, laneAssistMode, value)
                 result
             }
             RadioNode.ADAS_LDW_STYLE -> {
-                val result = node.isValid(value, false) && writeProperty(node.set.signal, value, node.set.origin)
+                val result = node.isValid(value, false) && writeProperty(
+                    node.set.signal,
+                    value,
+                    node.set.origin
+                )
                 takeIf { result }?.doUpdateRadioValue(node, ldwWarningStyle, value)
-                result            }
+                result
+            }
             RadioNode.ADAS_LDW_SENSITIVITY -> {
-                val result = node.isValid(value, false) && writeProperty(node.set.signal, value, node.set.origin)
+                val result = node.isValid(value, false) && writeProperty(
+                    node.set.signal,
+                    value,
+                    node.set.origin
+                )
                 takeIf { result }?.doUpdateRadioValue(node, ldwWarningSensitivity, value)
-                result            }
+                result
+            }
             else -> false
         }
     }
@@ -201,7 +215,6 @@ class LaneManager : BaseManager(), IOptionManager {
             else -> false
         }
     }
-
 
 
 }

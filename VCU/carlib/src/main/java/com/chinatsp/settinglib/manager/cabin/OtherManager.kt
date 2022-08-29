@@ -44,7 +44,7 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, result)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -55,7 +55,7 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, result)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -66,7 +66,7 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, result)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -179,7 +179,7 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
                 val result = SettingManager.instance.setTrailerDistance(value)
                 if (result) {
                     distance.set(value)
-                    doRadioChanged(node, value)
+                    doOptionChanged(node, value)
                 }
                 result
             }
@@ -187,7 +187,7 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
                 val result = SettingManager.instance.setTrailerSensitivity(value)
                 if (result) {
                     distance.set(value)
-                    doRadioChanged(node, value)
+                    doOptionChanged(node, value)
                 }
                 result
             }
@@ -242,9 +242,19 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
 
     fun onTrailerRemindChanged(onOff: Int, level: Int, dist: Int) {
         Timber.d("onTrailerRemindChanged statusValue:%s, level:%s, distance:%s", onOff, level, dist)
-        doUpdateSwitchValue(SwitchNode.DRIVE_TRAILER_REMIND, trailerRemind, onOff, this::doSwitchChanged)
-        doUpdateRadioValue(RadioNode.DEVICE_TRAILER_SENSITIVITY, sensitivity, level, this::doRadioChanged)
-        doUpdateRadioValue(RadioNode.DEVICE_TRAILER_DISTANCE, distance, dist, this::doRadioChanged)
+        doUpdateSwitchValue(
+            SwitchNode.DRIVE_TRAILER_REMIND,
+            trailerRemind,
+            onOff,
+            this::doSwitchChanged
+        )
+        doUpdateRadioValue(
+            RadioNode.DEVICE_TRAILER_SENSITIVITY,
+            sensitivity,
+            level,
+            this::doOptionChanged
+        )
+        doUpdateRadioValue(RadioNode.DEVICE_TRAILER_DISTANCE, distance, dist, this::doOptionChanged)
     }
 
 

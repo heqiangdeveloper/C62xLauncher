@@ -36,7 +36,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, result)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -47,7 +47,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, result)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -58,7 +58,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, result)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -160,7 +160,8 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
     }
 
     private fun writeProperty(volume: Volume, value: Int): Boolean {
-        val success = volume.isValid(value) && writeProperty(volume.type.get.signal, value, Origin.CABIN)
+        val success =
+            volume.isValid(value) && writeProperty(volume.type.get.signal, value, Origin.CABIN)
         if (success && develop) {
             volume.pos = value
             doRangeChanged(volume)
@@ -183,7 +184,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
                 && writeProperty(node.set.signal, value, node.set.origin)
         if (success && develop) {
             doUpdateRadioValue(node, atomic, value) { _node, _value ->
-                doRadioChanged(_node, _value)
+                doOptionChanged(_node, _value)
             }
         }
         return success

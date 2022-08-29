@@ -23,37 +23,28 @@ class CruiseViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _cruiseAssistFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.ADAS_IACC
-        MutableLiveData(node.default).apply {
-            value = manager.doGetSwitchOption(node)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val targetPromptFunction: LiveData<Boolean> by lazy { _targetPromptFunction }
 
     private val _targetPromptFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.ADAS_TARGET_PROMPT
-        MutableLiveData(node.default).apply {
-            value = manager.doGetSwitchOption(node)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val limberLeaveFunction: LiveData<Boolean> by lazy { _limberLeaveFunction }
 
     private val _limberLeaveFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.ADAS_LIMBER_LEAVE
-        MutableLiveData(node.default).apply {
-            value = manager.doGetSwitchOption(node)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val limberLeaveRadio: LiveData<Int> by lazy { _limberLeaveRadio }
 
     private val _limberLeaveRadio: MutableLiveData<Int> by lazy {
         val node = RadioNode.ADAS_LIMBER_LEAVE
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetRadioOption(node)
-            doUpdate(this, value, node.isValid(value))
-        }
+        MutableLiveData(manager.doGetRadioOption(node))
     }
 
     override fun onCreate() {

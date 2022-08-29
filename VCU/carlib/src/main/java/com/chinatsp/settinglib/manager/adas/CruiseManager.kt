@@ -35,7 +35,7 @@ class CruiseManager : BaseManager(), IOptionManager {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, value)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -45,7 +45,7 @@ class CruiseManager : BaseManager(), IOptionManager {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, value)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -56,7 +56,7 @@ class CruiseManager : BaseManager(), IOptionManager {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, value)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -67,8 +67,8 @@ class CruiseManager : BaseManager(), IOptionManager {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateRadioValue(node, this, value)
 //        }
-        return@lazy createAtomicInteger(node) {result, value ->
-            doUpdateRadioValue(node, result, value, this::doRadioChanged)
+        return@lazy createAtomicInteger(node) { result, value ->
+            doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
     }
 

@@ -8,7 +8,7 @@ import com.common.library.frame.base.BaseDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AngleDialogFragment: BaseDialogFragment<SoundEffectViewModel, AngleDialogFragmentBinding>() {
+class AngleDialogFragment : BaseDialogFragment<SoundEffectViewModel, AngleDialogFragmentBinding>() {
     override fun getLayoutId(): Int {
         return R.layout.angle_dialog_fragment
     }
@@ -16,9 +16,11 @@ class AngleDialogFragment: BaseDialogFragment<SoundEffectViewModel, AngleDialogF
     override fun initData(savedInstanceState: Bundle?) {
         setBackListener()
     }
+
     override fun getWidthRatio(): Float {
         return 1000f / 1920f
     }
+
     private fun setBackListener() {
         binding.hintConform.setOnClickListener {
             this.dismiss()

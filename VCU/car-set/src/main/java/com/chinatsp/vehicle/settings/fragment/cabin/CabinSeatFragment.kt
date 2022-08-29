@@ -1,12 +1,13 @@
 package com.chinatsp.vehicle.settings.fragment.cabin
 
 import android.os.Bundle
-import android.widget.CompoundButton
 import android.widget.TextView
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.listener.sound.ISoundManager
+import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.cabin.SeatManager
 import com.chinatsp.settinglib.optios.SwitchNode
+import com.chinatsp.vehicle.settings.ISwitchAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CabinSeatFragmentBinding
 import com.chinatsp.vehicle.settings.fragment.cabin.dialog.CopilotGuestsDialogFragment
@@ -24,9 +25,9 @@ import dagger.hilt.android.AndroidEntryPoint
  * @version: 1.0
  */
 @AndroidEntryPoint
-class CabinSeatFragment : BaseFragment<SeatViewModel, CabinSeatFragmentBinding>() {
+class CabinSeatFragment : BaseFragment<SeatViewModel, CabinSeatFragmentBinding>(), ISwitchAction {
 
-    private val manager:ISoundManager
+    private val manager: ISoundManager
         get() = SeatManager.instance
 
     override fun getLayoutId(): Int {
@@ -67,27 +68,15 @@ class CabinSeatFragment : BaseFragment<SeatViewModel, CabinSeatFragmentBinding>(
         }
     }
 
-    private fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {
-        val status = liveData.value ?: false
-        doUpdateSwitch(node, status, true)
-    }
-
-    private fun doUpdateSwitch(node: SwitchNode, status: Boolean, immediately: Boolean = false) {
-        val swb = when (node) {
+    override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
+        return when (node) {
             SwitchNode.SEAT_MAIN_DRIVE_MEET -> binding.seatMainMeetSwitch
             else -> null
         }
-        swb?.let {
-            doUpdateSwitch(it, status, immediately)
-        }
     }
 
-    private fun doUpdateSwitch(swb: SwitchButton, status: Boolean, immediately: Boolean = false) {
-        if (!immediately) {
-            swb.setCheckedNoEvent(status)
-        } else {
-            swb.setCheckedImmediatelyNoEvent(status)
-        }
+    override fun getSwitchManager(): ISwitchManager {
+        return manager
     }
 
     private fun setSwitchListener() {
@@ -95,14 +84,6 @@ class CabinSeatFragment : BaseFragment<SeatViewModel, CabinSeatFragmentBinding>(
             doUpdateSwitchOption(SwitchNode.SEAT_MAIN_DRIVE_MEET, buttonView, isChecked)
         }
     }
-
-    private fun doUpdateSwitchOption(node: SwitchNode, button: CompoundButton, status: Boolean) {
-        val result = manager.doSetSwitchOption(node, status)
-        if (!result && button is SwitchButton) {
-            button.setCheckedImmediatelyNoEvent(!status)
-        }
-    }
-
 
     private fun setCheckedChangeListener() {
         binding.cabinSeatAutomaticHeating.setOnClickListener {

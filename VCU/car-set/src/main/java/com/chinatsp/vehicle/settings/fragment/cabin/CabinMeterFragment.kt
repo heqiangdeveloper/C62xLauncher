@@ -2,10 +2,10 @@ package com.chinatsp.vehicle.settings.fragment.cabin
 
 import android.os.Bundle
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.cabin.MeterManager
 import com.chinatsp.settinglib.optios.RadioNode
+import com.chinatsp.vehicle.settings.IRadioAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CabinMeterFragmentBinding
 import com.chinatsp.vehicle.settings.vm.cabin.MeterViewModel
@@ -21,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
  * @version: 1.0
  */
 @AndroidEntryPoint
-class CabinMeterFragment : BaseFragment<MeterViewModel, CabinMeterFragmentBinding>() {
+class CabinMeterFragment : BaseFragment<MeterViewModel, CabinMeterFragmentBinding>(), IRadioAction {
 
     private val manager: IRadioManager
         get() = MeterManager.instance
@@ -54,56 +54,19 @@ class CabinMeterFragment : BaseFragment<MeterViewModel, CabinMeterFragmentBindin
         }
     }
 
-    private fun initRadioOption(node: RadioNode, liveData: LiveData<Int>) {
-        val value = liveData.value ?: node.default
-        doUpdateRadio(node, value, isInit = true)
-    }
-
-    private fun doUpdateRadio(
-        node: RadioNode,
-        value: String,
-        liveData: LiveData<Int>,
-        tabView: TabControlView
-    ) {
-        val result = isCanToInt(value) && manager.doSetRadioOption(node, value.toInt())
-        tabView.takeIf { !result }?.let {
-            val result = node.obtainSelectValue(liveData.value!!)
-            it.setSelection(result.toString(), true)
-        }
-    }
-
-    private fun doUpdateRadio(
-        node: RadioNode,
-        value: Int,
-        immediately: Boolean = false,
-        isInit: Boolean = false
-    ) {
-        val tabView = when (node) {
+    override fun findRadioByNode(node: RadioNode): TabControlView? {
+        return when (node) {
             RadioNode.DRIVE_METER_SYSTEM -> binding.cabinMeterSystemOptions
             else -> null
         }
-        tabView?.let {
-            bindRadioData(node, tabView, isInit)
-            val result = node.obtainSelectValue(value)
-            doUpdateRadio(it, result, immediately)
-            updateSystemImage(node, value)
-        }
     }
 
-    private fun doUpdateRadio(tabView: TabControlView, value: Int, immediately: Boolean = false) {
-        tabView.setSelection(value.toString(), true)
+    override fun getRadioManager(): IRadioManager {
+        return manager
     }
 
-    private fun isCanToInt(value: String?): Boolean {
-        return null != value && value.isNotBlank() && value.matches(Regex("\\d+"))
-    }
-
-    private fun bindRadioData(node: RadioNode, tabView: TabControlView, isInit: Boolean) {
-        if (isInit) {
-            val names = tabView.nameArray.map { it.toString() }.toTypedArray()
-            val values = node.set.values.map { it.toString() }.toTypedArray()
-            tabView.setItems(names, values)
-        }
+    override fun onPostSelected(node: RadioNode, value: Int) {
+        updateSystemImage(node, value)
     }
 
     private fun updateSystemImage(node: RadioNode, value: Int) {

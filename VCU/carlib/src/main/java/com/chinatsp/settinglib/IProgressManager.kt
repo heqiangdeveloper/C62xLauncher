@@ -11,13 +11,18 @@ import com.chinatsp.settinglib.optios.Progress
  * @desc   :
  * @version: 1.0
  */
-interface IProgressManager: IManager {
+interface IProgressManager : IManager {
 
     fun doGetVolume(type: Progress): Volume?
 
     fun doSetVolume(type: Progress, position: Int): Boolean
 
-    fun doUpdateProgress(volume: Volume, value: Int, status: Boolean, block: ((Progress, Int) -> Unit)? = null): Volume {
+    fun doUpdateProgress(
+        volume: Volume,
+        value: Int,
+        status: Boolean,
+        block: ((Progress, Int) -> Unit)? = null
+    ): Volume {
         if (status && value != volume.pos) {
             volume.pos = value
             block?.let { it(volume.type, value) }

@@ -13,12 +13,14 @@ import java.lang.annotation.RetentionPolicy
  * @version: 1.0
  */
 @SuppressLint("UniqueConstants")
-@IntDef(Model.INVALID,
+@IntDef(
+    Model.INVALID,
     Model.ACCESS_DOOR, Model.ACCESS_WINDOW, Model.ACCESS_STERN, Model.ACCESS_MIRROR,
     Model.LIGHT_COMMON, Model.LIGHT_AMBIENT, Model.LIGHT_SCREEN,
     Model.AUDIO_SOUND, Model.AUDIO_EFFECT,
     Model.CABIN_AIR, Model.CABIN_SEAT, Model.CABIN_SAFE, Model.CABIN_OTHER,
-    Model.ADAS_SMART, Model.ADAS_AHEAD, Model.ADAS_LANE, Model.ADAS_REAR, Model.ADAS_OTHER)
+    Model.ADAS_SMART, Model.ADAS_AHEAD, Model.ADAS_LANE, Model.ADAS_REAR, Model.ADAS_OTHER
+)
 @Retention(RetentionPolicy.SOURCE)
 annotation class Model {
     companion object {

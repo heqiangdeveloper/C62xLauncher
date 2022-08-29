@@ -60,11 +60,11 @@ enum class RadioNode(
      */
     DOOR_FLAMEOUT_UNLOCK(
         get = RNorm(
-            values = intArrayOf(0x3, 0x1, 0x2),
+            values = intArrayOf(0x1, 0x2),
             signal = CarCabinManager.ID_CUTOFF_UNLOCK_DOORS_STATUE
         ),
         set = RNorm(
-            values = intArrayOf(0x3, 0x1, 0x2),
+            values = intArrayOf(0x1, 0x2),
             signal = CarCabinManager.ID_CUT_OFF_UNLOCK_DOORS
         ),
         default = 0x3
@@ -98,11 +98,11 @@ enum class RadioNode(
      */
     ADAS_LIMBER_LEAVE(
         get = RNorm(
-            values = intArrayOf( 0x1, 0x2, 0x3),
+            values = intArrayOf(0x1, 0x2, 0x3),
             signal = -1//暂时没有找到获取信号
         ),
         set = RNorm(
-            values = intArrayOf( 0x1, 0x2, 0x3),
+            values = intArrayOf(0x1, 0x2, 0x3),
             signal = CarCabinManager.ID_OBJ_DETECTION_SWT
         ),
         default = 0x1
@@ -317,11 +317,13 @@ enum class RadioNode(
 
     /**
      * 车辆音效--音效--均衡器
+     * get -> EQ switch  type status EQ开关种类选择状态 0x0: Default 0x1: Classic
+     *        0x2: POP 0x3: Jazze 0x4: Beats 0x5: Rock 0x6: Reserved 0x7: Reserved
      */
     SYSTEM_SOUND_EFFECT(
         get = RNorm(
-            values = SoundEffect.idArray(),
-            signal = -1
+            values = intArrayOf(0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6),
+            signal = CarCabinManager.ID_AMP_EQ_TYPE_SW_STS
         ),
         set = RNorm(
             values = SoundEffect.idArray(),
@@ -350,7 +352,6 @@ enum class RadioNode(
     ),
 
 
-
     /**
      * 行车--拖车提醒--传感器灵敏度
      * 此信号走TBOX信号 而非走CAN信号， 所以需要特殊处理
@@ -360,6 +361,7 @@ enum class RadioNode(
         set = RNorm(values = intArrayOf(0x1, 0x2, 0x3), signal = -1),
         default = 0x1
     ),
+
     /**
      * 行车--拖车提醒--拖车提醒距离
      * 此信号走TBOX信号 而非走CAN信号， 所以需要特殊处理

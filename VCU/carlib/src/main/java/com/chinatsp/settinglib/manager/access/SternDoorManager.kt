@@ -43,7 +43,7 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, result)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -54,7 +54,7 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, result)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -65,7 +65,7 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, result)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -76,8 +76,8 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateRadioValue(node, this, result)
 //        }
-        return@lazy createAtomicInteger(node) {result, value ->
-            doUpdateRadioValue(node, result, value, this::doRadioChanged)
+        return@lazy createAtomicInteger(node) { result, value ->
+            doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
     }
 
@@ -209,8 +209,10 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
     private fun doTrunkAction(complete: Boolean, running: Boolean, value: Int) {
         if (!complete && !running) {
             //1表示press,发起打开请求
-            writeProperty(CarCabinManager.ID_HU_BACKDOORSWITCH,
-                value, Origin.CABIN, VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL)
+            writeProperty(
+                CarCabinManager.ID_HU_BACKDOORSWITCH,
+                value, Origin.CABIN, VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL
+            )
         }
     }
 
@@ -249,6 +251,7 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
         val value = getTrunkStatusValue()
         return isValidValue(value, 0x00, 0x06, 0x07) && 0x01 == value
     }
+
     /**
      * 尾门是否正在打开中
      * @return true 表示打开中
@@ -266,6 +269,7 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
         val value = getTrunkStatusValue()
         return isValidValue(value, 0x00, 0x06, 0x07) && 0x02 == value
     }
+
     /**
      * 尾门是否正在关闭中
      * @return true 表示关闭中

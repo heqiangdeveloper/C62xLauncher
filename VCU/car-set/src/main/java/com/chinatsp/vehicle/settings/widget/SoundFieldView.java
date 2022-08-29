@@ -25,8 +25,8 @@ import com.chinatsp.vehicle.settings.R;
 public class SoundFieldView extends LinearLayout {
     protected static final String TAG = "SoundFieldView";
 
-    public static  double BALANCE_MAX = 18.0;
-    public static  double FADE_MAX = 18.0;
+    public static double BALANCE_MAX = 18.0;
+    public static double FADE_MAX = 18.0;
     public static final int H_PADDING = 160;
     public static final int V_PADDING = 130;
 
@@ -78,7 +78,7 @@ public class SoundFieldView extends LinearLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if(event.getAction() == MotionEvent.ACTION_DOWN){
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
             mIsMouseDown = true;
 
             dispatchSetPressed(true);
@@ -88,9 +88,9 @@ public class SoundFieldView extends LinearLayout {
             return true;
         }
 
-        if((event.getAction() == MotionEvent.ACTION_MOVE || event.getAction() == MotionEvent.ACTION_UP)
-                && mIsMouseDown){
-            Log.d(TAG, "onTouchEvent "+event.getX()+" "+event.getY());
+        if ((event.getAction() == MotionEvent.ACTION_MOVE || event.getAction() == MotionEvent.ACTION_UP)
+                && mIsMouseDown) {
+            Log.d(TAG, "onTouchEvent " + event.getX() + " " + event.getY());
             mPosX = event.getX() < H_PADDING ? H_PADDING :
                     event.getX() > getWidth() - H_PADDING ? getWidth() - H_PADDING : event.getX();
             mPosY = event.getY() < V_PADDING ? V_PADDING :
@@ -101,13 +101,13 @@ public class SoundFieldView extends LinearLayout {
             mBalanceValue = xValue2Balance(mPosX);
             mFadeValue = yValue2Fade(mPosY);
 
-            if(mOnValueChangedListener != null){
+            if (mOnValueChangedListener != null) {
                 mOnValueChangedListener.onValueChange(mBalanceValue, mFadeValue, mPosX, mPosY);
             }
             return true;
         }
 
-        if(event.getAction() == MotionEvent.ACTION_UP){
+        if (event.getAction() == MotionEvent.ACTION_UP) {
             mIsMouseDown = false;
             dispatchSetPressed(false);
         }
@@ -116,11 +116,11 @@ public class SoundFieldView extends LinearLayout {
 //		return super.onTouchEvent(event);
     }
 
-    public void reset(){
+    public void reset() {
         mPosX = getWidth() / 2;
         mPosY = getHeight() / 2;
-        if(mOnValueChangedListener != null){
-            mOnValueChangedListener.onValueChange((int)BALANCE_MAX / 2, (int)FADE_MAX / 2, mPosX, mPosY);
+        if (mOnValueChangedListener != null) {
+            mOnValueChangedListener.onValueChange((int) BALANCE_MAX / 2, (int) FADE_MAX / 2, mPosX, mPosY);
         }
         post(new Runnable() {
 
@@ -132,7 +132,7 @@ public class SoundFieldView extends LinearLayout {
 
     }
 
-    private void setPointPos(){
+    private void setPointPos() {
         mImgPoint.setX(mPosX - mImgPoint.getWidth() / 2);
         mImgPoint.setY(mPosY - mImgPoint.getHeight() / 2);
 
@@ -144,34 +144,34 @@ public class SoundFieldView extends LinearLayout {
     }
 
     //获取有效计算区域的宽度值
-    private int getValidWidth(){
+    private int getValidWidth() {
         return getWidth() - H_PADDING * 2;
     }
 
     //获取有效计算区域的高度值
-    private int getValidHeight(){
+    private int getValidHeight() {
         return getHeight() - V_PADDING * 2;
     }
 
-    private int xValue2Balance(float x){
-        int balance = (int) ((x - H_PADDING) * BALANCE_MAX / getValidWidth()) ;
+    private int xValue2Balance(float x) {
+        int balance = (int) ((x - H_PADDING) * BALANCE_MAX / getValidWidth());
         Log.d(TAG, "xValue2Balance, x: " + (x - H_PADDING) + ", balance: " + balance + ", getWidth: " + getValidWidth());
         return balance;
     }
 
-    private int yValue2Fade(float y){
+    private int yValue2Fade(float y) {
         int fade = (int) (((y - V_PADDING) * FADE_MAX) / getValidHeight());
         Log.d(TAG, "yValue2Fade, y: " + (y - V_PADDING) + ", fade: " + fade + ", getHeight: " + getValidHeight());
         return fade;
     }
 
-    private float balance2x(int balance, int width){
+    private float balance2x(int balance, int width) {
         float x = (float) (balance * (width - H_PADDING * 2) / BALANCE_MAX);
         Log.d(TAG, "balance2x, balance: " + balance + ", x: " + x + ", width: " + width);
         return x + H_PADDING;
     }
 
-    private float fade2y(int fade, int height){
+    private float fade2y(int fade, int height) {
         float y = (float) (fade * (height - V_PADDING * 2) / FADE_MAX);
         Log.d(TAG, "fade2y, fade: " + fade + ", y: " + y + ", height: " + height);
         return y + V_PADDING;
@@ -194,21 +194,21 @@ public class SoundFieldView extends LinearLayout {
         mFadeValue = fadeValue;
     }
 
-    private void setXPosByBalance(){
+    private void setXPosByBalance() {
         float x = 0f;
-        if(getWidth() == 0){
+        if (getWidth() == 0) {
             mPosX = balance2x(mBalanceValue, getMeasuredWidth());
-        }else{
+        } else {
             mPosX = balance2x(mBalanceValue, getWidth());
         }
         setPointPos();
     }
 
-    private void setYPosByFade(){
+    private void setYPosByFade() {
         float y = 0f;
-        if(getHeight() == 0){
+        if (getHeight() == 0) {
             mPosY = fade2y(mFadeValue, getMeasuredHeight());
-        }else{
+        } else {
             mPosY = fade2y(mFadeValue, getHeight());
         }
         setPointPos();
@@ -216,18 +216,20 @@ public class SoundFieldView extends LinearLayout {
 
     /**
      * 用于在配置文件中读取并恢复x坐标值
-     * @param x　横向坐标值
+     *
+     * @param x 　横向坐标值
      */
-    public void setXPos(float x){
+    public void setXPos(float x) {
         mPosX = x;
         setPointPos();
     }
 
     /**
      * 用于在配置文件中读取并恢复y坐标值
-     * @param y　纵向坐标值
+     *
+     * @param y 　纵向坐标值
      */
-    public void setYPos(float y){
+    public void setYPos(float y) {
         mPosY = y;
         setPointPos();
     }
@@ -240,7 +242,7 @@ public class SoundFieldView extends LinearLayout {
         mOnValueChangedListener = onValueChangedListener;
     }
 
-    public interface OnValueChangedListener{
+    public interface OnValueChangedListener {
         public void onValueChange(int balance, int fade, float x, float y);
     }
 
@@ -248,11 +250,11 @@ public class SoundFieldView extends LinearLayout {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
         Log.d(TAG, "onLayout");
-        if(mPosX == INVALID_XY_VALUE){
+        if (mPosX == INVALID_XY_VALUE) {
             setXPosByBalance();
         }
 
-        if(mPosY == INVALID_XY_VALUE){
+        if (mPosY == INVALID_XY_VALUE) {
             setYPosByFade();
         }
         setPointPos();

@@ -11,7 +11,7 @@ import kotlin.properties.Delegates
  * @desc   :
  * @version: 1.0
  */
-open class BaseApp: Application() {
+open class BaseApp : Application() {
 
     val mainHandler: Handler by lazy {
         Handler(mainLooper)

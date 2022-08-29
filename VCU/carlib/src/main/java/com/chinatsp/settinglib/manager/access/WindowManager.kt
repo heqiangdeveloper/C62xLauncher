@@ -39,7 +39,7 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, result)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -50,7 +50,7 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, result)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -61,7 +61,7 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, result)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -72,7 +72,7 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, result)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -86,7 +86,7 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
 
     override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
-            val cabinSet = HashSet<Int> ().apply {
+            val cabinSet = HashSet<Int>().apply {
                 /**雨天自动关窗*/
                 add(SwitchNode.WIN_CLOSE_WHILE_RAIN.get.signal)
                 /**锁车自动关窗*/
@@ -240,5 +240,5 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
             callback?.onCmdHandleResult(cmd)
         }
     }
-    
+
 }

@@ -9,7 +9,7 @@ package com.chinatsp.settinglib.sign
  */
 class CarSign(val type: Origin) {
 
-    val signals:MutableSet<Int> by lazy { HashSet() }
+    val signals: MutableSet<Int> by lazy { HashSet() }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

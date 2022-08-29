@@ -2,10 +2,11 @@ package com.chinatsp.vehicle.settings.fragment.doors.dialog
 
 import android.graphics.Color
 import android.os.Bundle
-import androidx.lifecycle.LiveData
+import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.sound.EffectManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SoundEffect
+import com.chinatsp.vehicle.settings.IRadioAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.EqualizerDialogFragmetBinding
 import com.chinatsp.vehicle.settings.vm.sound.SoundEffectViewModel
@@ -13,10 +14,11 @@ import com.common.library.frame.base.BaseDialogFragment
 import com.common.xui.widget.smooth.SmoothLineChartView
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class EqualizerDialogFragment :
-    BaseDialogFragment<SoundEffectViewModel, EqualizerDialogFragmetBinding>() {
+    BaseDialogFragment<SoundEffectViewModel, EqualizerDialogFragmetBinding>(), IRadioAction {
 
     private val manager: EffectManager
         get() = EffectManager.instance
@@ -32,9 +34,11 @@ class EqualizerDialogFragment :
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+
         initRadioOption()
         addRadioLiveDataListener()
         setRadioListener()
+
         initView()
         binding.closeDialog.setOnClickListener {
             this.dismiss()
@@ -54,66 +58,38 @@ class EqualizerDialogFragment :
     private fun setRadioListener() {
         binding.soundEffectRadio.let {
             it.setOnTabSelectionChangedListener { _, value ->
-//                viewModel.doSwitchSoundEffect(value.toInt())
                 doUpdateRadio(RadioNode.SYSTEM_SOUND_EFFECT, value, viewModel.currentEffect, it)
+                doSendEQValue(value)
             }
         }
     }
 
-    private fun initRadioOption(node: RadioNode, liveData: LiveData<Int>) {
-        val value = liveData.value ?: node.default
-        doUpdateRadio(node, value, isInit = true)
-    }
-
-    private fun doUpdateRadio(
-        node: RadioNode,
-        value: String,
-        liveData: LiveData<Int>,
-        tabView: TabControlView
-    ) {
-        val result = isCanToInt(value) && manager.doSetRadioOption(node, value.toInt())
-        tabView.takeIf { !result }?.let {
-//            val result = node.obtainSelectValue(liveData.value!!)
-//            it.setSelection(result.toString(), true)
-            doUpdateRadio(node, liveData.value!!, immediately = false, isInit = false)
+    private fun doSendEQValue(value: String?) {
+        value?.run {
+            val node = RadioNode.SYSTEM_SOUND_EFFECT
+            val eq = node.obtainSelectValue(value.toInt())
+//            manager.sendEQValue(eq)
+            viewModel.setAudioEQ(eq)
+            onPostSelected(RadioNode.SYSTEM_SOUND_EFFECT, eq)
         }
     }
 
-    private fun doUpdateRadio(
-        node: RadioNode,
-        value: Int,
-        immediately: Boolean = false,
-        isInit: Boolean = false
-    ) {
-        val tabView = when (node) {
+    override fun findRadioByNode(node: RadioNode): TabControlView? {
+        return when (node) {
             RadioNode.SYSTEM_SOUND_EFFECT -> binding.soundEffectRadio
             else -> null
         }
-        tabView?.let {
-            bindRadioData(node, tabView, isInit)
-            val result = node.obtainSelectValue(value)
-            doUpdateRadio(it, result, immediately)
-        }
     }
 
-
-    private fun bindRadioData(node: RadioNode, tabView: TabControlView, isInit: Boolean) {
-        if (isInit) {
-            val names = tabView.nameArray.map { it.toString() }.toTypedArray()
-            val values = node.set.values.map { it.toString() }.toTypedArray()
-            tabView.setItems(names, values)
-        }
+    override fun getRadioManager(): IRadioManager {
+        return manager
     }
 
-    private fun doUpdateRadio(tabView: TabControlView, value: Int, immediately: Boolean = false) {
-        tabView.setSelection(value.toString(), true)
-        val values = viewModel.getEffectValues(SoundEffect.getEffect(value))
+    override fun onPostSelected(node: RadioNode, value: Int) {
+//        val result = node.obtainSelectValue(value)
+        val values = viewModel.getEffectValues(value)
         val toList = values.map { it.toFloat() }.toList()
         binding.smoothChartView.setData(toList, xValue, xValueTop)
-    }
-
-    private fun isCanToInt(value: String?): Boolean {
-        return null != value && value.isNotBlank() && value.matches(Regex("\\d+"))
     }
 
     private fun initView() {
@@ -131,10 +107,11 @@ class EqualizerDialogFragment :
         binding.smoothChartView.innerCircleColor = Color.parseColor("#ffffff")
         binding.smoothChartView.nodeStyle = SmoothLineChartView.NODE_STYLE_RING
         binding.smoothChartView.setOnChartClickListener { position, _ ->
-            viewModel?.setAudioEQ(position)
+            viewModel.setAudioEQ(position)
+            Timber.tag("luohong").d("--------------------position:%s", position)
         }
-        val effect = SoundEffect.getEffect(viewModel.currentEffect.value!!)
-        val values = viewModel.getEffectValues(effect)
+        val eqId = viewModel.currentEffect.value!!
+        val values = viewModel.getEffectValues(eqId)
         val toList = values.map { it.toFloat() }.toList()
         binding.smoothChartView.setData(toList, xValue, xValueTop)
     }

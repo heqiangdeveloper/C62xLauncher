@@ -1,8 +1,6 @@
 package com.chinatsp.vehicle.controller.annotation
 
 import androidx.annotation.IntDef
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
 
 /**
  * @author : luohong
@@ -11,8 +9,15 @@ import java.lang.annotation.RetentionPolicy
  * @desc :
  * @version: 1.0
  */
-@IntDef(IStatus.ERROR, IStatus.INIT, IStatus.START, IStatus.RUNNING, IStatus.SUCCESS, IStatus.FAILED)
-@Retention(RetentionPolicy.SOURCE)
+@IntDef(
+    IStatus.ERROR,
+    IStatus.INIT,
+    IStatus.START,
+    IStatus.RUNNING,
+    IStatus.SUCCESS,
+    IStatus.FAILED
+)
+@kotlin.annotation.Retention(AnnotationRetention.SOURCE)
 annotation class IStatus {
     companion object {
         const val ERROR: Int = -1

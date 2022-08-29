@@ -24,64 +24,41 @@ class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _audioMixing: MutableLiveData<Int> by lazy {
         val node = RadioNode.NAVI_AUDIO_MIXING
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetRadioOption(node)
-            doUpdate(this, value, node.isValid(value))
-        }
+        MutableLiveData(manager.doGetRadioOption(node))
     }
     val volumeOffset: LiveData<Int>
         get() = _volumeOffset
 
     private val _volumeOffset: MutableLiveData<Int> by lazy {
         val node = RadioNode.SPEED_VOLUME_OFFSET
-        MutableLiveData(node.default).apply {
-            launch {
-                val value = manager.doGetRadioOption(node)
-                doUpdate(this, value, node.isValid(value))
-            }
-        }
+        MutableLiveData(manager.doGetRadioOption(node))
     }
     val volumeLevel: LiveData<Int>
         get() = _volumeLevel
 
     private val _volumeLevel: MutableLiveData<Int> by lazy {
         val node = RadioNode.ICM_VOLUME_LEVEL
-        MutableLiveData(node.default).apply {
-            launch {
-                val value = manager.doGetRadioOption(node)
-//                postValue(value)
-                doUpdate(this, value, node.isValid(value))
-            }
-        }
+        MutableLiveData(manager.doGetRadioOption(node))
     }
     val toneStatus: LiveData<Boolean>
         get() = _toneStatus
 
     private val _toneStatus: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.AUDIO_SOUND_TONE
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            doUpdate(this, value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
     val huaweiStatus: LiveData<Boolean>
         get() = _huaweiStatus
     private val _huaweiStatus: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.AUDIO_SOUND_HUAWEI
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            doUpdate(this, value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
     val loudnessStatus: LiveData<Boolean>
         get() = _loudnessStatus
 
     private val _loudnessStatus: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.AUDIO_SOUND_LOUDNESS
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            doUpdate(this, value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val touchToneStatus: LiveData<Boolean>
@@ -89,10 +66,7 @@ class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _touchToneStatus: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.TOUCH_PROMPT_TONE
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            doUpdate(this, value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val speedVolumeOffset: LiveData<Boolean>
@@ -100,10 +74,7 @@ class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _speedVolumeOffset: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.SPEED_VOLUME_OFFSET
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            doUpdate(this, value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     override fun onCreate() {

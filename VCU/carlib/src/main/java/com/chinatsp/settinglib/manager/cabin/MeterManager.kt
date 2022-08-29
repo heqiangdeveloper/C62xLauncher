@@ -34,8 +34,8 @@ class MeterManager private constructor() : BaseManager(), IRadioManager {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateRadioValue(node, this, value)
 //        }
-        return@lazy createAtomicInteger(node) {result, value ->
-            doUpdateRadioValue(node, result, value, this::doRadioChanged)
+        return@lazy createAtomicInteger(node) { result, value ->
+            doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
     }
 
@@ -91,7 +91,7 @@ class MeterManager private constructor() : BaseManager(), IRadioManager {
                 && writeProperty(node.set.signal, value, node.set.origin)
         if (success && develop) {
             doUpdateRadioValue(node, atomic, value) { _node, _value ->
-                doRadioChanged(_node, _value)
+                doOptionChanged(_node, _value)
             }
         }
         return success

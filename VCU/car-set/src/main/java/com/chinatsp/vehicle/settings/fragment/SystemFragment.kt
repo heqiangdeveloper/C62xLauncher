@@ -1,7 +1,5 @@
 package com.chinatsp.vehicle.settings.fragment
 
-import android.content.ComponentName
-import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.vehicle.settings.R
@@ -12,7 +10,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class SystemFragment: BaseTabFragment<BaseViewModel, FragmentSimpleTabBinding>() {
+class SystemFragment : BaseTabFragment<BaseViewModel, FragmentSimpleTabBinding>() {
 
     override val nodeId: Int
         get() = 7

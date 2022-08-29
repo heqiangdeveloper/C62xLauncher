@@ -14,9 +14,9 @@ import com.chinatsp.settinglib.sign.Origin
  * @desc   :
  * @version: 1.0
  */
-class RoadSignManager: BaseManager(), ISwitchManager {
+class RoadSignManager : BaseManager(), ISwitchManager {
 
-    companion object: ISignal {
+    companion object : ISignal {
 
         override val TAG: String = RoadSignManager::class.java.simpleName
 
@@ -28,12 +28,11 @@ class RoadSignManager: BaseManager(), ISwitchManager {
 
     override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
-            val cabinSet = HashSet<Int> ().apply {
+            val cabinSet = HashSet<Int>().apply {
             }
             put(Origin.CABIN, cabinSet)
         }
     }
-
 
 
     override fun doGetSwitchOption(node: SwitchNode): Boolean {
@@ -43,7 +42,12 @@ class RoadSignManager: BaseManager(), ISwitchManager {
     override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
         return when (node) {
             SwitchNode.ADAS_TSR -> {
-                writeProperty(node.set.signal, node.value(status), node.set.origin, VehicleAreaSeat.SEAT_DRIVER)
+                writeProperty(
+                    node.set.signal,
+                    node.value(status),
+                    node.set.origin,
+                    VehicleAreaSeat.SEAT_DRIVER
+                )
             }
             else -> false
         }

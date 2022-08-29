@@ -9,15 +9,24 @@ import android.car.media.CarAudioManager
  * @desc   :
  * @version: 1.0
  */
-enum class SoundEffect(val id: Int) {
+enum class SoundEffect(val id: Int, description: String) {
 
-    POP(CarAudioManager.EQ_MODE_POP),
-    FLAT(CarAudioManager.EQ_MODE_FLAT),
-    ROCK(CarAudioManager.EQ_MODE_ROCK),
-    JAZZ(CarAudioManager.EQ_MODE_JAZZ),
-    VOCAL(CarAudioManager.EQ_MODE_VOCAL),
-    CLASSIC(CarAudioManager.EQ_MODE_CLASSIC),
-    CUSTOM(CarAudioManager.EQ_MODE_CUSTOM);
+//    BEGIN(CarAudioManager.EQ_MODE_AMP_BEGIN, "默认"),
+//    CLASSIC(CarAudioManager.EQ_MODE_AMP_CLASSIC, "典型的"),
+//    POP(CarAudioManager.EQ_MODE_AMP_POP, "流行"),
+//    JAZZ(CarAudioManager.EQ_MODE_AMP_JAZZ, "爵士"),
+//    BEATS(CarAudioManager.EQ_MODE_AMP_BEATS, "打击"),
+//    ROCK(CarAudioManager.EQ_MODE_AMP_ROCK, "摇滚"),
+//    CUSTOM(CarAudioManager.EQ_MODE_AMP_CUSTOM, "自定义");
+
+
+    BEGIN(CarAudioManager.EQ_MODE_FLAT, "默认"),
+    CLASSIC(CarAudioManager.EQ_MODE_CLASSIC, "典型的"),
+    POP(CarAudioManager.EQ_MODE_POP, "流行"),
+    JAZZ(CarAudioManager.EQ_MODE_JAZZ, "爵士"),
+    BEATS(CarAudioManager.EQ_MODE_BEATS, "打击"),
+    ROCK(CarAudioManager.EQ_MODE_ROCK, "摇滚"),
+    CUSTOM(CarAudioManager.EQ_MODE_CUSTOM, "自定义");
 
     companion object {
         fun getEffect(value: Int): SoundEffect {

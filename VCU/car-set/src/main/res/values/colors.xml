@@ -21,19 +21,19 @@
     <color name="copilot_guests_txt">#26C3FE</color>
 
     <color name="vcu_bg_pop_window">#EE262D3E</color>
-<!--    <color name="picture_tab_color_false">#503331</color>-->
-<!--    <color name="normal_text_color">#FFABD3E1</color>-->
-<!--    <color name="select_text_color">#FFFFFFFF</color>-->
+    <!--    <color name="picture_tab_color_false">#503331</color>-->
+    <!--    <color name="normal_text_color">#FFABD3E1</color>-->
+    <!--    <color name="select_text_color">#FFFFFFFF</color>-->
 
-<!--    <color name="tcv_unselected_color">#666666</color>-->
-<!--    <color name="tcv_onselected_color">#019CDD</color>-->
+    <!--    <color name="tcv_unselected_color">#666666</color>-->
+    <!--    <color name="tcv_onselected_color">#019CDD</color>-->
 
-<!--    <color name="tcv_radio_select_end_color">#147CCC</color>-->
-<!--    <color name="tcv_radio_select_start_color">#019CDD</color>-->
+    <!--    <color name="tcv_radio_select_end_color">#147CCC</color>-->
+    <!--    <color name="tcv_radio_select_start_color">#019CDD</color>-->
 
-<!--    <color name="tcv_radio_normal_end_color">#666666</color>-->
-<!--    <color name="tcv_radio_normal_start_color">#666666</color>-->
+    <!--    <color name="tcv_radio_normal_end_color">#666666</color>-->
+    <!--    <color name="tcv_radio_normal_start_color">#666666</color>-->
 
-<!--    <color name="tab_option_title_text_color">@android:color/white</color>-->
+    <!--    <color name="tab_option_title_text_color">@android:color/white</color>-->
 
 </resources>

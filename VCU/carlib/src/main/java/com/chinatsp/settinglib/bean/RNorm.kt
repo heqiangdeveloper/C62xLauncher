@@ -9,7 +9,11 @@ import com.chinatsp.settinglib.sign.Origin
  * @desc   :
  * @version: 1.0
  */
-data class RNorm(val values: IntArray = IntArray(3), val origin: Origin = Origin.CABIN, val signal: Int) {
+data class RNorm(
+    val values: IntArray = IntArray(3),
+    val origin: Origin = Origin.CABIN,
+    val signal: Int
+) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

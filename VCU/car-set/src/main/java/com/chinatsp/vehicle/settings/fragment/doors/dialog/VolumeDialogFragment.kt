@@ -11,7 +11,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
-class VolumeDialogFragment : BaseDialogFragment<SoundEffectViewModel, VolumeDialogFragmentBinding>() {
+class VolumeDialogFragment :
+    BaseDialogFragment<SoundEffectViewModel, VolumeDialogFragmentBinding>() {
 
     private var OFFSET = 9
 
@@ -28,19 +29,19 @@ class VolumeDialogFragment : BaseDialogFragment<SoundEffectViewModel, VolumeDial
             this.dismiss()
         }
         Timber.d("getAmpType type=${SettingManager.getAmpType()}")
-        if(SettingManager.getAmpType() == 0){
+        if (SettingManager.getAmpType() == 0) {
             OFFSET = 5;
             SoundFieldView.BALANCE_MAX = 10.0;
             SoundFieldView.FADE_MAX = 10.0;
             Timber.d("getAmpType OFFSET=${OFFSET} BALANCE_MAX= ${SoundFieldView.BALANCE_MAX}   FADE_MAX =${SoundFieldView.FADE_MAX}")
         }
         binding?.apply {
-            soundField?.onValueChangedListener =
+            soundField.onValueChangedListener =
                 SoundFieldView.OnValueChangedListener { balance, fade, x, y ->
-                    Timber.d( "onValueChange balance:$balance fade:$fade")
+                    Timber.d("onValueChange balance:$balance fade:$fade")
                     viewModel?.setAudioBalance(balance - OFFSET, -(fade - OFFSET))
                 }
-            refreshDialog?.setOnClickListener {
+            refreshDialog.setOnClickListener {
                 soundField.reset()
                 viewModel?.setAudioBalance(0, 0)
             }

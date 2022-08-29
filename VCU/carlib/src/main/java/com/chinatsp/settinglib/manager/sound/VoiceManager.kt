@@ -486,7 +486,7 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
                 && writeProperty(node.set.signal, value, node.set.origin)
         if (success && develop) {
             doUpdateRadioValue(node, atomic, value) { _node, _value ->
-                doRadioChanged(_node, _value)
+                doOptionChanged(_node, _value)
             }
         }
         return success
@@ -497,7 +497,7 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
                 && VcuUtils.setConfigParameters(OffLine.NAVI_MIXING, value)
         if (success && develop) {
             doUpdateRadioValue(node, atomic, value) { _node, _value ->
-                doRadioChanged(_node, _value)
+                doOptionChanged(_node, _value)
             }
         }
         return success

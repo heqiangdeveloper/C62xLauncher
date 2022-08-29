@@ -6,7 +6,6 @@ import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.manager.ISwitchManager
-import com.chinatsp.settinglib.optios.Area
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import java.lang.ref.WeakReference
@@ -29,7 +28,7 @@ class BackMirrorManager private constructor() : BaseManager(), ISwitchManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin, Area.GLOBAL)
 //            doUpdateSwitchValue(node, this, result)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -40,7 +39,7 @@ class BackMirrorManager private constructor() : BaseManager(), ISwitchManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin, Area.GLOBAL)
 //            doUpdateSwitchValue(node, this, result)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }

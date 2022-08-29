@@ -19,6 +19,7 @@ object Constant {
      * 浅色主题（白天模式）
      */
     const val LIGHT_TOPIC: Int = 0x01
+
     /**
      * 深色主题（黑夜模式）
      */

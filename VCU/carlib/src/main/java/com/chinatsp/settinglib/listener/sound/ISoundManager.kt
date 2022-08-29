@@ -10,4 +10,4 @@ import com.chinatsp.settinglib.manager.IOptionManager
  * @desc   :
  * @version: 1.0
  */
-interface ISoundManager: IOptionManager, IProgressManager
+interface ISoundManager : IOptionManager, IProgressManager

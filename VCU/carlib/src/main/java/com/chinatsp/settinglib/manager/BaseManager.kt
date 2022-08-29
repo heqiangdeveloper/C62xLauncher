@@ -37,23 +37,29 @@ abstract class BaseManager : IManager {
 
     abstract val careSerials: Map<Origin, Set<Int>>
 
-    fun createAtomicBoolean(node: SwitchNode, block:((AtomicBoolean, Int)->Unit)): AtomicBoolean {
+    fun createAtomicBoolean(
+        node: SwitchNode,
+        block: ((AtomicBoolean, Int) -> Unit)
+    ): AtomicBoolean {
         val result = AtomicBoolean(node.default)
-        readProperty(node.get.signal, node.get.origin){
+        readProperty(node.get.signal, node.get.origin) {
             block(result, it)
         }
         return result
     }
 
-    fun createAtomicInteger(node: RadioNode, block:((AtomicInteger, Int)->Unit)): AtomicInteger {
+    fun createAtomicInteger(node: RadioNode, block: ((AtomicInteger, Int) -> Unit)): AtomicInteger {
         val result = AtomicInteger(node.default)
-        readProperty(node.get.signal, node.get.origin){
+        readProperty(node.get.signal, node.get.origin) {
             block(result, it)
         }
         return result
     }
 
-    open fun onDispatchSignal(property: CarPropertyValue<*>, origin: Origin = Origin.CABIN): Boolean {
+    open fun onDispatchSignal(
+        property: CarPropertyValue<*>,
+        origin: Origin = Origin.CABIN
+    ): Boolean {
         if (isCareSignal(property.propertyId, origin)) {
             return onHandleSignal(property, origin)
         }
@@ -110,31 +116,32 @@ abstract class BaseManager : IManager {
 
     fun writeProperty(id: Int, value: Int, origin: Origin, area: Area = Area.GLOBAL): Boolean {
         return signalService.doSetProperty(id, value, origin, area)
-//        return true
     }
 
     fun writeProperty(id: Int, value: Int, origin: Origin, areaValue: Int): Boolean {
         return signalService.doSetProperty(id, value, origin, areaValue)
-//        return true
     }
 
     fun readIntProperty(id: Int, origin: Origin, area: Area = Area.GLOBAL): Int {
         return signalService.readIntProperty(id, origin, area)
-//        return 1
     }
 
     fun readIntProperty(id: Int, origin: Origin, areaValue: Int): Int {
         return signalService.readIntProperty(id, origin, areaValue)
-//        return 1
     }
 
-    fun readProperty(id: Int, origin: Origin, area: Area = Area.GLOBAL, block:((Int)->Unit)) {
+    private fun readProperty(
+        id: Int,
+        origin: Origin,
+        area: Area = Area.GLOBAL,
+        block: ((Int) -> Unit)
+    ) {
         signalService.readProperty(id, origin, area, block)
     }
 
-    fun readProperty(id: Int, origin: Origin, areaValue: Int, block:((Int)->Unit)) {
-        signalService.readProperty(id, origin, areaValue, block)
-    }
+//    fun readProperty(id: Int, origin: Origin, areaValue: Int, block:((Int)->Unit)) {
+//        signalService.readProperty(id, origin, areaValue, block)
+//    }
 
     override fun doSwitchChanged(node: SwitchNode, status: Boolean) {
         val readLock = readWriteLock.readLock()
@@ -152,7 +159,7 @@ abstract class BaseManager : IManager {
         }
     }
 
-    override fun doRadioChanged(node: RadioNode, value: Int) {
+    override fun doOptionChanged(node: RadioNode, value: Int) {
         val readLock = readWriteLock.readLock()
         try {
             readLock.lock()

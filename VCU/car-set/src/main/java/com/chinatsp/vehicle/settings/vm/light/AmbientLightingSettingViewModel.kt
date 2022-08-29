@@ -24,10 +24,7 @@ class AmbientLightingSettingViewModel @Inject constructor(app: Application, mode
 
     private val _alcDoorHint: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.ALC_DOOR_HINT
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            updateLiveData(this, value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val alcLockHint: LiveData<Boolean>
@@ -35,10 +32,7 @@ class AmbientLightingSettingViewModel @Inject constructor(app: Application, mode
 
     private val _alcLockHint: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.ALC_LOCK_HINT
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            updateLiveData(this, value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val alcBreatheHint: LiveData<Boolean>
@@ -46,10 +40,7 @@ class AmbientLightingSettingViewModel @Inject constructor(app: Application, mode
 
     private val _alcBreatheHint: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.ALC_BREATHE_HINT
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            updateLiveData(this, value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val alcComingHint: LiveData<Boolean>
@@ -57,10 +48,7 @@ class AmbientLightingSettingViewModel @Inject constructor(app: Application, mode
 
     private val _alcComingHint: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.ALC_COMING_HINT
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            updateLiveData(this, value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val alcRelatedTopics: LiveData<Boolean>
@@ -68,10 +56,7 @@ class AmbientLightingSettingViewModel @Inject constructor(app: Application, mode
 
     private val _alcRelatedTopics: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.ALC_RELATED_TOPICS
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            updateLiveData(this, value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     override fun onCreate() {

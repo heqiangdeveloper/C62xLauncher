@@ -12,31 +12,27 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class MirrorViewModel @Inject constructor(app: Application, model: BaseModel):
-    BaseViewModel(app, model), ISwitchListener{
+class MirrorViewModel @Inject constructor(app: Application, model: BaseModel) :
+    BaseViewModel(app, model), ISwitchListener {
 
-    private val manager:BackMirrorManager
+    private val manager: BackMirrorManager
         get() = BackMirrorManager.instance
 
     val mirrorFoldFunction: LiveData<Boolean> by lazy { _mirrorFoldFunction }
 
     private val _mirrorFoldFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.BACK_MIRROR_FOLD
-        MutableLiveData(node.default).apply {
-            value = manager.doGetSwitchOption(node)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val mirrorDownFunction: LiveData<Boolean> by lazy { _mirrorDownFunction }
 
     private val _mirrorDownFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.BACK_MIRROR_DOWN
-        MutableLiveData(node.default).apply {
-            value = manager.doGetSwitchOption(node)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    
+
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {
             SwitchNode.BACK_MIRROR_FOLD -> {

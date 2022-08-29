@@ -2,14 +2,15 @@ package com.chinatsp.vehicle.settings.fragment.doors
 
 import android.os.Bundle
 import android.view.View
-import android.widget.CompoundButton
-import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IOptionManager
+import com.chinatsp.settinglib.manager.IRadioManager
+import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.access.DoorManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
+import com.chinatsp.vehicle.settings.IOptionAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CarDoorsFragmentBinding
 import com.chinatsp.vehicle.settings.vm.DoorsViewModel
@@ -20,7 +21,7 @@ import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>() {
+class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>(), IOptionAction {
     private var animationOpenLock: AnimationDrawable = AnimationDrawable()
     private var animationCloseLock: AnimationDrawable = AnimationDrawable()
     private var animationFlameout: AnimationDrawable = AnimationDrawable()
@@ -35,6 +36,7 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
     override fun initData(savedInstanceState: Bundle?) {
         initViewsDisplay()
         initAnimation()
+
         initSwitchOption()
         addSwitchLiveDataListener()
         setSwitchListener()
@@ -43,12 +45,14 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
         addRadioLiveDataListener()
         setRadioListener()
     }
+
     private fun initViewsDisplay() {
         if (VcuUtils.isCareLevel(Level.LEVEL4)) {
             binding.wheelAutomaticHeating.visibility = View.VISIBLE
             binding.line3.visibility = View.VISIBLE
         }
     }
+
     private fun initRadioOption() {
         initRadioOption(RadioNode.DOOR_DRIVE_LOCK, viewModel.automaticDoorLock)
         initRadioOption(RadioNode.DOOR_FLAMEOUT_UNLOCK, viewModel.automaticDoorUnlock)
@@ -119,35 +123,6 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
         }
     }
 
-    private fun initRadioOption(node: RadioNode, liveData: LiveData<Int>) {
-        val value = liveData.value ?: node.default
-        doUpdateRadio(node, value)
-    }
-
-    private fun doUpdateRadio(
-        node: RadioNode,
-        value: String,
-        liveData: LiveData<Int>,
-        tabView: TabControlView
-    ) {
-        val result = isCanToInt(value) && manager.doSetRadioOption(node, value.toInt())
-        tabView.takeIf { !result }?.setSelection(liveData.value.toString(), true)
-    }
-
-    private fun doUpdateRadio(node: RadioNode, value: Int, immediately: Boolean = false) {
-        val tabView = when (node) {
-            RadioNode.DOOR_DRIVE_LOCK -> binding.doorAutomaticLockRadio
-            RadioNode.DOOR_FLAMEOUT_UNLOCK -> binding.doorAutomaticUnlockRadio
-            else -> null
-        }
-        takeIf { null != tabView }?.doUpdateRadio(tabView!!, value, immediately)
-    }
-
-    private fun doUpdateRadio(tabView: TabControlView, value: Int, immediately: Boolean = false) {
-        tabView.setSelection(value.toString(), true)
-    }
-
-
     private fun initSwitchOption() {
         initSwitchOption(SwitchNode.DOOR_SMART_ENTER, viewModel.smartDoorAccess)
     }
@@ -158,25 +133,27 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
         }
     }
 
-    private fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {
-        val status = liveData.value ?: node.default
-        doUpdateSwitch(node, status, true)
-    }
-
-    private fun doUpdateSwitch(node: SwitchNode, status: Boolean, immediately: Boolean = false) {
-        val swb = when (node) {
+    override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
+        return when (node) {
             SwitchNode.DOOR_SMART_ENTER -> binding.doorSmartAccessSwitch
             else -> null
         }
-        takeIf { null != swb }?.doUpdateSwitch(swb!!, status, immediately)
     }
 
-    private fun doUpdateSwitch(swb: SwitchButton, status: Boolean, immediately: Boolean = false) {
-        if (!immediately) {
-            swb.setCheckedNoEvent(status)
-        } else {
-            swb.setCheckedImmediatelyNoEvent(status)
+    override fun getSwitchManager(): ISwitchManager {
+        return manager
+    }
+
+    override fun findRadioByNode(node: RadioNode): TabControlView? {
+        return when (node) {
+            RadioNode.DOOR_DRIVE_LOCK -> binding.doorAutomaticLockRadio
+            RadioNode.DOOR_FLAMEOUT_UNLOCK -> binding.doorAutomaticUnlockRadio
+            else -> null
         }
+    }
+
+    override fun getRadioManager(): IRadioManager {
+        return manager
     }
 
     private fun setSwitchListener() {
@@ -185,14 +162,5 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
         }
     }
 
-    private fun doUpdateSwitchOption(node: SwitchNode, button: CompoundButton, status: Boolean) {
-        val result = manager.doSetSwitchOption(node, status)
-        if (!result && button is SwitchButton) {
-            button.setCheckedImmediatelyNoEvent(!status)
-        }
-    }
 
-    private fun isCanToInt(value: String?): Boolean {
-        return null != value && value.isNotBlank() && value.matches(Regex("\\d+"))
-    }
 }

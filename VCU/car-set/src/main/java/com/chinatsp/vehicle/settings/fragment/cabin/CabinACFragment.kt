@@ -1,11 +1,12 @@
 package com.chinatsp.vehicle.settings.fragment.cabin
 
 import android.os.Bundle
-import android.widget.CompoundButton
-import androidx.lifecycle.LiveData
+import com.chinatsp.settinglib.manager.IRadioManager
+import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.cabin.ACManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
+import com.chinatsp.vehicle.settings.IOptionAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CabinAcFragmentBinding
 import com.chinatsp.vehicle.settings.vm.CabinACViewModel
@@ -22,7 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
  * @version: 1.0
  */
 @AndroidEntryPoint
-class CabinACFragment : BaseFragment<CabinACViewModel, CabinAcFragmentBinding>() {
+class CabinACFragment : BaseFragment<CabinACViewModel, CabinAcFragmentBinding>(), IOptionAction {
 
     private val manager: ACManager
         get() = ACManager.instance
@@ -41,70 +42,28 @@ class CabinACFragment : BaseFragment<CabinACViewModel, CabinAcFragmentBinding>()
         setRadioListener()
     }
 
-
-    private fun initRadioOption() {
-        initRadioOption(RadioNode.AC_COMFORT, viewModel.comfortLiveData)
-    }
-
-    private fun addRadioLiveDataListener() {
-        viewModel.comfortLiveData.observe(this) {
-            doUpdateRadio(RadioNode.AC_COMFORT, it, false)
-        }
-    }
-
-    private fun setRadioListener() {
-        binding.cabinAcComfortOption.let {
-            it.setOnTabSelectionChangedListener { _, value ->
-                doUpdateRadio(RadioNode.AC_COMFORT, value, viewModel.comfortLiveData, it)
-            }
-        }
-    }
-
-    private fun initRadioOption(node: RadioNode, liveData: LiveData<Int>) {
-        val value = liveData.value ?: node.default
-        doUpdateRadio(node, value, isInit = true)
-    }
-
-    private fun doUpdateRadio(
-        node: RadioNode,
-        value: String,
-        liveData: LiveData<Int>,
-        tabView: TabControlView
-    ) {
-        val result = isCanToInt(value) && manager.doSetRadioOption(node, value.toInt())
-        tabView.takeIf { !result }?.let {
-            val result = node.obtainSelectValue(liveData.value!!)
-            it.setSelection(result.toString(), true)
-        }
-    }
-
-    private fun doUpdateRadio(
-        node: RadioNode,
-        value: Int,
-        immediately: Boolean = false,
-        isInit: Boolean = false
-    ) {
-        val tabView = when (node) {
+    override fun findRadioByNode(node: RadioNode): TabControlView? {
+        return when (node) {
             RadioNode.AC_COMFORT -> binding.cabinAcComfortOption
             else -> null
         }
-        tabView?.let {
-            bindRadioData(node, tabView, isInit)
-            val result = node.obtainSelectValue(value)
-            doUpdateRadio(it, result, immediately)
+    }
+
+    override fun getRadioManager(): IRadioManager {
+        return manager
+    }
+
+    override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
+        return when (node) {
+            SwitchNode.AC_AUTO_ARID -> binding.cabinAcAutoAridSwb
+            SwitchNode.AC_AUTO_DEMIST -> binding.cabinAcAutoDemistSwb
+            SwitchNode.AC_ADVANCE_WIND -> binding.cabinAcAdvanceWindSwb
+            else -> null
         }
     }
 
-    private fun bindRadioData(node: RadioNode, tabView: TabControlView, isInit: Boolean) {
-        if (isInit) {
-            val names = tabView.nameArray.map { it.toString() }.toTypedArray()
-            val values = node.set.values.map { it.toString() }.toTypedArray()
-            tabView.setItems(names, values)
-        }
-    }
-
-    private fun doUpdateRadio(tabView: TabControlView, value: Int, immediately: Boolean = false) {
-        tabView.setSelection(value.toString(), true)
+    override fun getSwitchManager(): ISwitchManager {
+        return manager
     }
 
     private fun initSwitchOption() {
@@ -125,29 +84,6 @@ class CabinACFragment : BaseFragment<CabinACViewModel, CabinAcFragmentBinding>()
         }
     }
 
-    private fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {
-        val status = liveData.value ?: node.default
-        doUpdateSwitch(node, status, true)
-    }
-
-    private fun doUpdateSwitch(node: SwitchNode, status: Boolean, immediately: Boolean = false) {
-        val swb = when (node) {
-            SwitchNode.AC_AUTO_ARID -> binding.cabinAcAutoAridSwb
-            SwitchNode.AC_AUTO_DEMIST -> binding.cabinAcAutoDemistSwb
-            SwitchNode.AC_ADVANCE_WIND -> binding.cabinAcAdvanceWindSwb
-            else -> null
-        }
-        takeIf { null != swb }?.doUpdateSwitch(swb!!, status, immediately)
-    }
-
-    private fun doUpdateSwitch(swb: SwitchButton, status: Boolean, immediately: Boolean = false) {
-        if (!immediately) {
-            swb.setCheckedNoEvent(status)
-        } else {
-            swb.setCheckedImmediatelyNoEvent(status)
-        }
-    }
-
     private fun setSwitchListener() {
         binding.cabinAcAutoAridSwb.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.AC_AUTO_ARID, buttonView, isChecked)
@@ -160,15 +96,23 @@ class CabinACFragment : BaseFragment<CabinACViewModel, CabinAcFragmentBinding>()
         }
     }
 
-    private fun doUpdateSwitchOption(node: SwitchNode, button: CompoundButton, status: Boolean) {
-        val result = manager.doSetSwitchOption(node, status)
-        if (!result && button is SwitchButton) {
-            button.setCheckedImmediatelyNoEvent(!status)
+
+    private fun initRadioOption() {
+        initRadioOption(RadioNode.AC_COMFORT, viewModel.comfortLiveData)
+    }
+
+    private fun addRadioLiveDataListener() {
+        viewModel.comfortLiveData.observe(this) {
+            doUpdateRadio(RadioNode.AC_COMFORT, it, false)
         }
     }
 
-    private fun isCanToInt(value: String?): Boolean {
-        return null != value && value.isNotBlank() && value.matches(Regex("\\d+"))
+    private fun setRadioListener() {
+        binding.cabinAcComfortOption.let {
+            it.setOnTabSelectionChangedListener { _, value ->
+                doUpdateRadio(RadioNode.AC_COMFORT, value, viewModel.comfortLiveData, it)
+            }
+        }
     }
 
 }

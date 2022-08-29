@@ -9,7 +9,6 @@ import com.chinatsp.settinglib.service.VehicleService
 import com.chinatsp.vehicle.controller.VcuOutTrader
 import com.chinatsp.vehicle.settings.app.Constants
 import com.king.retrofit.retrofithelper.RetrofitHelper
-import com.orhanobut.logger.*
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 

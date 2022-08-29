@@ -72,7 +72,7 @@ enum class SwitchNode(
     /**
      * 座舱--空调--自动除雾
      * set -> 前除霜if not set ,the value of signal is
-     8        0x0(inactive) 0x0: Inactive; 0x1: ON; 0x2: OFF; 0x3: Not used
+    8        0x0(inactive) 0x0: Inactive; 0x1: ON; 0x2: OFF; 0x3: Not used
      * get -> 前除霜显示图标 0x0: Not display; 0x1: Display; 0x2: Reserved; 0x3: Error
      */
     AC_AUTO_DEMIST(
@@ -255,10 +255,8 @@ enum class SwitchNode(
      * get -> Loudness switch status响度开关状态 0x0: OFF 0x1: ON
      */
     AUDIO_SOUND_LOUDNESS(
-//        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_AMP_LOUD_SW_STS),
-        get = Norm(on = 0x1, off = 0x0, signal = -1),
-//        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HUM_LOUD_SW),
-        set = Norm(on = 0x1, off = 0x2, signal = -1),
+        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_AMP_LOUD_SW_STS),
+        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HUM_LOUD_SW),
         default = true
     ),
 
@@ -280,10 +278,12 @@ enum class SwitchNode(
     TOUCH_PROMPT_TONE(
         get = Norm(
             on = CarAdapter.Constants.BEEP_VOLUME_LEVEL_MIDDLE,
-            off = CarAdapter.Constants.BEEP_VOLUME_LEVEL_CLOSE, origin = Origin.SPECIAL),
+            off = CarAdapter.Constants.BEEP_VOLUME_LEVEL_CLOSE, origin = Origin.SPECIAL
+        ),
         set = Norm(
             on = CarAdapter.Constants.BEEP_VOLUME_LEVEL_MIDDLE,
-            off = CarAdapter.Constants.BEEP_VOLUME_LEVEL_CLOSE, origin = Origin.SPECIAL),
+            off = CarAdapter.Constants.BEEP_VOLUME_LEVEL_CLOSE, origin = Origin.SPECIAL
+        ),
         default = false,
         careOn = false
     ),
@@ -389,6 +389,7 @@ enum class SwitchNode(
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_MIRROR_FADE_IN_OUT_SET),
         default = true
     ),
+
     /**
      * 车门车窗--外后视镜--外后视镜下翻
      * set -> int类型数据 0x0: Inactive; 0x1: Enable; 0x2: Disable; 0x3: Not used
@@ -749,6 +750,4 @@ enum class SwitchNode(
     fun isValid(value: Int) = (get.on == value) or (get.off == value)
 
     fun isOn(value: Int) = if (careOn) get.on == value else get.off != value
-
-    fun isOn() = default
 }

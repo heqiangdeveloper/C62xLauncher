@@ -1,10 +1,10 @@
 package com.chinatsp.vehicle.settings.fragment.cabin
 
 import android.os.Bundle
-import android.widget.CompoundButton
-import androidx.lifecycle.LiveData
+import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.cabin.SafeManager
 import com.chinatsp.settinglib.optios.SwitchNode
+import com.chinatsp.vehicle.settings.ISwitchAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CabinSafeFragmentBinding
 import com.chinatsp.vehicle.settings.vm.cabin.SafeViewModel
@@ -20,7 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
  * @version: 1.0
  */
 @AndroidEntryPoint
-class CabinSafeFragment: BaseFragment<SafeViewModel, CabinSafeFragmentBinding>() {
+class CabinSafeFragment : BaseFragment<SafeViewModel, CabinSafeFragmentBinding>(), ISwitchAction {
 
 
     private val manager: SafeManager
@@ -46,32 +46,20 @@ class CabinSafeFragment: BaseFragment<SafeViewModel, CabinSafeFragmentBinding>()
     }
 
     private fun initSwitchOption() {
-        initSwitchOption(SwitchNode.DRIVE_SAFE_FORTIFY_SOUND, viewModel.fortifyToneFunction,)
-        initSwitchOption(SwitchNode.DRIVE_SAFE_VIDEO_PLAYING, viewModel.videoModeFunction,)
+        initSwitchOption(SwitchNode.DRIVE_SAFE_FORTIFY_SOUND, viewModel.fortifyToneFunction)
+        initSwitchOption(SwitchNode.DRIVE_SAFE_VIDEO_PLAYING, viewModel.videoModeFunction)
     }
 
-    private fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {
-        val status = liveData.value ?: false
-        doUpdateSwitch(node, status, true)
-    }
-
-    private fun doUpdateSwitch(node: SwitchNode, status: Boolean, immediately: Boolean = false) {
-        val swb = when (node) {
+    override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
+        return when (node) {
             SwitchNode.DRIVE_SAFE_FORTIFY_SOUND -> binding.cabinSafeFortifySwitch
             SwitchNode.DRIVE_SAFE_VIDEO_PLAYING -> binding.cabinSafeMovieSwitch
             else -> null
         }
-        swb?.let {
-            doUpdateSwitch(it, status, immediately)
-        }
     }
 
-    private fun doUpdateSwitch(swb: SwitchButton, status: Boolean, immediately: Boolean = false) {
-        if (!immediately) {
-            swb.setCheckedNoEvent(status)
-        } else {
-            swb.setCheckedImmediatelyNoEvent(status)
-        }
+    override fun getSwitchManager(): ISwitchManager {
+        return manager
     }
 
     private fun setSwitchListener() {
@@ -83,10 +71,4 @@ class CabinSafeFragment: BaseFragment<SafeViewModel, CabinSafeFragmentBinding>()
         }
     }
 
-    private fun doUpdateSwitchOption(node: SwitchNode, button: CompoundButton, status: Boolean) {
-        val result = manager.doSetSwitchOption(node, status)
-        if (!result && button is SwitchButton) {
-            button.setCheckedImmediatelyNoEvent(!status)
-        }
-    }
 }

@@ -94,7 +94,7 @@ class LogManager private constructor() {
         private fun createTag(): String {
             val elements = Thread.currentThread().stackTrace
             return elements.let {
-                if (it.size < 5) "LogManager" else it[4].let {item ->
+                if (it.size < 5) "LogManager" else it[4].let { item ->
                     item.fileName.split(Regex.fromLiteral(".")).first()
                 }
             }

@@ -27,10 +27,7 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
 
     private val _insideLightMeet: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.LIGHT_INSIDE_MEET
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            updateLiveData(this, value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val outsideLightMeet: LiveData<Boolean>
@@ -38,10 +35,7 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
 
     private val _outsideLightMeet: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.LIGHT_OUTSIDE_MEET
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            updateLiveData(this, value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val lightOutDelayed: LiveData<Int>
@@ -49,10 +43,7 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
 
     private val _lightOutDelayed: MutableLiveData<Int> by lazy {
         val node = RadioNode.LIGHT_DELAYED_OUT
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetRadioOption(node)
-            updateLiveData(this, value)
-        }
+        MutableLiveData(manager.doGetRadioOption(node))
     }
 
     val lightFlicker: LiveData<Int>
@@ -60,10 +51,7 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
 
     private val _lightFlicker: MutableLiveData<Int> by lazy {
         val node = RadioNode.LIGHT_FLICKER
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetRadioOption(node)
-            updateLiveData(this, value)
-        }
+        MutableLiveData(manager.doGetRadioOption(node))
     }
 
     val ceremonySense: LiveData<Int>
@@ -71,10 +59,7 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
 
     private val _ceremonySense: MutableLiveData<Int> by lazy {
         val node = RadioNode.LIGHT_CEREMONY_SENSE
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetRadioOption(node)
-            updateLiveData(this, value)
-        }
+        MutableLiveData(manager.doGetRadioOption(node))
     }
 
     val switchBacklight: LiveData<Volume>

@@ -30,10 +30,7 @@ class TrailerViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _trailerFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.DRIVE_TRAILER_REMIND
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            setValue(value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val sensitivity: LiveData<Int>
@@ -41,10 +38,7 @@ class TrailerViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _sensitivity: MutableLiveData<Int> by lazy {
         val node = RadioNode.DEVICE_TRAILER_SENSITIVITY
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetRadioOption(node)
-            doUpdate(this, value, node.isValid(value))
-        }
+        MutableLiveData(manager.doGetRadioOption(node))
     }
 
     val distance: LiveData<Int>
@@ -52,10 +46,7 @@ class TrailerViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _distance: MutableLiveData<Int> by lazy {
         val node = RadioNode.DEVICE_TRAILER_DISTANCE
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetRadioOption(node)
-            doUpdate(this, value, node.isValid(value))
-        }
+        MutableLiveData(manager.doGetRadioOption(node))
     }
 
     override fun onCreate() {

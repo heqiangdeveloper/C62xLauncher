@@ -65,7 +65,7 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, value)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -75,7 +75,7 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, value)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -86,7 +86,7 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, value)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -97,7 +97,7 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, value)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -108,7 +108,7 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, value)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -119,7 +119,7 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, value)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -130,7 +130,7 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, value)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -141,7 +141,7 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, value)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -152,7 +152,7 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, value)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -163,7 +163,7 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, value)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -174,7 +174,7 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, value)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -223,15 +223,19 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
             Progress.AMBIENT_LIGHT_BRIGHTNESS -> {
                 val set = node.set
                 val result = writeProperty(set.signal, value, set.origin)
-                Timber.tag(TAG).d("setBrightness signal:%s, newValue:%s, result:%s",
-                    set.signal, value, result)
+                Timber.tag(TAG).d(
+                    "setBrightness signal:%s, newValue:%s, result:%s",
+                    set.signal, value, result
+                )
                 true
             }
             Progress.AMBIENT_LIGHT_COLOR -> {
                 val set = node.set
                 val result = writeProperty(set.signal, value, set.origin)
-                Timber.tag(TAG).d("setBrightness signal:%s, newValue:%s, result:%s",
-                    set.signal, value, result)
+                Timber.tag(TAG).d(
+                    "setBrightness signal:%s, newValue:%s, result:%s",
+                    set.signal, value, result
+                )
                 true
             }
             else -> false
@@ -376,7 +380,12 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
         val value = property.value
         if (value is Int) {
             Timber.d("onAmbientBrightnessChanged value%s", value)
-            doUpdateProgress(Progress.AMBIENT_LIGHT_BRIGHTNESS, ambientBrightness, value, this::doProgressChanged)
+            doUpdateProgress(
+                Progress.AMBIENT_LIGHT_BRIGHTNESS,
+                ambientBrightness,
+                value,
+                this::doProgressChanged
+            )
         }
     }
 
@@ -384,7 +393,12 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
         val value = property.value
         if (value is Int) {
             Timber.d("onAmbientBrightnessChanged value%s", value)
-            doUpdateProgress(Progress.AMBIENT_LIGHT_COLOR, ambientColor, value, this::doProgressChanged)
+            doUpdateProgress(
+                Progress.AMBIENT_LIGHT_COLOR,
+                ambientColor,
+                value,
+                this::doProgressChanged
+            )
         }
     }
 
@@ -393,7 +407,7 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
                 && writeProperty(node.set.signal, value, node.set.origin)
         if (success && develop) {
             doUpdateRadioValue(node, atomic, value) { _node, _value ->
-                doRadioChanged(_node, _value)
+                doOptionChanged(_node, _value)
             }
         }
         return success

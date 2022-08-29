@@ -22,7 +22,8 @@ import com.chinatsp.vehicle.settings.Node
  *
  *
  */
-abstract class BaseTabFragment<VM : BaseViewModel<*>, VDB : ViewDataBinding> : BaseFragment<VM, VDB>() {
+abstract class BaseTabFragment<VM : BaseViewModel<*>, VDB : ViewDataBinding> :
+    BaseFragment<VM, VDB>() {
 
     lateinit var tabOptions: List<View>
 

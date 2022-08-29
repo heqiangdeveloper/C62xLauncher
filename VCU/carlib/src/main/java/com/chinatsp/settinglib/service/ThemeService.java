@@ -95,6 +95,7 @@ public class ThemeService implements IThemeService {
             resolver.unregisterContentObserver(mContentObserver);
         }
     }
+
     public static final class C62xThemes {
         public static final String SYSTEM_THEME_TYPE0 = "type1"; // 经典模式
         public static final String SYSTEM_THEME_TYPE1 = "type2"; // 运动模式

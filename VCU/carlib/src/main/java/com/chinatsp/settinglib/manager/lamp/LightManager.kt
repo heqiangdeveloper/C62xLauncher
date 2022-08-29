@@ -52,7 +52,7 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, value)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -63,7 +63,7 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, value)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -74,8 +74,8 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateRadioValue(node, this, value)
 //        }
-        return@lazy createAtomicInteger(node) {result, value ->
-            doUpdateRadioValue(node, result, value, this::doRadioChanged)
+        return@lazy createAtomicInteger(node) { result, value ->
+            doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
     }
 
@@ -85,8 +85,8 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateRadioValue(node, this, value)
 //        }
-        return@lazy createAtomicInteger(node) {result, value ->
-            doUpdateRadioValue(node, result, value, this::doRadioChanged)
+        return@lazy createAtomicInteger(node) { result, value ->
+            doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
     }
 
@@ -96,8 +96,8 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateRadioValue(node, this, value)
 //        }
-        return@lazy createAtomicInteger(node) {result, value ->
-            doUpdateRadioValue(node, result, value, this::doRadioChanged)
+        return@lazy createAtomicInteger(node) { result, value ->
+            doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
     }
 
@@ -122,7 +122,7 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
     }
 
     private fun getBacklightLevel(): IntArray {
-        return intArrayOf(0x19, 0x33, 0x4C,  0x66, 0x7F, 0x99, 0xB2, 0xCC, 0xE5, 0xFF)
+        return intArrayOf(0x19, 0x33, 0x4C, 0x66, 0x7F, 0x99, 0xB2, 0xCC, 0xE5, 0xFF)
     }
 
     override fun isCareSignal(signal: Int, origin: Origin): Boolean {
@@ -178,7 +178,7 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
                 val backlightLevel = getBacklightLevel()
                 if (position in 0..backlightLevel.size) {
                     val value = backlightLevel[position]
-                   return writeProperty(type.set.signal, value, type.set.origin)
+                    return writeProperty(type.set.signal, value, type.set.origin)
                 }
                 false
             }
@@ -248,7 +248,7 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
             }
             Progress.SWITCH_BACKLIGHT_BRIGHTNESS.get.signal -> {
                 val level = findBacklightLevel(property.value as Int)
-                doUpdateProgress(switchBacklight, level, true, this::doProgressChanged )
+                doUpdateProgress(switchBacklight, level, true, this::doProgressChanged)
             }
             else -> {}
         }
@@ -259,7 +259,7 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
                 && writeProperty(node.set.signal, value, node.set.origin)
         if (success && develop) {
             doUpdateRadioValue(node, atomic, value) { _node, _value ->
-                doRadioChanged(_node, _value)
+                doOptionChanged(_node, _value)
             }
         }
         return success

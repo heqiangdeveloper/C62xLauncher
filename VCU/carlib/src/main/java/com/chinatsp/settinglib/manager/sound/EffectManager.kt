@@ -40,7 +40,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, result)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -50,7 +50,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, result)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -61,7 +61,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, result)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -72,7 +72,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, result)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -83,7 +83,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, result)
 //        }
-        return@lazy createAtomicBoolean(node) {result, value ->
+        return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -94,16 +94,16 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateRadioValue(node, this, result)
 //        }
-        return@lazy createAtomicInteger(node) {result, value ->
-            doUpdateRadioValue(node, result, value, this::doRadioChanged)
+        return@lazy createAtomicInteger(node) { result, value ->
+            doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
     }
 
     private val systemAudioEffect: AtomicInteger by lazy {
         val node = RadioNode.SYSTEM_SOUND_EFFECT
         AtomicInteger(node.default).apply {
-            val effect = SettingManager.instance.getAudioEQ()
-            doUpdateRadioValue(node, this, effect.id)
+            val eqId = SettingManager.instance.getEQ()
+            doUpdateRadioValue(node, this, eqId)
         }
     }
 
@@ -113,6 +113,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
                 add(SwitchNode.AUDIO_ENVI_AUDIO.get.signal)
                 add(SwitchNode.AUDIO_SOUND_LOUDNESS.get.signal)
                 add(RadioNode.AUDIO_ENVI_AUDIO.get.signal)
+                add(RadioNode.SYSTEM_SOUND_EFFECT.get.signal)
             }
             put(Origin.CABIN, cabinSet)
         }
@@ -289,8 +290,53 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
             RadioNode.AUDIO_ENVI_AUDIO.get.signal -> {
                 onRadioChanged(RadioNode.AUDIO_ENVI_AUDIO, audioEffectOption, property)
             }
+            RadioNode.SYSTEM_SOUND_EFFECT.get.signal -> {
+                onRadioChanged(RadioNode.SYSTEM_SOUND_EFFECT, systemAudioEffect, property)
+            }
             else -> {}
         }
     }
+
+    fun sendEQValue(eq: Int) {
+        val settingManager = SettingManager.instance
+        settingManager.setAudioEQ(eq)
+    }
+
+    fun doSetEQ(
+        mode: Int, lev1: Int = 0,
+        lev2: Int = 0, lev3: Int = 0,
+        lev4: Int = 0, lev5: Int = 0
+    ) {
+        val manager = SettingManager.instance
+        manager.setAudioEQ(mode, lev1, lev2, lev3, lev4, lev5)
+        val node = RadioNode.SYSTEM_SOUND_EFFECT
+        doUpdateRadioValue(node, systemAudioEffect, node.obtainSelectValue(mode), this::doOptionChanged)
+    }
+
+    fun getEQ(): Int {
+        val manager = SettingManager.instance
+        return manager.getEQ()
+    }
+
+    fun setAudioBalance(uiBalanceLevelValue: Int, uiFadeLevelValue: Int) {
+        val manager = SettingManager.instance
+        manager.setAudioBalance(uiBalanceLevelValue, uiFadeLevelValue)
+    }
+
+    fun getAudioBalance(): Int {
+        val manager = SettingManager.instance
+        return manager.getAudioBalance()
+    }
+
+    fun getAudioVoice(id: Int): Int {
+        val manager = SettingManager.instance
+        return manager.getAudioVoice(id)
+    }
+
+    fun audioFade(): Int {
+        val manager = SettingManager.instance
+        return manager.audioFade
+    }
+
 
 }

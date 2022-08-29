@@ -23,39 +23,28 @@ class LaneViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _laneAssistFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.ADAS_LANE_ASSIST
-        MutableLiveData(node.default).apply {
-            value = manager.doGetSwitchOption(node)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val laneAssistMode: LiveData<Int> by lazy { _laneAssistMode }
 
     private val _laneAssistMode: MutableLiveData<Int> by lazy {
         val node = RadioNode.ADAS_LANE_ASSIST_MODE
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetRadioOption(node)
-            doUpdate(this, value, node.isValid(value))
-        }
+        MutableLiveData(manager.doGetRadioOption(node))
     }
 
     val ldwStyle: LiveData<Int> by lazy { _ldwStyle }
 
     private val _ldwStyle: MutableLiveData<Int> by lazy {
         val node = RadioNode.ADAS_LDW_STYLE
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetRadioOption(node)
-            doUpdate(this, value, node.isValid(value))
-        }
+        MutableLiveData(manager.doGetRadioOption(node))
     }
 
     val ldwSensitivity: LiveData<Int> by lazy { _ldwSensitivity }
 
     private val _ldwSensitivity: MutableLiveData<Int> by lazy {
         val node = RadioNode.ADAS_LDW_SENSITIVITY
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetRadioOption(node)
-            doUpdate(this, value, node.isValid(value))
-        }
+        MutableLiveData(manager.doGetRadioOption(node))
     }
 
     override fun onCreate() {

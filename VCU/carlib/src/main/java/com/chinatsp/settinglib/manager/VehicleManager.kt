@@ -15,7 +15,7 @@ import timber.log.Timber
  * @desc   :
  * @version: 1.0
  */
-class VehicleManager private constructor(): ServiceConnection {
+class VehicleManager private constructor() : ServiceConnection {
 
     private lateinit var context: Context
 

@@ -124,8 +124,10 @@ class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback {
         val voiceName = Settings.System.getString(context.contentResolver, "aware")
         val map: MutableMap<String, String> = HashMap()
         map["#VOICENAME#"] = voiceName
-        LogManager.d(TAG, "audioHintActionResult invoke voiceName:$voiceName, " +
-                "audioSerial:$audioSerial, description:$description")
+        LogManager.d(
+            TAG, "audioHintActionResult invoke voiceName:$voiceName, " +
+                    "audioSerial:$audioSerial, description:$description"
+        )
         speechService.ttsSpeakListener(
             shownIfly = false,
             secondsr = false,

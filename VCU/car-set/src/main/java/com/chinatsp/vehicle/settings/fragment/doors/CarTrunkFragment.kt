@@ -3,13 +3,14 @@ package com.chinatsp.vehicle.settings.fragment.doors
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CompoundButton
-import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.VcuUtils
+import com.chinatsp.settinglib.manager.IRadioManager
+import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.access.SternDoorManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
+import com.chinatsp.vehicle.settings.IOptionAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CarTrunkFragmentBinding
 import com.chinatsp.vehicle.settings.vm.accress.SternDoorViewModel
@@ -22,7 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBinding>(),
-    ArcSeekBar.OnChangeListener {
+    ArcSeekBar.OnChangeListener, IOptionAction {
     private var animationOpenDoor: AnimationDrawable = AnimationDrawable()
     private var animationCloseDoor: AnimationDrawable = AnimationDrawable()
     private var animationFlashAlarm: AnimationDrawable = AnimationDrawable()
@@ -122,56 +123,6 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         }
     }
 
-    private fun initRadioOption(node: RadioNode, liveData: LiveData<Int>) {
-        val value = liveData.value ?: node.default
-        doUpdateRadio(node, value, isInit = true)
-    }
-
-    private fun doUpdateRadio(
-        node: RadioNode,
-        value: String,
-        liveData: LiveData<Int>,
-        tabView: TabControlView
-    ) {
-        val result = isCanToInt(value) && manager.doSetRadioOption(node, value.toInt())
-        tabView.takeIf { !result }?.let {
-            val result = node.obtainSelectValue(liveData.value!!)
-            it.setSelection(result.toString(), true)
-        }
-    }
-
-    private fun doUpdateRadio(
-        node: RadioNode,
-        value: Int,
-        immediately: Boolean = false,
-        isInit: Boolean = false
-    ) {
-        val tabView = when (node) {
-            RadioNode.STERN_SMART_ENTER -> {
-                binding.accessSternSmartEnterRadio
-            }
-            else -> null
-        }
-        tabView?.let {
-            bindRadioData(node, tabView, isInit)
-            val result = node.obtainSelectValue(value)
-            doUpdateRadio(it, result, immediately)
-        }
-    }
-
-
-    private fun bindRadioData(node: RadioNode, tabView: TabControlView, isInit: Boolean) {
-        if (isInit) {
-            val names = tabView.nameArray.map { it.toString() }.toTypedArray()
-            val values = node.set.values.map { it.toString() }.toTypedArray()
-            tabView.setItems(names, values)
-        }
-    }
-
-    private fun doUpdateRadio(tabView: TabControlView, value: Int, immediately: Boolean = false) {
-        tabView.setSelection(value.toString(), true)
-    }
-
     private fun setSwitchListener() {
         binding.accessSternElectricSw.let {
             it.setOnCheckedChangeListener { buttonView, isChecked ->
@@ -257,6 +208,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         animationOpenDoor.start(false, 50, object : AnimationDrawable.AnimationLisenter {
             override fun startAnimation() {
             }
+
             override fun endAnimation() {
                 if (binding.accessSternElectricSw.isChecked) {
                     binding.arcSeekBar.visibility = View.VISIBLE
@@ -266,17 +218,6 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
             }
         })
         binding.carTrunkDoorHeight.visibility = View.VISIBLE
-    }
-
-    private fun doUpdateSwitchOption(node: SwitchNode, button: CompoundButton, status: Boolean) {
-        val result = manager.doSetSwitchOption(node, status)
-        if (!result && button is SwitchButton) {
-            button.setCheckedImmediatelyNoEvent(!status)
-        }
-    }
-
-    private fun isCanToInt(value: String?): Boolean {
-        return null != value && value.isNotBlank() && value.matches(Regex("\\d+"))
     }
 
 
@@ -299,13 +240,8 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         initSwitchOption(SwitchNode.STERN_AUDIO_ALARM, viewModel.audioAlarmFunction)
     }
 
-    private fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {
-        val status = liveData.value ?: false
-        doUpdateSwitch(node, status, true)
-    }
-
-    private fun doUpdateSwitch(node: SwitchNode, status: Boolean, immediately: Boolean = false) {
-        val swb = when (node) {
+    override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
+        return when (node) {
             SwitchNode.AS_STERN_ELECTRIC -> {
                 binding.accessSternElectricSw
             }
@@ -317,18 +253,25 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
             }
             else -> null
         }
-        swb?.let {
-            doUpdateSwitch(it, status, immediately)
+    }
+
+    override fun getSwitchManager(): ISwitchManager {
+        return manager
+    }
+
+    override fun onPostChecked(button: SwitchButton, status: Boolean) {
+        checkDisableOtherDiv(button, status)
+    }
+
+    override fun findRadioByNode(node: RadioNode): TabControlView? {
+        return when (node) {
+            RadioNode.STERN_SMART_ENTER -> binding.accessSternSmartEnterRadio
+            else -> null
         }
     }
 
-    private fun doUpdateSwitch(swb: SwitchButton, status: Boolean, immediately: Boolean = false) {
-        if (!immediately) {
-            swb.setCheckedNoEvent(status)
-        } else {
-            swb.setCheckedImmediatelyNoEvent(status)
-        }
-        checkDisableOtherDiv(swb, status)
+    override fun getRadioManager(): IRadioManager {
+        return manager
     }
 
     private fun checkDisableOtherDiv(swb: SwitchButton, status: Boolean) {

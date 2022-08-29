@@ -16,7 +16,8 @@ import javax.inject.Inject
  * @version: 1.0
  */
 @HiltViewModel
-class MainViewModel @Inject constructor(app: Application, model: BaseModel) : BaseViewModel(app, model) {
+class MainViewModel @Inject constructor(app: Application, model: BaseModel) :
+    BaseViewModel(app, model) {
 
     private val liveDataTabPage: MutableLiveData<List<TabPage>> by lazy {
         MutableLiveData<List<TabPage>>().apply {

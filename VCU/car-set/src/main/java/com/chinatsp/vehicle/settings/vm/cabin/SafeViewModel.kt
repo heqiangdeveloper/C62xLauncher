@@ -29,10 +29,7 @@ class SafeViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _alcLockHint: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.ALC_LOCK_HINT
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            doUpdate(this, value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val fortifyToneFunction: LiveData<Boolean>
@@ -40,10 +37,7 @@ class SafeViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _fortifyToneFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.DRIVE_SAFE_FORTIFY_SOUND
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            setValue(value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
 
@@ -52,10 +46,7 @@ class SafeViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _videoModeFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.DRIVE_SAFE_VIDEO_PLAYING
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            setValue(value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     override fun onCreate() {
