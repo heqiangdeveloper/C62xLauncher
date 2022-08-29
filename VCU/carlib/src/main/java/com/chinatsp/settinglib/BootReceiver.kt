@@ -12,7 +12,7 @@ import timber.log.Timber
  * @desc   :
  * @version: 1.0
  */
-class BootReceiver: BroadcastReceiver() {
+class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         Timber.d("receiver android.intent.action.BOOT_COMPLETED")
     }

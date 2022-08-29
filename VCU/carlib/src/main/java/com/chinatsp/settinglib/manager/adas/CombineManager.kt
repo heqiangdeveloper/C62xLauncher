@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicBoolean
  */
 class CombineManager : BaseManager(), ISwitchManager {
 
-    companion object: ISignal {
+    companion object : ISignal {
         override val TAG: String = CombineManager::class.java.simpleName
         val instance: CombineManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             CombineManager()
@@ -29,23 +29,29 @@ class CombineManager : BaseManager(), ISwitchManager {
 
     private val slaValue: AtomicBoolean by lazy {
         val node = SwitchNode.ADAS_TSR
-        AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, result)
+//        AtomicBoolean(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, result)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val hmaValue: AtomicBoolean by lazy {
         val node = SwitchNode.ADAS_HMA
-        AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, result)
+//        AtomicBoolean(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, result)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
-            val cabinSet = HashSet<Int> ().apply {
+            val cabinSet = HashSet<Int>().apply {
                 add(SwitchNode.ADAS_HMA.get.signal)
                 add(SwitchNode.ADAS_TSR.get.signal)
             }

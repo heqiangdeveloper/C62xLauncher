@@ -57,31 +57,40 @@ class SideBackManager : BaseManager(), IOptionManager {
 
     private val dowValue: AtomicBoolean by lazy {
         val node = SwitchNode.ADAS_DOW
-        AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, result)
+//        AtomicBoolean(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, result)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val bsdValue: AtomicBoolean by lazy {
         val node = SwitchNode.ADAS_BSD
-        AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, result)
+//        AtomicBoolean(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, result)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val bscValue: AtomicBoolean by lazy {
         val node = SwitchNode.ADAS_BSC
-        AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, result)
+//        AtomicBoolean(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, result)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val guidesValue: AtomicBoolean by lazy {
         val node = SwitchNode.ADAS_GUIDES
-        AtomicBoolean(node.isOn()).apply {
+        AtomicBoolean(node.default).apply {
             val result = VcuUtils.getInt(
                 key = Constant.AUXILIARY_LINE,
                 value = node.get.on

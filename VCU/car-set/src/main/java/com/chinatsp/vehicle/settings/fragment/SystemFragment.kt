@@ -8,8 +8,9 @@ import com.chinatsp.vehicle.settings.databinding.FragmentSimpleTabBinding
 import com.common.library.frame.base.BaseTabFragment
 import dagger.hilt.android.AndroidEntryPoint
 
+
 @AndroidEntryPoint
-class SystemFragment: BaseTabFragment<BaseViewModel, FragmentSimpleTabBinding>() {
+class SystemFragment : BaseTabFragment<BaseViewModel, FragmentSimpleTabBinding>() {
 
     override val nodeId: Int
         get() = 7
@@ -22,6 +23,7 @@ class SystemFragment: BaseTabFragment<BaseViewModel, FragmentSimpleTabBinding>()
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+
     }
 
 

@@ -22,44 +22,34 @@ class SideViewModel @Inject constructor(app: Application, model: BaseModel) :
     val dowValue: LiveData<Boolean> by lazy { _dowValue }
 
     private val _dowValue: MutableLiveData<Boolean> by lazy {
-        val switchNode = SwitchNode.ADAS_DOW
-        MutableLiveData(switchNode.isOn()).apply {
-            value = manager.doGetSwitchOption(switchNode)
-        }
+        val node = SwitchNode.ADAS_DOW
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val bsdValue: LiveData<Boolean> by lazy { _bsdValue }
 
     private val _bsdValue: MutableLiveData<Boolean> by lazy {
-        val switchNode = SwitchNode.ADAS_BSD
-        MutableLiveData(switchNode.isOn()).apply {
-            value = manager.doGetSwitchOption(switchNode)
-        }
+        val node = SwitchNode.ADAS_BSD
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
     val bscValue: LiveData<Boolean> by lazy { _bscValue }
 
     private val _bscValue: MutableLiveData<Boolean> by lazy {
-        val switchNode = SwitchNode.ADAS_BSC
-        MutableLiveData(switchNode.isOn()).apply {
-            value = manager.doGetSwitchOption(switchNode)
-        }
+        val node = SwitchNode.ADAS_BSC
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
     val guidesValue: LiveData<Boolean> by lazy { _guidesValue }
 
     private val _guidesValue: MutableLiveData<Boolean> by lazy {
-        val switchNode = SwitchNode.ADAS_GUIDES
-        MutableLiveData(switchNode.isOn()).apply {
-            value = manager.doGetSwitchOption(switchNode)
-        }
+        val node = SwitchNode.ADAS_GUIDES
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val showAreaValue: LiveData<Int> by lazy { _showAreaValue }
 
     private val _showAreaValue: MutableLiveData<Int> by lazy {
         val node = RadioNode.ADAS_SIDE_BACK_SHOW_AREA
-        MutableLiveData(node.default).apply {
-            value = manager.doGetRadioOption(node)
-        }
+        MutableLiveData(manager.doGetRadioOption(node))
     }
 
     override fun onCreate() {
@@ -75,16 +65,16 @@ class SideViewModel @Inject constructor(app: Application, model: BaseModel) :
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {
             SwitchNode.ADAS_DOW -> {
-                _dowValue.postValue(status)
+                doUpdate(_dowValue, status)
             }
             SwitchNode.ADAS_BSD -> {
-                _bsdValue.postValue(status)
+                doUpdate(_bsdValue, status)
             }
             SwitchNode.ADAS_BSC -> {
-                _bscValue.postValue(status)
+                doUpdate(_bscValue, status)
             }
             SwitchNode.ADAS_GUIDES -> {
-                _guidesValue.postValue(status)
+                doUpdate(_guidesValue, status)
             }
             else -> {}
         }
@@ -93,7 +83,7 @@ class SideViewModel @Inject constructor(app: Application, model: BaseModel) :
     override fun onRadioOptionChanged(node: RadioNode, value: Int) {
         when (node) {
             RadioNode.ADAS_SIDE_BACK_SHOW_AREA -> {
-                _showAreaValue.value = value
+                doUpdate(_showAreaValue, value)
             }
             else -> {}
         }

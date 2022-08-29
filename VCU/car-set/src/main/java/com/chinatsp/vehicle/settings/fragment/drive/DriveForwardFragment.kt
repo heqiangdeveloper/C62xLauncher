@@ -5,12 +5,12 @@ import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.widget.CompoundButton
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LiveData
+import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.adas.ForwardManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.HintHold
+import com.chinatsp.vehicle.settings.ISwitchAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.DriveForwardFragmentBinding
 import com.chinatsp.vehicle.settings.fragment.drive.dialog.CloseBrakeDialogFragment
@@ -21,7 +21,8 @@ import com.common.xui.widget.button.switchbutton.SwitchButton
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragmentBinding>() {
+class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragmentBinding>(),
+    ISwitchAction {
 
     private val manager: ForwardManager
         get() = ForwardManager.instance
@@ -32,6 +33,7 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
 
     override fun initData(savedInstanceState: Bundle?) {
         initVideoListener()
+
         initSwitchOption()
         addSwitchLiveDataListener()
         setSwitchListener()
@@ -43,7 +45,7 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
         binding.driveWarningFcwDetails.setOnClickListener {
             updateHintMessage(R.string.drive_warning_fcw, R.string.fcw_details)
         }
-        binding.driveAebDetails.setOnClickListener{
+        binding.driveAebDetails.setOnClickListener {
             updateHintMessage(R.string.drive_aeb_title, R.string.aeb_details)
         }
     }
@@ -68,7 +70,7 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
             dynamicEffect()
             true
         }
-        binding.video.setOnPreparedListener{
+        binding.video.setOnPreparedListener {
             it.setOnInfoListener { _, _, _ ->
                 binding.video.setBackgroundColor(Color.TRANSPARENT);
                 binding.videoImage.visibility = View.GONE
@@ -91,28 +93,19 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
         initSwitchOption(SwitchNode.ADAS_AEB, viewModel.aebFunction)
     }
 
-    private fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {
-        val status = liveData.value ?: false
-        doUpdateSwitch(node, status, true)
-    }
-
-    private fun doUpdateSwitch(node: SwitchNode, status: Boolean, immediately: Boolean = false) {
-        val swb = when (node) {
+    override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
+        return when (node) {
             SwitchNode.ADAS_FCW -> binding.adasForwardFcwSwitch
             SwitchNode.ADAS_AEB -> binding.adasForwardAebSwitch
             else -> null
         }
-        swb?.let {
-            doUpdateSwitch(it, status, immediately)
-        }
     }
 
-    private fun doUpdateSwitch(swb: SwitchButton, status: Boolean, immediately: Boolean = false) {
-        if (!immediately) {
-            swb.setCheckedNoEvent(status)
-        } else {
-            swb.setCheckedImmediatelyNoEvent(status)
-        }
+    override fun getSwitchManager(): ISwitchManager {
+        return manager
+    }
+
+    override fun onPostChecked(button: SwitchButton, status: Boolean) {
         dynamicEffect()
     }
 
@@ -143,13 +136,6 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
                 }
                 binding.adasForwardAebSwitch.setCheckedImmediatelyNoEvent(!isChecked)
             }
-        }
-    }
-
-    private fun doUpdateSwitchOption(node: SwitchNode, button: CompoundButton, status: Boolean) {
-        val result = manager.doSetSwitchOption(node, status)
-        if (!result && button is SwitchButton) {
-            button.setCheckedImmediatelyNoEvent(!status)
         }
     }
 

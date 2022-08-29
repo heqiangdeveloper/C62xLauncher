@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -32,6 +33,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>(),
@@ -212,12 +214,29 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
             } else {
                 binding.constraint.setBackgroundResource(R.drawable.right_bg)
             }
+            if (tab.text == "BEIJING OS") {
+                doRouteToUpgrade()
+            }
         }
         if (firstCreate) {
             firstCreate = false
             return
         }
         tabLocation.postValue(binding.tabLayout.selectedTabPosition)
+    }
+
+    private fun doRouteToUpgrade() {
+        try {
+            val intent = Intent(Intent.ACTION_MAIN)
+            val componentName =
+                ComponentName("com.hmi.beic62.pc", "com.hmi.beic62.pc.FMainActivity")
+            intent.setComponent(componentName)
+//        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            intent.putExtra("type", "from downbar2022") //这里Intent传值
+            startActivity(intent)
+        } catch (e: Exception) {
+            Timber.e(e.message)
+        }
     }
 
     override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -242,7 +261,7 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
     }
 
     override fun cleanPopupLiveDate(serial: String): Boolean {
-        if (serial.equals(popupLiveData.value)) {
+        if (serial == popupLiveData.value) {
             popupLiveData.value = ""
             return true
         }

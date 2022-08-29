@@ -84,7 +84,7 @@ class VolumeViewModel @Inject constructor(app: Application, model: BaseModel) :
         target.takeIf { it.value?.type == expect.type }?.let {
             it.takeUnless { it.value == expect }?.let { liveData ->
                 liveData.value?.pos = expect.pos
-                liveData.value = liveData.value
+                liveData.postValue(liveData.value)
             }
         }
     }

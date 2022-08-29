@@ -39,33 +39,45 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
 
     private val _electricFunction: AtomicBoolean by lazy {
         val node = SwitchNode.AS_STERN_ELECTRIC
-        AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, result)
+//        AtomicBoolean(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, result)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val _lightAlarmFunction: AtomicBoolean by lazy {
         val node = SwitchNode.STERN_LIGHT_ALARM
-        AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, result)
+//        AtomicBoolean(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, result)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val _audioAlarmFunction: AtomicBoolean by lazy {
         val node = SwitchNode.STERN_AUDIO_ALARM
-        AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, result)
+//        AtomicBoolean(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, result)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val sternSmartEnter: AtomicInteger by lazy {
         val node = RadioNode.STERN_SMART_ENTER
-        AtomicInteger(node.default).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateRadioValue(node, this, result)
+//        AtomicInteger(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateRadioValue(node, this, result)
+//        }
+        return@lazy createAtomicInteger(node) { result, value ->
+            doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
     }
 
@@ -197,8 +209,10 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
     private fun doTrunkAction(complete: Boolean, running: Boolean, value: Int) {
         if (!complete && !running) {
             //1表示press,发起打开请求
-            writeProperty(CarCabinManager.ID_HU_BACKDOORSWITCH,
-                value, Origin.CABIN, VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL)
+            writeProperty(
+                CarCabinManager.ID_HU_BACKDOORSWITCH,
+                value, Origin.CABIN, VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL
+            )
         }
     }
 
@@ -237,6 +251,7 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
         val value = getTrunkStatusValue()
         return isValidValue(value, 0x00, 0x06, 0x07) && 0x01 == value
     }
+
     /**
      * 尾门是否正在打开中
      * @return true 表示打开中
@@ -254,6 +269,7 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
         val value = getTrunkStatusValue()
         return isValidValue(value, 0x00, 0x06, 0x07) && 0x02 == value
     }
+
     /**
      * 尾门是否正在关闭中
      * @return true 表示关闭中

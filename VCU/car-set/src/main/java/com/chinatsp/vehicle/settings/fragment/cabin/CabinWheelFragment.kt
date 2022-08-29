@@ -3,13 +3,16 @@ package com.chinatsp.vehicle.settings.fragment.cabin
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.Applet
 import com.chinatsp.settinglib.VcuUtils
+import com.chinatsp.settinglib.manager.IRadioManager
+import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.cabin.WheelManager
 import com.chinatsp.settinglib.optios.RadioNode
+import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.HintHold
+import com.chinatsp.vehicle.settings.IOptionAction
 import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.app.Toast
@@ -20,6 +23,7 @@ import com.chinatsp.vehicle.settings.fragment.drive.dialog.DetailsDialogFragment
 import com.chinatsp.vehicle.settings.vm.cabin.SteeringViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.utils.ResUtils
+import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -31,7 +35,8 @@ import dagger.hilt.android.AndroidEntryPoint
  * @version: 1.0
  */
 @AndroidEntryPoint
-class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBinding>() {
+class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBinding>(),
+    IOptionAction {
 
     private val manager: WheelManager
         get() = WheelManager.instance
@@ -103,7 +108,10 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
         binding.wheelEpsModeTabView.let {
             it.setOnTabSelectionChangedListener { _, value ->
                 if (!Applet.isCanSwitchEps(15f)) {
-                    showHintDialog(R.string.vcu_action_switch_failed, R.string.vcu_eps_action_switch_check)
+                    showHintDialog(
+                        R.string.vcu_action_switch_failed,
+                        R.string.vcu_eps_action_switch_check
+                    )
                     it.setSelection(viewModel.epsMode.value.toString(), true)
                 } else {
                     doUpdateRadio(RadioNode.DRIVE_EPS_MODE, value, viewModel.epsMode, it)
@@ -113,44 +121,26 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
         }
     }
 
-    private fun initRadioOption(node: RadioNode, liveData: LiveData<Int>) {
-        val value = liveData.value ?: node.default
-        doUpdateRadio(node, value, isInit = true)
+    override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
+        return null
     }
 
-    private fun doUpdateRadio(
-        node: RadioNode,
-        value: String,
-        liveData: LiveData<Int>,
-        tabView: TabControlView
-    ) {
-        val result = isCanToInt(value) && manager.doSetRadioOption(node, value.toInt())
-        tabView.takeIf { !result }?.setSelection(liveData.value.toString(), true)
+    override fun getSwitchManager(): ISwitchManager {
+        return manager
     }
 
-    private fun doUpdateRadio(
-        node: RadioNode,
-        value: Int,
-        immediately: Boolean = false,
-        isInit: Boolean = false
-    ) {
+    override fun findRadioByNode(node: RadioNode): TabControlView? {
         val tabView = when (node) {
             RadioNode.DRIVE_EPS_MODE -> binding.wheelEpsModeTabView
             else -> null
         }
-        tabView?.let {
-            if (isInit) {
-                val names = it.nameArray.map { item -> item.toString() }.toTypedArray()
-                val values = node.get.values.map { item -> item.toString() }.toTypedArray()
-                it.setItems(names, values)
-            }
-            doUpdateRadio(it, value, immediately)
-        }
+        return tabView
     }
 
-    private fun doUpdateRadio(tabView: TabControlView, value: Int, immediately: Boolean = false) {
-        tabView.setSelection(value.toString(), true)
+    override fun getRadioManager(): IRadioManager {
+        return manager
     }
+
 
     private fun setCheckedChangeListener() {
         binding.wheelCustomKeys.setOnClickListener {
@@ -175,9 +165,6 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
         }
     }
 
-    private fun isCanToInt(value: String?): Boolean {
-        return null != value && value.isNotBlank() && value.matches(Regex("\\d+"))
-    }
 
     private fun cleanPopupSerial(serial: String) {
         if (activity is IRoute) {

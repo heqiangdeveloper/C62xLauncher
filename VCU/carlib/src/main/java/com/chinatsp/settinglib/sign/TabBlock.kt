@@ -27,7 +27,6 @@ class TabBlock(val type: Type) {
     }
 
 
-
     private fun initCabinSignal(hashSet: HashSet<CarSign>) {
         hashSet.run {
             var carSign = CarSign(Origin.CABIN)

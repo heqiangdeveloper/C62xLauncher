@@ -72,7 +72,7 @@ enum class SwitchNode(
     /**
      * 座舱--空调--自动除雾
      * set -> 前除霜if not set ,the value of signal is
-     8        0x0(inactive) 0x0: Inactive; 0x1: ON; 0x2: OFF; 0x3: Not used
+    8        0x0(inactive) 0x0: Inactive; 0x1: ON; 0x2: OFF; 0x3: Not used
      * get -> 前除霜显示图标 0x0: Not display; 0x1: Display; 0x2: Reserved; 0x3: Error
      */
     AC_AUTO_DEMIST(
@@ -278,10 +278,12 @@ enum class SwitchNode(
     TOUCH_PROMPT_TONE(
         get = Norm(
             on = CarAdapter.Constants.BEEP_VOLUME_LEVEL_MIDDLE,
-            off = CarAdapter.Constants.BEEP_VOLUME_LEVEL_CLOSE, origin = Origin.SPECIAL),
+            off = CarAdapter.Constants.BEEP_VOLUME_LEVEL_CLOSE, origin = Origin.SPECIAL
+        ),
         set = Norm(
             on = CarAdapter.Constants.BEEP_VOLUME_LEVEL_MIDDLE,
-            off = CarAdapter.Constants.BEEP_VOLUME_LEVEL_CLOSE, origin = Origin.SPECIAL),
+            off = CarAdapter.Constants.BEEP_VOLUME_LEVEL_CLOSE, origin = Origin.SPECIAL
+        ),
         default = false,
         careOn = false
     ),
@@ -387,6 +389,7 @@ enum class SwitchNode(
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_MIRROR_FADE_IN_OUT_SET),
         default = true
     ),
+
     /**
      * 车门车窗--外后视镜--外后视镜下翻
      * set -> int类型数据 0x0: Inactive; 0x1: Enable; 0x2: Disable; 0x3: Not used
@@ -514,7 +517,7 @@ enum class SwitchNode(
      *        the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
      *        0x0: Inactive; 0x1: On; 0x2: Off; 0x3: Reserved
      */
-    ADAS_HMA(
+    ADAS_HMA(//向产品确认值
         get = Norm(on = 0x2, off = 0x1, signal = CarCabinManager.ID_HMA_STATUS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HMA_ON_OFF_SWT),
         default = false
@@ -747,6 +750,4 @@ enum class SwitchNode(
     fun isValid(value: Int) = (get.on == value) or (get.off == value)
 
     fun isOn(value: Int) = if (careOn) get.on == value else get.off != value
-
-    fun isOn() = default
 }

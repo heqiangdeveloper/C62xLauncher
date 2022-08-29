@@ -12,47 +12,34 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class MirrorViewModel @Inject constructor(app: Application, model: BaseModel):
-    BaseViewModel(app, model), ISwitchListener{
+class MirrorViewModel @Inject constructor(app: Application, model: BaseModel) :
+    BaseViewModel(app, model), ISwitchListener {
 
-    private val manager:BackMirrorManager
+    private val manager: BackMirrorManager
         get() = BackMirrorManager.instance
 
     val mirrorFoldFunction: LiveData<Boolean> by lazy { _mirrorFoldFunction }
 
     private val _mirrorFoldFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.BACK_MIRROR_FOLD
-        MutableLiveData(node.isOn()).apply {
-            value = manager.doGetSwitchOption(node)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val mirrorDownFunction: LiveData<Boolean> by lazy { _mirrorDownFunction }
 
     private val _mirrorDownFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.BACK_MIRROR_DOWN
-        MutableLiveData(node.isOn()).apply {
-            value = manager.doGetSwitchOption(node)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    private fun updateValue(liveData: MutableLiveData<Boolean>, status: Boolean) {
-        if (null == liveData.value) {
-            liveData.postValue(status)
-            return
-        }
-        if (liveData.value!! xor status) {
-            liveData.postValue(status)
-        }
-    }
-    
+
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {
             SwitchNode.BACK_MIRROR_FOLD -> {
-                updateValue(_mirrorFoldFunction, status)
+                doUpdate(_mirrorFoldFunction, status)
             }
             SwitchNode.BACK_MIRROR_DOWN -> {
-                updateValue(_mirrorDownFunction, status)
+                doUpdate(_mirrorDownFunction, status)
             }
             else -> {
 

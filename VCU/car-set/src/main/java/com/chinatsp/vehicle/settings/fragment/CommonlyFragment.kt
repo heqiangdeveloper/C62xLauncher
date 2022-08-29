@@ -10,7 +10,7 @@ import com.common.library.frame.base.BaseTabFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CommonlyFragment: BaseTabFragment<BaseViewModel, AccessFragmentBinding>() {
+class CommonlyFragment : BaseTabFragment<BaseViewModel, AccessFragmentBinding>() {
 
     override val nodeId: Int
         get() = 0
@@ -37,8 +37,6 @@ class CommonlyFragment: BaseTabFragment<BaseViewModel, AccessFragmentBinding>() 
             GlobalManager.instance.resetSwitchWindow()
         }
     }
-
-
 
 
 }

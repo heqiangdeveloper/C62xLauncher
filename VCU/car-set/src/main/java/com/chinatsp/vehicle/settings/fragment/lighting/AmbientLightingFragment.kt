@@ -3,14 +3,14 @@ package com.chinatsp.vehicle.settings.fragment.lighting
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CompoundButton
-import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.VcuUtils
+import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.lamp.AmbientLightingManager
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.IRoute
+import com.chinatsp.vehicle.settings.ISwitchAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.LightingAtmosphereFragmentBinding
 import com.chinatsp.vehicle.settings.vm.light.AmbientLightingViewModel
@@ -24,7 +24,7 @@ import timber.log.Timber
 @AndroidEntryPoint
 class AmbientLightingFragment :
     BaseFragment<AmbientLightingViewModel, LightingAtmosphereFragmentBinding>(),
-    ColorPickerView.OnColorPickerChangeListener {
+    ColorPickerView.OnColorPickerChangeListener, ISwitchAction {
     var status: Boolean = false
     private val manager: AmbientLightingManager
         get() = AmbientLightingManager.instance
@@ -74,26 +74,16 @@ class AmbientLightingFragment :
         }
     }
 
-    private fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {
-        val status = liveData.value ?: node.default
-        doUpdateSwitch(node, status, true)
-    }
-
-    private fun doUpdateSwitch(node: SwitchNode, status: Boolean, immediately: Boolean = false) {
-        val swb = when (node) {
+    override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
+        return when (node) {
             SwitchNode.FRONT_AMBIENT_LIGHTING -> binding.ambientFrontLightingSwitch
             SwitchNode.BACK_AMBIENT_LIGHTING -> binding.ambientBackLightingSwitch
             else -> null
         }
-        takeIf { null != swb }?.doUpdateSwitch(swb!!, status, immediately)
     }
 
-    private fun doUpdateSwitch(swb: SwitchButton, status: Boolean, immediately: Boolean = false) {
-        if (!immediately) {
-            swb.setCheckedNoEvent(status)
-        } else {
-            swb.setCheckedImmediatelyNoEvent(status)
-        }
+    override fun getSwitchManager(): ISwitchManager {
+        return manager
     }
 
     private fun setSwitchListener() {
@@ -105,21 +95,14 @@ class AmbientLightingFragment :
         }
     }
 
-    private fun doUpdateSwitchOption(node: SwitchNode, button: CompoundButton, status: Boolean) {
-        val result = manager.doSetSwitchOption(node, status)
-        if (!result && button is SwitchButton) {
-            button.setCheckedImmediatelyNoEvent(!status)
-        }
-    }
-
     private fun setCheckedChangeListener() {
         binding.lightingInstall.setOnClickListener {
-            if(!status) {
+            if (!status) {
                 showSettingFragment()
             }
         }
         binding.lightingIntelligentModel.setOnClickListener {
-            if(!status){
+            if (!status) {
                 showModeFragment()
             }
 

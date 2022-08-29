@@ -33,10 +33,7 @@ class SeatViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _mainMeetFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.SEAT_MAIN_DRIVE_MEET
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            setValue(value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val forkMeet: LiveData<Boolean>
@@ -44,10 +41,7 @@ class SeatViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _forkMeetFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.SEAT_FORK_DRIVE_MEET
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            setValue(value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val seatHeat: LiveData<Boolean>
@@ -55,10 +49,7 @@ class SeatViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _seatHeatFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.SEAT_HEAT_ALL
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            setValue(value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val sillTemp: LiveData<Volume>
@@ -76,9 +67,7 @@ class SeatViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _epsMode: MutableLiveData<Int> by lazy {
         val node = RadioNode.DRIVE_EPS_MODE
-        MutableLiveData(node.default).apply {
-            value = manager.doGetRadioOption(node)
-        }
+        MutableLiveData(manager.doGetRadioOption(node))
     }
 
 
@@ -96,14 +85,15 @@ class SeatViewModel @Inject constructor(app: Application, model: BaseModel) :
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {
             SwitchNode.SEAT_MAIN_DRIVE_MEET -> {
-                _mainMeetFunction.takeIf { it.value != status }?.value = status
+                doUpdate(_mainMeetFunction, status)
             }
             SwitchNode.SEAT_FORK_DRIVE_MEET -> {
-                _forkMeetFunction.takeIf { it.value != status }?.value = status
+                doUpdate(_forkMeetFunction, status)
             }
             SwitchNode.SEAT_HEAT_ALL -> {
-                _seatHeatFunction.takeIf { it.value != status }?.value = status
+                doUpdate(_seatHeatFunction, status)
             }
+            else -> {}
         }
     }
 
@@ -122,7 +112,7 @@ class SeatViewModel @Inject constructor(app: Application, model: BaseModel) :
         target.takeIf { it.value?.type == expect.type }?.let {
             it.takeUnless { it.value == expect }?.let { liveData ->
                 liveData.value?.pos = expect.pos
-                liveData.value = liveData.value
+                liveData.postValue(liveData.value)
             }
         }
     }

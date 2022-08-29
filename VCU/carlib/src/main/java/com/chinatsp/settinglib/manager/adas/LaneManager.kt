@@ -34,33 +34,45 @@ class LaneManager : BaseManager(), IOptionManager {
 
     private val laneAssistMode: AtomicInteger by lazy {
         val node = RadioNode.ADAS_LANE_ASSIST_MODE
-        AtomicInteger(node.default).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateRadioValue(node, this, value)
+//        AtomicInteger(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateRadioValue(node, this, value)
+//        }
+        return@lazy createAtomicInteger(node) { result, value ->
+            doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
     }
 
     private val ldwWarningSensitivity: AtomicInteger by lazy {
         val node = RadioNode.ADAS_LDW_SENSITIVITY
-        AtomicInteger(node.default).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateRadioValue(node, this, value)
+//        AtomicInteger(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateRadioValue(node, this, value)
+//        }
+        return@lazy createAtomicInteger(node) { result, value ->
+            doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
     }
 
     private val ldwWarningStyle: AtomicInteger by lazy {
         val node = RadioNode.ADAS_LDW_STYLE
-        AtomicInteger(node.default).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateRadioValue(node, this, value)
+//        AtomicInteger(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateRadioValue(node, this, value)
+//        }
+        return@lazy createAtomicInteger(node) { result, value ->
+            doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
     }
 
     private val laneAssistFunction: AtomicBoolean by lazy {
         val node = SwitchNode.ADAS_LANE_ASSIST
-        AtomicBoolean(node.default).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, value)
+//        AtomicBoolean(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, value)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
@@ -121,18 +133,32 @@ class LaneManager : BaseManager(), IOptionManager {
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
         return when (node) {
             RadioNode.ADAS_LANE_ASSIST_MODE -> {
-                val result = node.isValid(value, false) && writeProperty(node.set.signal, value, node.set.origin)
+                val result = node.isValid(value, false) && writeProperty(
+                    node.set.signal,
+                    value,
+                    node.set.origin
+                )
                 takeIf { result }?.doUpdateRadioValue(node, laneAssistMode, value)
                 result
             }
             RadioNode.ADAS_LDW_STYLE -> {
-                val result = node.isValid(value, false) && writeProperty(node.set.signal, value, node.set.origin)
+                val result = node.isValid(value, false) && writeProperty(
+                    node.set.signal,
+                    value,
+                    node.set.origin
+                )
                 takeIf { result }?.doUpdateRadioValue(node, ldwWarningStyle, value)
-                result            }
+                result
+            }
             RadioNode.ADAS_LDW_SENSITIVITY -> {
-                val result = node.isValid(value, false) && writeProperty(node.set.signal, value, node.set.origin)
+                val result = node.isValid(value, false) && writeProperty(
+                    node.set.signal,
+                    value,
+                    node.set.origin
+                )
                 takeIf { result }?.doUpdateRadioValue(node, ldwWarningSensitivity, value)
-                result            }
+                result
+            }
             else -> false
         }
     }
@@ -189,7 +215,6 @@ class LaneManager : BaseManager(), IOptionManager {
             else -> false
         }
     }
-
 
 
 }

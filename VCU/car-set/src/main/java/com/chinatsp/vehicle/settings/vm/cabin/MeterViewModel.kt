@@ -29,10 +29,7 @@ class MeterViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _systemRadioOption: MutableLiveData<Int> by lazy {
         val node = RadioNode.DRIVE_METER_SYSTEM
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetRadioOption(node)
-            setValue(value)
-        }
+        MutableLiveData(manager.doGetRadioOption(node))
     }
 
     override fun onCreate() {
@@ -49,7 +46,7 @@ class MeterViewModel @Inject constructor(app: Application, model: BaseModel) :
         when (node) {
             RadioNode.DRIVE_METER_SYSTEM -> {
                 if (node.isValid(value)) {
-                    _systemRadioOption.value = value
+                    doUpdate(_systemRadioOption, value)
                 }
             }
             else -> {}

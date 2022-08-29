@@ -26,17 +26,23 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
 
     private val swhFunction: AtomicBoolean by lazy {
         val node = SwitchNode.DRIVE_WHEEL_AUTO_HEAT
-        AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, result)
+//        AtomicBoolean(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, result)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val epsMode: AtomicInteger by lazy {
         val node = RadioNode.DRIVE_EPS_MODE
-        AtomicInteger(node.default).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateRadioValue(node, this, result)
+//        AtomicInteger(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateRadioValue(node, this, result)
+//        }
+        return@lazy createAtomicInteger(node) { result, value ->
+            doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
     }
 
@@ -139,7 +145,8 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
     }
 
     private fun writeProperty(volume: Volume, value: Int): Boolean {
-        val success = volume.isValid(value) && writeProperty(volume.type.set.signal, value, Origin.CABIN)
+        val success =
+            volume.isValid(value) && writeProperty(volume.type.set.signal, value, Origin.CABIN)
         if (success && develop) {
             volume.pos = value
             doRangeChanged(volume)
@@ -162,7 +169,7 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
                 && writeProperty(node.set.signal, value, node.set.origin)
         if (success && develop) {
             doUpdateRadioValue(node, atomic, value) { _node, _value ->
-                doRadioChanged(_node, _value)
+                doOptionChanged(_node, _value)
             }
         }
         return success

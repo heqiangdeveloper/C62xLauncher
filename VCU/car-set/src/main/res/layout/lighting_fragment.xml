@@ -172,7 +172,7 @@
                         style="@style/line"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/lighting_turn_external"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/lighting_car_screen"
@@ -314,6 +314,7 @@
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/turn_signal_iv_1"
             android:layout_width="@dimen/x194"
@@ -324,6 +325,7 @@
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/turn_signal_iv_2"
             android:layout_width="@dimen/x194"

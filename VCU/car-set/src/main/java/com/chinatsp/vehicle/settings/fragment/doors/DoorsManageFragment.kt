@@ -61,7 +61,8 @@ class DoorsManageFragment : BaseTabFragment<BaseViewModel, DoorsManageFragmentBi
         val range = 0 until tab.childCount
         tabOptions = range.map {
             val child = tab.getChildAt(it)
-            child.apply { setOnClickListener { onClick(this) } } }.toList()
+            child.apply { setOnClickListener { onClick(this) } }
+        }.toList()
         initRouteListener()
     }
 

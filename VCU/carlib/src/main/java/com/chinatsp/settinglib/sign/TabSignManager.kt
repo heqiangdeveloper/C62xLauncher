@@ -9,7 +9,7 @@ package com.chinatsp.settinglib.sign
  */
 class TabSignManager private constructor() {
 
-    val tabSignMap:MutableMap<TabBlock.Type, TabBlock> by lazy {
+    val tabSignMap: MutableMap<TabBlock.Type, TabBlock> by lazy {
         HashMap<TabBlock.Type, TabBlock>().also {
             TabBlock.Type.values().forEach { type ->
                 it[type] = TabBlock(type)

@@ -23,36 +23,28 @@ class SternDoorViewModel @Inject constructor(app: Application, model: BaseModel)
 
     private val _electricFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.AS_STERN_ELECTRIC
-        MutableLiveData(node.isOn()).apply {
-            value = manager.doGetSwitchOption(node)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val lightAlarmFunction: LiveData<Boolean> get() = _lightAlarmFunction
 
     private val _lightAlarmFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.STERN_LIGHT_ALARM
-        MutableLiveData(node.isOn()).apply {
-            value = manager.doGetSwitchOption(node)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val audioAlarmFunction: LiveData<Boolean> get() = _audioAlarmFunction
 
     private val _audioAlarmFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.STERN_AUDIO_ALARM
-        MutableLiveData(node.isOn()).apply {
-            value = manager.doGetSwitchOption(node)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val sternSmartEnterFunction: LiveData<Int> get() =  _sternSmartEnterFunction
+    val sternSmartEnterFunction: LiveData<Int> get() = _sternSmartEnterFunction
 
     private val _sternSmartEnterFunction: MutableLiveData<Int> by lazy {
         val node = RadioNode.STERN_SMART_ENTER
-        MutableLiveData(node.default).apply {
-            value = manager.doGetRadioOption(node)
-        }
+        MutableLiveData(manager.doGetRadioOption(node))
     }
 
     override fun onCreate() {
@@ -68,13 +60,13 @@ class SternDoorViewModel @Inject constructor(app: Application, model: BaseModel)
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {
             SwitchNode.AS_STERN_ELECTRIC -> {
-                _electricFunction.value = status
+                doUpdate(_electricFunction, status)
             }
             SwitchNode.STERN_LIGHT_ALARM -> {
-                _lightAlarmFunction.value = status
+                doUpdate(_lightAlarmFunction, status)
             }
             SwitchNode.STERN_AUDIO_ALARM -> {
-                _audioAlarmFunction.value = status
+                doUpdate(_audioAlarmFunction, status)
             }
             else -> {}
         }
@@ -82,9 +74,8 @@ class SternDoorViewModel @Inject constructor(app: Application, model: BaseModel)
 
     override fun onRadioOptionChanged(node: RadioNode, value: Int) {
         if (RadioNode.STERN_SMART_ENTER == node) {
-            _sternSmartEnterFunction.value = value
+            doUpdate(_sternSmartEnterFunction, value)
         }
-
     }
 
 }

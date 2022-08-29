@@ -10,7 +10,7 @@ import com.chinatsp.settinglib.listener.IBaseListener
  * @desc   :
  * @version: 1.0
  */
-interface ISoundListener: IBaseListener {
+interface ISoundListener : IBaseListener {
 
     fun onSoundVolumeChanged(vararg array: Volume)
 }

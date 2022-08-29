@@ -9,7 +9,7 @@ import com.chinatsp.settinglib.optios.Progress
  * @desc   :
  * @version: 1.0
  */
-interface IProgressListener: IBaseListener {
+interface IProgressListener : IBaseListener {
 
     fun onProgressChanged(node: Progress, value: Int)
 }

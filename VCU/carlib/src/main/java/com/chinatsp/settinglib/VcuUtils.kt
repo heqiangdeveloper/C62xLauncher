@@ -55,13 +55,13 @@ object VcuUtils {
         val value = getLevelValue()
         Timber.d("isCareLevel value: $value")
         val actual = levels.contains(value)
-        return !(actual xor expect)
-//        return false
+//        return !(actual xor expect)
+        return false
     }
 
     fun getLevelValue(): Int {
         val value = SystemProperties.getInt(OffLine.LEVEL, Level.LEVEL3)
-        Timber.d( "getLevelValue value: $value")
+        Timber.d("getLevelValue value: $value")
         return value
 //        return Level.LEVEL5
     }
@@ -101,7 +101,12 @@ object VcuUtils {
 
     fun getConfigParameters(keySerial: String, default: Int): Int {
         val result = SystemProperties.getInt(keySerial, default)
-        Timber.d("getConfigParameters keySerial:%s, default:%s, result:%s", keySerial, default, result)
+        Timber.d(
+            "getConfigParameters keySerial:%s, default:%s, result:%s",
+            keySerial,
+            default,
+            result
+        )
         return result
     }
 

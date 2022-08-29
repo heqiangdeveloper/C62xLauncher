@@ -24,26 +24,29 @@ class SafeViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val manager: SafeManager by lazy { SafeManager.instance }
 
+    val alcLockHint: LiveData<Boolean>
+        get() = _alcLockHint
+
+    private val _alcLockHint: MutableLiveData<Boolean> by lazy {
+        val node = SwitchNode.ALC_LOCK_HINT
+        MutableLiveData(manager.doGetSwitchOption(node))
+    }
+
     val fortifyToneFunction: LiveData<Boolean>
         get() = _fortifyToneFunction
 
     private val _fortifyToneFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.DRIVE_SAFE_FORTIFY_SOUND
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            setValue(value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
+
 
     val videoModeFunction: LiveData<Boolean>
         get() = _videoModeFunction
 
     private val _videoModeFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.DRIVE_SAFE_VIDEO_PLAYING
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            setValue(value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     override fun onCreate() {
@@ -60,11 +63,12 @@ class SafeViewModel @Inject constructor(app: Application, model: BaseModel) :
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {
             SwitchNode.DRIVE_SAFE_FORTIFY_SOUND -> {
-                _fortifyToneFunction.takeIf { it.value != status }?.value = status
+                doUpdate(_fortifyToneFunction, status)
             }
             SwitchNode.DRIVE_SAFE_VIDEO_PLAYING -> {
-                _videoModeFunction.takeIf { it.value != status }?.value = status
+                doUpdate(_videoModeFunction, status)
             }
+            else -> {}
         }
     }
 

@@ -21,7 +21,7 @@ interface IManager {
 
     fun doSwitchChanged(node: SwitchNode, status: Boolean) {}
 
-    fun doRadioChanged(node: RadioNode, value: Int) {}
+    fun doOptionChanged(node: RadioNode, value: Int) {}
 
     fun doProgressChanged(node: Progress, value: Int) {}
 

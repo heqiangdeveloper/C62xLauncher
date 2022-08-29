@@ -15,7 +15,8 @@ import javax.inject.Inject
  *
  */
 @HiltViewModel
-class OilPriceViewModel @Inject constructor(application: Application, model: BaseModel) : BaseViewModel(application, model) {
+class OilPriceViewModel @Inject constructor(application: Application, model: BaseModel) :
+    BaseViewModel(application, model) {
 
 
     val oilLiveData by lazy { MutableLiveData<List<OilPrice>>() }

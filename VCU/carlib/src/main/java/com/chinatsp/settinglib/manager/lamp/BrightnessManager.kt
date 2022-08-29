@@ -51,14 +51,14 @@ class BrightnessManager : BaseManager(), IProgressManager {
     fun injectManager(manager: CarPowerManager) {
         this.manager = manager
         thirdScreenService = SystemThirdScreenBA(BaseApp.instance.applicationContext)
-        this.manager?.setListener(object : CarPowerManager.CarPowerStateListener{
+        this.manager?.setListener(object : CarPowerManager.CarPowerStateListener {
             override fun onStateChanged(state: Int) {
                 Timber.d("onStateChanged state:%s", state)
             }
 
             override fun onBrightnessChanged(value: Int) {
                 Timber.d("onBrightnessChanged value:%s", value)
-                doUpdateProgress(carVolume, value, true, instance::doProgressChanged )
+                doUpdateProgress(carVolume, value, true, instance::doProgressChanged)
             }
         }, AppExecutors.get()?.singleIO())
     }
@@ -107,17 +107,17 @@ class BrightnessManager : BaseManager(), IProgressManager {
         Timber.d("doSetVolume position:$position")
         return when (type) {
             Progress.CONDITIONER_SCREEN_BRIGHTNESS -> {
-                writeProperty(type.set.signal,position, type.set.origin)
+                writeProperty(type.set.signal, position, type.set.origin)
             }
             Progress.HOST_SCREEN_BRIGHTNESS -> {
-//                manager?.brightness = value
+                manager?.brightness = position * 10
                 //iBAMode:白天黑夜模式，现传1就好, value：亮度值
                 thirdScreenService?.setThirdScreenBrightness(1, position)
                 doUpdateProgress(carVolume, position, true, this::doProgressChanged)
                 true
             }
             Progress.METER_SCREEN_BRIGHTNESS -> {
-                writeProperty(type.set.signal,position, type.set.origin)
+                writeProperty(type.set.signal, position, type.set.origin)
             }
             else -> {
                 false
@@ -128,10 +128,10 @@ class BrightnessManager : BaseManager(), IProgressManager {
     override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             Progress.METER_SCREEN_BRIGHTNESS.get.signal -> {
-                doUpdateProgress(meterVolume, property.value as Int, true, this::doProgressChanged )
+                doUpdateProgress(meterVolume, property.value as Int, true, this::doProgressChanged)
             }
             Progress.CONDITIONER_SCREEN_BRIGHTNESS.get.signal -> {
-                doUpdateProgress(acVolume, property.value as Int, true, this::doProgressChanged )
+                doUpdateProgress(acVolume, property.value as Int, true, this::doProgressChanged)
             }
             else -> {}
         }

@@ -19,6 +19,7 @@ enum class TabPage(val position: Int, val description: String) {
         fun getPage(position: Int): TabPage {
             return values()[position]
         }
+
         @JvmStatic
         fun size(): Int {
             return values().size

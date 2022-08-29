@@ -2,8 +2,8 @@ package com.chinatsp.settinglib.manager
 
 import android.car.hardware.CarPropertyValue
 import com.chinatsp.settinglib.listener.IManager
-import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
+import timber.log.Timber
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
@@ -30,11 +30,12 @@ interface IRadioManager : IManager {
 
     fun onRadioChanged(node: RadioNode, atomic: AtomicInteger, p: CarPropertyValue<*>) {
         val value = p.value
-        if (value is Int) {
-            onRadioChanged(node, atomic, value, this::doUpdateRadioValue) {
-                    radioNode, newValue -> doRadioChanged(radioNode, newValue)
-            }
+        if (value !is Int) {
+            Timber.e("onRadioChanged but value is not Int! node:$node, id:${p.propertyId}")
+            return
         }
+        Timber.d("onRadioChanged node:$node, value:$value")
+        onRadioChanged(node, atomic, value, this::doUpdateRadioValue, this::doOptionChanged)
     }
 
     fun onRadioChanged(
@@ -45,20 +46,22 @@ interface IRadioManager : IManager {
         update(node, atomic, value, block)
     }
 
-    fun doUpdateRadioValue(node: RadioNode, atomic: AtomicInteger, value: Int, block: ((RadioNode, Int) -> Unit)? = null)
-            : AtomicInteger {
-        if (node.isValid(value) && atomic.get() != value) {
+    fun doUpdateRadioValue(
+        node: RadioNode,
+        atomic: AtomicInteger,
+        value: Int,
+        block: ((RadioNode, Int) -> Unit)? = null
+    ): AtomicInteger {
+        val isValid = node.isValid(value)
+        val isEqual = value == atomic.get()
+        if (isValid && !isEqual) {
             atomic.set(value)
             block?.let { it(node, value) }
-        }
-        return atomic
-    }
-
-    fun doUpdateProgress(node: Progress, atomic: AtomicInteger, value: Int, block: ((Progress, Int) -> Unit)? = null)
-            : AtomicInteger {
-        if (node.isValid(value) && atomic.get() != value) {
-            atomic.set(value)
-            block?.let { it(node, value) }
+        } else {
+            Timber.e(
+                "doUpdateRadioValue node:$node, value:$value" +
+                        " isValid:$isValid, isEqual:$isEqual"
+            )
         }
         return atomic
     }

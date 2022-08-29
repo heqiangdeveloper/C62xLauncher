@@ -61,84 +61,121 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
 
     private val alcDoorHint: AtomicBoolean by lazy {
         val node = SwitchNode.ALC_DOOR_HINT
-        AtomicBoolean(node.isOn()).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, value)
+//        AtomicBoolean(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, value)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
     private val alcLockHint: AtomicBoolean by lazy {
         val node = SwitchNode.ALC_LOCK_HINT
-        AtomicBoolean(node.isOn()).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, value)
+//        AtomicBoolean(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, value)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
+
     private val alcBreatheHint: AtomicBoolean by lazy {
         val node = SwitchNode.ALC_BREATHE_HINT
-        AtomicBoolean(node.isOn()).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, value)
+//        AtomicBoolean(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, value)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
+
     private val alcComingHint: AtomicBoolean by lazy {
         val node = SwitchNode.ALC_COMING_HINT
-        AtomicBoolean(node.isOn()).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, value)
+//        AtomicBoolean(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, value)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
+
     private val alcRelatedTopics: AtomicBoolean by lazy {
         val node = SwitchNode.ALC_RELATED_TOPICS
-        AtomicBoolean(node.isOn()).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, value)
+//        AtomicBoolean(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, value)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val frontLighting: AtomicBoolean by lazy {
         val node = SwitchNode.FRONT_AMBIENT_LIGHTING
-        AtomicBoolean(node.isOn()).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, value)
+//        AtomicBoolean(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, value)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
+
     private val backLighting: AtomicBoolean by lazy {
         val node = SwitchNode.BACK_AMBIENT_LIGHTING
-        AtomicBoolean(node.isOn()).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, value)
+//        AtomicBoolean(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, value)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val alcSmartMode: AtomicBoolean by lazy {
         val node = SwitchNode.ALC_SMART_MODE
-        AtomicBoolean(node.isOn()).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, value)
+//        AtomicBoolean(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, value)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val speedRhythm: AtomicBoolean by lazy {
         val node = SwitchNode.SPEED_RHYTHM
-        AtomicBoolean(node.isOn()).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, value)
+//        AtomicBoolean(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, value)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val musicRhythm: AtomicBoolean by lazy {
         val node = SwitchNode.MUSIC_RHYTHM
-        AtomicBoolean(node.isOn()).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, value)
+//        AtomicBoolean(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, value)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val colourBreathe: AtomicBoolean by lazy {
         val node = SwitchNode.COLOUR_BREATHE
-        AtomicBoolean(node.isOn()).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, value)
+//        AtomicBoolean(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, value)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
@@ -186,15 +223,19 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
             Progress.AMBIENT_LIGHT_BRIGHTNESS -> {
                 val set = node.set
                 val result = writeProperty(set.signal, value, set.origin)
-                Timber.tag(TAG).d("setBrightness signal:%s, newValue:%s, result:%s",
-                    set.signal, value, result)
+                Timber.tag(TAG).d(
+                    "setBrightness signal:%s, newValue:%s, result:%s",
+                    set.signal, value, result
+                )
                 true
             }
             Progress.AMBIENT_LIGHT_COLOR -> {
                 val set = node.set
                 val result = writeProperty(set.signal, value, set.origin)
-                Timber.tag(TAG).d("setBrightness signal:%s, newValue:%s, result:%s",
-                    set.signal, value, result)
+                Timber.tag(TAG).d(
+                    "setBrightness signal:%s, newValue:%s, result:%s",
+                    set.signal, value, result
+                )
                 true
             }
             else -> false
@@ -207,7 +248,7 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
         try {
             writeLock.lock()
             unRegisterVcuListener(serial, identity)
-            listenerStore.put(serial, WeakReference(listener))
+            listenerStore[serial] = WeakReference(listener)
         } finally {
             writeLock.unlock()
         }
@@ -339,7 +380,12 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
         val value = property.value
         if (value is Int) {
             Timber.d("onAmbientBrightnessChanged value%s", value)
-            doUpdateProgress(Progress.AMBIENT_LIGHT_BRIGHTNESS, ambientBrightness, value, this::doProgressChanged)
+            doUpdateProgress(
+                Progress.AMBIENT_LIGHT_BRIGHTNESS,
+                ambientBrightness,
+                value,
+                this::doProgressChanged
+            )
         }
     }
 
@@ -347,7 +393,12 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
         val value = property.value
         if (value is Int) {
             Timber.d("onAmbientBrightnessChanged value%s", value)
-            doUpdateProgress(Progress.AMBIENT_LIGHT_COLOR, ambientColor, value, this::doProgressChanged)
+            doUpdateProgress(
+                Progress.AMBIENT_LIGHT_COLOR,
+                ambientColor,
+                value,
+                this::doProgressChanged
+            )
         }
     }
 
@@ -356,7 +407,7 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
                 && writeProperty(node.set.signal, value, node.set.origin)
         if (success && develop) {
             doUpdateRadioValue(node, atomic, value) { _node, _value ->
-                doRadioChanged(_node, _value)
+                doOptionChanged(_node, _value)
             }
         }
         return success

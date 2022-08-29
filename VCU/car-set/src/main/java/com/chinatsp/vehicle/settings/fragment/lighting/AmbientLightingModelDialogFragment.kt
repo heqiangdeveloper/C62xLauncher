@@ -39,21 +39,21 @@ class AmbientLightingModelDialogFragment :
 
     private fun initViewSelectListener() {
         binding.speedRhythm.setOnClickListener {
-            if(binding.alcSmartModelSwitch.isChecked){
+            if (binding.alcSmartModelSwitch.isChecked) {
                 val status = it.isSelected
                 val result: Boolean = viewModel.doUpdateViewStatus(SwitchNode.SPEED_RHYTHM, !status)
                 takeIf { result }?.doUpdateViewSelect(it, viewModel.speedRhythm.value!!, false)
             }
         }
         binding.musicRhythm.setOnClickListener {
-            if(binding.alcSmartModelSwitch.isChecked) {
+            if (binding.alcSmartModelSwitch.isChecked) {
                 val status = it.isSelected
                 val result: Boolean = viewModel.doUpdateViewStatus(SwitchNode.MUSIC_RHYTHM, !status)
                 takeIf { result }?.doUpdateViewSelect(it, viewModel.musicRhythm.value!!, false)
             }
         }
         binding.colourBreathe.setOnClickListener {
-            if(binding.alcSmartModelSwitch.isChecked) {
+            if (binding.alcSmartModelSwitch.isChecked) {
                 val status = it.isSelected
                 val result: Boolean =
                     viewModel.doUpdateViewStatus(SwitchNode.COLOUR_BREATHE, !status)
@@ -73,6 +73,15 @@ class AmbientLightingModelDialogFragment :
     private fun addSwitchLiveDataListener() {
         viewModel.alcSmartMode.observe(this) {
             doUpdateSwitch(SwitchNode.ALC_SMART_MODE, it)
+        }
+        viewModel.colourBreathe.observe(this) {
+            doUpdateViewSelect(SwitchNode.COLOUR_BREATHE, it)
+        }
+        viewModel.musicRhythm.observe(this) {
+            doUpdateViewSelect(SwitchNode.MUSIC_RHYTHM, it)
+        }
+        viewModel.speedRhythm.observe(this) {
+            doUpdateViewSelect(SwitchNode.SPEED_RHYTHM, it)
         }
     }
 

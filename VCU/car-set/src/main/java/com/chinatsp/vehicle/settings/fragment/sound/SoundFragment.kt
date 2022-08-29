@@ -2,13 +2,14 @@ package com.chinatsp.vehicle.settings.fragment.sound
 
 import android.os.Bundle
 import android.view.View
-import android.widget.CompoundButton
-import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.VcuUtils
+import com.chinatsp.settinglib.manager.IRadioManager
+import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
+import com.chinatsp.vehicle.settings.IOptionAction
 import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.SoundFragmentBinding
@@ -18,9 +19,10 @@ import com.common.xui.utils.ViewUtils
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
-class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>() {
+class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), IOptionAction {
 
     private val manager: VoiceManager by lazy { VoiceManager.instance }
 
@@ -86,53 +88,6 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>() {
                 doUpdateRadio(RadioNode.SPEED_VOLUME_OFFSET, value, viewModel.volumeOffset, it)
             }
         }
-
-    }
-
-    private fun initRadioOption(node: RadioNode, liveData: LiveData<Int>) {
-        val value = liveData.value ?: node.default
-        doUpdateRadio(node, value, isInit = true)
-    }
-
-    private fun doUpdateRadio(
-        node: RadioNode,
-        value: String,
-        liveData: LiveData<Int>,
-        tabView: TabControlView
-    ) {
-        val result = isCanToInt(value) && manager.doSetRadioOption(node, value.toInt())
-        tabView.takeIf { !result }?.setSelection(liveData.value.toString(), true)
-    }
-
-    private fun doUpdateRadio(
-        node: RadioNode,
-        value: Int,
-        immediately: Boolean = false,
-        isInit: Boolean = false
-    ) {
-        val tabView = when (node) {
-            RadioNode.ICM_VOLUME_LEVEL -> binding.soundMeterAlarmRadio
-            RadioNode.NAVI_AUDIO_MIXING -> binding.soundNaviMixingRadio
-            RadioNode.SPEED_VOLUME_OFFSET -> binding.soundSpeedOffsetRadio
-            else -> null
-        }
-        tabView?.let {
-            bindRadioData(node, tabView, isInit)
-            doUpdateRadio(it, value, immediately)
-        }
-    }
-
-
-    private fun bindRadioData(node: RadioNode, tabView: TabControlView, isInit: Boolean) {
-        if (isInit) {
-            val names = tabView.nameArray.map { it.toString() }.toTypedArray()
-            val values = node.get.values.map { it.toString() }.toTypedArray()
-            tabView.setItems(names, values)
-        }
-    }
-
-    private fun doUpdateRadio(tabView: TabControlView, value: Int, immediately: Boolean = false) {
-        tabView.setSelection(value.toString(), true)
     }
 
     private fun initSwitchOption() {
@@ -154,6 +109,7 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>() {
             doUpdateSwitch(SwitchNode.AUDIO_SOUND_HUAWEI, it)
         }
         viewModel.touchToneStatus.observe(this) {
+            Timber.d("addSwitchLiveDataListener node:${SwitchNode.TOUCH_PROMPT_TONE}, status:$it")
             doUpdateSwitch(SwitchNode.TOUCH_PROMPT_TONE, it)
         }
         viewModel.speedVolumeOffset.observe(this) {
@@ -161,13 +117,8 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>() {
         }
     }
 
-    private fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {
-        val status = liveData.value ?: node.default
-        doUpdateSwitch(node, status, true)
-    }
-
-    private fun doUpdateSwitch(node: SwitchNode, status: Boolean, immediately: Boolean = false) {
-        val swb = when (node) {
+    override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
+        return when (node) {
             SwitchNode.AUDIO_SOUND_TONE -> binding.soundWarnToneSwitch
             SwitchNode.AUDIO_SOUND_LOUDNESS -> binding.soundLoudnessSwitch
             SwitchNode.AUDIO_SOUND_HUAWEI -> binding.soundHuaweiSwitch
@@ -175,15 +126,23 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>() {
             SwitchNode.SPEED_VOLUME_OFFSET -> binding.soundSpeedOffsetSwitch
             else -> null
         }
-        takeIf { null != swb }?.doUpdateSwitch(swb!!, status, immediately)
     }
 
-    private fun doUpdateSwitch(swb: SwitchButton, status: Boolean, immediately: Boolean = false) {
-        if (!immediately) {
-            swb.setCheckedNoEvent(status)
-        } else {
-            swb.setCheckedImmediatelyNoEvent(status)
+    override fun getSwitchManager(): ISwitchManager {
+        return manager
+    }
+
+    override fun findRadioByNode(node: RadioNode): TabControlView? {
+        return when (node) {
+            RadioNode.ICM_VOLUME_LEVEL -> binding.soundMeterAlarmRadio
+            RadioNode.NAVI_AUDIO_MIXING -> binding.soundNaviMixingRadio
+            RadioNode.SPEED_VOLUME_OFFSET -> binding.soundSpeedOffsetRadio
+            else -> null
         }
+    }
+
+    override fun getRadioManager(): IRadioManager {
+        return manager
     }
 
     private fun setSwitchListener() {
@@ -203,18 +162,6 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>() {
             doUpdateSwitchOption(SwitchNode.SPEED_VOLUME_OFFSET, buttonView, isChecked)
         }
     }
-
-    private fun doUpdateSwitchOption(node: SwitchNode, button: CompoundButton, status: Boolean) {
-        val result = manager.doSetSwitchOption(node, status)
-        if (!result && button is SwitchButton) {
-            button.setCheckedImmediatelyNoEvent(!status)
-        }
-    }
-
-    private fun isCanToInt(value: String?): Boolean {
-        return null != value && value.isNotBlank() && value.matches(Regex("\\d+"))
-    }
-
 
     private fun setCheckedChangeListener() {
         binding.soundVolumeViews.apply {

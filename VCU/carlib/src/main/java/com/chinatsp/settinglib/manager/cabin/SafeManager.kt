@@ -23,9 +23,23 @@ class SafeManager private constructor() : BaseManager(), ISwitchManager {
 
     private val fortifyToneFunction: AtomicBoolean by lazy {
         val node = SwitchNode.DRIVE_SAFE_FORTIFY_SOUND
-        AtomicBoolean(node.default).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, result)
+//        AtomicBoolean(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, result)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+        }
+    }
+
+    private val alcLockHint: AtomicBoolean by lazy {
+        val node = SwitchNode.ALC_LOCK_HINT
+//        AtomicBoolean(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, value)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
@@ -82,6 +96,9 @@ class SafeManager private constructor() : BaseManager(), ISwitchManager {
             }
             SwitchNode.DRIVE_SAFE_VIDEO_PLAYING.get.signal -> {
                 onSwitchChanged(SwitchNode.DRIVE_SAFE_VIDEO_PLAYING, videoModeFunction, property)
+            }
+            SwitchNode.ALC_LOCK_HINT.get.signal -> {
+                onSwitchChanged(SwitchNode.ALC_LOCK_HINT, alcLockHint, property)
             }
             else -> {}
         }

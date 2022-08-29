@@ -4,8 +4,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.VcuUtils
+import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.access.BackMirrorManager
 import com.chinatsp.settinglib.optios.SwitchNode
+import com.chinatsp.vehicle.controller.annotation.Level
+import com.chinatsp.vehicle.settings.ISwitchAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CarMirrorFragmentBinding
 import com.chinatsp.vehicle.settings.fragment.doors.dialog.AngleDialogFragment
@@ -13,9 +16,9 @@ import com.chinatsp.vehicle.settings.vm.accress.MirrorViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import dagger.hilt.android.AndroidEntryPoint
-import com.chinatsp.vehicle.controller.annotation.Level
+
 @AndroidEntryPoint
-class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding>() {
+class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding>(), ISwitchAction {
 
     private val manager: BackMirrorManager
         get() = BackMirrorManager.instance
@@ -26,9 +29,11 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
 
     override fun initData(savedInstanceState: Bundle?) {
         initViewsDisplay()
+
         initSwitchOption()
         setSwitchListener()
         addSwitchLiveDataListener()
+
         setCheckedChangeListener()
     }
 
@@ -74,7 +79,19 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
         initSwitchOption(SwitchNode.BACK_MIRROR_DOWN, viewModel.mirrorDownFunction)
     }
 
-    private fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {
+    override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
+        return when (node) {
+            SwitchNode.BACK_MIRROR_FOLD -> binding.accessMirrorMirrorFoldSw
+            SwitchNode.BACK_MIRROR_DOWN -> binding.backMirrorDownSwitch
+            else -> null
+        }
+    }
+
+    override fun getSwitchManager(): ISwitchManager {
+        return manager
+    }
+
+    override fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {
         val status = liveData.value ?: false
         if (node == SwitchNode.BACK_MIRROR_FOLD) {
             if (status) {
@@ -84,25 +101,6 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
             }
         }
         doUpdateSwitch(node, status, true)
-    }
-
-    private fun doUpdateSwitch(node: SwitchNode, status: Boolean, immediately: Boolean = false) {
-        val swb = when (node) {
-            SwitchNode.BACK_MIRROR_FOLD -> binding.accessMirrorMirrorFoldSw
-            SwitchNode.BACK_MIRROR_DOWN -> binding.backMirrorDownSwitch
-            else -> null
-        }
-        swb?.let {
-            doUpdateSwitch(it, status, immediately)
-        }
-    }
-
-    private fun doUpdateSwitch(swb: SwitchButton, status: Boolean, immediately: Boolean = false) {
-        if (!immediately) {
-            swb.setCheckedNoEvent(status)
-        } else {
-            swb.setCheckedImmediatelyNoEvent(status)
-        }
     }
 
     private fun setCheckedChangeListener() {

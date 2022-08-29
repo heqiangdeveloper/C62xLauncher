@@ -26,7 +26,7 @@ public interface ConstantsVolume {
     String LAMPLIGHTPLUS_1 = "高";
     String LAMPLIGHTPLUS_2 = "低";
 
-    String[] WINDOW_ALL = {"所有窗户","所有车窗"};
+    String[] WINDOW_ALL = {"所有窗户", "所有车窗"};
     String WINDOW_LEFT_FRONT = "左前车窗";
     String WINDOW_RIGHT_FRONT = "右前车窗";
     String WINDOW_LEFT_FRONT2 = "主驾车窗";
@@ -59,14 +59,14 @@ public interface ConstantsVolume {
     String OIL_SHROUD = "油箱盖";
     String OIL_SHROUD_TEXT = "油箱";
 
-    String[] HOODS = {"前罩", "前罩盖", "前舱盖", "引擎盖","电动前罩"};
-    String[] TRUNKS = {"电动后备厢", "后背门", "电动后背门", "电动尾门", "尾门","后备箱","电动后备箱", "尾箱", "电动尾箱","背门","电动背门"};
+    String[] HOODS = {"前罩", "前罩盖", "前舱盖", "引擎盖", "电动前罩"};
+    String[] TRUNKS = {"电动后备厢", "后背门", "电动后背门", "电动尾门", "尾门", "后备箱", "电动后备箱", "尾箱", "电动尾箱", "背门", "电动背门"};
     String[] WIPERS = {"雨刮", "雨刷", "前雨刮", "前雨刮器", "雨刮器", "前雨刷", "前雨刷器", "雨刷器"};
     String[] REAR_WIPERS = {"后雨刮", "后雨刮器", "后雨刷器", "后雨刷"};
     String[] TIRE_PRESSURE_MONITORS = {"胎压监测", "胎压"};
-    String[] SMOKES = {"抽烟", "抽烟模式","小欧我要抽烟"};
+    String[] SMOKES = {"抽烟", "抽烟模式", "小欧我要抽烟"};
     String WIRELESS_CHARGING = "无线充电";
-    String[] IDLE_START_AND_STOP = {"怠速启停","智能启停"};
+    String[] IDLE_START_AND_STOP = {"怠速启停", "智能启停"};
     String[] AUTO_HEAD_LIGHTS = {"大灯"};
     String[] LIGHTS = {"近光灯", "远光灯", "位置灯"};
     String[] FOG_LIGHTS = {"雾灯", "后雾灯"};
@@ -76,8 +76,8 @@ public interface ConstantsVolume {
     String MODE_COMFORT = "舒适";
     String MODE_TRACK = "赛道";
     String[] MODE_NAMES = {MODE_SPORT, MODE_COMFORT, MODE_ECO, MODE_TRACK};
-    String[] DRIVER_WINDOW_COMMS = {"左前车窗","前左车窗", "主驾车窗"};
-    String[] PASSENGER_WINDOW_COMMS = {"右前车窗", "副驾车窗","前右车窗"};
+    String[] DRIVER_WINDOW_COMMS = {"左前车窗", "前左车窗", "主驾车窗"};
+    String[] PASSENGER_WINDOW_COMMS = {"右前车窗", "副驾车窗", "前右车窗"};
     String[] VOICE_VENT = {"车外声浪"};
 
 
@@ -98,18 +98,16 @@ public interface ConstantsVolume {
     String VENTILATE = "透气";
 
 
-
     //------------ 可见即可说热词 start ------------
     //设置左侧导航菜单
-    String[] HOTWORDS_MENU = {"快捷","车况","小欧","座舱","灯光","EaglePilot","车窗","门锁","连接","显示","声音","系统"};
+    String[] HOTWORDS_MENU = {"快捷", "车况", "小欧", "座舱", "灯光", "EaglePilot", "车窗", "门锁", "连接", "显示", "声音", "系统"};
     //快捷界面
-    String[] HOTWORDS_FASTCONTROL = {"打开朋友模式","关闭朋友模式","打开洗车模式","关闭洗车模式"};
-
+    String[] HOTWORDS_FASTCONTROL = {"打开朋友模式", "关闭朋友模式", "打开洗车模式", "关闭洗车模式"};
 
 
     //------------- 可见即可说热词 end -------------
 
-    String[] PACKAGES = {"com.chinatsp.dvrcamera","com.onstyle.track"};
+    String[] PACKAGES = {"com.chinatsp.dvrcamera", "com.onstyle.track"};
 
 
 }

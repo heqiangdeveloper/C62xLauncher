@@ -46,6 +46,7 @@
                 style="@style/line"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/car_trunk_electric_function" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/reverse_angle"
                 android:layout_width="match_parent"
@@ -75,7 +76,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     android:textSize="@dimen/text_10"
                     android:gravity="center_vertical"
-                    android:textColor="@color/tab_option_title_text_color"/>
+                    android:textColor="@color/tab_option_title_text_color" />
 
                 <com.common.xui.widget.button.switchbutton.SwitchButton
                     android:id="@+id/back_mirror_down_switch"

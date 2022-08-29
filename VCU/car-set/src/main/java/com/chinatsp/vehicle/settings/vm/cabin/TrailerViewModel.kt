@@ -30,10 +30,7 @@ class TrailerViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _trailerFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.DRIVE_TRAILER_REMIND
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            setValue(value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val sensitivity: LiveData<Int>
@@ -41,10 +38,7 @@ class TrailerViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _sensitivity: MutableLiveData<Int> by lazy {
         val node = RadioNode.DEVICE_TRAILER_SENSITIVITY
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetRadioOption(node)
-            setValue(value)
-        }
+        MutableLiveData(manager.doGetRadioOption(node))
     }
 
     val distance: LiveData<Int>
@@ -52,10 +46,7 @@ class TrailerViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _distance: MutableLiveData<Int> by lazy {
         val node = RadioNode.DEVICE_TRAILER_DISTANCE
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetRadioOption(node)
-            setValue(value)
-        }
+        MutableLiveData(manager.doGetRadioOption(node))
     }
 
     override fun onCreate() {
@@ -72,7 +63,7 @@ class TrailerViewModel @Inject constructor(app: Application, model: BaseModel) :
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {
             SwitchNode.DRIVE_TRAILER_REMIND -> {
-                _trailerFunction.takeIf { it.value != status }?.value = status
+                doUpdate(_trailerFunction, status)
             }
             else -> {}
         }
@@ -81,23 +72,23 @@ class TrailerViewModel @Inject constructor(app: Application, model: BaseModel) :
     override fun onRadioOptionChanged(node: RadioNode, value: Int) {
         when (node) {
             RadioNode.DEVICE_TRAILER_DISTANCE -> {
-                _distance.takeIf { it.value != value }?.value = value
+                doUpdate(_distance, value)
             }
             RadioNode.DEVICE_TRAILER_SENSITIVITY -> {
-                _sensitivity.takeIf { it.value != value }?.value = value
+                doUpdate(_sensitivity, value)
             }
             else -> {}
         }
     }
 
     fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
-        Thread{ manager.doSetRadioOption(node, value) }.start()
+        Thread { manager.doSetRadioOption(node, value) }.start()
         return true
 //        return manager.doSetRadioOption(node, value)
     }
 
     fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
-        Thread{ manager.doSetSwitchOption(node, status) }.start()
+        Thread { manager.doSetSwitchOption(node, status) }.start()
         return true
 //        return manager.doSetSwitchOption(node, status)
     }

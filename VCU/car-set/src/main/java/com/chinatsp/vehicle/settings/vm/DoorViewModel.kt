@@ -31,16 +31,10 @@ class DoorViewModel @Inject constructor(app: Application, model: BaseModel) :
         }
     }
 
-    val liveDataAutoAccessSwitch: MutableLiveData<Boolean> by lazy {
-        MutableLiveData<Boolean>().also {
-            it.value = false
-        }
-    }
 
     private fun loadDoorAutoLockOption(it: MutableLiveData<String>) {
         it.value = "loadDoorAutoLockOption"
     }
-
 
 
 }

@@ -1,5 +1,5 @@
 package com.chinatsp.settinglib.listener
 
- interface IThemeChangeListener {
+interface IThemeChangeListener {
     fun onChange(night: Boolean)
 }

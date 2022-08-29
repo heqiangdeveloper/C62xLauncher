@@ -33,10 +33,7 @@ class SteeringViewModel @Inject constructor(app: Application, model: BaseModel) 
 
     private val _swhFunction: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.DRIVE_WHEEL_AUTO_HEAT
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            setValue(value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val sillTemp: LiveData<Volume>
@@ -54,9 +51,7 @@ class SteeringViewModel @Inject constructor(app: Application, model: BaseModel) 
 
     private val _epsMode: MutableLiveData<Int> by lazy {
         val node = RadioNode.DRIVE_EPS_MODE
-        MutableLiveData(node.default).apply {
-            value = manager.doGetRadioOption(node)
-        }
+        MutableLiveData(manager.doGetRadioOption(node))
     }
 
 
@@ -74,9 +69,9 @@ class SteeringViewModel @Inject constructor(app: Application, model: BaseModel) 
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {
             SwitchNode.DRIVE_WHEEL_AUTO_HEAT -> {
-                _swhFunction.takeIf { it.value != status }?.postValue(status)
+                doUpdate(_swhFunction, status)
             }
-            else ->{}
+            else -> {}
         }
     }
 
@@ -95,7 +90,7 @@ class SteeringViewModel @Inject constructor(app: Application, model: BaseModel) 
         target.takeIf { it.value?.type == expect.type }?.let {
             it.takeUnless { it.value == expect }?.let { liveData ->
                 liveData.value?.pos = expect.pos
-                liveData.value = liveData.value
+                liveData.postValue(liveData.value)
             }
         }
     }

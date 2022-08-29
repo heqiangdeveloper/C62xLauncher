@@ -12,8 +12,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class WindowViewModel @Inject constructor(app: Application, model: BaseModel):
-    BaseViewModel(app, model), ISwitchListener{
+class WindowViewModel @Inject constructor(app: Application, model: BaseModel) :
+    BaseViewModel(app, model), ISwitchListener {
 
     private val manager: WindowManager
         get() = WindowManager.instance
@@ -23,9 +23,7 @@ class WindowViewModel @Inject constructor(app: Application, model: BaseModel):
 
     private val _closeWinFollowLock: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.WIN_CLOSE_FOLLOW_LOCK
-        MutableLiveData(node.isOn()).apply {
-            updateLiveData(this, manager.doGetSwitchOption(node))
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val closeWinWhileRain: LiveData<Boolean>
@@ -33,9 +31,7 @@ class WindowViewModel @Inject constructor(app: Application, model: BaseModel):
 
     private val _closeWinWhileRain: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.WIN_CLOSE_WHILE_RAIN
-        MutableLiveData(node.isOn()).apply {
-            updateLiveData(this, manager.doGetSwitchOption(node))
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val winRemoteControl: LiveData<Boolean>
@@ -43,9 +39,7 @@ class WindowViewModel @Inject constructor(app: Application, model: BaseModel):
 
     private val _winRemoteControl: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.WIN_REMOTE_CONTROL
-        MutableLiveData(node.isOn()).apply {
-            updateLiveData(this, manager.doGetSwitchOption(node))
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val rainWiperRepair: LiveData<Boolean>
@@ -53,9 +47,7 @@ class WindowViewModel @Inject constructor(app: Application, model: BaseModel):
 
     private val _rainWiperRepair: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.RAIN_WIPER_REPAIR
-        MutableLiveData(node.isOn()).apply {
-            updateLiveData(this, manager.doGetSwitchOption(node))
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     override fun onCreate() {
@@ -76,18 +68,18 @@ class WindowViewModel @Inject constructor(app: Application, model: BaseModel):
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {
             SwitchNode.WIN_REMOTE_CONTROL -> {
-                updateLiveData(_winRemoteControl, status)
+                doUpdate(_winRemoteControl, status)
             }
             SwitchNode.WIN_CLOSE_FOLLOW_LOCK -> {
-                updateLiveData(_closeWinFollowLock, status)
+                doUpdate(_closeWinFollowLock, status)
             }
             SwitchNode.WIN_CLOSE_WHILE_RAIN -> {
-                updateLiveData(_closeWinWhileRain, status)
+                doUpdate(_closeWinWhileRain, status)
             }
             SwitchNode.RAIN_WIPER_REPAIR -> {
-                updateLiveData(_rainWiperRepair, status)
+                doUpdate(_rainWiperRepair, status)
             }
-            else ->{}
+            else -> {}
         }
     }
 
@@ -98,5 +90,6 @@ class WindowViewModel @Inject constructor(app: Application, model: BaseModel):
         liveData.takeIf { value xor liveData.value!! }?.postValue(value)
         return liveData
     }
+
 
 }

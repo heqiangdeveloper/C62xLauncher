@@ -9,7 +9,7 @@ import com.chinatsp.settinglib.manager.IOptionManager
  * @desc   :
  * @version: 1.0
  */
-interface IAcManager: IOptionManager {
+interface IAcManager : IOptionManager {
 
 //    fun obtainAutoAridStatus():Boolean
 //

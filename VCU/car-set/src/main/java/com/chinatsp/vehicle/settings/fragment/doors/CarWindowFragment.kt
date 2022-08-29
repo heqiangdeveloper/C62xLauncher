@@ -2,12 +2,12 @@ package com.chinatsp.vehicle.settings.fragment.doors
 
 import android.os.Bundle
 import android.view.View
-import android.widget.CompoundButton
-import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.VcuUtils
+import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.access.WindowManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
+import com.chinatsp.vehicle.settings.ISwitchAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CarWindowFragmentBinding
 import com.chinatsp.vehicle.settings.vm.accress.WindowViewModel
@@ -17,7 +17,7 @@ import com.common.xui.widget.button.switchbutton.SwitchButton
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding>() {
+class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding>(), ISwitchAction {
 
     private var animationCarWindow: AnimationDrawable = AnimationDrawable()
 
@@ -87,28 +87,18 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
         }
     }
 
-    private fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {
-        val status = liveData.value ?: node.default
-        doUpdateSwitch(node, status, true)
-    }
-
-    private fun doUpdateSwitch(node: SwitchNode, status: Boolean, immediately: Boolean = false) {
-        val swb = when (node) {
+    override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
+        return when (node) {
             SwitchNode.WIN_REMOTE_CONTROL -> binding.carWindowRemoteControlSwb
             SwitchNode.WIN_CLOSE_FOLLOW_LOCK -> binding.carWindowLockCarSwb
             SwitchNode.WIN_CLOSE_WHILE_RAIN -> binding.carWindowRainyDaySwb
             SwitchNode.RAIN_WIPER_REPAIR -> binding.carWindowWiperSwb
             else -> null
         }
-        takeIf { null != swb }?.doUpdateSwitch(swb!!, status, immediately)
     }
 
-    private fun doUpdateSwitch(swb: SwitchButton, status: Boolean, immediately: Boolean = false) {
-        if (!immediately) {
-            swb.setCheckedNoEvent(status)
-        } else {
-            swb.setCheckedImmediatelyNoEvent(status)
-        }
+    override fun getSwitchManager(): ISwitchManager {
+        return manager
     }
 
     private fun setSwitchListener() {
@@ -135,13 +125,6 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
             } else {
                 binding.carWinper.visibility = View.GONE
             }
-        }
-    }
-
-    private fun doUpdateSwitchOption(node: SwitchNode, button: CompoundButton, status: Boolean) {
-        val result = manager.doSetSwitchOption(node, status)
-        if (!result && button is SwitchButton) {
-            button.setCheckedImmediatelyNoEvent(!status)
         }
     }
 

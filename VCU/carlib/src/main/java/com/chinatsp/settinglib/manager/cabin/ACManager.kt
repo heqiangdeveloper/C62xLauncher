@@ -1,13 +1,10 @@
 package com.chinatsp.settinglib.manager.cabin
 
 import android.car.hardware.CarPropertyValue
-import android.car.hardware.cabin.CarCabinManager
-import android.car.hardware.hvac.CarHvacManager
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.cabin.IAcManager
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
-import com.chinatsp.settinglib.optios.Area
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
@@ -26,39 +23,11 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class ACManager private constructor() : BaseManager(), IAcManager {
 
-    /**
-     * 【反馈】self-desiccation
-     * self-desiccation 自干燥功能状态显示 0x0:ON 0x1:OFF
-     * AcSelfStsDisp
-     */
-    private val cabinAridSignal = CarCabinManager.ID_ACSELFSTSDISP
-
-    /**
-     * 【反馈】解锁预通风功能开启状态
-     * 解锁预通风功能开启状态 0x0:ON 0x1:OFF
-     * VehicleArea:GLOBAL
-     * AcPreVentnDisp
-     */
-    private val cabinWindSignal = CarCabinManager.ID_ACPREVENTNDISP
-
-    /**
-     * 【反馈】空调舒适性状态显示
-     * 空调舒适性状态显示 0x0: Reserved 0x1: Gentle 0x2:
-     *  Standard 0x3: Powerful 0x4~0x6: Reserved 0x7: Invalid
-     * AcCmftStsDisp
-     */
-    private val cabinComfortSignal = CarCabinManager.ID_ACCMFTSTSDISP
-
-    private val hvacDemistSignal = CarHvacManager.ID_HVAC_AVN_KEY_DEFROST
-
     companion object : ISignal {
-
         override val TAG: String = ACManager::class.java.simpleName
-
         val instance: ACManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             ACManager()
         }
-
     }
 
     override val careSerials: Map<Origin, Set<Int>> by lazy {
@@ -78,33 +47,45 @@ class ACManager private constructor() : BaseManager(), IAcManager {
 
     private val aridStatus: AtomicBoolean by lazy {
         val node = SwitchNode.AC_AUTO_ARID
-        AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, result)
+//        AtomicBoolean(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, result)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val demistStatus: AtomicBoolean by lazy {
         val node = SwitchNode.AC_AUTO_DEMIST
-        AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, result)
+//        AtomicBoolean(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, result)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val windStatus: AtomicBoolean by lazy {
         val node = SwitchNode.AC_ADVANCE_WIND
-        AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, result)
+//        AtomicBoolean(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, result)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val comfortOption: AtomicInteger by lazy {
         val node = RadioNode.AC_COMFORT
-        AtomicInteger(node.default).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateRadioValue(node, this, result)
+//        AtomicInteger(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateRadioValue(node, this, result)
+//        }
+        return@lazy createAtomicInteger(node) { result, value ->
+            doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
     }
 
@@ -120,7 +101,12 @@ class ACManager private constructor() : BaseManager(), IAcManager {
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
         return when (node) {
             RadioNode.AC_COMFORT -> {
-                node.isValid(value, false) && writeProperty(node.set.signal, value, node.set.origin, node.area)
+                node.isValid(value, false) && writeProperty(
+                    node.set.signal,
+                    value,
+                    node.set.origin,
+                    node.area
+                )
             }
             else -> false
         }
@@ -163,42 +149,6 @@ class ACManager private constructor() : BaseManager(), IAcManager {
                 writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
             SwitchNode.AC_AUTO_DEMIST -> {
-                writeProperty(node.set.signal, node.value(status), node.set.origin)
-            }
-            else -> false
-        }
-    }
-
-
-    /**
-     * 更新空调舒适性
-     * @param value (自动舒适模式开关AC Auto Comfort Switch
-    0x0: Inactive
-    0x1: Gentle
-    0x2: Standard
-    0x3: Powerful
-    0x4~0x6: Reserved
-    0x7: Invalid
-     */
-    fun doUpdateAcComfort(value: Int): Boolean {
-        val isValid = listOf(0x1, 0x2, 0x3).any { it == value }
-        if (!isValid) {
-            return false
-        }
-        val signal = CarHvacManager.ID_HVAC_AVN_AC_AUTO_CMFT_SWT
-        return writeProperty(signal, value, Origin.HVAC, Area.GLOBAL)
-    }
-
-    /**
-     *
-     * @param node 开关选项
-     * @param status 开关期望状态
-     */
-    fun doSwitchOption(node: SwitchNode, status: Boolean): Boolean {
-        return when (node) {
-            SwitchNode.AC_AUTO_ARID,
-            SwitchNode.AC_AUTO_DEMIST,
-            SwitchNode.AC_ADVANCE_WIND -> {
                 writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
             else -> false

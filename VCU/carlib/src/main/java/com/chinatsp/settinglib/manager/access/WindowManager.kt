@@ -35,33 +35,45 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
 
     private val autoCloseWinInRain: AtomicBoolean by lazy {
         val node = SwitchNode.WIN_CLOSE_WHILE_RAIN
-        AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, result)
+//        AtomicBoolean(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, result)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val autoCloseWinAtLock: AtomicBoolean by lazy {
         val node = SwitchNode.WIN_CLOSE_FOLLOW_LOCK
-        AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, result)
+//        AtomicBoolean(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, result)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val winRemoteControl: AtomicBoolean by lazy {
         val node = SwitchNode.WIN_REMOTE_CONTROL
-        AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, result)
+//        AtomicBoolean(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, result)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val rainWiperRepair: AtomicBoolean by lazy {
         val node = SwitchNode.RAIN_WIPER_REPAIR
-        AtomicBoolean(node.isOn()).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, result)
+//        AtomicBoolean(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, result)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
@@ -74,7 +86,7 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
 
     override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
-            val cabinSet = HashSet<Int> ().apply {
+            val cabinSet = HashSet<Int>().apply {
                 /**雨天自动关窗*/
                 add(SwitchNode.WIN_CLOSE_WHILE_RAIN.get.signal)
                 /**锁车自动关窗*/
@@ -228,5 +240,5 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
             callback?.onCmdHandleResult(cmd)
         }
     }
-    
+
 }

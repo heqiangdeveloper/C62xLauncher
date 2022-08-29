@@ -22,37 +22,29 @@ class CruiseViewModel @Inject constructor(app: Application, model: BaseModel) :
     val cruiseAssistFunction: LiveData<Boolean> by lazy { _cruiseAssistFunction }
 
     private val _cruiseAssistFunction: MutableLiveData<Boolean> by lazy {
-        val switchNode = SwitchNode.ADAS_IACC
-        MutableLiveData(switchNode.isOn()).apply {
-            value = manager.doGetSwitchOption(switchNode)
-        }
+        val node = SwitchNode.ADAS_IACC
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val targetPromptFunction: LiveData<Boolean> by lazy { _targetPromptFunction }
 
     private val _targetPromptFunction: MutableLiveData<Boolean> by lazy {
-        val switchNode = SwitchNode.ADAS_TARGET_PROMPT
-        MutableLiveData(switchNode.isOn()).apply {
-            value = manager.doGetSwitchOption(switchNode)
-        }
+        val node = SwitchNode.ADAS_TARGET_PROMPT
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val limberLeaveFunction: LiveData<Boolean> by lazy { _limberLeaveFunction }
 
     private val _limberLeaveFunction: MutableLiveData<Boolean> by lazy {
-        val switchNode = SwitchNode.ADAS_LIMBER_LEAVE
-        MutableLiveData(switchNode.isOn()).apply {
-            value = manager.doGetSwitchOption(switchNode)
-        }
+        val node = SwitchNode.ADAS_LIMBER_LEAVE
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val limberLeaveRadio: LiveData<Int> by lazy { _limberLeaveRadio }
 
     private val _limberLeaveRadio: MutableLiveData<Int> by lazy {
-        val radioNode = RadioNode.ADAS_LIMBER_LEAVE
-        MutableLiveData(-1).apply {
-            value = manager.doGetRadioOption(radioNode)
-        }
+        val node = RadioNode.ADAS_LIMBER_LEAVE
+        MutableLiveData(manager.doGetRadioOption(node))
     }
 
     override fun onCreate() {
@@ -67,16 +59,16 @@ class CruiseViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {
-            SwitchNode.ADAS_IACC -> _cruiseAssistFunction.value = status
-            SwitchNode.ADAS_TARGET_PROMPT -> _targetPromptFunction.value = status
-            SwitchNode.ADAS_LIMBER_LEAVE -> _limberLeaveFunction.value = status
+            SwitchNode.ADAS_IACC -> doUpdate(_cruiseAssistFunction, status)
+            SwitchNode.ADAS_TARGET_PROMPT -> doUpdate(_targetPromptFunction, status)
+            SwitchNode.ADAS_LIMBER_LEAVE -> doUpdate(_limberLeaveFunction, status)
             else -> {}
         }
     }
 
     override fun onRadioOptionChanged(node: RadioNode, value: Int) {
         if (RadioNode.ADAS_LIMBER_LEAVE == node) {
-            _limberLeaveRadio.value = value
+            doUpdate(_limberLeaveRadio, value)
         }
 
     }

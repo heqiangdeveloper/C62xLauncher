@@ -31,32 +31,44 @@ class CruiseManager : BaseManager(), IOptionManager {
 
     private val iaccFunction: AtomicBoolean by lazy {
         val node = SwitchNode.ADAS_IACC
-        AtomicBoolean(node.isOn()).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, value)
+//        AtomicBoolean(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, value)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
     private val targetPromptFunction: AtomicBoolean by lazy {
         val node = SwitchNode.ADAS_TARGET_PROMPT
-        AtomicBoolean(node.isOn()).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, value)
+//        AtomicBoolean(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, value)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val limberLeaveFunction: AtomicBoolean by lazy {
         val node = SwitchNode.ADAS_LIMBER_LEAVE
-        AtomicBoolean(node.isOn()).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateSwitchValue(node, this, value)
+//        AtomicBoolean(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, value)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val limberLeaveRadio: AtomicInteger by lazy {
         val node = RadioNode.ADAS_LIMBER_LEAVE
-        AtomicInteger(node.default).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            doUpdateRadioValue(node, this, value)
+//        AtomicInteger(node.default).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateRadioValue(node, this, value)
+//        }
+        return@lazy createAtomicInteger(node) { result, value ->
+            doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
     }
 

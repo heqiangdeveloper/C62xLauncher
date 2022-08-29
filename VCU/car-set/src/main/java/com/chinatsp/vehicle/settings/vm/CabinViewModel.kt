@@ -14,6 +14,7 @@ import javax.inject.Inject
  * @version: 1.0
  */
 @HiltViewModel
-class CabinViewModel @Inject constructor(app: Application, model: BaseModel): BaseViewModel(app, model) {
+class CabinViewModel @Inject constructor(app: Application, model: BaseModel) :
+    BaseViewModel(app, model) {
 
 }

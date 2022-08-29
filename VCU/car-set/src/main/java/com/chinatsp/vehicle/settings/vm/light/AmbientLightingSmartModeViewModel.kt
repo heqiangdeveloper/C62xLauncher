@@ -23,40 +23,28 @@ class AmbientLightingSmartModeViewModel @Inject constructor(app: Application, mo
         get() = _alcSmartMode
     private val _alcSmartMode: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.ALC_SMART_MODE
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            updateLiveData(this, value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val colourBreathe: LiveData<Boolean>
         get() = _colourBreathe
     private val _colourBreathe: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.COLOUR_BREATHE
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            updateLiveData(this, value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val musicRhythm: LiveData<Boolean>
         get() = _musicRhythm
     private val _musicRhythm: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.MUSIC_RHYTHM
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            updateLiveData(this, value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val speedRhythm: LiveData<Boolean>
         get() = _speedRhythm
     private val _speedRhythm: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.SPEED_RHYTHM
-        MutableLiveData(node.default).apply {
-            val value = manager.doGetSwitchOption(node)
-            updateLiveData(this, value)
-        }
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     override fun onCreate() {
@@ -88,16 +76,16 @@ class AmbientLightingSmartModeViewModel @Inject constructor(app: Application, mo
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {
             SwitchNode.ALC_SMART_MODE -> {
-                updateLiveData(_alcSmartMode, status)
+                doUpdate(_alcSmartMode, status)
             }
             SwitchNode.SPEED_RHYTHM -> {
-                updateLiveData(_speedRhythm, status)
+                doUpdate(_speedRhythm, status)
             }
             SwitchNode.MUSIC_RHYTHM -> {
-                updateLiveData(_musicRhythm, status)
+                doUpdate(_musicRhythm, status)
             }
             SwitchNode.COLOUR_BREATHE -> {
-                updateLiveData(_colourBreathe, status)
+                doUpdate(_colourBreathe, status)
             }
             else -> {}
         }

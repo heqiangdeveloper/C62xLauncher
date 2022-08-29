@@ -17,4 +17,9 @@ import com.chinatsp.settinglib.sign.Origin
  * @param def 默认开关值
  */
 //data class Norm(val don: Int = 1, val doff: Int = 2, val uon: Int = 1, val uoff: Int = 2, val def: Boolean = true) {
-data class Norm(val on: Int = 1, val off: Int = 2, val origin: Origin = Origin.CABIN, val signal: Int = -1)
+data class Norm(
+    val on: Int = 1,
+    val off: Int = 2,
+    val origin: Origin = Origin.CABIN,
+    val signal: Int = -1
+)

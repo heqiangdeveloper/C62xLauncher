@@ -17,7 +17,7 @@ import timber.log.Timber
  * @desc   :
  * @version: 1.0
  */
-class VehicleService: Service() {
+class VehicleService : Service() {
 
     private val TAG: String = VehicleService::class.java.simpleName
 
@@ -31,7 +31,7 @@ class VehicleService: Service() {
         return controller
     }
 
-    inner class OuterControllerImpl: IOuterController.Stub() {
+    inner class OuterControllerImpl : IOuterController.Stub() {
 
         override fun isEngineStatus(packageName: String?): Boolean {
             return Constant.ENGINE_STATUS

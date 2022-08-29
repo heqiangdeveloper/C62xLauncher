@@ -23,11 +23,16 @@ class CommandParser {
         return arrays.contains(cmd)
     }
 
-    fun doDispatchSrAction(nlpVoiceModel: NlpVoiceModel, controller: IOuterController, callback: ICmdCallback): Boolean {
+    fun doDispatchSrAction(
+        nlpVoiceModel: NlpVoiceModel,
+        controller: IOuterController,
+        callback: ICmdCallback
+    ): Boolean {
         var result: Boolean = false
         do {
             try {
-                val semantic: Semantic = Gson().fromJson(nlpVoiceModel.semantic, Semantic::class.java)
+                val semantic: Semantic =
+                    Gson().fromJson(nlpVoiceModel.semantic, Semantic::class.java)
                 if (semantic.slots == null) {
 //                    Timber.d("onSrAction handle fail. semantic.slots is null.")
                     break
@@ -36,14 +41,17 @@ class CommandParser {
                 //true表示是开启操作,false表示未知操作
                 val isOpen = isMatch(ConstantsVolume.OPT_OPENS, nlpVoiceModel.operation);
                 //true表示关闭操作，false表示未知操作
-                val isClose = !isOpen && isMatch(ConstantsVolume.OPT_CLOSES, nlpVoiceModel.operation);
+                val isClose =
+                    !isOpen && isMatch(ConstantsVolume.OPT_CLOSES, nlpVoiceModel.operation);
                 LogManager.d(TAG, "doDispatchSrAction isOpen:$isOpen, isClose:$isClose, name:$name")
                 //TODO 目前语音无反馈 先屏蔽
                 if (TextUtils.equals(ConstantsVolume.REFUEL_MODE, name)
-                    || TextUtils.equals(ConstantsVolume.REFUEL_TEXT, name)) {
+                    || TextUtils.equals(ConstantsVolume.REFUEL_TEXT, name)
+                ) {
                     result = isOpen || isClose;
                 } else if (TextUtils.equals(ConstantsVolume.OIL_SHROUD, name)
-                    || TextUtils.equals(ConstantsVolume.OIL_SHROUD_TEXT, name)) {
+                    || TextUtils.equals(ConstantsVolume.OIL_SHROUD_TEXT, name)
+                ) {
                     result = isOpen || isClose;
 
                 } else if (isMatch(ConstantsVolume.HOODS, name)) {
@@ -84,9 +92,10 @@ class CommandParser {
                 } else if (ConstantsVolume.LOUVER.contains(name)) {
                     result = isOpen || isClose;
                     if (isOpen) {
-                        val cmd = Cmd(action = Action.OPEN, model = Model.ACCESS_WINDOW, message = "打开天窗")
+                        val cmd =
+                            Cmd(action = Action.OPEN, model = Model.ACCESS_WINDOW, message = "打开天窗")
                         controller.doOuterControlCommand(cmd, callback)
-                        LogManager.d(TAG, "execute open window!!!cmd：$cmd" )
+                        LogManager.d(TAG, "execute open window!!!cmd：$cmd")
                     }
                     if (isClose) {
                         val cmd = Cmd(Action.CLOSE, Model.ACCESS_WINDOW, message = "关闭天窗")

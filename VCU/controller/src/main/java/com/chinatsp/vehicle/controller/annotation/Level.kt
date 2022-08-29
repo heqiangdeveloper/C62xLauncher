@@ -1,8 +1,6 @@
 package com.chinatsp.vehicle.controller.annotation
 
 import androidx.annotation.IntDef
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
 
 /**
  * @author : luohong
@@ -12,7 +10,7 @@ import java.lang.annotation.RetentionPolicy
  * @version: 1.0
  */
 @IntDef(Level.LEVEL3, Level.LEVEL4, Level.LEVEL5)
-@Retention(RetentionPolicy.SOURCE)
+@kotlin.annotation.Retention(AnnotationRetention.SOURCE)
 annotation class Level {
     companion object {
         const val LEVEL3 = 0

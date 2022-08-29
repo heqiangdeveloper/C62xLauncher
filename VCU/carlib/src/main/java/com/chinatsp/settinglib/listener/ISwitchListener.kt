@@ -9,7 +9,7 @@ import com.chinatsp.settinglib.optios.SwitchNode
  * @desc   :
  * @version: 1.0
  */
-interface ISwitchListener: IBaseListener {
+interface ISwitchListener : IBaseListener {
 
     fun onSwitchOptionChanged(status: Boolean, node: SwitchNode)
 

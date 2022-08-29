@@ -9,4 +9,4 @@ import com.chinatsp.settinglib.listener.IBaseListener
  * @desc   :
  * @version: 1.0
  */
-interface ILightListener: IBaseListener
+interface ILightListener : IBaseListener

@@ -7,4 +7,4 @@ package com.chinatsp.settinglib.listener
  * @desc   :
  * @version: 1.0
  */
-interface IOptionListener: ISwitchListener, IRadioListener
+interface IOptionListener : ISwitchListener, IRadioListener

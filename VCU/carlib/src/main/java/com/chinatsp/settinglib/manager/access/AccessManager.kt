@@ -45,9 +45,7 @@ class AccessManager private constructor() : BaseManager(), ITabStore {
     }
 
     companion object : ISignal {
-
         override val TAG: String = AccessManager::class.java.simpleName
-
         val instance: AccessManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             AccessManager()
         }

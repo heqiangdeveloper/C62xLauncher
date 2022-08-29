@@ -28,18 +28,24 @@ class ForwardManager : BaseManager(), ISwitchManager {
     }
 
     private val fcwStatus: AtomicBoolean by lazy {
-        val switchNode = SwitchNode.ADAS_FCW
-        AtomicBoolean(switchNode.isOn()).apply {
-            val result = readIntProperty(switchNode.get.signal, switchNode.get.origin)
-            doUpdateSwitchValue(switchNode, this, result)
+        val node = SwitchNode.ADAS_FCW
+//        AtomicBoolean(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, result)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val aebStatus: AtomicBoolean by lazy {
-        val switchNode = SwitchNode.ADAS_AEB
-        AtomicBoolean(switchNode.isOn()).apply {
-            val result = readIntProperty(switchNode.get.signal, switchNode.get.origin)
-            doUpdateSwitchValue(switchNode, this, result)
+        val node = SwitchNode.ADAS_AEB
+//        AtomicBoolean(node.default).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            doUpdateSwitchValue(node, this, result)
+//        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 

@@ -2,16 +2,16 @@ package com.chinatsp.vehicle.settings.fragment.lighting
 
 import android.os.Bundle
 import android.view.View
-import android.widget.CompoundButton
-import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.Volume
-import com.chinatsp.settinglib.manager.IOptionManager
+import com.chinatsp.settinglib.manager.IRadioManager
+import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.lamp.LightManager
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
+import com.chinatsp.vehicle.settings.IOptionAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.LightingFragmentBinding
 import com.chinatsp.vehicle.settings.vm.light.LightingViewModel
@@ -23,7 +23,8 @@ import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding>(), VSeekBar.OnSeekBarListener {
+class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding>(),
+    VSeekBar.OnSeekBarListener, IOptionAction {
 
     private var animationHomeOpen: AnimationDrawable = AnimationDrawable()
     private var animationHomeClose: AnimationDrawable = AnimationDrawable()
@@ -146,71 +147,25 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
         binding.lightFlickerRadio.let {
             it.setOnTabSelectionChangedListener { _, value ->
                 doUpdateRadio(RadioNode.LIGHT_FLICKER, value, viewModel.lightFlicker, it)
-                if(value.equals("2")){
+                if (value.equals("2")) {
                     binding.turnSignalIv1.visibility = View.VISIBLE
                     binding.turnSignalIv2.visibility = View.GONE
                     binding.turnSignalIv.visibility = View.GONE
-                    setTurnAnimation(animationTurnSignal1,value)
-                }else if (value.equals("3")){
+                    setTurnAnimation(animationTurnSignal1, value)
+                } else if (value.equals("3")) {
                     binding.turnSignalIv2.visibility = View.VISIBLE
                     binding.turnSignalIv1.visibility = View.GONE
                     binding.turnSignalIv.visibility = View.GONE
-                    setTurnAnimation(animationTurnSignal2,value)
-                }else if (value.equals("4")){
+                    setTurnAnimation(animationTurnSignal2, value)
+                } else if (value.equals("4")) {
                     binding.turnSignalIv.visibility = View.VISIBLE
                     binding.turnSignalIv2.visibility = View.GONE
                     binding.turnSignalIv1.visibility = View.GONE
-                    setTurnAnimation(animationTurnSignal,value)
+                    setTurnAnimation(animationTurnSignal, value)
                 }
 
             }
         }
-    }
-
-    private fun initRadioOption(node: RadioNode, liveData: LiveData<Int>) {
-        val value = liveData.value ?: node.default
-        doUpdateRadio(node, value, isInit = true)
-    }
-
-    private fun doUpdateRadio(
-        node: RadioNode,
-        value: String,
-        liveData: LiveData<Int>,
-        tabView: TabControlView
-    ) {
-        val result = isCanToInt(value) && manager.doSetRadioOption(node, value.toInt())
-        tabView.takeIf { !result }?.setSelection(liveData.value.toString(), true)
-    }
-
-    private fun doUpdateRadio(
-        node: RadioNode,
-        value: Int,
-        immediately: Boolean = false,
-        isInit: Boolean = false
-    ) {
-        val tabView = when (node) {
-            RadioNode.LIGHT_DELAYED_OUT -> binding.lightDelayBlackOutRadio
-            RadioNode.LIGHT_FLICKER -> binding.lightFlickerRadio
-            RadioNode.LIGHT_CEREMONY_SENSE -> binding.lightCeremonySenseRadio
-            else -> null
-        }
-        tabView?.let {
-            bindRadioData(node, tabView, isInit)
-            doUpdateRadio(it, value, immediately)
-        }
-    }
-
-
-    private fun bindRadioData(node: RadioNode, tabView: TabControlView, isInit: Boolean) {
-        if (isInit) {
-            val names = tabView.nameArray.map { it.toString() }.toTypedArray()
-            val values = node.get.values.map { it.toString() }.toTypedArray()
-            tabView.setItems(names, values)
-        }
-    }
-
-    private fun doUpdateRadio(tabView: TabControlView, value: Int, immediately: Boolean = false) {
-        tabView.setSelection(value.toString(), true)
     }
 
     private fun initSwitchOption() {
@@ -227,26 +182,29 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
         }
     }
 
-    private fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {
-        val status = liveData.value ?: node.default
-        doUpdateSwitch(node, status, true)
-    }
-
-    private fun doUpdateSwitch(node: SwitchNode, status: Boolean, immediately: Boolean = false) {
-        val swb = when (node) {
+    override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
+        return when (node) {
             SwitchNode.LIGHT_OUTSIDE_MEET -> binding.lightOutsideMeetSwitch
             SwitchNode.LIGHT_INSIDE_MEET -> binding.lightInsideMeetSwitch
             else -> null
         }
-        takeIf { null != swb }?.doUpdateSwitch(swb!!, status, immediately)
     }
 
-    private fun doUpdateSwitch(swb: SwitchButton, status: Boolean, immediately: Boolean = false) {
-        if (!immediately) {
-            swb.setCheckedNoEvent(status)
-        } else {
-            swb.setCheckedImmediatelyNoEvent(status)
+    override fun getSwitchManager(): ISwitchManager {
+        return manager
+    }
+
+    override fun findRadioByNode(node: RadioNode): TabControlView? {
+        return when (node) {
+            RadioNode.LIGHT_DELAYED_OUT -> binding.lightDelayBlackOutRadio
+            RadioNode.LIGHT_FLICKER -> binding.lightFlickerRadio
+            RadioNode.LIGHT_CEREMONY_SENSE -> binding.lightCeremonySenseRadio
+            else -> null
         }
+    }
+
+    override fun getRadioManager(): IRadioManager {
+        return manager
     }
 
     private fun setSwitchListener() {
@@ -264,18 +222,7 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
         }
     }
 
-    private fun doUpdateSwitchOption(node: SwitchNode, button: CompoundButton, status: Boolean) {
-        val result = manager.doSetSwitchOption(node, status)
-        if (!result && button is SwitchButton) {
-            button.setCheckedImmediatelyNoEvent(!status)
-        }
-    }
-
-    private fun isCanToInt(value: String?): Boolean {
-        return null != value && value.isNotBlank() && value.matches(Regex("\\d+"))
-    }
-
-    private fun setTurnAnimation(animationDrawable: AnimationDrawable,value: String){
+    private fun setTurnAnimation(animationDrawable: AnimationDrawable, value: String) {
         animationDrawable.start(false, 50, null)
     }
 
