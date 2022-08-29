@@ -48,6 +48,9 @@ public abstract class BaseRcvAdapter<T> extends RecyclerView.Adapter<BaseViewHol
         if (data == null) {
             return;
         }
+        if (mData == data) {
+            return;
+        }
         mData = data;
         notifyDataSetChanged();
     }

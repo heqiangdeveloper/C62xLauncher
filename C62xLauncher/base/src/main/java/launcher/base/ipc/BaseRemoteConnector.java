@@ -4,7 +4,9 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Set;
 
 import launcher.base.R;
 import launcher.base.async.AsyncSchedule;
@@ -15,8 +17,8 @@ public class BaseRemoteConnector {
     private static final String TAG = BaseRemoteConnector.class.getSimpleName();
     private volatile boolean startBindService = false;
     private volatile boolean mServiceConnect;
-    private LinkedList<IConnectListener> mConnectListeners = new LinkedList<>();
-    private LinkedList<IRemoteDataCallback> mRemoteDataCallbacks = new LinkedList<>();
+    private Set<IConnectListener> mConnectListeners = new HashSet<>();
+    private Set<IRemoteDataCallback> mRemoteDataCallbacks = new HashSet<>();
     private RemoteProxy mRemoteProxy;
 
     public BaseRemoteConnector(@NonNull RemoteProxy remoteProxy) {
@@ -60,6 +62,7 @@ public class BaseRemoteConnector {
         AsyncSchedule.execute(new Runnable() {
             @Override
             public void run() {
+                EasyLog.i(TAG, "notifyDataCallback , listeners:"+mRemoteDataCallbacks );
                 for (IRemoteDataCallback remoteDataCallback : mRemoteDataCallbacks) {
                     remoteDataCallback.notifyData(t);
                 }
@@ -151,7 +154,7 @@ public class BaseRemoteConnector {
             @Override
             public void run() {
                 if (dataCallback != null) {
-                    mRemoteDataCallbacks.add(dataCallback);
+                    mRemoteDataCallbacks.remove(dataCallback);
                 }
             }
         });

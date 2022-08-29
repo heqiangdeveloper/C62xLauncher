@@ -1,5 +1,6 @@
 package com.chinatsp.drawer.drive;
 
+import android.annotation.SuppressLint;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -13,13 +14,13 @@ import com.chinatsp.widgetcards.R;
 import launcher.base.recyclerview.BaseViewHolder;
 
 public class DrawerDriveCounselorHolder extends BaseViewHolder<DrawerEntity> {
-    private DriveInfoDrawerController mController;
+    private final DriveInfoDrawerController mController;
 
-    private TextView tvDrawerDriveHealthy;
-    private TextView tvDrawerDriveDistance;
-    private TextView tvDrawerDriveDistanceLabel;
-    private TextView tvDrawerDriveRanking;
-    private DistanceCircleProgress progressDrawerDriveDistance;
+    private final TextView tvDrawerDriveHealthy;
+    private final TextView tvDrawerDriveDistance;
+    private final TextView tvDrawerDriveDistanceLabel;
+    private final TextView tvDrawerDriveRanking;
+    private final DistanceCircleProgress progressDrawerDriveDistance;
 
 
     public DrawerDriveCounselorHolder(@NonNull View itemView) {
@@ -52,8 +53,9 @@ public class DrawerDriveCounselorHolder extends BaseViewHolder<DrawerEntity> {
         progressDrawerDriveDistance.setProgress(percent);
     }
 
+    @SuppressLint("SetTextI18n")
     public void updateRank(int rank) {
-        tvDrawerDriveRanking.setText(String.valueOf(rank));
+        tvDrawerDriveRanking.setText(rank +"%");
     }
 
     public void updateDriveInfo(DriveInfo driveInfo, float maintenancePercent) {

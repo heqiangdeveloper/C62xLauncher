@@ -15,21 +15,18 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
 import androidx.lifecycle.Observer;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chinatsp.weaher.repository.WeatherBean;
-import com.chinatsp.weaher.viewholder.BigCardHolder;
-import com.chinatsp.weaher.viewholder.SmallCardHolder;
+import com.chinatsp.weaher.viewholder.WeatherBigCardHolder;
+import com.chinatsp.weaher.viewholder.WeatherSmallCardHolder;
 import com.chinatsp.weaher.weekday.DayWeatherBean;
-import com.chinatsp.weaher.weekday.WeekDayAdapter;
 import com.iflytek.autofly.weather.entity.WeatherInfo;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import card.service.ICardStyleChange;
-import launcher.base.recyclerview.SimpleRcvDecoration;
 import launcher.base.utils.view.LayoutParamUtil;
 
 
@@ -63,15 +60,16 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
     private RecyclerView mRcvCardWeatherWeek;
     private View mLargeCardView;
     private View mSmallCardView;
-    private SmallCardHolder mSmallCardHolder;
-    private BigCardHolder mBigCardHolder;
+    private WeatherSmallCardHolder mSmallCardHolder;
+    private WeatherBigCardHolder mBigCardHolder;
     private boolean mExpand;
     private LifecycleRegistry mLifecycleRegistry = new LifecycleRegistry(this);
 
     private void init() {
+        WeatherUtil.logI("WeatherCard init:"+hashCode());
         LayoutInflater.from(getContext()).inflate(R.layout.card_weather, this);
         mSmallCardView = findViewById(R.id.layoutSmallCardView);
-        mSmallCardHolder = new SmallCardHolder(mSmallCardView);
+        mSmallCardHolder = new WeatherSmallCardHolder(mSmallCardView);
         mSmallWidth = (int) getResources().getDimension(R.dimen.card_width);
         mLargeWidth = (int) getResources().getDimension(R.dimen.card_width_large);
         mController = new WeatherCardController(this);
@@ -85,26 +83,20 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
         mController.requestWeatherInfo();
     }
 
-    Observer<WeatherBean> mWeatherBeanObserver = new Observer<WeatherBean>() {
-        @Override
-        public void onChanged(WeatherBean weatherBean) {
-            refreshSmallCardUI(weatherBean);
-        }
-    };
-
     @Override
     public void expand() {
         mExpand = true;
         if (mLargeCardView == null) {
             mLargeCardView = LayoutInflater.from(getContext()).inflate(R.layout.card_weather_large, this, false);
-            mBigCardHolder = new BigCardHolder(mLargeCardView);
+            mBigCardHolder = new WeatherBigCardHolder(mLargeCardView);
         }
-        mController.requestWeatherInfo();
         addView(mLargeCardView);
         mLargeCardView.setVisibility(VISIBLE);
         mSmallCardView.setVisibility(GONE);
         LayoutParamUtil.setWidth(mLargeWidth, this);
         runExpandAnim();
+        mBigCardHolder.updateWeatherList(mController.getWeatherList());
+
     }
 
 
@@ -115,7 +107,6 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
         mLargeCardView.setVisibility(GONE);
         removeView(mLargeCardView);
         LayoutParamUtil.setWidth(mSmallWidth, this);
-        mController.requestWeatherInfo();
     }
 
     @Override
@@ -123,58 +114,11 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
         return false;
     }
 
-
-
     private void runExpandAnim() {
         ObjectAnimator.ofFloat(mLargeCardView, "translationX", -500, 0).setDuration(150).start();
         ObjectAnimator.ofFloat(mLargeCardView, "alpha", 0.1f, 1.0f).setDuration(500).start();
     }
 
-    private List<DayWeatherBean> createTest() {
-        List<DayWeatherBean> testData = new LinkedList<>();
-        testData.add(new DayWeatherBean("明天", 1, "多云", "13 ~ 22" + "℃"));
-        testData.add(new DayWeatherBean("星期二", 1, "晴天", "21 ~ 31" + "℃"));
-        testData.add(new DayWeatherBean("星期三", 1, "雷阵雨", "8 ~ 13" + "℃"));
-        testData.add(new DayWeatherBean("星期四", 1, "多云", "16 ~ 25" + "℃"));
-        testData.add(new DayWeatherBean("星期五", 1, "晴天", "12 ~ 22" + "℃"));
-        testData.add(new DayWeatherBean("星期六", 1, "多云", "22 ~ 25" + "℃"));
-        return testData;
-    }
-
-    public void refreshSmallCardUI(WeatherBean weatherBean) {
-        if (weatherBean == null) {
-            return;
-        }
-        TextView tvCardWeatherCity = findViewById(R.id.tvCardWeatherCity);
-        tvCardWeatherCity.setText(weatherBean.getCity());
-        TextView tvCardWeatherTemperature = findViewById(R.id.tvCardWeatherTemperature);
-        tvCardWeatherTemperature.setText(WeatherUtil.fixTemperatureDesc(weatherBean.getTemperatureDesc(), getResources()));
-        TextView tvCardWeatherDate = findViewById(R.id.tvCardWeatherDate);
-        tvCardWeatherDate.setText(WeatherUtil.getToday());
-
-        WeatherTypeRes weatherTypeRes = new WeatherTypeRes(weatherBean.getType());
-        ImageView ivCardWeatherIcon = findViewById(R.id.ivCardWeatherIcon);
-        ivCardWeatherIcon.setImageResource(weatherTypeRes.getIcon());
-        ImageView ivWeatherBg = findViewById(R.id.ivWeatherBg);
-        ivWeatherBg.setImageResource(weatherTypeRes.getSmallCardBg());
-    }
-    private void refreshBigCardUI(WeatherBean weatherBean) {
-        if (weatherBean == null) {
-            return;
-        }
-        TextView tvCardWeatherCity = findViewById(R.id.tvCardWeatherCity);
-        tvCardWeatherCity.setText(weatherBean.getCity());
-        TextView tvCardWeatherTemperature = findViewById(R.id.tvCardWeatherTemperature);
-        tvCardWeatherTemperature.setText(WeatherUtil.fixTemperatureDesc(weatherBean.getTemperatureDesc(), getResources()));
-        TextView tvCardWeatherDate = findViewById(R.id.tvCardWeatherDate);
-        tvCardWeatherDate.setText(WeatherUtil.getToday());
-
-        WeatherTypeRes weatherTypeRes = new WeatherTypeRes(weatherBean.getType());
-        ImageView ivCardWeatherIcon = findViewById(R.id.ivCardWeatherIcon);
-        ivCardWeatherIcon.setImageResource(weatherTypeRes.getIcon());
-        ImageView ivWeatherBg = findViewById(R.id.ivWeatherBg);
-        ivWeatherBg.setImageResource(weatherTypeRes.getSmallCardBg());
-    }
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
@@ -212,7 +156,6 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
             @Override
             public void run() {
                 if (mExpand) {
-                    mBigCardHolder.updateWeather(result.get(0));
                     mBigCardHolder.updateWeatherList(result);
                 } else {
                     mSmallCardHolder.updateWeather(result.get(0));

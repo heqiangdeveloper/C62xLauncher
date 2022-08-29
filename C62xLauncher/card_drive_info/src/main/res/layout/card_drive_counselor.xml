@@ -101,7 +101,7 @@
         />
 
     <TextView
-        android:text="驾驶里程"
+        android:text="行驶里程"
         android:layout_width="wrap_content"
         android:layout_height="30px"
         style="@style/CardLv3TextView"
@@ -155,7 +155,7 @@
 
     <TextView
         android:id="@+id/tvCardDriveTimeUnit"
-        android:text="min"
+        android:text="分钟"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/CardLv3TextView"

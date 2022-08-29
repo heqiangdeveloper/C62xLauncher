@@ -62,7 +62,7 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
     private String mSource = VolcanoRepository.SOURCE_TOUTIAO;
 
     private void init() {
-        EasyLog.i(TAG,"InitVolcano :"+hashCode());
+        EasyLog.i(TAG, "InitVolcano :" + hashCode());
         LayoutInflater.from(getContext()).inflate(R.layout.card_volcano, this);
         mController = new VolcanoController(this);
         mSmallCardView = findViewById(R.id.layoutSmallCardView);
@@ -90,7 +90,7 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
         LayoutParamUtil.setWidth(mLargeWidth, this);
         runExpandAnim();
         long time2 = System.currentTimeMillis();
-        EasyLog.d(TAG, "Trace expand cost:"+(time2-time1)+"ms");
+        EasyLog.d(TAG, "Trace expand cost:" + (time2 - time1) + "ms");
 
     }
 
@@ -102,7 +102,7 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
             @Override
             public void onAnimationEnd(Animator animation, boolean isReverse) {
                 super.onAnimationEnd(animation, isReverse);
-                EasyLog.d(TAG,"runExpandAnim onAnimationEnd");
+                EasyLog.d(TAG, "runExpandAnim onAnimationEnd");
                 if (mBigCardViewHolder != null) {
                     mBigCardViewHolder.init();
                 }
@@ -125,6 +125,7 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
             mController.loadSourceData(mSource);
         }
     }
+
     public void switchSource(String source) {
         mSource = source;
         mSmallCardViewHolder.onChangeSource(source);
@@ -176,9 +177,9 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
         post(() -> {
             if (mExpand) {
                 mBigCardViewHolder.updateList(videoListData);
-            } else {
-                mSmallCardViewHolder.updateList(videoListData);
             }
+            // 无论何种状态, 小卡封面都必须更新为Source对应列表的第一个item
+            mSmallCardViewHolder.updateList(videoListData);
         });
     }
 

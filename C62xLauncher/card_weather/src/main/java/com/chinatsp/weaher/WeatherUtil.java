@@ -3,6 +3,10 @@ package com.chinatsp.weaher;
 import android.content.res.Resources;
 import android.text.TextUtils;
 
+import com.iflytek.autofly.weather.entity.WeatherInfo;
+
+import java.lang.reflect.Constructor;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -24,6 +28,36 @@ public class WeatherUtil {
         return origin + "  " + resources.getString(R.string.symbol_celsius);
     }
 
+    public static int getWeekDayTextRes(DayOfWeek dayOfWeek) {
+        int[] res = {R.string.weather_monday, R.string.weather_tuesday, R.string.weather_wednesday, R.string.weather_thursday,
+                R.string.weather_friday, R.string.weather_saturday, R.string.weather_sunday};
+        int index = 0;
+        switch (dayOfWeek) {
+            case MONDAY:
+                index = 0;
+                break;
+            case TUESDAY:
+                index = 1;
+                break;
+            case WEDNESDAY:
+                index = 2;
+                break;
+            case THURSDAY:
+                index = 3;
+                break;
+            case FRIDAY:
+                index = 4;
+                break;
+            case SATURDAY:
+                index = 5;
+                break;
+            case SUNDAY:
+                index = 6;
+                break;
+        }
+        return res[index];
+    }
+
     public static void logD(String message) {
         EasyLog.d(TAG, message);
     }
@@ -42,5 +76,20 @@ public class WeatherUtil {
 
     public static void logW(String message) {
         EasyLog.w(TAG, message);
+    }
+
+    public static String parseTemperature(String temperatureNumStr, Resources resources) {
+        try {
+            int temperature = (int) Float.parseFloat(temperatureNumStr);
+            return temperature + resources.getString(R.string.symbol_celsius);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resources.getString(R.string.weather_desc_unknown);
+    }
+    public static String getTemperatureRange(WeatherInfo dayWeatherBean, Resources resources) {
+        String low = WeatherUtil.parseTemperature(dayWeatherBean.getLow(), resources);
+        String high = WeatherUtil.parseTemperature(dayWeatherBean.getHigh(), resources);
+        return low + "~" + high;
     }
 }

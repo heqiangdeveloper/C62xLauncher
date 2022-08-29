@@ -62,7 +62,7 @@
         android:textSize="24px"
         android:gravity="center_vertical|start"
         android:textColor="@color/card_grey_default"
-        android:text="周杰伦"
+        android:text=""
         app:layout_constraintTop_toBottomOf="@id/tvCardVolcanoVideoName"
         app:layout_constraintStart_toStartOf="@id/tvCardVolcanoVideoName"
         android:layout_marginTop="15px"
