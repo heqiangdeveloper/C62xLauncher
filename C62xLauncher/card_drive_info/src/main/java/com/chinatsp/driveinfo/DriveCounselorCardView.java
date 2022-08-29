@@ -105,13 +105,17 @@ public class DriveCounselorCardView extends ConstraintLayout {
             if (driveInfo == null) {
                 return;
             }
-            tvCardDriveOilValue.setText(String.valueOf(driveInfo.getOilConsumption()));
+            updateOilConsumption(driveInfo.getOilConsumption());
             tvCardDriveTimeValue.setText(String.valueOf(driveInfo.getDrivingTime()));
-            tvCardDriveDistanceValue.setText(String.valueOf(driveInfo.getDrivingMileage()));
+            updateDriveMileage(driveInfo.getDrivingMileage());
         }
 
         private void updateOilConsumption(float oil) {
-            tvCardDriveOilValue.setText(String.valueOf(oil));
+            if (Math.abs(oil) < 0.01) {
+                tvCardDriveOilValue.setText(String.valueOf(0));
+            } else {
+                tvCardDriveOilValue.setText(String.valueOf(oil));
+            }
         }
 
         private void updateDriveTime(int time) {
@@ -120,7 +124,11 @@ public class DriveCounselorCardView extends ConstraintLayout {
         }
 
         private void updateDriveMileage(float distance) {
-            tvCardDriveDistanceValue.setText(String.valueOf(distance));
+            if (Math.abs(distance) < 0.01) {
+                tvCardDriveDistanceValue.setText(String.valueOf(0));
+            } else {
+                tvCardDriveDistanceValue.setText(String.valueOf(distance));
+            }
         }
     }
 

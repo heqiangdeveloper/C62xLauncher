@@ -11,7 +11,10 @@ import com.chinatsp.volcano.R;
 import com.chinatsp.volcano.VolcanoCardView;
 import com.chinatsp.volcano.api.response.VideoListData;
 import com.chinatsp.volcano.repository.VolcanoRepository;
+import com.chinatsp.volcano.videos.VolcanoVideo;
 import com.chinatsp.volcano.videos.VolcanoVideoAdapter;
+
+import java.util.List;
 
 import launcher.base.utils.EasyLog;
 import launcher.base.utils.selector.OnViewSelected;
@@ -19,6 +22,7 @@ import launcher.base.utils.selector.StatefulViewHolder;
 import launcher.base.utils.selector.ViewStateSelector;
 
 public class BigCardViewHolder extends VolcanoViewHolder{
+    private static final int ITEM_COUNT_MAX = 10;
     private final String TAG = "BigCardViewHolder";
     private ImageView ivCardVolcanoLogin;
     private TextView tvCardVolcanoLogin;
@@ -85,8 +89,19 @@ public class BigCardViewHolder extends VolcanoViewHolder{
 
     @Override
     public void updateList(VideoListData videoListData) {
-        EasyLog.d(TAG, "updateList "+videoListData.getList().size());
-        mVolcanoVideoAdapter.setData(videoListData.getList());
+        EasyLog.d(TAG, "updateList "+videoListData);
+        List<VolcanoVideo> list = videoListData.getList();
+        if (list != null) {
+            EasyLog.d(TAG, "updateList size: "+list.size());
+
+        }
+        List<VolcanoVideo> list2 = list;
+        if (list != null && !list.isEmpty()) {
+            if (list.size() > ITEM_COUNT_MAX) {
+                list2 = list.subList(0, ITEM_COUNT_MAX);
+            }
+        }
+        mVolcanoVideoAdapter.setData(list2);
         hideLoadingView();
     }
 

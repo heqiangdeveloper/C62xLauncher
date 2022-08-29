@@ -1,5 +1,6 @@
 package com.chinatsp.weaher.viewholder;
 
+import android.content.res.Resources;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -10,7 +11,7 @@ import com.chinatsp.weaher.WeatherUtil;
 import com.chinatsp.weaher.repository.WeatherBean;
 import com.iflytek.autofly.weather.entity.WeatherInfo;
 
-public class SmallCardHolder extends WeatherCardHolder{
+public class WeatherSmallCardHolder extends WeatherCardHolder{
 
 
     private final TextView tvCardWeatherCity;
@@ -19,7 +20,7 @@ public class SmallCardHolder extends WeatherCardHolder{
     private final ImageView ivCardWeatherIcon;
     private final ImageView ivWeatherBg;
 
-    public SmallCardHolder(View rootView) {
+    public WeatherSmallCardHolder(View rootView) {
         super(rootView);
         tvCardWeatherCity = rootView.findViewById(R.id.tvCardWeatherCity);
         tvCardWeatherTemperature = rootView.findViewById(R.id.tvCardWeatherTemperature);
@@ -35,9 +36,10 @@ public class SmallCardHolder extends WeatherCardHolder{
 
     @Override
     public void updateWeather(WeatherInfo weatherInfo) {
-        WeatherUtil.logD("updateWeather weatherInfo:" + weatherInfo);
+        WeatherUtil.logD("updateWeather weatherInfo");
+        Resources resources = mRootView.getResources();
         tvCardWeatherCity.setText(weatherInfo.getCity());
-        tvCardWeatherTemperature.setText(WeatherUtil.fixTemperatureDesc(weatherInfo.getTemp(), mRootView.getResources()));
+        tvCardWeatherTemperature.setText(WeatherUtil.getTemperatureRange(weatherInfo, resources));
         tvCardWeatherDate.setText(WeatherUtil.getToday());
 
         WeatherTypeRes weatherTypeRes = new WeatherTypeRes(getWeatherType(weatherInfo.getWeatherType()));

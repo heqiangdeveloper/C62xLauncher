@@ -9,7 +9,6 @@ import java.util.List;
 
 import launcher.base.ipc.IOnRequestListener;
 import launcher.base.ipc.IRemoteDataCallback;
-import launcher.base.utils.EasyLog;
 
 public class WeatherCardController {
     private WeatherCardView mCardView;
@@ -23,14 +22,16 @@ public class WeatherCardController {
 
     void requestWeatherInfo() {
         WeatherUtil.logD("requestWeatherInfo");
-        mWeatherRepository.requestWeatherInfo(new IOnRequestListener() {
+        mWeatherRepository.requestRefreshWeatherInfo(new IOnRequestListener() {
             @Override
             public <T> void onSuccess(T t) {
+                WeatherUtil.logD("requestWeatherInfo onSuccess");
                 refreshData(t);
             }
 
             @Override
             public void onFail(String msg) {
+                WeatherUtil.logE("requestWeatherInfo onSuccess");
                 if (mCardView != null) {
                     mCardView.refreshDefault();
                 }
@@ -39,7 +40,6 @@ public class WeatherCardController {
     }
 
     private final IRemoteDataCallback iRemoteDataCallback = new IRemoteDataCallback() {
-
         @Override
         public <T> void notifyData(T t) {
             refreshData(t);
@@ -60,7 +60,6 @@ public class WeatherCardController {
 
     void addDataCallback() {
         mWeatherRepository.registerDataCallback(iRemoteDataCallback);
-
     }
 
     void removeDataCallback() {
@@ -111,5 +110,9 @@ public class WeatherCardController {
         WeatherBean weatherBean = new WeatherBean(WeatherBean.TYPE_FOG, "22 ~ 35", "", "重庆");
         return weatherBean;
 
+    }
+
+    public List<WeatherInfo> getWeatherList() {
+        return mWeatherRepository.getWeatherInfo();
     }
 }

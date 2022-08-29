@@ -31,7 +31,7 @@ public abstract class BaseRepository {
     }
     public void unregisterDataCallback(IRemoteDataCallback remoteDataCallback) {
         if (mRemoteConnector != null) {
-            mRemoteConnector.registerRemoteDataCallbacks(remoteDataCallback);
+            mRemoteConnector.unregisterRemoteDataCallbacks(remoteDataCallback);
         }
     }
 

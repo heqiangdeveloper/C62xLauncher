@@ -56,6 +56,7 @@ public class WeatherConnectProxy implements RemoteProxy {
 
     @Override
     public void requestData(IOnRequestListener onRequestListener) {
+        WeatherUtil.logD("WeatherConnectProxy requestData");
         mWeatherRemoteControl.getWeatherInfoList(new IRequestCallback() {
             @Override
             public void onSuccess(List<WeatherInfo> list) {

@@ -1,3 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="weather_desc_sunny">sunny</string>
+    <string name="weather_desc_cloudy">cloudy</string>
+    <string name="weather_desc_rain">rain</string>
+    <string name="weather_desc_fog">fog</string>
+    <string name="weather_desc_snow">snow</string>
+    <string name="weather_desc_thunder_shower">thundershower</string>
+    <string name="weather_desc_overcast">overcast</string>
+    <string name="weather_desc_smog">smog</string>
+    <string name="weather_desc_windy">windy</string>
+    <string name="weather_desc_unknown">unknown</string>
+    <string name="symbol_celsius">℃</string>
+    <string name="weather_monday">Mon.</string>
+    <string name="weather_tuesday">Tue.</string>
+    <string name="weather_wednesday">Wed.</string>
+    <string name="weather_thursday">Thur.</string>
+    <string name="weather_friday">Fri.</string>
+    <string name="weather_saturday">Sat.</string>
+    <string name="weather_sunday">Sun.</string>
 </resources>

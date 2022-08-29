@@ -1,6 +1,8 @@
 package com.chinatsp.weaher.weekday;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Resources;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,13 +14,19 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chinatsp.weaher.R;
+import com.chinatsp.weaher.WeatherUtil;
 import com.iflytek.autofly.weather.entity.WeatherInfo;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.TextStyle;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+
+import launcher.base.utils.EasyLog;
+import launcher.base.utils.property.PropertyUtils;
 
 public class WeekDayAdapter extends RecyclerView.Adapter<WeekDayAdapter.ViewHolder> {
 
@@ -62,27 +70,37 @@ public class WeekDayAdapter extends RecyclerView.Adapter<WeekDayAdapter.ViewHold
         }
 
         public void bind(WeatherInfo dayWeatherBean) {
-            tvItemWeatherWeekDay.setText(getWeekDay(dayWeatherBean));
-            tvItemWeatherWord.setText(dayWeatherBean.getWeather());
-            String tempRange = dayWeatherBean.getTempRange();
-            if (TextUtils.isEmpty(tempRange)) {
-                tempRange = dayWeatherBean.getTemp();
+            if (dayWeatherBean == null) {
+                return;
             }
-            tvItemWeatherTemperatureDesc.setText(tempRange);
+            WeatherUtil.logD("bind WeatherInfo: "+dayWeatherBean);
+            tvItemWeatherWeekDay.setText(getWeekDayRes(dayWeatherBean));
+            tvItemWeatherWord.setText(dayWeatherBean.getWeather());
+            tvItemWeatherTemperatureDesc.setText(WeatherUtil.getTemperatureRange(dayWeatherBean, mContext.getResources()));
         }
     }
 
-    private String getWeekDay(WeatherInfo dayWeatherBean) {
+    private String getWeekDayRes(WeatherInfo dayWeatherBean) {
         String dateStr = dayWeatherBean.getDate();
+        if (TextUtils.isEmpty(dateStr)) {
+            return "未知";
+        }
         LocalDate localDate = LocalDate.parse(dateStr);
         DayOfWeek dayOfWeek = localDate.getDayOfWeek();
-        return dayOfWeek.name();
+        int res= WeatherUtil.getWeekDayTextRes(dayOfWeek);
+        return mContext.getString(res);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setDayWeatherList(List<WeatherInfo> dayWeatherList) {
         if (dayWeatherList == null) {
             return;
         }
+        if (mDayWeatherList == dayWeatherList) {
+            return;
+        }
         mDayWeatherList = dayWeatherList;
+        notifyDataSetChanged();
     }
+
 }

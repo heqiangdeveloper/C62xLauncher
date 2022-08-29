@@ -34,7 +34,7 @@
 
     <TextView
         android:id="@+id/tvCardWeatherWord"
-        android:layout_width="34px"
+        android:layout_width="wrap_content"
         android:layout_height="48px"
         android:layout_marginLeft="54px"
         android:text="晴"
