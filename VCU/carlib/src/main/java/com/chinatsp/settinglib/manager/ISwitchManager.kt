@@ -61,7 +61,7 @@ interface ISwitchManager : IManager {
             doUpdateSwitchValue(node, atomic, node.isOn(value), block)
         } else {
             Timber.e(
-                "updateSwitchValue but isValid:$isValid," +
+                "doActionSignal updateSwitchValue but isValid:$isValid," +
                         "node:$node, value:$value, coreOn:${node.careOn}"
             )
         }

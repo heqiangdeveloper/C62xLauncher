@@ -2,7 +2,10 @@ package com.chinatsp.settinglib.manager.sound
 
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.mcu.CarMcuManager
+import android.car.media.CarAudioManager
+import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.SettingManager
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.sound.ISoundManager
@@ -12,6 +15,7 @@ import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
+import timber.log.Timber
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -99,12 +103,58 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    private val systemAudioEffect: AtomicInteger by lazy {
+    private val eqMode: AtomicInteger by lazy {
         val node = RadioNode.SYSTEM_SOUND_EFFECT
         AtomicInteger(node.default).apply {
-            val eqId = SettingManager.instance.getEQ()
-            doUpdateRadioValue(node, this, eqId)
+            val eqId = getDefaultEqSerial()
+            doUpdateRadioValue(node, this, eqId, instance::doOptionChanged)
+            Timber.tag("luohong").d("----------eqId:$eqId, this.value:${this.get()}")
         }
+    }
+
+    private fun getDefaultEqSerial(): Int {
+        var eqId = SettingManager.instance.getEQ()
+        var index: Int = Constant.INVALID
+        val eqIdArray = getEqIdArray()
+        val node = RadioNode.SYSTEM_SOUND_EFFECT
+        if (null != eqId) {
+            index = eqIdArray.indexOf(eqId)
+            if (index !in 0..node.get.values.size) {
+                index = if (VcuUtils.isAmplifier()) 1 else 0
+            }
+        } else {
+            index = if (VcuUtils.isAmplifier()) 1 else 0
+        }
+        return node.get.values[index]
+    }
+
+    private val insetArray: IntArray by lazy {
+        intArrayOf(
+            CarAudioManager.EQ_MODE_FLAT, //"默认"
+            CarAudioManager.EQ_MODE_CLASSIC, //"典型的"
+            CarAudioManager.EQ_MODE_POP, //"流行"
+            CarAudioManager.EQ_MODE_JAZZ, //"爵士"
+            CarAudioManager.EQ_MODE_BEATS, //"打击"
+            CarAudioManager.EQ_MODE_ROCK, //"摇滚"
+            CarAudioManager.EQ_MODE_CUSTOM //"自定义"
+        )
+    }
+
+    private val outsetArray: IntArray by lazy {
+        intArrayOf(
+            CarAudioManager.EQ_MODE_AMP_BEGIN, //"默认"
+            CarAudioManager.EQ_MODE_AMP_CLASSIC, //"典型的"
+            CarAudioManager.EQ_MODE_AMP_POP, //"流行"
+            CarAudioManager.EQ_MODE_AMP_JAZZ, //"爵士"
+            CarAudioManager.EQ_MODE_AMP_BEATS, //"打击"
+            CarAudioManager.EQ_MODE_AMP_ROCK, //"摇滚"
+            CarAudioManager.EQ_MODE_AMP_CUSTOM //"自定义"
+        )
+    }
+
+    fun getEqIdArray(): IntArray {
+        val amplifier = VcuUtils.isAmplifier()
+        return if (amplifier) insetArray else outsetArray
     }
 
     override val careSerials: Map<Origin, Set<Int>> by lazy {
@@ -196,7 +246,9 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
     override fun doGetRadioOption(node: RadioNode): Int {
         return when (node) {
             RadioNode.SYSTEM_SOUND_EFFECT -> {
-                systemAudioEffect.get()
+                val value = eqMode.get()
+                Timber.tag("luohong").d("doGetRadioOption value:$value")
+                value
             }
             RadioNode.AUDIO_ENVI_AUDIO -> {
                 audioEffectOption.get()
@@ -206,7 +258,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
     }
 
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
-        when (node) {
+        return when (node) {
             RadioNode.SYSTEM_SOUND_EFFECT -> {
 //                writeProperty(node.set.signal, value, node.set.origin)
                 doUpdateSoundEffect(node, value)
@@ -214,13 +266,13 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
             RadioNode.AUDIO_ENVI_AUDIO -> {
                 writeProperty(node.set.signal, value, node.set.origin)
             }
-            else -> -1
+            else -> false
         }
-        return true
     }
 
-    private fun doUpdateSoundEffect(node: RadioNode, value: Int) {
-        SettingManager.instance.setAudioEQ(value)
+    private fun doUpdateSoundEffect(node: RadioNode, value: Int): Boolean {
+        doSetEQ(value)
+        return true
     }
 
     override fun doGetSwitchOption(node: SwitchNode): Boolean {
@@ -291,16 +343,12 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
                 onRadioChanged(RadioNode.AUDIO_ENVI_AUDIO, audioEffectOption, property)
             }
             RadioNode.SYSTEM_SOUND_EFFECT.get.signal -> {
-                onRadioChanged(RadioNode.SYSTEM_SOUND_EFFECT, systemAudioEffect, property)
+                onRadioChanged(RadioNode.SYSTEM_SOUND_EFFECT, eqMode, property)
             }
             else -> {}
         }
     }
 
-    fun sendEQValue(eq: Int) {
-        val settingManager = SettingManager.instance
-        settingManager.setAudioEQ(eq)
-    }
 
     fun doSetEQ(
         mode: Int, lev1: Int = 0,
@@ -308,14 +356,21 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         lev4: Int = 0, lev5: Int = 0
     ) {
         val manager = SettingManager.instance
-        manager.setAudioEQ(mode, lev1, lev2, lev3, lev4, lev5)
         val node = RadioNode.SYSTEM_SOUND_EFFECT
-        doUpdateRadioValue(node, systemAudioEffect, node.obtainSelectValue(mode), this::doOptionChanged)
+        val eqModeId = findEqIdSerial(node, mode)
+        manager.setAudioEQ(eqModeId, lev1, lev2, lev3, lev4, lev5)
+//        doUpdateRadioValue(node, eqMode, node.obtainSelectValue(mode), this::doOptionChanged)
     }
 
-    fun getEQ(): Int {
-        val manager = SettingManager.instance
-        return manager.getEQ()
+    private fun findEqIdSerial(node: RadioNode, value: Int): Int {
+        val values = node.set.values
+        val index = values.indexOf(value)
+        val eqIdArray = getEqIdArray()
+        return if (index in 0..values.size) {
+            eqIdArray[index]
+        } else {
+            eqIdArray[1]
+        }
     }
 
     fun setAudioBalance(uiBalanceLevelValue: Int, uiFadeLevelValue: Int) {

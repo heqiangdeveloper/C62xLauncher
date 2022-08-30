@@ -43,7 +43,8 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
 
     private val _currentEffect: MutableLiveData<Int> by lazy {
         val node = RadioNode.SYSTEM_SOUND_EFFECT
-        MutableLiveData(EffectManager.instance.doGetRadioOption(node))
+        val value = EffectManager.instance.doGetRadioOption(node)
+        MutableLiveData(value)
     }
 
     val effectOption: LiveData<Int>
@@ -94,8 +95,8 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
         val lev3 = getAudioVoice(SettingManager.VOICE_LEVEL3)
         val lev4 = getAudioVoice(SettingManager.VOICE_LEVEL4)
         val lev5 = getAudioVoice(SettingManager.VOICE_LEVEL5)
-        val effect = manager.getEQ()
-        Timber.d("getEffectValues effect:$effect, lev1:$lev1, lev2:$lev2, lev3:$lev3, lev4:$lev4, lev5:$lev5")
+        val effect = SettingManager.instance.getEQ()
+        Timber.d("getEffectValues effect:$effect, eqId:$eqId, lev1:$lev1, lev2:$lev2, lev3:$lev3, lev4:$lev4, lev5:$lev5")
         return intArrayOf(lev1, lev2, lev3, lev4, lev5)
     }
 
@@ -112,53 +113,53 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
     }
 
 
-    fun setAudioEQ(
-        position: Int,
-        lev1: Int = getAudioVoice(SettingManager.VOICE_LEVEL1),
-        lev2: Int = getAudioVoice(SettingManager.VOICE_LEVEL2),
-        lev3: Int = getAudioVoice(SettingManager.VOICE_LEVEL3),
-        lev4: Int = getAudioVoice(SettingManager.VOICE_LEVEL4),
-        lev5: Int = getAudioVoice(SettingManager.VOICE_LEVEL5),
-    ) {
-        var effectArray: IntArray? = null
-        val mode = when (position) {
-            0 -> {
-                effectArray = standardEffect
-                SoundEffect.BEGIN.id
-            }
-            1 -> {
-                effectArray = classicEffect
-                SoundEffect.CLASSIC.id
-            }
-            2 -> {
-                effectArray = peopleEffect
-                SoundEffect.POP.id
-            }
-            3 -> {
-                effectArray = jazzEffect
-                SoundEffect.JAZZ.id
-            }
-            4 -> {
-                effectArray = popEffect
-                SoundEffect.BEATS.id
-            }
-            5 -> {
-                effectArray = rockEffect
-                SoundEffect.ROCK.id
-            }
-            else -> {
-                SoundEffect.CUSTOM.id
-            }
-        }
-        if (null != effectArray) {
-            manager.doSetEQ(
-                mode, effectArray[0], effectArray[1],
-                effectArray[2], effectArray[3], effectArray[4]
-            )
-        } else {
-            manager.doSetEQ(mode, lev1, lev2, lev3, lev4, lev5)
-        }
-    }
+//    fun setAudioEQ(
+//        position: Int,
+//        lev1: Int = getAudioVoice(SettingManager.VOICE_LEVEL1),
+//        lev2: Int = getAudioVoice(SettingManager.VOICE_LEVEL2),
+//        lev3: Int = getAudioVoice(SettingManager.VOICE_LEVEL3),
+//        lev4: Int = getAudioVoice(SettingManager.VOICE_LEVEL4),
+//        lev5: Int = getAudioVoice(SettingManager.VOICE_LEVEL5),
+//    ) {
+//        var effectArray: IntArray? = null
+//        val mode = when (position) {
+//            0 -> {
+//                effectArray = standardEffect
+//                SoundEffect.BEGIN.id
+//            }
+//            1 -> {
+//                effectArray = classicEffect
+//                SoundEffect.CLASSIC.id
+//            }
+//            2 -> {
+//                effectArray = peopleEffect
+//                SoundEffect.POP.id
+//            }
+//            3 -> {
+//                effectArray = jazzEffect
+//                SoundEffect.JAZZ.id
+//            }
+//            4 -> {
+//                effectArray = popEffect
+//                SoundEffect.BEATS.id
+//            }
+//            5 -> {
+//                effectArray = rockEffect
+//                SoundEffect.ROCK.id
+//            }
+//            else -> {
+//                SoundEffect.CUSTOM.id
+//            }
+//        }
+//        if (null != effectArray) {
+//            manager.doSetEQ(
+//                mode, effectArray[0], effectArray[1],
+//                effectArray[2], effectArray[3], effectArray[4]
+//            )
+//        } else {
+//            manager.doSetEQ(mode, lev1, lev2, lev3, lev4, lev5)
+//        }
+//    }
 
     private fun getAudioVoice(id: Int): Int {
         return manager.getAudioVoice(id)
@@ -177,6 +178,9 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
         when (node) {
             RadioNode.AUDIO_ENVI_AUDIO -> {
                 doUpdate(_effectOption, value)
+            }
+            RadioNode.SYSTEM_SOUND_EFFECT -> {
+                doUpdate(_currentEffect, value)
             }
             else -> {}
         }

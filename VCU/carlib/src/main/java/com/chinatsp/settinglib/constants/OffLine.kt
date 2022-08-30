@@ -112,4 +112,6 @@ object OffLine {
     const val LEVEL = "persist.vendor.vehicle.index"
 
     const val NAVI_MIXING = "persist.navi.media_state"
+
+    const val AMP_TYPE = "persist.vendor.vehicle.amp"
 }

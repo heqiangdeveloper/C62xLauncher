@@ -1,6 +1,9 @@
 package com.chinatsp.settinglib.manager.cabin
 
 import android.car.hardware.CarPropertyValue
+import android.database.ContentObserver
+import android.net.Uri
+import com.chinatsp.settinglib.BaseApp
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.BaseManager
@@ -8,6 +11,7 @@ import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
+import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -55,6 +59,18 @@ class SafeManager private constructor() : BaseManager(), ISwitchManager {
     }
 
     val version: AtomicInteger by lazy { AtomicInteger(0) }
+
+    init {
+//        行车播放视频开关 采用写系统Globel属性的方式，属性的Key为DRIVE_VIDEO_PLAYING，值：on = 0x01, off = 0x00
+        VcuUtils.addUriObserver(Constant.DRIVE_VIDEO_PLAYING, object : ContentObserver(BaseApp.instance.mainHandler){
+            override fun onChange(selfChange: Boolean, uri: Uri?) {
+                val node = SwitchNode.DRIVE_SAFE_VIDEO_PLAYING
+                val value = VcuUtils.getInt(key = Constant.DRIVE_VIDEO_PLAYING, value = node.value(node.default))
+                Timber.d("observer onChange node:$node value:$value")
+                doUpdateSwitchValue(node, videoModeFunction, node.isOn(value), instance::doSwitchChanged)
+            }
+        })
+    }
 
     override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {

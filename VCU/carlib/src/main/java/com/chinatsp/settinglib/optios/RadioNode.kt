@@ -2,6 +2,7 @@ package com.chinatsp.settinglib.optios
 
 import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.hvac.CarHvacManager
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.RNorm
 import com.chinatsp.settinglib.sign.Origin
 import timber.log.Timber
@@ -67,7 +68,7 @@ enum class RadioNode(
             values = intArrayOf(0x1, 0x2),
             signal = CarCabinManager.ID_CUT_OFF_UNLOCK_DOORS
         ),
-        default = 0x3
+        default = 0x1
     ),
 
     /**
@@ -326,11 +327,23 @@ enum class RadioNode(
             signal = CarCabinManager.ID_AMP_EQ_TYPE_SW_STS
         ),
         set = RNorm(
-            values = SoundEffect.idArray(),
+            values = intArrayOf(0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6),
             signal = -1
         ),
-        default = SoundEffect.POP.id
-    ),
+        default = 0x0
+    ) {
+        override fun isValid(value: Int, isGet: Boolean): Boolean {
+            if (VcuUtils.isAmplifier() && value == 0) {
+                return false
+            }
+            return if (isGet) {
+                get.isValid(value)
+            } else {
+                set.isValid(value)
+            }
+        }
+
+    },
 
     /**
      * 车辆音效--音效--环境音效
@@ -373,7 +386,7 @@ enum class RadioNode(
     )
     ;
 
-    fun isValid(value: Int, isGet: Boolean = true): Boolean {
+    open fun isValid(value: Int, isGet: Boolean = true): Boolean {
         return if (isGet) {
             get.isValid(value)
         } else {
@@ -381,13 +394,25 @@ enum class RadioNode(
         }
     }
 
-    fun obtainSelectValue(value: Int): Int {
-        var index = get.values.indexOf(value)
+    fun indexOf(value: Int, isGet: Boolean = true): Int {
+        return if (isGet) get.values.indexOf(value) else set.values.indexOf(value)
+    }
+
+    fun obtainSelectValue(value: Int, isGet: Boolean = true): Int {
+        return if (isGet) {
+            getTargetValue(get.values, set.values, value)
+        } else {
+            getTargetValue(set.values, get.values, value)
+        }
+    }
+
+    private fun getTargetValue(queryArray: IntArray, resultArray: IntArray, value: Int): Int {
+        var index = queryArray.indexOf(value)
         Timber.d("obtainSelectValue value:$value, index:$index, node:$this")
-        if (index !in 0..set.values.size) {
+        if (index !in 0..resultArray.size) {
             index = 0
         }
-        return set.values[index]
+        return resultArray[index]
     }
 
 }

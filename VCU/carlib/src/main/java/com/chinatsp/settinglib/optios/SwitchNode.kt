@@ -18,7 +18,9 @@ enum class SwitchNode(
     val set: Norm,
     val default: Boolean = true,
     val careOn: Boolean = true,//当此值为true表示只有当值等于 get的on时才当为开，当此值为false表示只要值不等于get的off时就当为开
-    val area: Area = Area.GLOBAL
+    val area: Area = Area.GLOBAL,
+    val validValues: IntArray? = null,
+    val invalidValues: IntArray? = null
 ) {
 
     //-------------------座舱--开始-------------------
@@ -110,7 +112,7 @@ enum class SwitchNode(
     SEAT_MAIN_DRIVE_MEET(
         get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_SEAT_WELCOME_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HUM_SEAT_WELCOME_EN),
-        default = false
+        default = true
     ),
 
     /**
@@ -191,8 +193,9 @@ enum class SwitchNode(
      *        0x4:LVPM Disenabled by HUM/APP; 0x05：LVPM disabled by OTA
      */
     DRIVE_BATTERY_OPTIMIZE(
-        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_LOU_PWR_MNGT_STS),
+        get = Norm(on = 0x0, off = 0x4, signal = CarCabinManager.ID_LOU_PWR_MNGT_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_LOU_PWR_MNG_SWT),
+        validValues = intArrayOf(0x0, 0x1, 0x2, 0x3, 0x4, 0x5),
         default = true
     ),
 
@@ -283,6 +286,12 @@ enum class SwitchNode(
         set = Norm(
             on = CarAdapter.Constants.BEEP_VOLUME_LEVEL_MIDDLE,
             off = CarAdapter.Constants.BEEP_VOLUME_LEVEL_CLOSE, origin = Origin.SPECIAL
+        ),
+        validValues = intArrayOf(
+            CarAdapter.Constants.BEEP_VOLUME_LEVEL_CLOSE,
+            CarAdapter.Constants.BEEP_VOLUME_LEVEL_LOW,
+            CarAdapter.Constants.BEEP_VOLUME_LEVEL_MIDDLE,
+            CarAdapter.Constants.BEEP_VOLUME_LEVEL_HIGH,
         ),
         default = false,
         careOn = false
@@ -382,7 +391,7 @@ enum class SwitchNode(
     /**
      * 车门车窗--外后视镜--后视镜自动折叠
      * set -> 0x1: Enable(default)   0x2: Disable 0x3: Not used
-     * get -> 0x0: 0x0: Inactive 0x1: Enable(default) 0x2: Disable 0x3: Reserved
+     * get -> 0x0: Inactive 0x1: Enable(default) 0x2: Disable 0x3: Reserved
      */
     BACK_MIRROR_FOLD(
         get = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_MIRROR_FADE_IN_OUT_STATUE),
@@ -480,7 +489,7 @@ enum class SwitchNode(
      *
      */
     ADAS_LANE_ASSIST(
-        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_LANE_ASSIT_TYPE),
+        get = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_LANE_ASSIT_TYPE),
         set = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_LDW_RDP_LKS_FUNC_EN),
         default = true,
         careOn = false
@@ -518,9 +527,10 @@ enum class SwitchNode(
      *        0x0: Inactive; 0x1: On; 0x2: Off; 0x3: Reserved
      */
     ADAS_HMA(//向产品确认值
-        get = Norm(on = 0x2, off = 0x1, signal = CarCabinManager.ID_HMA_STATUS),
+        get = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_HMA_STATUS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HMA_ON_OFF_SWT),
-        default = false
+        default = false,
+        careOn = false
     ),
 
     /**
@@ -544,7 +554,7 @@ enum class SwitchNode(
      * get :0x0: OFF 0x1: ON
      */
     ADAS_BSD(
-        get = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_ALC_HUM_BSD_SW_REPONSE),
+        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ALC_HUM_BSD_SW_REPONSE),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HUM_ALC_BSD_REMIND_EN),
         default = true
     ),
@@ -747,7 +757,7 @@ enum class SwitchNode(
         return if (status) set.on else set.off
     }
 
-    fun isValid(value: Int) = (get.on == value) or (get.off == value)
+    fun isValid(value: Int) = validValues?.contains(value) ?: ((get.on == value) or (get.off == value))
 
     fun isOn(value: Int) = if (careOn) get.on == value else get.off != value
 }

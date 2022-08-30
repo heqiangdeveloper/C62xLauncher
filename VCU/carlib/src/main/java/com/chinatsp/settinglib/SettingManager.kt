@@ -34,7 +34,9 @@ import android.net.Uri
 import android.os.*
 import android.provider.Settings
 import android.text.format.DateFormat
+import android.view.KeyEvent
 import com.android.internal.app.LocalePicker
+import com.chinatsp.settinglib.constants.OffLine
 import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.RegisterSignalManager.Companion.cabinSignal
 import com.chinatsp.settinglib.manager.RegisterSignalManager.Companion.hvacSignal
@@ -219,7 +221,7 @@ class SettingManager private constructor() {
     private val cabinEventListener = object : CarCabinManager.CarCabinEventCallback {
         override fun onChangeEvent(property: CarPropertyValue<*>) {
             val id = property.propertyId
-            Timber.d("Cabin onChangeEvent propertyId hex:${Integer.toHexString(id)}, dec:$id value:${property.value}")
+            Timber.d("doActionSignal-cabin receive-cabin hex-id::${Integer.toHexString(id)}, dec-id:$id value:${property.value}")
             GlobalManager.instance.onDispatchSignal(property, Origin.CABIN)
         }
 
@@ -231,7 +233,7 @@ class SettingManager private constructor() {
     private val mcuEventListener = object : CarMcuEventCallback {
         override fun onChangeEvent(property: CarPropertyValue<*>) {
             val id = property.propertyId
-//            Timber.d("MCU onChangeEvent propertyId hex:${Integer.toHexString(id)}, dec:$id value:${property.value}")
+            Timber.d("doActionSignal-mcu receive-mcu hex-id::${Integer.toHexString(id)}, dec-id:$id value:${property.value}")
             GlobalManager.instance.onDispatchSignal(property, Origin.MCU)
 //            switch (property.getPropertyId()) {
 //                case CarMcuManager.ID_VENDOR_MCU_POWER_MODE://电源状态
@@ -298,6 +300,7 @@ class SettingManager private constructor() {
         override fun onChangeEvent(property: CarPropertyValue<*>) {
             val id = property.propertyId
 //            Timber.d("Hvac onChangeEvent propertyId hex:${Integer.toHexString(id)}, dec:$id value:${property.value}")
+            Timber.d("doActionSignal-hvac receive-hvac hex-id::${Integer.toHexString(id)}, dec-id:$id value:${property.value}")
             GlobalManager.instance.onDispatchSignal(property, Origin.HVAC)
         }
 
@@ -481,7 +484,7 @@ class SettingManager private constructor() {
         if (null != mCarCabinManager) {
             try {
                 AppExecutors.get()?.networkIO()?.execute {
-                    Timber.d("setCabinValue b hex propertyId:" + Integer.toHexString(id) + ", dec propertyId:" + id + ", value:" + value)
+                    Timber.d("doActionSignal-cabin send-cabin hex-id:" + Integer.toHexString(id) + ", dec-id:" + id + ", value:" + value)
                     mCarCabinManager!!.setIntProperty(id, areaValue, value)
                 }
                 return true
@@ -496,7 +499,7 @@ class SettingManager private constructor() {
         if (null != hvacManager) {
             try {
                 AppExecutors.get()?.networkIO()?.execute {
-                    Timber.d("setHvacValue b hex propertyId:" + Integer.toHexString(id) + ", dec propertyId:" + id + ", value:" + value)
+                    Timber.d("doActionSignal-hvac send-hvac hex-id:" + Integer.toHexString(id) + ", dec-id:" + id + ", value:" + value)
                     hvacManager!!.setIntProperty(id, areaValue, value)
                 }
                 return true
@@ -990,9 +993,8 @@ class SettingManager private constructor() {
         var result = Constant.INVALID
         try {
             result = mCarAudioManager?.getAudioVoice(id) ?: Constant.INVALID
-            Timber.d("getAudioVoice id:$id result:$result")
+//            Timber.d("getAudioVoice id:$id result:$result")
         } catch (e: Throwable) {
-            e.printStackTrace()
             Timber.d("e=" + e.message)
         }
         return result
@@ -1010,20 +1012,18 @@ class SettingManager private constructor() {
             return -100
         }
 
-    fun getAudioEQ(): SoundEffect {
-        var result = SoundEffect.POP
-        try {
-            val mode = mCarAudioManager?.eqMode ?: CarAudioManager.EQ_MODE_FLAT
-            result = SoundEffect.getEffect(mode)
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
-        return result
+    fun getEQ(): Int? {
+        return mCarAudioManager?.eqMode
     }
 
-    fun getEQ(): Int {
-        return mCarAudioManager?.eqMode ?: RadioNode.SYSTEM_SOUND_EFFECT.get.values[0]
-    }
+//    fun getDefaultEq(): Int {
+//        val values = RadioNode.SYSTEM_SOUND_EFFECT.get.values
+//        return if (VcuUtils.isAmplifier()) {
+//            [1]
+//        } else {
+//            values[0]
+//        }
+//    }
 
     fun setSoundEffect(effect: SoundEffect) {
         mCarAudioManager?.eqMode = effect.id
@@ -1146,6 +1146,8 @@ class SettingManager private constructor() {
     }
 
     private fun onRegisterHvacListener() {
+        KeyEvent.KEYCODE_ENTER
+
         if (!connectService) {
             Timber.e("onRegisterHvacListener but app not connect to service!")
             return
@@ -1325,14 +1327,7 @@ class SettingManager private constructor() {
         }
 
         fun getAmpType(): Int {
-            try {
-                var type = SystemProperties.getInt("persist.vendor.vehicle.amp", 0)
-                Timber.d("getAmpType type=${type}")
-                return type;
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            return 0;
+            return VcuUtils.getConfigParameters("persist.vendor.vehicle.amp", 0)
         }
 
         fun getVerName(context: Context?, pkgName: String?): String {

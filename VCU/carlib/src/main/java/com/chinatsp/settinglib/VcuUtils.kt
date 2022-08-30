@@ -55,15 +55,19 @@ object VcuUtils {
         val value = getLevelValue()
         Timber.d("isCareLevel value: $value")
         val actual = levels.contains(value)
-//        return !(actual xor expect)
-        return false
+        return !(actual xor expect)
     }
 
     fun getLevelValue(): Int {
         val value = SystemProperties.getInt(OffLine.LEVEL, Level.LEVEL3)
         Timber.d("getLevelValue value: $value")
         return value
-//        return Level.LEVEL5
+    }
+    
+    fun isAmplifier(): Boolean {
+        val value = getConfigParameters(OffLine.AMP_TYPE, 0)
+        Timber.d("isAmplifier value: $value")
+        return 0 == value
     }
 
     fun putInt(context: Context = BaseApp.instance, key: String, value: Int): Boolean {
@@ -100,13 +104,13 @@ object VcuUtils {
     }
 
     fun getConfigParameters(keySerial: String, default: Int): Int {
-        val result = SystemProperties.getInt(keySerial, default)
-        Timber.d(
-            "getConfigParameters keySerial:%s, default:%s, result:%s",
-            keySerial,
-            default,
-            result
-        )
+        val result = try {
+            SystemProperties.getInt(keySerial, default)
+        } catch (e: Exception) {
+            Timber.d("getConfigParam key:%s, def:%s, e:%s", keySerial, default, e.message)
+            default
+        }
+        Timber.d("getConfigParam key:%s, def:%s, result:%s", keySerial, default, result)
         return result
     }
 
