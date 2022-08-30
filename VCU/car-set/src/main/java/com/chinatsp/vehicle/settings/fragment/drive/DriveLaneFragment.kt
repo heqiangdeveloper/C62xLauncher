@@ -63,6 +63,7 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
 
     private fun initVideoListener() {
         val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_auxiliary_system
+        binding.video.setZOrderOnTop(true)
         binding.video.setAudioFocusRequest(AudioManager.AUDIOFOCUS_NONE)
         binding.video.setVideoURI(Uri.parse(uri))
         binding.video.setOnCompletionListener {
