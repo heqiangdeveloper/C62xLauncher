@@ -15,10 +15,12 @@ buildscript {
         }
         jcenter()
         google()
+        mavenCentral()
 
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.6.4'
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10")
     }
 }
 
@@ -27,6 +29,7 @@ allprojects {
         maven { url "https://jitpack.io" }
         jcenter()
         google()
+        mavenCentral()
     }
 }
 task clean(type: Delete) {

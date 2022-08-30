@@ -13,7 +13,9 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
-
+    dataBinding {
+        enabled = true
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -23,6 +25,17 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+/**
+ * 封装的, 用来区分蓝牙电话Card aar包的依赖, 避免混乱.
+ * @param closure
+ * @return
+ */
+static def dependencyForBTPhoneCard(Closure closure) {
+    if (closure != null) {
+        closure()
     }
 }
 
@@ -39,4 +52,11 @@ dependencies {
     implementation project(path: ':card_iquting')
     implementation project(path: ':card_drive_info')
     implementation project(path: ':card_appstore')
+
+    dependencyForBTPhoneCard {
+        implementation("androidx.core:core-ktx:1.6.0")
+        implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.4.1")
+        implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1")
+        implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.1")
+    }
 }

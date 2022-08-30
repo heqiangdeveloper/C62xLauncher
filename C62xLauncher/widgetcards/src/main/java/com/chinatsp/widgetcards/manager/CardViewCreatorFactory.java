@@ -2,12 +2,13 @@ package com.chinatsp.widgetcards.manager;
 
 import com.chinatsp.appstore.AppStoreCardView;
 import com.chinatsp.driveinfo.DriveCounselorCardView;
-import com.chinatsp.usercenter.UserCenterCardView;
-import com.chinatsp.volcano.VolcanoCardView;
 import com.chinatsp.econnect.EConnectCardView;
 import com.chinatsp.iquting.IQuTingCardView;
 import com.chinatsp.musiclauncher.MediaCardView;
 import com.chinatsp.navigation.NaviCardView;
+import com.chinatsp.phone.widget.BTPhoneCardView;
+import com.chinatsp.usercenter.UserCenterCardView;
+import com.chinatsp.volcano.VolcanoCardView;
 import com.chinatsp.weaher.WeatherCardView;
 
 import card.base.ICardViewCreator;
@@ -73,7 +74,7 @@ public class CardViewCreatorFactory {
     }
 
     private static ICardViewCreator createPhone() {
-        return null;
+        return BTPhoneCardView::new;
     }
 
     private static ICardViewCreator createVehicleSetting() {
