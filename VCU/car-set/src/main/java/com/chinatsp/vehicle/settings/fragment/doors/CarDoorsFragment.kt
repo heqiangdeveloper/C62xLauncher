@@ -47,7 +47,7 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
     }
 
     private fun initViewsDisplay() {
-        if (VcuUtils.isCareLevel(Level.LEVEL4)) {
+        if (VcuUtils.isCareLevel(Level.LEVEL4)||VcuUtils.isCareLevel(Level.LEVEL3)) {
             binding.wheelAutomaticHeating.visibility = View.VISIBLE
             binding.line3.visibility = View.VISIBLE
         }
