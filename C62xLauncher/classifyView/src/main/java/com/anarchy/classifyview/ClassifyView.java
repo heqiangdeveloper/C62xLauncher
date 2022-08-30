@@ -169,6 +169,7 @@ public class ClassifyView extends FrameLayout {
     private SharedPreferences.Editor editor;
     private boolean isSoftKeyBoardShow = false;
     private boolean isInSubDrag = false;
+    private List<String> canUninstallNameLists;
     public ClassifyView(Context context) {
         super(context);
         init(context, null, 0);
@@ -189,6 +190,14 @@ public class ClassifyView extends FrameLayout {
     public ClassifyView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context, attrs, defStyleAttr);
+    }
+
+    public List<String> getCanUninstallNameLists() {
+        return canUninstallNameLists;
+    }
+
+    public void setCanUninstallNameLists(List<String> canUninstallNameLists) {
+        this.canUninstallNameLists = canUninstallNameLists;
     }
 
     /**
@@ -218,7 +227,9 @@ public class ClassifyView extends FrameLayout {
         mEdgeWidth = a.getDimensionPixelSize(R.styleable.ClassifyView_EdgeWidth, 15);
         a.recycle();
         mMainRecyclerView = getMain(context, attrs);
+        mMainRecyclerView.setOverScrollMode(OVER_SCROLL_NEVER);//去掉滑动到顶/底部时的阴影
         mSubRecyclerView = getSub(context, attrs);
+        mSubRecyclerView.setOverScrollMode(OVER_SCROLL_NEVER);
         mMainContainer.addView(mMainRecyclerView);
         mMainShadowView = new View(context);
         mMainShadowView.setBackgroundColor(mShadowColor);
@@ -236,6 +247,10 @@ public class ClassifyView extends FrameLayout {
             @Override
             public void onClick(View v) {
                 if (mHideSubAnim != null && mHideSubAnim.isRunning()) return;
+                //重置delete标签
+                editor.putBoolean(MyConfigs.SHOWDELETE,false);
+                editor.putInt(MyConfigs.SHOWDELETEPOSITION,-1);
+                editor.commit();
                 hideSubContainer();
                 //刷新桌面中sub的显示,实际发现mSubRecyclerView.getChildCount()数目会变少，不采用mSubRecyclerView计算
                 //mSubCallBack.removeItem(mSubRecyclerView.getChildCount() - 1);
@@ -467,6 +482,10 @@ public class ClassifyView extends FrameLayout {
                             iv.setVisibility(View.GONE);
                         }
                     }
+
+                    editor.putBoolean(MyConfigs.SHOWDELETE,false);
+                    editor.putInt(MyConfigs.SHOWDELETEPOSITION,-1);
+                    editor.commit();
 
                     //如果没有添加按钮，则新增一个添加按钮,防止添加按钮不是在最末尾，先清除，再新增
                     isExistAdd = false;
@@ -870,6 +889,14 @@ public class ClassifyView extends FrameLayout {
 
     }
 
+    public boolean isSubContainerShow(){
+        if(mSubContainer != null){
+            return mSubContainer.getVisibility() == View.VISIBLE ? true : false;
+        }else {
+            return false;
+        }
+    }
+
     private boolean mergeSuccess = false;
 
     long startTime = 0;
@@ -955,6 +982,9 @@ public class ClassifyView extends FrameLayout {
                                 @Override
                                 public void onClick(View view) {
                                     dialog.dismiss();
+                                    editor.putInt(MyConfigs.SHOWDELETEPOSITION,-1);
+                                    editor.putBoolean(MyConfigs.SHOWDELETE,false);
+                                    editor.commit();
                                     //如果没有添加按钮，则新增一个添加按钮
                                     for(int i = 0; i < list.size(); i++){
                                         if(list.get(i) == null){
@@ -1183,6 +1213,22 @@ public class ClassifyView extends FrameLayout {
                         mDragView.bringToFront();
                         mElevationHelper.floatView(mSubRecyclerView, mDragView);
                         if(null != addView) addView.setVisibility(View.GONE);
+
+                        for(int i = 0; i < mSubRecyclerView.getChildCount(); i++){
+                            relativeLayout = (RelativeLayout) mSubRecyclerView.getChildAt(i);
+                            insertAbleGridView = (InsertAbleGridView) relativeLayout.getChildAt(0);
+                            ImageView iv = (ImageView) relativeLayout.getChildAt(2);
+                            TextView nameTv = (TextView) relativeLayout.getChildAt(3);
+
+                            if(canUninstallNameLists != null && canUninstallNameLists.contains(nameTv.getText().toString().trim())){
+                                iv.setVisibility(View.VISIBLE);
+                            }else{
+                                iv.setVisibility(View.GONE);
+                            }
+                        }
+
+                        lastX = x;
+                        lastY = y;
                     }
                     break;
                 case DragEvent.ACTION_DRAG_LOCATION:
@@ -1254,6 +1300,17 @@ public class ClassifyView extends FrameLayout {
                     break;
                 case DragEvent.ACTION_DROP:
                     L.d("sub DragEvent.ACTION_DROP");
+                    if(Math.abs(x - lastX) >= 5 || Math.abs(y - lastY) > 5){
+                        isInDeleteMode = false;
+                    }else {
+                        isInDeleteMode = true;
+                    }
+                    //存储在SP中，在MyAppInfoAdapter中刷新时再判断是否显示删除按钮
+                    SharedPreferences sp = getContext().getSharedPreferences(MyConfigs.APPPANELSP,Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putBoolean(MyConfigs.SHOWDELETE,isInDeleteMode ? true : false);
+                    editor.putInt(MyConfigs.SHOWDELETEPOSITION,mSelectedPosition);
+                    editor.commit();
                     break;
             }
             return true;
