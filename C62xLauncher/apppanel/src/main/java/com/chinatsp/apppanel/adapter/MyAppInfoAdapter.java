@@ -74,7 +74,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
     private String titleStr = null;
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
-    private int parentIndex;
+    private int showdeleteposition;
     private String title;
     private boolean showDelete;
     private int selectSize = 0;
@@ -172,17 +172,14 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             holder.tvName.setText(mData.get(position).get(0).getName());
             holder.deleteIv.setTag(mData.get(position).get(0).getCanuninstalled());
             //是否显示删除按钮
-            parentIndex = preferences.getInt(MyConfigs.SHOWDELETEPOSITION ,  -1);
+            showdeleteposition = preferences.getInt(MyConfigs.SHOWDELETEPOSITION ,  -1);
             showDelete = preferences.getBoolean(MyConfigs.SHOWDELETE,false);
-            if(parentIndex != -1 && parentIndex == position){
-                if(showDelete){
-                    holder.deleteIv.setVisibility((int)holder.deleteIv.getTag() == 1 ? View.VISIBLE : View.GONE);
-                }else {
-                    holder.deleteIv.setVisibility(View.GONE);
-                }
-                editor.putBoolean(MyConfigs.SHOWDELETE,false);
-                editor.putInt(MyConfigs.SHOWDELETEPOSITION,-1);
-                editor.commit();
+            //修复： 防止上下滑动时，删除错乱
+            //if(parentIndex != -1 && parentIndex == position){
+            if(showdeleteposition != -1 && showDelete){
+                holder.deleteIv.setVisibility((int)holder.deleteIv.getTag() == 1 ? View.VISIBLE : View.GONE);
+            }else {
+                holder.deleteIv.setVisibility(View.GONE);
             }
 
             locationBean = mData.get(position).get(0);
@@ -263,9 +260,17 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         super.onBindSubViewHolder(holder, mainPosition, subPosition);
         if(subPosition < mData.get(mainPosition).size()){
             if(mData.get(mainPosition).get(subPosition) == null){
+                holder.deleteIv.setVisibility(View.GONE);
                 holder.tvName.setVisibility(View.GONE);
                 holder.tvName.setText(context.getString(R.string.add));
             }else {
+                showdeleteposition = preferences.getInt(MyConfigs.SHOWDELETEPOSITION ,  -1);
+                showDelete = preferences.getBoolean(MyConfigs.SHOWDELETE,false);
+                if(showdeleteposition != -1 && showDelete) {
+                    holder.deleteIv.setVisibility(mData.get(mainPosition).get(subPosition).getCanuninstalled() == 1 ? View.VISIBLE : View.GONE);
+                }else {
+                    holder.deleteIv.setVisibility(View.GONE);
+                }
                 holder.tvName.setVisibility(View.VISIBLE);
                 holder.tvName.setText(mData.get(mainPosition).get(subPosition).getName());
                 Log.d("hqtest","onBindSubViewHolder package is: " + mData.get(mainPosition).get(subPosition).getPackageName() + ",parent = " + mainPosition + ",child = " + subPosition);
@@ -322,7 +327,11 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         }else {
             if(iv.getVisibility() == View.VISIBLE){//如果删除按钮显示了，执行删除应用逻辑
                 hideDeleteIcon((RecyclerView) relativeLayout.getParent());
-                showDeleteDialog(tv.getText().toString(),mData.get(parentIndex).get(0).getPackageName());
+                if(index == -1){
+                    showDeleteDialog(tv.getText().toString(),mData.get(parentIndex).get(0).getPackageName());
+                }else {
+                    showDeleteDialog(tv.getText().toString(),mData.get(parentIndex).get(index).getPackageName());
+                }
             }else {
                 hideDeleteIcon((RecyclerView) relativeLayout.getParent());
                 String packageName = "";

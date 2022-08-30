@@ -41,6 +41,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,6 +79,7 @@ public class MyAppFragment extends Fragment {
     private MyAppInfoAdapter mMyAppInfoAdapter;
     private List<List<LocationBean>> data;
     private static boolean isStoringData = false;
+    private List<String> canUninstallNameLists = new ArrayList<>();
     public MyAppFragment() {
         // Required empty public constructor
     }
@@ -141,6 +143,7 @@ public class MyAppFragment extends Fragment {
         loadingTv.setVisibility(View.GONE);
         mMyAppInfoAdapter = new MyAppInfoAdapter(view.getContext(), data);
         appInfoClassifyView.setAdapter(mMyAppInfoAdapter);
+        appInfoClassifyView.setCanUninstallNameLists(getCanUninstallLists());
         SoftKeyBoardListener.setListener(getActivity(), new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
             @Override
             public void keyBoardShow(int height) {//键盘显示
@@ -153,6 +156,23 @@ public class MyAppFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    private List<String> getCanUninstallLists(){
+        if(canUninstallNameLists != null) canUninstallNameLists.clear();
+        for(List<LocationBean> lists:data){
+            for(int i = 0; i < lists.size(); i++){
+                locationBean = lists.get(i);
+                if(locationBean != null){
+                    if(!AppLists.APPMANAGEMENT.equals(locationBean.getPackageName()) &&
+                            !AppLists.isSystemApplication(getContext(),locationBean.getPackageName())){
+                        canUninstallNameLists.add(locationBean.getName());
+                        Log.d(TAG,"add in CanUninstallLists: " + locationBean.getName());
+                    }
+                }
+            }
+        }
+        return canUninstallNameLists;
     }
 
     private void getOriginalData(){
@@ -334,10 +354,16 @@ public class MyAppFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Event event){
         if(event instanceof ChangeTitleEvent){
+            //重置delete标签
+            resetDeleteFlag(false,-1);
             mMyAppInfoAdapter.changeTitle((ChangeTitleEvent)event);
         }else if(event instanceof HideSubContainerEvent){
+            //重置delete标签
+            resetDeleteFlag(false,-1);
             appInfoClassifyView.hideSubContainer();
         }else if(event instanceof AppInstallStatusEvent){
+            //重置delete标签
+            resetDeleteFlag(false,-1);
             int status = ((AppInstallStatusEvent) event).getStatus();
             String packageName = ((AppInstallStatusEvent) event).getPackageName();
             Log.d(TAG,"status = " + status + ",pacakageName is: " + packageName);
@@ -348,21 +374,50 @@ public class MyAppFragment extends Fragment {
                 }
                 mMyAppInfoAdapter = new MyAppInfoAdapter(getContext(), data);
                 appInfoClassifyView.setAdapter(mMyAppInfoAdapter);
+                appInfoClassifyView.setCanUninstallNameLists(getCanUninstallLists());
             }else {//卸载
                 if(!AppLists.isInBlackListApp(packageName)){
-                    A:for(List<LocationBean> lists:data){
-                        if(lists != null && lists.size() < 2 && lists.get(0) != null &&
-                                lists.get(0).getPackageName().equals(packageName)){
-                            data.remove(lists);
-                            mMyAppInfoAdapter = new MyAppInfoAdapter(getContext(), data);
-                            appInfoClassifyView.setAdapter(mMyAppInfoAdapter);
-                            AsyncSchedule.execute(new Runnable() {
-                                @Override
-                                public void run() {
-                                    db.deleteLocation(packageName);
+                    List<LocationBean> lists;
+                    boolean isSubShow = appInfoClassifyView.isSubContainerShow();
+                    Log.d(TAG,"isSubShow = " + isSubShow);
+                    A:for(int k = 0; k < data.size(); k++){
+                        lists = data.get(k);
+                        if(lists == null) continue;//如果是 添加按钮，跳过
+                        lists.removeAll(Collections.singleton(null));//清除掉null对象
+                        for(int i = 0; i < lists.size(); i++) {
+                            locationBean = lists.get(i);
+                            if(locationBean == null) continue;
+                            if (packageName.equals(locationBean.getPackageName())) {
+                                if(lists.size() == 1){
+                                    data.remove(lists);
+                                    if(isSubShow){
+                                        appInfoClassifyView.hideSubContainer();
+                                    }
+                                }else if(lists.size() == 2){//如果只有2个，删除当前的后，隐藏sub
+                                    lists.remove(locationBean);
+                                    if(isSubShow){
+                                        appInfoClassifyView.hideSubContainer();
+                                    }
+                                }else {
+                                    lists.remove(locationBean);
+                                    lists.add(null);
                                 }
-                            });
-                            break A;
+
+                                mMyAppInfoAdapter = new MyAppInfoAdapter(getContext(), data);
+                                appInfoClassifyView.setAdapter(mMyAppInfoAdapter);
+                                if(isSubShow){
+                                    mMyAppInfoAdapter.getSubAdapter().initData(k,lists);
+                                }
+                                appInfoClassifyView.setCanUninstallNameLists(getCanUninstallLists());
+
+                                AsyncSchedule.execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        db.deleteLocation(packageName);
+                                    }
+                                });
+                                break A;
+                            }
                         }
                     }
                 }
@@ -370,6 +425,12 @@ public class MyAppFragment extends Fragment {
         }else if(event instanceof ReStoreDataEvent){
             if(!isStoringData) storeData();
         }
+    }
+
+    private void resetDeleteFlag(boolean isShowDelete,int position){
+        editor.putBoolean(MyConfigs.SHOWDELETE,isShowDelete);
+        editor.putInt(MyConfigs.SHOWDELETEPOSITION,position);
+        editor.commit();
     }
 
     /**
