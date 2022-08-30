@@ -57,6 +57,7 @@ class DriveLightingFragment : BaseFragment<CombineViewModel, DriveLightingFragme
 
     private fun initVideoListener() {
         val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_hma
+        binding.video.setZOrderOnTop(true)
         binding.video.setAudioFocusRequest(AudioManager.AUDIOFOCUS_NONE)
         binding.video.setVideoURI(parse(uri))
         binding.video.setOnCompletionListener {

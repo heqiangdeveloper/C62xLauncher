@@ -55,6 +55,7 @@ class DriveTrafficFragment : BaseFragment<CombineViewModel, DriveTrafficFragment
 
     private fun initVideoListener() {
         val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_sla
+        binding.video.setZOrderOnTop(true)
         binding.video.setAudioFocusRequest(AudioManager.AUDIOFOCUS_NONE)
         binding.video.setVideoURI(Uri.parse(uri))
         binding.video.setOnCompletionListener {

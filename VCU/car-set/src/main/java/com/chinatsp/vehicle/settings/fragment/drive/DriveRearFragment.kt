@@ -89,6 +89,7 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
 
     private fun initVideoListener() {
         val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_bsd
+        binding.video.setZOrderOnTop(true)
         binding.video.setAudioFocusRequest(AudioManager.AUDIOFOCUS_NONE)
         binding.video.setVideoURI(Uri.parse(uri));
         binding.video.setOnCompletionListener {
