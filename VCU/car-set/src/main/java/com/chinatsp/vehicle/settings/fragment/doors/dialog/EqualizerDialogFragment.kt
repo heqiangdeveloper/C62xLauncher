@@ -30,6 +30,9 @@ class EqualizerDialogFragment :
     private val xValueTop: List<String>
         get() = listOf("4dB", "-2dB", "4dB", "2dB", "4dB")
 
+    private val xTestValueTop: List<String>
+        get() = listOf("10dB", "-6dB", "20dB", "11dB", "65dB")
+
     override fun getLayoutId(): Int {
         return R.layout.equalizer_dialog_fragmet
     }
@@ -90,6 +93,8 @@ class EqualizerDialogFragment :
         val values = viewModel.getEffectValues(value)
         val toList = values.map { it.toFloat() }.toList()
         binding.smoothChartView.setData(toList, xValue, xValueTop)
+        //动态设置上边X轴数据
+        binding.smoothChartView.setXValueTop(xTestValueTop)
     }
 
     private fun doSendCustomEqValue() {
@@ -122,10 +127,11 @@ class EqualizerDialogFragment :
         binding.smoothChartView.circleColor = resources.getColor(R.color.smooth_circle_color)
         binding.smoothChartView.innerCircleColor = Color.parseColor("#ffffff")
         binding.smoothChartView.nodeStyle = SmoothLineChartView.NODE_STYLE_RING
-        binding.smoothChartView.setOnChartClickListener { position, _ ->
+        binding.smoothChartView.setOnChartClickListener { position, value ->
 //            viewModel.setAudioEQ(position)
             doSendCustomEqValue()
             Timber.tag("luohong").d("--------------------position:%s", position)
+            Timber.tag("luohong").d("--------------------value:%s", value)
         }
         onPostSelected(RadioNode.SYSTEM_SOUND_EFFECT, viewModel.currentEffect.value!!)
     }

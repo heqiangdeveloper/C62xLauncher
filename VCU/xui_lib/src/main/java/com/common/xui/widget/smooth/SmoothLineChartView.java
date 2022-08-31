@@ -120,6 +120,15 @@ public class SmoothLineChartView extends View {
         vLength = height * 0.75f;         // y轴长度
     }
 
+    /**
+     * 动态设置上边X轴值
+     * @param xValueTop
+     */
+    public void setXValueTop(List<String>xValueTop){
+        this.mXDataTop = xValueTop;
+        invalidate();
+    }
+
     /***
      * 设置路径节点
      */
@@ -372,6 +381,9 @@ public class SmoothLineChartView extends View {
                 float y_new = coordinateConversionY(touchY);
                 if (isMoveChange && mSelectedNode != -1 && y_new > mMinY && y_new < mMaxY) {
                     mValues.set(mSelectedNode,y_new);
+                    if (mChartClickListener != null) {
+                        mChartClickListener.onClick(mSelectedNode, Math.round(mValues.get(mSelectedNode)));
+                    }
                     invalidate();
                 }
                 return super.onTouchEvent(event);
@@ -379,7 +391,7 @@ public class SmoothLineChartView extends View {
                 mSelectedNode = checkClicked(event.getX(), event.getY());
                 if (mSelectedNode != -1) {
                     if (mChartClickListener != null) {
-                        mChartClickListener.onClick(mSelectedNode, mValues.get(mSelectedNode));
+                        mChartClickListener.onClick(mSelectedNode, Math.round(mValues.get(mSelectedNode)));
                     }
                     invalidate();
                 }
@@ -583,7 +595,7 @@ public class SmoothLineChartView extends View {
     }
 
     public interface OnChartClickListener {
-        void onClick(int position, float value);
+        void onClick(int position, int value);
     }
 
     // 把坐标从 y 轴的位置转换成实际的值
