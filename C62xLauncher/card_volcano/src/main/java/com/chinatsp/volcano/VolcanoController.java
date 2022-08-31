@@ -1,17 +1,8 @@
 package com.chinatsp.volcano;
 
-import android.os.Handler;
-import android.os.RemoteException;
-
 import com.chinatsp.volcano.api.response.VideoListData;
-import com.chinatsp.volcano.api.response.VolcanoResponse;
+import com.chinatsp.volcano.repository.IVolcanoLoadListener;
 import com.chinatsp.volcano.repository.VolcanoRepository;
-import com.chinatsp.volcano.videos.VolcanoVideo;
-import com.oushang.radio.network.errorhandler.ExceptionHandler;
-import com.oushang.radio.network.observer.BaseObserver;
-
-import java.util.LinkedList;
-import java.util.List;
 
 public class VolcanoController {
     private VolcanoCardView mView;
@@ -22,21 +13,10 @@ public class VolcanoController {
     }
 
 
+
     void onDestroy() {
         mView = null;
     }
-
-    public List<VolcanoVideo> createTestList() {
-        List<VolcanoVideo> songList = new LinkedList<>();
-        songList.add(new VolcanoVideo());
-        songList.add(new VolcanoVideo());
-        songList.add(new VolcanoVideo());
-        songList.add(new VolcanoVideo());
-        songList.add(new VolcanoVideo());
-        songList.add(new VolcanoVideo());
-        return songList;
-    }
-
 
     public void loadSourceData(String source) {
         VideoListData videoListData = mRepository.getVideoList(source);
@@ -48,22 +28,24 @@ public class VolcanoController {
         }
     }
 
-
-
-    BaseObserver<VideoListData> loadListener = new BaseObserver<VideoListData>() {
+    IVolcanoLoadListener loadListener = new IVolcanoLoadListener() {
         @Override
-        public void onError(ExceptionHandler.ResponeThrowable e) throws RemoteException {
-            if (mView != null) {
-                mView.hideLoading();
-            }
-        }
-
-        @Override
-        public void onNext(VideoListData videoListData) {
+        public void onSuccess(VideoListData videoListData) {
             mView.updateList(videoListData);
             if (mView != null) {
                 mView.hideLoading();
             }
         }
+
+        @Override
+        public void onFail(String msg) {
+            if (mView != null) {
+                mView.hideLoading();
+            }
+        }
     };
+
+    public void setCurrentSource(String source) {
+        mRepository.setCurrentSource(source);
+    }
 }

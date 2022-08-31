@@ -12,6 +12,7 @@ import com.chinatsp.widgetcards.manager.CardManager;
 import card.theme.ThemeService;
 import launcher.base.network.NetworkStateReceiver;
 import launcher.base.service.AppServiceManager;
+import launcher.base.service.platform.PlatformService;
 
 public class LauncherApplication extends Application {
     private static final String TAG = "Launcher_version";
@@ -26,6 +27,7 @@ public class LauncherApplication extends Application {
 
     private void initServices() {
         CardManager.getInstance().init(this);
+        AppServiceManager.addService(AppServiceManager.SERVICE_PLATFORM, new PlatformService());
         AppServiceManager.addService(AppServiceManager.SERVICE_THEME, new ThemeService(this));
         AppServiceManager.addService(AppServiceManager.SERVICE_CAR, new AppCarService(this));
         NetworkStateReceiver.getInstance().registerReceiver(this);//注册网络监听

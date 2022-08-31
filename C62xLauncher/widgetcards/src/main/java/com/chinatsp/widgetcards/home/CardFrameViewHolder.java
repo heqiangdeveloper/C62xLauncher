@@ -60,7 +60,9 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(int position, LauncherCard cardEntity) {
         mLauncherCard = cardEntity;
-        boolean isSmall = ExpandStateManager.getInstance().getSmallCardPosition() == position;
+        int smallCardPosition = ExpandStateManager.getInstance().getSmallCardPosition();
+        boolean isSmall = (smallCardPosition == position);
+        EasyLog.i(TAG, "bind smallCardPosition:" + smallCardPosition + " , position:" + position);
         if (isSmall) {
             showSmallCardsInnerList();
         } else {
@@ -109,7 +111,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
         return new StableOnClickListener(MIN_CLICK_INTERVAL, new Consumer<View>() {
             @Override
             public void accept(View view) {
-                EasyLog.d(TAG, "click expand or collapse view :"+cardEntity.getName());
+                EasyLog.d(TAG, "click expand or collapse view :" + cardEntity.getName());
                 if (view == mIvCardZoom) {
                     changeExpandState();
                 }
@@ -118,7 +120,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void changeExpandState() {
-        EasyLog.i(TAG,"changeExpandState: "+mLauncherCard.getName() +" , is expand: "+mExpandState);
+        EasyLog.i(TAG, "changeExpandState: " + mLauncherCard.getName() + " , is expand: " + mExpandState);
         if (mExpandState) {
             collapse();
             dealCollapseScroll(getAdapterPosition());
@@ -139,11 +141,12 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
         if (bigCardPosition > 0 && bigCardPosition != getAdapterPosition()) {
             CardFrameViewHolder bigCard = (CardFrameViewHolder) RecyclerViewUtil.findViewHold(mRecyclerView, bigCardPosition);
             if (bigCard != null && bigCard != this && bigCard.mExpandState) {
-                EasyLog.d(TAG, "collapseAnotherIfNeed:  "+bigCard.getLauncherCard());
+                EasyLog.d(TAG, "collapseAnotherIfNeed:  " + bigCard.getLauncherCard());
                 bigCard.changeExpandState();
             }
         }
     }
+
     private void collapseAnotherIfNeed2() {
         int bigCardPosition = ExpandStateManager.getInstance().getBigCardPosition();
         if (bigCardPosition > 0 && bigCardPosition != getAdapterPosition()) {
@@ -169,14 +172,14 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void showSmallCardsInnerList() {
-        EasyLog.d(TAG, "showSmallCardsViewPager : "+mLauncherCard.getName());
+        EasyLog.d(TAG, "showSmallCardsViewPager : " + mLauncherCard.getName());
         mCardInnerListHelper.showInnerList(getAdapterPosition(), ExpandStateManager.getInstance().getBigCardPosition());
         mCardInner.setVisibility(View.INVISIBLE);
         itemView.setBackground(null);
     }
 
     private void hideSmallCardsInnerList() {
-        EasyLog.d(TAG, "hideSmallCardsViewPager : "+mLauncherCard.getName()+" expand :"+mExpandState);
+        EasyLog.d(TAG, "hideSmallCardsViewPager : " + mLauncherCard.getName() + " expand :" + mExpandState);
         mCardInnerListHelper.hideInnerList();
         mCardInner.setVisibility(View.VISIBLE);
         if (mExpandState) {
@@ -186,6 +189,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
         }
 
     }
+
     // 表示大卡是否处于
     private boolean scrolledInExpand = false;
 

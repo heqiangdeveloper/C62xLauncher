@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.chinatsp.volcano.R;
 import com.chinatsp.volcano.api.response.VideoListData;
 import com.chinatsp.volcano.repository.VolcanoRepository;
+import com.chinatsp.volcano.videos.VolcanoSource;
 import com.chinatsp.volcano.videos.VolcanoVideo;
 
 import java.util.IllegalFormatCodePointException;
@@ -82,24 +83,9 @@ public class SmallCardViewHolder extends VolcanoViewHolder{
 
     @Override
     public void onChangeSource(String source) {
-        int res;
-        String sourceName;
-        switch (source) {
-            case VolcanoRepository.SOURCE_DOUYIN:
-                res = R.drawable.card_volcano_type_douyin;
-                sourceName = "抖音";
-                break;
-            case VolcanoRepository.SOURCE_XIGUA:
-                res = R.drawable.card_volcano_type_xigua;
-                sourceName = "西瓜";
-                break;
-            case VolcanoRepository.SOURCE_TOUTIAO:
-            default:
-                res = R.drawable.card_volcano_type_toutiao;
-                sourceName = "头条";
-        }
-        ivCardVolcanoSourceLogo.setImageResource(res);
-        tvCardVolcanoSource.setText(sourceName);
+        VolcanoSource volcanoSource = VolcanoSource.create(source);
+        ivCardVolcanoSourceLogo.setImageResource(volcanoSource.getIconRes());
+        tvCardVolcanoSource.setText(volcanoSource.getName());
     }
 
     @Override

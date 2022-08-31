@@ -70,6 +70,7 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
         LayoutInflater.from(getContext()).inflate(R.layout.card_weather, this);
         mSmallCardView = findViewById(R.id.layoutSmallCardView);
         mSmallCardHolder = new WeatherSmallCardHolder(mSmallCardView);
+        refreshDefault();
         mSmallWidth = (int) getResources().getDimension(R.dimen.card_width);
         mLargeWidth = (int) getResources().getDimension(R.dimen.card_width_large);
         mController = new WeatherCardController(this);

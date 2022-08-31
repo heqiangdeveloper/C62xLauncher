@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="drawer_width">673px</dimen>
+    <dimen name="drawer_width">575px</dimen>
     <dimen name="drawer_content_width">543px</dimen>
     <dimen name="drawer_search_height">68px</dimen>
     <dimen name="drawer_item_top_margin">28px</dimen>

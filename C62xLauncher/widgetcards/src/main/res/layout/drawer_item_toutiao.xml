@@ -23,6 +23,7 @@
         />
 
     <TextView
+        android:id="@+id/tvDrawerVolcanoLoginSlogan"
         android:layout_width="match_parent"
         android:layout_height="264px"
         android:layout_marginTop="16px"
@@ -34,11 +35,11 @@
         />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcvDrawerVolcanoVideos"
         android:layout_width="match_parent"
         android:layout_height="264px"
         android:orientation="horizontal"
         android:layout_marginTop="16px"
-        android:padding="34px"
         android:background="@drawable/drawer_item_bg_selector"
         app:layout_constraintTop_toBottomOf="@id/tvTitle"
         app:layout_constraintStart_toStartOf="parent"

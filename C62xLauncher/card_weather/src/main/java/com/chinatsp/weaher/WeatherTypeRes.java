@@ -41,7 +41,7 @@ public class WeatherTypeRes {
     public WeatherTypeRes(int type) {
         switch (type) {
             case WeatherBean.TYPE_UNKNOWN:
-                icon = R.drawable.weather_icon_windy;
+                icon = R.drawable.weather_icon_unkown;
                 drawerBg = R.drawable.drawer_weather_bg_wind;
                 smallCardBg = R.drawable.card_weather_bg_wind;
                 bigCardBg = R.drawable.card_weather_bg_wind_large;
