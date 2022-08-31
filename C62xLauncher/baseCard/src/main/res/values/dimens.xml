@@ -6,6 +6,7 @@
     <dimen name="card_width_unselected">150px</dimen>
     <dimen name="card_height">540px</dimen>
     <dimen name="card_width">575px</dimen>
+    <dimen name="card_divider_width">30px</dimen>
     <dimen name="card_width_large">1180px</dimen>
     <dimen name="card_height_large">540px</dimen>
     <dimen name="card_icon_size_lv0">100px</dimen>

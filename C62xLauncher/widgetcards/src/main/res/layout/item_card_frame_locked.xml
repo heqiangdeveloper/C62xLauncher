@@ -35,5 +35,11 @@
         app:layout_constraintTop_toTopOf="parent"
         />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ff3398"
+        android:visibility="gone"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

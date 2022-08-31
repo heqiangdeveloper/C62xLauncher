@@ -6,7 +6,7 @@ import android.view.View;
 import com.chinatsp.drawer.drive.DrawerDriveCounselorHolder;
 import com.chinatsp.drawer.iquting.DrawerIqutingHolder;
 import com.chinatsp.drawer.search.DrawerSearchHolder;
-import com.chinatsp.drawer.toutiao.DrawerToutiaoHolder;
+import com.chinatsp.drawer.volcano.DrawerVolcanoHolder;
 
 import launcher.base.recyclerview.BaseViewHolder;
 import launcher.base.recyclerview.MultiStyleRcvAdapter;
@@ -31,7 +31,7 @@ public class DrawerContentAdapter extends MultiStyleRcvAdapter<DrawerEntity> {
                 viewHolder = new DrawerIqutingHolder(view);
                 break;
             case DrawerEntity.TYPE_TOUTIAO:
-                viewHolder = new DrawerToutiaoHolder(view);
+                viewHolder = new DrawerVolcanoHolder(view);
                 break;
             case DrawerEntity.TYPE_DRIVE_COUNSELOR:
                 viewHolder = new DrawerDriveCounselorHolder(view);

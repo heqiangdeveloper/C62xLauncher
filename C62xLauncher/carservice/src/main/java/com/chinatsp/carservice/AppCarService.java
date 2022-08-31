@@ -8,7 +8,9 @@ import android.content.Context;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
+import launcher.base.service.AppServiceManager;
 import launcher.base.service.car.ICarService;
+import launcher.base.service.platform.PlatformService;
 import launcher.base.utils.EasyLog;
 import launcher.base.utils.property.PropertyUtils;
 
@@ -23,8 +25,16 @@ public class AppCarService implements ICarService {
 
     public AppCarService(Context context) {
         this.mContext = context;
-        mCar = Car.createCar(context, mServiceConnection);
-        mCar.connect();
+        boolean isC62x = checkPlatform();
+        if (isC62x) {
+            mCar = Car.createCar(context, mServiceConnection);
+            mCar.connect();
+        }
+    }
+
+    private boolean checkPlatform() {
+        PlatformService platformService = (PlatformService) AppServiceManager.getService(AppServiceManager.SERVICE_PLATFORM);
+        return platformService.isC62x();
     }
 
     @Override
@@ -37,7 +47,6 @@ public class AppCarService implements ICarService {
         EasyLog.d(TAG,"getCarType , is connect: "+mConnected);
         EasyLog.d(TAG,"getCarType , carbin : "+mCarCabinManager);
         return CarPropertyUtil.getCarModel(mCarCabinManager);
-//        return CarPropertyUtil.getCarType2(mContext);
     }
     @Override
     public String getVinCode() {

@@ -53,7 +53,6 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
     private VolcanoController mController;
     private View mLargeCardView;
     private View mSmallCardView;
-    private View viewLoading;
     private int mSmallWidth;
     private int mLargeWidth;
     private boolean mExpand = false;
@@ -66,12 +65,11 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
         LayoutInflater.from(getContext()).inflate(R.layout.card_volcano, this);
         mController = new VolcanoController(this);
         mSmallCardView = findViewById(R.id.layoutSmallCardView);
-        viewLoading = findViewById(R.id.viewLoading);
         mSmallCardViewHolder = new SmallCardViewHolder(mSmallCardView);
         mSmallCardViewHolder.showNormal();
         mSmallWidth = (int) getResources().getDimension(R.dimen.card_width);
         mLargeWidth = (int) getResources().getDimension(R.dimen.card_width_large);
-        requestData();
+        switchSource(mSource);
 
         if (mLargeCardView == null) {
             mLargeCardView = LayoutInflater.from(getContext()).inflate(R.layout.card_volcano_large, this, false);
@@ -91,12 +89,14 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
         runExpandAnim();
         long time2 = System.currentTimeMillis();
         EasyLog.d(TAG, "Trace expand cost:" + (time2 - time1) + "ms");
-
     }
 
     private void runExpandAnim() {
-        ObjectAnimator.ofFloat(mLargeCardView, "translationX", -500, 0).setDuration(150).start();
-        ObjectAnimator animator = ObjectAnimator.ofFloat(mLargeCardView, "alpha", 0.1f, 1.0f).setDuration(500);
+        int alphaAnimDuration = 500;
+        int moveAnimValue = -500;
+        int moveAnimDuration = 150;
+        ObjectAnimator.ofFloat(mLargeCardView, "translationX", moveAnimValue, 0).setDuration(moveAnimDuration).start();
+        ObjectAnimator animator = ObjectAnimator.ofFloat(mLargeCardView, "alpha", 0.1f, 1.0f).setDuration(alphaAnimDuration);
         animator.start();
         animator.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -119,15 +119,9 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
         LayoutParamUtil.setWidth(mSmallWidth, this);
     }
 
-    public void requestData() {
-        EasyLog.d(TAG, "requestData start, source:" + mSource);
-        if (mController != null) {
-            mController.loadSourceData(mSource);
-        }
-    }
-
     public void switchSource(String source) {
         mSource = source;
+        mController.setCurrentSource(source);
         mSmallCardViewHolder.onChangeSource(source);
         if (mBigCardViewHolder != null) {
             mBigCardViewHolder.onChangeSource(source);

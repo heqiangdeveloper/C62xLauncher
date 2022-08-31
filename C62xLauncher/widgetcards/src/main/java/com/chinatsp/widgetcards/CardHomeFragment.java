@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
+import android.view.GestureDetector;
 import android.view.View;
 
 import com.chinatsp.drawer.DrawerCreator;
@@ -39,16 +40,19 @@ public class CardHomeFragment extends BaseFragment {
     private CardIndicator mCardIndicator;
     private PagerSnapHelper mSnapHelper;
     private DrawerCreator drawerCreator;
+    private Handler mUiHandler = new Handler();
+    private int mCardDividerWidth;
 
     @Override
     protected void initViews(View rootView) {
+        mCardDividerWidth = getResources().getDimensionPixelOffset(R.dimen.card_divider_width);
         initObservers();
         initCardsRcv(rootView);
         mCardIndicator = rootView.findViewById(R.id.cardIndicator);
         mCardIndicator.setIndex(0);
 
-        drawerCreator = new DrawerCreator(rootView.findViewById(R.id.rcvDrawerContent));
-        drawerCreator.initDrawerRcv();
+//        drawerCreator = new DrawerCreator(rootView.findViewById(R.id.rcvDrawerContent));
+//        drawerCreator.initDrawerRcv();
 
         EventBus.getDefault().register(this);
     }
@@ -56,7 +60,7 @@ public class CardHomeFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        drawerCreator.initDrawerRcv();
+//        drawerCreator.initDrawerRcv();
     }
 
     private void initObservers() {
@@ -72,7 +76,7 @@ public class CardHomeFragment extends BaseFragment {
     Observer<Boolean> mExpandOb = new Observer<Boolean>() {
         @Override
         public void onChanged(Boolean expand) {
-            new Handler().postDelayed(new Runnable() {
+            mUiHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     onChangeExpandState(expand);
@@ -121,8 +125,22 @@ public class CardHomeFragment extends BaseFragment {
             EasyLog.d(TAG,"mHomeCardsOb  onChanged : "+baseCardEntities);
             mCardsAdapter.setCardEntityList(baseCardEntities);
             mCardsAdapter.notifyDataSetChanged();
+            if (mCardsAdapter.isIncludeDrawer()) {
+                scrollToFirstCard();
+            }
         }
     };
+
+    /**
+     * 初始化卡片时, 列表需要移动到第2个位置, 因为第1个位置是控件组, 需要先隐藏
+     */
+    private void scrollToFirstCard() {
+        LinearLayoutManager layoutManager = (LinearLayoutManager) mRcvCards.getLayoutManager();
+        if (layoutManager != null) {
+            layoutManager.scrollToPositionWithOffset(1,-mCardDividerWidth/2);
+        }
+    }
+
     private void initCardsRcv(View rootView) {
         EasyLog.d(TAG, "initCardsRcv");
         mRcvCards = rootView.findViewById(R.id.rcvCards);
@@ -141,7 +159,7 @@ public class CardHomeFragment extends BaseFragment {
         mRcvCards.setLayoutManager(layoutManager);
         setItemAnimator();
         if (mRcvCards.getItemDecorationCount() == 0) {
-            SimpleRcvDecoration decoration = new SimpleRcvDecoration(30, layoutManager);
+            SimpleRcvDecoration decoration = new SimpleRcvDecoration(mCardDividerWidth, layoutManager);
             mRcvCards.addItemDecoration(decoration);
         }
         mCardsAdapter = new HomeCardsAdapter(getActivity(), mRcvCards);
@@ -176,7 +194,7 @@ public class CardHomeFragment extends BaseFragment {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_cards;
+        return R.layout.fragment_cards3;
     }
 
     @Override

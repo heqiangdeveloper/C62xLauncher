@@ -31,7 +31,10 @@ public class WeatherSmallCardHolder extends WeatherCardHolder{
 
     @Override
     public void updateDefault() {
-
+        tvCardWeatherDate.setText(WeatherUtil.getToday());
+        WeatherTypeRes weatherTypeRes = new WeatherTypeRes(WeatherBean.TYPE_UNKNOWN);
+        ivCardWeatherIcon.setImageResource(weatherTypeRes.getIcon());
+        ivWeatherBg.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -44,6 +47,7 @@ public class WeatherSmallCardHolder extends WeatherCardHolder{
 
         WeatherTypeRes weatherTypeRes = new WeatherTypeRes(getWeatherType(weatherInfo.getWeatherType()));
         ivCardWeatherIcon.setImageResource(weatherTypeRes.getIcon());
+        ivWeatherBg.setVisibility(View.VISIBLE);
         ivWeatherBg.setImageResource(weatherTypeRes.getSmallCardBg());
     }
 

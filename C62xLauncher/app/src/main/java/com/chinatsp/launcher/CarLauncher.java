@@ -1,8 +1,6 @@
 package com.chinatsp.launcher;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -10,20 +8,20 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.chinatsp.apppanel.ApppanelActivity;
 import com.chinatsp.apppanel.receiver.AppInstallStatusReceiver;
 import com.chinatsp.iquting.receiver.BootBroadcastReceiver;
 
-public class CarLauncher extends AppCompatActivity {
+public class CarLauncher extends AppCompatActivity implements OnGestureAction {
     private IntentFilter intentFilter;
     private AppInstallStatusReceiver receiver;
     private BootBroadcastReceiver bootBroadcastReceiver;
-
+    GestureDetector mGestureDetector;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +31,14 @@ public class CarLauncher extends AppCompatActivity {
         //注册监听APP安装卸载广播
         registerAppInstallBroadcast();
         initVersionInfo();
+
+        mGestureDetector = new GestureDetector(new SlideGestureListener(this, this));
+
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return mGestureDetector.onTouchEvent(event);
     }
 
     private void initVersionInfo() {
@@ -77,5 +83,10 @@ public class CarLauncher extends AppCompatActivity {
         super.onDestroy();
         unregisterReceiver(receiver);
         unregisterReceiver(bootBroadcastReceiver);
+    }
+
+    @Override
+    public void goAppPanel() {
+        startActivity(new Intent(CarLauncher.this, ApppanelActivity.class));
     }
 }

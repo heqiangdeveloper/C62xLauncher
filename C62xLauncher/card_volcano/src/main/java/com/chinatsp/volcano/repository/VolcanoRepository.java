@@ -30,6 +30,7 @@ public class VolcanoRepository {
     private VideoListData mDouyinList;
     private VideoListData mXiguaList;
     private VideoListData mToutiaoList;
+    private String mCurrentSource = SOURCE_TOUTIAO;
 
 
     public static VolcanoRepository getInstance() {
@@ -40,15 +41,19 @@ public class VolcanoRepository {
 
     }
 
+    public void setCurrentSource(String currentSource) {
+        mCurrentSource = currentSource;
+    }
+
+    public String getCurrentSource() {
+        return mCurrentSource;
+    }
+
     private static class Holder {
         private static VolcanoRepository repository = new VolcanoRepository();
     }
 
-    private void init(Context context) {
-        mContext = context;
-    }
-
-    public void loadFromServer(String source, BaseObserver<VideoListData> listener) {
+    public void loadFromServer(String source, IVolcanoLoadListener listener) {
         VolcanoApi volcanoApi = new VolcanoApi();
         IHomeCardApi iHomeCardApi = volcanoApi.create(IHomeCardApi.class);
         VolcanoApiParam params = new VolcanoApiParam("GET");
@@ -80,15 +85,22 @@ public class VolcanoRepository {
                 if (volcanoResponse.getErrno() == VolcanoResponse.CODE_SUCCESS) {
                     saveList(volcanoResponse.getData(), source);
                     if (listener != null) {
-                        listener.onNext(volcanoResponse.getData());
+                        listener.onSuccess(volcanoResponse.getData());
+                    }
+                } else {
+                    if (listener != null) {
+                        listener.onFail(volcanoResponse.getMsg());
                     }
                 }
 
             }
 
             @Override
-            public void onError(ExceptionHandler.ResponeThrowable e) throws RemoteException {
+            public void onError(ExceptionHandler.ResponeThrowable e) {
                 e.printStackTrace();
+                if (listener != null) {
+                    listener.onFail(e.message);
+                }
             }
         });
     }
