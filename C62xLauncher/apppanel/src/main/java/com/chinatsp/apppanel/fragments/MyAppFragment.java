@@ -112,6 +112,9 @@ public class MyAppFragment extends Fragment {
         db = new MyAppDB(getContext());
         preferences = getContext().getSharedPreferences(MyConfigs.APPPANELSP, Context.MODE_PRIVATE);
         editor = preferences.edit();
+        editor.putBoolean(MyConfigs.SHOWDELETE,false);
+        editor.putInt(MyConfigs.SHOWDELETEPOSITION,-1);
+        editor.commit();
         EventBus.getDefault().register(this);
     }
 
