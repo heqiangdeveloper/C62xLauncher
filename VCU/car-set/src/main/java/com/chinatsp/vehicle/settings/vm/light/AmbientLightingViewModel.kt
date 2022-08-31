@@ -42,7 +42,7 @@ class AmbientLightingViewModel @Inject constructor(app: Application, model: Base
 
     private val _ambientBrightness: MutableLiveData<Int> by lazy {
         val node = Progress.AMBIENT_LIGHT_BRIGHTNESS
-        MutableLiveData(0).apply {
+        MutableLiveData(node.min).apply {
             val value = manager.doGetProgress(node)
             updateLiveData(this, value)
         }
@@ -53,7 +53,7 @@ class AmbientLightingViewModel @Inject constructor(app: Application, model: Base
 
     private val _ambientColor: MutableLiveData<Int> by lazy {
         val node = Progress.AMBIENT_LIGHT_COLOR
-        MutableLiveData(0).apply {
+        MutableLiveData(node.min).apply {
             val value = manager.doGetProgress(node)
             updateLiveData(this, value)
         }

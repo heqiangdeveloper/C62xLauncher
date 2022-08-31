@@ -482,30 +482,34 @@ class SettingManager private constructor() {
 
     private fun doSetCabinProperty(id: Int, value: Int, areaValue: Int): Boolean {
         if (null != mCarCabinManager) {
-            try {
-                AppExecutors.get()?.networkIO()?.execute {
-                    Timber.d("doActionSignal-cabin send-cabin hex-id:" + Integer.toHexString(id) + ", dec-id:" + id + ", value:" + value)
-                    mCarCabinManager!!.setIntProperty(id, areaValue, value)
+            AppExecutors.get()?.networkIO()?.execute {
+                try {
+                    val hasManager = null != mCarAudioManager
+                    Timber.d("doActionSignal-cabin send-cabin hex-id:" + Integer.toHexString(id)
+                            + ", dec-id:" + id + ", value:" + value + ", hasManager:" + hasManager)
+                    mCarCabinManager?.setIntProperty(id, areaValue, value)
+                } catch (e: Exception) {
+                    Timber.e(e)
                 }
-                return true
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
+            return true
         }
         return false
     }
 
     private fun doSetHvacProperty(id: Int, value: Int, areaValue: Int): Boolean {
         if (null != hvacManager) {
-            try {
-                AppExecutors.get()?.networkIO()?.execute {
-                    Timber.d("doActionSignal-hvac send-hvac hex-id:" + Integer.toHexString(id) + ", dec-id:" + id + ", value:" + value)
-                    hvacManager!!.setIntProperty(id, areaValue, value)
+            AppExecutors.get()?.networkIO()?.execute {
+                try {
+                    val hasManager = null != hvacManager
+                    Timber.d("doActionSignal-hvac send-hvac hex-id:" + Integer.toHexString(id)
+                            + ", dec-id:" + id + ", value:" + value + ", hasManager:" + hasManager)
+                    hvacManager?.setIntProperty(id, areaValue, value)
+                } catch (e: Exception) {
+                    Timber.e(e)
                 }
-                return true
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
+            return true
         }
         return false
     }
@@ -1242,51 +1246,54 @@ class SettingManager private constructor() {
     }
 
     fun setTrailerRemind(value: Int): Boolean {
-        try {
-            val truckInformation = mBoxManager?.truckInformation
-            if (null != truckInformation) {
-                Timber.d("setTrailerRemind start $truckInformation")
-                truckInformation.onOff = value
-                mBoxManager?.truckInformation = truckInformation
-                Timber.d("setTrailerRemind end $truckInformation")
-                return true
+        AppExecutors.get()?.networkIO()?.execute {
+            try {
+                val truckInformation = mBoxManager?.truckInformation
+                if (null != truckInformation) {
+                    Timber.d("setTrailerRemind start $truckInformation")
+                    truckInformation.onOff = value
+                    mBoxManager?.truckInformation = truckInformation
+                    Timber.d("setTrailerRemind end $truckInformation")
+                }
+            } catch (e: Throwable) {
+                Timber.e("setTrailerRemind value:$value, exception:${e.message}")
             }
-        } catch (e: Throwable) {
-            Timber.e("setTrailerRemind value:$value, exception:${e.message}")
         }
-        return false
+        return true
     }
 
     fun setTrailerDistance(value: Int): Boolean {
-        try {
-            val truckInformation = mBoxManager?.truckInformation
-            if (null != truckInformation) {
-                Timber.d("setTrailerDistance start $truckInformation")
-                truckInformation.dist = value
-                mBoxManager?.truckInformation = truckInformation
-                Timber.d("setTrailerDistance end $truckInformation")
-                return true
+        AppExecutors.get()?.networkIO()?.execute {
+            try {
+                val truckInformation = mBoxManager?.truckInformation
+                if (null != truckInformation) {
+                    Timber.d("setTrailerDistance start $truckInformation")
+                    truckInformation.dist = value
+                    mBoxManager?.truckInformation = truckInformation
+                    Timber.d("setTrailerDistance end $truckInformation")
+                }
+            } catch (e: Throwable) {
+                Timber.e("setTrailerDistance value:$value, exception:${e.message}")
             }
-        } catch (e: Throwable) {
-            Timber.e("setTrailerDistance value:$value, exception:${e.message}")
         }
-        return false
+        return true
     }
 
     fun setTrailerSensitivity(value: Int): Boolean {
-        try {
-            val truckInformation = mBoxManager?.truckInformation
-            if (null != truckInformation) {
-                Timber.d("setTrailerSensitivity start $truckInformation")
-                truckInformation.level = value
-                mBoxManager?.truckInformation = truckInformation
-                Timber.d("setTrailerSensitivity end $truckInformation")
-                return true
+        AppExecutors.get()?.networkIO()?.execute {
+            try {
+                val truckInformation = mBoxManager?.truckInformation
+                if (null != truckInformation) {
+                    Timber.d("setTrailerSensitivity start $truckInformation")
+                    truckInformation.level = value
+                    mBoxManager?.truckInformation = truckInformation
+                    Timber.d("setTrailerSensitivity end $truckInformation")
+                }
+            } catch (e: Throwable) {
+                Timber.e("setTrailerSensitivity value:$value, exception:${e.message}")
             }
-        } catch (e: Throwable) {
-            Timber.e("setTrailerSensitivity value:$value, exception:${e.message}")
         }
-        return false
+        return true
     }
 
     private val boxChangedListener = object : TboxChangedListener {

@@ -109,16 +109,16 @@ class GlobalManager private constructor() : BaseManager() {
     fun doSwitchWindow(status: Boolean): Boolean {
         val value = if (status) 0xC8 else 0x00
         Timber.d("doSwitchWindow status:%s, value:%s", status, value)
-        writeProperty(CarCabinManager.ID_FRNTLEWINPOSNSET, value, Origin.CABIN)
-        writeProperty(CarCabinManager.ID_FRNTRIWINPOSNSET, value, Origin.CABIN)
+//        writeProperty(CarCabinManager.ID_FRNTLEWINPOSNSET, value, Origin.CABIN)
+//        writeProperty(CarCabinManager.ID_FRNTRIWINPOSNSET, value, Origin.CABIN)
         return true
     }
 
     fun resetSwitchWindow(): Boolean {
         val value = 0xFE
         Timber.d("resetSwitchWindow value:%s", value)
-        writeProperty(CarCabinManager.ID_FRNTLEWINPOSNSET, value, Origin.CABIN)
-        writeProperty(CarCabinManager.ID_FRNTRIWINPOSNSET, value, Origin.CABIN)
+//        writeProperty(CarCabinManager.ID_FRNTLEWINPOSNSET, value, Origin.CABIN)
+//        writeProperty(CarCabinManager.ID_FRNTRIWINPOSNSET, value, Origin.CABIN)
         return true
     }
 

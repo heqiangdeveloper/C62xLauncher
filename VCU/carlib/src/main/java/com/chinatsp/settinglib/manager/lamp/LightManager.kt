@@ -108,7 +108,7 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
     private fun initProgress(type: Progress): Volume {
         val value = readIntProperty(type.get.signal, type.get.origin)
         val position = findBacklightLevel(value)
-        Timber.d("initProgress type:$type, value:$value, position:$position")
+        Timber.d("initProgress $type type:$type, value:$value, position:$position")
         return Volume(type, type.min, type.max, position)
     }
 
@@ -122,7 +122,7 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
     }
 
     private fun getBacklightLevel(): IntArray {
-        return intArrayOf(0x19, 0x33, 0x4C, 0x66, 0x7F, 0x99, 0xB2, 0xCC, 0xE5, 0xFF)
+        return intArrayOf(0x00, 0x19, 0x33, 0x4C, 0x66, 0x7F, 0x99, 0xB2, 0xCC, 0xE5, 0xFF)
     }
 
     override fun isCareSignal(signal: Int, origin: Origin): Boolean {
@@ -247,7 +247,9 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
                 onRadioChanged(RadioNode.LIGHT_CEREMONY_SENSE, lightCeremonySense, property)
             }
             Progress.SWITCH_BACKLIGHT_BRIGHTNESS.get.signal -> {
-                val level = findBacklightLevel(property.value as Int)
+                val value = property.value as Int
+                val level = findBacklightLevel(value)
+                Timber.d("onCabinPropertyChanged SWITCH_BACKLIGHT_BRIGHTNESS value:$value, level:$level")
                 doUpdateProgress(switchBacklight, level, true, this::doProgressChanged)
             }
             else -> {}
