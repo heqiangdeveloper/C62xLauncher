@@ -32,7 +32,7 @@ public class SmoothLineChartView extends View {
     public static final int NODE_STYLE_CIRCLE = 0;
     public static final int NODE_STYLE_RING = 1;
 
-    public static final int TOUCH_MIN_DISTANCE = 35;
+    public static final int TOUCH_MIN_DISTANCE = 40;
     private static final int CHART_COLOR = 0xFF0099CC;//默认线条颜色
     private static final int CIRCLE_SIZE = 28;//默认节点圆直径
     private static final int SELECTED_CIRCLE_SIZE = 35;//默认选中的节点圆直径
@@ -125,7 +125,7 @@ public class SmoothLineChartView extends View {
     /**
      * 设置区间
      */
-    public void setInterval(float intervalMax, float intervalMin) {
+    public void setInterval(float intervalMin, float intervalMax) {
         this.intervalMinY = intervalMin;
         this.intervalMaxY = intervalMax;
         calculateInterval();
@@ -135,19 +135,23 @@ public class SmoothLineChartView extends View {
     private void calculateInterval(){
         mXDataTop.clear();
         for (int i = 0; i < mValues.size(); i++) {
-            float count = mValues.get(i) / intervalMaxY;
-            mXDataTop.add(Math.round(count) + "DB");
+            mXDataTop.add(Math.round(mValues.get(i)) + "DB");
         }
     }
 
     /***
      * 设置路径节点
      */
-    public void setData(List<Float> yValues, List<String> xValue) {
-        if (yValues == null || xValue == null) {
+    public void setData(List<Float> yData, List<String> xValue) {
+        if (yData == null || xValue == null) {
             throw new IllegalArgumentException("valuse can not be null");
-        } else if (yValues.size() != xValue.size()) {
+        } else if (yData.size() != xValue.size()) {
             throw new IllegalArgumentException("yValues's size should be same as xValue's");
+        }
+        //计算进度值，传进来的进度值减去最大区间值，并显示在X抽
+        List<Float> yValues = new ArrayList<>();
+        for(int i = 0;i<yData.size();i++){
+            yValues.add(i,yData.get(i)-mMaxY);
         }
         mValues = yValues;
         mPoints.clear();
@@ -164,6 +168,7 @@ public class SmoothLineChartView extends View {
             }
         }
         this.mXData = xValue;
+        calculateInterval();
         invalidate();
     }
 
@@ -392,7 +397,7 @@ public class SmoothLineChartView extends View {
                 if (isMoveChange && mSelectedNode != -1 && y_new > mMinY && y_new < mMaxY) {
                     mValues.set(mSelectedNode, y_new);
                     if (mChartClickListener != null) {
-                        mChartClickListener.onClick(mSelectedNode, Math.round(mValues.get(mSelectedNode)));
+                        mChartClickListener.onClick(mSelectedNode, Math.round(mValues.get(mSelectedNode)+mMaxY));
                         calculateInterval();
                     }
                     invalidate();
@@ -402,7 +407,7 @@ public class SmoothLineChartView extends View {
                 mSelectedNode = checkClicked(event.getX(), event.getY());
                 if (mSelectedNode != -1) {
                     if (mChartClickListener != null) {
-                        mChartClickListener.onClick(mSelectedNode, Math.round(mValues.get(mSelectedNode)));
+                        mChartClickListener.onClick(mSelectedNode, Math.round(mValues.get(mSelectedNode)+mMaxY));
                         calculateInterval();
                     }
                     invalidate();

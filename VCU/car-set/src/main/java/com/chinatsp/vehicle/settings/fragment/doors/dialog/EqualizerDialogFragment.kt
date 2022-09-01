@@ -91,9 +91,12 @@ class EqualizerDialogFragment :
         val values = viewModel.getEffectValues(value)
         val toList = values.map { it.toFloat() }.toList()
         Timber.tag("luohong").d("--------------------toList:%s", toList)
+        binding.smoothChartView.minY = -9F
+        binding.smoothChartView.maxY = 9F
         binding.smoothChartView.setData(toList, xValue)
         //动态设置计算区间
-        binding.smoothChartView.setInterval(-5f,5f)
+        //binding.smoothChartView.setInterval(-5f,5f)
+
     }
 
     private fun doSendCustomEqValue() {
@@ -118,8 +121,6 @@ class EqualizerDialogFragment :
         binding.smoothChartView.textColor = Color.TRANSPARENT
         binding.smoothChartView.textSize = 20
         binding.smoothChartView.textOffset = 4
-        binding.smoothChartView.minY = 0F
-        binding.smoothChartView.maxY = 90F
         binding.smoothChartView.enableShowTag(false)
         binding.smoothChartView.enableDrawArea(true)
         binding.smoothChartView.lineColor = resources.getColor(R.color.smooth_line_color)
