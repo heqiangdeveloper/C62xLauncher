@@ -1,6 +1,7 @@
 package launcher.base.utils.property;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.lang.reflect.Method;
@@ -56,5 +57,17 @@ public class PropertyUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static boolean checkPkgInstalled(Context context, String pkgName) {
+        if (TextUtils.isEmpty(pkgName)) {
+            return false;
+        }
+        try {
+            context.getPackageManager().getPackageInfo(pkgName, 0);
+        } catch (Exception x) {
+            return false;
+        }
+        return true;
     }
 }

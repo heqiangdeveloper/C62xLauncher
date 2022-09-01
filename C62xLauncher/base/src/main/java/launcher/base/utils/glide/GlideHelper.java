@@ -1,7 +1,9 @@
 package launcher.base.utils.glide;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
@@ -29,6 +31,11 @@ public class GlideHelper {
 
     public static void loadUrlAlbumCoverRadius(Context context, ImageView imageView,
                                          String res,int radius) {
+        //如果已经destroy就不往下进行
+        if(isDestroy((Activity) context)){
+            Log.d(TAG,"Activity is destroyed");
+            return;
+        }
         if(TextUtils.isEmpty(res)){
             Log.d(TAG,"url is empty");
             return;
@@ -57,6 +64,11 @@ public class GlideHelper {
 
 
     public static void loadUrlImage(Context context, ImageView imageView, String res) {
+        //如果已经destroy就不往下进行
+        if(isDestroy((Activity) context)){
+            Log.d(TAG,"Activity is destroyed");
+            return;
+        }
         if(TextUtils.isEmpty(res)){
             Log.d(TAG,"url is empty");
             return;
@@ -70,6 +82,11 @@ public class GlideHelper {
         requestBuilder.into(imageView);
     }
     public static void loadUrlImage(Context context, ImageView imageView, String res, int width, int height, int radius) {
+        //如果已经destroy就不往下进行
+        if(isDestroy((Activity) context)){
+            Log.d(TAG,"Activity is destroyed");
+            return;
+        }
         if(TextUtils.isEmpty(res)){
             Log.d(TAG,"url is empty");
             return;
@@ -84,5 +101,18 @@ public class GlideHelper {
                     new RoundBitmapTransformation(radius, radius, radius, radius));
         }
         requestBuilder.into(imageView);
+    }
+
+    /**
+     * 判断Activity是否Destroy
+     * @param mActivity
+     * @return
+     */
+    public static boolean isDestroy(Activity mActivity) {
+        if (mActivity== null || mActivity.isFinishing() || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && mActivity.isDestroyed())) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

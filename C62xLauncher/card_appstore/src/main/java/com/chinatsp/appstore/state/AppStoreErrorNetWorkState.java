@@ -27,14 +27,14 @@ public class AppStoreErrorNetWorkState implements AppStoreState {
 
     @Override
     public void updateBigCardState(View view) {
-//        TextView tvCardIQuTingLoginTipBig = view.findViewById(R.id.tvCardIQuTingLoginTipBig);
-//        if(tvCardIQuTingLoginTipBig != null){
-//            tvCardIQuTingLoginTipBig.setVisibility(View.VISIBLE);
-//            tvCardIQuTingLoginTipBig.setText(R.string.iquting_disconnect_tip);
-//        }
-//
-//        if(view.findViewById(R.id.rcvCardIQuTingSongList) != null){
-//            view.findViewById(R.id.rcvCardIQuTingSongList).setVisibility(View.GONE);
-//        }
+        TextView tvCardIQuTingLoginTipBig = view.findViewById(R.id.tvAppStoreTipBig);
+        if(tvCardIQuTingLoginTipBig != null){
+            tvCardIQuTingLoginTipBig.setVisibility(View.VISIBLE);
+            tvCardIQuTingLoginTipBig.setText(R.string.iquting_disconnect_tip);
+        }
+
+        if(view.findViewById(R.id.rcvAppStoreAppsList) != null){
+            view.findViewById(R.id.rcvAppStoreAppsList).setVisibility(View.GONE);
+        }
     }
 }

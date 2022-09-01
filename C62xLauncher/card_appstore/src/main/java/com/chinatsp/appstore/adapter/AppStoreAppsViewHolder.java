@@ -18,6 +18,7 @@ import com.chinatsp.appstore.bean.AppInfo;
 
 import launcher.base.recyclerview.BaseViewHolder;
 import launcher.base.utils.glide.GlideHelper;
+import launcher.base.utils.property.PropertyUtils;
 import launcher.base.utils.recent.RecentAppHelper;
 
 public class AppStoreAppsViewHolder extends BaseViewHolder<AppInfo> {
@@ -56,9 +57,14 @@ public class AppStoreAppsViewHolder extends BaseViewHolder<AppInfo> {
         mIvAppItemIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG,"onClick: " + finalPackageName);
-//                RecentAppHelper.launchApp(mIvAppItemIcon.getContext(), finalPackageName);
-                AppStoreJump.jumpAppMarket(finalPackageName, v.getContext());
+                boolean isPkgInstalled = PropertyUtils.checkPkgInstalled(v.getContext(),finalPackageName);
+                Log.d(TAG,"onClick: " + finalPackageName + ",isPkgInstalled: " + isPkgInstalled);
+                //如果该应用已经安装就打开它，否则跳转到下载详情
+                if(isPkgInstalled){
+                    RecentAppHelper.launchApp(v.getContext(), finalPackageName);
+                }else {
+                    AppStoreJump.jumpAppMarket(finalPackageName, v.getContext());
+                }
             }
         });
     }
