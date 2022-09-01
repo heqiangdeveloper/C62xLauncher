@@ -8,25 +8,23 @@
         android:id="@+id/imgSoundLineH"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:src="@drawable/audio_heng_line" />
 
     <ImageView
         android:id="@+id/imgSoundLineV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:src="@drawable/audio_shu_line" />
 
     <ImageView
-        android:id="@+id/imgSouncPoint22"
+        android:id="@+id/imgSouncPoint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:src="@drawable/audio_point" />
 
     <ImageView
-        android:id="@+id/imgSouncPoint"
+        android:id="@+id/imgSouncPoint22"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/shengchang" />

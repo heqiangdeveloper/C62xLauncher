@@ -974,14 +974,14 @@ class SettingManager private constructor() {
      */
     fun setAudioBalance(uiBalanceLevelValue: Int, uiFadeLevelValue: Int) {
         try {
-            var muiBalanceLevelValue = 0;
-            var muiFadeLevelValue = 0;
+            var muiBalanceLevelValue = uiBalanceLevelValue;
+            var muiFadeLevelValue = uiFadeLevelValue;
             if (getAmpType() == 0) { //内置
-                muiBalanceLevelValue = uiBalanceLevelValue + 10;
-                muiFadeLevelValue = uiFadeLevelValue + 10;
+            //    muiBalanceLevelValue = uiBalanceLevelValue + 10;
+             //   muiFadeLevelValue = uiFadeLevelValue + 10;
             } else {
-                muiBalanceLevelValue = uiBalanceLevelValue + 6;
-                muiFadeLevelValue = uiFadeLevelValue + 6;
+           //     muiBalanceLevelValue = uiBalanceLevelValue + 6;
+          //      muiFadeLevelValue = uiFadeLevelValue + 6;
             }
             Timber.d(
                 "setAudioBalance muiBalanceLevelValue=${muiBalanceLevelValue}  " +
@@ -1185,7 +1185,8 @@ class SettingManager private constructor() {
                 if (null == mBoxManager) {
                     mBoxManager = TboxManager.getInstance()
                 }
-                mBoxManager!!.addTBoxChangedListener(boxChangedListener)
+//                ===================  bb aaa  ==
+             mBoxManager!!.addTBoxChangedListener(boxChangedListener)
             }
         } catch (e: Exception) {
             e.printStackTrace()

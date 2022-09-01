@@ -25,10 +25,10 @@ import com.chinatsp.vehicle.settings.R;
 public class SoundFieldView extends LinearLayout {
     protected static final String TAG = "SoundFieldView";
 
-    public static double BALANCE_MAX = 18.0;
-    public static double FADE_MAX = 18.0;
-    public static final int H_PADDING = 160;
-    public static final int V_PADDING = 130;
+    public static double BALANCE_MAX = 10.0;
+    public static double FADE_MAX = 10.0;
+    public static final int H_PADDING = 160; //160
+    public static final int V_PADDING = 20; //130
 
     private View mSFView = null;
     private ImageView mImgPoint = null;
@@ -90,7 +90,7 @@ public class SoundFieldView extends LinearLayout {
 
         if ((event.getAction() == MotionEvent.ACTION_MOVE || event.getAction() == MotionEvent.ACTION_UP)
                 && mIsMouseDown) {
-            Log.d(TAG, "onTouchEvent " + event.getX() + " " + event.getY());
+            Log.d(TAG, "onTouchEvent getX=" + event.getX() + " getY=" + event.getY());
             mPosX = event.getX() < H_PADDING ? H_PADDING :
                     event.getX() > getWidth() - H_PADDING ? getWidth() - H_PADDING : event.getX();
             mPosY = event.getY() < V_PADDING ? V_PADDING :
