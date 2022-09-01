@@ -21,7 +21,7 @@ public class ExpandStateManager {
 
     private final MutableLiveData<Boolean> mExpandStateLiveData = new MutableLiveData<>(false);
     private int mBigPosition = -1;
-    private int mSmallCardPosition;
+    private int mSmallCardPosition = -1;
 
     public void setExpand(boolean expandState) {
         mExpandStateLiveData.postValue(expandState);
