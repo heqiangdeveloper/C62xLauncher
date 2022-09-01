@@ -14,7 +14,6 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -75,6 +74,8 @@ public class SmoothLineChartView extends View {
     private Drawable mTagDrawable;
     private float mMinY;    //最小y刻度值
     private float mMaxY;    //最大y刻度值
+    private float intervalMinY;    //最小区间
+    private float intervalMaxY;    //最大区间
     private OnChartClickListener mChartClickListener;
     private int mSelectedNode = -1;
     private Shader shader;//渐变
@@ -97,6 +98,7 @@ public class SmoothLineChartView extends View {
 
     public SmoothLineChartView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        mXDataTop = new ArrayList<>();
         mContext = context;
         float scale = context.getResources().getDisplayMetrics().density;
         mCircleSize = scale * CIRCLE_SIZE;
@@ -121,18 +123,27 @@ public class SmoothLineChartView extends View {
     }
 
     /**
-     * 动态设置上边X轴值
-     * @param xValueTop
+     * 设置区间
      */
-    public void setXValueTop(List<String>xValueTop){
-        this.mXDataTop = xValueTop;
+    public void setInterval(float intervalMax, float intervalMin) {
+        this.intervalMinY = intervalMin;
+        this.intervalMaxY = intervalMax;
+        calculateInterval();
         invalidate();
+    }
+
+    private void calculateInterval(){
+        mXDataTop.clear();
+        for (int i = 0; i < mValues.size(); i++) {
+            float count = mValues.get(i) / intervalMaxY;
+            mXDataTop.add(Math.round(count) + "DB");
+        }
     }
 
     /***
      * 设置路径节点
      */
-    public void setData(List<Float> yValues, List<String> xValue,List<String>xValueTop) {
+    public void setData(List<Float> yValues, List<String> xValue) {
         if (yValues == null || xValue == null) {
             throw new IllegalArgumentException("valuse can not be null");
         } else if (yValues.size() != xValue.size()) {
@@ -153,7 +164,6 @@ public class SmoothLineChartView extends View {
             }
         }
         this.mXData = xValue;
-        this.mXDataTop = xValueTop;
         invalidate();
     }
 
@@ -223,14 +233,14 @@ public class SmoothLineChartView extends View {
         mPaint.setStrokeWidth(mStrokeSize);
 
         //if (!isMoveChange) {
-            mPoints.clear();
-            //计算点的坐标,并保存点的集合
-            for (int i = 0; i < size; i++) {
-                float x = 2 * mBorder + i * width / dX;
-                float y = mBorder + height - (mValues.get(i) - mMinY) * height / dY;
-                mPoints.add(new PointF(x, y));
-            }
-       // }
+        mPoints.clear();
+        //计算点的坐标,并保存点的集合
+        for (int i = 0; i < size; i++) {
+            float x = 2 * mBorder + i * width / dX;
+            float y = mBorder + height - (mValues.get(i) - mMinY) * height / dY;
+            mPoints.add(new PointF(x, y));
+        }
+        // }
         //计算曲线路径
         float lX = 0, lY = 0;
         mPath.moveTo(mPoints.get(0).x, mPoints.get(0).y);
@@ -268,7 +278,7 @@ public class SmoothLineChartView extends View {
             mShadowPaint.setStyle(Paint.Style.FILL);
             mShadowPaint.setAntiAlias(true);
             //shader = new LinearGradient(getWidth() / 2, getHeight(), getWidth() / 2, 0, mContext.getResources().getColor(R.color.smooth_bg_color_end), mContext.getResources().getColor(R.color.smooth_bg_color_start), Shader.TileMode.MIRROR);
-            shader = new LinearGradient(getWidth() / 2, getHeight(), getWidth() / 2, 0, new int[]{Color.TRANSPARENT,mContext.getResources().getColor(R.color.smooth_bg_color_end),mContext.getResources().getColor(R.color.smooth_bg_color_start)},new float[]{0.3f,0.1f,0.8f}, Shader.TileMode.CLAMP);
+            shader = new LinearGradient(getWidth() / 2, getHeight(), getWidth() / 2, 0, new int[]{Color.TRANSPARENT, mContext.getResources().getColor(R.color.smooth_bg_color_end), mContext.getResources().getColor(R.color.smooth_bg_color_start)}, new float[]{0.3f, 0.1f, 0.8f}, Shader.TileMode.CLAMP);
             mShadowPaint.setShader(shader);
             mPath.lineTo(mPoints.get(size - 1).x, height + mBorder);
             mPath.lineTo(mPoints.get(0).x, height + mBorder);
@@ -296,7 +306,7 @@ public class SmoothLineChartView extends View {
         mPaint.setStrokeWidth(0.5f);
         mPaint.setStyle(Paint.Style.FILL);
         for (PointF point : mPoints) {
-            canvas.drawLine(point.x, height / 2 - mBorder, point.x, height+mBorder, mPaint);
+            canvas.drawLine(point.x, height / 2 - mBorder, point.x, height + mBorder, mPaint);
         }
         //绘制圆环内圆填充
         if (mNodeStyle == NODE_STYLE_RING) {
@@ -349,11 +359,11 @@ public class SmoothLineChartView extends View {
             mPaint.setColor(Color.WHITE);
             final Rect textRect = new Rect();
             mPaint.getTextBounds(mXData.get(i), 0, mXData.get(i).length(), textRect);
-            canvas.drawText(mXData.get(i), 0,  mXData.get(i).length(), mPoints.get(i).x - textRect.width() * 0.5f, getMeasuredHeight()-10, mPaint);
+            canvas.drawText(mXData.get(i), 0, mXData.get(i).length(), mPoints.get(i).x - textRect.width() * 0.5f, getMeasuredHeight() - 10, mPaint);
 
             mPaint.setTextSize(DensityUtils.sp2px(mContext, 22));
             mPaint.getTextBounds(mXDataTop.get(i), 0, mXDataTop.get(i).length(), textRect);
-            canvas.drawText(mXDataTop.get(i), 0,  mXDataTop.get(i).length(), mPoints.get(i).x - textRect.width() * 0.5f, 35, mPaint);
+            canvas.drawText(mXDataTop.get(i), 0, mXDataTop.get(i).length(), mPoints.get(i).x - textRect.width() * 0.5f, 35, mPaint);
         }
 
         //绘制Y刻度
@@ -380,9 +390,10 @@ public class SmoothLineChartView extends View {
             case MotionEvent.ACTION_MOVE://滑动
                 float y_new = coordinateConversionY(touchY);
                 if (isMoveChange && mSelectedNode != -1 && y_new > mMinY && y_new < mMaxY) {
-                    mValues.set(mSelectedNode,y_new);
+                    mValues.set(mSelectedNode, y_new);
                     if (mChartClickListener != null) {
                         mChartClickListener.onClick(mSelectedNode, Math.round(mValues.get(mSelectedNode)));
+                        calculateInterval();
                     }
                     invalidate();
                 }
@@ -392,6 +403,7 @@ public class SmoothLineChartView extends View {
                 if (mSelectedNode != -1) {
                     if (mChartClickListener != null) {
                         mChartClickListener.onClick(mSelectedNode, Math.round(mValues.get(mSelectedNode)));
+                        calculateInterval();
                     }
                     invalidate();
                 }

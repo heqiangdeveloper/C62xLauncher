@@ -2,6 +2,7 @@ package com.chinatsp.vehicle.settings.fragment.doors.dialog
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IRadioManager
@@ -29,9 +30,6 @@ class EqualizerDialogFragment :
 
     private val xValueTop: List<String>
         get() = listOf("4dB", "-2dB", "4dB", "2dB", "4dB")
-
-    private val xTestValueTop: List<String>
-        get() = listOf("10dB", "-6dB", "20dB", "11dB", "65dB")
 
     override fun getLayoutId(): Int {
         return R.layout.equalizer_dialog_fragmet
@@ -92,9 +90,10 @@ class EqualizerDialogFragment :
         Timber.d("onPostSelected tabView:$tabView, value:$value")
         val values = viewModel.getEffectValues(value)
         val toList = values.map { it.toFloat() }.toList()
-        binding.smoothChartView.setData(toList, xValue, xValueTop)
-        //动态设置上边X轴数据
-        binding.smoothChartView.setXValueTop(xTestValueTop)
+        Timber.tag("luohong").d("--------------------toList:%s", toList)
+        binding.smoothChartView.setData(toList, xValue)
+        //动态设置计算区间
+        binding.smoothChartView.setInterval(-5f,5f)
     }
 
     private fun doSendCustomEqValue() {
@@ -120,7 +119,7 @@ class EqualizerDialogFragment :
         binding.smoothChartView.textSize = 20
         binding.smoothChartView.textOffset = 4
         binding.smoothChartView.minY = 0F
-        binding.smoothChartView.maxY = 15F
+        binding.smoothChartView.maxY = 90F
         binding.smoothChartView.enableShowTag(false)
         binding.smoothChartView.enableDrawArea(true)
         binding.smoothChartView.lineColor = resources.getColor(R.color.smooth_line_color)
