@@ -24,7 +24,7 @@ enum class Progress(
      */
     AMBIENT_LIGHT_BRIGHTNESS(
         min = 0x00,
-        max = 0x05,
+        max = 0x06,
         get = CanLocate(signal = CarCabinManager.ID_ALC_AL_RESPONSE_BRIGHTNESS),
         set = CanLocate(signal = CarCabinManager.ID_ALC_HUM_ALC_BRIGHTNESS_GRADE)
     ),
@@ -85,7 +85,7 @@ enum class Progress(
      */
     SWITCH_BACKLIGHT_BRIGHTNESS(
         min = 0x00,
-        max = 0x09,
+        max = 0x0A,
         get = CanLocate(signal = CarCabinManager.ID_BCM_BACKLIGHT_LEVEL_STATUS),
         set = CanLocate(signal = CarCabinManager.ID_ALC_HUM_BACKLIGHT_LEVEL)
     ),

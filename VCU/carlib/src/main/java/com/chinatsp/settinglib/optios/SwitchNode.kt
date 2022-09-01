@@ -2,6 +2,7 @@ package com.chinatsp.settinglib.optios
 
 import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.hvac.CarHvacManager
+import android.car.media.CarAudioManager
 import com.chinatsp.settinglib.CarAdapter
 import com.chinatsp.settinglib.bean.Norm
 import com.chinatsp.settinglib.sign.Origin
@@ -264,7 +265,7 @@ enum class SwitchNode(
     ),
 
     /**
-     * 车辆音效--音效--环境音效 (no signal)
+     * 车辆音效--音效--环境音效
      * set -> 环境音效开关[0x1,0,0x0,0x2] 0x0:Inactive; 0x1:ON(default); 0x2:OFF 0x3:Reserved
      * get -> 环境音效开关状态 0x0:OFF; 0x1:ON
      */
