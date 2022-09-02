@@ -76,4 +76,11 @@ public class SmallCardsAdapter extends RecyclerView.Adapter<SmallCardViewHolder>
         holder.bind(position, mCardEntityList.get(position));
     }
 
+    public LauncherCard getItem(int position) {
+        if (position >= 0 && position < getItemCount()) {
+            return mCardEntityList.get(position);
+        }
+        return null;
+    }
+
 }

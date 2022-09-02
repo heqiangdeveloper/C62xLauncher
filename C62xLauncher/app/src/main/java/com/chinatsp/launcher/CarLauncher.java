@@ -56,6 +56,7 @@ public class CarLauncher extends AppCompatActivity implements OnGestureAction {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        findViewById(R.id.btnTestGoAppPanel).setVisibility(View.VISIBLE);
     }
 
     public void toApppanel(View view){

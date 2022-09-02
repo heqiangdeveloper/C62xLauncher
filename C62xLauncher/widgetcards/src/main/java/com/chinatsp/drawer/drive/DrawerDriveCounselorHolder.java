@@ -12,6 +12,7 @@ import com.chinatsp.driveinfo.DriveInfo;
 import com.chinatsp.widgetcards.R;
 
 import launcher.base.recyclerview.BaseViewHolder;
+import launcher.base.utils.EasyLog;
 
 public class DrawerDriveCounselorHolder extends BaseViewHolder<DrawerEntity> {
     private final DriveInfoDrawerController mController;
