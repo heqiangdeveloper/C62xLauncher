@@ -43,6 +43,8 @@ enum class Progress(
      * 主机屏亮度
      */
     HOST_SCREEN_BRIGHTNESS(
+        min = 0x01,
+        max = 0x0A,
         get = CanLocate(signal = -1),
         set = CanLocate(signal = -1)
     ),

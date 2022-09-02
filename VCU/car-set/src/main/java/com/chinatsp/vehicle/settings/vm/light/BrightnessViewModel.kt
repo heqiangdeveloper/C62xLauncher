@@ -10,6 +10,7 @@ import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.common.library.frame.base.BaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -52,8 +53,9 @@ class BrightnessViewModel @Inject constructor(app: Application, model: BaseModel
         liveData.value?.let {
             val isMin = it.min == node.min
             val isMax = it.max == node.max
-            val isPos = it.pos == value;
-            if (isMin && isMin && isMin) {
+            val isPos = it.pos == value
+            Timber.d("updateVolumeValue mode:$node, value:$value, isMin:$isMin, isMax:$isMax, isPos:$isPos")
+            if (isMin && isMax && isPos) {
                 return
             }
             if (!isMin) {

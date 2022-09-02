@@ -3,6 +3,8 @@ package com.chinatsp.settinglib
 import android.car.VehicleAreaType
 import android.car.hardware.cabin.CarCabinManager
 import android.content.Context
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.database.ContentObserver
 import android.os.SystemProperties
 import android.provider.Settings
@@ -53,9 +55,10 @@ object VcuUtils {
 
     fun isCareLevel(@Level vararg levels: Int, expect: Boolean = true): Boolean {
         val value = getLevelValue()
-        Timber.d("isCareLevel value: $value")
         val actual = levels.contains(value)
-        return !(actual xor expect)
+        val result = !(actual xor expect)
+        Timber.d("isCareLevel value: $value, actual:$actual, result:$result")
+        return result
     }
 
     fun getLevelValue(): Int {
@@ -63,11 +66,11 @@ object VcuUtils {
         Timber.d("getLevelValue value: $value")
         return value
     }
-    
-    fun isAmplifier(): Boolean {
+
+    val isAmplifier: Boolean by lazy {
         val value = getConfigParameters(OffLine.AMP_TYPE, 0)
         Timber.d("isAmplifier value: $value")
-        return 0 == value
+        0 == value
     }
 
     fun putInt(context: Context = BaseApp.instance, key: String, value: Int): Boolean {
@@ -123,6 +126,18 @@ object VcuUtils {
             Timber.e(e)
         }
         return false
+    }
+
+    val versionName: String by lazy {
+        try {
+            return@lazy BaseApp.instance.packageManager.getPackageInfo(
+                BaseApp.instance.packageName,
+                PackageManager.GET_META_DATA
+            )?.versionName ?: ""
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return@lazy ""
     }
 
 }

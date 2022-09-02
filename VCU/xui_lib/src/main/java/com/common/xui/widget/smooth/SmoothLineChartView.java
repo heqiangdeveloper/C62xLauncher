@@ -139,6 +139,13 @@ public class SmoothLineChartView extends View {
         }
     }
 
+    public int[] obtainProgress() {
+        if (null != mValues) {
+            return mValues.stream().mapToInt(it -> Math.round(it / intervalMaxY)).toArray();
+        }
+        return null;
+    }
+
     /***
      * 设置路径节点
      */
