@@ -48,6 +48,7 @@ import com.chinatsp.apppanel.decoration.AppManageDecoration;
 import com.chinatsp.apppanel.event.DeletedCallback;
 import com.chinatsp.apppanel.event.SelectedCallback;
 import com.chinatsp.apppanel.utils.Utils;
+import com.chinatsp.apppanel.window.AppManagementWindow;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -322,7 +323,8 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             }
         }else if(tv.getText().toString().trim().equals(context.getString(R.string.appmanagement_name))){
             if(isTimeEnabled()) {//防抖处理
-                showAppManagementDialog();
+                //showAppManagementDialog();
+                AppManagementWindow.getInstance(context).show();
             }
         }else {
             if(iv.getVisibility() == View.VISIBLE){//如果删除按钮显示了，执行删除应用逻辑

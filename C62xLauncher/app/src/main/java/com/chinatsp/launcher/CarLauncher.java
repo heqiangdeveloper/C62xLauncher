@@ -13,14 +13,17 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
+import com.chinatsp.apppanel.AppConfigs.Constant;
 import com.chinatsp.apppanel.ApppanelActivity;
 import com.chinatsp.apppanel.receiver.AppInstallStatusReceiver;
+import com.chinatsp.apppanel.receiver.AppManagementReceiver;
 import com.chinatsp.iquting.receiver.BootBroadcastReceiver;
 
 public class CarLauncher extends AppCompatActivity implements OnGestureAction {
     private IntentFilter intentFilter;
     private AppInstallStatusReceiver receiver;
     private BootBroadcastReceiver bootBroadcastReceiver;
+    private AppManagementReceiver appManagementReceiver;
     GestureDetector mGestureDetector;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +33,8 @@ public class CarLauncher extends AppCompatActivity implements OnGestureAction {
         registerBootBroadcast();
         //注册监听APP安装卸载广播
         registerAppInstallBroadcast();
+        //注册监听打开或关闭应用管理的广播
+        registerAppManagementBroadcast();
         initVersionInfo();
 
         mGestureDetector = new GestureDetector(new SlideGestureListener(this, this));
@@ -78,11 +83,19 @@ public class CarLauncher extends AppCompatActivity implements OnGestureAction {
         registerReceiver(bootBroadcastReceiver,intentFilter);
     }
 
+    private void registerAppManagementBroadcast(){
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(Constant.APPMANEGEMENTBROADCAST);
+        appManagementReceiver = new AppManagementReceiver();
+        registerReceiver(appManagementReceiver,intentFilter);
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(receiver);
         unregisterReceiver(bootBroadcastReceiver);
+        unregisterReceiver(appManagementReceiver);
     }
 
     @Override
