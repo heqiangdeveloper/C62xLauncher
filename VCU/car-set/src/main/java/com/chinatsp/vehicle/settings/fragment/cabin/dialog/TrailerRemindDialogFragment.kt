@@ -1,6 +1,8 @@
 package com.chinatsp.vehicle.settings.fragment.cabin.dialog
 
 import android.os.Bundle
+import android.view.View
+import android.view.ViewGroup
 import com.chinatsp.settinglib.listener.IThemeChangeListener
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.ISwitchManager
@@ -97,6 +99,7 @@ class TrailerRemindDialogFragment :
     private fun addSwitchLiveDataListener() {
         viewModel.trailerFunction.observe(this) {
             doUpdateSwitch(SwitchNode.DRIVE_TRAILER_REMIND, it)
+            resetFollowTrailerSwitch(it)
         }
     }
 
@@ -126,7 +129,30 @@ class TrailerRemindDialogFragment :
     private fun setSwitchListener() {
         binding.trailerRemindSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.DRIVE_TRAILER_REMIND, buttonView, isChecked)
+            resetFollowTrailerSwitch(binding.trailerRemindSwitch.isChecked)
         }
+    }
+
+    private fun resetFollowTrailerSwitch(status: Boolean) {
+        updateViewEnable(binding.sensorSensitivityLinearLayout, status)
+        updateViewEnable(binding.trailerRemindDistance, status)
+    }
+
+    private fun updateViewEnable(view: View, status: Boolean) {
+        if (view is ViewGroup) {
+            val childCount = view.childCount
+            val intRange = 0 until childCount
+            intRange.forEach {
+                view.getChildAt(it)?.let {
+                    updateViewEnable(it, status)
+                }
+            }
+            return
+        }
+        val alpha = if (status) 1.0f else 0.7f
+        view.isEnabled = status
+        view.alpha = alpha
+
     }
 
 }

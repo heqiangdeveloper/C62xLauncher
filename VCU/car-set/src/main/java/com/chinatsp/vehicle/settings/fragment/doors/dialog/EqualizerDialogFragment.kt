@@ -2,7 +2,6 @@ package com.chinatsp.vehicle.settings.fragment.doors.dialog
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IRadioManager
@@ -50,7 +49,7 @@ class EqualizerDialogFragment :
 
     private fun initViewDisplay() {
         val eqRadio = binding.soundEffectRadio
-        if (VcuUtils.isAmplifier()) {
+        if (VcuUtils.isAmplifier) {
             eqRadio.getChildAt(0).visibility = View.GONE
         }
     }
@@ -91,36 +90,44 @@ class EqualizerDialogFragment :
         val values = viewModel.getEffectValues(value)
         val toList = values.map { it.toFloat() }.toList()
         Timber.tag("luohong").d("--------------------toList:%s", toList)
-        binding.smoothChartView.minY = -9F
-        binding.smoothChartView.maxY = 9F
         binding.smoothChartView.setData(toList, xValue)
         //动态设置计算区间
-        //binding.smoothChartView.setInterval(-5f,5f)
-
     }
 
     private fun doSendCustomEqValue() {
         val node = RadioNode.SYSTEM_SOUND_EFFECT
         val values = node.get.values
         viewModel.currentEffect.let {
-            Timber.d("doSendCustomEqValue it.value:${it.value}, coreId:${values[values.size -1]}")
-            if (it.value == values[values.size -1]) {
-                val lev1 = (binding.smoothChartView.maxY / 5).toInt()
-                val lev2 = (binding.smoothChartView.maxY / 4).toInt()
-                val lev3 = (binding.smoothChartView.maxY / 3).toInt()
-                val lev4 = (binding.smoothChartView.maxY / 2).toInt()
-                val lev5 = (binding.smoothChartView.maxY / 1).toInt()
+            Timber.d("doSendCustomEqValue it.value:${it.value}, coreId:${values[values.size - 1]}")
+            if (it.value == values[values.size - 1]) {
+                val progress = binding.smoothChartView.obtainProgress()
+                var lev1 = 0
+                var lev2 = 0
+                var lev3 = 0
+                var lev4 = 0
+                var lev5 = 0
+                if (null != progress && progress.size == 5) {
+                    lev1 = progress[0]
+                    lev2 = progress[1]
+                    lev3 = progress[2]
+                    lev4 = progress[3]
+                    lev5 = progress[4]
+                }
                 manager.doSetEQ(node.obtainSelectValue(it.value!!), lev1, lev2, lev3, lev4, lev5)
             }
         }
     }
 
     private fun initView() {
+        val offset = if (VcuUtils.isAmplifier) 5 else 9
+        binding.smoothChartView.setInterval(-1 * offset.toFloat(), offset.toFloat())
         binding.smoothChartView.isCustomBorder = true
         binding.smoothChartView.setTagDrawable(R.drawable.ac_blue_52)
         binding.smoothChartView.textColor = Color.TRANSPARENT
         binding.smoothChartView.textSize = 20
         binding.smoothChartView.textOffset = 4
+        binding.smoothChartView.minY = -1 * offset.toFloat()
+        binding.smoothChartView.maxY = offset.toFloat()
         binding.smoothChartView.enableShowTag(false)
         binding.smoothChartView.enableDrawArea(true)
         binding.smoothChartView.lineColor = resources.getColor(R.color.smooth_line_color)
@@ -130,8 +137,7 @@ class EqualizerDialogFragment :
         binding.smoothChartView.setOnChartClickListener { position, value ->
 //            viewModel.setAudioEQ(position)
             doSendCustomEqValue()
-            Timber.tag("luohong").d("--------------------position:%s", position)
-            Timber.tag("luohong").d("--------------------value:%s", value)
+            Timber.tag("luohong").d("-----------position:%s, value:%s", position, value)
         }
         onPostSelected(RadioNode.SYSTEM_SOUND_EFFECT, viewModel.currentEffect.value!!)
     }

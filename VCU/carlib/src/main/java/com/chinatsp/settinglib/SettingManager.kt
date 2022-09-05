@@ -486,7 +486,8 @@ class SettingManager private constructor() {
                 try {
                     val hasManager = null != mCarAudioManager
                     Timber.d("doActionSignal-cabin send-cabin hex-id:" + Integer.toHexString(id)
-                            + ", dec-id:" + id + ", value:" + value + ", hasManager:" + hasManager)
+                            + ", dec-id:" + id + ", value:" + value + ", hasManager:" + hasManager
+                            + ", versionName:" + VcuUtils.versionName)
                     mCarCabinManager?.setIntProperty(id, areaValue, value)
                 } catch (e: Exception) {
                     Timber.e(e)
@@ -503,7 +504,8 @@ class SettingManager private constructor() {
                 try {
                     val hasManager = null != hvacManager
                     Timber.d("doActionSignal-hvac send-hvac hex-id:" + Integer.toHexString(id)
-                            + ", dec-id:" + id + ", value:" + value + ", hasManager:" + hasManager)
+                            + ", dec-id:" + id + ", value:" + value + ", hasManager:" + hasManager
+                            + ", versionName:" + VcuUtils.versionName)
                     hvacManager?.setIntProperty(id, areaValue, value)
                 } catch (e: Exception) {
                     Timber.e(e)

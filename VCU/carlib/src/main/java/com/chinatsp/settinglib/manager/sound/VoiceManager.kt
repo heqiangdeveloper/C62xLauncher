@@ -50,13 +50,19 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
             val mcuSet = HashSet<Int>().apply {
                 /**【反馈】返回设置音源音量信息*/
                 add(CarMcuManager.ID_AUDIO_VOL_SETTING_INFO)
+                if (VcuUtils.isAmplifier) {
+                    add(SwitchNode.SPEED_VOLUME_OFFSET_INSERT.get.signal)
+                }
             }
             put(Origin.MCU, mcuSet)
             val cabinSet = HashSet<Int>().apply {
 //                add(CarCabinManager.ID_AMP_LOUD_SW_STS)
                 add(SwitchNode.AUDIO_SOUND_TONE.get.signal)
                 add(SwitchNode.AUDIO_SOUND_HUAWEI.get.signal)
-                add(SwitchNode.SPEED_VOLUME_OFFSET.get.signal)
+                //当为外置功放时注册
+                if (!VcuUtils.isAmplifier) {
+                    add(SwitchNode.SPEED_VOLUME_OFFSET.get.signal)
+                }
                 add(SwitchNode.AUDIO_SOUND_LOUDNESS.get.signal)
 
                 add(RadioNode.ICM_VOLUME_LEVEL.get.signal)
@@ -90,6 +96,14 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
+    val volumeSpeedSwitch: SwitchNode by lazy {
+        if (VcuUtils.isAmplifier) {
+            SwitchNode.SPEED_VOLUME_OFFSET_INSERT
+        } else {
+            SwitchNode.SPEED_VOLUME_OFFSET
+        }
+    }
+
     private val huaweiAtomic: AtomicBoolean by lazy {
         val node = SwitchNode.AUDIO_SOUND_HUAWEI
 //        AtomicBoolean(node.default).apply {
@@ -102,7 +116,7 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
     }
 
     private val offsetAtomic: AtomicBoolean by lazy {
-        val node = SwitchNode.SPEED_VOLUME_OFFSET
+        val node = volumeSpeedSwitch
 //        AtomicBoolean(node.default).apply {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, value)
@@ -186,13 +200,28 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         return true
     }
 
-    private fun onMcuPropertyChanged(property: CarPropertyValue<*>) {
+    override fun onMcuPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             CarMcuManager.ID_AUDIO_VOL_SETTING_INFO -> {
                 onMcuVolumeChanged(property)
             }
+            volumeSpeedSwitch.get.signal -> {
+                val value = property.value
+                if (value is Array<*> && value.size >= 15) {
+                    onSwitchChanged(volumeSpeedSwitch, offsetAtomic, value[14])
+                }
+            }
             else -> {}
         }
+    }
+
+    fun onSwitchChanged(node: SwitchNode, atomic: AtomicBoolean, value: Any?) {
+        if (value !is Int) {
+            Timber.e("onSwitchChanged but value is not Int! node:$node, value:$value")
+            return
+        }
+        Timber.d("doSwitchChanged node:$node, value:$value, status:${node.isOn(value)}")
+        onSwitchChanged(node, atomic, value, this::doUpdateSwitchValue, this::doSwitchChanged)
     }
 
     private fun initVolume(type: Progress): Volume {
@@ -298,7 +327,7 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
             SwitchNode.AUDIO_SOUND_HUAWEI -> {
                 huaweiAtomic.get()
             }
-            SwitchNode.SPEED_VOLUME_OFFSET -> {
+            volumeSpeedSwitch -> {
                 offsetAtomic.get()
             }
             SwitchNode.AUDIO_SOUND_LOUDNESS -> {
@@ -320,7 +349,7 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
             SwitchNode.AUDIO_SOUND_HUAWEI -> {
                 writeProperty(node.set.signal, node.value(status), node.set.origin, node.area)
             }
-            SwitchNode.SPEED_VOLUME_OFFSET -> {
+            volumeSpeedSwitch -> {
                 writeProperty(node.set.signal, node.value(status), node.set.origin, node.area)
             }
             SwitchNode.AUDIO_SOUND_LOUDNESS -> {
@@ -349,7 +378,10 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
+
+
     override fun onHvacPropertyChanged(property: CarPropertyValue<*>) {
+        super.onHvacPropertyChanged(property)
         when (property.propertyId) {
             else -> {}
         }
@@ -357,8 +389,10 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
 
     override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
-            SwitchNode.SPEED_VOLUME_OFFSET.get.signal -> {
-                onSwitchChanged(SwitchNode.SPEED_VOLUME_OFFSET, offsetAtomic, property)
+            volumeSpeedSwitch.get.signal -> {
+                if (!VcuUtils.isAmplifier) {
+                    onSwitchChanged(volumeSpeedSwitch, offsetAtomic, property)
+                }
             }
             SwitchNode.AUDIO_SOUND_TONE.get.signal -> {
                 onSwitchChanged(SwitchNode.AUDIO_SOUND_TONE, toneAtomic, property)

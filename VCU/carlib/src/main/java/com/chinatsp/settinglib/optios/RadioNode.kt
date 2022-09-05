@@ -333,7 +333,7 @@ enum class RadioNode(
         default = 0x0
     ) {
         override fun isValid(value: Int, isGet: Boolean): Boolean {
-            if (VcuUtils.isAmplifier() && value == 0) {
+            if (VcuUtils.isAmplifier && value == 0) {
                 return false
             }
             return if (isGet) {

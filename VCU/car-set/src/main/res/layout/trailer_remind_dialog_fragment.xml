@@ -86,6 +86,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/trailer_remind_distance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/x45"
@@ -106,5 +107,6 @@
                 app:tcv_defaultSelection="1"
                 app:tcv_items="@array/trailer_remind_distance_option" />
         </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

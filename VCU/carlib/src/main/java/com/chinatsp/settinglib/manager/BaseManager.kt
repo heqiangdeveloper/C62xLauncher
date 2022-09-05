@@ -74,6 +74,9 @@ abstract class BaseManager : IManager {
             Origin.HVAC -> {
                 onHvacPropertyChanged(property)
             }
+            Origin.MCU -> {
+                onMcuPropertyChanged(property)
+            }
             else -> {}
         }
         return true
@@ -192,6 +195,8 @@ abstract class BaseManager : IManager {
     protected open fun onHvacPropertyChanged(property: CarPropertyValue<*>) {}
 
     protected open fun onCabinPropertyChanged(property: CarPropertyValue<*>) {}
+
+    protected open fun onMcuPropertyChanged(property: CarPropertyValue<*>) {}
 
     open fun doOuterControlCommand(cmd: Cmd, callback: ICmdCallback?) {}
 }

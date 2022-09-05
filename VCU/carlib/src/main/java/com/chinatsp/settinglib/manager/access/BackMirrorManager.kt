@@ -92,7 +92,7 @@ class BackMirrorManager private constructor() : BaseManager(), ISwitchManager {
             try {
                 writeLock.lock()
                 unRegisterVcuListener(serial, identity)
-                listenerStore.put(serial, WeakReference(listener))
+                listenerStore[serial] = WeakReference(listener)
             } finally {
                 writeLock.unlock()
             }

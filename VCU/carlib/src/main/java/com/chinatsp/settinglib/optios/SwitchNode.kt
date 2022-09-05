@@ -2,6 +2,7 @@ package com.chinatsp.settinglib.optios
 
 import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.hvac.CarHvacManager
+import android.car.hardware.mcu.CarMcuManager
 import android.car.media.CarAudioManager
 import com.chinatsp.settinglib.CarAdapter
 import com.chinatsp.settinglib.bean.Norm
@@ -184,7 +185,7 @@ enum class SwitchNode(
     DRIVE_TRAILER_REMIND(
         get = Norm(on = 0x1, off = 0x2, signal = -1),
         set = Norm(on = 0x1, off = 0x2, signal = -1),
-        default = true
+        default = false
     ),
 
     /**
@@ -244,6 +245,12 @@ enum class SwitchNode(
         default = false
     ),
 
+    SPEED_VOLUME_OFFSET_INSERT(
+        get = Norm(on = 0x01, off = 0x02, origin = Origin.MCU, signal = CarMcuManager.ID_MCU_RET_AUDIO_INFO),
+        set = Norm(on = 0x01, off = 0x02, signal = CarCabinManager.ID_SETVOLUMESPEED),
+        default = false
+    ),
+
     /**
      * 车辆音效--声音--华为音效
      */
@@ -281,18 +288,18 @@ enum class SwitchNode(
      */
     TOUCH_PROMPT_TONE(
         get = Norm(
-            on = CarAdapter.Constants.BEEP_VOLUME_LEVEL_MIDDLE,
-            off = CarAdapter.Constants.BEEP_VOLUME_LEVEL_CLOSE, origin = Origin.SPECIAL
+            on = CarAudioManager.BEEP_VOLUME_LEVEL_MIDDLE,
+            off = CarAudioManager.BEEP_VOLUME_LEVEL_CLOSE, origin = Origin.SPECIAL
         ),
         set = Norm(
-            on = CarAdapter.Constants.BEEP_VOLUME_LEVEL_MIDDLE,
-            off = CarAdapter.Constants.BEEP_VOLUME_LEVEL_CLOSE, origin = Origin.SPECIAL
+            on = CarAudioManager.BEEP_VOLUME_LEVEL_MIDDLE,
+            off = CarAudioManager.BEEP_VOLUME_LEVEL_CLOSE, origin = Origin.SPECIAL
         ),
         validValues = intArrayOf(
-            CarAdapter.Constants.BEEP_VOLUME_LEVEL_CLOSE,
-            CarAdapter.Constants.BEEP_VOLUME_LEVEL_LOW,
-            CarAdapter.Constants.BEEP_VOLUME_LEVEL_MIDDLE,
-            CarAdapter.Constants.BEEP_VOLUME_LEVEL_HIGH,
+            CarAudioManager.BEEP_VOLUME_LEVEL_CLOSE,
+            CarAudioManager.BEEP_VOLUME_LEVEL_LOW,
+            CarAudioManager.BEEP_VOLUME_LEVEL_MIDDLE,
+            CarAudioManager.BEEP_VOLUME_LEVEL_HIGH,
         ),
         default = false,
         careOn = false

@@ -120,10 +120,10 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         if (null != eqId) {
             index = eqIdArray.indexOf(eqId)
             if (index !in 0..node.get.values.size) {
-                index = if (VcuUtils.isAmplifier()) 1 else 0
+                index = if (VcuUtils.isAmplifier) 1 else 0
             }
         } else {
-            index = if (VcuUtils.isAmplifier()) 1 else 0
+            index = if (VcuUtils.isAmplifier) 1 else 0
         }
         return node.get.values[index]
     }
@@ -153,7 +153,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
     }
 
     fun getEqIdArray(): IntArray {
-        val amplifier = VcuUtils.isAmplifier()
+        val amplifier = VcuUtils.isAmplifier
         return if (amplifier) insetArray else outsetArray
     }
 
@@ -185,7 +185,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         return true
     }
 
-    private fun onMcuPropertyChanged(property: CarPropertyValue<*>) {
+    override fun onMcuPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             CarMcuManager.ID_AUDIO_VOL_SETTING_INFO -> {
                 onMcuVolumeChanged(property)
