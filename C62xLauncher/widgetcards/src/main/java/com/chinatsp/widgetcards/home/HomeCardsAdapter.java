@@ -59,11 +59,7 @@ public class HomeCardsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private CardFrameViewHolder createCardFrameHolder(ViewGroup parent, int viewType) {
         LauncherCard cardEntity = CardManager.getInstance().findByType(viewType);
         ViewGroup layout;
-        if (cardEntity.isCanExpand()) {
-            layout = (ViewGroup) mLayoutInflater.inflate(R.layout.item_card_frame, parent, false);
-        } else {
-            layout = (ViewGroup) mLayoutInflater.inflate(R.layout.item_card_frame_locked, parent, false);
-        }
+        layout = (ViewGroup) mLayoutInflater.inflate(R.layout.item_card_frame, parent, false);
         layout.setTag(cardEntity.getName());
         View innerCard = cardEntity.getLayout(layout.getContext());
         layout.addView(innerCard, 0);
@@ -111,8 +107,8 @@ public class HomeCardsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof CardFrameViewHolder) {
             int cardPosition = mIncludeDrawer ? position - 1 : position;
-            EasyLog.d(TAG, "onBindViewHolder : " + mCardEntityList.get(cardPosition).getName()+" , position:"+position);
-            ((CardFrameViewHolder) holder).bind(cardPosition, mCardEntityList.get(cardPosition));
+            EasyLog.d(TAG, "onBindViewHolder : " + mCardEntityList.get(cardPosition).getName() + " , position:" + position);
+            ((CardFrameViewHolder) holder).bind(position, mCardEntityList.get(cardPosition));
         }
     }
 }

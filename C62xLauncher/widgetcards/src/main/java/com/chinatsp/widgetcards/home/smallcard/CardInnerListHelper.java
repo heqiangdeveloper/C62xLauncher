@@ -2,25 +2,27 @@ package com.chinatsp.widgetcards.home.smallcard;
 
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.chinatsp.widgetcards.home.CardFrameViewHolder;
-import com.chinatsp.widgetcards.home.ExpandStateManager;
 import com.chinatsp.widgetcards.manager.CardManager;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import card.base.LauncherCard;
+import launcher.base.utils.EasyLog;
 
 public class CardInnerListHelper {
     public RecyclerView mRecyclerView;
     private PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
     private SmallCardsAdapter smallCardsAdapter;
+    private OnSelectCardListener mOnSelectCardListener;
 
-    public CardInnerListHelper(RecyclerView recyclerView) {
+    public CardInnerListHelper(RecyclerView recyclerView, OnSelectCardListener onSelectCardListener) {
+        mOnSelectCardListener = onSelectCardListener;
         if (recyclerView == null) {
             return;
         }
@@ -31,17 +33,37 @@ public class CardInnerListHelper {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(smallCardsAdapter);
         pagerSnapHelper.attachToRecyclerView(mRecyclerView);
+        mRecyclerView.addOnScrollListener(mOnScrollListener);
     }
+
+    RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                try {
+                    int currentPosition = ((RecyclerView.LayoutParams) recyclerView.getChildAt(0).getLayoutParams()).getViewAdapterPosition();
+                    LauncherCard card = smallCardsAdapter.getItem(currentPosition);
+                    EasyLog.d("CardInnerListHelper", "" + currentPosition + " , card:" + card.getName());
+                    if (mOnSelectCardListener != null) {
+                        mOnSelectCardListener.onSelectCard(card);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+    };
 
     public void showInnerList(int currentSmallCardPosition, int bigCardPosition) {
         if (mRecyclerView == null) {
             return;
         }
-        mRecyclerView.scrollToPosition(0);
         mRecyclerView.setVisibility(View.VISIBLE);
-        List<LauncherCard> smallCardList = getSmallCardList(bigCardPosition);
+        List<LauncherCard> smallCardList = getSmallCardList(bigCardPosition - 1);
         smallCardsAdapter.setCardEntityList(smallCardList);
-        mRecyclerView.scrollToPosition(currentSmallCardPosition);
+        mRecyclerView.scrollToPosition(currentSmallCardPosition - 1);
     }
 
 
@@ -67,4 +89,7 @@ public class CardInnerListHelper {
         return result;
     }
 
+    public interface OnSelectCardListener {
+        void onSelectCard(LauncherCard card);
+    }
 }

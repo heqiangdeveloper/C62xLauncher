@@ -84,10 +84,13 @@ public class CardHomeFragment extends BaseFragment {
             }, 600);
         }
     };
+
     private void onChangeExpandState(Boolean expand) {
-        EasyLog.d(TAG, "onChangeExpandState: "+expand);
         int smallCardPosition = ExpandStateManager.getInstance().getSmallCardPosition();
-        if (smallCardPosition >= 0 && smallCardPosition < mCardsAdapter.getItemCount()) {
+        EasyLog.d(TAG, "onChangeExpandState: " + expand + ", smallCardPosition:" + smallCardPosition);
+        int firstCardIndex = mCardsAdapter.isIncludeDrawer() ? 1 : 0;
+        if (smallCardPosition >= firstCardIndex && smallCardPosition < mCardsAdapter.getItemCount()) {
+            EasyLog.d(TAG, "onChangeExpandState: notifyItemChanged");
             mCardsAdapter.notifyItemChanged(smallCardPosition);
         }
         if (!expand) {
@@ -122,7 +125,7 @@ public class CardHomeFragment extends BaseFragment {
         @SuppressLint("NotifyDataSetChanged")
         @Override
         public void onChanged(List<LauncherCard> baseCardEntities) {
-            EasyLog.d(TAG,"mHomeCardsOb  onChanged : "+baseCardEntities);
+            EasyLog.d(TAG, "mHomeCardsOb  onChanged : " + baseCardEntities);
             mCardsAdapter.setCardEntityList(baseCardEntities);
             mCardsAdapter.notifyDataSetChanged();
             if (mCardsAdapter.isIncludeDrawer()) {
@@ -137,14 +140,14 @@ public class CardHomeFragment extends BaseFragment {
     private void scrollToFirstCard() {
         LinearLayoutManager layoutManager = (LinearLayoutManager) mRcvCards.getLayoutManager();
         if (layoutManager != null) {
-            layoutManager.scrollToPositionWithOffset(1,-mCardDividerWidth/2);
+            layoutManager.scrollToPositionWithOffset(1, -mCardDividerWidth / 2);
         }
     }
 
     private void initCardsRcv(View rootView) {
         EasyLog.d(TAG, "initCardsRcv");
         mRcvCards = rootView.findViewById(R.id.rcvCards);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity()){
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity()) {
             @Override
             public boolean canScrollHorizontally() {
                 // 展开时, 禁止滑动
