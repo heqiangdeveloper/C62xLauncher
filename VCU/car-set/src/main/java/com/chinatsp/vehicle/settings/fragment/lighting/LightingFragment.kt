@@ -58,9 +58,11 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
     }
 
     private fun initViewDisplay() {
-        if (VcuUtils.isCareLevel(Level.LEVEL3, expect = true)) {
+        if (VcuUtils.isCareLevel(Level.LEVEL3, expect = true)||VcuUtils.isCareLevel(Level.LEVEL4, expect = true)) {
             binding.lightingTurnExternal.visibility = View.GONE
             binding.line4.visibility = View.GONE
+            binding.lightingCarInside.visibility = View.GONE
+            binding.line7.visibility = View.GONE
         }
     }
 

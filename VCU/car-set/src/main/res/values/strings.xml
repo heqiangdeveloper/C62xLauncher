@@ -54,6 +54,7 @@
     <string name="cabin_safe_fortify_success_tone">设防成功提示音</string>
     <string name="cabin_safe_fortify_failure_tone">设防失败提示音</string>
     <string name="cabin_safe_video_safe_mode">视频安全模式</string>
+    <string name="cabin_safe_video_safe_mode_content">视频安全模式开启后，⻋速⼤于15km/h时，本地视频将⾃动关闭。</string>
 
     <string name="cabin_wheel_electronic_mode">电子助力转向模式</string>
     <string name="cabin_wheel_press_key">方向盘自定义按键</string>
@@ -80,8 +81,10 @@
     <string name="cabin_seat_copilot_top">副驾上车</string>
 
     <string name="cabin_other_trailer_remind">拖车提醒</string>
+    <string name="cabin_other_trailer_remind_content">车辆被摇曳、牵引超过设定的提醒距离时，将通过APP或短信提醒车主。</string>
     <string name="cabin_other_close">已关闭</string>
     <string name="cabin_other_battery_optimization">蓄电池优化</string>
+    <string name="cabin_other_battery_optimization_content">监控车辆电能消耗情况，低电量状态下，对整车舒适性功能（空调、大屏等）进行管理</string>
     <string name="cabin_other_wireless_charging">无线充电</string>
     <string name="cabin_other_wireless_charging_lamp">无线充电灯</string>
     <string name="cabin_other_sensor_sensitivity">传感器灵敏度</string>
@@ -101,6 +104,9 @@
     <string name="car_window_lock_car">锁车自动关窗</string>
     <string name="car_window_rainy_day">雨天自动关窗</string>
     <string name="car_window_wiper">雨刮维修</string>
+    <string name="car_window_lock_content">功能开启后，可通过钥匙遥控关闭/开启四门车窗</string>
+    <string name="car_window_lock_car_content">功能开启后，锁车时，四门车窗，天窗和遮阳帘自动关闭</string>
+    <string name="car_window_wiper_content">对⻛挡玻璃⾬刮器进⾏维护操作时，务必打开⾬刮维修模式。打开⾬刮维修，⾬刮将⾃动运⾏⾄维修位置。功能开启后，⻋速⾸次⼤于120km/h时，天窗⾃动关闭，此时向后拨动天窗开关可再次开启天窗。</string>
 
     <string name="car_trunk_electric_function">电动尾门电动功能</string>
     <string name="car_trunk_intelligence_into">电动尾门智能进入</string>
@@ -113,6 +119,8 @@
     <string name="car_trunk_buzzer_close">蜂鸣器报警已关闭</string>
     <string name="car_trunk_light_open">灯光闪烁报警已开启</string>
     <string name="car_trunk_light_close">灯光闪烁报警已关闭</string>
+    <string name="car_trunk_content">模式⼀：携带合法智能钥匙进⼊后备箱感应区域内，然后退出此区域，再次进⼊感应区域，电动尾⻔⾃动开启；\n
+        模式⼆：携带合法智能钥匙进⼊后备箱感应区域内，原地站⽴6s以上，电动尾⻔⾃动开启。</string>
 
     <string name="car_mirror_automatic_folding">外后视镜自动折叠</string>
     <string name="car_mirror_automatic_folding_close">后视镜自动折叠已关闭</string>
@@ -138,7 +146,7 @@
     <string name="drive_full_speed_range">全速范围内为驾驶员提供车辆的横纵向辅助</string>
     <string name="drive_open">已开启</string>
     <string name="drive_close">已关闭</string>
-    <string name="drive_warning_fcw">前向碰撞预警FCW</string>
+    <string name="drive_warning_fcw">前碰撞预警FCW</string>
     <string name="drive_fcw_txt_content">检测到前向预警碰撞风险时预警驾驶员</string>
     <string name="drive_sensitivity_setting">灵敏度设置</string>
     <string name="drive_sensitivity">灵敏度</string>
@@ -155,7 +163,7 @@
     <string name="drive_voice_prompt">语音提示</string>
     <string name="drive_hma_title">智能远光灯辅助HMA</string>
     <string name="drive_hma_content">远近光灯自动切换的辅助</string>
-    <string name="drive_sla_title">速度限制提醒SLA</string>
+    <string name="drive_sla_title">限速标志识别TSR</string>
     <string name="drive_sla_content">探测行驶道路上或道路旁的限速标志</string>
     <string name="drive_target_tone">目标提示音</string>
     <string name="drive_vehicle_departure">前车驶离提示</string>
@@ -222,6 +230,7 @@
     <string name="sound_volume_balance">音量平衡</string>
     <string name="sound_environmental">环境音效</string>
     <string name="sound_standard">标准</string>
+    <string name="sound_loudness_control_content">在小音量时，加强低音和高音；反之，大音量时，降低低音和高音，以让响度均衡</string>
 
     <string name="vcu_action_switch_failed">切换失败</string>
     <string name="vcu_eps_action_switch_check">请确认是否满⾜以下条件：\n1.发动机已启动\n2.处于安全⻋速下\n3.其他条件请阅读整⻋说明书</string>

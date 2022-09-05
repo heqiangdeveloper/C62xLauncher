@@ -123,7 +123,6 @@
                             android:id="@+id/light_switch_backlight_seek_bar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/x11"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/lighting_physical_switch_title"
                             app:xsb_insideRangeLineStrokeWidth="@dimen/x32"
@@ -247,7 +246,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/switch_item_option_height"
                         android:orientation="horizontal"
-                        android:visibility="gone"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/line6">
 
@@ -269,7 +267,6 @@
                     <View
                         android:id="@+id/line7"
                         style="@style/line"
-                        android:visibility="gone"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/lighting_car_inside" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
