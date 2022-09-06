@@ -29,6 +29,7 @@ import com.anarchy.classifyview.event.ReStoreDataEvent;
 import com.anarchy.classifyview.listener.SoftKeyBoardListener;
 import com.anarchy.classifyview.util.MyConfigs;
 import com.chinatsp.apppanel.AppConfigs.AppLists;
+import com.chinatsp.apppanel.AppConfigs.Priorities;
 import com.chinatsp.apppanel.R;
 import com.chinatsp.apppanel.adapter.AddAppAdapter;
 import com.chinatsp.apppanel.adapter.MyAppInfoAdapter;
@@ -42,6 +43,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -80,6 +82,7 @@ public class MyAppFragment extends Fragment {
     private List<List<LocationBean>> data;
     private static boolean isStoringData = false;
     private List<String> canUninstallNameLists = new ArrayList<>();
+    private boolean isNeedSort = false;//是否需要排序
     public MyAppFragment() {
         // Required empty public constructor
     }
@@ -131,11 +134,14 @@ public class MyAppFragment extends Fragment {
         LocationBean locationBean = null;
         Log.d(TAG,"db.countLocation() = " + db.countLocation());
         if(db.countLocation() == 0){//没有数据记录
+            isNeedSort = true;
             getOriginalData();
         }else {
+            isNeedSort = false;
             data = db.getData1();
             Log.d(TAG,"data.size = " + data.size());
             if(data.size() == 0){
+                isNeedSort = true;
                 getOriginalData();
             }
         }
@@ -143,6 +149,9 @@ public class MyAppFragment extends Fragment {
         addPushInstalledApp();//添加通过push方式安装的应用
         deleteUninstallApp();//删除掉未安装的应用，应用管理除外
         checkDVR();//检查车型DVR
+        if(isNeedSort){//首次使用，需要按默认顺序排序
+            sortWithPriority();
+        }
         loadingTv.setVisibility(View.GONE);
         mMyAppInfoAdapter = new MyAppInfoAdapter(view.getContext(), data);
         appInfoClassifyView.setAdapter(mMyAppInfoAdapter);
@@ -204,6 +213,7 @@ public class MyAppFragment extends Fragment {
                 drawable = info.activityInfo.loadIcon(getContext().getPackageManager());
                 locationBean.setName((info.activityInfo.loadLabel(getContext().getPackageManager())).toString());
             }
+            locationBean.setPriority(getPriority(locationBean.getPackageName()));
             locationBean.setCanuninstalled(AppLists.isSystemApplication(getContext(),locationBean.getPackageName()) ? 0:1);
             locationBean.setTitle("");
             locationBean.setImgByte(null);
@@ -354,6 +364,44 @@ public class MyAppFragment extends Fragment {
         }
     }
 
+    private int getPriority(String pkgName){
+        if(pkgName.equals(AppLists.systemSettings)){
+            return Priorities.systemSettings;
+        }else if(pkgName.equals(AppLists.vehicleSettings)){
+            return Priorities.vehicleSettings;
+        }else if(pkgName.equals(AppLists.media)){
+            return Priorities.media;
+        }else if(pkgName.equals(AppLists.usercenter)){
+            return Priorities.usercenter;
+        }else if(pkgName.equals(AppLists.btPhone)){
+            return Priorities.btPhone;
+        }else if(pkgName.equals(AppLists.iot)){
+            return Priorities.iot;
+        }else if(pkgName.equals(AppLists.dvr)){
+            return Priorities.dvr;
+        }else if(pkgName.equals(AppLists.ifly)){
+            return Priorities.ifly;
+        }else if(pkgName.equals(AppLists.userbook)){
+            return Priorities.userbook;
+        }else if(pkgName.equals(AppLists.appmarket)){
+            return Priorities.appmarket;
+        }else if(pkgName.equals(AppLists.APPMANAGEMENT)){
+            return Priorities.appmanagement;
+        }else if(pkgName.equals(AppLists.iquting)){
+            return Priorities.iquting;
+        }else if(pkgName.equals(AppLists.volcano)){
+            return Priorities.volcano;
+        }else if(pkgName.equals(AppLists.amap)){
+            return Priorities.amap;
+        }else if(pkgName.equals(AppLists.easyconn)){
+            return Priorities.easyconn;
+        }else if(pkgName.equals(AppLists.weather)){
+            return Priorities.weather;
+        }else {
+            return Priorities.MIN_PRIORITY;
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Event event){
         if(event instanceof ChangeTitleEvent){
@@ -497,6 +545,24 @@ public class MyAppFragment extends Fragment {
         }
         packageLists = packageLists.stream().distinct().collect(Collectors.toList());//去掉重复的包名
         return packageLists;
+    }
+
+    /*
+    *  All app默认排序
+    *  系统设置，车辆设置，多媒体，个人中心，电话，行车顾问，行车记录仪，语音，电子说明书，华为应用商城，应用管理，爱趣听，火山车娱，
+    *  高德导航，亿连，天气
+    */
+    private void sortWithPriority(){
+        Collections.sort(data, new Comparator<List<LocationBean>>() {
+            @Override
+            public int compare(List<LocationBean> o1, List<LocationBean> o2) {
+                //0代表相等，1表示大于，-1表示小于
+                int i = o1.get(0).getPriority() - o2.get(0).getPriority();
+                return i;
+            }
+        });
+
+        //更新存储数据的工作在onResume()中进行
     }
 
     @Override
