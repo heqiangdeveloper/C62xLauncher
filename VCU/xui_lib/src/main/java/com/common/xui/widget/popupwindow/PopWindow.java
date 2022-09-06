@@ -187,5 +187,17 @@ public class PopWindow extends PopupWindow {
 		//在控件上方显示
 		showAtLocation(v, Gravity.NO_GRAVITY, (location[0]) - mPopupWidth / 2, location[1] - mPopupHeight);
 	}
+	/**
+	 * 设置显示在v下方(以v的左边距为开始位置)
+	 * @param v
+	 */
+	public void showDown(View v) {
+		//获取需要在其上方显示的控件的位置信息
+		int[] location = new int[2];
+		v.getLocationOnScreen(location);
+		//在控件上方显示
+		//showAtLocation(v, Gravity.NO_GRAVITY, (location[0]) - mPopupWidth / 2, location[1] - mPopupHeight);
+		showAsDropDown(v,-200,0,Gravity.BOTTOM);
+	}
 
 }

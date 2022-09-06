@@ -3,6 +3,8 @@ package com.chinatsp.vehicle.settings.fragment.doors
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageView
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.ISwitchManager
@@ -18,6 +20,7 @@ import com.common.animationlib.AnimationDrawable
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.picker.ArcSeekBar
+import com.common.xui.widget.popupwindow.PopWindow
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -48,6 +51,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         setRadioListener()
 
         initViewDisplay()
+        initDetailsClickListener()
     }
 
     private fun initViewDisplay() {
@@ -79,7 +83,11 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
             binding.ivBuzzerAlarms
         )
     }
-
+    private fun initDetailsClickListener() {
+        binding.electricTailDetails.setOnClickListener {
+            showPopWindow(R.string.car_trunk_content,it)
+        }
+    }
     private fun initArcSeekBar() {
         binding.arcSeekBar.progress = 75
         binding.arcSeekBar.setOnChangeListener(this)
@@ -300,6 +308,10 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
             view.isEnabled = status
             return
         }
+        if (view is AppCompatImageView) {
+            view.isEnabled = status
+            return
+        }
         if (view is TabControlView) {
             view.updateEnable(status)
             return
@@ -327,5 +339,11 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
 
     }
 
+    private fun showPopWindow(id:Int, view:View){
+        val popWindow = PopWindow(activity,R.layout.pop_window)
+        var text: TextView = popWindow.findViewById(R.id.content) as TextView
+        text.text = resources.getString(id)
+        popWindow.showDown(view)
+    }
 
 }

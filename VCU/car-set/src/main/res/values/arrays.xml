@@ -107,8 +107,8 @@
 
     <string-array name="adas_lane_assist_option_titles">
         <item>智能车道居中</item>
-        <item>偏离预警</item>
-        <item>偏离辅助</item>
+        <item>车道偏离预警</item>
+        <item>车道保持辅助</item>
     </string-array>
     <string-array name="adas_lane_assist_option_values">
         <item>2</item>

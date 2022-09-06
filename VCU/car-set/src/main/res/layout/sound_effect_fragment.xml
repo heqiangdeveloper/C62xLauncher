@@ -223,7 +223,8 @@
                     android:id="@+id/line3"
                     style="@style/line"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/sound_volume_balance_compensation" />
+                    app:layout_constraintTop_toBottomOf="@id/sound_volume_balance_compensation"
+                    android:visibility="gone"/>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/sound_loudness_control_compensation"
@@ -231,13 +232,22 @@
                     android:layout_height="@dimen/switch_item_option_height"
                     android:orientation="horizontal"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/line3">
+                    app:layout_constraintTop_toBottomOf="@id/line3"
+                    android:visibility="gone">
 
                     <TextView
+                        android:id="@+id/sound_loudness_text"
                         style="@style/switch_row_option_style"
                         android:text="@string/sound_loudness_control"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/sound_loudness_details"
+                        style="@style/image_prompt"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toRightOf="@+id/sound_loudness_text"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <com.common.xui.widget.button.switchbutton.SwitchButton

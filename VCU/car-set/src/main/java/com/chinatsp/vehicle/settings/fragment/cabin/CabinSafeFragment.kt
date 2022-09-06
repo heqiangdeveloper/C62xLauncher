@@ -1,6 +1,8 @@
 package com.chinatsp.vehicle.settings.fragment.cabin
 
 import android.os.Bundle
+import android.view.View
+import android.widget.TextView
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.cabin.SafeManager
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -10,6 +12,7 @@ import com.chinatsp.vehicle.settings.databinding.CabinSafeFragmentBinding
 import com.chinatsp.vehicle.settings.vm.cabin.SafeViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
+import com.common.xui.widget.popupwindow.PopWindow
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -34,6 +37,7 @@ class CabinSafeFragment : BaseFragment<SafeViewModel, CabinSafeFragmentBinding>(
         initSwitchOption()
         addSwitchLiveDataListener()
         setSwitchListener()
+        initDetailsClickListener()
     }
 
     private fun addSwitchLiveDataListener() {
@@ -42,6 +46,12 @@ class CabinSafeFragment : BaseFragment<SafeViewModel, CabinSafeFragmentBinding>(
         }
         viewModel.videoModeFunction.observe(this) {
             doUpdateSwitch(SwitchNode.DRIVE_SAFE_VIDEO_PLAYING, it)
+        }
+    }
+
+    private fun initDetailsClickListener() {
+        binding.cabinAcAutoWindsDetails.setOnClickListener {
+            showPopWindow(R.string.cabin_safe_video_safe_mode_content,it)
         }
     }
 
@@ -69,6 +79,13 @@ class CabinSafeFragment : BaseFragment<SafeViewModel, CabinSafeFragmentBinding>(
         binding.cabinSafeMovieSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.DRIVE_SAFE_VIDEO_PLAYING, buttonView, isChecked)
         }
+    }
+
+    private fun showPopWindow(id:Int, view: View){
+        val popWindow = PopWindow(activity,R.layout.pop_window)
+        var text: TextView = popWindow.findViewById(R.id.content) as TextView
+        text.text = resources.getString(id)
+        popWindow.showDown(view)
     }
 
 }
