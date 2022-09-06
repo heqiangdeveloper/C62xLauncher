@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.chinatsp.carservice.AppCarService;
 import com.chinatsp.iquting.service.IqutingBindService;
+import com.chinatsp.iquting.service.TencentSdkService;
 import com.chinatsp.widgetcards.manager.CardManager;
 
 import card.theme.ThemeService;
@@ -30,6 +31,7 @@ public class LauncherApplication extends Application {
         AppServiceManager.addService(AppServiceManager.SERVICE_PLATFORM, new PlatformService());
         AppServiceManager.addService(AppServiceManager.SERVICE_THEME, new ThemeService(this));
         AppServiceManager.addService(AppServiceManager.SERVICE_CAR, new AppCarService(this));
+        AppServiceManager.addService(AppServiceManager.SERVICE_TENCENT_SDK, new TencentSdkService());
         NetworkStateReceiver.getInstance().registerReceiver(this);//注册网络监听
         IqutingBindService.getInstance().bindPlayService(this);//注册爱趣听播放服务
         IqutingBindService.getInstance().bindContentService(this);//注册爱趣听内容服务
