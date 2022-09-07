@@ -31,6 +31,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     private var animationCloseDoor: AnimationDrawable = AnimationDrawable()
     private var animationFlashAlarm: AnimationDrawable = AnimationDrawable()
     private var animationBuzzerAlarms: AnimationDrawable = AnimationDrawable()
+    private var progress:Int=75
 
     private val manager: SternDoorManager
         get() = SternDoorManager.instance
@@ -62,11 +63,6 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     }
 
     private fun initAnimation() {
-        animationOpenDoor.setAnimation(
-            activity,
-            R.drawable.trunk_door_animation,
-            binding.ivCarTrunk
-        )
         animationCloseDoor.setAnimation(
             activity,
             R.drawable.trunk_door_close_animation,
@@ -89,7 +85,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         }
     }
     private fun initArcSeekBar() {
-        binding.arcSeekBar.progress = 75
+        binding.arcSeekBar.progress = progress
         binding.arcSeekBar.setOnChangeListener(this)
     }
 
@@ -169,7 +165,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
                 }
 
                 override fun endAnimation() {
-                    if (binding.accessSternElectricSw.isChecked) {
+                    if (binding.accessSternElectricSw.isChecked&& binding.intelligenceInto.visibility==View.GONE) {
                         binding.arcSeekBar.visibility = View.VISIBLE
                     } else {
                         binding.arcSeekBar.visibility = View.GONE
@@ -196,7 +192,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
 
             override fun endAnimation() {
                 binding.ivFlashAlarm.visibility = View.GONE
-                if (binding.accessSternElectricSw.isChecked) {
+                if (binding.accessSternElectricSw.isChecked&& binding.intelligenceInto.visibility==View.GONE) {
                     binding.arcSeekBar.visibility = View.VISIBLE
                 } else {
                     binding.arcSeekBar.visibility = View.GONE
@@ -213,11 +209,23 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
             binding.arcSeekBar.visibility = View.GONE
             return
         }
+        binding.carTrunkDoorHeight.visibility = View.VISIBLE
+        if(progress==50){
+            animationOpenDoor.progressStart(progress)
+            binding.arcSeekBar.visibility = View.VISIBLE
+            return
+        }else if(progress in 51..75){
+            animationOpenDoor.setAnimation(activity, R.drawable.trunk_door_animation_1, binding.ivCarTrunk)
+        }else{
+            animationOpenDoor.setAnimation(activity, R.drawable.trunk_door_animation, binding.ivCarTrunk)
+        }
+
         animationOpenDoor.start(false, 50, object : AnimationDrawable.AnimationLisenter {
             override fun startAnimation() {
             }
 
             override fun endAnimation() {
+                animationOpenDoor.setAnimation(activity, R.drawable.trunk_door_animation, binding.ivCarTrunk)
                 if (binding.accessSternElectricSw.isChecked) {
                     binding.arcSeekBar.visibility = View.VISIBLE
                 } else {
@@ -225,7 +233,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
                 }
             }
         })
-        binding.carTrunkDoorHeight.visibility = View.VISIBLE
+
     }
 
 
@@ -328,6 +336,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     }
 
     override fun onProgressChanged(progress: Float, max: Float, fromUser: Boolean) {
+        this.progress = progress.toInt()
         animationOpenDoor.progressStart(progress.toInt())
     }
 
@@ -341,7 +350,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
 
     private fun showPopWindow(id:Int, view:View){
         val popWindow = PopWindow(activity,R.layout.pop_window)
-        var text: TextView = popWindow.findViewById(R.id.content) as TextView
+        val text: TextView = popWindow.findViewById(R.id.content) as TextView
         text.text = resources.getString(id)
         popWindow.showDown(view)
     }
