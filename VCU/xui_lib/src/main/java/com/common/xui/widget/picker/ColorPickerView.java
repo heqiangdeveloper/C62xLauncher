@@ -476,7 +476,7 @@ public class ColorPickerView extends View {
 
     private boolean inBoundOfColorTable(int ex, int ey) {
         if (orientation == Orientation.HORIZONTAL) {
-            if (ex <= mLeft + mRadius + 30 || ex >= (mRight - mRadius) - 20) {
+            if (ex <= mLeft + mRadius + 50 || ex >= (mRight - mRadius) - 40) {
                 return false;
             }
         } else {
@@ -648,9 +648,9 @@ public class ColorPickerView extends View {
         }
         int x = (index * (959 / colorIndex)) + (mLeft + mRadius + 70);
         if (x > 900) {
-            curX = x - 40;
+            curX = x - 60;
         } else {
-            curX = x + 10;
+            curX = x + 30;
         }
         this.mIndicatorColor = Color.rgb(colorInfoList.get(index - 1).getR(), colorInfoList.get(index - 1).getG(), colorInfoList.get(index - 1).getB());
         needReDrawIndicator = true;
