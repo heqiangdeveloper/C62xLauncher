@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.listener.IOptionListener
+import com.chinatsp.settinglib.manager.sound.EffectManager
 import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -33,6 +34,16 @@ class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
         val node = RadioNode.SPEED_VOLUME_OFFSET
         MutableLiveData(manager.doGetRadioOption(node))
     }
+
+//    val currentEffect: LiveData<Int>
+//        get() = _currentEffect
+//
+//    private val _currentEffect: MutableLiveData<Int> by lazy {
+//        val node = RadioNode.SYSTEM_SOUND_EFFECT
+//        val value = EffectManager.instance.doGetRadioOption(node)
+//        MutableLiveData(value)
+//    }
+    
     val volumeLevel: LiveData<Int>
         get() = _volumeLevel
 
@@ -80,11 +91,13 @@ class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
     override fun onCreate() {
         super.onCreate()
         keySerial = VoiceManager.instance.onRegisterVcuListener(0, this)
+        EffectManager.instance.onRegisterVcuListener(0, this)
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         VoiceManager.instance.unRegisterVcuListener(keySerial)
+        EffectManager.instance.unRegisterVcuListener(keySerial)
+        super.onDestroy()
     }
 
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
@@ -117,6 +130,9 @@ class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
             RadioNode.NAVI_AUDIO_MIXING -> {
                 doUpdate(_audioMixing, value)
             }
+//            RadioNode.SYSTEM_SOUND_EFFECT -> {
+//                doUpdate(_currentEffect, value)
+//            }
             else -> {}
         }
     }

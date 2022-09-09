@@ -239,10 +239,18 @@
                         app:layout_constraintTop_toBottomOf="@id/line6">
 
                         <TextView
+                            android:id="@+id/sound_loudness_text"
                             style="@style/switch_row_option_style"
                             android:text="@string/sound_loudness_control"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/sound_loudness_details"
+                            style="@style/image_prompt"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toRightOf="@+id/sound_loudness_text"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <com.common.xui.widget.button.switchbutton.SwitchButton

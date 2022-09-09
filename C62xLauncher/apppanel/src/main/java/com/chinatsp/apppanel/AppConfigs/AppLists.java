@@ -22,14 +22,23 @@ public class AppLists {
     private static final String carcorderdemo = "com.mediatek.carcorderdemo";//Carcorder Demo
     private static final String b561Radio = "com.oushang.radio";//b561 Radio
 
-    private static final String appstore = "com.cusc.appstore";//应用商城
-    private static final String settings = "com.chinatsp.settings";//设置
-    private static final String btPhone = "com.chinatsp.phone";//蓝牙电话
-    private static final String filemanager = "com.chinatsp.filemanager";//文件管理
-    private static final String systemSettings = "com.chinatsp.vehiclesetting";//系统设置
-    private static final String vehicleSettings = "com.chinatsp.vehicle.settings";//车辆设置
-    private static final String buryPoint = "com.oushang.datastat";//埋点
+    public static final String btPhone = "com.chinatsp.phone";//蓝牙电话
+    public static final String filemanager = "com.chinatsp.filemanager";//文件管理
+    public static final String systemSettings = "com.chinatsp.settings";//系统设置
+    public static final String vehicleSettings = "com.chinatsp.vehicle.settings";//车辆设置
+    public static final String buryPoint = "com.oushang.datastat";//埋点
     public static final String dvr = "com.miren.dvrc62xf06";//DVR
+    public static final String iquting = "com.tencent.wecarflow";//爱趣听
+    public static final String media = "com.chinatsp.media";//多媒体
+    public static final String usercenter = "com.chinatsp.usercenter";//个人中心
+    public static final String iot = "com.uaes.iot";//行车顾问
+    public static final String ifly = "com.chinatsp.ifly";//语音
+    public static final String userbook = "com.deheshuntian.baic_c62x_f06_om";//电子说明书
+    public static final String appmarket = "com.huawei.appmarket.car.landscape";//华为应用商城
+    public static final String volcano = "com.bytedance.byteautoservice";//火山车娱
+    public static final String amap = "com.autonavi.amapauto";//高德地图
+    public static final String easyconn = "net.easyconn";//亿连手机互联
+    public static final String weather = "com.iflytek.autofly.weather";//天气
 
     public static final String APPMANAGEMENT = "com.chinatsp.appmanagement";//应用管理，自定义的包名，实际不存在此应用
     //不显示在桌面的应用名单

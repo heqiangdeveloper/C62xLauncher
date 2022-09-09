@@ -261,7 +261,9 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         return when (node) {
             RadioNode.SYSTEM_SOUND_EFFECT -> {
 //                writeProperty(node.set.signal, value, node.set.origin)
-                doUpdateSoundEffect(node, value)
+                val result = doUpdateSoundEffect(node, value)
+                if (result) doUpdateRadioValue(node, eqMode, value, this::doOptionChanged)
+                result
             }
             RadioNode.AUDIO_ENVI_AUDIO -> {
                 writeProperty(node.set.signal, value, node.set.origin)
@@ -318,11 +320,11 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
     }
 
     override fun doGetVolume(type: Progress): Volume? {
-        TODO("Not yet implemented")
+        return null
     }
 
     override fun doSetVolume(type: Progress, position: Int): Boolean {
-        TODO("Not yet implemented")
+        return false
     }
 
     override fun onHvacPropertyChanged(property: CarPropertyValue<*>) {

@@ -1,0 +1,21 @@
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <item
+        android:drawable="@drawable/trunk_door_00"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/trunk_door_01"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/trunk_door_02"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/trunk_door_03"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/trunk_door_04"
+        android:duration="50" />
+    <item
+        android:drawable="@drawable/trunk_door_05"
+        android:duration="50" />
+</animation-list>

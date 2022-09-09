@@ -17,6 +17,7 @@ import com.chinatsp.vehicle.settings.fragment.cabin.dialog.TrailerRemindDialogFr
 import com.chinatsp.vehicle.settings.vm.cabin.OtherViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
+import com.common.xui.widget.popupwindow.PopWindow
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,6 +37,7 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
         addSwitchLiveDataListener()
         setSwitchListener()
         initViewsDisplay()
+        initDetailsClickListener()
     }
 
     private fun initViewsDisplay() {
@@ -50,6 +52,15 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
             binding.line4.visibility = View.GONE
         }
 
+    }
+
+    private fun initDetailsClickListener() {
+        binding.cabinOtherTrailerRemindDetails.setOnClickListener {
+            showPopWindow(R.string.cabin_other_trailer_remind_content,it)
+        }
+        binding.cabinOtherBatteryOptimizationDetails.setOnClickListener {
+            showPopWindow(R.string.cabin_other_battery_optimization_content,it)
+        }
     }
 
     private fun initSwitchOption() {
@@ -130,5 +141,10 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
             }
         }
     }
-
+    private fun showPopWindow(id:Int, view: View){
+        val popWindow = PopWindow(activity,R.layout.pop_window)
+        var text: TextView = popWindow.findViewById(R.id.content) as TextView
+        text.text = resources.getString(id)
+        popWindow.showDown(view)
+    }
 }

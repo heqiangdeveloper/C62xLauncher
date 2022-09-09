@@ -24,10 +24,18 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
+                    android:id="@+id/remote_rose_window"
                     style="@style/switch_row_option_style"
                     android:text="@string/car_window_remote_control"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/remote_rose_window_details"
+                    style="@style/image_prompt"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/remote_rose_window"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.common.xui.widget.button.switchbutton.SwitchButton
@@ -55,10 +63,18 @@
                 app:layout_constraintTop_toBottomOf="@id/line1">
 
                 <TextView
+                    android:id="@+id/car_lock_text"
                     style="@style/switch_row_option_style"
                     android:text="@string/car_window_lock_car"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/car_lock_details"
+                    style="@style/image_prompt"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/car_lock_text"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.common.xui.widget.button.switchbutton.SwitchButton
@@ -117,10 +133,18 @@
                 app:layout_constraintTop_toBottomOf="@id/line3">
 
                 <TextView
+                    android:id="@+id/car_wiper_text"
                     style="@style/switch_row_option_style"
                     android:text="@string/car_window_wiper"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/car_wiper_details"
+                    style="@style/image_prompt"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/car_wiper_text"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.common.xui.widget.button.switchbutton.SwitchButton

@@ -32,7 +32,11 @@ import com.chinatsp.apppanel.utils.Utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
 
+import launcher.base.async.AsyncSchedule;
+import launcher.base.service.AppServiceManager;
+import launcher.base.service.tencentsdk.ITencentSdkService;
 import launcher.base.utils.recent.RecentAppHelper;
 
 public class AppManagementWindow {
@@ -121,12 +125,12 @@ public class AppManagementWindow {
             @Override
             public void onClick(View view) {
                 hide();
-                new Thread(new Runnable() {
+                AsyncSchedule.execute(new Runnable() {
                     @Override
                     public void run() {
                         getMemorySize();
                     }
-                }).start();
+                });
             }
         });
         closeIv.setOnClickListener(new View.OnClickListener() {
@@ -212,7 +216,21 @@ public class AppManagementWindow {
         });
 
         for(int i = 0; i < infos.size(); i++){
-            Utils.forceStopPackage(mContext,(String) infos.get(i).get("packageName"));
+            String pkgName = (String) infos.get(i).get("packageName");
+            if("com.tencent.wecarflow".equals(pkgName)){
+                closeWecarFlowUI();
+            }else {
+                Utils.forceStopPackage(mContext,pkgName);
+            }
         }
+    }
+
+    /*
+    *  退出爱趣听UI，但不改变播放状态
+     */
+    private void closeWecarFlowUI() {
+        ITencentSdkService service =
+                (ITencentSdkService) AppServiceManager.getService(AppServiceManager.SERVICE_TENCENT_SDK);
+        service.closeUI();
     }
 }

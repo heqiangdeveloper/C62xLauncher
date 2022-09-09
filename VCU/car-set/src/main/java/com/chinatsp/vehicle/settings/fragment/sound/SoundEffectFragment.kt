@@ -3,6 +3,7 @@ package com.chinatsp.vehicle.settings.fragment.sound
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.ISwitchManager
@@ -18,8 +19,10 @@ import com.chinatsp.vehicle.settings.fragment.doors.dialog.VolumeDialogFragment
 import com.chinatsp.vehicle.settings.vm.sound.SoundEffectViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
+import com.common.xui.widget.popupwindow.PopWindow
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragmentBinding>(),
@@ -40,12 +43,18 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
         initRadioOption()
         addRadioLiveDataListener()
         setRadioListener()
+        initDetailsClickListener()
     }
 
     private fun initViewsDisplay() {
-        if (VcuUtils.isCareLevel(Level.LEVEL5, expect = false)) {
-            binding.soundLoudnessControlCompensation.visibility = View.GONE
-            binding.line3.visibility = View.GONE
+        if (VcuUtils.isCareLevel(Level.LEVEL5, expect = true)) {
+            binding.soundLoudnessControlCompensation.visibility = View.VISIBLE
+            binding.line3.visibility = View.VISIBLE
+        }
+    }
+    private fun initDetailsClickListener() {
+        binding.soundLoudnessDetails.setOnClickListener {
+            showPopWindow(R.string.sound_loudness_control_content,it)
         }
     }
 
@@ -56,6 +65,11 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
     private fun addRadioLiveDataListener() {
         viewModel.effectOption.observe(this) {
             doUpdateRadio(RadioNode.AUDIO_ENVI_AUDIO, it, false)
+        }
+        viewModel.currentEffect.observe(this) {
+            val array = resources.getStringArray(R.array.sound_equalizer_option)
+            Timber.tag("luohong").d("========================it==$it")
+            binding.soundEffectHint.text = array[it]
         }
     }
 
@@ -174,5 +188,10 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
             }
         }
     }
-
+    private fun showPopWindow(id:Int, view:View){
+        val popWindow = PopWindow(activity,R.layout.pop_window)
+        var text: TextView = popWindow.findViewById(R.id.content) as TextView
+        text.text = resources.getString(id)
+        popWindow.showUp2(view)
+    }
 }

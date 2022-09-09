@@ -4,7 +4,6 @@ import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.hvac.CarHvacManager
 import android.car.hardware.mcu.CarMcuManager
 import android.car.media.CarAudioManager
-import com.chinatsp.settinglib.CarAdapter
 import com.chinatsp.settinglib.bean.Norm
 import com.chinatsp.settinglib.sign.Origin
 

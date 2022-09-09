@@ -2,9 +2,11 @@ package com.chinatsp.vehicle.settings.fragment.sound
 
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.ISwitchManager
+import com.chinatsp.settinglib.manager.sound.EffectManager
 import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -17,6 +19,7 @@ import com.chinatsp.vehicle.settings.vm.sound.SoundViewModel
 import com.common.library.frame.base.BaseLazyFragment
 import com.common.xui.utils.ViewUtils
 import com.common.xui.widget.button.switchbutton.SwitchButton
+import com.common.xui.widget.popupwindow.PopWindow
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -45,6 +48,7 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
 
         initRouteListener()
         initViewsDisplay()
+        initDetailsClickListener()
     }
 
     private fun initViewsDisplay() {
@@ -54,11 +58,18 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
         }
     }
 
+    private fun initDetailsClickListener() {
+        binding.soundLoudnessDetails.setOnClickListener {
+            showPopWindow(R.string.sound_loudness_control_content,it)
+        }
+    }
+
     private fun initRadioOption() {
         initRadioOption(RadioNode.ICM_VOLUME_LEVEL, viewModel.volumeLevel)
         initRadioOption(RadioNode.NAVI_AUDIO_MIXING, viewModel.audioMixing)
         initRadioOption(RadioNode.SPEED_VOLUME_OFFSET, viewModel.volumeOffset)
     }
+
 
     private fun addRadioLiveDataListener() {
         viewModel.volumeLevel.observe(this) {
@@ -203,4 +214,10 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
 
     }
 
+    private fun showPopWindow(id:Int, view:View){
+        val popWindow = PopWindow(activity,R.layout.pop_window)
+        var text: TextView = popWindow.findViewById(R.id.content) as TextView
+        text.text = resources.getString(id)
+        popWindow.showUp2(view)
+    }
 }

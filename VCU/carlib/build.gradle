@@ -44,6 +44,8 @@ dependencies {
     implementation project(':controller')
     //log
     implementation deps.timber
+    implementation deps.gson
+
 }
 
 repositories {

@@ -32,6 +32,7 @@ public class SoundFieldView extends LinearLayout {
 
     private View mSFView = null;
     private ImageView mImgPoint = null;
+    private ImageView imgSouncPointBg = null;
     private boolean mIsMouseDown = false;
     private ImageView mImgSoundLineH = null;
     private ImageView mImgSoundLineV = null;
@@ -64,6 +65,7 @@ public class SoundFieldView extends LinearLayout {
      */
     private void initViews() {
         mImgPoint = (ImageView) mSFView.findViewById(R.id.imgSouncPoint);
+        imgSouncPointBg = (ImageView) mSFView.findViewById(R.id.imgSouncPointBg);
         mImgSoundLineH = (ImageView) mSFView.findViewById(R.id.imgSoundLineH);
         mImgSoundLineV = (ImageView) mSFView.findViewById(R.id.imgSoundLineV);
     }
@@ -135,6 +137,10 @@ public class SoundFieldView extends LinearLayout {
     private void setPointPos() {
         mImgPoint.setX(mPosX - mImgPoint.getWidth() / 2);
         mImgPoint.setY(mPosY - mImgPoint.getHeight() / 2);
+
+        imgSouncPointBg.setX(mPosX - imgSouncPointBg.getWidth() / 2);
+        imgSouncPointBg.setY(mPosY - imgSouncPointBg.getHeight() / 2);
+
 
         mImgSoundLineH.setX(mPosX - mImgSoundLineH.getWidth() / 2);
         mImgSoundLineH.setY(mPosY - mImgSoundLineH.getHeight() / 2);

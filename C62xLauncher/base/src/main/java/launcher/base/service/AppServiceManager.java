@@ -10,6 +10,7 @@ public class AppServiceManager {
     public static final String SERVICE_THEME = "app.service.theme";
     public static final String SERVICE_CAR = "app.service.car";
     public static final String SERVICE_PLATFORM = "app.service.platform";
+    public static final String SERVICE_TENCENT_SDK = "app.tencent.sdk";
     public static Object getService(String serviceName) {
         return mServices.get(serviceName);
     }

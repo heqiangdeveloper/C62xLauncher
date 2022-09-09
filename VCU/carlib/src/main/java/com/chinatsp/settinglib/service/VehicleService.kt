@@ -3,9 +3,11 @@ package com.chinatsp.settinglib.service
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+import android.text.TextUtils
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.vehicle.controller.ICmdCallback
+import com.chinatsp.vehicle.controller.IDataResolver
 import com.chinatsp.vehicle.controller.IOuterController
 import com.chinatsp.vehicle.controller.bean.Cmd
 import timber.log.Timber
@@ -21,7 +23,7 @@ class VehicleService : Service() {
 
     private val TAG: String = VehicleService::class.java.simpleName
 
-    private val controller: IOuterController.Stub by lazy { OuterControllerImpl() }
+    private val controller: OuterControllerImpl by lazy { OuterControllerImpl() }
 
     override fun onBind(intent: Intent?): IBinder {
         intent?.let {
@@ -31,7 +33,20 @@ class VehicleService : Service() {
         return controller
     }
 
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        val data = intent?.getStringExtra("data");
+        Timber.d("receive data:$data")
+        controller.doParseSourceData(data)
+        return super.onStartCommand(intent, flags, startId)
+    }
+
     inner class OuterControllerImpl : IOuterController.Stub() {
+
+        private var resolver: IDataResolver? = null
+
+        override fun doBindDataResolver(resolver: IDataResolver?) {
+            this.resolver = resolver
+        }
 
         override fun isEngineStatus(packageName: String?): Boolean {
             return Constant.ENGINE_STATUS
@@ -47,6 +62,13 @@ class VehicleService : Service() {
 //            callback?.onCmdHandleResult(cmd)
         }
 
+        fun doParseSourceData(data: String?) {
+            if (!TextUtils.isEmpty(data)) {
+                resolver?.let {
+                    it.doResolverData(data)
+                }
+            }
+        }
 
     }
 
