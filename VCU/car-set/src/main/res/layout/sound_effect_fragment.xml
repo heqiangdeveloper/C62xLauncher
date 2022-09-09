@@ -162,6 +162,7 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <TextView
+                            android:id="@+id/sound_effect_hint"
                             style="@style/click_row_option_style"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"

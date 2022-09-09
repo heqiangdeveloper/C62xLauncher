@@ -181,6 +181,9 @@ deps.timber = "com.jakewharton.timber:timber:$versions.timber"
 
 deps.logger = "com.orhanobut:logger:$versions.logger"
 
+deps.gson = "com.google.code.gson:gson:$versions.gson"
+
+
 ext.deps = deps
 
 //leakcanary

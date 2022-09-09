@@ -11,14 +11,11 @@ import android.os.IBinder
 import android.os.Message
 import android.provider.Settings
 import android.text.TextUtils
-import com.chinatsp.ifly.ISpeechTtsResultListener
-import com.chinatsp.ifly.ISpeechTtsStatusListener
-import com.chinatsp.ifly.aidlbean.CmdVoiceModel
-import com.chinatsp.ifly.aidlbean.NlpVoiceModel
-import com.chinatsp.ifly.voiceadapter.Business
-import com.chinatsp.ifly.voiceadapter.SpeechServiceAgent
-import com.chinatsp.ifly.voiceadapter.abs.SpeechControlListenerAbs
 import com.chinatsp.vehicle.controller.bean.Cmd
+import com.chinatsp.vehicle.controller.semantic.CmdVoiceModel
+import com.chinatsp.vehicle.controller.semantic.GsonUtil
+import com.chinatsp.vehicle.controller.semantic.NlpVoiceModel
+import org.json.JSONObject
 
 /**
  * @author : luohong
@@ -27,15 +24,13 @@ import com.chinatsp.vehicle.controller.bean.Cmd
  * @desc   :
  * @version: 1.0
  */
-class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback {
+class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback, IDataResolver {
 
     private lateinit var app: Application
 
     private val context: Context get() = app.baseContext.applicationContext
 
     private var controller: IOuterController? = null
-
-    private var bindVoiceStatus: Int = -1
 
     private val handler: Handler
 
@@ -49,9 +44,6 @@ class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback {
 
     val TAG: String get() = "VehicleService"
 
-    private val speechService: SpeechServiceAgent by lazy {
-        SpeechServiceAgent.instance
-    }
 
     init {
         val handleThread = HandlerThread("VcuOutTrader")
@@ -65,15 +57,8 @@ class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback {
 
     fun bindServices() {
         onBindVcuService()
-        onBindVoiceService()
     }
 
-    private fun onBindVoiceService() {
-        if (needBindVoice() && !isBindToVoice()) {
-            speechService.setServiceConnect(VoiceConnectListener())
-            speechService.initService(context, Business.CAR_CONTROL, mSpeechControlListener)
-        }
-    }
 
     private fun needBindVoice(): Boolean {
         return context.packageName.equals("com.chinatsp.vehicle.settings")
@@ -92,26 +77,21 @@ class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback {
 
     private fun isBindToVcu(): Boolean = null != controller
 
-    private fun isBindToVoice(): Boolean = 1 == bindVoiceStatus
-
-    private val mSpeechControlListener = object : SpeechControlListenerAbs() {
-
-        override fun onMvwAction(cmdVoiceModel: CmdVoiceModel?) {
-            LogManager.d(TAG, "onMvwAction() called with: cmdVoiceModel = $cmdVoiceModel")
-            val message = handler.obtainMessage(WHAT_MVW_ACTION)
-            message.obj = cmdVoiceModel
-            message.sendToTarget()
-        }
-
-        override fun onSrAction(nlpVoiceModel: NlpVoiceModel?) {
-            LogManager.d(TAG, "onSrAction() called with: nlpVoiceModel = $nlpVoiceModel")
-            val message = handler.obtainMessage(WHAT_SR_ACTION)
-            message.obj = nlpVoiceModel
-            message.sendToTarget()
-        }
-
-
+    private fun onMvwAction(cmdVoiceModel: CmdVoiceModel?) {
+        LogManager.d(TAG, "onMvwAction() called with: cmdVoiceModel = $cmdVoiceModel")
+        val message = handler.obtainMessage(WHAT_MVW_ACTION)
+        message.obj = cmdVoiceModel
+        message.sendToTarget()
     }
+
+    private fun onSrAction(nlpVoiceModel: NlpVoiceModel?) {
+        LogManager.d(TAG, "onSrAction() called with: nlpVoiceModel = $nlpVoiceModel")
+        val message = handler.obtainMessage(WHAT_SR_ACTION)
+        message.obj = nlpVoiceModel
+        message.sendToTarget()
+    }
+
+
 
     /**
      * 小欧不做处理 播报，防止小欧发呆
@@ -128,38 +108,23 @@ class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback {
             TAG, "audioHintActionResult invoke voiceName:$voiceName, " +
                     "audioSerial:$audioSerial, description:$description"
         )
-        speechService.ttsSpeakListener(
-            shownIfly = false,
-            secondsr = false,
-            priority = 1,
-            conditionId = audioSerial,
-            data = map,
-            listener = ttsResultListener,
-            listener2 = ttsStatusListener
-        )
+//        speechService.ttsSpeakListener(
+//            shownIfly = false,
+//            secondsr = false,
+//            priority = 1,
+//            conditionId = audioSerial,
+//            data = map,
+//            listener = ttsResultListener,
+//            listener2 = ttsStatusListener
+//        )
     }
 
-
-    private val ttsResultListener = object : ISpeechTtsResultListener.Stub() {
-
-        override fun onTtsCallback(ttsMessage: String?) {
-            LogManager.d(TAG, "onTtsCallback ttsMessage:$ttsMessage")
-        }
-
-    }
-
-    private val ttsStatusListener = object : ISpeechTtsStatusListener.Stub() {
-
-        override fun onPlayStatusChanged(status: Int) {
-            LogManager.d(TAG, "onPlayStatusChanged status:$status")
-        }
-
-    }
 
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
         LogManager.d(TAG, "onServiceConnected name:${name?.packageName}, service:$service")
         service?.let {
             controller = IOuterController.Stub.asInterface(service)
+            controller?.doBindDataResolver(this)
         }
     }
 
@@ -169,12 +134,6 @@ class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback {
         }
     }
 
-    inner class VoiceConnectListener : SpeechServiceAgent.ServiceConnect {
-        override fun onConnectStatusChanged(connect: Int) {
-            LogManager.d(TAG, "onConnectStatusChanged() called with: connect = $connect")
-            bindVoiceStatus = connect
-        }
-    }
 
     inner class CmdHandleCallback : ICmdCallback.Stub() {
         override fun onCmdHandleResult(cmd: Cmd) {
@@ -221,6 +180,30 @@ class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback {
         result = CommandParser().doDispatchSrAction(obj, controller!!, CmdHandleCallback())
         if (!result) {
             defaultHandleSpeech()
+        }
+    }
+
+    override fun asBinder(): IBinder? {
+        return null
+    }
+
+    override fun doResolverData(data: String?) {
+        data?.let {
+            if (BuildConfig.DEBUG) {
+                val jsonObject = JSONObject(data)
+                val intentStr = jsonObject.getString("intent")
+                val entity = GsonUtil.stringToObject(
+                    intentStr,
+                    com.chinatsp.vehicle.controller.semantic.Intent::class.java
+                )
+                onSrAction(entity.convert2NlpVoiceModel())
+            } else {
+                val entity = GsonUtil.stringToObject(
+                    data,
+                    com.chinatsp.vehicle.controller.semantic.Intent::class.java
+                )
+                onSrAction(entity.convert2NlpVoiceModel())
+            }
         }
     }
 

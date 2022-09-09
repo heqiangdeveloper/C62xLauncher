@@ -36,7 +36,6 @@ import android.provider.Settings
 import android.text.format.DateFormat
 import android.view.KeyEvent
 import com.android.internal.app.LocalePicker
-import com.chinatsp.settinglib.constants.OffLine
 import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.RegisterSignalManager.Companion.cabinSignal
 import com.chinatsp.settinglib.manager.RegisterSignalManager.Companion.hvacSignal
@@ -45,7 +44,6 @@ import com.chinatsp.settinglib.manager.cabin.OtherManager
 import com.chinatsp.settinglib.manager.lamp.BrightnessManager
 import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.settinglib.optios.Area
-import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SoundEffect
 import com.chinatsp.settinglib.sign.Origin
 import timber.log.Timber

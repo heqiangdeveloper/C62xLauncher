@@ -141,7 +141,7 @@ enum class Progress(
     SYSTEM(
         min = 0x00,
         max = 0x1E,
-        get = CanLocate(origin = Origin.ATTR, signal = AudioAttributes.USAGE_ASSISTANT)
+        get = CanLocate(origin = Origin.ATTR, signal = AudioAttributes.USAGE_NOTIFICATION)
     );
 
     fun isValid(value: Int): Boolean = value in min..max

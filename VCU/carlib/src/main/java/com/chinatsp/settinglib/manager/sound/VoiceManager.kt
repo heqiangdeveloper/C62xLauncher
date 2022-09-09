@@ -238,7 +238,6 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
                 updateVolumePosition(voiceVolume, it.elementAt(2) as Int)
                 updateVolumePosition(naviVolume, it.elementAt(3) as Int)
                 updateVolumePosition(systemVolume, it.elementAt(4) as Int)
-
                 Timber.d("return volume media:${it[0]}, phone:${it[1]}, voice:${it[2]}, navi:${it[3]}, system:${it[4]}")
                 onMcuVolumeChanged()
             }

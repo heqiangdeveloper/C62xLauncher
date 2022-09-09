@@ -1,12 +1,12 @@
 package com.chinatsp.vehicle.controller
 
 import android.text.TextUtils
-import com.chinatsp.ifly.aidlbean.CmdVoiceModel
-import com.chinatsp.ifly.aidlbean.NlpVoiceModel
 import com.chinatsp.vehicle.controller.annotation.Action
 import com.chinatsp.vehicle.controller.annotation.Model
 import com.chinatsp.vehicle.controller.bean.Cmd
 import com.chinatsp.vehicle.controller.data.Semantic
+import com.chinatsp.vehicle.controller.semantic.CmdVoiceModel
+import com.chinatsp.vehicle.controller.semantic.NlpVoiceModel
 import com.chinatsp.vehicle.controller.utils.ConstantsVolume
 import com.google.gson.Gson
 
