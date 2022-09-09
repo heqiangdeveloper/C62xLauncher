@@ -8,6 +8,7 @@ import com.chinatsp.musiclauncher.MediaCardView;
 import com.chinatsp.navigation.NaviCardView;
 import com.chinatsp.phone.widget.BTPhoneCardView;
 import com.chinatsp.usercenter.UserCenterCardView;
+import com.chinatsp.vehiclesetting.VehicleSettingCardView;
 import com.chinatsp.volcano.VolcanoCardView;
 import com.chinatsp.weaher.WeatherCardView;
 
@@ -26,7 +27,7 @@ public class CardViewCreatorFactory {
             case CardManager.CardType.I_QU_TING:
                 creator = createIQuTing();
                 break;
-            case CardManager.CardType.VIDEO:
+            case CardManager.CardType.VOLCANO:
                 creator = createVideo();
                 break;
             case CardManager.CardType.WEATHER:
@@ -78,7 +79,7 @@ public class CardViewCreatorFactory {
     }
 
     private static ICardViewCreator createVehicleSetting() {
-        return null;
+        return VehicleSettingCardView::new;
     }
 
     private static ICardViewCreator createEConnect() {

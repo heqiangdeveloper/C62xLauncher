@@ -17,6 +17,7 @@ import launcher.base.ipc.IConnectListener;
 import launcher.base.ipc.IOnRequestListener;
 import launcher.base.ipc.IRemoteDataCallback;
 import launcher.base.ipc.RemoteProxy;
+import launcher.base.utils.flowcontrol.PollingTask;
 
 public class WeatherRepository extends BaseRepository {
 
@@ -31,20 +32,12 @@ public class WeatherRepository extends BaseRepository {
     public static WeatherRepository getInstance() {
         return Holder.instance;
     }
-
     private List<WeatherInfo> mData;
 
-    IRemoteDataCallback mIRemoteDataCallback = new IRemoteDataCallback() {
+    IRemoteDataCallback<List<WeatherInfo>> mIRemoteDataCallback = new IRemoteDataCallback<List<WeatherInfo>>() {
         @Override
-        public <T> void notifyData(T t) {
-            if (t != null) {
-                try {
-                    mData = (List<WeatherInfo>) t;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
+        public void notifyData(List<WeatherInfo> weatherList) {
+            mData = weatherList;
         }
     };
 
@@ -68,10 +61,18 @@ public class WeatherRepository extends BaseRepository {
                 WeatherUtil.logD("mRemoteConnector requestWeatherInfo....");
                 mRemoteConnector.requestData(onRequestListener);
             } else {
-                WeatherUtil.logW("mRemoteConnector disconnect.");
+                String disconnectMsg = "mRemoteConnector disconnect.";
+                WeatherUtil.logW(disconnectMsg);
+                if (onRequestListener != null) {
+                    onRequestListener.onFail(disconnectMsg);
+                }
             }
         } else {
-            WeatherUtil.logW("mRemoteConnector is NULL.");
+            String errMsg = "mRemoteConnector is NULL.";
+            WeatherUtil.logW(errMsg);
+            if (onRequestListener != null) {
+                onRequestListener.onFail(errMsg);
+            }
         }
     }
 

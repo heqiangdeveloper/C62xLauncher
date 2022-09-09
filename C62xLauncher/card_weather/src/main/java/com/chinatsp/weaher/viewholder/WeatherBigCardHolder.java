@@ -83,7 +83,7 @@ public class WeatherBigCardHolder extends WeatherCardHolder{
         tvCardWeatherTemperature.setText(weatherInfo.getTemp());
         tvCardWeatherTemperatureRange.setText(WeatherUtil.getTemperatureRange(weatherInfo, mResources));
 
-        WeatherTypeRes weatherTypeRes = new WeatherTypeRes(getWeatherType(weatherInfo.getWeatherType()));
+        WeatherTypeRes weatherTypeRes = new WeatherTypeRes(WeatherUtil.getWeatherType(weatherInfo.getWeatherType()));
         ivCardWeatherIcon.setImageResource(weatherTypeRes.getIcon());
     }
     public void updateWeatherList(List<WeatherInfo> weatherInfoList) {
@@ -95,12 +95,4 @@ public class WeatherBigCardHolder extends WeatherCardHolder{
         updateWeather(weatherInfoList.get(0));
     }
 
-    private int getWeatherType(String type) {
-        try {
-            return Integer.parseInt(type);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return WeatherBean.TYPE_UNKNOWN;
-    }
 }

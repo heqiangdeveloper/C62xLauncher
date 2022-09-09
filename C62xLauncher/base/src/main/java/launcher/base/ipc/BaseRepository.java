@@ -35,6 +35,8 @@ public abstract class BaseRepository {
         }
     }
 
+
+
     protected void destroy(){
         mContext = null;
         if (mRemoteConnector != null) {

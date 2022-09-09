@@ -13,7 +13,7 @@ public class AppStoreJump {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.getApplicationContext().startActivity(intent);
         } catch (Exception e) {
-            Toast.makeText(context,"请确认已安装应用商店App", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context,"请确认已安装应用商城App", Toast.LENGTH_SHORT).show();
         }
     }
 }

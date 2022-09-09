@@ -1,5 +1,5 @@
 package launcher.base.ipc;
 
-public interface IRemoteDataCallback {
-    <T> void notifyData(T t);
+public interface IRemoteDataCallback<T> {
+     void notifyData(T t);
 }

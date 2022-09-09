@@ -47,14 +47,23 @@ public class BaseRemoteConnector {
     private IRemoteDataCallback createRemoteDataCallback() {
         return new IRemoteDataCallback() {
             @Override
-            public <T> void notifyData(T t) {
+            public void notifyData(Object o) {
                 AsyncSchedule.execute(new Runnable() {
                     @Override
                     public void run() {
-                        notifyDataCallback(t);
+                        notifyDataCallback(o);
                     }
                 });
             }
+//            @Override
+//            public <T> void notifyData(T t) {
+//                AsyncSchedule.execute(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        notifyDataCallback(t);
+//                    }
+//                });
+//            }
         };
     }
 
