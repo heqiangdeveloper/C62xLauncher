@@ -89,6 +89,7 @@
     <string name="cabin_other_wireless_charging_lamp">无线充电灯</string>
     <string name="cabin_other_sensor_sensitivity">传感器灵敏度</string>
     <string name="cabin_other_trailer_remind_distance">拖车提醒距离</string>
+    <string name="cabin_other_toast_content">车辆被拖时无法收到相关提醒</string>
 
     <string name="note_users_title">用户须知</string>
     <string name="note_users_content">为了确保安全使⽤⼿机⽆线充电功能，请您务必阅读并完全理解以下注意事项并仅可按照提示使⽤该功能：\n
@@ -198,8 +199,8 @@
     <string name="lighting_conditioner_screen_title">空调屏幕亮度</string>
     <string name="lighting_car_outside_title">车外迎宾灯</string>
     <string name="lighting_car_inside_title">车内迎宾灯</string>
-    <string name="lighting_front_atmosphere">前排氛围灯</string>
-    <string name="lighting_rear_atmosphere">后排氛围灯</string>
+    <string name="lighting_front_atmosphere">流线式氛围灯</string>
+    <string name="lighting_rear_atmosphere">环抱式氛围灯</string>
     <string name="lighting_brightness">亮度</string>
     <string name="lighting_color">颜色</string>
     <string name="lighting_intelligent_model">智能模式</string>

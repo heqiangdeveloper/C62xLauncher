@@ -5,6 +5,8 @@ import com.chinatsp.vehicle.controller.annotation.Action
 import com.chinatsp.vehicle.controller.annotation.Model
 import com.chinatsp.vehicle.controller.bean.Cmd
 import com.chinatsp.vehicle.controller.data.Semantic
+import com.chinatsp.vehicle.controller.logic.conditioner.ConditionerConstants
+import com.chinatsp.vehicle.controller.logic.conditioner.ConditionerParser
 import com.chinatsp.vehicle.controller.semantic.CmdVoiceModel
 import com.chinatsp.vehicle.controller.semantic.NlpVoiceModel
 import com.chinatsp.vehicle.controller.utils.ConstantsVolume
@@ -101,6 +103,9 @@ class CommandParser {
                         val cmd = Cmd(Action.CLOSE, Model.ACCESS_WINDOW, message = "关闭天窗")
                         controller.doOuterControlCommand(cmd, callback)
                     }
+                }else if(ConditionerConstants.KT_NAME.contains(name)){//空调
+                    result = isOpen || isClose;
+                    ConditionerParser.doDispatchSrAction(nlpVoiceModel, controller, callback)
                 } else if (isMatch(ConstantsVolume.VOICE_VENT, name)) {
                     result = isOpen || isClose;
                 }

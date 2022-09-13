@@ -17,6 +17,7 @@ import com.chinatsp.vehicle.settings.vm.cabin.TrailerViewModel
 import com.common.library.frame.base.BaseDialogFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.tabbar.TabControlView
+import com.king.base.util.ToastUtils
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -130,6 +131,9 @@ class TrailerRemindDialogFragment :
         binding.trailerRemindSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.DRIVE_TRAILER_REMIND, buttonView, isChecked)
             resetFollowTrailerSwitch(binding.trailerRemindSwitch.isChecked)
+            if(!isChecked){
+                ToastUtils.showToast(context,getString(R.string.cabin_other_toast_content))
+            }
         }
     }
 
