@@ -1,5 +1,6 @@
 package launcher.base.utils.view;
 
+import android.util.Log;
 import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,10 +21,6 @@ public class RecyclerViewUtil {
         if (layoutManager == null) {
             return null;
         }
-        View child = layoutManager.getChildAt(position);
-        if (child == null) {
-            return null;
-        }
-        return recyclerView.getChildViewHolder(child);
+        return recyclerView.findViewHolderForAdapterPosition(position);
     }
 }

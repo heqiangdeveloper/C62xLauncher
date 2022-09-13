@@ -3,6 +3,7 @@ package com.chinatsp.weaher;
 import android.content.res.Resources;
 import android.text.TextUtils;
 
+import com.chinatsp.weaher.repository.WeatherBean;
 import com.iflytek.autofly.weather.entity.WeatherInfo;
 
 import java.lang.reflect.Constructor;
@@ -17,7 +18,7 @@ public class WeatherUtil {
 
     public static String getToday() {
         LocalDate date = LocalDate.now();
-        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy.MM.dd  EE");
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy/MM/dd  EE");
         return df.format(date);
     }
 
@@ -91,5 +92,14 @@ public class WeatherUtil {
         String low = WeatherUtil.parseTemperature(dayWeatherBean.getLow(), resources);
         String high = WeatherUtil.parseTemperature(dayWeatherBean.getHigh(), resources);
         return low + "~" + high;
+    }
+
+    public static int getWeatherType(String type) {
+        try {
+            return Integer.parseInt(type);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return WeatherBean.TYPE_UNKNOWN;
     }
 }

@@ -35,4 +35,14 @@ public class EasyLog {
             Log.v(ORIGIN_TAG, "["+tag+"] "+msg);
         }
     }
+
+    public static void printStack(String tag) {
+        if (enableLog) {
+            Log.d(ORIGIN_TAG, "[" + tag + "] printStack: ");
+            StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+            for (StackTraceElement stackTraceElement : stackTrace) {
+                Log.d(ORIGIN_TAG, "[" + tag + "] " + stackTraceElement);
+            }
+        }
+    }
 }

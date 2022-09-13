@@ -32,6 +32,10 @@ public class CarPropertyUtil {
     public static String getVinCode(Context context) {
         String KEY_VIN = "VIN";
         if (context == null) return "";
-        return Settings.System.getString(context.getApplicationContext().getContentResolver(), KEY_VIN);
+        String vin = Settings.System.getString(context.getApplicationContext().getContentResolver(), KEY_VIN);
+        if (vin == null) {
+            vin = "";
+        }
+        return vin;
     }
 }

@@ -41,7 +41,7 @@ public class CardManager {
         int NAVIGATION = 1;
         int MEDIA = 2;
         int I_QU_TING = 3;
-        int VIDEO = 4;
+        int VOLCANO = 4;
         int WEATHER = 5;
         int PHONE = 6;
         int VEHICLE_SETTING = 7;

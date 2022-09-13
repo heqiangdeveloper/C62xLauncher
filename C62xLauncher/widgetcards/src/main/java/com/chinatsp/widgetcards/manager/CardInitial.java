@@ -1,7 +1,6 @@
 package com.chinatsp.widgetcards.manager;
 
 import android.content.Context;
-import android.content.res.Resources;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -13,7 +12,7 @@ public class CardInitial {
         List<LauncherCard> cardList = new LinkedList<>();
         cardList.add(CardEntityFactory.create(CardManager.CardType.NAVIGATION));
         cardList.add(CardEntityFactory.create(CardManager.CardType.I_QU_TING));
-        cardList.add(CardEntityFactory.create(CardManager.CardType.VIDEO));
+        cardList.add(CardEntityFactory.create(CardManager.CardType.VOLCANO));
         cardList.add(CardEntityFactory.create(CardManager.CardType.WEATHER));
         cardList.add(CardEntityFactory.create(CardManager.CardType.E_CONNECT));
         cardList.add(CardEntityFactory.create(CardManager.CardType.DRIVE_COUNSELOR));

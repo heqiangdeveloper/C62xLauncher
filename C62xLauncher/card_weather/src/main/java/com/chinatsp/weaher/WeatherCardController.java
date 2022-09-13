@@ -22,16 +22,22 @@ public class WeatherCardController {
 
     void requestWeatherInfo() {
         WeatherUtil.logD("requestWeatherInfo");
-        mWeatherRepository.requestRefreshWeatherInfo(new IOnRequestListener() {
+        mWeatherRepository.requestRefreshWeatherInfo(new IOnRequestListener<List<WeatherInfo>>() {
+
+
             @Override
-            public <T> void onSuccess(T t) {
+            public void onSuccess(List<WeatherInfo> weatherInfoList) {
                 WeatherUtil.logD("requestWeatherInfo onSuccess");
-                refreshData(t);
+                if (weatherInfoList == null || weatherInfoList.isEmpty()) {
+                    mCardView.refreshDefault();
+                } else {
+                    mCardView.refreshData(weatherInfoList);
+                }
             }
 
             @Override
             public void onFail(String msg) {
-                WeatherUtil.logE("requestWeatherInfo onSuccess");
+                WeatherUtil.logE("requestWeatherInfo onFail: " + msg);
                 if (mCardView != null) {
                     mCardView.refreshDefault();
                 }
@@ -39,10 +45,14 @@ public class WeatherCardController {
         });
     }
 
-    private final IRemoteDataCallback iRemoteDataCallback = new IRemoteDataCallback() {
+    private final IRemoteDataCallback<List<WeatherInfo>> iRemoteDataCallback = new IRemoteDataCallback<List<WeatherInfo>>() {
         @Override
-        public <T> void notifyData(T t) {
-            refreshData(t);
+        public void notifyData(List<WeatherInfo> weatherList) {
+            if (weatherList == null || weatherList.isEmpty()) {
+                mCardView.refreshDefault();
+            } else {
+                mCardView.refreshData(weatherList);
+            }
         }
     };
 
@@ -53,7 +63,7 @@ public class WeatherCardController {
         List<WeatherInfo> result = cast(t);
         if (result == null || result.isEmpty()) {
             mCardView.refreshDefault();
-        }else {
+        } else {
             mCardView.refreshData(result);
         }
     }

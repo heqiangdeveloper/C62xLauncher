@@ -21,13 +21,13 @@ public class CardInnerListHelper {
     private SmallCardsAdapter smallCardsAdapter;
     private OnSelectCardListener mOnSelectCardListener;
 
-    public CardInnerListHelper(RecyclerView recyclerView, OnSelectCardListener onSelectCardListener) {
+    public CardInnerListHelper(RecyclerView recyclerView, OnSelectCardListener onSelectCardListener, OnExpandCardInCard mOnExpandCardInCard) {
         mOnSelectCardListener = onSelectCardListener;
         if (recyclerView == null) {
             return;
         }
         mRecyclerView = recyclerView;
-        smallCardsAdapter = new SmallCardsAdapter(mRecyclerView.getContext(), mRecyclerView);
+        smallCardsAdapter = new SmallCardsAdapter(mRecyclerView.getContext(), mRecyclerView, mOnExpandCardInCard);
         LinearLayoutManager layoutManager = new LinearLayoutManager(mRecyclerView.getContext());
         layoutManager.setOrientation(RecyclerView.HORIZONTAL);
         mRecyclerView.setLayoutManager(layoutManager);
@@ -35,6 +35,7 @@ public class CardInnerListHelper {
         pagerSnapHelper.attachToRecyclerView(mRecyclerView);
         mRecyclerView.addOnScrollListener(mOnScrollListener);
     }
+
 
     RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
@@ -60,10 +61,16 @@ public class CardInnerListHelper {
         if (mRecyclerView == null) {
             return;
         }
+        EasyLog.d("CardInnerListHelper", "showInnerList small:" + currentSmallCardPosition + " , big:" + bigCardPosition);
         mRecyclerView.setVisibility(View.VISIBLE);
-        List<LauncherCard> smallCardList = getSmallCardList(bigCardPosition - 1);
+        List<LauncherCard> smallCardList = getSmallCardList(bigCardPosition);
         smallCardsAdapter.setCardEntityList(smallCardList);
-        mRecyclerView.scrollToPosition(currentSmallCardPosition - 1);
+        if (currentSmallCardPosition < bigCardPosition) {
+            mRecyclerView.scrollToPosition(currentSmallCardPosition);
+        } else {
+            // 如果小卡位于大卡右侧, 则小卡在剩余小卡列表中的位置要-1
+            mRecyclerView.scrollToPosition(currentSmallCardPosition - 1);
+        }
     }
 
 
@@ -79,7 +86,6 @@ public class CardInnerListHelper {
         CardManager cardManager = CardManager.getInstance();
         List<LauncherCard> homeList = cardManager.getHomeList();
         List<LauncherCard> result = new LinkedList<>();
-        int anchorIndex = 0;
         for (int i = 0; i < homeList.size(); i++) {
             LauncherCard launcherCard = homeList.get(i);
             if (i != bigCardPosition) {

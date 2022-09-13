@@ -4,10 +4,8 @@ import android.content.Context;
 import android.view.View;
 
 import com.chinatsp.driveinfo.DriveCounselorCardView;
-import com.chinatsp.volcano.VolcanoCardView;
 import com.chinatsp.econnect.EConnectCardView;
 import com.chinatsp.iquting.IQuTingCardView;
-import com.chinatsp.navigation.NaviCardView;
 import com.chinatsp.weaher.WeatherCardView;
 import com.chinatsp.widgetcards.R;
 
@@ -27,7 +25,7 @@ public class CardEntityFactory {
             case CardManager.CardType.I_QU_TING:
                 entity = createIQuTing();
                 break;
-            case CardManager.CardType.VIDEO:
+            case CardManager.CardType.VOLCANO:
                 entity = createVideo();
                 break;
             case CardManager.CardType.WEATHER:
@@ -82,11 +80,12 @@ public class CardEntityFactory {
 
     private static LauncherCard createAppStore() {
         LauncherCard cardEntity = new LauncherCard();
-        cardEntity.setName("应用商店");
+        cardEntity.setName("应用商城");
         cardEntity.setType(CardManager.CardType.APP_STORE);
         cardEntity.setSelectBgRes(R.drawable.card_edit_select_app_store);
         cardEntity.setUnselectBgRes(R.drawable.card_edit_unselect_app_store);
         cardEntity.setCanExpand(true);
+        cardEntity.setCardViewCreator(CardViewCreatorFactory.create(CardManager.CardType.APP_STORE));
         return cardEntity;
     }
 
@@ -97,6 +96,7 @@ public class CardEntityFactory {
         cardEntity.setSelectBgRes(R.drawable.card_edit_select_user_center);
         cardEntity.setUnselectBgRes(R.drawable.card_edit_unselect_user_center);
         cardEntity.setCanExpand(false);
+        cardEntity.setCardViewCreator(CardViewCreatorFactory.create(CardManager.CardType.VEHICLE_SETTING));
         return cardEntity;
     }
 
@@ -107,12 +107,7 @@ public class CardEntityFactory {
         cardEntity.setSelectBgRes(R.drawable.card_edit_select_drive_qa);
         cardEntity.setUnselectBgRes(R.drawable.card_edit_unselect_drive_qa);
         cardEntity.setCanExpand(false);
-        cardEntity.setCardViewCreator(new ICardViewCreator() {
-            @Override
-            public View createCardView(Context context) {
-                return new DriveCounselorCardView(context);
-            }
-        });
+        cardEntity.setCardViewCreator(CardViewCreatorFactory.create(CardManager.CardType.DRIVE_COUNSELOR));
         return cardEntity;
     }
 
@@ -123,6 +118,7 @@ public class CardEntityFactory {
         cardEntity.setSelectBgRes(R.drawable.card_edit_select_vehicle_setting);
         cardEntity.setUnselectBgRes(R.drawable.card_edit_unselect_vehicle_setting);
         cardEntity.setCanExpand(false);
+        cardEntity.setCardViewCreator(CardViewCreatorFactory.create(CardManager.CardType.VEHICLE_SETTING));
         return cardEntity;
     }
 
@@ -134,12 +130,7 @@ public class CardEntityFactory {
         cardEntity.setSelectBgRes(R.drawable.card_edit_select_e_connect);
         cardEntity.setUnselectBgRes(R.drawable.card_edit_unselect_e_connect);
         cardEntity.setCanExpand(false);
-        cardEntity.setCardViewCreator(new ICardViewCreator() {
-            @Override
-            public View createCardView(Context context) {
-                return new EConnectCardView(context);
-            }
-        });
+        cardEntity.setCardViewCreator(CardViewCreatorFactory.create(CardManager.CardType.E_CONNECT));
         return cardEntity;
     }
 
@@ -150,6 +141,7 @@ public class CardEntityFactory {
         cardEntity.setSelectBgRes(R.drawable.card_edit_select_phone);
         cardEntity.setUnselectBgRes(R.drawable.card_edit_unselect_phone);
         cardEntity.setCanExpand(true);
+        cardEntity.setCardViewCreator(CardViewCreatorFactory.create(CardManager.CardType.PHONE));
         return cardEntity;
     }
 
@@ -160,12 +152,7 @@ public class CardEntityFactory {
         cardEntity.setSelectBgRes(R.drawable.card_edit_select_weather);
         cardEntity.setUnselectBgRes(R.drawable.card_edit_unselect_weather);
         cardEntity.setCanExpand(true);
-        cardEntity.setCardViewCreator(new ICardViewCreator() {
-            @Override
-            public View createCardView(Context context) {
-                return new WeatherCardView(context);
-            }
-        });
+        cardEntity.setCardViewCreator(CardViewCreatorFactory.create(CardManager.CardType.WEATHER));
         return cardEntity;
     }
 
@@ -176,28 +163,18 @@ public class CardEntityFactory {
         cardEntity.setSelectBgRes(R.drawable.card_edit_select_iquting);
         cardEntity.setUnselectBgRes(R.drawable.card_edit_unselect_iquting);
         cardEntity.setCanExpand(true);
-        cardEntity.setCardViewCreator(new ICardViewCreator() {
-            @Override
-            public View createCardView(Context context) {
-                return new IQuTingCardView(context);
-            }
-        });
+        cardEntity.setCardViewCreator(CardViewCreatorFactory.create(CardManager.CardType.I_QU_TING));
         return cardEntity;
     }
 
     private static LauncherCard createVideo() {
         LauncherCard cardEntity = new LauncherCard();
         cardEntity.setName("火山车娱");
-        cardEntity.setType(CardManager.CardType.VIDEO);
+        cardEntity.setType(CardManager.CardType.VOLCANO);
         cardEntity.setSelectBgRes(R.drawable.card_edit_select_douyin);
         cardEntity.setUnselectBgRes(R.drawable.card_edit_unselect_douyin);
         cardEntity.setCanExpand(true);
-        cardEntity.setCardViewCreator(new ICardViewCreator() {
-            @Override
-            public View createCardView(Context context) {
-                return new VolcanoCardView(context);
-            }
-        });
+        cardEntity.setCardViewCreator(CardViewCreatorFactory.create(CardManager.CardType.VOLCANO));
         return cardEntity;
     }
 
@@ -209,12 +186,7 @@ public class CardEntityFactory {
         cardEntity.setSelectBgRes(R.drawable.card_edit_select_navi);
         cardEntity.setUnselectBgRes(R.drawable.card_edit_unselect_navi);
         cardEntity.setCanExpand(true);
-        cardEntity.setCardViewCreator(new ICardViewCreator() {
-            @Override
-            public View createCardView(Context context) {
-                return new NaviCardView(context);
-            }
-        });
+        cardEntity.setCardViewCreator(CardViewCreatorFactory.create(CardManager.CardType.NAVIGATION));
         return cardEntity;
     }
 

@@ -158,11 +158,12 @@
 
 
         <ImageView
-            android:layout_width="210.5px"
-            android:layout_height="159px"
-            android:background="#1FCCDCFF"
+            android:layout_width="221px"
+            android:layout_height="160px"
+            android:src="@drawable/drawer_drive_counselor_rank_car"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="2px"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

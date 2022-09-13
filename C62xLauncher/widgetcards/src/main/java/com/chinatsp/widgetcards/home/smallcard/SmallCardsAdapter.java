@@ -28,11 +28,13 @@ public class SmallCardsAdapter extends RecyclerView.Adapter<SmallCardViewHolder>
     private List<LauncherCard> mCardEntityList = new LinkedList<>();
     private final Set<CardFrameViewHolder> mViewHolders = new HashSet<>();
     private RecyclerView mRecyclerView;
+    private OnExpandCardInCard mOnExpandCardInCard;
 
 
-    public SmallCardsAdapter(Context context, RecyclerView recyclerView) {
+    public SmallCardsAdapter(Context context, RecyclerView recyclerView, OnExpandCardInCard onExpandCardInCard) {
         mContext = context;
         mRecyclerView = recyclerView;
+        mOnExpandCardInCard = onExpandCardInCard;
         mLayoutInflater = LayoutInflater.from(mContext);
     }
 
@@ -50,7 +52,7 @@ public class SmallCardsAdapter extends RecyclerView.Adapter<SmallCardViewHolder>
         innerCard.setTag("InnerCard");
         layout.addView(innerCard,0);
         EasyLog.d(TAG, "onCreateViewHolder: "+viewType);
-        return new SmallCardViewHolder(layout);
+        return new SmallCardViewHolder(layout, innerCard, mOnExpandCardInCard);
     }
 
     @Override

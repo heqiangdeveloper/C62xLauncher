@@ -11,6 +11,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.chinatsp.drawer.DrawerCreator;
@@ -55,6 +56,14 @@ public class CardHomeFragment extends BaseFragment {
 //        drawerCreator.initDrawerRcv();
 
         EventBus.getDefault().register(this);
+
+        rootView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                EasyLog.d(TAG, "onTouch TEST");
+                return false;
+            }
+        });
     }
 
     @Override
