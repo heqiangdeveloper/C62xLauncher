@@ -46,12 +46,12 @@ import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.anarchy.classifyview.Bean.LocationBean;
 import com.anarchy.classifyview.adapter.BaseMainAdapter;
 import com.anarchy.classifyview.adapter.BaseSubAdapter;
 import com.anarchy.classifyview.adapter.MainRecyclerViewCallBack;
 import com.anarchy.classifyview.adapter.SubAdapterReference;
 import com.anarchy.classifyview.adapter.SubRecyclerViewCallBack;
-import com.anarchy.classifyview.decoration.SubRecyclerViewDecoration;
 import com.anarchy.classifyview.event.ChangeTitleEvent;
 import com.anarchy.classifyview.event.ReStoreDataEvent;
 import com.anarchy.classifyview.simple.BaseSimpleAdapter;
@@ -170,6 +170,7 @@ public class ClassifyView extends FrameLayout {
     private boolean isSoftKeyBoardShow = false;
     private boolean isInSubDrag = false;
     private List<String> canUninstallNameLists;
+    private boolean isHasDeletedItems = false;//sub中是否有可删除的item
     public ClassifyView(Context context) {
         super(context);
         init(context, null, 0);
@@ -227,6 +228,7 @@ public class ClassifyView extends FrameLayout {
         mEdgeWidth = a.getDimensionPixelSize(R.styleable.ClassifyView_EdgeWidth, 15);
         a.recycle();
         mMainRecyclerView = getMain(context, attrs);
+        mMainRecyclerView.setPadding(60,0,0,0);
         mMainRecyclerView.setOverScrollMode(OVER_SCROLL_NEVER);//去掉滑动到顶/底部时的阴影
         mSubRecyclerView = getSub(context, attrs);
         mSubRecyclerView.setOverScrollMode(OVER_SCROLL_NEVER);
@@ -247,23 +249,60 @@ public class ClassifyView extends FrameLayout {
             @Override
             public void onClick(View v) {
                 if (mHideSubAnim != null && mHideSubAnim.isRunning()) return;
+
+                //判断sub中有无显示删除按钮的item,有，说明处于删除状态
+                //之前RecyclerView显示正在显示的item的删除按钮，未显示的item未处理
+                //出现sub中存在可删除的item，但是未显示出来，导致点击sub外时，没有先清除删除按钮就直接退出了，先按这样做
+                //如果出现上面的情况，需要根据MyConfigs.SHOWDELETE判断
+//                RelativeLayout relativeLayout;
+//                InsertAbleGridView insertAbleGridView;
+//                int num;
+//                for(num = 0; num < mSubRecyclerView.getChildCount(); num++){
+//                    relativeLayout = (RelativeLayout) mSubRecyclerView.getChildAt(num);
+//                    insertAbleGridView = (InsertAbleGridView) relativeLayout.getChildAt(0);
+//                    if(insertAbleGridView.getChildCount() == 1){//非文件夹
+//                        ImageView iv = (ImageView) relativeLayout.getChildAt(2);
+//                        if(iv.getVisibility() == View.VISIBLE){
+//                            isHasDeletedItems = true;
+//                            break;
+//                        }
+//                    }
+//                }
+//
+//                if(num >= mSubRecyclerView.getChildCount()){
+//                    isHasDeletedItems = false;
+//                }
+
+                boolean isInDeletedMode = preferences.getBoolean(MyConfigs.SHOWDELETE,false);
+
                 //重置delete标签
                 editor.putBoolean(MyConfigs.SHOWDELETE,false);
-                editor.putInt(MyConfigs.SHOWDELETEPOSITION,-1);
                 editor.commit();
-                hideSubContainer();
-                //刷新桌面中sub的显示,实际发现mSubRecyclerView.getChildCount()数目会变少，不采用mSubRecyclerView计算
-                //mSubCallBack.removeItem(mSubRecyclerView.getChildCount() - 1);
-                mMainCallBack = (MainRecyclerViewCallBack) mMainRecyclerView.getAdapter();
-                List list = mMainCallBack.explodeItem(position, null);
-                if(null != list){
-                    for(int i = list.size() - 1; i >= 0; i--){
-                        if(list.get(i) == null){
-                            list.remove(i);
-                            break;
+                L.d("mMainShadowView OnClick isInDeletedMode: " + isInDeletedMode);
+                if(isInDeletedMode){
+                    for(int i = 0; i < mSubRecyclerView.getChildCount(); i++){
+                        relativeLayout = (RelativeLayout) mSubRecyclerView.getChildAt(i);
+                        insertAbleGridView = (InsertAbleGridView) relativeLayout.getChildAt(0);
+                        if(insertAbleGridView.getChildCount() == 1){//非文件夹
+                            ImageView iv = (ImageView) relativeLayout.getChildAt(2);
+                            iv.setVisibility(View.GONE);
                         }
                     }
-                    mSubCallBack.initData(position,list);
+                }else {
+                    hideSubContainer();
+                    //刷新桌面中sub的显示,实际发现mSubRecyclerView.getChildCount()数目会变少，不采用mSubRecyclerView计算
+                    //mSubCallBack.removeItem(mSubRecyclerView.getChildCount() - 1);
+                    mMainCallBack = (MainRecyclerViewCallBack) mMainRecyclerView.getAdapter();
+                    List list = mMainCallBack.explodeItem(position, null);
+                    if(null != list){
+                        for(int i = list.size() - 1; i >= 0; i--){
+                            if(list.get(i) == null){
+                                list.remove(i);
+                                break;
+                            }
+                        }
+                        mSubCallBack.initData(position,list);
+                    }
                 }
             }
         });
@@ -469,6 +508,9 @@ public class ClassifyView extends FrameLayout {
                 if (pressedView == null) return false;
                 position = mMainRecyclerView.getChildAdapterPosition(pressedView);
                 List list = mMainCallBack.explodeItem(position, pressedView);
+                editor.putBoolean(MyConfigs.SHOWDELETE,false);
+                editor.putBoolean(MyConfigs.MAINSHOWDELETE,false);
+                editor.commit();
                 if (list == null || list.size() < 2) {
                     mMainCallBack.onItemClick(position, pressedView);
                     return true;
@@ -482,10 +524,6 @@ public class ClassifyView extends FrameLayout {
                             iv.setVisibility(View.GONE);
                         }
                     }
-
-                    editor.putBoolean(MyConfigs.SHOWDELETE,false);
-                    editor.putInt(MyConfigs.SHOWDELETEPOSITION,-1);
-                    editor.commit();
 
                     //如果没有添加按钮，则新增一个添加按钮,防止添加按钮不是在最末尾，先清除，再新增
                     isExistAdd = false;
@@ -982,7 +1020,7 @@ public class ClassifyView extends FrameLayout {
                                 @Override
                                 public void onClick(View view) {
                                     dialog.dismiss();
-                                    editor.putInt(MyConfigs.SHOWDELETEPOSITION,-1);
+                                    editor.putBoolean(MyConfigs.MAINSHOWDELETE,false);
                                     editor.putBoolean(MyConfigs.SHOWDELETE,false);
                                     editor.commit();
                                     //如果没有添加按钮，则新增一个添加按钮
@@ -1091,8 +1129,7 @@ public class ClassifyView extends FrameLayout {
                     //存储在SP中，在MyAppInfoAdapter中刷新时再判断是否显示删除按钮
                     SharedPreferences sp = getContext().getSharedPreferences(MyConfigs.APPPANELSP,Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sp.edit();
-                    editor.putBoolean(MyConfigs.SHOWDELETE,isInDeleteMode ? true : false);
-                    editor.putInt(MyConfigs.SHOWDELETEPOSITION,mSelectedPosition);
+                    editor.putBoolean(MyConfigs.MAINSHOWDELETE,isInDeleteMode ? true : false);
                     editor.commit();
                     L.d("ACTION_DROP");
                     if (inMergeState) {
@@ -1214,16 +1251,32 @@ public class ClassifyView extends FrameLayout {
                         mElevationHelper.floatView(mSubRecyclerView, mDragView);
                         if(null != addView) addView.setVisibility(View.GONE);
 
-                        for(int i = 0; i < mSubRecyclerView.getChildCount(); i++){
-                            relativeLayout = (RelativeLayout) mSubRecyclerView.getChildAt(i);
-                            insertAbleGridView = (InsertAbleGridView) relativeLayout.getChildAt(0);
-                            ImageView iv = (ImageView) relativeLayout.getChildAt(2);
-                            TextView nameTv = (TextView) relativeLayout.getChildAt(3);
+                        //判断sub中是否有可删除的
+                        isHasDeletedItems = false;
+                        List<LocationBean> subDatas = mSubCallBack.getSubData();
+                        for(int i = 0; i < subDatas.size(); i++){
+                            if(subDatas.get(i) != null && canUninstallNameLists != null &&
+                                    canUninstallNameLists.contains(subDatas.get(i).getName())){
+                                isHasDeletedItems = true;
+                                break;
+                            }
+                        }
 
-                            if(canUninstallNameLists != null && canUninstallNameLists.contains(nameTv.getText().toString().trim())){
-                                iv.setVisibility(View.VISIBLE);
-                            }else{
-                                iv.setVisibility(View.GONE);
+                        if(isHasDeletedItems){
+                            //getChildCount得到的是当前正在显示的item的个数,所以这里只能显示正在显示的item的删除按钮
+                            for(int i = 0; i < mSubRecyclerView.getChildCount(); i++){
+                                relativeLayout = (RelativeLayout) mSubRecyclerView.getChildAt(i);
+                                insertAbleGridView = (InsertAbleGridView) relativeLayout.getChildAt(0);
+                                ImageView iv = (ImageView) relativeLayout.getChildAt(2);
+                                TextView nameTv = (TextView) relativeLayout.getChildAt(3);
+
+                                String text = nameTv.getText().toString().trim();
+                                L.d("text is: " + text);
+                                if(canUninstallNameLists != null && canUninstallNameLists.contains(text)){
+                                    iv.setVisibility(View.VISIBLE);
+                                }else{
+                                    iv.setVisibility(View.GONE);
+                                }
                             }
                         }
 
@@ -1235,6 +1288,15 @@ public class ClassifyView extends FrameLayout {
                     if(null != addView) addView.setVisibility(View.GONE);
                     //L.d("Sub ACTION_DRAG_LOCATION");
                     //L.d("x： " + mDragView.getX() + ",y: " + mDragView.getY());
+                    //sub中拖动时，隐藏所有的删除按钮
+                    if(Math.abs(x - lastX) >= 5 || Math.abs(y - lastY) > 5){
+                        for(int i = 0; i < mSubRecyclerView.getChildCount(); i++){
+                            relativeLayout = (RelativeLayout) mSubRecyclerView.getChildAt(i);
+                            insertAbleGridView = (InsertAbleGridView) relativeLayout.getChildAt(0);
+                            ImageView iv = (ImageView) relativeLayout.getChildAt(2);
+                            iv.setVisibility(View.GONE);
+                        }
+                    }
                     mVelocityTracker.addMovement(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(),
                             MotionEvent.ACTION_MOVE, x, y, 0));
 //                    mDragView.setX(centerX);
@@ -1308,8 +1370,8 @@ public class ClassifyView extends FrameLayout {
                     //存储在SP中，在MyAppInfoAdapter中刷新时再判断是否显示删除按钮
                     SharedPreferences sp = getContext().getSharedPreferences(MyConfigs.APPPANELSP,Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sp.edit();
-                    editor.putBoolean(MyConfigs.SHOWDELETE,isInDeleteMode ? true : false);
-                    editor.putInt(MyConfigs.SHOWDELETEPOSITION,mSelectedPosition);
+                    L.d("isHasDeletedItems: " + isHasDeletedItems);
+                    editor.putBoolean(MyConfigs.SHOWDELETE,isInDeleteMode && isHasDeletedItems ? true : false);
                     editor.commit();
                     break;
             }

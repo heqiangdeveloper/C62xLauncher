@@ -75,4 +75,9 @@ public interface SubRecyclerViewCallBack {
     * @param position位置
      */
     void removeItem(int position);
+
+    /*
+    * 刷新数据
+     */
+    void notifyDataChanged();
 }

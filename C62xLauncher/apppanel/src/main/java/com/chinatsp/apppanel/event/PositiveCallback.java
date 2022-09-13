@@ -1,6 +1,6 @@
 package com.chinatsp.apppanel.event;
 
-import com.chinatsp.apppanel.bean.LocationBean;
+import com.anarchy.classifyview.Bean.LocationBean;
 
 import java.util.List;
 

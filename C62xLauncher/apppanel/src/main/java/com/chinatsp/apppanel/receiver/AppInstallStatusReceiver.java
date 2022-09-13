@@ -5,22 +5,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
+import com.anarchy.classifyview.Bean.LocationBean;
 import com.anarchy.classifyview.event.AppInstallStatusEvent;
-import com.anarchy.classifyview.event.Event;
 import com.chinatsp.apppanel.AppConfigs.AppLists;
-import com.chinatsp.apppanel.adapter.MyAppInfoAdapter;
-import com.chinatsp.apppanel.bean.LocationBean;
 import com.chinatsp.apppanel.db.MyAppDB;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import launcher.base.async.AsyncSchedule;

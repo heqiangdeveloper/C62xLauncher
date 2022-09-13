@@ -110,5 +110,10 @@ public abstract class BaseSubAdapter<VH extends RecyclerView.ViewHolder> extends
     public void removeItem(int position) {
 
     }
+
+    @Override
+    public void notifyDataChanged() {
+        notifyDataSetChanged();
+    }
 }
 
