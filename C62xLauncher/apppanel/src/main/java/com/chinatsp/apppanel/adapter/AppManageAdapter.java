@@ -1,31 +1,21 @@
 package com.chinatsp.apppanel.adapter;
 
-import android.app.ActivityManager;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chinatsp.apppanel.R;
-import com.chinatsp.apppanel.bean.LocationBean;
 import com.chinatsp.apppanel.event.DeletedCallback;
-import com.chinatsp.apppanel.event.SelectedCallback;
 import com.chinatsp.apppanel.utils.Utils;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;

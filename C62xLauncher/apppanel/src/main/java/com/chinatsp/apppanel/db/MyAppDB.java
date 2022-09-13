@@ -9,7 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
-import com.chinatsp.apppanel.bean.LocationBean;
+import com.anarchy.classifyview.Bean.LocationBean;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;

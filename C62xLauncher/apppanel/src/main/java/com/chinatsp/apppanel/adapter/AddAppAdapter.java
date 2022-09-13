@@ -1,14 +1,11 @@
 package com.chinatsp.apppanel.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.ResolveInfo;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,9 +13,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.anarchy.classifyview.util.L;
+import com.anarchy.classifyview.Bean.LocationBean;
 import com.chinatsp.apppanel.R;
-import com.chinatsp.apppanel.bean.LocationBean;
 import com.chinatsp.apppanel.event.SelectedCallback;
 
 import java.util.ArrayList;

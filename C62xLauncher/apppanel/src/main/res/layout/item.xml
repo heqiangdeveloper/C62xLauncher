@@ -2,9 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:padding="0dp"
-              android:layout_width="match_parent"
+              android:layout_width="200dp"
               android:layout_height="200dp"
-    android:layout_marginTop="0dp">
+    android:layout_marginTop="0dp"
+    android:id="@+id/root_rl">
 
     <com.anarchy.classifyview.simple.widget.InsertAbleGridView
         android:id="@+id/insertAbleGridView"
@@ -30,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="30dp"
-        android:layout_marginEnd="60dp"
+        android:layout_marginEnd="30dp"
         android:visibility="gone"
         android:src="@mipmap/delete" />
 
