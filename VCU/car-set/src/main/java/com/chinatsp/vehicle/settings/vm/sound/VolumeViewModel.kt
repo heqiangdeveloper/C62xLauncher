@@ -3,6 +3,7 @@ package com.chinatsp.vehicle.settings.vm.sound
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.bean.Volume
+import com.chinatsp.settinglib.listener.IProgressListener
 import com.chinatsp.settinglib.listener.sound.ISoundListener
 import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.settinglib.optios.Progress
@@ -13,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VolumeViewModel @Inject constructor(app: Application, model: BaseModel) :
-    BaseViewModel(app, model), ISoundListener {
+    BaseViewModel(app, model), ISoundListener, IProgressListener {
 
     val manager: VoiceManager by lazy { VoiceManager.instance }
 
@@ -91,6 +92,34 @@ class VolumeViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     fun resetDeviceVolume() {
         manager.resetDeviceVolume()
+    }
+
+    override fun onProgressChanged(node: Progress, value: Int) {
+        when (node) {
+            Progress.NAVI -> {
+                updateVolume(naviVolume, value)
+            }
+            Progress.VOICE -> {
+                updateVolume(voiceVolume, value)
+            }
+            Progress.MEDIA -> {
+                updateVolume(mediaVolume, value)
+            }
+            Progress.PHONE -> {
+                updateVolume(phoneVolume, value)
+            }
+            Progress.SYSTEM -> {
+                updateVolume(systemVolume, value)
+            }
+            else -> {}
+        }
+    }
+
+    private fun updateVolume(target: MutableLiveData<Volume>, value: Int) {
+        target.takeIf { it.value?.pos != value }?.let {
+            it.value?.pos = value
+            target.postValue(target.value)
+        }
     }
 
 }

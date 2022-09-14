@@ -3,8 +3,11 @@ package com.chinatsp.vehicle.settings.vm.accress
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IOptionListener
+import com.chinatsp.settinglib.listener.IProgressListener
 import com.chinatsp.settinglib.manager.access.SternDoorManager
+import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
@@ -14,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SternDoorViewModel @Inject constructor(app: Application, model: BaseModel) :
-    BaseViewModel(app, model), IOptionListener {
+    BaseViewModel(app, model), IOptionListener, IProgressListener {
 
     private val manager: SternDoorManager
         get() = SternDoorManager.instance
@@ -40,11 +43,20 @@ class SternDoorViewModel @Inject constructor(app: Application, model: BaseModel)
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val sternSmartEnterFunction: LiveData<Int> get() = _sternSmartEnterFunction
+    val sternSmartEnter: LiveData<Int> get() = _sternSmartEnter
 
-    private val _sternSmartEnterFunction: MutableLiveData<Int> by lazy {
+    private val _sternSmartEnter: MutableLiveData<Int> by lazy {
         val node = RadioNode.STERN_SMART_ENTER
         MutableLiveData(manager.doGetRadioOption(node))
+    }
+
+    val trunkStopPosition: LiveData<Volume> get() = _trunkStopPosition
+
+    private val _trunkStopPosition: MutableLiveData<Volume> by lazy {
+        val node = Progress.TRUNK_STOP_POSITION
+        MutableLiveData<Volume>().apply {
+            this.value = manager.doGetVolume(node)
+        }
     }
 
     override fun onCreate() {
@@ -74,7 +86,23 @@ class SternDoorViewModel @Inject constructor(app: Application, model: BaseModel)
 
     override fun onRadioOptionChanged(node: RadioNode, value: Int) {
         if (RadioNode.STERN_SMART_ENTER == node) {
-            doUpdate(_sternSmartEnterFunction, value)
+            doUpdate(_sternSmartEnter, value)
+        }
+    }
+
+    override fun onProgressChanged(node: Progress, value: Int) {
+        when (node) {
+            Progress.TRUNK_STOP_POSITION -> {
+                updateVolume(_trunkStopPosition, value)
+            }
+            else -> {}
+        }
+    }
+
+    private fun updateVolume(target: MutableLiveData<Volume>, value: Int) {
+        target.takeIf { it.value?.pos != value }?.let {
+            it.value?.pos = value
+            target.postValue(target.value)
         }
     }
 

@@ -32,7 +32,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.common.xui.widget.button.switchbutton.SwitchButton
-                    android:id="@+id/access_stern_electric_sw"
+                    android:id="@+id/stern_electric_switch"
                     style="@style/switch_button_style"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -73,7 +73,7 @@
 
 
                 <com.common.xui.widget.tabbar.TabControlView
-                    android:id="@+id/access_stern_smart_enter_radio"
+                    android:id="@+id/stern_smart_enter_radio"
                     style="@style/tdv_common_style"
                     app:layout_constraintTop_toTopOf="parent"
                     app:tcv_defaultSelection="1"

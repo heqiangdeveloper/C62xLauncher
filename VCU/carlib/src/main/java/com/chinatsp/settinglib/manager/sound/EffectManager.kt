@@ -3,7 +3,6 @@ package com.chinatsp.settinglib.manager.sound
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.mcu.CarMcuManager
 import android.car.media.CarAudioManager
-import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.SettingManager
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.Volume
@@ -113,8 +112,8 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
     }
 
     private fun getDefaultEqSerial(): Int {
-        var eqId = SettingManager.instance.getEQ()
-        var index: Int = Constant.INVALID
+        val eqId = SettingManager.instance.getEQ()
+        var index: Int
         val eqIdArray = getEqIdArray()
         val node = RadioNode.SYSTEM_SOUND_EFFECT
         if (null != eqId) {
@@ -152,7 +151,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         )
     }
 
-    fun getEqIdArray(): IntArray {
+    private fun getEqIdArray(): IntArray {
         val amplifier = VcuUtils.isAmplifier
         return if (amplifier) insetArray else outsetArray
     }

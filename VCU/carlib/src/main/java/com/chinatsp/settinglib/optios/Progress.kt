@@ -2,6 +2,7 @@ package com.chinatsp.settinglib.optios
 
 import android.car.hardware.cabin.CarCabinManager
 import android.media.AudioAttributes
+import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.bean.CanLocate
 import com.chinatsp.settinglib.sign.Origin
 
@@ -142,7 +143,18 @@ enum class Progress(
         min = 0x00,
         max = 0x1E,
         get = CanLocate(origin = Origin.ATTR, signal = AudioAttributes.USAGE_NOTIFICATION)
+    ),
+
+    /**
+     * 电动尾门依靠位置 from 0 to 100
+     */
+    TRUNK_STOP_POSITION(
+        min = 50,
+        max = 100,
+        get = CanLocate(signal = CarCabinManager.ID_PTM_POSITION_STATUS),
+        set = CanLocate(signal = CarCabinManager.ID_PTM_STP_POSN_SET)
     );
+
 
     fun isValid(value: Int): Boolean = value in min..max
 

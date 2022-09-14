@@ -28,6 +28,6 @@
         android:drawable="@drawable/trunk_door_08"
         android:duration="50" />
     <item
-        android:drawable="@drawable/trunk_door_09"
+        android:drawable="@drawable/trunk_door_08"
         android:duration="50" />
 </animation-list>

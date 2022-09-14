@@ -3,12 +3,16 @@ package com.chinatsp.settinglib.manager.access
 import android.car.VehicleAreaType
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
+import com.chinatsp.settinglib.AppExecutors
+import com.chinatsp.settinglib.IProgressManager
 import com.chinatsp.settinglib.VcuUtils
+import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.constants.OffLine
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.ISignal
+import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
@@ -28,7 +32,7 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 
 
-class SternDoorManager private constructor() : BaseManager(), IOptionManager {
+class SternDoorManager private constructor() : BaseManager(), IOptionManager, IProgressManager {
 
     companion object : ISignal {
         override val TAG: String = SternDoorManager::class.java.simpleName
@@ -81,6 +85,16 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
         }
     }
 
+    private val stopPosition: Volume by lazy {
+        val node = Progress.TRUNK_STOP_POSITION
+        Volume(node, node.min, node.max, node.min).apply {
+            AppExecutors.get()?.singleIO()?.execute {
+                val value = readIntProperty(node.get.signal, node.get.origin)
+                doUpdateProgress(stopPosition, value, true, instance::doProgressChanged)
+            }
+        }
+    }
+
     override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int>().apply {
@@ -88,6 +102,7 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
                 add(SwitchNode.STERN_LIGHT_ALARM.get.signal)
                 add(SwitchNode.STERN_AUDIO_ALARM.get.signal)
                 add(RadioNode.STERN_SMART_ENTER.get.signal)
+                add(Progress.TRUNK_STOP_POSITION.get.signal)
             }
             put(Origin.CABIN, cabinSet)
         }
@@ -120,13 +135,31 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
         }
     }
 
+    override fun doGetVolume(type: Progress): Volume? {
+        return when (type) {
+            Progress.TRUNK_STOP_POSITION -> {
+                stopPosition
+            }
+            else -> null
+        }
+    }
+
+    override fun doSetVolume(type: Progress, position: Int): Boolean {
+        return when (type) {
+            Progress.TRUNK_STOP_POSITION -> {
+                writeProperty(type.set.signal, position, type.set.origin)
+            }
+            else -> false
+        }
+    }
+
     override fun onRegisterVcuListener(priority: Int, listener: IBaseListener): Int {
         val serial: Int = System.identityHashCode(listener)
         val writeLock = readWriteLock.writeLock()
         try {
             writeLock.lock()
             unRegisterVcuListener(serial, identity)
-            listenerStore.put(serial, WeakReference(listener))
+            listenerStore[serial] = WeakReference(listener)
         } finally {
             writeLock.unlock()
         }
@@ -177,6 +210,9 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager {
             }
             RadioNode.STERN_SMART_ENTER.get.signal -> {
                 onRadioChanged(RadioNode.STERN_SMART_ENTER, sternSmartEnter, property)
+            }
+            Progress.TRUNK_STOP_POSITION.get.signal -> {
+                doUpdateProgress(stopPosition, property.value as Int, true, this::doProgressChanged)
             }
             else -> {}
         }

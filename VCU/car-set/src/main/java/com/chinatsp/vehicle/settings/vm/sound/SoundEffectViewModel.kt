@@ -25,19 +25,6 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
 
     private val manager: EffectManager by lazy { EffectManager.instance }
 
-    private val popEffect: IntArray
-        get() = intArrayOf(30, 23, 37, 49, 59)
-    private val rockEffect: IntArray
-        get() = intArrayOf(60, 57, 33, 70, 43)
-    private val jazzEffect: IntArray
-        get() = intArrayOf(60, 57, 60, 70, 35)
-    private val peopleEffect: IntArray
-        get() = intArrayOf(60, 57, 33, 70, 66)
-    private val classicEffect: IntArray
-        get() = intArrayOf(60, 57, 33, 70, 50)
-    private val standardEffect: IntArray
-        get() = intArrayOf(36, 57, 50, 70, 48)
-
     val currentEffect: LiveData<Int>
         get() = _currentEffect
 

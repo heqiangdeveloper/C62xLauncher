@@ -122,7 +122,7 @@ enum class SwitchNode(
     SEAT_FORK_DRIVE_MEET(
         get = Norm(),
         set = Norm(),
-        default = true
+        default = false
     ),
 
     /**
@@ -213,8 +213,7 @@ enum class SwitchNode(
 
     /**
      * 座舱--其它--无线充电灯（no signal）
-     * set -> int类型数据 氛围灯Console软开关[0x1,0,0x0,0x3]
-     *        0x0: Inactive; 0x1: ON
+     * set -> int类型数据 氛围灯Console软开关 0x0: Inactive; 0x1: ON; 0x2: OFF; 0x3: Reserved
      */
     DRIVE_WIRELESS_CHARGING_LAMP(
         get = Norm(on = 0x1, off = 0x0, signal = -1),
@@ -351,13 +350,13 @@ enum class SwitchNode(
 
 
     /**
-     * 车门车窗--车窗--雨刮维修 (no signal)
+     * 车门车窗--车窗--雨刮维修
+     * get -> 前雨刮维修模式状态; 0x0:Initializing; 0x1 maitenance mode; 0x2:normal mode; 0x3:Invalid
      * set -> 前雨刮维修模式开关 0x0:Initializing; 0x1:maitenance mode; 0x2:normal mode; 0x3:Invalid
      *
      */
     RAIN_WIPER_REPAIR(
-        //get MCU 信号：FRONT_WIPER_MAINTENNANCE_STS
-        get = Norm(),
+        get = Norm(on = 0x01, off = 0x02, signal = CarCabinManager.ID_FRONT_WIPER_MAINTENNANCE_STATES),
         set = Norm(on = 0x01, off = 0x02, signal = CarCabinManager.ID_FRONT_WIPER_MAINTENNANCE_SW),
         default = false
     ),
@@ -620,10 +619,12 @@ enum class SwitchNode(
     /**
      * 灯光设置--氛围灯--后排氛围灯 (no signal)
      * get -> 后排氛围灯开关状态 0x0:OFF; 0x1:ON
+     * set -> 后排氛围灯软开关[0x1,0,0x0,0x3] x0: Inactive;  0x1: ON; 0x2: OFF;  0x3: Reserved
      */
     BACK_AMBIENT_LIGHTING(
-        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ALC_GEAR_PART_STS),
-        set = Norm(on = 0x1, off = 0x2, signal = -1),
+//        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ALC_GEAR_PART_STS),
+        get = Norm(on = 0x1, off = 0x0, signal = -1),
+        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HUM_ALC_REAR_PART_SW),
         default = false
     ),
 
