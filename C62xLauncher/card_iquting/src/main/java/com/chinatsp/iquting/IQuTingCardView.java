@@ -587,7 +587,6 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
             @Override
             public void success(AreaContentResponseBean areaContentResponseBean) {
                 Log.d(TAG_CONTENT,"getAreaContentData success");
-                mTvCardIQuTingLoginTip.setText("getAreaContentData success");
                 List<BaseSongItemBean> songLists = areaContentResponseBean.getSonglist();
                 if(songLists != null){
                     int currentTab = sp.getInt(IqutingConfigs.CURRENTTAB,1);
@@ -733,7 +732,7 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.ivIQuTingPlayPauseBtn || v.getId() == R.id.ivIQuTingPlayPauseBtnBig) {//暂停播放
-            Log.d(TAG,"onClick ivIQuTingPlayPauseBtn");
+            Log.d(TAG,"onClick ivIQuTingPlayPauseBtn isLogin: " + isLogin);
             if(!isLogin) return;
             checkHasMediaPlay();
             Log.d(TAG,"isPlaying: " + isPlaying);
@@ -743,7 +742,7 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                 FlowPlayControl.getInstance().doPlay();
             }
         }else if(v.getId() == R.id.ivIQuTingPreBtn || v.getId() == R.id.ivIQuTingPreBtnBig){//上一曲
-            Log.d(TAG,"onClick ivIQuTingPreBtn");
+            Log.d(TAG,"onClick ivIQuTingPreBtn isLogin: " + isLogin);
             if(!isLogin) return;
             checkHasMediaPlay();
 //            FlowPlayControl.getInstance().doPre();
@@ -763,7 +762,7 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                 }
             });
         }else if(v.getId() == R.id.ivIQuTingNextBtn || v.getId() == R.id.ivIQuTingNextBtnBig){//下一曲
-            Log.d(TAG,"onClick ivIQuTingNextBtn");
+            Log.d(TAG,"onClick ivIQuTingNextBtn isLogin: " + isLogin);
             if(!isLogin) return;
             checkHasMediaPlay();
 //            FlowPlayControl.getInstance().doNext();
@@ -783,7 +782,7 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                 }
             });
         }else if(v.getId() == R.id.ivIQuTingLike || v.getId() == R.id.ivIQuTingLikeBtnBig){//收藏
-            Log.d(TAG,"onClick ivIQuTingLike");
+            Log.d(TAG,"onClick ivIQuTingLike isLogin: " + isLogin);
             if(!isLogin) return;
             checkHasMediaPlay();
             if(currentMediaInfo != null){
@@ -800,10 +799,13 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
             mTvIQuTingRankSongs.setTextColor(getResources().getColor(R.color.card_blue_default));
             mTvIQuTingDailySongs.setTextColor(getResources().getColor(R.color.card_title_expand));
 
-            if(mContentId == TYPE_RANKSONGS && (dailySongLists == null || dailySongLists.size() == 0)){
-                getMusicList(TYPE_DAILYSONGS);
-            }else if(mContentId == TYPE_RANKSONGS && (dailySongLists != null && dailySongLists.size() != 0)){
-                if(mNormalBigCardViewHolder != null) mNormalBigCardViewHolder.updateSongs(dailySongLists);
+            Log.d(TAG,"onClick tvIQuTingDailySongs  isLogin: " + isLogin);
+            if(isLogin){
+                if(mContentId == TYPE_RANKSONGS && (dailySongLists == null || dailySongLists.size() == 0)){
+                    getMusicList(TYPE_DAILYSONGS);
+                }else if(mContentId == TYPE_RANKSONGS && (dailySongLists != null && dailySongLists.size() != 0)){
+                    if(mNormalBigCardViewHolder != null) mNormalBigCardViewHolder.updateSongs(dailySongLists);
+                }
             }
             mContentId = TYPE_DAILYSONGS;
             editor.putInt(IqutingConfigs.CURRENTTAB,TYPE_DAILYSONGS);
@@ -812,10 +814,13 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
             mTvIQuTingDailySongs.setTextColor(getResources().getColor(R.color.card_blue_default));
             mTvIQuTingRankSongs.setTextColor(getResources().getColor(R.color.card_title_expand));
 
-            if(mContentId == TYPE_DAILYSONGS && (rankSongLists == null || rankSongLists.size() == 0)){
-                getMusicList(TYPE_RANKSONGS);
-            }else if(mContentId == TYPE_DAILYSONGS && (rankSongLists != null && rankSongLists.size() != 0)){
-                if(mNormalBigCardViewHolder != null) mNormalBigCardViewHolder.updateSongs(rankSongLists);
+            Log.d(TAG,"onClick tvIQuTingRankSongs isLogin: " + isLogin);
+            if(isLogin){
+                if(mContentId == TYPE_DAILYSONGS && (rankSongLists == null || rankSongLists.size() == 0)){
+                    getMusicList(TYPE_RANKSONGS);
+                }else if(mContentId == TYPE_DAILYSONGS && (rankSongLists != null && rankSongLists.size() != 0)){
+                    if(mNormalBigCardViewHolder != null) mNormalBigCardViewHolder.updateSongs(rankSongLists);
+                }
             }
             mContentId = TYPE_RANKSONGS;
             editor.putInt(IqutingConfigs.CURRENTTAB,TYPE_RANKSONGS);
@@ -887,7 +892,7 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
             mIvIQuTingLikeBtnBig.setTag("unlike");
         }
         addView(mLargeCardView);
-        mState.updateViewState(this, mExpand);
+        if(mState != null) mState.updateViewState(this, mExpand);
 
         mLargeCardView.setVisibility(VISIBLE);
         mSmallCardView.setVisibility(GONE);

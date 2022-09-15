@@ -13,7 +13,9 @@ import androidx.fragment.app.Fragment;
 
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -34,6 +36,7 @@ import com.chinatsp.apppanel.R;
 import com.chinatsp.apppanel.adapter.AddAppAdapter;
 import com.chinatsp.apppanel.adapter.MyAppInfoAdapter;
 import com.chinatsp.apppanel.db.MyAppDB;
+import com.chinatsp.apppanel.event.UninstallCommandEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -475,6 +478,9 @@ public class MyAppFragment extends Fragment {
             }
         }else if(event instanceof ReStoreDataEvent){
             if(!isStoringData) storeData();
+        }else if(event instanceof UninstallCommandEvent){//倒计时退出编辑的事件
+            Log.d("CountTimer","UninstallCommandEvent start count");
+            appInfoClassifyView.startCountTimer();
         }
     }
 
@@ -708,7 +714,7 @@ public class MyAppFragment extends Fragment {
         super.onDestroy();
         Log.d("heqq","myAppFragment onDestroy");
         EventBus.getDefault().unregister(this);
-        resetSubDeleteFlag(false);
+        resetMainDeleteFlag(false);
         resetSubDeleteFlag(false);
     }
 }
