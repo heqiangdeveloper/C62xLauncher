@@ -141,7 +141,7 @@ public class SmoothLineChartView extends View {
 
     public int[] obtainProgress() {
         if (null != mValues) {
-            return mValues.stream().mapToInt(it -> Math.round(it / intervalMaxY)).toArray();
+            return mValues.stream().mapToInt(it -> (int) (Math.round(it) + intervalMaxY + 1)).toArray();
         }
         return null;
     }

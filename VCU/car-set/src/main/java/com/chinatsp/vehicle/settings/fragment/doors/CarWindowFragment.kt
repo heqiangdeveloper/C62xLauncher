@@ -8,17 +8,14 @@ import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.access.WindowManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
-import com.chinatsp.vehicle.settings.HintHold
 import com.chinatsp.vehicle.settings.ISwitchAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CarWindowFragmentBinding
-import com.chinatsp.vehicle.settings.fragment.drive.dialog.DetailsDialogFragment
 import com.chinatsp.vehicle.settings.vm.accress.WindowViewModel
 import com.common.animationlib.AnimationDrawable
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.popupwindow.PopWindow
-import com.common.xui.widget.popupwindow.easypopup.EasyPopup
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -148,7 +145,7 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
 
     private fun showPopWindow(id:Int, view:View){
         val popWindow = PopWindow(activity,R.layout.pop_window)
-        var text:TextView = popWindow.findViewById(R.id.content) as TextView
+        val text:TextView = popWindow.findViewById(R.id.content) as TextView
         text.text = resources.getString(id)
         popWindow.showDown(view)
     }

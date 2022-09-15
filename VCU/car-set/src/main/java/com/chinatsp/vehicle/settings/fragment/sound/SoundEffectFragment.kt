@@ -22,7 +22,6 @@ import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.popupwindow.PopWindow
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 @AndroidEntryPoint
 class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragmentBinding>(),
@@ -68,7 +67,6 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
         }
         viewModel.currentEffect.observe(this) {
             val array = resources.getStringArray(R.array.sound_equalizer_option)
-            Timber.tag("luohong").d("========================it==$it")
             binding.soundEffectHint.text = array[it]
         }
     }

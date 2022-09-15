@@ -1,6 +1,7 @@
 package com.chinatsp.settinglib.manager
 
 import android.car.hardware.CarPropertyValue
+import android.car.hardware.cabin.CarCabinManager
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.access.AccessManager
 import com.chinatsp.settinglib.manager.adas.AdasManager
@@ -105,11 +106,13 @@ class GlobalManager private constructor() : BaseManager() {
 //        CabinManager.instance.onTrailerRemindChanged(onOff, level, dist)
 //    }
 
+    /**
+     * 一键升降窗开关  0x0: Inactive; 0x1: Open all; 0x2: Close all; 0x3: Reserved"
+     */
     fun doSwitchWindow(status: Boolean): Boolean {
-        val value = if (status) 0xC8 else 0x00
+        val value = if (status) 0x01 else 0x02
         Timber.d("doSwitchWindow status:%s, value:%s", status, value)
-//        writeProperty(CarCabinManager.ID_FRNTLEWINPOSNSET, value, Origin.CABIN)
-//        writeProperty(CarCabinManager.ID_FRNTRIWINPOSNSET, value, Origin.CABIN)
+        writeProperty(CarCabinManager.ID_ONE_KEY_CLICK_ALL_WINDOW_SW, value, Origin.CABIN)
         return true
     }
 

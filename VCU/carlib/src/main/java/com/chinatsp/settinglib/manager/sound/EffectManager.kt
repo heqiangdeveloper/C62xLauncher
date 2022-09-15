@@ -106,8 +106,8 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         val node = RadioNode.SYSTEM_SOUND_EFFECT
         AtomicInteger(node.default).apply {
             val eqId = getDefaultEqSerial()
-            doUpdateRadioValue(node, this, eqId, instance::doOptionChanged)
-            Timber.tag("luohong").d("----------eqId:$eqId, this.value:${this.get()}")
+            set(eqId)
+//            doUpdateRadioValue(node, this, eqId, instance::doOptionChanged)
         }
     }
 
@@ -124,6 +124,8 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         } else {
             index = if (VcuUtils.isAmplifier) 1 else 0
         }
+        Timber.d("getDefaultEqSerial eqId:$eqId, " +
+                "index:$index, VcuUtils.isAmplifier:${VcuUtils.isAmplifier}")
         return node.get.values[index]
     }
 
@@ -245,9 +247,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
     override fun doGetRadioOption(node: RadioNode): Int {
         return when (node) {
             RadioNode.SYSTEM_SOUND_EFFECT -> {
-                val value = eqMode.get()
-                Timber.tag("luohong").d("doGetRadioOption value:$value")
-                value
+                eqMode.get()
             }
             RadioNode.AUDIO_ENVI_AUDIO -> {
                 audioEffectOption.get()
@@ -259,7 +259,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
         return when (node) {
             RadioNode.SYSTEM_SOUND_EFFECT -> {
-//                writeProperty(node.set.signal, value, node.set.origin)
+                Timber.d("doSetRadioOption SYSTEM_SOUND_EFFECT value:$value")
                 val result = doUpdateSoundEffect(node, value)
                 if (result) doUpdateRadioValue(node, eqMode, value, this::doOptionChanged)
                 result
@@ -344,7 +344,8 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
                 onRadioChanged(RadioNode.AUDIO_ENVI_AUDIO, audioEffectOption, property)
             }
             RadioNode.SYSTEM_SOUND_EFFECT.get.signal -> {
-                onRadioChanged(RadioNode.SYSTEM_SOUND_EFFECT, eqMode, property)
+                Timber.d("onCabinPropertyChanged SYSTEM_SOUND_EFFECT value:${property.value}")
+//                onRadioChanged(RadioNode.SYSTEM_SOUND_EFFECT, eqMode, property)
             }
             else -> {}
         }
@@ -359,8 +360,14 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         val manager = SettingManager.instance
         val node = RadioNode.SYSTEM_SOUND_EFFECT
         val eqModeId = findEqIdSerial(node, mode)
-        manager.setAudioEQ(eqModeId, lev1, lev2, lev3, lev4, lev5)
-//        doUpdateRadioValue(node, eqMode, node.obtainSelectValue(mode), this::doOptionChanged)
+        manager.setAudioEQ(eqModeId, mode,  lev1, lev2, lev3, lev4, lev5)
+    }
+
+    private fun doSetEQ(mode: Int) {
+        val manager = SettingManager.instance
+        val node = RadioNode.SYSTEM_SOUND_EFFECT
+        val eqModeId = findEqIdSerial(node, mode)
+        manager.setAudioEQ(eqModeId)
     }
 
     private fun findEqIdSerial(node: RadioNode, value: Int): Int {

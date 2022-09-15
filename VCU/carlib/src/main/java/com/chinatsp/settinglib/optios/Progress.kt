@@ -2,7 +2,6 @@ package com.chinatsp.settinglib.optios
 
 import android.car.hardware.cabin.CarCabinManager
 import android.media.AudioAttributes
-import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.bean.CanLocate
 import com.chinatsp.settinglib.sign.Origin
 

@@ -44,6 +44,7 @@ import com.chinatsp.settinglib.manager.cabin.OtherManager
 import com.chinatsp.settinglib.manager.lamp.BrightnessManager
 import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.settinglib.optios.Area
+import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SoundEffect
 import com.chinatsp.settinglib.sign.Origin
 import timber.log.Timber
@@ -201,8 +202,8 @@ class SettingManager private constructor() {
             mCarCabinManager?.let { it ->
                 val signals = cabinSignal
                 val signalArray = signals.stream().filter { value -> value != -1 }
-                        .mapToInt { obj: Int -> obj }
-                        .toArray()
+                    .mapToInt { obj: Int -> obj }
+                    .toArray()
                 Arrays.stream(signalArray).forEach {
                     Timber.d("register cabin: hex propertyId:${Integer.toHexString(it)},  dec propertyId:$it")
                 }
@@ -1042,13 +1043,14 @@ class SettingManager private constructor() {
     }
 
     fun setAudioEQ(
-        mode: Int, lev1: Int = 0,
+        eqMode: Int, optionId: Int, lev1: Int = 0,
         lev2: Int = 0, lev3: Int = 0,
         lev4: Int = 0, lev5: Int = 0
     ) {
         try {
             mCarAudioManager?.let {
-                val isCustom = CarAudioManager.EQ_MODE_CUSTOM == mode
+                it.eqMode = eqMode
+                val isCustom = RadioNode.SYSTEM_SOUND_EFFECT.get.values.last() == optionId
                 if (isCustom) {
                     setAudioVoice(VOICE_LEVEL1, lev1)
                     setAudioVoice(VOICE_LEVEL2, lev2)
@@ -1056,14 +1058,21 @@ class SettingManager private constructor() {
                     setAudioVoice(VOICE_LEVEL4, lev4)
                     setAudioVoice(VOICE_LEVEL5, lev5)
                 }
-                it.eqMode = mode
                 val builder = StringBuilder()
-                builder.append("setAudioEQ mode:$mode, isCustom:$isCustom")
+                builder.append("setAudioEQ mode:$eqMode, isCustom:$isCustom")
                 if (isCustom) {
                     builder.append(", lev1:$lev1, lev2:$lev2, lev3:$lev3, lev4:$lev4, lev5:$lev5")
                 }
                 Timber.d(builder.toString())
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun setAudioEQ(eqMode: Int) {
+        try {
+            mCarAudioManager?.eqMode = eqMode
         } catch (e: Exception) {
             e.printStackTrace()
         }

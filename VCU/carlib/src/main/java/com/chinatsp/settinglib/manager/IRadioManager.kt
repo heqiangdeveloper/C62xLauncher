@@ -58,10 +58,7 @@ interface IRadioManager : IManager {
             atomic.set(value)
             block?.let { it(node, value) }
         } else {
-            Timber.tag("luohong").e(
-                "doUpdateRadioValue node:$node, value:$value" +
-                        " isValid:$isValid, isEqual:$isEqual"
-            )
+            Timber.e("doUpdateRadioValue node:$node, value:$value, isValid:$isValid, isEqual:$isEqual")
         }
         return atomic
     }

@@ -60,10 +60,7 @@ interface ISwitchManager : IManager {
         if (isValid) {
             doUpdateSwitchValue(node, atomic, node.isOn(value), block)
         } else {
-            Timber.e(
-                "doActionSignal updateSwitchValue but isValid:$isValid," +
-                        "node:$node, value:$value, coreOn:${node.careOn}"
-            )
+            Timber.e("updateSwitchValue but isValid:$isValid, node:$node, value:$value, coreOn:${node.careOn}")
         }
         return atomic
     }
@@ -74,9 +71,12 @@ interface ISwitchManager : IManager {
         status: Boolean,
         block: ((SwitchNode, Boolean) -> Unit)? = null
     ): AtomicBoolean {
-        if (atomic.get() xor status) {
+        val isNotEqual = atomic.get() xor status
+        if (isNotEqual) {
             atomic.set(status)
             block?.let { it(node, status) }
+        } else {
+            Timber.e("updateSwitchValue but isNotEqual:$isNotEqual, node:$node, status:$status")
         }
         return atomic
     }

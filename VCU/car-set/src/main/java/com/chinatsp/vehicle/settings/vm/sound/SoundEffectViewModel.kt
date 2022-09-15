@@ -7,7 +7,6 @@ import com.chinatsp.settinglib.SettingManager
 import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.manager.sound.EffectManager
 import com.chinatsp.settinglib.optios.RadioNode
-import com.chinatsp.settinglib.optios.SoundEffect
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.common.library.frame.base.BaseModel
@@ -29,8 +28,7 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
         get() = _currentEffect
 
     private val _currentEffect: MutableLiveData<Int> by lazy {
-        val node = RadioNode.SYSTEM_SOUND_EFFECT
-        val value = EffectManager.instance.doGetRadioOption(node)
+        val value = EffectManager.instance.doGetRadioOption(RadioNode.SYSTEM_SOUND_EFFECT)
         MutableLiveData(value)
     }
 
@@ -68,14 +66,6 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
         super.onDestroy()
     }
 
-//    fun getEffectValues(effect: SoundEffect): IntArray {
-//        val id = manager.getSoundEffect()
-//        if (id != effect.id) {
-//            manager.setSoundEffect(effect)
-//        }
-//        return getEffectValues()
-//    }
-
     fun getEffectValues(eqId: Int): IntArray {
         val lev1 = getAudioVoice(SettingManager.VOICE_LEVEL1)
         val lev2 = getAudioVoice(SettingManager.VOICE_LEVEL2)
@@ -98,55 +88,6 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
     fun getAudioFade(): Int {
         return manager.audioFade()
     }
-
-
-//    fun setAudioEQ(
-//        position: Int,
-//        lev1: Int = getAudioVoice(SettingManager.VOICE_LEVEL1),
-//        lev2: Int = getAudioVoice(SettingManager.VOICE_LEVEL2),
-//        lev3: Int = getAudioVoice(SettingManager.VOICE_LEVEL3),
-//        lev4: Int = getAudioVoice(SettingManager.VOICE_LEVEL4),
-//        lev5: Int = getAudioVoice(SettingManager.VOICE_LEVEL5),
-//    ) {
-//        var effectArray: IntArray? = null
-//        val mode = when (position) {
-//            0 -> {
-//                effectArray = standardEffect
-//                SoundEffect.BEGIN.id
-//            }
-//            1 -> {
-//                effectArray = classicEffect
-//                SoundEffect.CLASSIC.id
-//            }
-//            2 -> {
-//                effectArray = peopleEffect
-//                SoundEffect.POP.id
-//            }
-//            3 -> {
-//                effectArray = jazzEffect
-//                SoundEffect.JAZZ.id
-//            }
-//            4 -> {
-//                effectArray = popEffect
-//                SoundEffect.BEATS.id
-//            }
-//            5 -> {
-//                effectArray = rockEffect
-//                SoundEffect.ROCK.id
-//            }
-//            else -> {
-//                SoundEffect.CUSTOM.id
-//            }
-//        }
-//        if (null != effectArray) {
-//            manager.doSetEQ(
-//                mode, effectArray[0], effectArray[1],
-//                effectArray[2], effectArray[3], effectArray[4]
-//            )
-//        } else {
-//            manager.doSetEQ(mode, lev1, lev2, lev3, lev4, lev5)
-//        }
-//    }
 
     private fun getAudioVoice(id: Int): Int {
         return manager.getAudioVoice(id)

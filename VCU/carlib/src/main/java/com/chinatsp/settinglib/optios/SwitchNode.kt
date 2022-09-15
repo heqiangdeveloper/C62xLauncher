@@ -319,10 +319,12 @@ enum class SwitchNode(
 
     /**
      * 车门车窗--车窗--遥控升窗/降窗 (no signal)
+     * get -> 遥控升降窗状态反馈 0x0: Initializing  0x1: On  0x2: Off   0x3: Invalid
+     * set -> 遥控升降窗软开关 0x0: Inactive; 0x1: Enabled; 0x2: Disabled; 0x3: Reserved
      */
     WIN_REMOTE_CONTROL(
-        get = Norm(),
-        set = Norm(),
+        get = Norm(on = 0x01, off = 0x02, signal = CarCabinManager.ID_REMOTE_WINDOW_RISE_FALL_STATES),
+        set = Norm(on = 0x01, off = 0x02, signal = CarCabinManager.ID_REMOTE_WINDOW_RISE_FALL_SW),
         default = false
     ),
 
@@ -607,7 +609,7 @@ enum class SwitchNode(
 
     /**
      * 灯光设置--氛围灯--前排氛围灯
-     * get -> 0x0:ALT OFF 0x1:ALT ON 0x2~0x3:Reserved
+     * get -> 前排氛围灯开关状态 0x0: Off; 0x1: On
      * set -> 前排氛围灯软开关[0x1,0,0x0,0x3] 0x0: Inactive 0x1: ON 0x2: OFF 0x3: Reserved
      */
     FRONT_AMBIENT_LIGHTING(
@@ -617,13 +619,12 @@ enum class SwitchNode(
     ),
 
     /**
-     * 灯光设置--氛围灯--后排氛围灯 (no signal)
-     * get -> 后排氛围灯开关状态 0x0:OFF; 0x1:ON
+     * 灯光设置--氛围灯--后排氛围灯
+     * get -> 后排氛围灯开关状态 0x0: Off;  0x1: On
      * set -> 后排氛围灯软开关[0x1,0,0x0,0x3] x0: Inactive;  0x1: ON; 0x2: OFF;  0x3: Reserved
      */
     BACK_AMBIENT_LIGHTING(
-//        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ALC_GEAR_PART_STS),
-        get = Norm(on = 0x1, off = 0x0, signal = -1),
+        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ALC_REAR_PART_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HUM_ALC_REAR_PART_SW),
         default = false
     ),
