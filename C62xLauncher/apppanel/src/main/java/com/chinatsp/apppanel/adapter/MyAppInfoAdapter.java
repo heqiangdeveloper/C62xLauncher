@@ -43,6 +43,7 @@ import com.chinatsp.apppanel.db.MyAppDB;
 import com.chinatsp.apppanel.decoration.AppManageDecoration;
 import com.chinatsp.apppanel.event.DeletedCallback;
 import com.chinatsp.apppanel.event.SelectedCallback;
+import com.chinatsp.apppanel.event.UninstallCommandEvent;
 import com.chinatsp.apppanel.utils.Utils;
 import com.chinatsp.apppanel.window.AppManagementWindow;
 
@@ -276,6 +277,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
     public View getView(ViewGroup parent, int mainPosition, int subPosition) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_inner,parent,false);
         ImageView iconIv = (ImageView) view.findViewById(R.id.icon_iv);
+        iconIv.setScaleType(ImageView.ScaleType.FIT_XY);
         if(mainPosition < mData.size() && subPosition < mData.get(mainPosition).size()){
             if(mData.get(mainPosition).get(subPosition) == null){
                 iconIv.setImageResource(R.drawable.add_app_icon);
@@ -320,6 +322,10 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             }
         }else if(tv.getText().toString().trim().equals(context.getString(R.string.appmanagement_name))){
             if(isTimeEnabled()) {//防抖处理
+                editor.putBoolean(MyConfigs.SHOWDELETE,false);
+                editor.putBoolean(MyConfigs.MAINSHOWDELETE,false);
+                editor.commit();
+                hideDeleteIcon((RecyclerView) relativeLayout.getParent());
                 //showAppManagementDialog();
                 AppManagementWindow.getInstance(context).show();
             }
@@ -328,14 +334,14 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             if(isClickDelete){//如果点击的是删除
                 //hideDeleteIcon((RecyclerView) relativeLayout.getParent());
                 //resetDeleteFlag(true,parentIndex);//position不为-1就行,用parentIndex
-                if(index == -1){
+                if(index == -1){//main中
                     editor.putBoolean(MyConfigs.MAINSHOWDELETE,true);
                     editor.commit();
-                    showDeleteDialog(tv.getText().toString(),mData.get(parentIndex).get(0).getPackageName());
-                }else {
+                    showDeleteDialog(tv.getText().toString(),mData.get(parentIndex).get(0).getPackageName(),true);
+                }else {//sub中
                     editor.putBoolean(MyConfigs.SHOWDELETE,true);
                     editor.commit();
-                    showDeleteDialog(tv.getText().toString(),mData.get(parentIndex).get(index).getPackageName());
+                    showDeleteDialog(tv.getText().toString(),mData.get(parentIndex).get(index).getPackageName(),false);
                 }
             }else {
                 editor.putBoolean(MyConfigs.SHOWDELETE,false);
@@ -829,7 +835,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         return addAppLists;
     }
 
-    private void showDeleteDialog(String name,String packageName){
+    private void showDeleteDialog(String name,String packageName,boolean isSendCount){
         Dialog dialog = new Dialog(context, com.anarchy.classifyview.R.style.mydialog);
         dialog.setContentView(R.layout.uninstall_dialog);
         WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
@@ -844,14 +850,17 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             public void onClick(View view) {
                 uninstall(packageName);
                 dialog.dismiss();
+                if(isSendCount) EventBus.getDefault().post(new UninstallCommandEvent());//发送倒计时退出编辑的事件
             }
         });
         negativeTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
+                if(isSendCount) EventBus.getDefault().post(new UninstallCommandEvent());//发送倒计时退出编辑的事件
             }
         });
+        dialog.setCancelable(false);
         dialog.show();
     }
 

@@ -56,6 +56,7 @@ import com.anarchy.classifyview.event.ChangeTitleEvent;
 import com.anarchy.classifyview.event.ReStoreDataEvent;
 import com.anarchy.classifyview.simple.BaseSimpleAdapter;
 import com.anarchy.classifyview.simple.widget.InsertAbleGridView;
+import com.anarchy.classifyview.time.CountTimer;
 import com.anarchy.classifyview.util.L;
 import com.anarchy.classifyview.util.MyConfigs;
 
@@ -171,6 +172,7 @@ public class ClassifyView extends FrameLayout {
     private boolean isInSubDrag = false;
     private List<String> canUninstallNameLists;
     private boolean isHasDeletedItems = false;//sub中是否有可删除的item
+    private CountTimer countTimerView;
     public ClassifyView(Context context) {
         super(context);
         init(context, null, 0);
@@ -228,7 +230,7 @@ public class ClassifyView extends FrameLayout {
         mEdgeWidth = a.getDimensionPixelSize(R.styleable.ClassifyView_EdgeWidth, 15);
         a.recycle();
         mMainRecyclerView = getMain(context, attrs);
-        mMainRecyclerView.setPadding(60,0,0,0);
+        mMainRecyclerView.setPadding(160,0,160,0);
         mMainRecyclerView.setOverScrollMode(OVER_SCROLL_NEVER);//去掉滑动到顶/底部时的阴影
         mSubRecyclerView = getSub(context, attrs);
         mSubRecyclerView.setOverScrollMode(OVER_SCROLL_NEVER);
@@ -400,6 +402,8 @@ public class ClassifyView extends FrameLayout {
         mDragView.setVisibility(GONE);
         addViewInLayout(mDragView, -1, generateDefaultLayoutParams());
         setUpTouchListener(context);
+        //初始化CountTimer，设置倒计时为10s。
+        countTimerView = new CountTimer(10000L,1000L,getMainRecyclerView());
     }
 
     protected
@@ -511,6 +515,11 @@ public class ClassifyView extends FrameLayout {
                 editor.putBoolean(MyConfigs.SHOWDELETE,false);
                 editor.putBoolean(MyConfigs.MAINSHOWDELETE,false);
                 editor.commit();
+                if(isInDeleteMode && isCountTimer){
+                    Log.d("CountTimer","onSingleTapConfirmed cancel count");
+                    countTimerView.cancel();
+                    isCountTimer = false;
+                }
                 if (list == null || list.size() < 2) {
                     mMainCallBack.onItemClick(position, pressedView);
                     return true;
@@ -928,8 +937,8 @@ public class ClassifyView extends FrameLayout {
     }
 
     public boolean isSubContainerShow(){
-        if(mSubContainer != null){
-            return mSubContainer.getVisibility() == View.VISIBLE ? true : false;
+        if(mMainShadowView != null){
+            return mMainShadowView.getVisibility() == View.VISIBLE ? true : false;
         }else {
             return false;
         }
@@ -945,6 +954,7 @@ public class ClassifyView extends FrameLayout {
     RecyclerView recyclerView;
     RelativeLayout relativeLayout;
     InsertAbleGridView insertAbleGridView;
+    boolean isCountTimer = false;
     class MainDragListener implements View.OnDragListener {
         @Override
         public boolean onDrag(View v, DragEvent event) {
@@ -957,6 +967,11 @@ public class ClassifyView extends FrameLayout {
             float centerX = x - width / 2;
             float centerY = y - height / 2;
 
+            if(isCountTimer){
+                Log.d("CountTimer","MainDragListener cancel count");
+                countTimerView.cancel();
+                isCountTimer = false;
+            }
             switch (action) {
                 case DragEvent.ACTION_DRAG_STARTED:
                     if (inMainRegion) {
@@ -1064,6 +1079,9 @@ public class ClassifyView extends FrameLayout {
                                             iv.setVisibility((int)iv.getTag() == 1 ? View.VISIBLE : View.GONE);
                                         }
                                     }
+                                    Log.d("CountTimer","editTv start count");
+                                    isCountTimer = true;
+                                    countTimerView.start();
                                 }
                             });
                             dialog.show();
@@ -1105,6 +1123,27 @@ public class ClassifyView extends FrameLayout {
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
                     L.d("ACTION_DRAG_ENDED");
+                    //因为sub中长按后，最后也会走到这里，所以需要判断是否是在sub中操作的
+                    boolean isSubShow = isSubContainerShow();
+                    boolean isDialogShow = false;//文件夹编辑框是否显示
+                    if(dialog == null){
+                        isDialogShow = false;
+                    }else {
+                        isDialogShow = dialog.isShowing();
+                    }
+                    Log.d("CountTimer","isSubShow: " + isSubShow + ",isDialogShow: " + isDialogShow);
+                    //sub未展开，且dialog未显示
+                    if(!isSubShow && !isDialogShow){
+                        if(isInDeleteMode){
+                            Log.d("CountTimer","ACTION_DRAG_ENDED start count");
+                            isCountTimer = true;
+                            countTimerView.start();
+                        }else {
+                            isCountTimer = false;
+                        }
+                    }else {
+                        isCountTimer = false;
+                    }
 //                    Log.d("MyAppFragment","main drag ACTION_DRAG_ENDED ReStoreDataEvent");
 //                    EventBus.getDefault().post(new ReStoreDataEvent());//通知存储数据
                     if (mergeSuccess) {
@@ -1160,6 +1199,16 @@ public class ClassifyView extends FrameLayout {
             }
             return true;
         }
+    }
+
+    public void startCountTimer(){
+        countTimerView.start();
+        isCountTimer = true;
+    }
+
+    public void cancelCountTimer(){
+        countTimerView.cancel();
+        isCountTimer = false;
     }
 
     private int mLastMergeStartPositionAtAnimationStart = 0;
