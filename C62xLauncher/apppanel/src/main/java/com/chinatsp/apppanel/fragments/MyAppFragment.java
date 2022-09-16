@@ -13,12 +13,14 @@ import androidx.fragment.app.Fragment;
 
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.anarchy.classifyview.Bean.LocationBean;
 import com.anarchy.classifyview.ClassifyView;
 import com.anarchy.classifyview.adapter.MainRecyclerViewCallBack;
 import com.anarchy.classifyview.event.AppInstallStatusEvent;
@@ -33,8 +35,8 @@ import com.chinatsp.apppanel.AppConfigs.Priorities;
 import com.chinatsp.apppanel.R;
 import com.chinatsp.apppanel.adapter.AddAppAdapter;
 import com.chinatsp.apppanel.adapter.MyAppInfoAdapter;
-import com.chinatsp.apppanel.bean.LocationBean;
 import com.chinatsp.apppanel.db.MyAppDB;
+import com.chinatsp.apppanel.event.UninstallCommandEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -115,9 +117,8 @@ public class MyAppFragment extends Fragment {
         db = new MyAppDB(getContext());
         preferences = getContext().getSharedPreferences(MyConfigs.APPPANELSP, Context.MODE_PRIVATE);
         editor = preferences.edit();
-        editor.putBoolean(MyConfigs.SHOWDELETE,false);
-        editor.putInt(MyConfigs.SHOWDELETEPOSITION,-1);
-        editor.commit();
+        resetMainDeleteFlag(false);
+        resetSubDeleteFlag(false);
         EventBus.getDefault().register(this);
     }
 
@@ -406,15 +407,15 @@ public class MyAppFragment extends Fragment {
     public void onMessageEvent(Event event){
         if(event instanceof ChangeTitleEvent){
             //重置delete标签
-            resetDeleteFlag(false,-1);
+            resetSubDeleteFlag(false);
             mMyAppInfoAdapter.changeTitle((ChangeTitleEvent)event);
         }else if(event instanceof HideSubContainerEvent){
             //重置delete标签
-            resetDeleteFlag(false,-1);
+            resetSubDeleteFlag(false);
             appInfoClassifyView.hideSubContainer();
         }else if(event instanceof AppInstallStatusEvent){
             //重置delete标签
-            resetDeleteFlag(false,-1);
+            //resetDeleteFlag(false,-1);
             int status = ((AppInstallStatusEvent) event).getStatus();
             String packageName = ((AppInstallStatusEvent) event).getPackageName();
             Log.d(TAG,"status = " + status + ",pacakageName is: " + packageName);
@@ -454,8 +455,10 @@ public class MyAppFragment extends Fragment {
                                     lists.add(null);
                                 }
 
-                                mMyAppInfoAdapter = new MyAppInfoAdapter(getContext(), data);
-                                appInfoClassifyView.setAdapter(mMyAppInfoAdapter);
+                                //防止整个页面都刷新，不重新绑定，调用notifyDataSetChanged
+                                //mMyAppInfoAdapter = new MyAppInfoAdapter(getContext(), data);
+                                //appInfoClassifyView.setAdapter(mMyAppInfoAdapter);
+                                mMyAppInfoAdapter.notifyDataSetChanged();
                                 if(isSubShow){
                                     mMyAppInfoAdapter.getSubAdapter().initData(k,lists);
                                 }
@@ -475,12 +478,19 @@ public class MyAppFragment extends Fragment {
             }
         }else if(event instanceof ReStoreDataEvent){
             if(!isStoringData) storeData();
+        }else if(event instanceof UninstallCommandEvent){//倒计时退出编辑的事件
+            Log.d("CountTimer","UninstallCommandEvent start count");
+            appInfoClassifyView.startCountTimer();
         }
     }
 
-    private void resetDeleteFlag(boolean isShowDelete,int position){
+    private void resetMainDeleteFlag(boolean isShowDelete){
+        editor.putBoolean(MyConfigs.MAINSHOWDELETE,isShowDelete);
+        editor.commit();
+    }
+
+    private void resetSubDeleteFlag(boolean isShowDelete){
         editor.putBoolean(MyConfigs.SHOWDELETE,isShowDelete);
-        editor.putInt(MyConfigs.SHOWDELETEPOSITION,position);
         editor.commit();
     }
 
@@ -704,8 +714,7 @@ public class MyAppFragment extends Fragment {
         super.onDestroy();
         Log.d("heqq","myAppFragment onDestroy");
         EventBus.getDefault().unregister(this);
-        editor.putBoolean(MyConfigs.SHOWDELETE,false);
-        editor.putInt(MyConfigs.SHOWDELETEPOSITION,-1);
-        editor.commit();
+        resetMainDeleteFlag(false);
+        resetSubDeleteFlag(false);
     }
 }

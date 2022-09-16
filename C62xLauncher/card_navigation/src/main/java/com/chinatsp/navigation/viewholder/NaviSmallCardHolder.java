@@ -2,6 +2,7 @@ package com.chinatsp.navigation.viewholder;
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.autonavi.autoaidlwidget.AutoAidlWidgetView;
@@ -12,6 +13,8 @@ public class NaviSmallCardHolder extends NaviCardHolder{
     private ImageView ivCardNaviHome;
     private ImageView ivCardNaviCompany;
     private ImageView ivCardNaviArrow;
+    private ImageView ivCardNaviInstruction;
+    private TextView tvCardNaviInstruction;
     private AutoAidlWidgetView surfaceViewNavi;
     public NaviSmallCardHolder(View rootView) {
         super(rootView);
@@ -19,6 +22,8 @@ public class NaviSmallCardHolder extends NaviCardHolder{
         ivCardNaviHome = rootView.findViewById(R.id.ivCardNaviHome);
         ivCardNaviCompany = rootView.findViewById(R.id.ivCardNaviCompany);
         ivCardNaviArrow = rootView.findViewById(R.id.ivCardNaviArrow);
+        ivCardNaviInstruction = rootView.findViewById(R.id.ivCardNaviInstruction);
+        tvCardNaviInstruction = rootView.findViewById(R.id.tvCardNaviInstruction);
         surfaceViewNavi = rootView.findViewById(R.id.surfaceViewNavi);
 
         ivCardNaviSearch.setOnClickListener(mOnClickListener);
@@ -28,12 +33,22 @@ public class NaviSmallCardHolder extends NaviCardHolder{
 
     @Override
     public void refreshNavigation() {
-
+        ivCardNaviArrow.setVisibility(View.VISIBLE);
+        ivCardNaviCompany.setVisibility(View.VISIBLE);
+        ivCardNaviHome.setVisibility(View.VISIBLE);
+        ivCardNaviSearch.setVisibility(View.VISIBLE);
+        ivCardNaviInstruction.setVisibility(View.GONE);
+        tvCardNaviInstruction.setVisibility(View.GONE);
     }
 
     @Override
     public void refreshFreeMode() {
-
+        ivCardNaviArrow.setVisibility(View.GONE);
+        ivCardNaviCompany.setVisibility(View.GONE);
+        ivCardNaviHome.setVisibility(View.GONE);
+        ivCardNaviSearch.setVisibility(View.GONE);
+        ivCardNaviInstruction.setVisibility(View.VISIBLE);
+        tvCardNaviInstruction.setVisibility(View.VISIBLE);
     }
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {

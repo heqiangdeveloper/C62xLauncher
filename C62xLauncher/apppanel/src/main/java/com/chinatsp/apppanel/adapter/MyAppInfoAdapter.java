@@ -1,6 +1,5 @@
 package com.chinatsp.apppanel.adapter;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
@@ -11,9 +10,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Debug;
@@ -33,30 +30,28 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.anarchy.classifyview.Bean.LocationBean;
 import com.anarchy.classifyview.event.ChangeTitleEvent;
 import com.anarchy.classifyview.event.HideSubContainerEvent;
 import com.anarchy.classifyview.simple.SimpleAdapter;
 import com.anarchy.classifyview.simple.widget.InsertAbleGridView;
 import com.anarchy.classifyview.util.L;
 import com.anarchy.classifyview.util.MyConfigs;
-import com.chinatsp.apppanel.AppConfigs.AppLists;
 import com.chinatsp.apppanel.R;
 import com.chinatsp.apppanel.bean.InfoBean;
-import com.chinatsp.apppanel.bean.LocationBean;
 import com.chinatsp.apppanel.db.MyAppDB;
 import com.chinatsp.apppanel.decoration.AppManageDecoration;
 import com.chinatsp.apppanel.event.DeletedCallback;
 import com.chinatsp.apppanel.event.SelectedCallback;
+import com.chinatsp.apppanel.event.UninstallCommandEvent;
 import com.chinatsp.apppanel.utils.Utils;
 import com.chinatsp.apppanel.window.AppManagementWindow;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import launcher.base.utils.recent.RecentAppHelper;
@@ -81,6 +76,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
     private int selectSize = 0;
     private List<HashMap<String,Object>> appInfos = new ArrayList<HashMap<String,Object>>();
     private final int MAX_RECENT_APPS = 20;
+    private static boolean isClickDelete = false;
 
     public MyAppInfoAdapter(Context context, List<List<LocationBean>> mData) {
         super(mData);
@@ -173,11 +169,10 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             holder.tvName.setText(mData.get(position).get(0).getName());
             holder.deleteIv.setTag(mData.get(position).get(0).getCanuninstalled());
             //是否显示删除按钮
-            showdeleteposition = preferences.getInt(MyConfigs.SHOWDELETEPOSITION ,  -1);
-            showDelete = preferences.getBoolean(MyConfigs.SHOWDELETE,false);
+            showDelete = preferences.getBoolean(MyConfigs.MAINSHOWDELETE,false);
             //修复： 防止上下滑动时，删除错乱
             //if(parentIndex != -1 && parentIndex == position){
-            if(showdeleteposition != -1 && showDelete){
+            if(showDelete){
                 holder.deleteIv.setVisibility((int)holder.deleteIv.getTag() == 1 ? View.VISIBLE : View.GONE);
             }else {
                 holder.deleteIv.setVisibility(View.GONE);
@@ -265,9 +260,8 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
                 holder.tvName.setVisibility(View.GONE);
                 holder.tvName.setText(context.getString(R.string.add));
             }else {
-                showdeleteposition = preferences.getInt(MyConfigs.SHOWDELETEPOSITION ,  -1);
                 showDelete = preferences.getBoolean(MyConfigs.SHOWDELETE,false);
-                if(showdeleteposition != -1 && showDelete) {
+                if(showDelete) {
                     holder.deleteIv.setVisibility(mData.get(mainPosition).get(subPosition).getCanuninstalled() == 1 ? View.VISIBLE : View.GONE);
                 }else {
                     holder.deleteIv.setVisibility(View.GONE);
@@ -283,6 +277,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
     public View getView(ViewGroup parent, int mainPosition, int subPosition) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_inner,parent,false);
         ImageView iconIv = (ImageView) view.findViewById(R.id.icon_iv);
+        iconIv.setScaleType(ImageView.ScaleType.FIT_XY);
         if(mainPosition < mData.size() && subPosition < mData.get(mainPosition).size()){
             if(mData.get(mainPosition).get(subPosition) == null){
                 iconIv.setImageResource(R.drawable.add_app_icon);
@@ -319,22 +314,39 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         TextView tv = (TextView) relativeLayout.getChildAt(3);
         if(tv.getText().toString().trim().equals(context.getString(R.string.add))){
             if(isTimeEnabled()){//防抖处理
+                editor.putBoolean(MyConfigs.SHOWDELETE,false);
+                editor.putBoolean(MyConfigs.MAINSHOWDELETE,false);
+                editor.commit();
+                hideDeleteIcon((RecyclerView) relativeLayout.getParent());
                 showAddDialog(parentIndex);
             }
         }else if(tv.getText().toString().trim().equals(context.getString(R.string.appmanagement_name))){
             if(isTimeEnabled()) {//防抖处理
+                editor.putBoolean(MyConfigs.SHOWDELETE,false);
+                editor.putBoolean(MyConfigs.MAINSHOWDELETE,false);
+                editor.commit();
+                hideDeleteIcon((RecyclerView) relativeLayout.getParent());
                 //showAppManagementDialog();
                 AppManagementWindow.getInstance(context).show();
             }
         }else {
-            if(iv.getVisibility() == View.VISIBLE){//如果删除按钮显示了，执行删除应用逻辑
-                hideDeleteIcon((RecyclerView) relativeLayout.getParent());
-                if(index == -1){
-                    showDeleteDialog(tv.getText().toString(),mData.get(parentIndex).get(0).getPackageName());
-                }else {
-                    showDeleteDialog(tv.getText().toString(),mData.get(parentIndex).get(index).getPackageName());
+            Log.d("MyAppInfoAdapter","onItemClick isClickDelete: " + isClickDelete);
+            if(isClickDelete){//如果点击的是删除
+                //hideDeleteIcon((RecyclerView) relativeLayout.getParent());
+                //resetDeleteFlag(true,parentIndex);//position不为-1就行,用parentIndex
+                if(index == -1){//main中
+                    editor.putBoolean(MyConfigs.MAINSHOWDELETE,true);
+                    editor.commit();
+                    showDeleteDialog(tv.getText().toString(),mData.get(parentIndex).get(0).getPackageName(),true);
+                }else {//sub中
+                    editor.putBoolean(MyConfigs.SHOWDELETE,true);
+                    editor.commit();
+                    showDeleteDialog(tv.getText().toString(),mData.get(parentIndex).get(index).getPackageName(),false);
                 }
             }else {
+                editor.putBoolean(MyConfigs.SHOWDELETE,false);
+                editor.putBoolean(MyConfigs.MAINSHOWDELETE,false);
+                editor.commit();
                 hideDeleteIcon((RecyclerView) relativeLayout.getParent());
                 String packageName = "";
                 if(index == -1){//-1 是main area
@@ -400,9 +412,10 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
                  */
                 List<LocationBean> selectedLists = addAppAdapter.getSelectdItems();//确认添加的应用list
                 List<LocationBean> childLists = mData.get(parentIndex);
-                childLists.removeAll(Collections.singleton(null));
+                //防止SubRecyclerView报Inconsistency detected异常，没有调用notifyDataSetChanged就不要更改数据源
+                //childLists.removeAll(Collections.singleton(null));
                 //如果数据没有变化，则不处理
-                if(childLists.size() == selectedLists.size() && childLists.containsAll(selectedLists)){
+                if(childLists.size() - 1 == selectedLists.size() && childLists.containsAll(selectedLists)){
                     return;
                 }
                 if(selectedLists.size() == 0){
@@ -822,7 +835,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         return addAppLists;
     }
 
-    private void showDeleteDialog(String name,String packageName){
+    private void showDeleteDialog(String name,String packageName,boolean isSendCount){
         Dialog dialog = new Dialog(context, com.anarchy.classifyview.R.style.mydialog);
         dialog.setContentView(R.layout.uninstall_dialog);
         WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
@@ -837,14 +850,17 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             public void onClick(View view) {
                 uninstall(packageName);
                 dialog.dismiss();
+                if(isSendCount) EventBus.getDefault().post(new UninstallCommandEvent());//发送倒计时退出编辑的事件
             }
         });
         negativeTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
+                if(isSendCount) EventBus.getDefault().post(new UninstallCommandEvent());//发送倒计时退出编辑的事件
             }
         });
+        dialog.setCancelable(false);
         dialog.show();
     }
 
@@ -872,6 +888,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
     }
 
     static class ViewHolder extends SimpleAdapter.ViewHolder {
+        public RelativeLayout rootRl;
         public TextView tvName;
         public ImageView deleteIv;
         public InsertAbleGridView insertAbleGridView;
@@ -881,10 +898,26 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         //holder.loadStatusIv.setVisibility(View.VISIBLE);
         public ViewHolder(View itemView) {
             super(itemView);
+            rootRl = (RelativeLayout) itemView.findViewById(R.id.root_rl);
             tvName = (TextView) itemView.findViewById(R.id.app_name_tv);
             deleteIv = (ImageView) itemView.findViewById(R.id.delete_iv);
             insertAbleGridView = (InsertAbleGridView) itemView.findViewById(R.id.insertAbleGridView);
             loadStatusIv = (ImageView) itemView.findViewById(R.id.load_status_iv);
+
+            rootRl.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("MyAppInfoAdapter","rootRl click");
+                    isClickDelete = false;
+                }
+            });
+            deleteIv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("MyAppInfoAdapter","deleteIv click");
+                    isClickDelete = true;
+                }
+            });
         }
     }
 }

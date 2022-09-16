@@ -85,12 +85,12 @@ public class CardHomeFragment extends BaseFragment {
     Observer<Boolean> mExpandOb = new Observer<Boolean>() {
         @Override
         public void onChanged(Boolean expand) {
-            mUiHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    onChangeExpandState(expand);
-                }
-            }, 600);
+//            mUiHandler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    onChangeExpandState(expand);
+//                }
+//            }, 600);
         }
     };
 
@@ -99,7 +99,7 @@ public class CardHomeFragment extends BaseFragment {
         EasyLog.d(TAG, "onChangeExpandState: " + expand + ", smallCardPosition:" + smallCardPosition);
         int firstCardIndex = mCardsAdapter.isIncludeDrawer() ? 1 : 0;
         if (smallCardPosition >= firstCardIndex && smallCardPosition < mCardsAdapter.getItemCount()) {
-            EasyLog.d(TAG, "onChangeExpandState: notifyItemChanged");
+            EasyLog.d(TAG, "onChangeExpandState: notifyItemChanged , smallCardPosition: "+smallCardPosition );
             mCardsAdapter.notifyItemChanged(smallCardPosition);
         }
         if (!expand) {

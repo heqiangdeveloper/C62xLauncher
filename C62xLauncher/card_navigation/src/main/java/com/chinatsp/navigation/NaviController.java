@@ -11,4 +11,8 @@ public class NaviController {
         mView = view;
     }
 
+    public void refreshInitView() {
+        mState = STATE_FREE;
+        mView.refreshState(mState);
+    }
 }

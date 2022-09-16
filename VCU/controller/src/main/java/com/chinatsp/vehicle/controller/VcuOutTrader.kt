@@ -12,10 +12,12 @@ import android.os.Message
 import android.provider.Settings
 import android.text.TextUtils
 import com.chinatsp.vehicle.controller.bean.Cmd
+import com.chinatsp.vehicle.controller.logic.conditioner.ConditionerConstants
 import com.chinatsp.vehicle.controller.semantic.CmdVoiceModel
 import com.chinatsp.vehicle.controller.semantic.GsonUtil
 import com.chinatsp.vehicle.controller.semantic.NlpVoiceModel
 import org.json.JSONObject
+import kotlin.random.Random
 
 /**
  * @author : luohong
@@ -172,12 +174,20 @@ class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback, 
             return
         }
         result = controller!!.isEngineStatus(context.packageName)
+        val carSpeed = 120//获取系统车速
         if (!result) {
             LogManager.d(TAG, "发动机没有开启，请打开发动机！")
             audioHintActionResult("", "发动机没有开启，请打开发动机！")
             return
         }
+        if(carSpeed>120){//车速大于120，不许开窗
+            LogManager.d(TAG, "车速过快，建议不要开启天窗！")
+            audioHintActionResult("", "车速过快，建议不要开启天窗！")
+            return
+        }
         result = CommandParser().doDispatchSrAction(obj, controller!!, CmdHandleCallback())
+        val array = ConditionerConstants.KT_USED
+        audioHintActionResult("", array[Random.nextInt(array.size)])//车机反馈应答，随机抽取
         if (!result) {
             defaultHandleSpeech()
         }

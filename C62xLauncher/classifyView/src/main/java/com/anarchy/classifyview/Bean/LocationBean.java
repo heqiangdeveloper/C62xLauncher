@@ -1,4 +1,4 @@
-package com.chinatsp.apppanel.bean;
+package com.anarchy.classifyview.Bean;
 
 import android.graphics.drawable.Drawable;
 import android.util.Log;
