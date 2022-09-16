@@ -1,7 +1,10 @@
 package com.chinatsp.vehicle.settings.fragment.doors.dialog
 
 import android.os.Bundle
+import android.os.SystemClock
+import android.view.View
 import com.chinatsp.settinglib.SettingManager
+import com.chinatsp.vehicle.settings.MainActivity
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.VolumeDialogFragmentBinding
 import com.chinatsp.vehicle.settings.vm.sound.SoundEffectViewModel
@@ -43,12 +46,26 @@ class VolumeDialogFragment :
 
 
         binding?.apply {
-            soundField.onValueChangedListener =
-                SoundFieldView.OnValueChangedListener { balance, fade, x, y ->
+
+//            soundField.onValueChangedListener =
+//                SoundFieldView.OnValueChangedListener { balance, fade, x, y ->
+//                    Timber.d("onValueChange balance:$balance fade:$fade")
+////                    viewModel?.setAudioBalance(balance - OFFSET, -(fade - OFFSET))
+//                    viewModel?.setAudioBalance(balance+OFFSET, fade+OFFSET)
+//                }
+
+            soundField.onValueChangedListener = object :SoundFieldView.OnValueChangedListener{
+                override fun onValueChange(balance: Int, fade: Int, x: Float, y: Float) {
                     Timber.d("onValueChange balance:$balance fade:$fade")
-//                    viewModel?.setAudioBalance(balance - OFFSET, -(fade - OFFSET))
                     viewModel?.setAudioBalance(balance+OFFSET, fade+OFFSET)
                 }
+
+                override fun onDoubleClickChange(balance: Int, fade: Int, x: Float, y: Float) {
+                    soundField.reset()
+                    Timber.d("onDoubleClickChange reset balance:${DEFALUT_BALANCE+OFFSET} fade:${DEFALUT_FADE+OFFSET}")
+                    viewModel?.setAudioBalance(DEFALUT_BALANCE+OFFSET, DEFALUT_FADE+OFFSET)
+                }
+            }
             refreshDialog.setOnClickListener {
                 soundField.reset()
                 Timber.d("onValueChange reset balance:${DEFALUT_BALANCE+OFFSET} fade:${DEFALUT_FADE+OFFSET}")
