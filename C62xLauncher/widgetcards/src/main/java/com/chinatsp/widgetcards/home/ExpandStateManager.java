@@ -8,7 +8,6 @@ import launcher.base.utils.EasyLog;
 
 public class ExpandStateManager {
     private static final String TAG = "ExpandStateManager";
-    private CardFrameViewHolder mBigCard;
 
     private ExpandStateManager() {
     }
@@ -62,11 +61,4 @@ public class ExpandStateManager {
         this.mSmallCardPosition = -1;
     }
 
-    public CardFrameViewHolder getBigCard() {
-        return mBigCard;
-    }
-
-    public void setBigCard(CardFrameViewHolder bigCard) {
-        mBigCard = bigCard;
-    }
 }

@@ -1,7 +1,5 @@
 package com.chinatsp.navigation;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.util.AttributeSet;
@@ -13,13 +11,10 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.autonavi.autoaidlwidget.AutoAidlWidgetManager;
-import com.autonavi.autoaidlwidget.AutoAidlWidgetSurfaceView;
-import com.autonavi.autoaidlwidget.AutoAidlWidgetView;
 import com.chinatsp.navigation.viewholder.NaviBigCardHolder;
 import com.chinatsp.navigation.viewholder.NaviSmallCardHolder;
 
 import card.service.ICardStyleChange;
-import launcher.base.utils.EasyLog;
 import launcher.base.utils.view.LayoutParamUtil;
 
 
@@ -61,6 +56,7 @@ public class NaviCardView extends ConstraintLayout implements ICardStyleChange {
         mSmallCardView = findViewById(R.id.layoutSmallCardView);
         mSmallCardHolder = new NaviSmallCardHolder(mSmallCardView);
         mController = new NaviController(this);
+        mController.refreshInitView();
     }
 
     @Override
@@ -100,7 +96,7 @@ public class NaviCardView extends ConstraintLayout implements ICardStyleChange {
         if (state == NaviController.STATE_IN_NAVIGATION) {
             refreshNavigation();
         } else {
-            refreshFree();
+            refreshFreeMode();
         }
     }
 
@@ -112,15 +108,16 @@ public class NaviCardView extends ConstraintLayout implements ICardStyleChange {
         }
     }
 
-
-    private void refreshFree() {
+    /**
+     * 刷新自由模式UI
+     */
+    private void refreshFreeMode() {
         if (mExpand) {
             mBigCardHolder.refreshFreeMode();
         } else {
             mSmallCardHolder.refreshFreeMode();
         }
     }
-
 
     @Override
     public boolean hideDefaultTitle() {

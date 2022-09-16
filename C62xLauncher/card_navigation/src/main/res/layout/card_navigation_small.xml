@@ -74,9 +74,9 @@
         android:layout_marginTop="132px"
         />
 
-    <ImageView
+    <TextView
         android:id="@+id/tvCardNaviInstruction"
-        android:src="@drawable/card_navi_icon_arrow"
+        android:src="@drawable/card_navi_icon_turn_right"
         android:layout_width="120px"
         android:layout_height="120px"
         app:layout_constraintStart_toStartOf="parent"

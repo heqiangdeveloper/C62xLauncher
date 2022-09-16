@@ -15,7 +15,7 @@ class DriveInfoDrawerController {
     private DriveInfoRepository mDriveInfoRepository;
     private DriveInfo mDriveInfo;
     private final int MIN_MAINTAIN = -10239;
-    private final int MAX_MAINTAIN = 55295;
+    private final int MAX_MAINTAIN = 5000;
     private Handler mMainHandler = new android.os.Handler();
 
 

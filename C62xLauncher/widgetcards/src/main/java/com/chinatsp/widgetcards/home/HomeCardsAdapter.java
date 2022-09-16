@@ -12,8 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.chinatsp.widgetcards.R;
 import com.chinatsp.widgetcards.manager.CardManager;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import card.base.LauncherCard;
 import launcher.base.utils.EasyLog;
@@ -29,6 +31,7 @@ public class HomeCardsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
 
     private final boolean mIncludeDrawer = true;
+    private Map<LauncherCard, RecyclerView.ViewHolder> mViewHolderMap = new HashMap<>();
 
 
     public HomeCardsAdapter(Context context, RecyclerView recyclerView) {
@@ -60,11 +63,12 @@ public class HomeCardsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         LauncherCard cardEntity = CardManager.getInstance().findByType(viewType);
         ViewGroup layout;
         layout = (ViewGroup) mLayoutInflater.inflate(R.layout.item_card_frame, parent, false);
-        layout.setTag(cardEntity.getName());
         View innerCard = cardEntity.getLayout(layout.getContext());
         layout.addView(innerCard, 0);
         EasyLog.d(TAG, "createCardFrameHolder: " + cardEntity.getName());
-        return new CardFrameViewHolder(layout, mRecyclerView, innerCard);
+        CardFrameViewHolder viewHolder = new CardFrameViewHolder(layout, mRecyclerView, innerCard);
+        mViewHolderMap.put(cardEntity, viewHolder);
+        return viewHolder;
     }
 
     private RecyclerView.ViewHolder createDrawerHolder(@NonNull ViewGroup parent) {
@@ -110,5 +114,20 @@ public class HomeCardsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             EasyLog.d(TAG, "onBindViewHolder : " + mCardEntityList.get(cardPosition).getName() + " , position:" + position);
             ((CardFrameViewHolder) holder).bind(position, mCardEntityList.get(cardPosition));
         }
+    }
+
+    public RecyclerView.ViewHolder find(LauncherCard card) {
+        if (card == null) {
+            return null;
+        }
+        return mViewHolderMap.get(card);
+    }
+
+    public int getPositionByCard(LauncherCard card) {
+        int position = CardManager.getInstance().getHomeList().indexOf(card);
+        if (isIncludeDrawer()) {
+            position++;
+        }
+        return position;
     }
 }
