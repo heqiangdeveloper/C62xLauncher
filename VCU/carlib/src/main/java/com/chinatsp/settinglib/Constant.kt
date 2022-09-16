@@ -29,13 +29,44 @@ object Constant {
     val ROUTE_SERIAL: String
         get() = "ROUTE_SERIAL"
 
+    /**
+     * 视频开关
+     */
     val DRIVE_VIDEO_PLAYING: String
         get() = "DRIVE_VIDEO_PLAYING"
 
+    /**
+     * 辅助线
+     */
     val AUXILIARY_LINE: String
         get() = "AUXILIARY_LINE"
 
     val SHOW_AREA: String
         get() = "SHOW_AREA"
+
+    /**
+     * 座椅加热开关
+     */
+    val SEAT_HEAT_SWITCH: String
+        get() = "SEAT_HEAT_SWITCH"
+
+    /**
+     * 座椅加热开始温度
+     */
+    val SEAT_HEAT_TEMP: String
+        get() = "SEAT_HEAT_TEMP"
+
+
+    /**
+     * 方向盘加热开关
+     */
+    val STEERING_HEAT_SWITCH: String
+        get() = "STEERING_HEAT_SWITCH"
+
+    /**
+     * 方向盘加热开始温度
+     */
+    val STEERING_HEAT_TEMP: String
+        get() = "STEERING_HEAT_TEMP"
 
 }

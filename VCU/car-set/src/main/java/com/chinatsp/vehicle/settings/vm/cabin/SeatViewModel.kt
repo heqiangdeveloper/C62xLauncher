@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.bean.Volume
+import com.chinatsp.settinglib.listener.IProgressListener
 import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.listener.sound.ISoundListener
 import com.chinatsp.settinglib.manager.cabin.SeatManager
@@ -13,6 +14,7 @@ import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.common.library.frame.base.BaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -24,7 +26,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class SeatViewModel @Inject constructor(app: Application, model: BaseModel) :
-    BaseViewModel(app, model), ISoundListener, ISwitchListener {
+    BaseViewModel(app, model), IProgressListener, ISwitchListener {
 
     private val manager: SeatManager by lazy { SeatManager.instance }
 
@@ -97,23 +99,54 @@ class SeatViewModel @Inject constructor(app: Application, model: BaseModel) :
         }
     }
 
-    override fun onSoundVolumeChanged(vararg array: Volume) {
-        array.forEach {
-            when (it.type) {
-                Progress.SEAT_ONSET_TEMPERATURE -> {
-                    updateVolume(_sillTemp, it)
-                }
-                else -> {}
+//    override fun onSoundVolumeChanged(vararg array: Volume) {
+//        array.forEach {
+//            when (it.type) {
+//                Progress.SEAT_ONSET_TEMPERATURE -> {
+//                    updateVolume(_sillTemp, it)
+//                }
+//                else -> {}
+//            }
+//        }
+//    }
+//
+//    private fun updateVolume(target: MutableLiveData<Volume>, expect: Volume) {
+//        target.takeIf { it.value?.type == expect.type }?.let {
+//            it.takeUnless { it.value == expect }?.let { liveData ->
+//                liveData.value?.pos = expect.pos
+//                liveData.postValue(liveData.value)
+//            }
+//        }
+//    }
+
+    private fun updateVolumeValue(liveData: MutableLiveData<Volume>, node: Progress, value: Int) {
+        liveData.value?.let {
+            val isMin = it.min == node.min
+            val isMax = it.max == node.max
+            val isPos = it.pos == value
+            Timber.d("updateVolumeValue mode:$node, value:$value, isMin:$isMin, isMax:$isMax, isPos:$isPos")
+            if (isMin && isMax && isPos) {
+                return
             }
+            if (!isMin) {
+                it.min = node.min
+            }
+            if (!isMax) {
+                it.max = node.max
+            }
+            if (!isPos) {
+                it.pos = value
+            }
+            liveData.postValue(it)
         }
     }
 
-    private fun updateVolume(target: MutableLiveData<Volume>, expect: Volume) {
-        target.takeIf { it.value?.type == expect.type }?.let {
-            it.takeUnless { it.value == expect }?.let { liveData ->
-                liveData.value?.pos = expect.pos
-                liveData.postValue(liveData.value)
+    override fun onProgressChanged(node: Progress, value: Int) {
+        when (node) {
+            Progress.SEAT_ONSET_TEMPERATURE -> {
+                updateVolumeValue(_sillTemp, node, value)
             }
+            else -> {}
         }
     }
 

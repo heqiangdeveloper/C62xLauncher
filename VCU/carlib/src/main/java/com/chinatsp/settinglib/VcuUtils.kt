@@ -57,7 +57,7 @@ object VcuUtils {
         val actual = levels.contains(value)
         val result = !(actual xor expect)
         Timber.d("isCareLevel value: $value, actual:$actual, result:$result")
-        return result
+        return false
     }
 
     fun getLevelValue(): Int {
@@ -74,6 +74,7 @@ object VcuUtils {
 
     fun putInt(context: Context = BaseApp.instance, key: String, value: Int): Boolean {
         try {
+            Timber.d("=======putInt key:%s, value:%s", key, value)
             return Settings.Global.putInt(context.contentResolver, key, value)
         } catch (e: java.lang.Exception) {
             e.printStackTrace()

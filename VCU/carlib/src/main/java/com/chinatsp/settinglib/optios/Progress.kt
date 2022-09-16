@@ -109,7 +109,7 @@ enum class Progress(
      */
     STEERING_ONSET_TEMPERATURE(
         min = 0x00,
-        max = 0x1E,
+        max = 0x0A,
         get = CanLocate(signal = -1),
         set = CanLocate(signal = CarCabinManager.ID_SWS_AUTO_HEAT_TEMP)
     ),

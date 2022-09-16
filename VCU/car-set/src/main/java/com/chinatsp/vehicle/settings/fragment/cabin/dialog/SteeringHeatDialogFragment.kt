@@ -12,6 +12,7 @@ import com.chinatsp.vehicle.settings.vm.cabin.SteeringViewModel
 import com.common.library.frame.base.BaseDialogFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class SteeringHeatDialogFragment :
@@ -38,8 +39,8 @@ class SteeringHeatDialogFragment :
     }
 
     private fun setRangeListener() {
-        binding.steeringHeatingStartTemperatureSeekBar.setOnSeekBarListener { seekBar, newValue ->
-            manager.doSetVolume(Progress.STEERING_ONSET_TEMPERATURE, newValue)
+        binding.steeringHeatingStartTemperatureSeekBar.setOnSeekBarListener { _, value ->
+            manager.doSetVolume(Progress.STEERING_ONSET_TEMPERATURE, value)
         }
     }
 

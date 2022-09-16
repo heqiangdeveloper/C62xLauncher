@@ -59,8 +59,7 @@ enum class SwitchNode(
 
     /**
      * 座舱--空调--空调自干燥
-     * set -> 自干燥使能开关Self-desiccation Switch
-     *        0x0: Inactive；0x1: Enabled； 0x2: Disabled；0x3: Reserved
+     * set -> 自干燥使能开关 x0: Inactive；0x1: Enabled； 0x2: Disabled；0x3: Reserved
      * get -> self-desiccation 自干燥功能状态显示 0x0:ON 0x1:OFF
      */
     AC_AUTO_ARID(
@@ -134,7 +133,6 @@ enum class SwitchNode(
      */
     SEAT_HEAT_ALL(
         get = Norm(on = 0x2, off = 0x1, signal = -1),
-//        get = Norm(on = 0x2, off = 0x1, signal = CarCabinManager.ID_HUM_SEAT_HEAT_POS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_DSM_AUTO_HEAT_SW),
         default = true,
         careOn = false
@@ -244,7 +242,12 @@ enum class SwitchNode(
     ),
 
     SPEED_VOLUME_OFFSET_INSERT(
-        get = Norm(on = 0x01, off = 0x02, origin = Origin.MCU, signal = CarMcuManager.ID_MCU_RET_AUDIO_INFO),
+        get = Norm(
+            on = 0x01,
+            off = 0x02,
+            origin = Origin.MCU,
+            signal = CarMcuManager.ID_MCU_RET_AUDIO_INFO
+        ),
         set = Norm(on = 0x01, off = 0x02, signal = CarCabinManager.ID_SETVOLUMESPEED),
         default = false
     ),
@@ -323,7 +326,11 @@ enum class SwitchNode(
      * set -> 遥控升降窗软开关 0x0: Inactive; 0x1: Enabled; 0x2: Disabled; 0x3: Reserved
      */
     WIN_REMOTE_CONTROL(
-        get = Norm(on = 0x01, off = 0x02, signal = CarCabinManager.ID_REMOTE_WINDOW_RISE_FALL_STATES),
+        get = Norm(
+            on = 0x01,
+            off = 0x02,
+            signal = CarCabinManager.ID_REMOTE_WINDOW_RISE_FALL_STATES
+        ),
         set = Norm(on = 0x01, off = 0x02, signal = CarCabinManager.ID_REMOTE_WINDOW_RISE_FALL_SW),
         default = false
     ),
@@ -358,7 +365,11 @@ enum class SwitchNode(
      *
      */
     RAIN_WIPER_REPAIR(
-        get = Norm(on = 0x01, off = 0x02, signal = CarCabinManager.ID_FRONT_WIPER_MAINTENNANCE_STATES),
+        get = Norm(
+            on = 0x01,
+            off = 0x02,
+            signal = CarCabinManager.ID_FRONT_WIPER_MAINTENNANCE_STATES
+        ),
         set = Norm(on = 0x01, off = 0x02, signal = CarCabinManager.ID_FRONT_WIPER_MAINTENNANCE_SW),
         default = false
     ),
@@ -762,11 +773,16 @@ enum class SwitchNode(
         default = true
     );
 
-    fun value(status: Boolean): Int {
-        return if (status) set.on else set.off
+    fun value(status: Boolean, isGet: Boolean = false): Int {
+        return if (isGet) {
+            if (status) get.on else get.off
+        } else {
+            if (status) set.on else set.off
+        }
     }
 
-    fun isValid(value: Int) = validValues?.contains(value) ?: ((get.on == value) or (get.off == value))
+    fun isValid(value: Int) =
+        validValues?.contains(value) ?: ((get.on == value) or (get.off == value))
 
     fun isOn(value: Int) = if (careOn) get.on == value else get.off != value
 }

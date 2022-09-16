@@ -63,6 +63,10 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".KanziActivity">
+
+        </activity>
+
         <activity
             android:name="com.chinatsp.vehicle.settings.app.oil.OilPriceActivity"
             android:screenOrientation="portrait" />

@@ -107,6 +107,7 @@ dependencies {
     implementation project(':carlib')
     implementation project(':animationlib')
     implementation project(':controller')
+    implementation project(':kanzi')
 
 
 }
