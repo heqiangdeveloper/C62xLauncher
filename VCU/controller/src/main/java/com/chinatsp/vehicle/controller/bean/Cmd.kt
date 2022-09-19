@@ -18,7 +18,7 @@ data class Cmd(
     val serial: String = UUID.randomUUID().toString(),
     @Action val action: Int,
     @Model val model: Int,
-    @IStatus var status: Int
+    @IStatus var status: Int,
 ) : Parcelable {
 
     var message: String = ""
@@ -27,7 +27,7 @@ data class Cmd(
         @Action action: Int,
         @Model model: Int,
         @IStatus status: Int = IStatus.INIT,
-        message: String
+        message: String,
     ) : this(action = action, model = model, status = status) {
         this.message = message
     }

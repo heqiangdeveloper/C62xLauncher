@@ -5,10 +5,9 @@
             <stroke
                 android:width="2dp"
                 android:color="@color/xui_config_color_light_blue" />
-            <corners
-                android:radius="@dimen/xui_config_size_edittext_radius_phone" />
+            <corners android:radius="@dimen/xui_config_size_edittext_radius_phone" />
 
-            <solid android:color="@color/xui_config_color_white"/>
+            <solid android:color="@color/xui_config_color_white" />
 
         </shape>
     </item>

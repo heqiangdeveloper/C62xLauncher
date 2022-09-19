@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.layout.linkage.view;
 
 import android.content.Context;
@@ -15,6 +14,7 @@ import com.common.xui.widget.layout.linkage.LinkageScrollHandler;
 
 /**
  * 置于联动容器的RecyclerView
+ *
  * @since 2020/3/11 6:17 PM
  */
 public class LinkageRecyclerView extends RecyclerView implements ILinkageScroll {

@@ -1045,7 +1045,7 @@ class SettingManager private constructor() {
     fun setAudioEQ(
         eqMode: Int, optionId: Int, lev1: Int = 0,
         lev2: Int = 0, lev3: Int = 0,
-        lev4: Int = 0, lev5: Int = 0
+        lev4: Int = 0, lev5: Int = 0,
     ) {
         try {
             mCarAudioManager?.let {

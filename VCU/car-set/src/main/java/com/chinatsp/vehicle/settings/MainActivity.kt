@@ -20,7 +20,6 @@ import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.bean.TabPage
 import com.chinatsp.vehicle.settings.databinding.MainActivityTablayoutBinding
 import com.chinatsp.vehicle.settings.fragment.CommonlyFragment
-import com.chinatsp.vehicle.settings.fragment.SystemFragment
 import com.chinatsp.vehicle.settings.fragment.cabin.CabinManagerFragment
 import com.chinatsp.vehicle.settings.fragment.doors.DoorsManageFragment
 import com.chinatsp.vehicle.settings.fragment.drive.DriveManageFragment
@@ -63,8 +62,8 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
     override fun isBinding(): Boolean = true
 
     override fun initData(savedInstanceState: Bundle?) {
-        checkOutRoute(intent)
         initTabLayout()
+        checkOutRoute(intent)
         tabLocation.observe(this) {
             manager.setTabSerial(it)
             if (it != binding.tabLayout.selectedTabPosition) {
@@ -90,7 +89,7 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
                 node2?.id = level2
                 node2?.presentId = level1
                 node2?.valid = true
-                val value = it.getStringExtra("POPUP")
+                val value = it.getStringExtra(Constant.DIALOG_SERIAL)
                 tabLocation.value = level1
                 level2Node.value = node2
                 popupLiveData.value = value ?: ""
@@ -111,14 +110,12 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
             childAt.layoutManager?.isItemPrefetchEnabled = false
             TabLayoutMediator(
                 binding.tabLayout, binding.viewPager, true, false
-            )
-            { tab: TabLayout.Tab, position: Int ->
+            ) { tab: TabLayout.Tab, position: Int ->
                 tab.text = mAdapter.getPageTitle(position)
+                tab.view.isLongClickable = false
+                tab.view.tooltipText = null
             }.attach()
             refreshAdapter(true)
-            if (VcuUtils.isCareLevel(Level.LEVEL3)) {
-                binding.tabLayout.getTabAt(0)?.view?.visibility = View.GONE
-            }
         }
     }
 
@@ -163,32 +160,38 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
             mAdapter.clear()
             return
         }
+        var values = TabPage.values()
+        if (VcuUtils.isCareLevel(Level.LEVEL3, expect = true)) {
+            values = values.dropWhile { it == TabPage.COMMONLY }.toTypedArray()
+        }
         // 动态加载选项卡内容
-        for (page in TabPage.values()) {
-            val title = page.description
-            val position = page.position
-            if (position == 0) {
-                val fragment = CommonlyFragment::class.java
-//                    fragment.userVisibleHint = true
-                mAdapter.addFragment(fragment, title)
-            } else if (position == 1) {
-                val fragment = DoorsManageFragment::class.java
-                mAdapter.addFragment(fragment, title)
-            } else if (position == 2) {
-                val fragment = LightingManageFragment::class.java
-                mAdapter.addFragment(fragment, title)
-            } else if (position == 3) {
-                val fragment = SoundManageFragment::class.java
-                mAdapter.addFragment(fragment, title)
-            } else if (position == 4) {
-                val fragment = CabinManagerFragment::class.java
-                mAdapter.addFragment(fragment, title)
-            } else if (position == 5) {
-                val fragment = DriveManageFragment::class.java
-                mAdapter.addFragment(fragment, title)
-            } else {
-                val fragment = SystemFragment::class.java
-                mAdapter.addFragment(fragment, title)
+        values.forEach {
+            when (it) {
+                TabPage.COMMONLY -> {
+                    val fragment = CommonlyFragment::class.java
+                    //                    fragment.userVisibleHint = true
+                    mAdapter.addFragment(fragment, it.desc)
+                }
+                TabPage.ACCESS -> {
+                    val fragment = DoorsManageFragment::class.java
+                    mAdapter.addFragment(fragment, it.desc)
+                }
+                TabPage.LIGHTING -> {
+                    val fragment = LightingManageFragment::class.java
+                    mAdapter.addFragment(fragment, it.desc)
+                }
+                TabPage.SOUND -> {
+                    val fragment = SoundManageFragment::class.java
+                    mAdapter.addFragment(fragment, it.desc)
+                }
+                TabPage.COCKPIT -> {
+                    val fragment = CabinManagerFragment::class.java
+                    mAdapter.addFragment(fragment, it.desc)
+                }
+                TabPage.ADAS -> {
+                    val fragment = DriveManageFragment::class.java
+                    mAdapter.addFragment(fragment, it.desc)
+                }
             }
         }
         binding.viewPager.offscreenPageLimit = mAdapter.itemCount

@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@ public interface TintableDrawable {
      * </p>
      *
      * @param tint Color state list to use for tinting this drawable, or
-     *            {@code null} to clear the tint
+     *             {@code null} to clear the tint
      * @see #setTint(int)
      * @see #setTintMode(PorterDuff.Mode)
      */

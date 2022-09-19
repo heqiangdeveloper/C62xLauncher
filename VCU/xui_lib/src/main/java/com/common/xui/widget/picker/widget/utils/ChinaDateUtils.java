@@ -26,7 +26,6 @@ import java.util.Locale;
 /**
  * 农历工具类
  *
- *
  * @since 2019/1/1 下午7:20
  */
 public final class ChinaDateUtils {
@@ -37,7 +36,7 @@ public final class ChinaDateUtils {
 
     /**
      * <lunarInfo 数组值的计算原理>
-     *
+     * <p>
      * 0x代表十六进制，后面的五位数是十六进制数。
      * 举个例子: 1980年的数据是 0x095b0
      * 二进制:  0000 1001 0101 1011 0000

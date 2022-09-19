@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,6 @@ import com.common.xui.R;
 
 /**
  * 状态控件
- *
  *
  * @since 2018/12/27 下午5:35
  */

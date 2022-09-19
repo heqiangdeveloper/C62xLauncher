@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.button.shinebutton;
 
 import android.animation.Animator;

@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview.edit;
 
 import android.annotation.SuppressLint;
@@ -21,10 +20,9 @@ import com.common.xui.R;
 
 /**
  * 图片编辑主控件
- *
+ * <p>
  * This ViewGroup will have the {@link BrushDrawingView} to draw paint on it with {@link ImageView}
  * which our source image
- *
  *
  * @since 2019-10-28 10:29
  */

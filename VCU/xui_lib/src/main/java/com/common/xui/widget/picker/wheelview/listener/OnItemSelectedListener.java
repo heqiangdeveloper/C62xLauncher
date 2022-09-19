@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ package com.common.xui.widget.picker.wheelview.listener;
 /**
  * 条目选择监听
  *
- * 
  * @since 2019/1/1 下午5:10
  */
 public interface OnItemSelectedListener {

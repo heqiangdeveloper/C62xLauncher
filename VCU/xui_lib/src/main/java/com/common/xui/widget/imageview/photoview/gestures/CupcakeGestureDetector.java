@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview.photoview.gestures;
 
 import android.content.Context;

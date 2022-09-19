@@ -1,4 +1,3 @@
-
 package com.common.xui.utils;
 
 import android.app.Activity;
@@ -26,6 +25,7 @@ import java.util.HashMap;
 
 /**
  * 软键盘工具
+ *
  * @since 2019/1/14 下午10:04
  */
 public class KeyboardUtils implements ViewTreeObserver.OnGlobalLayoutListener {

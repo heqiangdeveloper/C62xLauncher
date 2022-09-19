@@ -1,5 +1,6 @@
-
 package com.common.xui.widget.tabbar;
+
+import static android.os.Build.VERSION_CODES.JELLY_BEAN;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -34,11 +35,8 @@ import java.util.Map;
 
 import io.github.inflationx.calligraphy3.HasTypeface;
 
-import static android.os.Build.VERSION_CODES.JELLY_BEAN;
-
 /**
  * 多选Tab（CheckBox实现）
- *
  */
 public class MultiTabControlView extends LinearLayout implements HasTypeface {
 

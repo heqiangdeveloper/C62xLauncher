@@ -3,6 +3,10 @@ package com.common.library.frame.di.module;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.room.RoomDatabase;
+
 import com.common.library.frame.config.AppliesOptions;
 import com.common.library.frame.config.FrameConfigModule;
 import com.common.library.frame.config.ManifestParser;
@@ -12,10 +16,6 @@ import com.king.retrofit.retrofithelper.RetrofitHelper;
 import java.util.List;
 
 import javax.inject.Singleton;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.room.RoomDatabase;
 
 import dagger.Module;
 import dagger.Provides;

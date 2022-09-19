@@ -2,8 +2,6 @@ package com.common.library.frame.data;
 
 import android.content.Context;
 
-import java.lang.Class;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.Room;
@@ -11,8 +9,6 @@ import androidx.room.RoomDatabase;
 
 /**
  * 统一管理数据业务层，实现类见{@link DataRepository}
- *
- *
  */
 public interface IDataRepository {
     /**

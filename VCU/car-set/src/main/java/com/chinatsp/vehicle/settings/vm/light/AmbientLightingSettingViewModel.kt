@@ -71,7 +71,7 @@ class AmbientLightingSettingViewModel @Inject constructor(app: Application, mode
 
     private fun updateLiveData(
         liveData: MutableLiveData<Boolean>,
-        value: Boolean
+        value: Boolean,
     ): MutableLiveData<Boolean> {
         liveData.takeIf { value xor (liveData.value == true) }?.value = value
         return liveData
@@ -79,7 +79,7 @@ class AmbientLightingSettingViewModel @Inject constructor(app: Application, mode
 
     private fun updateLiveData(
         liveData: MutableLiveData<Int>,
-        value: Int
+        value: Int,
     ): MutableLiveData<Int> {
         liveData.takeIf { value != liveData.value }?.value = value
         return liveData

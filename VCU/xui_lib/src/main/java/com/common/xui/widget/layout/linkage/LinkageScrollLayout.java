@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.layout.linkage;
 
 import android.content.Context;

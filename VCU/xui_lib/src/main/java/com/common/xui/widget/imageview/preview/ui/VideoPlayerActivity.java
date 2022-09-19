@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview.preview.ui;
 
 import android.content.Intent;
@@ -16,7 +15,6 @@ import com.common.xui.R;
 
 /**
  * 视频播放界面
- *
  */
 public class VideoPlayerActivity extends AppCompatActivity {
 

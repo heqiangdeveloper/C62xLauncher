@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ package com.common.xui.widget.picker.widget.configure;
  * <p>
  * 分别控制“年”“月”“日”“时”“分”“秒”的显示或隐藏。
  *
- * 
  * @since 2019/1/1 下午8:58
  */
 public enum TimePickerType {

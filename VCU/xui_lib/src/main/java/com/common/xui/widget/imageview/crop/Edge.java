@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview.crop;
 
 import android.graphics.Rect;
@@ -6,7 +5,6 @@ import android.view.View;
 
 /**
  * 裁剪窗口四个边角的枚举
- *
  */
 public enum Edge {
 

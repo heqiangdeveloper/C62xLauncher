@@ -1,12 +1,12 @@
 package com.common.xui.widget.banner.transform;
 
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.ViewPager;
-import android.view.View;
 
 /**
  * 侧滑逐渐消失切换
- *
  */
 public class FadeSlideTransformer implements ViewPager.PageTransformer {
     @Override

@@ -47,14 +47,15 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
     }
 
     private fun initViewsDisplay() {
-        if (VcuUtils.isCareLevel(Level.LEVEL5, expect = true)) {
+        if (VcuUtils.isCareLevel(Level.LEVEL5, Level.LEVEL5_2, expect = true)) {
             binding.soundLoudnessControlCompensation.visibility = View.VISIBLE
             binding.line3.visibility = View.VISIBLE
         }
     }
+
     private fun initDetailsClickListener() {
         binding.soundLoudnessDetails.setOnClickListener {
-            showPopWindow(R.string.sound_loudness_control_content,it)
+            showPopWindow(R.string.sound_loudness_control_content, it)
         }
     }
 
@@ -187,10 +188,13 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
             }
         }
     }
-    private fun showPopWindow(id:Int, view:View){
-        val popWindow = PopWindow(activity,R.layout.pop_window,activity?.let { AppCompatResources.getDrawable(it,R.drawable.popup_bg_qipao172_5) })
+
+    private fun showPopWindow(id: Int, view: View) {
+        val popWindow = PopWindow(activity,
+            R.layout.pop_window,
+            activity?.let { AppCompatResources.getDrawable(it, R.drawable.popup_bg_qipao172_5) })
         var text: TextView = popWindow.findViewById(R.id.content) as TextView
         text.text = resources.getString(id)
-        popWindow.showDownLift(view,30,-160)
+        popWindow.showDownLift(view, 30, -160)
     }
 }

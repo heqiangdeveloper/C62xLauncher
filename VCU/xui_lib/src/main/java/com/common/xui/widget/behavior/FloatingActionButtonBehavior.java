@@ -1,16 +1,14 @@
-
 package com.common.xui.widget.behavior;
 
 import android.content.Context;
-
-import androidx.annotation.NonNull;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
 /**
  * Behavior for Float Button
- *
  *
  * @since 2019-05-10 01:12
  */

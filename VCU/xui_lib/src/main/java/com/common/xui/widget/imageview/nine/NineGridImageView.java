@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,6 @@ import java.util.List;
 /**
  * 九宫图
  *
- * 
  * @since 2018/12/9 下午10:38
  */
 public class NineGridImageView<T> extends ViewGroup {

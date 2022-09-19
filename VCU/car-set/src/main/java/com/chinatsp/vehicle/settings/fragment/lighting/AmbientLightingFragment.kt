@@ -3,6 +3,7 @@ package com.chinatsp.vehicle.settings.fragment.lighting
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.lamp.AmbientLightingManager
@@ -32,12 +33,6 @@ class AmbientLightingFragment :
     override fun getLayoutId(): Int {
         return R.layout.lighting_atmosphere_fragment
     }
-
-    private val modeFragmentSerial: String
-        get() = "AmbientLightingMode"
-
-    private val settingFragmentSerial: String
-        get() = "AmbientLightingSetting"
 
     override fun initData(savedInstanceState: Bundle?) {
         setCheckedChangeListener()
@@ -105,7 +100,6 @@ class AmbientLightingFragment :
             if (!status) {
                 showModeFragment()
             }
-
         }
 
         binding.brightnessLayout.setOnClickListener {
@@ -133,7 +127,7 @@ class AmbientLightingFragment :
         activity?.supportFragmentManager?.let {
             fragment.show(it, fragment::javaClass.name)
         }
-        cleanPopupSerial(modeFragmentSerial)
+        cleanPopupSerial(Constant.AMBIENT_LIGHTING_MODE)
     }
 
     private fun showSettingFragment() {
@@ -141,7 +135,7 @@ class AmbientLightingFragment :
         activity?.supportFragmentManager?.let {
             fragment.show(it, fragment::javaClass.name)
         }
-        cleanPopupSerial(settingFragmentSerial)
+        cleanPopupSerial(Constant.AMBIENT_LIGHTING_SETTING)
     }
 
     private fun cleanPopupSerial(serial: String) {
@@ -156,9 +150,9 @@ class AmbientLightingFragment :
             val iroute = activity as IRoute
             val liveData = iroute.obtainPopupLiveData()
             liveData.observe(this) {
-                if (it.equals(modeFragmentSerial)) {
+                if (it.equals(Constant.AMBIENT_LIGHTING_MODE)) {
                     showModeFragment()
-                } else if (it.equals(settingFragmentSerial)) {
+                } else if (it.equals(Constant.AMBIENT_LIGHTING_SETTING)) {
                     showSettingFragment()
                 }
             }

@@ -1,8 +1,8 @@
-
 package com.common.xui.widget.imageview.strategy;
 
 /**
  * 对齐方式
+ *
  * @since 2020/3/2 12:20 PM
  */
 public enum AlignEnum {

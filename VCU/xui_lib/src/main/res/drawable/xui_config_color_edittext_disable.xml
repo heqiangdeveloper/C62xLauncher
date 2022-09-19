@@ -5,9 +5,8 @@
         android:width="1dp"
         android:color="?attr/xui_config_color_stroke" />
 
-    <corners
-        android:radius="?attr/xui_config_size_edittext_radius" />
+    <corners android:radius="?attr/xui_config_size_edittext_radius" />
 
-    <solid android:color="?attr/xui_config_color_disable"/>
+    <solid android:color="?attr/xui_config_color_disable" />
 
 </shape>

@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview.edit;
 
 import android.util.Log;
@@ -7,7 +6,6 @@ import android.view.View;
 
 /**
  * 缩放手势检测器
- *
  */
 class ScaleGestureDetector {
     private static final String TAG = "ScaleGestureDetector";

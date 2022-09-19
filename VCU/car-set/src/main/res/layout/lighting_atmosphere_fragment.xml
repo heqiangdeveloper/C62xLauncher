@@ -155,7 +155,7 @@
                 android:src="@drawable/close_selector"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="@dimen/x15"/>
+                android:layout_marginTop="@dimen/x15" />
 
 
             <com.common.xui.widget.picker.VSeekBar

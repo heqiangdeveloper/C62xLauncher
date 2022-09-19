@@ -7,7 +7,6 @@ import java.util.List;
 
 /**
  * 九宫图适配器
- *
  */
 public abstract class NineGridImageViewAdapter<T> {
 

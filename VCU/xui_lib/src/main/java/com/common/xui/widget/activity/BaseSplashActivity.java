@@ -1,17 +1,17 @@
 package com.common.xui.widget.activity;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.common.xui.utils.Utils;
 
 /**
  * 基础启动页
- *
  *
  * @since 2018/11/27 下午4:49
  */

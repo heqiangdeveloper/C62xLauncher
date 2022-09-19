@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.dialog.materialdialog.internal;
 
 import android.annotation.SuppressLint;
@@ -45,7 +44,7 @@ public class MDButton extends TextView {
      * Set if the button should be displayed in stacked mode. This should only be called from
      * MDRootLayout's onMeasure, and we must be measured after calling this.
      */
-  /* package */ void setStacked(boolean stacked, boolean force) {
+    /* package */ void setStacked(boolean stacked, boolean force) {
         if (this.stacked != stacked || force) {
 
             setGravity(

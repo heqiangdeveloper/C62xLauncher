@@ -22,7 +22,6 @@ import io.github.inflationx.viewpump.ViewPump;
 
 /**
  * UI全局设置
- *
  */
 public class XUI {
 

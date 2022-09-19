@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,6 @@ import com.common.xui.widget.imageview.strategy.LoadOption;
 import java.lang.ref.WeakReference;
 
 /**
- * 
  * @since 2019-09-24 9:04
  */
 public abstract class BaseImageBanner<T extends BaseImageBanner<T>> extends BaseIndicatorBanner<BannerItem, T> {

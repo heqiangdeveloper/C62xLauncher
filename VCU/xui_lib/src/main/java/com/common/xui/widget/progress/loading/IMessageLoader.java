@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package com.common.xui.widget.progress.loading;
 
 /**
  * 消息loading加载者
- *
  *
  * @since 2019/1/11 下午3:58
  */

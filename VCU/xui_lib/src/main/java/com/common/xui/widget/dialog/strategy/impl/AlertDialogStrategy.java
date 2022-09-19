@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,6 @@ import com.common.xui.widget.dialog.strategy.InputInfo;
 /**
  * AlertDialog 策略
  *
- * 
  * @since 2018/11/15 上午12:24
  */
 public class AlertDialogStrategy implements IDialogStrategy {

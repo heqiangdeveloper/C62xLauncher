@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,18 @@
 
 package com.common.xui.widget.popupwindow.bar;
 
+import static com.common.xui.widget.popupwindow.bar.Cookie.DEFAULT_COOKIE_DURATION;
+
 import android.app.Activity;
-import androidx.annotation.ColorRes;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.StringRes;
 import android.view.Gravity;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
-import java.lang.ref.WeakReference;
+import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
 
-import static com.common.xui.widget.popupwindow.bar.Cookie.DEFAULT_COOKIE_DURATION;
+import java.lang.ref.WeakReference;
 
 /**
  * 顶部和底部信息消息显示条<p>
@@ -39,7 +40,6 @@ import static com.common.xui.widget.popupwindow.bar.Cookie.DEFAULT_COOKIE_DURATI
  *      .show();
  * </pre>
  * <p>
- *
  *
  * @since 2018/12/19 上午9:30
  */

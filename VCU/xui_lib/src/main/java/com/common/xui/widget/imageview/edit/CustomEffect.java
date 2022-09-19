@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview.edit;
 
 import android.text.TextUtils;
@@ -10,7 +9,6 @@ import java.util.Map;
 
 /**
  * 自定义滤镜效果
- *
  */
 public class CustomEffect {
 

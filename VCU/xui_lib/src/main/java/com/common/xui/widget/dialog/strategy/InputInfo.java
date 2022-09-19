@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import androidx.annotation.NonNull;
 
 /**
  * 输入信息
- *
  *
  * @since 2018/11/16 上午12:18
  */

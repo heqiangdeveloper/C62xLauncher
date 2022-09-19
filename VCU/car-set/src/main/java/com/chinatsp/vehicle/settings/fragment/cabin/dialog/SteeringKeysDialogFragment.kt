@@ -28,9 +28,9 @@ class SteeringKeysDialogFragment :
         binding.closeDialog.setOnClickListener {
             this.dismiss()
         }
-        binding.navigation.setOnClickListener{}
-        binding.privacyMode.setOnClickListener{}
-        binding.turnScreen.setOnClickListener{}
+        binding.navigation.setOnClickListener {}
+        binding.privacyMode.setOnClickListener {}
+        binding.turnScreen.setOnClickListener {}
     }
 
     override fun getWidthRatio(): Float {

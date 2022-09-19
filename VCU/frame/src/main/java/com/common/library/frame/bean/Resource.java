@@ -1,9 +1,9 @@
 package com.common.library.frame.bean;
 
 
-import com.common.library.frame.base.livedata.StatusEvent;
-
 import androidx.annotation.Nullable;
+
+import com.common.library.frame.base.livedata.StatusEvent;
 
 /**
  *

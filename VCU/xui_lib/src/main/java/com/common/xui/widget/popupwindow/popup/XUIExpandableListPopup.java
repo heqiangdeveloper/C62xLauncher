@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,6 @@ import com.common.xui.widget.XUIWrapContentExpandableListView;
 
 /**
  * 继承自 {@link XUIPopup}，在 {@link XUIPopup} 的基础上，支持显示一个可伸缩的列表。
- *
  *
  * @since 2019-11-09 18:05
  */

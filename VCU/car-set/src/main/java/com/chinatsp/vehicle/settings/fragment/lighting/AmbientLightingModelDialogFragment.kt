@@ -121,7 +121,7 @@ class AmbientLightingModelDialogFragment :
     private fun doUpdateViewSelect(
         node: SwitchNode,
         status: Boolean,
-        immediately: Boolean = false
+        immediately: Boolean = false,
     ) {
         val swb = when (node) {
             SwitchNode.SPEED_RHYTHM -> binding.speedRhythm

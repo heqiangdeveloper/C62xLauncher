@@ -1,13 +1,13 @@
-
 package com.common.xui.widget.dialog.materialdialog;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import androidx.annotation.NonNull;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
 
 import com.common.xui.utils.KeyboardUtils;
 import com.common.xui.widget.dialog.materialdialog.internal.MDRootLayout;
@@ -25,7 +25,7 @@ class DialogBase extends Dialog implements DialogInterface.OnShowListener {
     }
 
     @Override
-    public  <T extends View> T findViewById(int id) {
+    public <T extends View> T findViewById(int id) {
         return view.findViewById(id);
     }
 

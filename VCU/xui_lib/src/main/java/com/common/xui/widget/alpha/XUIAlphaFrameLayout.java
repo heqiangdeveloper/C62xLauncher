@@ -6,7 +6,6 @@ import android.widget.FrameLayout;
 
 /**
  * 在 pressed 和 disabled 时改变 View 的透明度
- *
  */
 public class XUIAlphaFrameLayout extends FrameLayout {
 

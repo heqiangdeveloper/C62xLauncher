@@ -1,12 +1,12 @@
 package com.common.xui.logs;
 
-import androidx.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 /**
  * 框架日志记录
- *
  */
 public final class UILog {
 
@@ -86,6 +86,7 @@ public final class UILog {
 
     /**
      * 设置是否打开调试
+     *
      * @param isDebug
      */
     public static void debug(boolean isDebug) {
@@ -114,6 +115,7 @@ public final class UILog {
     }
 
     //=============打印方法===============//
+
     /**
      * 打印任何（所有）信息
      *

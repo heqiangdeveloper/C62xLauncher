@@ -13,7 +13,6 @@ import java.util.Random;
 
 /**
  * Animation borrowed from https://github.com/tyrantgit/ExplosionField
- *
  */
 public class BadgeAnimator extends ValueAnimator {
     private BitmapFragment[][] mFragments;

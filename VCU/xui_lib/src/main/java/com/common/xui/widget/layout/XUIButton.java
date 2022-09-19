@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import com.common.xui.widget.alpha.XUIAlphaButton;
 
 /**
  * 封装的button，便于样式的修改
- *
  */
 public class XUIButton extends XUIAlphaButton implements IXUILayout {
     private XUILayoutHelper mLayoutHelper;

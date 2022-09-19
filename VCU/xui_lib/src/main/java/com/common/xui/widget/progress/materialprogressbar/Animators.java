@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,12 +31,14 @@ import com.common.xui.widget.progress.materialprogressbar.internal.ObjectAnimato
  */
 class Animators {
 
-    private Animators() {}
+    private Animators() {
+    }
 
     // M -522.59998,0
     // c 48.89972,0 166.02656,0 301.21729,0
     // c 197.58128,0 420.9827,0 420.9827,0
     private static final Path PATH_INDETERMINATE_HORIZONTAL_RECT1_TRANSLATE_X;
+
     static {
         PATH_INDETERMINATE_HORIZONTAL_RECT1_TRANSLATE_X = new Path();
         PATH_INDETERMINATE_HORIZONTAL_RECT1_TRANSLATE_X.moveTo(-522.59998f, 0);
@@ -50,6 +52,7 @@ class Animators {
     // L 1 0.826849212646
     // L 2 0.1
     private static final Path PATH_INDETERMINATE_HORIZONTAL_RECT1_SCALE_X;
+
     static {
         PATH_INDETERMINATE_HORIZONTAL_RECT1_SCALE_X = new Path();
         PATH_INDETERMINATE_HORIZONTAL_RECT1_SCALE_X.moveTo(0, 0.1f);
@@ -62,6 +65,7 @@ class Animators {
     // c 54.26191,0 90.42461,0 168.24331,0
     // c 144.72154,0 316.40982,0 316.40982,0
     private static final Path PATH_INDETERMINATE_HORIZONTAL_RECT2_TRANSLATE_X;
+
     static {
         PATH_INDETERMINATE_HORIZONTAL_RECT2_TRANSLATE_X = new Path();
         PATH_INDETERMINATE_HORIZONTAL_RECT2_TRANSLATE_X.moveTo(-197.60001f, 0);
@@ -78,6 +82,7 @@ class Animators {
     // L 2.0,0.909950256348
     // L 3.0,0.1
     private static final Path PATH_INDETERMINATE_HORIZONTAL_RECT2_SCALE_X;
+
     static {
         PATH_INDETERMINATE_HORIZONTAL_RECT2_SCALE_X = new Path();
         PATH_INDETERMINATE_HORIZONTAL_RECT2_SCALE_X.moveTo(0, 0.1f);

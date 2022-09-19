@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.button;
 
 import android.animation.ValueAnimator;
@@ -23,7 +22,6 @@ import com.common.xui.utils.ThemeUtils;
 /**
  * 自带动画的checkbox
  *
- * 
  * @since 2020-01-06 9:55
  */
 public class SmoothCheckBox extends View implements Checkable {

@@ -1,9 +1,7 @@
-
 package com.common.xui.widget.imageview.edit;
 
 /**
  * 滤镜
- *
  */
 public enum PhotoFilter {
     NONE,

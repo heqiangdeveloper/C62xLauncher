@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.layout.linkage;
 
 import android.view.View;
@@ -6,7 +5,6 @@ import android.view.View;
 /**
  * 子布局向 LinkageScrollLayout {@link LinkageScrollLayout} 提供的滚动处理实现接口
  *
- * 
  * @since 2020/3/11 5:46 PM
  */
 public interface LinkageScrollHandler {

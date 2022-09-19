@@ -5,7 +5,6 @@ import android.content.res.ColorStateList;
 /**
  * 色彩工具
  *
- * 
  * @since 2019/1/14 下午10:09
  */
 class ColorUtils {

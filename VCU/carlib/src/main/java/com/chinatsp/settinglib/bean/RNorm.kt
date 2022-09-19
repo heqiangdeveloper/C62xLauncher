@@ -12,7 +12,7 @@ import com.chinatsp.settinglib.sign.Origin
 data class RNorm(
     val values: IntArray = IntArray(3),
     val origin: Origin = Origin.CABIN,
-    val signal: Int
+    val signal: Int,
 ) {
 
     override fun equals(other: Any?): Boolean {

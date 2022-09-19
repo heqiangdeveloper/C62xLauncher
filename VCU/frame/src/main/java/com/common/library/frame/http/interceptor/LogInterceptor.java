@@ -1,10 +1,10 @@
 package com.common.library.frame.http.interceptor;
 
+import androidx.annotation.NonNull;
+
 import java.io.EOFException;
 import java.io.IOException;
 import java.nio.charset.Charset;
-
-import androidx.annotation.NonNull;
 
 import okhttp3.Interceptor;
 import okhttp3.MediaType;

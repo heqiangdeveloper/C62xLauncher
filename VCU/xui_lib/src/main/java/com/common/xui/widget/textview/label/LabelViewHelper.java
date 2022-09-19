@@ -16,7 +16,6 @@ import com.common.xui.utils.Utils;
 
 /**
  * 标签控件
- *
  */
 public final class LabelViewHelper {
 

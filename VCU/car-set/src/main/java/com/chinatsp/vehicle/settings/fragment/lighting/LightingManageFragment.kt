@@ -104,8 +104,8 @@ class LightingManageFragment : BaseTabFragment<BaseViewModel, LightingManageFrag
 
     private fun initRouteListener() {
         if (activity is IRoute) {
-            val iroute = activity as IRoute
-            val liveData = iroute.obtainLevelLiveData()
+            val route = activity as IRoute
+            val liveData = route.obtainLevelLiveData()
             liveData.observe(this) {
                 initRouteLocation(it)
             }

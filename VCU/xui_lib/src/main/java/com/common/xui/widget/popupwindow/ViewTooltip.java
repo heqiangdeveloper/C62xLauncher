@@ -26,7 +26,6 @@ import com.common.xui.utils.ThemeUtils;
 /**
  * 控件提示弹出窗，可自定义弹出的位置，持续时间以及样式
  *
- *
  * @since 2019/1/14 上午11:23
  */
 public class ViewTooltip {
@@ -41,6 +40,7 @@ public class ViewTooltip {
 
     /**
      * 创建并设置提示控件依附的View
+     *
      * @param view
      * @return
      */
@@ -60,6 +60,7 @@ public class ViewTooltip {
 
     /**
      * 设置提示显示的相对位置
+     *
      * @param position
      * @return
      */
@@ -70,6 +71,7 @@ public class ViewTooltip {
 
     /**
      * 设置自定义提示布局
+     *
      * @param customView
      * @return
      */
@@ -90,6 +92,7 @@ public class ViewTooltip {
 
     /**
      * 显示
+     *
      * @return
      */
     public TooltipView show() {
@@ -132,6 +135,7 @@ public class ViewTooltip {
 
     /**
      * 设置提示持续的时间
+     *
      * @param duration
      * @return
      */
@@ -142,6 +146,7 @@ public class ViewTooltip {
 
     /**
      * 设置提示框的背景颜色
+     *
      * @param color
      * @return
      */
@@ -152,6 +157,7 @@ public class ViewTooltip {
 
     /**
      * 设置显示的监听
+     *
      * @param listener
      * @return
      */
@@ -162,6 +168,7 @@ public class ViewTooltip {
 
     /**
      * 设置隐藏的监听
+     *
      * @param listener
      * @return
      */
@@ -172,6 +179,7 @@ public class ViewTooltip {
 
     /**
      * 设置间隔的距离
+     *
      * @param left
      * @param top
      * @param right
@@ -188,6 +196,7 @@ public class ViewTooltip {
 
     /**
      * 设置显示和隐藏的动画
+     *
      * @param tooltipAnimation
      * @return
      */
@@ -198,6 +207,7 @@ public class ViewTooltip {
 
     /**
      * 设置提示的文字
+     *
      * @param text
      * @return
      */
@@ -208,6 +218,7 @@ public class ViewTooltip {
 
     /**
      * 设置圆角的角度
+     *
      * @param corner
      * @return
      */
@@ -218,6 +229,7 @@ public class ViewTooltip {
 
     /**
      * 设置提示文字的颜色
+     *
      * @param textColor
      * @return
      */
@@ -233,6 +245,7 @@ public class ViewTooltip {
 
     /**
      * 设置提示文字的字体大小
+     *
      * @param unit
      * @param textSize
      * @return
@@ -249,6 +262,7 @@ public class ViewTooltip {
 
     /**
      * 设置是否点击隐藏
+     *
      * @param clickToHide
      * @return
      */

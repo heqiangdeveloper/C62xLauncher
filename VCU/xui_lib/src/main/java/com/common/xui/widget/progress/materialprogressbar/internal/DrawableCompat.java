@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,13 +26,20 @@ public class DrawableCompat {
      */
     public static PorterDuff.Mode parseTintMode(int value, PorterDuff.Mode defaultMode) {
         switch (value) {
-            case 3: return PorterDuff.Mode.SRC_OVER;
-            case 5: return PorterDuff.Mode.SRC_IN;
-            case 9: return PorterDuff.Mode.SRC_ATOP;
-            case 14: return PorterDuff.Mode.MULTIPLY;
-            case 15: return PorterDuff.Mode.SCREEN;
-            case 16: return PorterDuff.Mode.ADD;
-            default: return defaultMode;
+            case 3:
+                return PorterDuff.Mode.SRC_OVER;
+            case 5:
+                return PorterDuff.Mode.SRC_IN;
+            case 9:
+                return PorterDuff.Mode.SRC_ATOP;
+            case 14:
+                return PorterDuff.Mode.MULTIPLY;
+            case 15:
+                return PorterDuff.Mode.SCREEN;
+            case 16:
+                return PorterDuff.Mode.ADD;
+            default:
+                return defaultMode;
         }
     }
 }

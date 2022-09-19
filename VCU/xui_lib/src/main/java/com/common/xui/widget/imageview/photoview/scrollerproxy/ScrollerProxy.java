@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview.photoview.scrollerproxy;
 
 import android.content.Context;

@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ public class CircularProgressDrawable extends BaseProgressLayerDrawable<
      * @param context the {@code Context} for retrieving style information.
      */
     public CircularProgressDrawable(int style, Context context) {
-        super(new Drawable[] {
+        super(new Drawable[]{
                 new CircularProgressBackgroundDrawable(),
                 new SingleCircularProgressDrawable(style),
                 new SingleCircularProgressDrawable(style),

@@ -7,7 +7,6 @@ import android.view.View;
 
 /**
  * Geometric calculations for position, size and radius
- *
  */
 class Calculator {
 
@@ -50,12 +49,12 @@ class Calculator {
     }
 
     /**
-     *  Setting round rectangle focus at specific position
+     * Setting round rectangle focus at specific position
      *
-     * @param positionX       focus at specific position Y coordinate
-     * @param positionY       focus at specific position circle radius
-     * @param rectWidth   focus at specific position rectangle width
-     * @param rectHeight  focus at specific position rectangle height
+     * @param positionX  focus at specific position Y coordinate
+     * @param positionY  focus at specific position circle radius
+     * @param rectWidth  focus at specific position rectangle width
+     * @param rectHeight focus at specific position rectangle height
      */
 
     public void setRectPosition(int positionX, int positionY, int rectWidth, int rectHeight) {
@@ -68,11 +67,11 @@ class Calculator {
     }
 
     /**
-     *  Setting circle focus at specific position
+     * Setting circle focus at specific position
      *
-     * @param positionX       focus at specific position Y coordinate
-     * @param positionY       focus at specific position circle radius
-     * @param radius          focus at specific position circle radius
+     * @param positionX focus at specific position Y coordinate
+     * @param positionY focus at specific position circle radius
+     * @param radius    focus at specific position circle radius
      */
 
     public void setCirclePosition(int positionX, int positionY, int radius) {
@@ -163,7 +162,7 @@ class Calculator {
      * @return Bottom position of round rect
      */
     float roundRectLeft(int animCounter, double animMoveFactor) {
-        return (float) (mCircleCenterX - mFocusWidth / 2 - animCounter * animMoveFactor );
+        return (float) (mCircleCenterX - mFocusWidth / 2 - animCounter * animMoveFactor);
     }
 
     /**

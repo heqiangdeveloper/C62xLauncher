@@ -31,7 +31,7 @@ interface IProgressManager : IManager {
         node: Progress,
         atomic: AtomicInteger,
         value: Int,
-        block: ((Progress, Int) -> Unit)? = null
+        block: ((Progress, Int) -> Unit)? = null,
     ): AtomicInteger {
         val isValid = node.isValid(value)
         val isEqual = value == atomic.get()

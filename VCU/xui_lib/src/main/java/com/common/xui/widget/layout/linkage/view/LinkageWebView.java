@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.layout.linkage.view;
 
 import android.content.Context;
@@ -21,6 +20,7 @@ import com.common.xui.widget.layout.linkage.PosIndicator;
 
 /**
  * 置于联动容器的WebView
+ *
  * @since 2020/3/11 7:13 PM
  */
 public class LinkageWebView extends WebView implements ILinkageScroll, NestedScrollingChild {

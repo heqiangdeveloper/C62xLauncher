@@ -1,17 +1,15 @@
-
 package com.common.xui.widget.behavior;
 
 import android.content.Context;
+import android.util.AttributeSet;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import android.util.AttributeSet;
-import android.view.View;
 
 /**
  * Behavior for Navigation Bar
  *
- * 
  * @since 2019-05-10 01:12
  */
 public class BottomNavigationViewBehavior extends BaseBehavior {

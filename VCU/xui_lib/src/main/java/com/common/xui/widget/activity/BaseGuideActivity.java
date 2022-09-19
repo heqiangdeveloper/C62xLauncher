@@ -3,8 +3,9 @@ package com.common.xui.widget.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.viewpager.widget.ViewPager;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import com.common.xui.R;
 import com.common.xui.utils.WidgetUtils;
@@ -16,7 +17,6 @@ import java.util.List;
 
 /**
  * 启动引导页
- *
  *
  * @since 2018/11/27 下午4:49
  */

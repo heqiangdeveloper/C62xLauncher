@@ -35,11 +35,11 @@
     <item name="expand_collapse" type="id" />
 
     <!--MultipleStatusView-->
-    <item name="empty_view" type="id"/>
-    <item name="error_view" type="id"/>
-    <item name="loading_view" type="id"/>
-    <item name="content_view" type="id"/>
-    <item name="no_network_view" type="id"/>
+    <item name="empty_view" type="id" />
+    <item name="error_view" type="id" />
+    <item name="loading_view" type="id" />
+    <item name="content_view" type="id" />
+    <item name="no_network_view" type="id" />
 
     <!--Preview-->
     <item name="item_image_key" type="id" />
@@ -49,12 +49,11 @@
     <item name="snackbar_text" type="id" />
 
     <!--EasyIndicator-->
-    <item name="view_pager" type="id"/>
+    <item name="view_pager" type="id" />
 
     <!--XUIItemViewsAdapter-->
-    <item name="xui_tab_segment_item_id" type="id"/>
-    <item name="xui_view_can_not_cache_tag" type="id"/>
-
+    <item name="xui_tab_segment_item_id" type="id" />
+    <item name="xui_view_can_not_cache_tag" type="id" />
 
 
 </resources>

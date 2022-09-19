@@ -406,7 +406,6 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
             }
             SwitchNode.TOUCH_PROMPT_TONE -> {
                 touchTone.get()
-                true
             }
             else -> false
         }
@@ -510,7 +509,8 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
     override fun doSetVolume(type: Progress, value: Int): Boolean {
         return when (type) {
             Progress.NAVI, Progress.VOICE, Progress.MEDIA,
-            Progress.PHONE, Progress.SYSTEM -> {
+            Progress.PHONE, Progress.SYSTEM,
+            -> {
                 val volume = doGetVolume(type)
                 if (value != volume?.pos) {
                     setVolumePosition(type.set.signal, value)
@@ -551,23 +551,23 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
             val result = manager?.let {
                 it.beepLevel
             } ?: node.get.off
-            Timber.d("getPromptToneLevel: node:%s, result:%s", node, result)
+            Timber.d("doActionSignal GET: node:%s, result:%s", node, result)
+            return result
         }
-        return -1;
+        return -1
     }
 
     private fun switchTouchTone(node: SwitchNode, status: Boolean): Boolean {
         try {
+
             if (node.set.origin == Origin.SPECIAL) {
                 val result = manager?.let {
-                    it.beepLevel = if (status) node.set.on else node.set.off
-                    Timber.d(
-                        "switchTouchTone node:%s, status:%s, beepLevel:%s",
-                        node,
-                        status,
-                        it.beepLevel
-                    )
-                    return@let true
+                    val expect = if (status) node.set.on else node.set.off
+                    it.beepLevel = expect
+                    val actual = it.beepLevel
+                    doUpdateSwitchValue(node, touchTone, actual, null)
+                    Timber.d("doActionSignal SET node:$node, status:$status, expect:$expect, actual:$actual")
+                    return@let actual == expect
                 } ?: false
                 return result
             }

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.ISwitchManager
@@ -113,7 +112,7 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
 
     private fun setCheckedChangeListener() {
         binding.modifyAngle.setOnClickListener {
-            if(binding.accessMirrorMirrorFoldSw.isChecked&&binding.backMirrorDownSwitch.isChecked){
+            if (binding.accessMirrorMirrorFoldSw.isChecked && binding.backMirrorDownSwitch.isChecked) {
                 showReverseAngleFragment()
             }
         }
@@ -138,7 +137,7 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
                     updateViewEnable(childAt, status)
                 }
             }
-        }else if(swb == binding.backMirrorDownSwitch){
+        } else if (swb == binding.backMirrorDownSwitch) {
             val childCount = binding.modifyAngle.childCount
             val intRange = 0 until childCount
             intRange.forEach {

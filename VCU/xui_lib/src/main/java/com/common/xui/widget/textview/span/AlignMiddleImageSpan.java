@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 
 /**
  * 支持垂直居中的ImageSpan
- *
  */
 public class AlignMiddleImageSpan extends ImageSpan {
 

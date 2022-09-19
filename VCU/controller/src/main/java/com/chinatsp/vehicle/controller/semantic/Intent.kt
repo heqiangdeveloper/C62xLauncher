@@ -19,7 +19,7 @@ data class Intent(
     val sid: String,
     val text: String,
     val uuid: String,
-    val version: String
+    val version: String,
 ) {
     fun convert2NlpVoiceModel(): NlpVoiceModel {
         val nlpVoiceModel = NlpVoiceModel()

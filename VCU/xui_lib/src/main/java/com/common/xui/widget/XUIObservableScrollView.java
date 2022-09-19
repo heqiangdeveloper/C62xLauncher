@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * 可以监听滚动事件的 {@link ScrollView}，并能在滚动回调中获取每次滚动前后的偏移量。
  * <p>
- *  由于 {@link ScrollView} 没有类似于 addOnScrollChangedListener 的方法可以监听滚动事件，所以需要通过重写 {@link android.view.View#onScrollChanged}，来触发滚动监听
+ * 由于 {@link ScrollView} 没有类似于 addOnScrollChangedListener 的方法可以监听滚动事件，所以需要通过重写 {@link android.view.View#onScrollChanged}，来触发滚动监听
  * </p>
  */
 public class XUIObservableScrollView extends ScrollView {
@@ -34,6 +34,7 @@ public class XUIObservableScrollView extends ScrollView {
 
     /**
      * 添加滚动监听
+     *
      * @param onScrollChangedListener
      */
     public void addOnScrollChangedListener(OnScrollChangedListener onScrollChangedListener) {
@@ -71,11 +72,12 @@ public class XUIObservableScrollView extends ScrollView {
     public interface OnScrollChangedListener {
         /**
          * 滚动发生变化
+         *
          * @param scrollView
-         * @param l 变化后的X轴位置
-         * @param t 变化后的Y轴的位置
-         * @param oldl 原先的X轴的位置
-         * @param oldt 原先的Y轴的位置
+         * @param l          变化后的X轴位置
+         * @param t          变化后的Y轴的位置
+         * @param oldl       原先的X轴的位置
+         * @param oldt       原先的Y轴的位置
          */
         void onScrollChanged(XUIObservableScrollView scrollView, int l, int t, int oldl, int oldt);
     }

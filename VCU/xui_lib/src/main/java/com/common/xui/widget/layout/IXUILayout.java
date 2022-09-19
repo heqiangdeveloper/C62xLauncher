@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.layout;
 
 import android.view.View;
@@ -11,6 +10,7 @@ import java.lang.annotation.RetentionPolicy;
 
 /**
  * 布局封装的接口
+ *
  * @since 2019-06-01 19:29
  */
 public interface IXUILayout {

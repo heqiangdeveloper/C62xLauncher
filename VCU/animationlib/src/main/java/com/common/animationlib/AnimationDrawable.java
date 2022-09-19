@@ -134,23 +134,23 @@ public class AnimationDrawable {
     public void progressStart(int progress) {
         if (progress >= 50 && progress <= 55) {
             progress = 0;
-        }else if (progress >= 56 && progress <= 60) {
+        } else if (progress >= 56 && progress <= 60) {
             progress = 1;
-        }else if (progress >= 61 && progress <= 65) {
+        } else if (progress >= 61 && progress <= 65) {
             progress = 2;
-        }else if (progress >= 66 && progress <= 70) {
+        } else if (progress >= 66 && progress <= 70) {
             progress = 3;
-        }else if (progress >= 71 && progress <= 75) {
+        } else if (progress >= 71 && progress <= 75) {
             progress = 4;
-        }else if (progress >= 76 && progress <= 80) {
+        } else if (progress >= 76 && progress <= 80) {
             progress = 5;
-        }else if (progress >= 81 && progress <= 85) {
+        } else if (progress >= 81 && progress <= 85) {
             progress = 6;
-        }else if (progress >= 86 && progress <= 90) {
+        } else if (progress >= 86 && progress <= 90) {
             progress = 7;
-        }else if (progress >= 91 && progress <= 95) {
+        } else if (progress >= 91 && progress <= 95) {
             progress = 8;
-        }else if (progress >= 96 && progress <= 100) {
+        } else if (progress >= 96 && progress <= 100) {
             progress = 9;
         }
         Bitmap bitmap = readBitMap(mImageView.getContext(), mResourceIdList.get(progress));

@@ -21,7 +21,6 @@ import android.widget.PopupWindow;
 /**
  * 基础BasePopup
  *
- * 
  * @since 2019/1/14 下午10:02
  */
 public abstract class XUIBasePopup {

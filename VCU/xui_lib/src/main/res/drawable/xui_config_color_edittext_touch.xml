@@ -5,9 +5,8 @@
         android:width="2dp"
         android:color="?attr/colorAccent" />
 
-    <corners
-        android:radius="?attr/xui_config_size_edittext_radius" />
+    <corners android:radius="?attr/xui_config_size_edittext_radius" />
 
-    <solid android:color="@color/xui_config_color_white"/>
+    <solid android:color="@color/xui_config_color_white" />
 
 </shape>

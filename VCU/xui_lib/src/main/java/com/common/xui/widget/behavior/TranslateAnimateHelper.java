@@ -1,13 +1,12 @@
-
 package com.common.xui.widget.behavior;
 
 import android.animation.ValueAnimator;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import android.view.View;
+
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 /**
  * 平移动画
- *
  *
  * @since 2019-05-10 01:06
  */

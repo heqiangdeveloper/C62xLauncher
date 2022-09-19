@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.tabbar.vertical;
 
 import android.graphics.Color;

@@ -1,16 +1,16 @@
 package com.common.library.frame.di.module;
 
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import androidx.annotation.Nullable;
+
 import com.common.library.frame.config.AppliesOptions;
 import com.common.library.frame.http.InterceptorConfig;
 import com.common.library.frame.http.interceptor.LogInterceptor;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.king.retrofit.retrofithelper.RetrofitHelper;
 
 import javax.inject.Singleton;
-
-import androidx.annotation.Nullable;
 
 import dagger.Module;
 import dagger.Provides;

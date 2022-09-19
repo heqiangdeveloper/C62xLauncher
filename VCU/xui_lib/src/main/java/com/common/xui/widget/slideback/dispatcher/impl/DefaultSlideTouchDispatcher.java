@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,9 @@
 
 package com.common.xui.widget.slideback.dispatcher.impl;
 
+import static com.common.xui.widget.slideback.SlideBack.EDGE_LEFT;
+import static com.common.xui.widget.slideback.SlideBack.EDGE_RIGHT;
+
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -27,13 +30,9 @@ import com.common.xui.widget.slideback.callback.SlideCallBack;
 import com.common.xui.widget.slideback.dispatcher.ISlideTouchEventDispatcher;
 import com.common.xui.widget.slideback.dispatcher.OnSlideUpdateListener;
 
-import static com.common.xui.widget.slideback.SlideBack.EDGE_LEFT;
-import static com.common.xui.widget.slideback.SlideBack.EDGE_RIGHT;
-
 /**
  * 默认的侧滑触摸事件处理
  *
- * 
  * @since 2019-08-30 11:05
  */
 public class DefaultSlideTouchDispatcher implements ISlideTouchEventDispatcher {

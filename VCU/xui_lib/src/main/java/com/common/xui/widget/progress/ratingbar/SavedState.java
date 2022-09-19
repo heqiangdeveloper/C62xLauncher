@@ -6,7 +6,6 @@ import android.view.View;
 
 /**
  * 状态保存
- *
  */
 class SavedState extends View.BaseSavedState {
 

@@ -122,9 +122,12 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
 
     private fun setRadioListener() {
         binding.lightCeremonySenseRadio.let {
-            if(binding.lightCeremonySenseSwitch.isChecked){
+            if (binding.lightCeremonySenseSwitch.isChecked) {
                 it.setOnTabSelectionChangedListener { title, value ->
-                    doUpdateRadio(RadioNode.LIGHT_CEREMONY_SENSE, value, viewModel.ceremonySense, it)
+                    doUpdateRadio(RadioNode.LIGHT_CEREMONY_SENSE,
+                        value,
+                        viewModel.ceremonySense,
+                        it)
                 }
             }
         }

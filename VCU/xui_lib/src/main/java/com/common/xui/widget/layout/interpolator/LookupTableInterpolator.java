@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.layout.interpolator;
 
 import android.view.animation.Interpolator;

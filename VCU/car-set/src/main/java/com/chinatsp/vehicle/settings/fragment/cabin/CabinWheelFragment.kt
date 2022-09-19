@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.DialogFragment
 import com.chinatsp.settinglib.Applet
+import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.ISwitchManager
@@ -45,11 +46,6 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
         return R.layout.cabin_whell_fragment
     }
 
-    private val steeringKeysCustom: String
-        get() = "STEERING_KEYS_CUSTOM"
-
-    private val steeringAutoHeating: String
-        get() = "STEERING_AUTO_HEATING"
 
     override fun initData(savedInstanceState: Bundle?) {
         setCheckedChangeListener()
@@ -59,9 +55,7 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
         initRadioOption()
         addRadioLiveDataListener()
         setRadioListener()
-
         initRouteListener()
-
         initViewsDisplay()
     }
 
@@ -144,19 +138,19 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
 
     private fun setCheckedChangeListener() {
         binding.wheelCustomKeys.setOnClickListener {
-            showDialogFragment(steeringKeysCustom)
+            showDialogFragment(Constant.STEERING_CUSTOM_KEYPAD)
         }
         binding.wheelAutomaticHeating.setOnClickListener {
-            showDialogFragment(steeringAutoHeating)
+            showDialogFragment(Constant.STEERING_HEATING_SETTING)
         }
     }
 
     private fun showDialogFragment(serial: String) {
         var fragment: DialogFragment? = null
-        if (steeringKeysCustom == serial) {
+        if (Constant.STEERING_CUSTOM_KEYPAD == serial) {
             cleanPopupSerial(serial)
             fragment = SteeringKeysDialogFragment()
-        } else if (steeringAutoHeating == serial) {
+        } else if (Constant.STEERING_HEATING_SETTING == serial) {
             cleanPopupSerial(serial)
             fragment = SteeringHeatDialogFragment()
         }
@@ -175,12 +169,12 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
 
     private fun initRouteListener() {
         if (activity is IRoute) {
-            val iroute = activity as IRoute
-            val liveData = iroute.obtainPopupLiveData()
+            val route = activity as IRoute
+            val liveData = route.obtainPopupLiveData()
             liveData.observe(this) {
-                if (it.equals(steeringKeysCustom)) {
+                if (it.equals(Constant.STEERING_CUSTOM_KEYPAD)) {
                     showDialogFragment(it)
-                } else if (it.equals(steeringAutoHeating)) {
+                } else if (it.equals(Constant.STEERING_HEATING_SETTING)) {
                     showDialogFragment(it)
                 }
             }

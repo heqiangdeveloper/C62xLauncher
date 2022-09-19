@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.banner.recycler.layout;
 
 import androidx.annotation.NonNull;

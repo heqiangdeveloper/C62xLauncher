@@ -300,7 +300,7 @@
             android:layout_width="@dimen/x450"
             android:layout_height="@dimen/x176"
             android:layout_marginEnd="@dimen/x143"
-            android:src="@drawable/home_open_animation"
+            android:src="@drawable/home_open_05"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -311,7 +311,7 @@
             android:layout_height="@dimen/x50"
             android:layout_marginEnd="@dimen/x107"
             android:layout_marginBottom="@dimen/x148"
-            android:src="@drawable/welcome_lamp_animation"
+            android:src="@drawable/welcome_lamp_73"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -322,7 +322,7 @@
             android:layout_height="@dimen/x72"
             android:layout_marginEnd="@dimen/x143"
             android:layout_marginBottom="@dimen/x106"
-            android:src="@drawable/turn_signal_animation"
+            android:src="@drawable/turn_signal_025"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -333,7 +333,7 @@
             android:layout_height="@dimen/x72"
             android:layout_marginEnd="@dimen/x143"
             android:layout_marginBottom="@dimen/x106"
-            android:src="@drawable/turn_signal_animation"
+            android:src="@drawable/turn_signal_027"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -344,9 +344,10 @@
             android:layout_height="@dimen/x72"
             android:layout_marginEnd="@dimen/x143"
             android:layout_marginBottom="@dimen/x106"
-            android:src="@drawable/turn_signal_animation"
+            android:src="@drawable/turn_signal_027"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

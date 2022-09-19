@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview.crop;
 
 import android.content.Context;
@@ -25,7 +24,6 @@ import com.common.xui.utils.DrawableUtils;
 
 /**
  * 自定义图片裁剪控件
- *
  */
 public class CropImageView extends FrameLayout {
 

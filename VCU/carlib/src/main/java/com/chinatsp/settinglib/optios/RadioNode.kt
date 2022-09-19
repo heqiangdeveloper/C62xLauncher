@@ -18,7 +18,7 @@ enum class RadioNode(
     val get: RNorm,
     val set: RNorm,
     val default: Int,
-    val area: Area = Area.GLOBAL
+    val area: Area = Area.GLOBAL,
 ) {
 
     AC_COMFORT(

@@ -2,7 +2,6 @@ package com.common.xui.widget.spinner.editspinner;
 
 /**
  * 监听输入并过滤
- *
  */
 public interface EditSpinnerFilter {
     /**

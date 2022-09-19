@@ -17,15 +17,17 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import androidx.annotation.ColorInt;
-import androidx.appcompat.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+
+import androidx.annotation.ColorInt;
+import androidx.appcompat.widget.AppCompatImageView;
 
 import com.common.xui.R;
 
 /**
  * 提供为图片添加圆角、边框、剪裁到圆形或其他形状等功能。
+ *
  * @since 2018/12/1 下午11:59
  */
 public class RadiusImageView extends AppCompatImageView {

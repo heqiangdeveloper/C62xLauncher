@@ -2,19 +2,17 @@ package com.common.library.frame.base;
 
 import android.app.Application;
 
-import java.lang.Class;
-
-import javax.inject.Inject;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import javax.inject.Inject;
+
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
 /**
- *  框架基于 Google 官方的 JetPack 构建，在使用  时，需遵循一些规范：
+ * 框架基于 Google 官方的 JetPack 构建，在使用  时，需遵循一些规范：
  *
  * <p>如果您继承使用了 DataViewModel 或其子类，你需要参照如下方式在类上添加 @HiltViewModel 并在构造函数上添加 @Inject 注解
  *
@@ -31,8 +29,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
  *
  * <p>默认提供 {@link BaseModel#getRetrofitService} 的功能，当 ViewModel 和 Model 数据比较简单时可使用本类，弱化 Model 层。
  * <p>如果 ViewModel 或 Model 层里面逻辑比较复杂请尽量使用继承 {@link BaseViewModel} 和 {@link BaseModel} 进行分层。
- *
- *
  */
 @HiltViewModel
 public class DataViewModel extends BaseViewModel<BaseModel> {

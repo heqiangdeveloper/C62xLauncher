@@ -3,8 +3,6 @@ package com.common.xui.widget.spinner.materialspinner;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Build;
-import androidx.annotation.ColorInt;
-import androidx.annotation.DrawableRes;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,13 +10,15 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
+
 import com.common.xui.R;
 
 import java.util.List;
 
 /**
  * 基础Spinner适配器
- *
  */
 public abstract class MaterialSpinnerBaseAdapter<T> extends BaseAdapter {
 
