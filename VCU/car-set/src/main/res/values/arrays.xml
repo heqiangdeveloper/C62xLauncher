@@ -2,10 +2,10 @@
 <resources>
     <string-array name="drive_auto_lock_door_option_titles">
         <item>关闭</item>
-        <item>5KM</item>
-        <item>10KM</item>
-        <item>15KM</item>
-        <item>20KM</item>
+        <item>5km</item>
+        <item>10km</item>
+        <item>15km</item>
+        <item>20km</item>
     </string-array>
     <string-array name="drive_auto_lock_door_option_values">
         <item>1</item>

@@ -224,8 +224,7 @@
                     android:id="@+id/line3"
                     style="@style/line"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/sound_volume_balance_compensation"
-                    android:visibility="gone"/>
+                    app:layout_constraintTop_toBottomOf="@id/sound_volume_balance_compensation" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/sound_loudness_control_compensation"

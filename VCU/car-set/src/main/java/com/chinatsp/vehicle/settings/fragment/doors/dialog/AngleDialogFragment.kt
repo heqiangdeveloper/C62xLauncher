@@ -1,6 +1,7 @@
 package com.chinatsp.vehicle.settings.fragment.doors.dialog
 
 import android.os.Bundle
+import android.view.View
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.AngleDialogFragmentBinding
 import com.chinatsp.vehicle.settings.vm.sound.SoundEffectViewModel
@@ -18,12 +19,18 @@ class AngleDialogFragment : BaseDialogFragment<SoundEffectViewModel, AngleDialog
     }
 
     override fun getWidthRatio(): Float {
-        return 1000f / 1920f
+        return 640f / 1920f
     }
 
     private fun setBackListener() {
         binding.hintConform.setOnClickListener {
+            binding.setLayout.visibility = View.GONE
+            binding.saveLinear.visibility = View.VISIBLE
+        }
+        binding.hintCancel.setOnClickListener {
             this.dismiss()
         }
+        binding.carMirrorCancelSet.setOnClickListener{this.dismiss()}
+        binding.carMirrorSaveSet.setOnClickListener{this.dismiss()}
     }
 }

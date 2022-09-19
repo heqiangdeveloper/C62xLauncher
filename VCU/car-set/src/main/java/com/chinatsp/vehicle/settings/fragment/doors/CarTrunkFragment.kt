@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageView
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IRadioManager
@@ -352,6 +353,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
             view.updateEnable(status)
             return
         }
+
         if (view is ViewGroup) {
             val childCount = view.childCount
             val intRange = 0 until childCount
@@ -380,11 +382,11 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
 
     }
 
-    private fun showPopWindow(id: Int, view: View) {
-        val popWindow = PopWindow(activity, R.layout.pop_window)
+    private fun showPopWindow(id:Int, view:View){
+        val popWindow = PopWindow(activity,R.layout.pop_window,activity?.let { AppCompatResources.getDrawable(it,R.drawable.popup_bg_qipao172) })
         val text: TextView = popWindow.findViewById(R.id.content) as TextView
         text.text = resources.getString(id)
-        popWindow.showDown(view)
+        popWindow.showDownLift(view,30,-130)
     }
 
     private fun onTrunkPositionChanged(progress: Int) {

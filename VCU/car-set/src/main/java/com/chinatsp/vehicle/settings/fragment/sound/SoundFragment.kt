@@ -3,6 +3,7 @@ package com.chinatsp.vehicle.settings.fragment.sound
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.ISwitchManager
@@ -214,9 +215,9 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
     }
 
     private fun showPopWindow(id:Int, view:View){
-        val popWindow = PopWindow(activity,R.layout.pop_window)
+        val popWindow = PopWindow(activity,R.layout.pop_window,activity?.let { AppCompatResources.getDrawable(it,R.drawable.popup_bg_qipao172_5) })
         var text: TextView = popWindow.findViewById(R.id.content) as TextView
         text.text = resources.getString(id)
-        popWindow.showUp2(view)
+        popWindow.showDownLift(view,30,-160)
     }
 }

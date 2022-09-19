@@ -3,6 +3,7 @@ package com.chinatsp.vehicle.settings.fragment.cabin
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.cabin.SafeManager
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -82,10 +83,10 @@ class CabinSafeFragment : BaseFragment<SafeViewModel, CabinSafeFragmentBinding>(
     }
 
     private fun showPopWindow(id:Int, view: View){
-        val popWindow = PopWindow(activity,R.layout.pop_window)
+        val popWindow = PopWindow(activity,R.layout.pop_window,activity?.let { AppCompatResources.getDrawable(it,R.drawable.popup_bg_qipao172_6) })
         var text: TextView = popWindow.findViewById(R.id.content) as TextView
         text.text = resources.getString(id)
-        popWindow.showDown(view)
+        popWindow.showDownLift(view,30,-80)
     }
 
 }

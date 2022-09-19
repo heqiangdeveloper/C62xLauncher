@@ -20,7 +20,10 @@
     <color name="card_txt">#ABD3E1</color>
     <color name="copilot_guests_txt">#26C3FE</color>
 
-    <color name="vcu_bg_pop_window">#EE262D3E</color>
+    <color name="vcu_bg_pop_window">#262D3E</color>
+
+    <color name="pop_text">#ffffff</color>
+    <color name="pop_text_time">#26C3FE</color>
     <!--    <color name="picture_tab_color_false">#503331</color>-->
     <!--    <color name="normal_text_color">#FFABD3E1</color>-->
     <!--    <color name="select_text_color">#FFFFFFFF</color>-->

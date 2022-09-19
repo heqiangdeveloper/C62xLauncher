@@ -154,16 +154,31 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
+                        <com.common.xui.widget.button.switchbutton.SwitchButton
+                            android:id="@+id/light_ceremony_sense_switch"
+                            style="@style/switch_button_style"
+                            android:checked="true"
+                            android:layout_marginTop="@dimen/x12"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                        <com.common.xui.widget.tabbar.TabControlView
-                            android:id="@+id/light_ceremony_sense_radio"
-                            style="@style/tdv_common_style"
-                            android:layout_marginTop="@dimen/x11"
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/light_ceremony_sense_radio_constraint"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/x95"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/lighting_turn_external_lighting"
-                            app:tcv_defaultSelection="1"
-                            app:tcv_items="@array/lighting_external_lighting_options" />
+                            app:layout_constraintTop_toBottomOf="@id/lighting_turn_external_lighting">
 
+                            <com.common.xui.widget.tabbar.TabControlView
+                                android:id="@+id/light_ceremony_sense_radio"
+                                style="@style/tdv_common_style"
+                                android:layout_marginTop="@dimen/x11"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:tcv_defaultSelection="1"
+                                app:tcv_items="@array/lighting_external_lighting_options" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <View

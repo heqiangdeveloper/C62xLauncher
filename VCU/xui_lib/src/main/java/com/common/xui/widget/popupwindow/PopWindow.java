@@ -1,6 +1,7 @@
 package com.common.xui.widget.popupwindow;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout.LayoutParams;
@@ -22,55 +23,55 @@ public class PopWindow extends PopupWindow {
 	/**
 	 * @param contentView 布局控件
 	 */
-	public PopWindow(View contentView) {
-		this(contentView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+	public PopWindow(View contentView,Drawable drawable) {
+		this(contentView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT,drawable);
 	}
-	
+
 	/**
 	 * @param context
 	 * @param layoutId 布局资源id
 	 */
-	public PopWindow(Context context, int layoutId) {
-		this(context, layoutId, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+	public PopWindow(Context context, int layoutId,Drawable drawable) {
+		this(context, layoutId, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT,drawable);
 	}
-	
+
 	/**
 	 * @param contentView
 	 * @param width 宽
 	 * @param height 高
 	 */
-	public PopWindow(View contentView, int width, int height) {
+	public PopWindow(View contentView, int width, int height, Drawable drawable) {
 		super(contentView, width, height, false);
-		init(contentView.getContext());
+		init(contentView.getContext(),drawable);
 	}
-	
+
 	/**
 	 * @param context
 	 * @param layoutId 布局资源id
 	 * @param width 宽
 	 * @param height 高
 	 */
-	public PopWindow(Context context, int layoutId, int width, int height) {
+	public PopWindow(Context context, int layoutId, int width, int height, Drawable drawable) {
 		super();
 		initContentView(context, layoutId, width, height);
-		init(context);
+		init(context,drawable);
 	}
-	
+
 	private void initContentView(Context context, int layoutId, int width, int height) {
 		View contentView = View.inflate(context, layoutId, null);
 		setContentView(contentView);
 		setWidth(width);
-	    setHeight(height);
+		setHeight(height);
 	}
 
 	/**
 	 * 默认可聚焦、可外部点击消失、无背景
 	 */
-	private void init(Context context) {
+	private void init(Context context,Drawable drawable) {
 		setFocusable(true);
 		setOutsideTouchable(true);
 		// 必须设置，否则获得焦点后页面上其他地方点击无响应
-		setBackgroundDrawable(context.getResources().getDrawable(R.drawable.xui_bg_center_popwindow));
+		setBackgroundDrawable(drawable);
 		measurePopWindowSize();
 
 	}
@@ -120,7 +121,7 @@ public class PopWindow extends PopupWindow {
 			showUp(v);
 		}
 	}
-	
+
 	/**
 	 * 点击显示或者隐藏弹窗
 	 * @param v 点击显示弹窗的控件
@@ -134,14 +135,14 @@ public class PopWindow extends PopupWindow {
 			showAsDropDown(v, xoff, yoff);
 		}
 	}
-	
+
 	public View findViewById(int resId) {
 		return getContentView().findViewById(resId);
 	}
 
-    protected <T extends View> T findView(int resId) {
-        return (T) getContentView().findViewById(resId);
-    }
+	protected <T extends View> T findView(int resId) {
+		return (T) getContentView().findViewById(resId);
+	}
 
 	public Context getContext() {
 		return getContentView().getContext();
@@ -198,6 +199,19 @@ public class PopWindow extends PopupWindow {
 		//在控件上方显示
 		//showAtLocation(v, Gravity.NO_GRAVITY, (location[0]) - mPopupWidth / 2, location[1] - mPopupHeight);
 		showAsDropDown(v,-200,0,Gravity.BOTTOM);
+	}
+
+	/**
+	 * 设置显示在v左边(以v的左边距为开始位置)
+	 * @param v
+	 */
+	public void showDownLift(View v,int xoff,int yoff) {
+		//获取需要在其上方显示的控件的位置信息
+		int[] location = new int[2];
+		v.getLocationOnScreen(location);
+		//在控件上方显示
+		//showAtLocation(v, Gravity.NO_GRAVITY, (location[0]) - mPopupWidth / 2, location[1] - mPopupHeight);
+		showAsDropDown(v,xoff,yoff);
 	}
 
 }

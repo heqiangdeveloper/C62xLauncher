@@ -8,9 +8,16 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@drawable/bg_sound_popup_20"
         android:paddingBottom="@dimen/x15">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x235"
+            android:src="@drawable/intelligent_model"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <RelativeLayout
             android:id="@+id/pop_title"
@@ -27,82 +34,63 @@
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/dialog_title"
                 android:text="@string/lighting_intelligent_model" />
+
+            <com.common.xui.widget.button.switchbutton.SwitchButton
+                android:id="@+id/alc_smart_model_switch"
+                style="@style/switch_button_style"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/x15" />
         </RelativeLayout>
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_car_interior_bg"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/model_title"
-            style="@style/txt_prompt_style"
-            android:layout_marginStart="@dimen/x40"
-            android:layout_marginTop="@dimen/x28"
-            android:text="@string/lighting_intelligent_model"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/pop_title" />
-
-        <com.common.xui.widget.button.switchbutton.SwitchButton
-            android:id="@+id/alc_smart_model_switch"
-            style="@style/switch_button_style"
-            android:layout_marginStart="@dimen/x121"
-            android:layout_marginTop="@dimen/x26"
-            app:layout_constraintLeft_toRightOf="@+id/model_title"
-            app:layout_constraintTop_toBottomOf="@id/pop_title" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_content"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/model_title">
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/colour_breathe"
-                style="@style/model_txt_dialog"
-                android:layout_marginStart="@dimen/x36"
-                android:layout_marginTop="@dimen/x17"
+                style="@style/model_txt_dialog_normal"
                 android:text="@string/drive_colour_breathing"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/music_rhythm"
-                style="@style/model_txt_dialog"
-                android:layout_marginStart="@dimen/x8"
-                android:layout_marginTop="@dimen/x17"
+                style="@style/model_txt_dialog_normal"
+                android:layout_marginStart="@dimen/x18"
                 android:text="@string/drive_music_rhythm"
                 app:layout_constraintLeft_toRightOf="@+id/colour_breathe"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/speed_rhythm"
-                style="@style/model_txt_dialog"
-                android:layout_marginStart="@dimen/x36"
-                android:layout_marginTop="@dimen/x8"
+                style="@style/model_txt_dialog_normal"
+                android:layout_marginStart="@dimen/x18"
                 android:text="@string/drive_car_rhythm"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/colour_breathe" />
+                app:layout_constraintLeft_toRightOf="@+id/music_rhythm"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/model_txt_dialog"
+                style="@style/model_txt_dialog_normal"
                 android:layout_marginStart="@dimen/x8"
                 android:layout_marginTop="@dimen/x8"
                 android:text="@string/drive_pm_display"
-                android:visibility="invisible"
+                android:visibility="gone"
                 app:layout_constraintLeft_toRightOf="@+id/speed_rhythm"
                 app:layout_constraintTop_toBottomOf="@id/colour_breathe" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/drive_temperature_rhythm"
-                style="@style/model_txt_dialog"
+                style="@style/model_txt_dialog_normal"
                 android:layout_marginStart="@dimen/x36"
                 android:layout_marginTop="@dimen/x8"
                 android:text="@string/drive_temperature_rhythm"
-                android:visibility="invisible"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/speed_rhythm" />
         </androidx.constraintlayout.widget.ConstraintLayout>
