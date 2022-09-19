@@ -177,7 +177,7 @@
     <string name="drive_aeb_title">自动紧急制动AEB</string>
     <string name="drive_aeb_content">检测到危险情况时产生一个短促制动</string>
     <string name="drive_Lane_assist_system">车道辅助系统</string>
-    <string name="drive_Lane_assist_system_content">检测两侧车道线辅助车辆在车道内行驶</string>
+    <string name="drive_Lane_assist_system_content">车道赋值功能请到空调屏进行开启或关闭</string>
     <string name="drive_bsd_title">盲区监测BSD</string>
     <string name="drive_bsd_content">提醒驾驶者后方来车情况</string>
     <string name="drive_dow_title">开门预警DOW</string>
@@ -304,4 +304,5 @@ IACC会优先通过识别⻋道两侧清晰的⻋道线进⾏横向辅助控制�
 的响应触发不同的报警模式，避免在⻋道变换过程中出现碰撞发⽣，当驾驶员开启转向灯准备变道时，提升为⼆级报警。</string>
     <string name="bsc_details">在⻋辆⾏驶过程中，当驾驶员进⾏左（或右）变道或超⻋时，视野被B柱、C柱遮挡存在视野盲区，盲区影像功能可为驾驶
 员提供⻋辆左后⽅（或右后⽅）的盲区影像，辅助驾驶员进⾏安全驾驶。</string>
+    <string name="meb_details">一种帮助驾驶员发现车辆后方障碍物，并在判断有碰撞危险时进行自动刹车制动的功能。</string>
 </resources>
