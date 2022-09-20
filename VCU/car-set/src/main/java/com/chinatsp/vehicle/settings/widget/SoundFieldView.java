@@ -13,11 +13,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import com.chinatsp.vehicle.settings.MainActivity;
 import com.chinatsp.vehicle.settings.R;
-import com.king.base.util.LogUtils;
 
 
 /**
@@ -86,7 +83,6 @@ public class SoundFieldView extends LinearLayout {
     }
 
 
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -101,12 +97,12 @@ public class SoundFieldView extends LinearLayout {
 
                 if (mCurTime - mLastTime < 500) {
                     mDoubleClick = true;
-                    Log.d(TAG, "这就是传说中的双击事件 mDoubleClick="+ mDoubleClick);
+                    Log.d(TAG, "这就是传说中的双击事件 mDoubleClick=" + mDoubleClick);
                     if (mOnValueChangedListener != null) {
                         mOnValueChangedListener.onDoubleClickChange(mBalanceValue, mFadeValue, mPosX, mPosY);
                     }
                     return true;
-                }else {
+                } else {
                     mDoubleClick = false;
                 }
             }
@@ -274,6 +270,7 @@ public class SoundFieldView extends LinearLayout {
 
     public interface OnValueChangedListener {
         public void onValueChange(int balance, int fade, float x, float y);
+
         public void onDoubleClickChange(int balance, int fade, float x, float y);
     }
 

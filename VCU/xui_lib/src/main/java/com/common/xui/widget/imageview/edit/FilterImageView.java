@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview.edit;
 
 import android.content.Context;
@@ -17,7 +16,6 @@ import androidx.appcompat.widget.AppCompatImageView;
 
 /**
  * 图片过滤处理
- *
  */
 class FilterImageView extends AppCompatImageView {
 

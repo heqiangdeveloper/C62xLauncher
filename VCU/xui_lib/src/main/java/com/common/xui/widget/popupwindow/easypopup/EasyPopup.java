@@ -31,7 +31,6 @@ import com.common.xui.logs.UILog;
 /**
  * 简单弹出框，对PopupWindow的简要封装
  *
- *
  * @since 2019/1/14 下午10:02
  */
 public class EasyPopup implements PopupWindow.OnDismissListener {

@@ -21,7 +21,6 @@ import java.util.List;
 
 /**
  * 流式标签布局
- *
  */
 public class FlowTagLayout extends ViewGroup {
     /**

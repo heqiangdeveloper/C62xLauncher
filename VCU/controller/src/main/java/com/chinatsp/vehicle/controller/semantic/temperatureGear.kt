@@ -10,5 +10,5 @@ data class temperatureGear(
     val direct: String,
     val offset: String,
     val ref: String,
-    val type: String
+    val type: String,
 )

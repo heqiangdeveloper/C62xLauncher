@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.tabbar;
 
 import android.animation.AnimatorSet;
@@ -33,7 +32,6 @@ import io.github.inflationx.calligraphy3.HasTypeface;
 
 /**
  * 简单的索引器
- *
  */
 public class EasyIndicator extends LinearLayout implements View.OnClickListener, ViewPager.OnPageChangeListener, HasTypeface {
     private LinearLayout mIndicatorContainer;
@@ -363,7 +361,6 @@ public class EasyIndicator extends LinearLayout implements View.OnClickListener,
 
     /**
      * 选项卡点击监听
-     *
      *
      * @since 2021/3/14 3:38 PM
      */

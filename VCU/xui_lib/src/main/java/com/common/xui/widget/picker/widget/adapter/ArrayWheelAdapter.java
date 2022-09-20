@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import java.util.List;
 /**
  * 简单的数组滚轮适配器
  *
- *
  * @since 2019/1/1 下午6:34
  */
 public class ArrayWheelAdapter<T> implements WheelAdapter {
@@ -36,7 +35,7 @@ public class ArrayWheelAdapter<T> implements WheelAdapter {
      * @param items the mItems
      */
     public ArrayWheelAdapter(List<T> items) {
-       mItems = items;
+        mItems = items;
     }
 
     @Override

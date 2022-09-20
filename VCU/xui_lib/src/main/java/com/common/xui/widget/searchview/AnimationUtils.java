@@ -20,16 +20,16 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.os.Build;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.ViewPropertyAnimatorListener;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 
+import androidx.core.view.ViewCompat;
+import androidx.core.view.ViewPropertyAnimatorListener;
+
 /**
  * 动画工具类
  *
- * 
  * @since 2019/1/2 下午3:59
  */
 class AnimationUtils {

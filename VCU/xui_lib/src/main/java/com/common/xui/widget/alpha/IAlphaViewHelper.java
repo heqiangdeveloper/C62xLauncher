@@ -4,7 +4,6 @@ import android.view.View;
 
 /**
  * 透明度辅助工具
- *
  */
 public interface IAlphaViewHelper {
 

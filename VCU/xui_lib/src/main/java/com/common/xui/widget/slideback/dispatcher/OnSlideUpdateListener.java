@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package com.common.xui.widget.slideback.dispatcher;
 
 /**
  * 侧滑更新监听事件
- *
  *
  * @since 2019-08-30 15:50
  */

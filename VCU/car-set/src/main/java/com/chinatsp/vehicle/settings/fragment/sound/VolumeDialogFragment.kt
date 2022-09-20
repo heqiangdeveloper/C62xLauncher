@@ -116,7 +116,7 @@ class VolumeDialogFragment : BaseDialogFragment<VolumeViewModel, AudioSoundVolum
         binding.closeDialog.setOnClickListener {
             dismiss()
         }
-        binding.reset.setOnClickListener { }
+        binding.reset.setOnClickListener { onClick(binding.reset) }
     }
 
     private fun observeSoundVolume() {

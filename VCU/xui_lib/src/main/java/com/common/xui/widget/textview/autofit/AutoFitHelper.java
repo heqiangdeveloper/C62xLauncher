@@ -23,7 +23,6 @@ import java.util.ArrayList;
 
 /**
  * 字体自适应辅助类
- *
  */
 public class AutoFitHelper {
 

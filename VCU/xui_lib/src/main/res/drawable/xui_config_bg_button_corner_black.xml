@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,9 +19,9 @@
     <!-- rectangle 表示为矩形 -->
 
     <!-- 填充的颜色 -->
-    <solid android:color="#4D000000"/>
+    <solid android:color="#4D000000" />
 
     <!-- android:radius 圆角的半径 -->
-    <corners android:radius="13dp"/>
+    <corners android:radius="13dp" />
 
 </shape>

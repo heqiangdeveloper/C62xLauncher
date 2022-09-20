@@ -13,9 +13,9 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
 
-//        ndk {
-//            setAbiFilters(['armeabi-v8a'])
-//        }
+        ndk {
+            setAbiFilters(['armeabi-v8a'])
+        }
     }
 
     buildTypes {
@@ -35,11 +35,21 @@ android {
     aaptOptions {
         noCompress 'kzb', 'cfg', 'xml'
     }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+    packagingOptions {
+        doNotStrip '*/**/*.so'
+    }
 }
 
 dependencies {
-    api fileTree(dir: 'libs', include: ['*.jar'])
+//    implementation fileTree(includes: ['*.jar'], dir: 'libs')
 
+    implementation fileTree(includes: ['*.jar', '*aar'], dir: 'libs')
 
     testImplementation deps.test.junit
     androidTestImplementation deps.test.android_junit

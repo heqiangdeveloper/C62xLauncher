@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 /**
  * 复合字幕条目对象
- *
  */
 public class ComplexItemEntity {
 

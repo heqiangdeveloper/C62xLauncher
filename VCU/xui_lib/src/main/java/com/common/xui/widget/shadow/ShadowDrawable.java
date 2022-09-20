@@ -1,5 +1,7 @@
 package com.common.xui.widget.shadow;
 
+import static com.common.xui.widget.shadow.ShadowDrawable.Builder.DEFAULT_SHADOW_COLOR;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -13,17 +15,15 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
+import android.util.AttributeSet;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
-import android.util.AttributeSet;
-import android.view.View;
 
 import com.common.xui.R;
 import com.common.xui.utils.ResUtils;
-
-import static com.common.xui.widget.shadow.ShadowDrawable.Builder.DEFAULT_SHADOW_COLOR;
 
 /**
  * 可以方便地生成圆角矩形/圆形的阴影

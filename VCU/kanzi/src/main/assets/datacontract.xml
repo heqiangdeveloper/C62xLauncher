@@ -1,4 +1,3 @@
 <Car>
-	<Speed type="int">0</Speed>
-</Car>
-<KanziInitFinish type="int">0</KanziInitFinish> <!-- 0-未初始化完成  1-初始化完成 -->
+    <Speed type="int">0</Speed>
+</Car><KanziInitFinish type="int">0</KanziInitFinish> <!-- 0-未初始化完成  1-初始化完成 -->

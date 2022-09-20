@@ -11,7 +11,6 @@ import com.common.xui.utils.KeyboardUtils;
 
 /**
  * 监听键盘弹出，自动滚动
- *
  */
 public class XUIKeyboardScrollView extends ScrollView implements KeyboardUtils.SoftKeyboardToggleListener {
 

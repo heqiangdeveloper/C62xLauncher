@@ -7,7 +7,6 @@ import com.common.xui.widget.statelayout.StateLayoutConfig;
 
 /**
  * UI动态配置
- *
  */
 public class UIConfig {
 

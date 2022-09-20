@@ -32,7 +32,6 @@ import java.lang.annotation.RetentionPolicy;
 
 /**
  * 主题工具
- *
  */
 public final class ThemeUtils {
 

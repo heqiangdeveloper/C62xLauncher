@@ -14,7 +14,6 @@ import com.common.xui.logs.UILog;
 
 /**
  * 多状态布局加载者
- *
  */
 public class StatusLoader {
     /**

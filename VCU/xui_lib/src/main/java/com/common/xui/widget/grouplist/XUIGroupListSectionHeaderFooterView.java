@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.grouplist;
 
 import android.content.Context;
@@ -14,7 +13,6 @@ import com.common.xui.utils.Utils;
 /**
  * 用作通用列表 {@link XUIGroupListView} 里每个 {@link XUIGroupListView.Section} 的头部或尾部，也可单独使用。
  *
- * 
  * @since 2019/1/3 上午10:48
  */
 public class XUIGroupListSectionHeaderFooterView extends LinearLayout {

@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,9 @@ package com.common.xui.widget.dialog.strategy.impl;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import androidx.annotation.NonNull;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 
 import com.common.xui.widget.dialog.materialdialog.DialogAction;
 import com.common.xui.widget.dialog.materialdialog.MaterialDialog;
@@ -31,7 +32,6 @@ import com.common.xui.widget.dialog.strategy.InputInfo;
 
 /**
  * MaterialDialog 策略
- *
  *
  * @since 2018/11/14 下午11:46
  */
@@ -45,7 +45,7 @@ public class MaterialDialogStrategy implements IDialogStrategy {
      * @param title      标题
      * @param content    正文
      * @param submitText 确认按钮
-     * @param listener 确认按钮点击监听
+     * @param listener   确认按钮点击监听
      */
     @Override
     public Dialog showTipDialog(Context context, int icon, String title, String content, String submitText, final DialogInterface.OnClickListener listener) {

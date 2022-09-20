@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ public class IndeterminateHorizontalProgressDrawable extends BaseIndeterminatePr
 
         mBackgroundAlpha = ThemeUtils.resolveFloat(context, android.R.attr.disabledAlpha, 0);
 
-        mAnimators = new Animator[] {
+        mAnimators = new Animator[]{
                 Animators.createIndeterminateHorizontalRect1(mRect1TransformX),
                 Animators.createIndeterminateHorizontalRect2(mRect2TransformX)
         };

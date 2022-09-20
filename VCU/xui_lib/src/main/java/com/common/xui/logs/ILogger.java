@@ -1,9 +1,7 @@
-
 package com.common.xui.logs;
 
 /**
  * 简易的日志记录接口
- *
  */
 public interface ILogger {
 

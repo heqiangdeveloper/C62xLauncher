@@ -21,7 +21,7 @@ enum class SwitchNode(
     val careOn: Boolean = true,//当此值为true表示只有当值等于 get的on时才当为开，当此值为false表示只要值不等于get的off时就当为开
     val area: Area = Area.GLOBAL,
     val validValues: IntArray? = null,
-    val invalidValues: IntArray? = null
+    val invalidValues: IntArray? = null,
 ) {
 
     //-------------------座舱--开始-------------------
@@ -548,6 +548,7 @@ enum class SwitchNode(
     ADAS_HMA(//向产品确认值
         get = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_HMA_STATUS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HMA_ON_OFF_SWT),
+        validValues = intArrayOf(0, 1, 2, 3, 4, 5, 7),
         default = false,
         careOn = false
     ),

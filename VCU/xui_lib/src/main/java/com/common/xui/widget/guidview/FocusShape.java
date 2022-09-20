@@ -2,7 +2,6 @@ package com.common.xui.widget.guidview;
 
 /**
  * 聚焦的形状
- *
  */
 public enum FocusShape {
     /**

@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview.edit;
 
 import android.opengl.GLES20;
@@ -62,11 +61,11 @@ class TextureRenderer {
 
         // Setup coordinate buffers
         mTexVertices = ByteBuffer.allocateDirect(
-                TEX_VERTICES.length * FLOAT_SIZE_BYTES)
+                        TEX_VERTICES.length * FLOAT_SIZE_BYTES)
                 .order(ByteOrder.nativeOrder()).asFloatBuffer();
         mTexVertices.put(TEX_VERTICES).position(0);
         mPosVertices = ByteBuffer.allocateDirect(
-                POS_VERTICES.length * FLOAT_SIZE_BYTES)
+                        POS_VERTICES.length * FLOAT_SIZE_BYTES)
                 .order(ByteOrder.nativeOrder()).asFloatBuffer();
         mPosVertices.put(POS_VERTICES).position(0);
     }

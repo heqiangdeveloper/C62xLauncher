@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import android.view.View;
 /**
  * 条件选择的监听器
  *
- * 
  * @since 2019/1/1 下午7:05
  */
 public interface OnOptionsSelectListener {

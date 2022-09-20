@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview.preview.view;
 
 import android.animation.Animator;

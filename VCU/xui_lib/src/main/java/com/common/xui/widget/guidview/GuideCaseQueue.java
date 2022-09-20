@@ -49,6 +49,7 @@ public class GuideCaseQueue implements DismissListener {
 
     /**
      * Cancels the queue
+     *
      * @param hideCurrent hides current GuideCaseView
      */
     public void cancel(boolean hideCurrent) {

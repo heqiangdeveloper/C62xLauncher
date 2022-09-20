@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +20,11 @@ package com.common.xui.widget.dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
-import androidx.annotation.StyleRes;
-
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.StyleRes;
 
 import com.common.xui.R;
 import com.common.xui.widget.progress.loading.ARCLoadingView;
@@ -33,7 +33,6 @@ import com.common.xui.widget.progress.loading.LoadingCancelListener;
 
 /**
  * loading加载框
- *
  *
  * @since 2019/1/14 下午10:08
  */

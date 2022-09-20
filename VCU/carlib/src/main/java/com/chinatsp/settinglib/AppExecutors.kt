@@ -27,7 +27,7 @@ class AppExecutors private constructor(
     /**
      * 主线程
      */
-    private val mMainThread: Executor = MainThreadExecutor()
+    private val mMainThread: Executor = MainThreadExecutor(),
 ) {
     /**
      * 获取单线程池

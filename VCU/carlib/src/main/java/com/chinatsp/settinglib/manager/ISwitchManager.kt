@@ -45,7 +45,7 @@ interface ISwitchManager : IManager {
         atomic: AtomicBoolean,
         value: Int,
         update: (SwitchNode, AtomicBoolean, Int, ((SwitchNode, Boolean) -> Unit)?) -> Unit,
-        block: ((SwitchNode, Boolean) -> Unit)? = null
+        block: ((SwitchNode, Boolean) -> Unit)? = null,
     ) {
         update(node, atomic, value, block)
     }
@@ -54,7 +54,7 @@ interface ISwitchManager : IManager {
         node: SwitchNode,
         atomic: AtomicBoolean,
         value: Int,
-        block: ((SwitchNode, Boolean) -> Unit)? = null
+        block: ((SwitchNode, Boolean) -> Unit)? = null,
     ): AtomicBoolean {
         val isValid = node.isValid(value)
         if (isValid) {
@@ -69,7 +69,7 @@ interface ISwitchManager : IManager {
         node: SwitchNode,
         atomic: AtomicBoolean,
         status: Boolean,
-        block: ((SwitchNode, Boolean) -> Unit)? = null
+        block: ((SwitchNode, Boolean) -> Unit)? = null,
     ): AtomicBoolean {
         val isNotEqual = atomic.get() xor status
         if (isNotEqual) {

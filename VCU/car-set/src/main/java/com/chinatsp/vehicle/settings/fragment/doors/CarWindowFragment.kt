@@ -58,13 +58,13 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
 
     private fun initDetailsClickListener() {
         binding.remoteRoseWindowDetails.setOnClickListener {
-            showPopWindow(R.string.car_window_lock_content,it)
+            showPopWindow(R.string.car_window_lock_content, it)
         }
-        binding.carLockDetails.setOnClickListener{
-            showPopWindow(R.string.car_window_lock_car_content,it)
+        binding.carLockDetails.setOnClickListener {
+            showPopWindow(R.string.car_window_lock_car_content, it)
         }
-        binding.carWiperDetails.setOnClickListener{
-            showPopWindow(R.string.car_window_wiper_content,it)
+        binding.carWiperDetails.setOnClickListener {
+            showPopWindow(R.string.car_window_wiper_content, it)
         }
     }
 
@@ -144,22 +144,31 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
         }
     }
 
-    private fun showPopWindow(id:Int, view:View){
-        val popWindow:PopWindow
-        if(view.id==binding.carWiperDetails.id){
-            popWindow = PopWindow(activity,R.layout.pop_window,
-                activity?.let { AppCompatResources.getDrawable(it,R.drawable.popup_bg_qipao172_1) })
-            popWindow.showDownLift(view,30,-340)
-        }else if (view.id==binding.remoteRoseWindowDetails.id){
-            popWindow = PopWindow(activity,R.layout.pop_window,
-                activity?.let { AppCompatResources.getDrawable(it,R.drawable.popup_bg_qipao172_2) })
-            popWindow.showDownLift(view,30,-80)
-        }else{
-            popWindow = PopWindow(activity,R.layout.pop_window,
-                activity?.let { AppCompatResources.getDrawable(it,R.drawable.popup_bg_qipao172_3) })
-            popWindow.showDownLift(view,30,-80)
+    private fun showPopWindow(id: Int, view: View) {
+        val popWindow: PopWindow
+        if (view.id == binding.carWiperDetails.id) {
+            popWindow = PopWindow(activity, R.layout.pop_window,
+                activity?.let {
+                    AppCompatResources.getDrawable(it,
+                        R.drawable.popup_bg_qipao172_1)
+                })
+            popWindow.showDownLift(view, 30, -340)
+        } else if (view.id == binding.remoteRoseWindowDetails.id) {
+            popWindow = PopWindow(activity, R.layout.pop_window,
+                activity?.let {
+                    AppCompatResources.getDrawable(it,
+                        R.drawable.popup_bg_qipao172_2)
+                })
+            popWindow.showDownLift(view, 30, -80)
+        } else {
+            popWindow = PopWindow(activity, R.layout.pop_window,
+                activity?.let {
+                    AppCompatResources.getDrawable(it,
+                        R.drawable.popup_bg_qipao172_3)
+                })
+            popWindow.showDownLift(view, 30, -80)
         }
-        val text:TextView = popWindow.findViewById(R.id.content) as TextView
+        val text: TextView = popWindow.findViewById(R.id.content) as TextView
         text.text = resources.getString(id)
 
     }

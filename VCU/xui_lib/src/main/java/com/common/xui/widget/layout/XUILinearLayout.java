@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.layout;
 
 import android.content.Context;
@@ -11,6 +10,7 @@ import com.common.xui.widget.alpha.XUIAlphaLinearLayout;
 
 /**
  * 封装的LinearLayout，便于样式的修改
+ *
  * @since 2019-06-02 02:26
  */
 public class XUILinearLayout extends XUIAlphaLinearLayout implements IXUILayout {
@@ -135,7 +135,7 @@ public class XUILinearLayout extends XUIAlphaLinearLayout implements IXUILayout 
 
     @Override
     public void setRadiusAndShadow(int radius, int hideRadiusSide, int shadowElevation, int shadowColor, float shadowAlpha) {
-        mLayoutHelper.setRadiusAndShadow(radius, hideRadiusSide, shadowElevation,  shadowColor, shadowAlpha);
+        mLayoutHelper.setRadiusAndShadow(radius, hideRadiusSide, shadowElevation, shadowColor, shadowAlpha);
     }
 
     @Override

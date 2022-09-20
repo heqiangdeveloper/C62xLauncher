@@ -29,7 +29,6 @@ import com.common.xui.utils.ResUtils;
 
 /**
  * 可伸缩折叠的TextView
- *
  */
 public class ExpandableTextView extends LinearLayout implements View.OnClickListener {
 

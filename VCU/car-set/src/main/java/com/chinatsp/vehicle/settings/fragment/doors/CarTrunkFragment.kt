@@ -101,7 +101,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     }
 
     private fun initViewDisplay() {
-        if (VcuUtils.isCareLevel(Level.LEVEL5, expect = true)) {
+        if (VcuUtils.isCareLevel(Level.LEVEL5, Level.LEVEL5_2, expect = true)) {
             binding.linearLayout.visibility = View.GONE
             binding.line2.visibility = View.GONE
         }
@@ -382,11 +382,13 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
 
     }
 
-    private fun showPopWindow(id:Int, view:View){
-        val popWindow = PopWindow(activity,R.layout.pop_window,activity?.let { AppCompatResources.getDrawable(it,R.drawable.popup_bg_qipao172) })
+    private fun showPopWindow(id: Int, view: View) {
+        val popWindow = PopWindow(activity,
+            R.layout.pop_window,
+            activity?.let { AppCompatResources.getDrawable(it, R.drawable.popup_bg_qipao172) })
         val text: TextView = popWindow.findViewById(R.id.content) as TextView
         text.text = resources.getString(id)
-        popWindow.showDownLift(view,30,-130)
+        popWindow.showDownLift(view, 30, -130)
     }
 
     private fun onTrunkPositionChanged(progress: Int) {

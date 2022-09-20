@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package com.common.xui.widget.popupwindow.status;
 
 /**
  * 状态枚举
- *
  *
  * @since 2018/12/27 下午5:34
  */

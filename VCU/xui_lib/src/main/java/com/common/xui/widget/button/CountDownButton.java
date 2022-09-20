@@ -4,10 +4,11 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.os.CountDownTimer;
-import androidx.appcompat.widget.AppCompatButton;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+
+import androidx.appcompat.widget.AppCompatButton;
 
 import com.common.xui.R;
 
@@ -16,7 +17,6 @@ import java.util.Locale;
 /**
  * 倒计时按钮
  *
- * 
  * @since 2019/1/14 下午10:10
  */
 public class CountDownButton extends AppCompatButton {

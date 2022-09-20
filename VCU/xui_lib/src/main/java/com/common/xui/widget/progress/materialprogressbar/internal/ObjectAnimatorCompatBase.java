@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,8 @@ class ObjectAnimatorCompatBase {
     // As per android.support.v4.view.animation.FastOutLinearInInterpolator.
     private static final int NUM_POINTS = 201;
 
-    private ObjectAnimatorCompatBase() {}
+    private ObjectAnimatorCompatBase() {
+    }
 
     public static ObjectAnimator ofArgb(Object target, String propertyName, int... values) {
         ObjectAnimator animator = ObjectAnimator.ofInt(target, propertyName, values);

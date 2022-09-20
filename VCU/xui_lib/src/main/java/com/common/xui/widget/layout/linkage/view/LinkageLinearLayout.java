@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.layout.linkage.view;
 
 import android.content.Context;
@@ -12,6 +11,7 @@ import com.common.xui.widget.layout.linkage.LinkageScrollHandlerAdapter;
 
 /**
  * 置于联动容器的LinearLayout
+ *
  * @since 2020/3/11 6:14 PM
  */
 public class LinkageLinearLayout extends LinearLayout implements ILinkageScroll {

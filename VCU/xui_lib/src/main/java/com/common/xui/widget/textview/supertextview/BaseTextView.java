@@ -181,5 +181,4 @@ public class BaseTextView extends LinearLayout implements HasTypeface {
     }
 
 
-
 }

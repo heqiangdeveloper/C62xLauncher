@@ -2,9 +2,7 @@ package com.common.library.frame.base;
 
 import android.app.Application;
 import android.os.Message;
-import com.common.library.frame.base.livedata.MessageEvent;
-import com.common.library.frame.base.livedata.SingleLiveEvent;
-import com.common.library.frame.base.livedata.StatusEvent;
+
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
@@ -14,8 +12,12 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
+import com.common.library.frame.base.livedata.MessageEvent;
+import com.common.library.frame.base.livedata.SingleLiveEvent;
+import com.common.library.frame.base.livedata.StatusEvent;
+
 /**
- *  框架基于 Google 官方的 JetPack 构建，在使用  时，需遵循一些规范：
+ * 框架基于 Google 官方的 JetPack 构建，在使用  时，需遵循一些规范：
  *
  * <p>如果您继承使用了 BaseViewModel 或其子类，你需要参照如下方式在类上添加 @HiltViewModel 并在构造函数上添加 @Inject 注解
  *
@@ -43,8 +45,6 @@ import androidx.lifecycle.Observer;
  * </pre>
  *
  * <p>MVVM模式中的VM (ViewModel)层基类
- *
- *
  */
 public class BaseViewModel<M extends BaseModel> extends AndroidViewModel implements IViewModel {
 

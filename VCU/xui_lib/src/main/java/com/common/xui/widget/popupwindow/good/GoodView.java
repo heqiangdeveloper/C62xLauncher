@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,6 @@ import com.common.xui.utils.ResUtils;
 
 /**
  * 点赞效果
- *
  *
  * @since 2020-01-05 19:49
  */

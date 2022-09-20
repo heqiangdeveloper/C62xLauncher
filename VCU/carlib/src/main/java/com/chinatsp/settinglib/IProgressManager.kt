@@ -21,7 +21,7 @@ interface IProgressManager : IManager {
         volume: Volume,
         value: Int,
         status: Boolean,
-        block: ((Progress, Int) -> Unit)? = null
+        block: ((Progress, Int) -> Unit)? = null,
     ): Volume {
         if (status && value != volume.pos) {
             volume.pos = value

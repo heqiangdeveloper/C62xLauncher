@@ -66,7 +66,9 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+//    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(includes: ['*.jar', '*.aar'], dir: 'libs')
+
 //    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation deps.test.junit
     androidTestImplementation deps.test.android_junit
@@ -107,7 +109,7 @@ dependencies {
     implementation project(':carlib')
     implementation project(':animationlib')
     implementation project(':controller')
-    implementation project(':kanzi')
+//    implementation project(':kanzi')
 
 
 }

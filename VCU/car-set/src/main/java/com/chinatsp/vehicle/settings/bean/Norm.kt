@@ -19,5 +19,5 @@ data class Norm(
     val doff: Int = 2,
     val uon: Int = 1,
     val uoff: Int = 2,
-    val def: Int = 1
+    val def: Int = 1,
 )

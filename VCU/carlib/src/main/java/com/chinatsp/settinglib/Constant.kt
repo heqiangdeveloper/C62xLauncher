@@ -26,6 +26,9 @@ object Constant {
     const val DARK_TOPIC: Int = 0x02
 
 
+    val DIALOG_SERIAL: String
+        get() = "DIALOG_SERIAL"
+
     val ROUTE_SERIAL: String
         get() = "ROUTE_SERIAL"
 
@@ -68,5 +71,35 @@ object Constant {
      */
     val STEERING_HEAT_TEMP: String
         get() = "STEERING_HEAT_TEMP"
+
+    val STEERING_CUSTOM_KEYPAD: String
+        get() = "STEERING_CUSTOM_KEYPAD"
+
+    val STEERING_HEATING_SETTING: String
+        get() = "STEERING_HEATING_SETTING"
+
+    val DEVICE_AUDIO_VOLUME: String
+        get() = "DEVICE_AUDIO_VOLUME"
+
+    val AMBIENT_LIGHTING_MODE: String
+        get() = "AMBIENT_LIGHTING_MODE"
+
+    val AMBIENT_LIGHTING_SETTING: String
+        get() = "AMBIENT_LIGHTING_SETTING"
+
+    val VCU_GENERAL_ROUTER: String
+        get() = "com.chinatsp.vcu.actions.VCU_GENERAL_ROUTER"
+
+    val VCU_AMBIENT_LIGHTING: String
+        get() = "com.chinatsp.vcu.actions.VCU_AMBIENT_LIGHTING"
+
+    val VCU_SCREEN_BRIGHTNESS: String
+        get() = "com.chinatsp.vcu.actions.VCU_SCREEN_BRIGHTNESS"
+
+    val VCU_AUDIO_VOLUME: String
+        get() = "com.chinatsp.vcu.actions.VCU_AUDIO_VOLUME"
+
+    val VCU_CUSTOM_KEYPAD: String
+        get() = "com.chinatsp.vcu.actions.VCU_CUSTOM_KEYPAD"
 
 }

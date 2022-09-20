@@ -41,7 +41,7 @@ abstract class BaseManager : IManager {
 
     fun createAtomicBoolean(
         node: SwitchNode,
-        block: ((AtomicBoolean, Int) -> Unit)
+        block: ((AtomicBoolean, Int) -> Unit),
     ): AtomicBoolean {
         val result = AtomicBoolean(node.default)
         readProperty(node.get.signal, node.get.origin) {
@@ -53,7 +53,7 @@ abstract class BaseManager : IManager {
     fun createAtomicBoolean(
         node: SwitchNode,
         key: String,
-        block: ((AtomicBoolean, Int) -> Unit)
+        block: ((AtomicBoolean, Int) -> Unit),
     ): AtomicBoolean {
         val result = AtomicBoolean(node.default)
         AppExecutors.get()?.singleIO()?.execute {
@@ -73,7 +73,7 @@ abstract class BaseManager : IManager {
 
     open fun onDispatchSignal(
         property: CarPropertyValue<*>,
-        origin: Origin = Origin.CABIN
+        origin: Origin = Origin.CABIN,
     ): Boolean {
         if (isCareSignal(property.propertyId, origin)) {
             return onHandleSignal(property, origin)
@@ -152,7 +152,7 @@ abstract class BaseManager : IManager {
         id: Int,
         origin: Origin,
         area: Area = Area.GLOBAL,
-        block: ((Int) -> Unit)
+        block: ((Int) -> Unit),
     ) {
         signalService.readProperty(id, origin, area, block)
     }

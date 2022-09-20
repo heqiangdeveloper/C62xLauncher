@@ -1,5 +1,6 @@
-
 package com.common.xui.utils;
+
+import static androidx.recyclerview.widget.OrientationHelper.VERTICAL;
 
 import android.app.Activity;
 import android.content.Context;
@@ -25,8 +26,6 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.tabs.TabLayout;
 import com.common.xui.R;
 import com.common.xui.XUI;
 import com.common.xui.adapter.recyclerview.DividerItemDecoration;
@@ -37,14 +36,13 @@ import com.common.xui.widget.dialog.LoadingDialog;
 import com.common.xui.widget.dialog.MiniLoadingDialog;
 import com.common.xui.widget.progress.loading.IMessageLoader;
 import com.common.xui.widget.progress.loading.LoadingViewLayout;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
 
-import static androidx.recyclerview.widget.OrientationHelper.VERTICAL;
-
 /**
  * 组件工具类
- *
  */
 public final class WidgetUtils {
 

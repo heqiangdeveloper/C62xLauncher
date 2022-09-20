@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview.edit;
 
 import android.graphics.Rect;
@@ -13,7 +12,6 @@ import androidx.annotation.Nullable;
 
 /**
  * 多点触摸监听
- *
  *
  * @since 2019-10-28 10:03
  */

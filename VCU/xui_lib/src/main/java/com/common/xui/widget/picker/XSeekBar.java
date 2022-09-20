@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,6 @@ import java.util.Set;
 /**
  * 滑块选择器
  *
- * 
  * @since 2020-01-04 18:30
  */
 public class XSeekBar extends View {

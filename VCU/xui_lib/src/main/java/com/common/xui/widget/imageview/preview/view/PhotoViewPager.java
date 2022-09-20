@@ -1,10 +1,10 @@
-
 package com.common.xui.widget.imageview.preview.view;
 
 import android.content.Context;
-import androidx.viewpager.widget.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+
+import androidx.viewpager.widget.ViewPager;
 
 
 public class PhotoViewPager extends ViewPager {

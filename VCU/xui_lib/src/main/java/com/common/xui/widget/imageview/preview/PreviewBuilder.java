@@ -1,5 +1,16 @@
-
 package com.common.xui.widget.imageview.preview;
+
+import static com.common.xui.widget.imageview.preview.ui.BasePhotoFragment.KEY_DRAG;
+import static com.common.xui.widget.imageview.preview.ui.BasePhotoFragment.KEY_PROGRESS_COLOR;
+import static com.common.xui.widget.imageview.preview.ui.BasePhotoFragment.KEY_SENSITIVITY;
+import static com.common.xui.widget.imageview.preview.ui.BasePhotoFragment.KEY_SING_FILING;
+import static com.common.xui.widget.imageview.preview.ui.PreviewActivity.KEY_CLASSNAME;
+import static com.common.xui.widget.imageview.preview.ui.PreviewActivity.KEY_DURATION;
+import static com.common.xui.widget.imageview.preview.ui.PreviewActivity.KEY_IMAGE_PATHS;
+import static com.common.xui.widget.imageview.preview.ui.PreviewActivity.KEY_IS_FULLSCREEN;
+import static com.common.xui.widget.imageview.preview.ui.PreviewActivity.KEY_IS_SHOW;
+import static com.common.xui.widget.imageview.preview.ui.PreviewActivity.KEY_POSITION;
+import static com.common.xui.widget.imageview.preview.ui.PreviewActivity.KEY_TYPE;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,20 +28,9 @@ import com.common.xui.widget.imageview.preview.ui.PreviewActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.common.xui.widget.imageview.preview.ui.BasePhotoFragment.KEY_DRAG;
-import static com.common.xui.widget.imageview.preview.ui.BasePhotoFragment.KEY_PROGRESS_COLOR;
-import static com.common.xui.widget.imageview.preview.ui.BasePhotoFragment.KEY_SENSITIVITY;
-import static com.common.xui.widget.imageview.preview.ui.BasePhotoFragment.KEY_SING_FILING;
-import static com.common.xui.widget.imageview.preview.ui.PreviewActivity.KEY_CLASSNAME;
-import static com.common.xui.widget.imageview.preview.ui.PreviewActivity.KEY_DURATION;
-import static com.common.xui.widget.imageview.preview.ui.PreviewActivity.KEY_IMAGE_PATHS;
-import static com.common.xui.widget.imageview.preview.ui.PreviewActivity.KEY_IS_FULLSCREEN;
-import static com.common.xui.widget.imageview.preview.ui.PreviewActivity.KEY_IS_SHOW;
-import static com.common.xui.widget.imageview.preview.ui.PreviewActivity.KEY_POSITION;
-import static com.common.xui.widget.imageview.preview.ui.PreviewActivity.KEY_TYPE;
-
 /**
  * 构建者
+ *
  * @since 2018/12/5 上午11:46
  */
 public final class PreviewBuilder {

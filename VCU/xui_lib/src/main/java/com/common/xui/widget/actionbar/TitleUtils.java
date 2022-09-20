@@ -2,12 +2,11 @@ package com.common.xui.widget.actionbar;
 
 import android.app.Activity;
 import android.content.Context;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+
+import androidx.fragment.app.Fragment;
 
 import com.common.xui.R;
 import com.common.xui.utils.ThemeUtils;
@@ -15,7 +14,6 @@ import com.common.xui.utils.ThemeUtils;
 /**
  * 标题栏工具
  *
- * 
  * @since 2018/11/14 下午2:16
  */
 public final class TitleUtils {

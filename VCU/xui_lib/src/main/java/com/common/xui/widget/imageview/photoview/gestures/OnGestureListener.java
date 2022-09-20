@@ -1,9 +1,7 @@
-
 package com.common.xui.widget.imageview.photoview.gestures;
 
 /**
  * 手势监听器
- *
  *
  * @since 2018/12/5 上午10:51
  */
@@ -11,6 +9,7 @@ public interface OnGestureListener {
 
     /**
      * 拖拽
+     *
      * @param dx
      * @param dy
      */
@@ -18,6 +17,7 @@ public interface OnGestureListener {
 
     /**
      * 移动
+     *
      * @param startX
      * @param startY
      * @param velocityX
@@ -28,6 +28,7 @@ public interface OnGestureListener {
 
     /**
      * 缩放
+     *
      * @param scaleFactor
      * @param focusX
      * @param focusY

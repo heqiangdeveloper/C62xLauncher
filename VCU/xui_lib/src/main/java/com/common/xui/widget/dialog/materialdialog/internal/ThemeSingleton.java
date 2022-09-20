@@ -1,8 +1,8 @@
-
 package com.common.xui.widget.dialog.materialdialog.internal;
 
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
+
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 

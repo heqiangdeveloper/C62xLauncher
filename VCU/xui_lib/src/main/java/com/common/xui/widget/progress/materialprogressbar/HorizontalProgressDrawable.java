@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ public class HorizontalProgressDrawable extends BaseProgressLayerDrawable<
      * @param context the {@code Context} for retrieving style information.
      */
     public HorizontalProgressDrawable(Context context) {
-        super(new Drawable[] {
+        super(new Drawable[]{
                 new HorizontalProgressBackgroundDrawable(context),
                 new SingleHorizontalProgressDrawable(context),
                 new SingleHorizontalProgressDrawable(context)

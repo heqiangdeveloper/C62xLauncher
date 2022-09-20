@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview.edit;
 
 import android.graphics.Typeface;
@@ -14,7 +13,6 @@ import java.util.Map;
 
 /**
  * 文字编辑
- *
  */
 public class TextStyleBuilder {
 

@@ -30,7 +30,7 @@ class AngleDialogFragment : BaseDialogFragment<SoundEffectViewModel, AngleDialog
         binding.hintCancel.setOnClickListener {
             this.dismiss()
         }
-        binding.carMirrorCancelSet.setOnClickListener{this.dismiss()}
-        binding.carMirrorSaveSet.setOnClickListener{this.dismiss()}
+        binding.carMirrorCancelSet.setOnClickListener { this.dismiss() }
+        binding.carMirrorSaveSet.setOnClickListener { this.dismiss() }
     }
 }

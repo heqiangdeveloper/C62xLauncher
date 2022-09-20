@@ -8,7 +8,6 @@ import androidx.viewpager.widget.ViewPager;
 /**
  * 3D旋转切换
  *
- * 
  * @since 2019/1/14 下午10:11
  */
 public class DepthTransformer implements ViewPager.PageTransformer {

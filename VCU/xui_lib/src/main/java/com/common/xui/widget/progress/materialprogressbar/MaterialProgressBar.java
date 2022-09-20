@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,6 @@ import com.common.xui.widget.progress.materialprogressbar.internal.DrawableCompa
 
 /**
  * A {@link ProgressBar} subclass that handles tasks related to backported progress drawable.
- *
  *
  * @since 2019/1/14 下午10:06
  */

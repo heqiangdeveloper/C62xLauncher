@@ -21,7 +21,6 @@ import java.util.List;
 /**
  * 简易的可伸缩列表适配器
  *
- * 
  * @since 2019-11-11 14:01
  */
 public class XUISimpleExpandableListAdapter extends BaseExpandableListAdapter {
@@ -168,6 +167,7 @@ public class XUISimpleExpandableListAdapter extends BaseExpandableListAdapter {
 
     /**
      * 设置箭头样式
+     *
      * @param arrowDownResId
      * @return
      */

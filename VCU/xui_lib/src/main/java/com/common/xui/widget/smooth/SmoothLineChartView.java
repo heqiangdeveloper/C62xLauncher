@@ -132,7 +132,7 @@ public class SmoothLineChartView extends View {
         invalidate();
     }
 
-    private void calculateInterval(){
+    private void calculateInterval() {
         mXDataTop.clear();
         for (int i = 0; i < mValues.size(); i++) {
             mXDataTop.add(Math.round(mValues.get(i)) + "DB");
@@ -157,8 +157,8 @@ public class SmoothLineChartView extends View {
         }
         //计算进度值，传进来的进度值减去最大区间值，并显示在X抽
         List<Float> yValues = new ArrayList<>();
-        for(int i = 0;i<yData.size();i++){
-            yValues.add(i,yData.get(i)-mMaxY);
+        for (int i = 0; i < yData.size(); i++) {
+            yValues.add(i, yData.get(i) - mMaxY);
         }
         mValues = yValues;
         mPoints.clear();
@@ -404,7 +404,7 @@ public class SmoothLineChartView extends View {
                 if (isMoveChange && mSelectedNode != -1 && y_new > mMinY && y_new < mMaxY) {
                     mValues.set(mSelectedNode, y_new);
                     if (mChartClickListener != null) {
-                        mChartClickListener.onClick(mSelectedNode, Math.round(mValues.get(mSelectedNode)+mMaxY));
+                        mChartClickListener.onClick(mSelectedNode, Math.round(mValues.get(mSelectedNode) + mMaxY));
                         calculateInterval();
                     }
                     invalidate();
@@ -414,7 +414,7 @@ public class SmoothLineChartView extends View {
                 mSelectedNode = checkClicked(event.getX(), event.getY());
                 if (mSelectedNode != -1) {
                     if (mChartClickListener != null) {
-                        mChartClickListener.onClick(mSelectedNode, Math.round(mValues.get(mSelectedNode)+mMaxY));
+                        mChartClickListener.onClick(mSelectedNode, Math.round(mValues.get(mSelectedNode) + mMaxY));
                         calculateInterval();
                     }
                     invalidate();

@@ -1,4 +1,3 @@
-
 package com.common.xui.utils;
 
 import android.animation.Animator;
@@ -45,10 +44,10 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
 
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.common.xui.R;
 import com.common.xui.XUI;
 import com.common.xui.widget.imageview.ImageLoader;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +55,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 控件工具类
+ *
  * @since 2019/1/3 上午10:05
  */
 public final class ViewUtils {

@@ -7,8 +7,6 @@ import androidx.lifecycle.LifecycleOwner;
 
 /**
  * 提供观察消息事件
- *
- *
  */
 public class MessageEvent extends SingleLiveEvent<String> {
 

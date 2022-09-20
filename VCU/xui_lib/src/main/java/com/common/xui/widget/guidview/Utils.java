@@ -11,7 +11,6 @@ import android.view.View;
 
 /**
  * Util class for {@link GuideCaseView}
- *
  */
 class Utils {
 

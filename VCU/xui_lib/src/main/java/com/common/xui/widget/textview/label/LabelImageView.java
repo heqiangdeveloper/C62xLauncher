@@ -100,11 +100,11 @@ public class LabelImageView extends AppCompatImageView {
         utils.setLabelTextSize(this, textSize);
     }
 
-    public int getLabelTextStyle(){
+    public int getLabelTextStyle() {
         return utils.getLabelTextStyle();
     }
 
-    public void setLabelTextStyle(int textStyle){
+    public void setLabelTextStyle(int textStyle) {
         utils.setLabelTextStyle(this, textStyle);
     }
 

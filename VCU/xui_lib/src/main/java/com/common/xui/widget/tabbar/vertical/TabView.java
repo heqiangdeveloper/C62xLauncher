@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.tabbar.vertical;
 
 import android.content.Context;
@@ -11,7 +10,6 @@ import com.common.xui.widget.textview.badge.Badge;
 
 /**
  * 抽象的tab选项卡
- *
  */
 public abstract class TabView extends FrameLayout implements Checkable, ITabView {
 

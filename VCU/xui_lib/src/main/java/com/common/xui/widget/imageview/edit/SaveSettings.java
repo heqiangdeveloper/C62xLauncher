@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview.edit;
 
 import android.graphics.Bitmap;
@@ -8,7 +7,6 @@ import androidx.annotation.NonNull;
 
 /**
  * 图片保存设置
- *
  */
 public class SaveSettings {
     private boolean isTransparencyEnabled;

@@ -8,7 +8,6 @@ import androidx.appcompat.widget.AppCompatButton;
 
 /**
  * 标签按钮
- *
  */
 public class LabelButtonView extends AppCompatButton {
 
@@ -97,11 +96,11 @@ public class LabelButtonView extends AppCompatButton {
         utils.setLabelTextSize(this, textSize);
     }
 
-    public int getLabelTextStyle(){
+    public int getLabelTextStyle() {
         return utils.getLabelTextStyle();
     }
 
-    public void setLabelTextStyle(int textStyle){
+    public void setLabelTextStyle(int textStyle) {
         utils.setLabelTextStyle(this, textStyle);
     }
 

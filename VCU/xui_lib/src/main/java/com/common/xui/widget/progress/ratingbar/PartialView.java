@@ -12,9 +12,6 @@ import android.widget.RelativeLayout;
 import androidx.annotation.IntRange;
 
 /**
- *
- *
- * 
  * @since 2019/3/26 下午10:53
  */
 class PartialView extends RelativeLayout {

@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview.preview;
 
 import android.content.Context;
@@ -13,9 +12,10 @@ import com.common.xui.widget.imageview.preview.loader.ISimpleTarget;
 
 /**
  * 图片加载管理器
+ *
  * @since 2018/12/5 上午11:27
  */
-public class MediaLoader implements IMediaLoader{
+public class MediaLoader implements IMediaLoader {
 
     private static volatile MediaLoader sInstance = null;
 

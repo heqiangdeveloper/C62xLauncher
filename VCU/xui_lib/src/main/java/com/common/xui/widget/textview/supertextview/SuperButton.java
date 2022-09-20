@@ -16,7 +16,6 @@ import com.common.xui.widget.alpha.XUIAlphaViewHelper;
 
 /**
  * 超级按钮  实现shape所有的属性
- *
  */
 public class SuperButton extends AppCompatButton {
 

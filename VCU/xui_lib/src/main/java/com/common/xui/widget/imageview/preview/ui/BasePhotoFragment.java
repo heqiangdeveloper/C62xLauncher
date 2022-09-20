@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview.preview.ui;
 
 import android.graphics.Color;
@@ -28,7 +27,6 @@ import com.common.xui.widget.progress.materialprogressbar.MaterialProgressBar;
 
 /**
  * 图片预览单个图片的fragment
- *
  */
 public class BasePhotoFragment extends Fragment {
     private static final String GIF = ".gif";

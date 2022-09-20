@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.dialog.materialdialog;
 
 import android.annotation.SuppressLint;
@@ -69,7 +68,6 @@ import java.util.Locale;
 
 /**
  * Material Design Dialog
- *
  *
  * @since 2018/11/14 下午5:38
  */

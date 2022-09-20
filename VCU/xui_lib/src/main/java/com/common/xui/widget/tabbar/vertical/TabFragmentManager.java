@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.tabbar.vertical;
 
 import androidx.fragment.app.Fragment;
@@ -11,7 +10,6 @@ import java.util.List;
 
 /**
  * 选项卡的Fragment管理
- *
  */
 public class TabFragmentManager {
     private FragmentManager mManager;
@@ -80,6 +78,7 @@ public class TabFragmentManager {
         public void onTabUnselected(TabView tab, int position) {
 
         }
+
         @Override
         public void onTabReselected(TabView tab, int position) {
 

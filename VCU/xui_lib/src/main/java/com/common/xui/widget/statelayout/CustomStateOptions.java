@@ -8,6 +8,7 @@ import java.io.Serializable;
 
 /**
  * Model builder class to show custom state
+ *
  * @see com.common.xui.widget.statelayout.StatefulLayout#showCustom(CustomStateOptions)
  */
 public class CustomStateOptions implements Serializable {

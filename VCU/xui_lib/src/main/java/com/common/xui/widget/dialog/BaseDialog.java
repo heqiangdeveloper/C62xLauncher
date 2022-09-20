@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,6 @@ import com.common.xui.utils.WidgetUtils;
  * 基类Dialog
  * 1.触摸Dialog屏幕以外的区域，dialog消失同时隐藏键盘
  * 2.可以同步系统控制器显示状态
- *
  *
  * @since 2018/12/6 下午3:29
  */

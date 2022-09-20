@@ -52,16 +52,14 @@ public class VerSeekBar extends SeekBar {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        if (!isEnabled())
-        {
+        if (!isEnabled()) {
             return false;
         }
 
         //Logcat.i(TAG,  "onTouchEvent setPressed true");
         setPressed(true);
         ThreadUtil.getInstance().getMainThreadHandler().removeCallbacks(resetRunnable);
-        switch (event.getAction())
-        {
+        switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 if (onSeekBarChangeListener != null)
                     onSeekBarChangeListener.onStartTrackingTouch(this);

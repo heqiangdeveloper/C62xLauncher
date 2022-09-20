@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,11 @@
  */
 
 package com.common.xui.widget.imageview.preview.ui;
+
+import static com.common.xui.widget.imageview.preview.ui.BasePhotoFragment.KEY_DRAG;
+import static com.common.xui.widget.imageview.preview.ui.BasePhotoFragment.KEY_PROGRESS_COLOR;
+import static com.common.xui.widget.imageview.preview.ui.BasePhotoFragment.KEY_SENSITIVITY;
+import static com.common.xui.widget.imageview.preview.ui.BasePhotoFragment.KEY_SING_FILING;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -43,15 +48,9 @@ import com.common.xui.widget.imageview.preview.view.SmoothImageView;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.common.xui.widget.imageview.preview.ui.BasePhotoFragment.KEY_DRAG;
-import static com.common.xui.widget.imageview.preview.ui.BasePhotoFragment.KEY_PROGRESS_COLOR;
-import static com.common.xui.widget.imageview.preview.ui.BasePhotoFragment.KEY_SENSITIVITY;
-import static com.common.xui.widget.imageview.preview.ui.BasePhotoFragment.KEY_SING_FILING;
-
 /**
  * 图片预览页面
  *
- * 
  * @since 2018/12/5 上午11:42
  */
 public class PreviewActivity extends AppCompatActivity {

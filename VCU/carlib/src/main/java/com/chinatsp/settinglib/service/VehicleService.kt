@@ -33,10 +33,15 @@ class VehicleService : Service() {
         return controller
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val data = intent?.getStringExtra("data");
-        Timber.d("receive data:$data")
-        controller.doParseSourceData(data)
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        val action = intent.action
+        val data = intent.getStringExtra("data");
+        Timber.d("receive action:$action, data:$data")
+        if ("com.chinatsp.vcu.actions.USER_SETTING_RECOVE" == action) {
+
+        } else if ("com.chinatsp.vcu.actions.ACOUSTIC_CONTROLER" == action) {
+            controller.doParseSourceData(data)
+        }
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -65,7 +70,12 @@ class VehicleService : Service() {
         fun doParseSourceData(data: String?) {
             if (!TextUtils.isEmpty(data)) {
                 resolver?.let {
-                    it.doResolverData(data)
+                    try {
+                        it.doResolverData(data)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    } finally {
+                    }
                 }
             }
         }

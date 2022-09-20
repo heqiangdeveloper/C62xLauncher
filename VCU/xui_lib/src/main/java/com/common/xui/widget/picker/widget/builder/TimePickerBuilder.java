@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,6 @@ import java.util.Calendar;
 /**
  * 时间选择器构建者
  *
- * 
  * @since 2019/1/1 下午8:20
  */
 public class TimePickerBuilder {

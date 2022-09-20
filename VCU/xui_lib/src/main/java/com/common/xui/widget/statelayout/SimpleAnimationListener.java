@@ -4,7 +4,6 @@ import android.view.animation.Animation;
 
 /**
  * 简易的动画监听
- *
  */
 public class SimpleAnimationListener implements Animation.AnimationListener {
 

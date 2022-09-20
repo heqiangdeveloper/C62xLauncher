@@ -1,4 +1,3 @@
-
 package com.common.xui.utils;
 
 import android.graphics.Color;
@@ -9,7 +8,6 @@ import java.util.Random;
 
 /**
  * 颜色辅助工具
- *
  */
 public final class ColorUtils {
 

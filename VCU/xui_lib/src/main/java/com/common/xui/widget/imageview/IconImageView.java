@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview;
 
 import android.content.Context;
@@ -20,6 +19,7 @@ import com.common.xui.utils.Utils;
 
 /**
  * 可在ImageView上设置图标的ImageView
+ *
  * @since 2018/12/10 上午11:58
  */
 public class IconImageView extends AppCompatImageView {

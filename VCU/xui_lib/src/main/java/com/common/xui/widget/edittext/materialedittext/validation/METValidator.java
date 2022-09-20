@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 /**
  * 自定义校验器
- *
  */
 public abstract class METValidator {
 

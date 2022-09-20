@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.dialog.materialdialog;
 
 import android.content.Context;
@@ -9,7 +8,6 @@ import androidx.annotation.IdRes;
 /**
  * 基础抽象的弹窗，可继承后自定义弹窗
  *
- * 
  * @since 2018/11/16 上午12:51
  */
 public abstract class CustomMaterialDialog {
@@ -21,6 +19,7 @@ public abstract class CustomMaterialDialog {
 
     /**
      * 构造窗体
+     *
      * @param context
      */
     public CustomMaterialDialog(Context context) {
@@ -31,6 +30,7 @@ public abstract class CustomMaterialDialog {
 
     /**
      * 获取弹窗的构建者
+     *
      * @param context
      * @return
      */
@@ -38,12 +38,14 @@ public abstract class CustomMaterialDialog {
 
     /**
      * 初始化控件
+     *
      * @param context
      */
     protected abstract void initViews(Context context);
 
     /**
      * 显示弹窗
+     *
      * @param <T>
      * @return
      */
@@ -56,6 +58,7 @@ public abstract class CustomMaterialDialog {
 
     /**
      * 隐藏弹窗
+     *
      * @param <T>
      * @return
      */

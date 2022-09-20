@@ -1,5 +1,8 @@
-
 package com.common.xui.widget.imageview.photoview;
+
+import static android.view.MotionEvent.ACTION_CANCEL;
+import static android.view.MotionEvent.ACTION_DOWN;
+import static android.view.MotionEvent.ACTION_UP;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -8,10 +11,6 @@ import android.graphics.Matrix;
 import android.graphics.Matrix.ScaleToFit;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-
-import androidx.annotation.Nullable;
-import androidx.core.view.MotionEventCompat;
-
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -24,6 +23,9 @@ import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
+import androidx.annotation.Nullable;
+import androidx.core.view.MotionEventCompat;
+
 import com.common.xui.logs.UILog;
 import com.common.xui.widget.imageview.photoview.gestures.IGestureDetector;
 import com.common.xui.widget.imageview.photoview.gestures.OnGestureListener;
@@ -31,10 +33,6 @@ import com.common.xui.widget.imageview.photoview.gestures.VersionedGestureDetect
 import com.common.xui.widget.imageview.photoview.scrollerproxy.ScrollerProxy;
 
 import java.lang.ref.WeakReference;
-
-import static android.view.MotionEvent.ACTION_CANCEL;
-import static android.view.MotionEvent.ACTION_DOWN;
-import static android.view.MotionEvent.ACTION_UP;
 
 public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         OnGestureListener,

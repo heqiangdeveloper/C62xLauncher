@@ -25,7 +25,7 @@ object RouterSerial {
     fun makeRouteSerial(
         @IntRange(from = 0, to = 0xf) level1: Int,
         @IntRange(from = 0, to = 0xf) level2: Int,
-        @IntRange(from = 0, to = 0xf) level3: Int
+        @IntRange(from = 0, to = 0xf) level3: Int,
     ): Int {
         return level1 shl LEVEL1_SHIFT or (level2 shl LEVEL2_SHIFT) or (level3 shl LEVEL3_SHIFT)
     }

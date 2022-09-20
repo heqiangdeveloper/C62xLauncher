@@ -1,10 +1,8 @@
-
 package com.common.xui.widget.tabbar.vertical;
 
 
 /**
  * Tab适配器
- *
  */
 public interface TabAdapter {
     int getCount();

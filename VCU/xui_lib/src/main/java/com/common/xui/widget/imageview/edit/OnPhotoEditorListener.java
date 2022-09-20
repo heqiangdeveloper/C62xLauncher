@@ -1,11 +1,9 @@
-
 package com.common.xui.widget.imageview.edit;
 
 import android.view.View;
 
 /**
  * 图片编辑监听
- *
  */
 public interface OnPhotoEditorListener {
 

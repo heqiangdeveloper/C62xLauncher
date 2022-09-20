@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.spinner;
 
 import android.content.Context;
@@ -29,7 +28,6 @@ import java.util.List;
 
 /**
  * 下拉选择菜单
- *
  */
 public class DropDownMenu extends LinearLayout {
     /**

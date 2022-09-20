@@ -14,7 +14,6 @@ import java.util.List;
 
 /**
  * 文字轮播控件【类似字幕、头条之类】
- *
  */
 public class MarqueeView extends ViewFlipper {
     /**
@@ -59,6 +58,7 @@ public class MarqueeView extends ViewFlipper {
 
     /**
      * 设置滚动数据的工厂
+     *
      * @param factory
      */
     public void setMarqueeFactory(MarqueeFactory factory) {
@@ -74,6 +74,7 @@ public class MarqueeView extends ViewFlipper {
 
     /**
      * 设置翻页时间间隔
+     *
      * @param interval
      */
     public void setInterval(int interval) {
@@ -83,6 +84,7 @@ public class MarqueeView extends ViewFlipper {
 
     /**
      * 设置动画执行时间
+     *
      * @param animDuration
      */
     public void setAnimDuration(int animDuration) {

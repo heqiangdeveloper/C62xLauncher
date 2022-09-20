@@ -1,10 +1,8 @@
-
 package com.common.xui.widget.imageview.crop;
 
 
 /**
  * 图片裁剪类型
- *
  */
 public class CropImageType {
     /**

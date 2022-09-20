@@ -4,28 +4,24 @@ import android.app.Application;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.common.library.frame.config.AppliesOptions;
-import com.common.library.frame.config.Constants;
-import com.common.library.frame.util.Preconditions;
-
-import java.lang.Class;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.collection.LruCache;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.common.library.frame.config.AppliesOptions;
+import com.common.library.frame.config.Constants;
+import com.common.library.frame.util.Preconditions;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import dagger.Lazy;
 import retrofit2.Retrofit;
 
 /**
  * 统一管理数据业务层
- *
- *
  */
 @Singleton
 public class DataRepository implements IDataRepository {

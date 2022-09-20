@@ -17,7 +17,6 @@ import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.picker.VSeekBar
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 @AndroidEntryPoint
 class SteeringHeatDialogFragment :
@@ -74,7 +73,8 @@ class SteeringHeatDialogFragment :
 
     private fun initSwitchOption() {
         initSwitchOption(SwitchNode.DRIVE_WHEEL_AUTO_HEAT, viewModel.swhFunction)
-        checkDisableOtherDiv(binding.steeringAutomaticHeatingSwitch, binding.steeringAutomaticHeatingSwitch.isChecked)
+        checkDisableOtherDiv(binding.steeringAutomaticHeatingSwitch,
+            binding.steeringAutomaticHeatingSwitch.isChecked)
     }
 
     private fun addSwitchLiveDataListener() {

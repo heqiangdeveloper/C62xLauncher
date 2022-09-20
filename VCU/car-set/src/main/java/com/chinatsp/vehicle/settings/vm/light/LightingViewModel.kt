@@ -86,7 +86,7 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
 
     private fun updateLiveData(
         liveData: MutableLiveData<Boolean>,
-        value: Boolean
+        value: Boolean,
     ): MutableLiveData<Boolean> {
         liveData.takeIf { value xor (liveData.value == true) }?.postValue(value)
         return liveData
@@ -94,7 +94,7 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
 
     private fun updateLiveData(
         liveData: MutableLiveData<Int>,
-        value: Int
+        value: Int,
     ): MutableLiveData<Int> {
         liveData.takeIf { value != liveData.value }?.postValue(value)
         return liveData

@@ -14,7 +14,6 @@ import com.common.xui.widget.picker.widget.listener.OnOptionsSelectListener;
 
 /**
  * 条件选择器构建者
- *
  */
 public class OptionsPickerBuilder {
 

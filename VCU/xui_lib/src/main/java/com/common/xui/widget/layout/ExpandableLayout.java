@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,11 @@
 
 package com.common.xui.widget.layout;
 
+import static com.common.xui.widget.layout.ExpandableLayout.State.COLLAPSED;
+import static com.common.xui.widget.layout.ExpandableLayout.State.COLLAPSING;
+import static com.common.xui.widget.layout.ExpandableLayout.State.EXPANDED;
+import static com.common.xui.widget.layout.ExpandableLayout.State.EXPANDING;
+
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -33,15 +38,9 @@ import android.widget.LinearLayout;
 import com.common.xui.R;
 import com.common.xui.widget.layout.interpolator.FastOutSlowInInterpolator;
 
-import static com.common.xui.widget.layout.ExpandableLayout.State.COLLAPSED;
-import static com.common.xui.widget.layout.ExpandableLayout.State.COLLAPSING;
-import static com.common.xui.widget.layout.ExpandableLayout.State.EXPANDED;
-import static com.common.xui.widget.layout.ExpandableLayout.State.EXPANDING;
-
 /**
  * 可伸缩的布局
  *
- * 
  * @since 2019-11-22 13:41
  */
 public class ExpandableLayout extends FrameLayout {
@@ -313,6 +312,7 @@ public class ExpandableLayout extends FrameLayout {
 
     /**
      * 设置伸缩比率变化监听
+     *
      * @param listener
      * @return
      */

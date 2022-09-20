@@ -26,7 +26,6 @@ import com.common.xui.XUI;
 
 /**
  * 获取res中的资源
- *
  */
 public final class ResUtils {
 
@@ -263,7 +262,8 @@ public final class ResUtils {
      * @return darker version of specified color.
      */
     public static int darker(int color, float factor) {
-        return Color.argb(Color.alpha(color), Math.max((int) (Color.red(color) * factor), 0),
+        return Color.argb(Color.alpha(color),
+                Math.max((int) (Color.red(color) * factor), 0),
                 Math.max((int) (Color.green(color) * factor), 0),
                 Math.max((int) (Color.blue(color) * factor), 0));
     }

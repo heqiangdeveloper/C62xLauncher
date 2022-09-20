@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,6 @@ import java.util.Calendar;
 
 /**
  * Picker配置类
- *
  *
  * @since 2019/1/1 下午6:57
  */

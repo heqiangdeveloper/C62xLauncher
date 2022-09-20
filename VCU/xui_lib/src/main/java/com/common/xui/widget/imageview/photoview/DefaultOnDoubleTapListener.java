@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview.photoview;
 
 import android.graphics.RectF;
@@ -57,7 +56,7 @@ public class DefaultOnDoubleTapListener implements GestureDetector.OnDoubleTapLi
 
                     photoViewAttacher.getOnPhotoTapListener().onPhotoTap(imageView, xResult, yResult);
                     return true;
-                }else{
+                } else {
                     photoViewAttacher.getOnPhotoTapListener().onOutsidePhotoTap();
                 }
             }

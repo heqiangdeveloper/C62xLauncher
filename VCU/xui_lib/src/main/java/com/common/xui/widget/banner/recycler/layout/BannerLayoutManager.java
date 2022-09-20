@@ -1,5 +1,6 @@
-
 package com.common.xui.widget.banner.recycler.layout;
+
+import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
 
 import android.content.Context;
 import android.os.Parcel;
@@ -16,8 +17,6 @@ import androidx.recyclerview.widget.OrientationHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-
-import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
 
 /**
  * An implementation of {@link RecyclerView.LayoutManager} which behaves like view pager.
