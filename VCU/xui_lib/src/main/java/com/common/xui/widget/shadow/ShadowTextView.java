@@ -10,7 +10,6 @@ import androidx.core.view.ViewCompat;
 /**
  * 可设置阴影的TextView
  *
- * 
  * @since 2019/3/31 下午7:09
  */
 public class ShadowTextView extends AppCompatTextView {

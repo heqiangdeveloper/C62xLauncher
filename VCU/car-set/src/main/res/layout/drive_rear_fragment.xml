@@ -44,6 +44,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/dow_details"
                             style="@style/image_prompt"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toRightOf="@+id/drive_dow_title"
@@ -87,6 +88,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/meb_details"
                             style="@style/image_prompt"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toRightOf="@+id/adas_meb_tv_title"
@@ -198,73 +200,82 @@
                     <View
                         android:id="@+id/line3"
                         style="@style/line"
+                        android:visibility="gone"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/drive_bsd_camera"
-                        android:visibility="gone" />
+                        app:layout_constraintTop_toBottomOf="@id/drive_bsd_camera" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/drive_auxiliary_line"
+                        android:id="@+id/container"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/switch_item_option_height"
+                        android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/line3">
 
-                        <TextView
-                            style="@style/switch_row_option_style"
-                            android:text="@string/drive_auxiliary_line"
-                            app:layout_constraintBottom_toBottomOf="parent"
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/drive_auxiliary_line"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/switch_item_option_height"
+                            android:orientation="horizontal"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent">
 
-                        <com.common.xui.widget.button.switchbutton.SwitchButton
-                            android:id="@+id/adas_side_guides_switch"
-                            style="@style/switch_button_style"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            <TextView
+                                style="@style/switch_row_option_style"
+                                android:text="@string/drive_auxiliary_line"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <com.common.xui.widget.button.switchbutton.SwitchButton
+                                android:id="@+id/adas_side_guides_switch"
+                                style="@style/switch_button_style"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <View
+                            android:id="@+id/line4"
+                            style="@style/line"
+                            android:visibility="gone"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/drive_auxiliary_line" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/drive_display"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/x100"
+                            android:orientation="horizontal"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/line4">
+
+                            <TextView
+                                android:id="@+id/drive_display_area"
+                                style="@style/switch_row_option_style"
+                                android:layout_marginTop="@dimen/x15"
+                                android:text="@string/drive_display_area"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <com.common.xui.widget.tabbar.TabControlView
+                                android:id="@+id/adas_side_show_area_radio"
+                                style="@style/tdv_common_style"
+                                android:layout_marginTop="@dimen/x10"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/drive_display_area"
+                                app:tcv_defaultSelection="1"
+                                app:tcv_items="@array/drive_display_area_options"
+                                app:tcv_values="@array/adas_side_show_area_option_values" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <View
+                            android:id="@+id/line5"
+                            style="@style/line"
+                            android:visibility="gone"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/drive_display" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <View
-                        android:id="@+id/line4"
-                        style="@style/line"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/drive_auxiliary_line"
-                        android:visibility="gone" />
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/drive_display"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/x100"
-                        android:orientation="horizontal"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/line4">
-
-                        <TextView
-                            android:id="@+id/drive_display_area"
-                            style="@style/switch_row_option_style"
-                            android:layout_marginTop="@dimen/x15"
-                            android:text="@string/drive_display_area"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <com.common.xui.widget.tabbar.TabControlView
-                            android:id="@+id/adas_side_show_area_radio"
-                            style="@style/tdv_common_style"
-                            android:layout_marginTop="@dimen/x10"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/drive_display_area"
-                            app:tcv_defaultSelection="1"
-                            app:tcv_items="@array/drive_display_area_options"
-                            app:tcv_values="@array/adas_side_show_area_option_values" />
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <View
-                        android:id="@+id/line5"
-                        style="@style/line"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/drive_display"
-                        android:visibility="gone" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </LinearLayout>

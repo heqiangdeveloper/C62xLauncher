@@ -103,7 +103,8 @@
             android:id="@+id/lighting_rear_reminder"
             style="@style/install_dialog_layout"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lighting_brightness_breathing">
+            app:layout_constraintTop_toBottomOf="@id/lighting_brightness_breathing"
+            android:visibility="gone">
 
             <TextView
                 style="@style/txt_prompt_style"

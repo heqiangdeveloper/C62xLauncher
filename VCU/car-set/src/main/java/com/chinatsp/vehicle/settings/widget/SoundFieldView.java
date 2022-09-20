@@ -28,12 +28,17 @@ public class SoundFieldView extends LinearLayout {
     public static double BALANCE_MAX = 10.0;
     public static double FADE_MAX = 10.0;
     public static final int H_PADDING = 160; //160
-    public static final int V_PADDING = 20; //130
+    public static final int V_PADDING = 80; //130
+
+    long mLastTime;
+    long mCurTime;
 
     private View mSFView = null;
     private ImageView mImgPoint = null;
     private ImageView imgSouncPointBg = null;
     private boolean mIsMouseDown = false;
+    private boolean mDoubleClick = false;
+
     private ImageView mImgSoundLineH = null;
     private ImageView mImgSoundLineV = null;
 
@@ -82,16 +87,31 @@ public class SoundFieldView extends LinearLayout {
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             mIsMouseDown = true;
-
             dispatchSetPressed(true);
             if (super.getParent() != null) {
                 super.getParent().requestDisallowInterceptTouchEvent(true);
             }
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                mLastTime = mCurTime;
+                mCurTime = System.currentTimeMillis();
+
+                if (mCurTime - mLastTime < 500) {
+                    mDoubleClick = true;
+                    Log.d(TAG, "这就是传说中的双击事件 mDoubleClick=" + mDoubleClick);
+                    if (mOnValueChangedListener != null) {
+                        mOnValueChangedListener.onDoubleClickChange(mBalanceValue, mFadeValue, mPosX, mPosY);
+                    }
+                    return true;
+                } else {
+                    mDoubleClick = false;
+                }
+            }
             return true;
         }
 
+
         if ((event.getAction() == MotionEvent.ACTION_MOVE || event.getAction() == MotionEvent.ACTION_UP)
-                && mIsMouseDown) {
+                && mIsMouseDown && !mDoubleClick) {
             Log.d(TAG, "onTouchEvent getX=" + event.getX() + " getY=" + event.getY());
             mPosX = event.getX() < H_PADDING ? H_PADDING :
                     event.getX() > getWidth() - H_PADDING ? getWidth() - H_PADDING : event.getX();
@@ -250,6 +270,8 @@ public class SoundFieldView extends LinearLayout {
 
     public interface OnValueChangedListener {
         public void onValueChange(int balance, int fade, float x, float y);
+
+        public void onDoubleClickChange(int balance, int fade, float x, float y);
     }
 
     @Override

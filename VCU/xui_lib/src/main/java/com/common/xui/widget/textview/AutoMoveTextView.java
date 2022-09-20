@@ -8,26 +8,25 @@ import androidx.appcompat.widget.AppCompatTextView;
 
 /**
  * 自定义跑马灯Textview类
- *
  */
 public class AutoMoveTextView extends AppCompatTextView {
-	public AutoMoveTextView(Context context) {
-		super(context);
-		setEllipsize(TextUtils.TruncateAt.MARQUEE);
-	}
+    public AutoMoveTextView(Context context) {
+        super(context);
+        setEllipsize(TextUtils.TruncateAt.MARQUEE);
+    }
 
-	public AutoMoveTextView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		setEllipsize(TextUtils.TruncateAt.MARQUEE);
-	}
+    public AutoMoveTextView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        setEllipsize(TextUtils.TruncateAt.MARQUEE);
+    }
 
-	public AutoMoveTextView(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-		setEllipsize(TextUtils.TruncateAt.MARQUEE);
-	}
+    public AutoMoveTextView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        setEllipsize(TextUtils.TruncateAt.MARQUEE);
+    }
 
-	@Override
-	public boolean isFocused() {
-		return true;
-	}
+    @Override
+    public boolean isFocused() {
+        return true;
+    }
 }

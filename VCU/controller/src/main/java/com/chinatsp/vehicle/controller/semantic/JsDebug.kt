@@ -5,5 +5,5 @@ data class JsDebug(
     val dataSearchTime: Double,
     val dialogScriptTime: Double,
     val inheritTime: Double,
-    val inhertPostProcessTime: Double
+    val inhertPostProcessTime: Double,
 )

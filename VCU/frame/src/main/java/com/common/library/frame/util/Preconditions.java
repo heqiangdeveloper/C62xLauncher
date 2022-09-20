@@ -1,15 +1,8 @@
 package com.common.library.frame.util;
 
-import java.lang.String;
-import java.lang.Object;
-import java.lang.IllegalStateException;
-import java.lang.IllegalArgumentException;
-import java.lang.NullPointerException;
-
 import androidx.annotation.Nullable;
 
 /**
- *
  * @see <a href="https://github.com/google/guava/blob/b86fe4fc7ec511d78507c3ba32c789d1f250f827/guava/src/com/google/common/base/Preconditions.java">guava</a>
  */
 public final class Preconditions {

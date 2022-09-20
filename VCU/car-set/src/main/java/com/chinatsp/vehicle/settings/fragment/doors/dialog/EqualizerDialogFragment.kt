@@ -27,14 +27,16 @@ class EqualizerDialogFragment :
     private val xValue: List<String>
         get() = listOf("高音", "中高音", "中音", "中低音", "低音")
 
-    private val xValueTop: List<String>
-        get() = listOf("4dB", "-2dB", "4dB", "2dB", "4dB")
+    private val offset: Float by lazy {
+        if (VcuUtils.isAmplifier) 5f else 9f
+    }
 
     override fun getLayoutId(): Int {
         return R.layout.equalizer_dialog_fragmet
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+
         initRadioOption()
         addRadioLiveDataListener()
         setRadioListener()
@@ -68,7 +70,7 @@ class EqualizerDialogFragment :
         binding.soundEffectRadio.let {
             it.setOnTabSelectionChangedListener { _, value ->
                 doUpdateRadio(RadioNode.SYSTEM_SOUND_EFFECT, value, viewModel.currentEffect, it)
-                onPostSelected(it, value.toInt())
+//                onPostSelected(it, value.toInt())
             }
         }
     }
@@ -86,10 +88,18 @@ class EqualizerDialogFragment :
 
     override fun onPostSelected(tabView: TabControlView, value: Int) {
 //        val result = node.obtainSelectValue(value)
-        Timber.d("onPostSelected tabView:$tabView, value:$value")
-        val values = viewModel.getEffectValues(value)
-        val toList = values.map { it.toFloat() }.toList()
-        Timber.tag("luohong").d("--------------------toList:%s", toList)
+        val values = viewModel.getEffectValues(value).toList()
+        Timber.d("onPostSelected 11111111111111 tabView:$tabView, value:$value, values:%s", values)
+        val toList = values.map {
+            var value = it.toFloat() - 1
+            if (value < 0f) {
+                value = 0f
+            } else if (value > 2 * offset) {
+                value = 2 * offset
+            }
+            value
+        }.toList()
+        Timber.d("onPostSelected 22222222222222 tabView:$tabView, value:$value, toList:%s", toList)
         binding.smoothChartView.setData(toList, xValue)
         //动态设置计算区间
     }
@@ -98,8 +108,7 @@ class EqualizerDialogFragment :
         val node = RadioNode.SYSTEM_SOUND_EFFECT
         val values = node.get.values
         viewModel.currentEffect.let {
-            Timber.d("doSendCustomEqValue it.value:${it.value}, coreId:${values[values.size - 1]}")
-            if (it.value == values[values.size - 1]) {
+            if (it.value == values.last()) {
                 val progress = binding.smoothChartView.obtainProgress()
                 var lev1 = 0
                 var lev2 = 0
@@ -113,21 +122,21 @@ class EqualizerDialogFragment :
                     lev4 = progress[3]
                     lev5 = progress[4]
                 }
-                manager.doSetEQ(node.obtainSelectValue(it.value!!), lev1, lev2, lev3, lev4, lev5)
+                manager.doSetEQ(it.value!!, lev1, lev2, lev3, lev4, lev5)
             }
         }
     }
 
     private fun initView() {
-        val offset = if (VcuUtils.isAmplifier) 5 else 9
-        binding.smoothChartView.setInterval(-1 * offset.toFloat(), offset.toFloat())
+
+        binding.smoothChartView.setInterval(-1 * offset, offset)
         binding.smoothChartView.isCustomBorder = true
         binding.smoothChartView.setTagDrawable(R.drawable.ac_blue_52)
         binding.smoothChartView.textColor = Color.TRANSPARENT
         binding.smoothChartView.textSize = 20
         binding.smoothChartView.textOffset = 4
-        binding.smoothChartView.minY = -1 * offset.toFloat()
-        binding.smoothChartView.maxY = offset.toFloat()
+        binding.smoothChartView.minY = -1 * offset
+        binding.smoothChartView.maxY = offset
         binding.smoothChartView.enableShowTag(false)
         binding.smoothChartView.enableDrawArea(true)
         binding.smoothChartView.lineColor = resources.getColor(R.color.smooth_line_color)
@@ -137,9 +146,8 @@ class EqualizerDialogFragment :
         binding.smoothChartView.setOnChartClickListener { position, value ->
 //            viewModel.setAudioEQ(position)
             doSendCustomEqValue()
-            Timber.tag("luohong").d("-----------position:%s, value:%s", position, value)
         }
-        onPostSelected(RadioNode.SYSTEM_SOUND_EFFECT, viewModel.currentEffect.value!!)
+//        onPostSelected(RadioNode.SYSTEM_SOUND_EFFECT, viewModel.currentEffect.value!!)
     }
 
 

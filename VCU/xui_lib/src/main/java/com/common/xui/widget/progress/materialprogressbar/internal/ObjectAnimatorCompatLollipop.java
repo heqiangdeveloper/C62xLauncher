@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,8 @@ import android.util.Property;
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 class ObjectAnimatorCompatLollipop {
 
-    private ObjectAnimatorCompatLollipop() {}
+    private ObjectAnimatorCompatLollipop() {
+    }
 
     public static ObjectAnimator ofArgb(Object target, String propertyName, int... values) {
         return ObjectAnimator.ofArgb(target, propertyName, values);

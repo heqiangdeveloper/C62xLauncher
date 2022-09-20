@@ -1,12 +1,13 @@
-
 package com.common.xui.widget.imageview.preview.enitity;
 
 import android.graphics.Rect;
 import android.os.Parcelable;
+
 import androidx.annotation.Nullable;
 
 /**
  * 图片预览接口
+ *
  * @since 2018/12/5 上午11:04
  */
 public interface IPreviewInfo extends Parcelable {

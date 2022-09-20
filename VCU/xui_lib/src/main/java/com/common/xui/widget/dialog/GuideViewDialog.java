@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,6 @@ import android.widget.LinearLayout.LayoutParams;
 /**
  * 显示引导图片
  *
- * 
  * @since 2018/11/14 下午5:55
  */
 public class GuideViewDialog extends AlertDialog {

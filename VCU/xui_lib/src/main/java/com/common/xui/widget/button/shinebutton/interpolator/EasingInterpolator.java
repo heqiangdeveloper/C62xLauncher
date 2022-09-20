@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.button.shinebutton.interpolator;
 
 import android.view.animation.Interpolator;

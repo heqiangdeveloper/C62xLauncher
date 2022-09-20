@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.button;
 
 import android.content.Context;
@@ -12,7 +11,6 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Handler;
-import androidx.annotation.ColorRes;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -21,13 +19,14 @@ import android.view.animation.ScaleAnimation;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 
+import androidx.annotation.ColorRes;
+
 import com.common.xui.R;
 import com.common.xui.utils.ResUtils;
 
 
 /**
  * 点击可出现水波效果的控件，作为父布局使用
- *
  *
  * @since 2019-05-15 00:10
  */

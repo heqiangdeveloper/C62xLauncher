@@ -10,8 +10,6 @@ import androidx.fragment.app.Fragment;
 
 /**
  * 懒加载 Fragment
- *
- *
  */
 public abstract class BaseLazyFragment<VM extends BaseViewModel, VDB extends ViewDataBinding> extends BaseFragment<VM, VDB> {
     /**

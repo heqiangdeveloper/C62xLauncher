@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview.crop;
 
 import android.graphics.Rect;

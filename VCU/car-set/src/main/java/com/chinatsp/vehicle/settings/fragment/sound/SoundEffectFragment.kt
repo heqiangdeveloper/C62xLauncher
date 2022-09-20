@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.ISwitchManager
@@ -22,7 +23,6 @@ import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.popupwindow.PopWindow
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 @AndroidEntryPoint
 class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragmentBinding>(),
@@ -47,14 +47,15 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
     }
 
     private fun initViewsDisplay() {
-        if (VcuUtils.isCareLevel(Level.LEVEL5, expect = true)) {
+        if (VcuUtils.isCareLevel(Level.LEVEL5, Level.LEVEL5_2, expect = true)) {
             binding.soundLoudnessControlCompensation.visibility = View.VISIBLE
             binding.line3.visibility = View.VISIBLE
         }
     }
+
     private fun initDetailsClickListener() {
         binding.soundLoudnessDetails.setOnClickListener {
-            showPopWindow(R.string.sound_loudness_control_content,it)
+            showPopWindow(R.string.sound_loudness_control_content, it)
         }
     }
 
@@ -68,7 +69,6 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
         }
         viewModel.currentEffect.observe(this) {
             val array = resources.getStringArray(R.array.sound_equalizer_option)
-            Timber.tag("luohong").d("========================it==$it")
             binding.soundEffectHint.text = array[it]
         }
     }
@@ -188,10 +188,13 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
             }
         }
     }
-    private fun showPopWindow(id:Int, view:View){
-        val popWindow = PopWindow(activity,R.layout.pop_window)
+
+    private fun showPopWindow(id: Int, view: View) {
+        val popWindow = PopWindow(activity,
+            R.layout.pop_window,
+            activity?.let { AppCompatResources.getDrawable(it, R.drawable.popup_bg_qipao172_5) })
         var text: TextView = popWindow.findViewById(R.id.content) as TextView
         text.text = resources.getString(id)
-        popWindow.showUp2(view)
+        popWindow.showDownLift(view, 30, -160)
     }
 }

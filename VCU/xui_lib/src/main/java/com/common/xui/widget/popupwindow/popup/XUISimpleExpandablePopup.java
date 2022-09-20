@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,6 @@ import java.util.List;
 
 /**
  * 简单的可伸缩弹窗
- *
  *
  * @since 2019-11-11 16:31
  */

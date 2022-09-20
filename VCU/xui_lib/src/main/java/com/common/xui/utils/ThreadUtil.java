@@ -10,7 +10,7 @@ public class ThreadUtil {
     private Handler mWorkThrredHandler;
     private final Handler mMainThreadHandler;
 
-    private ThreadUtil(){
+    private ThreadUtil() {
         this.mMainThreadHandler = new Handler(Looper.getMainLooper());
         HandlerThread thread = new HandlerThread("work_thread");
         thread.start();

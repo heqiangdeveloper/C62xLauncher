@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.dialog.materialdialog.internal;
 
 import android.annotation.TargetApi;
@@ -9,10 +8,6 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Build;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +16,10 @@ import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ScrollView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.common.xui.R;
 import com.common.xui.utils.ThemeUtils;
 import com.common.xui.widget.dialog.materialdialog.GravityEnum;
@@ -28,8 +27,8 @@ import com.common.xui.widget.dialog.materialdialog.StackingBehavior;
 
 /**
  * @author Kevin Barry (teslacoil) 4/02/2015 This is the top level view for all MaterialDialogs It
- *         handles the layout of: titleFrame (md_layout_stub_titleframe) content (text, custom view, listview,
- *         etc) buttonDefault... (either stacked or horizontal)
+ * handles the layout of: titleFrame (md_layout_stub_titleframe) content (text, custom view, listview,
+ * etc) buttonDefault... (either stacked or horizontal)
  */
 public class MDRootLayout extends ViewGroup {
 
@@ -113,21 +112,21 @@ public class MDRootLayout extends ViewGroup {
     }
 
     private static boolean canAdapterViewScroll(AdapterView lv) {
-    /* Force it to layout it's children */
+        /* Force it to layout it's children */
         if (lv.getLastVisiblePosition() == -1) {
             return false;
         }
 
-    /* We can scroll if the first or last item is not visible */
+        /* We can scroll if the first or last item is not visible */
         boolean firstItemVisible = lv.getFirstVisiblePosition() == 0;
         boolean lastItemVisible = lv.getLastVisiblePosition() == lv.getCount() - 1;
 
         if (firstItemVisible && lastItemVisible && lv.getChildCount() > 0) {
-      /* Or the first item's top is above or own top */
+            /* Or the first item's top is above or own top */
             if (lv.getChildAt(0).getTop() < lv.getPaddingTop()) {
                 return true;
             }
-      /* or the last item's bottom is beyond our own bottom */
+            /* or the last item's bottom is beyond our own bottom */
             return lv.getChildAt(lv.getChildCount() - 1).getBottom()
                     > lv.getHeight() - lv.getPaddingBottom();
         }
@@ -279,10 +278,10 @@ public class MDRootLayout extends ViewGroup {
             } else {
                 availableHeight -= buttonBarHeight;
                 fullPadding += 2 * buttonPaddingFull;
-        /* No minPadding */
+                /* No minPadding */
             }
         } else {
-      /* Content has 8dp, we add 16dp and get 24dp, the frame margin */
+            /* Content has 8dp, we add 16dp and get 24dp, the frame margin */
             fullPadding += 2 * buttonPaddingFull;
         }
 
@@ -375,7 +374,7 @@ public class MDRootLayout extends ViewGroup {
       */
             int offset = buttonHorizontalEdgeMargin;
 
-      /* Used with CENTER gravity */
+            /* Used with CENTER gravity */
             int neutralLeft = -1;
             int neutralRight = -1;
 
@@ -385,7 +384,7 @@ public class MDRootLayout extends ViewGroup {
                     bl = l + offset;
                     br = bl + buttons[INDEX_POSITIVE].getMeasuredWidth();
                 } else {
-          /* START || CENTER */
+                    /* START || CENTER */
                     br = r - offset;
                     bl = br - buttons[INDEX_POSITIVE].getMeasuredWidth();
                     neutralRight = bl;
@@ -403,7 +402,7 @@ public class MDRootLayout extends ViewGroup {
                     br = r - offset;
                     bl = br - buttons[INDEX_NEGATIVE].getMeasuredWidth();
                 } else {
-          /* CENTER */
+                    /* CENTER */
                     bl = l + buttonHorizontalEdgeMargin;
                     br = bl + buttons[INDEX_NEGATIVE].getMeasuredWidth();
                     neutralLeft = br;
@@ -420,7 +419,7 @@ public class MDRootLayout extends ViewGroup {
                     bl = l + buttonHorizontalEdgeMargin;
                     br = bl + buttons[INDEX_NEUTRAL].getMeasuredWidth();
                 } else {
-          /* CENTER */
+                    /* CENTER */
                     if (neutralLeft == -1 && neutralRight != -1) {
                         neutralLeft = neutralRight - buttons[INDEX_NEUTRAL].getMeasuredWidth();
                     } else if (neutralRight == -1 && neutralLeft != -1) {

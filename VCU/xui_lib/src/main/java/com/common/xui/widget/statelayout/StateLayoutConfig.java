@@ -10,7 +10,6 @@ import com.common.xui.utils.ResUtils;
 
 /**
  * 多状态布局的配置信息
- *
  */
 public class StateLayoutConfig {
     private static final boolean DEFAULT_ANIM_ENABLED = true;

@@ -37,22 +37,36 @@ class VolumeDialogFragment :
             Timber.d("getAmpType OFFSET=${OFFSET} BALANCE_MAX= ${SoundFieldView.BALANCE_MAX}   FADE_MAX =${SoundFieldView.FADE_MAX}")
         }
 
-        DEFALUT_BALANCE = (SoundFieldView.BALANCE_MAX/2).toInt();
-        DEFALUT_FADE = (SoundFieldView.FADE_MAX/2).toInt();
+        DEFALUT_BALANCE = (SoundFieldView.BALANCE_MAX / 2).toInt();
+        DEFALUT_FADE = (SoundFieldView.FADE_MAX / 2).toInt();
 
 
 
         binding?.apply {
-            soundField.onValueChangedListener =
-                SoundFieldView.OnValueChangedListener { balance, fade, x, y ->
+
+//            soundField.onValueChangedListener =
+//                SoundFieldView.OnValueChangedListener { balance, fade, x, y ->
+//                    Timber.d("onValueChange balance:$balance fade:$fade")
+////                    viewModel?.setAudioBalance(balance - OFFSET, -(fade - OFFSET))
+//                    viewModel?.setAudioBalance(balance+OFFSET, fade+OFFSET)
+//                }
+
+            soundField.onValueChangedListener = object : SoundFieldView.OnValueChangedListener {
+                override fun onValueChange(balance: Int, fade: Int, x: Float, y: Float) {
                     Timber.d("onValueChange balance:$balance fade:$fade")
-//                    viewModel?.setAudioBalance(balance - OFFSET, -(fade - OFFSET))
-                    viewModel?.setAudioBalance(balance+OFFSET, fade+OFFSET)
+                    viewModel?.setAudioBalance(balance + OFFSET, fade + OFFSET)
                 }
+
+                override fun onDoubleClickChange(balance: Int, fade: Int, x: Float, y: Float) {
+                    soundField.reset()
+                    Timber.d("onDoubleClickChange reset balance:${DEFALUT_BALANCE + OFFSET} fade:${DEFALUT_FADE + OFFSET}")
+                    viewModel?.setAudioBalance(DEFALUT_BALANCE + OFFSET, DEFALUT_FADE + OFFSET)
+                }
+            }
             refreshDialog.setOnClickListener {
                 soundField.reset()
-                Timber.d("onValueChange reset balance:${DEFALUT_BALANCE+OFFSET} fade:${DEFALUT_FADE+OFFSET}")
-                viewModel?.setAudioBalance(DEFALUT_BALANCE+OFFSET, DEFALUT_FADE+OFFSET)
+                Timber.d("onValueChange reset balance:${DEFALUT_BALANCE + OFFSET} fade:${DEFALUT_FADE + OFFSET}")
+                viewModel?.setAudioBalance(DEFALUT_BALANCE + OFFSET, DEFALUT_FADE + OFFSET)
             }
             initBlance()
         }
@@ -65,11 +79,11 @@ class VolumeDialogFragment :
             Timber.d("before getAudioBalFadInfo balance:$balance fade:$fade")
             binding?.apply {
                 if (balance != null) {
-                   // soundField?.balanceValue = balance + OFFSET
+                    // soundField?.balanceValue = balance + OFFSET
                     soundField?.balanceValue = balance - OFFSET
                 }
                 if (fade != null) {
-                  //  soundField.fadeValue = -fade + OFFSET
+                    //  soundField.fadeValue = -fade + OFFSET
                     soundField.fadeValue = fade - OFFSET
                 }
                 Timber.d("after getAudioBalFadInfo balance:${soundField?.balanceValue} fade:${soundField.fadeValue}")

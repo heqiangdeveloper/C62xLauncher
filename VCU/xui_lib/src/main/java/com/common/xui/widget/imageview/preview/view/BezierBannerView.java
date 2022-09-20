@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview.preview.view;
 
 import android.content.Context;
@@ -6,19 +5,21 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
-import androidx.annotation.Nullable;
-import androidx.viewpager.widget.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 
+import androidx.annotation.Nullable;
+import androidx.viewpager.widget.ViewPager;
+
 import com.common.xui.R;
 
 
 /**
  * 指示器控件
+ *
  * @since 2018/12/5 上午11:22
  */
 public class BezierBannerView extends View implements ViewPager.OnPageChangeListener {

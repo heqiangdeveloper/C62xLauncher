@@ -281,7 +281,7 @@ public class ChartView extends View {
 
     /**
      * 绘制浮动框
-     * */
+     */
     private void drawFloatTextBox(Canvas canvas, float x, float y, int text) {
         int dp6 = dpToPx(6);
         int dp18 = dpToPx(18);
@@ -579,7 +579,7 @@ public class ChartView extends View {
 
     /**
      * 点击X轴坐标或者折线节点
-     *  */
+     */
     // 44  142  139
     private void clickAction(MotionEvent event) {
         int dp8 = dpToPx(8);

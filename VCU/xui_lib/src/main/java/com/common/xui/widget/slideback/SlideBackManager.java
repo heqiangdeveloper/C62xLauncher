@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,10 @@
 
 package com.common.xui.widget.slideback;
 
+import static com.common.xui.widget.slideback.SlideBack.EDGE_BOTH;
+import static com.common.xui.widget.slideback.SlideBack.EDGE_LEFT;
+import static com.common.xui.widget.slideback.SlideBack.EDGE_RIGHT;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.util.DisplayMetrics;
@@ -32,13 +36,8 @@ import com.common.xui.widget.slideback.dispatcher.impl.DefaultSlideTouchDispatch
 import com.common.xui.widget.slideback.widget.SlideBackIconView;
 import com.common.xui.widget.slideback.widget.SlideBackInterceptLayout;
 
-import static com.common.xui.widget.slideback.SlideBack.EDGE_BOTH;
-import static com.common.xui.widget.slideback.SlideBack.EDGE_LEFT;
-import static com.common.xui.widget.slideback.SlideBack.EDGE_RIGHT;
-
 /**
  * SlideBack管理器
- *
  *
  * @since 2019-08-30 9:31
  */

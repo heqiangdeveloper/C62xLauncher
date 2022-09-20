@@ -1,5 +1,7 @@
-
 package com.common.xui.widget.tabbar;
+
+import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_IDLE;
+import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_SETTLING;
 
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
@@ -32,12 +34,8 @@ import com.common.xui.widget.tabbar.vertical.XTabView;
 import java.util.ArrayList;
 import java.util.List;
 
-import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_IDLE;
-import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_SETTLING;
-
 /**
  * 垂直方向上的TabLayout
- *
  */
 public class VerticalTabLayout extends ScrollView {
     private Context mContext;

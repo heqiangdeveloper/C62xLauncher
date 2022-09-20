@@ -74,6 +74,7 @@ object VcuUtils {
 
     fun putInt(context: Context = BaseApp.instance, key: String, value: Int): Boolean {
         try {
+            Timber.d("=======putInt key:%s, value:%s", key, value)
             return Settings.Global.putInt(context.contentResolver, key, value)
         } catch (e: java.lang.Exception) {
             e.printStackTrace()

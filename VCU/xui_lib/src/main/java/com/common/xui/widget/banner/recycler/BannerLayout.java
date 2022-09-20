@@ -1,5 +1,6 @@
-
 package com.common.xui.widget.banner.recycler;
+
+import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -26,11 +27,8 @@ import com.common.xui.utils.ResUtils;
 import com.common.xui.widget.banner.recycler.layout.BannerLayoutManager;
 import com.common.xui.widget.banner.recycler.layout.CenterSnapHelper;
 
-import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
-
 /**
  * 使用RecyclerView实现轮播Banner
- *
  *
  * @since 2019/5/29 10:52
  */

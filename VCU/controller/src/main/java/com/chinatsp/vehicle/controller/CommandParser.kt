@@ -28,7 +28,7 @@ class CommandParser {
     fun doDispatchSrAction(
         nlpVoiceModel: NlpVoiceModel,
         controller: IOuterController,
-        callback: ICmdCallback
+        callback: ICmdCallback,
     ): Boolean {
         var result: Boolean = false
         do {
@@ -103,7 +103,7 @@ class CommandParser {
                         val cmd = Cmd(Action.CLOSE, Model.ACCESS_WINDOW, message = "关闭天窗")
                         controller.doOuterControlCommand(cmd, callback)
                     }
-                }else if(ConditionerConstants.KT_NAME.contains(name)){//空调
+                } else if (ConditionerConstants.KT_NAME.contains(name)) {//空调
                     result = isOpen || isClose;
                     ConditionerParser.doDispatchSrAction(nlpVoiceModel, controller, callback)
                 } else if (isMatch(ConstantsVolume.VOICE_VENT, name)) {

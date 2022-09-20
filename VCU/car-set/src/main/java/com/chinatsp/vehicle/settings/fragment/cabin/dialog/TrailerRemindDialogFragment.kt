@@ -131,8 +131,8 @@ class TrailerRemindDialogFragment :
         binding.trailerRemindSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.DRIVE_TRAILER_REMIND, buttonView, isChecked)
             resetFollowTrailerSwitch(binding.trailerRemindSwitch.isChecked)
-            if(!isChecked){
-                ToastUtils.showToast(context,getString(R.string.cabin_other_toast_content))
+            if (!isChecked) {
+                ToastUtils.showToast(context, getString(R.string.cabin_other_toast_content))
             }
         }
     }

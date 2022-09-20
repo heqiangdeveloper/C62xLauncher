@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import com.common.xui.widget.slideback.callback.SlideCallBack;
 /**
  * 侧滑触摸事件分发器
  *
- * 
  * @since 2019-08-30 15:42
  */
 public interface ISlideTouchEventDispatcher extends View.OnTouchListener {

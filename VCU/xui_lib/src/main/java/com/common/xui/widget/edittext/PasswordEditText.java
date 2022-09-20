@@ -21,7 +21,6 @@ import com.common.xui.utils.ResUtils;
 /**
  * 支持显示密码的输入框
  *
- *
  * @since 2019/1/14 下午10:08
  */
 public class PasswordEditText extends AppCompatEditText {

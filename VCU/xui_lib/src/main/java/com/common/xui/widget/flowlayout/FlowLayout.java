@@ -10,7 +10,6 @@ import java.util.List;
 
 /**
  * 流布局
- *
  */
 public class FlowLayout extends ViewGroup {
 

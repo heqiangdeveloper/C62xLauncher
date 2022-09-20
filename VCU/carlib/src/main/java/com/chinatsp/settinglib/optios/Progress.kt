@@ -17,20 +17,24 @@ enum class Progress(
     var max: Int = 10,
     val step: Int = 1,
     val get: CanLocate,
-    val set: CanLocate = get
+    val set: CanLocate = get,
 ) {
     /**
      * 氛围灯亮度
+     * get -> 0x00:OFF0x01:grade1,20%0x02:grade2,40%0x03:grade3,60%0x04:grade4,80%0x05:grade5,100%0x06~0xF：Reserved
+     * set -> 0x00:OFF0x01:grade1,20%0x02:grade2,40%0x03:grade3,60%0x04:grade4,80%0x05:grade5,100%0x06~0xF：Reserved
      */
     AMBIENT_LIGHT_BRIGHTNESS(
         min = 0x00,
-        max = 0x06,
+        max = 0x05,
         get = CanLocate(signal = CarCabinManager.ID_ALC_AL_RESPONSE_BRIGHTNESS),
         set = CanLocate(signal = CarCabinManager.ID_ALC_HUM_ALC_BRIGHTNESS_GRADE)
     ),
 
     /**
      * 氛围灯颜色
+     * get -> 全车氛围灯颜色反馈 0x0: Inactive; 0x1~0x40: Color 1~64; 0x41~0x7F: Reserved
+     * set -> 全车氛围灯颜色设置 0x0: Inactive; 0x1~0x40: Color 1~64; 0x41~0x7F: Reserved
      */
     AMBIENT_LIGHT_COLOR(
         min = 0x01,
@@ -109,7 +113,7 @@ enum class Progress(
      */
     STEERING_ONSET_TEMPERATURE(
         min = 0x00,
-        max = 0x1E,
+        max = 0x0A,
         get = CanLocate(signal = -1),
         set = CanLocate(signal = CarCabinManager.ID_SWS_AUTO_HEAT_TEMP)
     ),
@@ -142,7 +146,18 @@ enum class Progress(
         min = 0x00,
         max = 0x1E,
         get = CanLocate(origin = Origin.ATTR, signal = AudioAttributes.USAGE_NOTIFICATION)
+    ),
+
+    /**
+     * 电动尾门依靠位置 from 0 to 100
+     */
+    TRUNK_STOP_POSITION(
+        min = 50,
+        max = 100,
+        get = CanLocate(signal = CarCabinManager.ID_PTM_POSITION_STATUS),
+        set = CanLocate(signal = CarCabinManager.ID_PTM_STP_POSN_SET)
     );
+
 
     fun isValid(value: Int): Boolean = value in min..max
 

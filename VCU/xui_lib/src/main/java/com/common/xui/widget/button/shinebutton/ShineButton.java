@@ -24,7 +24,6 @@ import java.lang.ref.WeakReference;
 
 /**
  * 增强效果的按钮
- *
  */
 public class ShineButton extends PorterShapeImageView implements Checkable {
     private boolean mIsChecked = false;

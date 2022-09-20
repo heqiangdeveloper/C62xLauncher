@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview;
 
 import android.content.Context;
@@ -23,6 +22,7 @@ import com.common.xui.utils.ThemeUtils;
 
 /**
  * 自定义签名画板
+ *
  * @since 2021/5/27 1:07 AM
  */
 public class SignatureView extends View {

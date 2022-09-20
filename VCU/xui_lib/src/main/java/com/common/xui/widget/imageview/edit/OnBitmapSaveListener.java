@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview.edit;
 
 import android.graphics.Bitmap;
@@ -6,7 +5,6 @@ import android.graphics.Bitmap;
 /**
  * 图片保存监听
  *
- * 
  * @since 2019-10-28 10:07
  */
 public interface OnBitmapSaveListener {
@@ -18,7 +16,6 @@ public interface OnBitmapSaveListener {
     void onBitmapReady(Bitmap saveBitmap);
 
     /**
-     *
      * @param e
      */
     void onFailure(Exception e);

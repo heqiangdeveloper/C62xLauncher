@@ -1,6 +1,8 @@
 package com.chinatsp.settinglib.manager.cabin
 
 import android.car.hardware.CarPropertyValue
+import com.chinatsp.settinglib.Constant
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.sound.ISoundListener
 import com.chinatsp.settinglib.listener.sound.ISoundManager
@@ -10,7 +12,6 @@ import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
-import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -30,7 +31,7 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, result)
 //        }
-        return@lazy createAtomicBoolean(node) { result, value ->
+        return@lazy createAtomicBoolean(node, Constant.STEERING_HEAT_SWITCH) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
@@ -62,9 +63,14 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
     }
 
     private fun initVolume(type: Progress): Volume {
-        val pos = readIntProperty(type.get.signal, type.get.origin)
-        val max = 10
-        return Volume(type, 0, max, pos)
+        val pos = 0x05
+        val result = VcuUtils.getInt(key = Constant.STEERING_HEAT_TEMP, value = pos)
+        val volume = Volume(type, type.min, type.max, result)
+//        AppExecutors.get()?.singleIO()?.execute {
+//            val result = VcuUtils.getInt(key = Constant.STEERING_HEAT_TEMP, value = pos)
+//            doUpdateProgress(volume, result, true, instance::doProgressChanged)
+//        }
+        return volume
     }
 
 
@@ -109,7 +115,12 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
     override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
         return when (node) {
             SwitchNode.DRIVE_WHEEL_AUTO_HEAT -> {
-                writeProperty(node, status, swhFunction)
+                val result = writeProperty(node, status, swhFunction)
+                if (result) {
+                    val value = node.value(status, isGet = true)
+                    VcuUtils.putInt(key = Constant.STEERING_HEAT_SWITCH, value = value)
+                }
+                return result
             }
             else -> false
         }
@@ -128,8 +139,10 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
         return when (type) {
             Progress.STEERING_ONSET_TEMPERATURE -> {
                 val result = writeProperty(steeringSillTemp, position)
-                Timber.d("doSetVolume type:%s, position:%s, result:%s", type, position, result)
-                result
+                if (result) {
+                    VcuUtils.putInt(key = Constant.STEERING_HEAT_TEMP, value = position)
+                }
+                return result
             }
             else -> false
         }
@@ -149,7 +162,7 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
             volume.isValid(value) && writeProperty(volume.type.set.signal, value, Origin.CABIN)
         if (success && develop) {
             volume.pos = value
-            doRangeChanged(volume)
+//            doRangeChanged(volume)
         }
         return success
     }

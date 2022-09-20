@@ -9,7 +9,6 @@ import com.common.xui.logs.UILog;
 
 /**
  * 跟踪触摸事件位置的辅助类
- *
  */
 public class PosIndicator {
     /**

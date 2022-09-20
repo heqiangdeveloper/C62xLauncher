@@ -7,7 +7,6 @@ import androidx.appcompat.widget.AppCompatImageButton;
 
 /**
  * 在 pressed 和 disabled 时改变 View 的透明度
- *
  */
 public class XUIAlphaImageButton extends AppCompatImageButton {
 

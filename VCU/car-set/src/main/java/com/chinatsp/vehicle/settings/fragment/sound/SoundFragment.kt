@@ -3,10 +3,11 @@ package com.chinatsp.vehicle.settings.fragment.sound
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
+import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.ISwitchManager
-import com.chinatsp.settinglib.manager.sound.EffectManager
 import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -29,9 +30,6 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
 
     private val manager: VoiceManager by lazy { VoiceManager.instance }
 
-    private val volumeControl: String
-        get() = "volumeControl"
-
     override fun getLayoutId(): Int {
         return R.layout.sound_fragment
     }
@@ -52,7 +50,7 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
     }
 
     private fun initViewsDisplay() {
-        if (VcuUtils.isCareLevel(Level.LEVEL5, expect = true)) {
+        if (VcuUtils.isCareLevel(Level.LEVEL5, Level.LEVEL5_2, expect = true)) {
             binding.soundLoudnessControl.visibility = View.GONE
             binding.line7.visibility = View.GONE
         }
@@ -60,7 +58,7 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
 
     private fun initDetailsClickListener() {
         binding.soundLoudnessDetails.setOnClickListener {
-            showPopWindow(R.string.sound_loudness_control_content,it)
+            showPopWindow(R.string.sound_loudness_control_content, it)
         }
     }
 
@@ -195,7 +193,7 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
             val iroute = activity as IRoute
             val liveData = iroute.obtainPopupLiveData()
             liveData.observe(this) {
-                if (it.equals(volumeControl)) {
+                if (it.equals(Constant.DEVICE_AUDIO_VOLUME)) {
                     showVolumeFragment()
                 }
             }
@@ -207,17 +205,19 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
         activity?.supportFragmentManager?.let { it ->
             fragment.show(it, fragment.javaClass.simpleName)
         }
-        cleanPopupSerial(volumeControl)
+        cleanPopupSerial(Constant.DEVICE_AUDIO_VOLUME)
     }
 
     override fun onLazyLoad() {
 
     }
 
-    private fun showPopWindow(id:Int, view:View){
-        val popWindow = PopWindow(activity,R.layout.pop_window)
+    private fun showPopWindow(id: Int, view: View) {
+        val popWindow = PopWindow(activity,
+            R.layout.pop_window,
+            activity?.let { AppCompatResources.getDrawable(it, R.drawable.popup_bg_qipao172_5) })
         var text: TextView = popWindow.findViewById(R.id.content) as TextView
         text.text = resources.getString(id)
-        popWindow.showUp2(view)
+        popWindow.showDownLift(view, 30, -160)
     }
 }

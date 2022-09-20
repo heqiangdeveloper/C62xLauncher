@@ -15,7 +15,6 @@ import java.util.List;
 
 /**
  * 粘顶嵌套滚动布局
- *
  */
 public class StickyNestedScrollView extends NestedScrollView {
 

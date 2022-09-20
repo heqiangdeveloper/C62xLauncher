@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ public class IndeterminateCircularProgressDrawable extends BaseIndeterminateProg
         mProgressIntrinsicSize = Math.round(PROGRESS_INTRINSIC_SIZE_DP * density);
         mPaddedIntrinsicSize = Math.round(PADDED_INTRINSIC_SIZE_DP * density);
 
-        mAnimators = new Animator[] {
+        mAnimators = new Animator[]{
                 Animators.createIndeterminate(mRingPathTransform),
                 Animators.createIndeterminateRotation(mRingRotation)
         };

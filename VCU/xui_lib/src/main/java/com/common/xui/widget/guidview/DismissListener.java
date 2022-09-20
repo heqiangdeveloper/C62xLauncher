@@ -10,6 +10,7 @@ public interface DismissListener {
      * @param id the show once id of the dismissed view
      */
     void onDismiss(String id);
+
     /**
      * is called when a {@link GuideCaseView} is skipped because of it's show once id
      *

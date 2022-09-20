@@ -11,7 +11,6 @@ import com.chinatsp.vehicle.settings.vm.light.BrightnessViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.picker.VSeekBar
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 @AndroidEntryPoint
 class LightingScreenFragment : BaseFragment<BrightnessViewModel, LightingScreenFragmentBinding>(),

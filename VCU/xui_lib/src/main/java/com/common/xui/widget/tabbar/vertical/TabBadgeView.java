@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.tabbar.vertical;
 
 import android.content.Context;
@@ -10,7 +9,6 @@ import com.common.xui.widget.textview.badge.BadgeView;
 
 /**
  * 选项卡上的圆点小标记
- *
  */
 public class TabBadgeView extends BadgeView {
     private TabBadgeView(Context context) {

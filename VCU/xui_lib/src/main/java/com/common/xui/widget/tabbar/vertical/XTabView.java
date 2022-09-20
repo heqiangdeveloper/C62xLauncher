@@ -20,7 +20,6 @@ import com.common.xui.widget.textview.badge.BadgeView;
 
 /**
  * 选项卡
- *
  */
 public class XTabView extends TabView {
 
@@ -53,7 +52,7 @@ public class XTabView extends TabView {
     }
 
     private void initView() {
-        setMinimumHeight(DensityUtils.dp2px(mContext,25));
+        setMinimumHeight(DensityUtils.dp2px(mContext, 25));
         if (mTitle == null) {
             mTitle = new TextView(mContext);
             LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);

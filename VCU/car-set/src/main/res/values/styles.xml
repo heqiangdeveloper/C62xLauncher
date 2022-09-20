@@ -17,7 +17,8 @@
         <item name="windowNoTitle">true</item>
 
     </style>
-    <style name="ActivityTheme" parent="XUITheme.Tablet.Big" >
+
+    <style name="ActivityTheme" parent="XUITheme.Tablet.Big">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -41,7 +42,7 @@
     <style name="switch_row_option_style">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/h2_text_size</item>
+        <item name="android:textSize">@dimen/text_15</item>
         <item name="android:textColor">@color/tab_option_title_text_color</item>
     </style>
 
@@ -114,7 +115,7 @@
     <style name="image_prompt">
         <item name="android:layout_width">@dimen/x16</item>
         <item name="android:layout_height">@dimen/x16</item>
-        <item name="android:src">@drawable/icon_information_32</item>
+        <item name="android:src">@drawable/information_selector</item>
         <item name="android:layout_marginStart">@dimen/x5</item>
     </style>
 
@@ -139,6 +140,15 @@
         <item name="android:layout_width">@dimen/x114</item>
         <item name="android:layout_height">@dimen/x37</item>
         <item name="android:background">@drawable/lighting_dialog_txt_bg</item>
+        <item name="android:textColor">@color/xui_config_color_white</item>
+        <item name="android:textSize">@dimen/text_14</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="model_txt_dialog_normal">
+        <item name="android:layout_width">@dimen/x114</item>
+        <item name="android:layout_height">@dimen/x37</item>
+        <item name="android:background">@drawable/normal_dialog_bg</item>
         <item name="android:textColor">@color/xui_config_color_white</item>
         <item name="android:textSize">@dimen/text_14</item>
         <item name="android:gravity">center</item>

@@ -1,11 +1,9 @@
-
 package com.common.xui.widget.imageview.crop;
 
 import android.graphics.Rect;
 
 /**
  * 裁剪窗口上可按可拖动的句柄的枚举
- *
  */
 public enum Handle {
 

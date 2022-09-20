@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.layout;
 
 import android.content.Context;
@@ -11,7 +10,6 @@ import com.common.xui.widget.alpha.XUIAlphaFrameLayout;
 
 /**
  * 封装的FrameLayout，便于样式的修改
- *
  */
 public class XUIFrameLayout extends XUIAlphaFrameLayout implements IXUILayout {
     private XUILayoutHelper mLayoutHelper;
@@ -136,7 +134,7 @@ public class XUIFrameLayout extends XUIAlphaFrameLayout implements IXUILayout {
 
     @Override
     public void setRadiusAndShadow(int radius, int hideRadiusSide, int shadowElevation, int shadowColor, float shadowAlpha) {
-        mLayoutHelper.setRadiusAndShadow(radius, hideRadiusSide, shadowElevation,  shadowColor, shadowAlpha);
+        mLayoutHelper.setRadiusAndShadow(radius, hideRadiusSide, shadowElevation, shadowColor, shadowAlpha);
     }
 
     @Override

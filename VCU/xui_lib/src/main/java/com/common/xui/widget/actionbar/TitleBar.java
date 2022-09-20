@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,6 @@ import io.github.inflationx.calligraphy3.HasTypeface;
 
 /**
  * 标题栏
- *
  *
  * @since 2019/1/14 下午10:08
  */

@@ -2,7 +2,6 @@ package com.common.xui.widget.banner.widget.banner;
 
 /**
  * 图片轮播条目
- *
  */
 public class BannerItem {
     public String imgUrl;

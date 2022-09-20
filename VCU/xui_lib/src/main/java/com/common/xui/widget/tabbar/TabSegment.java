@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.tabbar;
 
 import android.animation.Animator;
@@ -42,7 +41,6 @@ import com.common.xui.utils.DensityUtils;
 import com.common.xui.utils.ThemeUtils;
 import com.common.xui.utils.Utils;
 
-import java.lang.String;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.WeakReference;
@@ -94,7 +92,6 @@ import java.util.List;
  * </code>
  * </li>
  * </ul>
- *
  */
 public class TabSegment extends HorizontalScrollView {
 

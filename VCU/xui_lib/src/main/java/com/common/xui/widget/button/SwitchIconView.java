@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.button;
 
 import android.animation.ArgbEvaluator;
@@ -28,7 +27,6 @@ import com.common.xui.utils.ThemeUtils;
 
 /**
  * 可切换图标的按钮
- *
  *
  * @since 2020-01-05 23:03
  */

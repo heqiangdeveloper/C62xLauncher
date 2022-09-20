@@ -3,22 +3,20 @@ package com.chinatsp.vehicle.settings.fragment.doors
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.access.WindowManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
-import com.chinatsp.vehicle.settings.HintHold
 import com.chinatsp.vehicle.settings.ISwitchAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CarWindowFragmentBinding
-import com.chinatsp.vehicle.settings.fragment.drive.dialog.DetailsDialogFragment
 import com.chinatsp.vehicle.settings.vm.accress.WindowViewModel
 import com.common.animationlib.AnimationDrawable
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.popupwindow.PopWindow
-import com.common.xui.widget.popupwindow.easypopup.EasyPopup
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -60,13 +58,13 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
 
     private fun initDetailsClickListener() {
         binding.remoteRoseWindowDetails.setOnClickListener {
-            showPopWindow(R.string.car_window_lock_content,it)
+            showPopWindow(R.string.car_window_lock_content, it)
         }
-        binding.carLockDetails.setOnClickListener{
-            showPopWindow(R.string.car_window_lock_car_content,it)
+        binding.carLockDetails.setOnClickListener {
+            showPopWindow(R.string.car_window_lock_car_content, it)
         }
-        binding.carWiperDetails.setOnClickListener{
-            showPopWindow(R.string.car_window_wiper_content,it)
+        binding.carWiperDetails.setOnClickListener {
+            showPopWindow(R.string.car_window_wiper_content, it)
         }
     }
 
@@ -146,10 +144,32 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
         }
     }
 
-    private fun showPopWindow(id:Int, view:View){
-        val popWindow = PopWindow(activity,R.layout.pop_window)
-        var text:TextView = popWindow.findViewById(R.id.content) as TextView
+    private fun showPopWindow(id: Int, view: View) {
+        val popWindow: PopWindow
+        if (view.id == binding.carWiperDetails.id) {
+            popWindow = PopWindow(activity, R.layout.pop_window,
+                activity?.let {
+                    AppCompatResources.getDrawable(it,
+                        R.drawable.popup_bg_qipao172_1)
+                })
+            popWindow.showDownLift(view, 30, -340)
+        } else if (view.id == binding.remoteRoseWindowDetails.id) {
+            popWindow = PopWindow(activity, R.layout.pop_window,
+                activity?.let {
+                    AppCompatResources.getDrawable(it,
+                        R.drawable.popup_bg_qipao172_2)
+                })
+            popWindow.showDownLift(view, 30, -80)
+        } else {
+            popWindow = PopWindow(activity, R.layout.pop_window,
+                activity?.let {
+                    AppCompatResources.getDrawable(it,
+                        R.drawable.popup_bg_qipao172_3)
+                })
+            popWindow.showDownLift(view, 30, -80)
+        }
+        val text: TextView = popWindow.findViewById(R.id.content) as TextView
         text.text = resources.getString(id)
-        popWindow.showDown(view)
+
     }
 }

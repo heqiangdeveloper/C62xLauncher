@@ -44,6 +44,7 @@ import com.chinatsp.settinglib.manager.cabin.OtherManager
 import com.chinatsp.settinglib.manager.lamp.BrightnessManager
 import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.settinglib.optios.Area
+import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SoundEffect
 import com.chinatsp.settinglib.sign.Origin
 import timber.log.Timber
@@ -198,14 +199,11 @@ class SettingManager private constructor() {
             if (null == mCarCabinManager) {
                 mCarCabinManager = mCarApi!!.getCarManager(Car.CABIN_SERVICE) as CarCabinManager
             }
-            mCarCabinManager?.let {
-//                    int[] signalArray = Arrays.stream(Cabin.values())
-//                            .flatMapToInt(cabin -> Arrays.stream(cabin.getSignals())).distinct().toArray();
-//                    Arrays.stream(signalArray).forEach(it -> LogManager.Companion.Timber.d("value:0x" + Integer.toHexString(it).toUpperCase()));
-//                    Set<Integer> signals = GlobalManager.Companion.getInstance().getConcernedSignal(SignalOrigin.CABIN_SIGNAL);
+            mCarCabinManager?.let { it ->
                 val signals = cabinSignal
-                val signalArray =
-                    signals.stream().filter { it != -1 }.mapToInt { obj: Int -> obj }.toArray()
+                val signalArray = signals.stream().filter { value -> value != -1 }
+                    .mapToInt { obj: Int -> obj }
+                    .toArray()
                 Arrays.stream(signalArray).forEach {
                     Timber.d("register cabin: hex propertyId:${Integer.toHexString(it)},  dec propertyId:$it")
                 }
@@ -483,9 +481,11 @@ class SettingManager private constructor() {
             AppExecutors.get()?.networkIO()?.execute {
                 try {
                     val hasManager = null != mCarAudioManager
-                    Timber.d("doActionSignal-cabin send-cabin hex-id:" + Integer.toHexString(id)
-                            + ", dec-id:" + id + ", value:" + value + ", hasManager:" + hasManager
-                            + ", versionName:" + VcuUtils.versionName)
+                    Timber.d(
+                        "doActionSignal-cabin send-cabin hex-id:" + Integer.toHexString(id)
+                                + ", dec-id:" + id + ", value:" + value + ", hasManager:" + hasManager
+                                + ", versionName:" + VcuUtils.versionName
+                    )
                     mCarCabinManager?.setIntProperty(id, areaValue, value)
                 } catch (e: Exception) {
                     Timber.e(e)
@@ -501,9 +501,11 @@ class SettingManager private constructor() {
             AppExecutors.get()?.networkIO()?.execute {
                 try {
                     val hasManager = null != hvacManager
-                    Timber.d("doActionSignal-hvac send-hvac hex-id:" + Integer.toHexString(id)
-                            + ", dec-id:" + id + ", value:" + value + ", hasManager:" + hasManager
-                            + ", versionName:" + VcuUtils.versionName)
+                    Timber.d(
+                        "doActionSignal-hvac send-hvac hex-id:" + Integer.toHexString(id)
+                                + ", dec-id:" + id + ", value:" + value + ", hasManager:" + hasManager
+                                + ", versionName:" + VcuUtils.versionName
+                    )
                     hvacManager?.setIntProperty(id, areaValue, value)
                 } catch (e: Exception) {
                     Timber.e(e)
@@ -977,11 +979,11 @@ class SettingManager private constructor() {
             var muiBalanceLevelValue = uiBalanceLevelValue;
             var muiFadeLevelValue = uiFadeLevelValue;
             if (getAmpType() == 0) { //内置
-            //    muiBalanceLevelValue = uiBalanceLevelValue + 10;
-             //   muiFadeLevelValue = uiFadeLevelValue + 10;
+                //    muiBalanceLevelValue = uiBalanceLevelValue + 10;
+                //   muiFadeLevelValue = uiFadeLevelValue + 10;
             } else {
-           //     muiBalanceLevelValue = uiBalanceLevelValue + 6;
-          //      muiFadeLevelValue = uiFadeLevelValue + 6;
+                //     muiBalanceLevelValue = uiBalanceLevelValue + 6;
+                //      muiFadeLevelValue = uiFadeLevelValue + 6;
             }
             Timber.d(
                 "setAudioBalance muiBalanceLevelValue=${muiBalanceLevelValue}  " +
@@ -1041,13 +1043,14 @@ class SettingManager private constructor() {
     }
 
     fun setAudioEQ(
-        mode: Int, lev1: Int = 0,
+        eqMode: Int, optionId: Int, lev1: Int = 0,
         lev2: Int = 0, lev3: Int = 0,
-        lev4: Int = 0, lev5: Int = 0
+        lev4: Int = 0, lev5: Int = 0,
     ) {
         try {
             mCarAudioManager?.let {
-                val isCustom = CarAudioManager.EQ_MODE_CUSTOM == mode
+                it.eqMode = eqMode
+                val isCustom = RadioNode.SYSTEM_SOUND_EFFECT.get.values.last() == optionId
                 if (isCustom) {
                     setAudioVoice(VOICE_LEVEL1, lev1)
                     setAudioVoice(VOICE_LEVEL2, lev2)
@@ -1055,14 +1058,21 @@ class SettingManager private constructor() {
                     setAudioVoice(VOICE_LEVEL4, lev4)
                     setAudioVoice(VOICE_LEVEL5, lev5)
                 }
-                it.eqMode = mode
                 val builder = StringBuilder()
-                builder.append("setAudioEQ mode:$mode, isCustom:$isCustom")
+                builder.append("setAudioEQ mode:$eqMode, isCustom:$isCustom")
                 if (isCustom) {
                     builder.append(", lev1:$lev1, lev2:$lev2, lev3:$lev3, lev4:$lev4, lev5:$lev5")
                 }
                 Timber.d(builder.toString())
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun setAudioEQ(eqMode: Int) {
+        try {
+            mCarAudioManager?.eqMode = eqMode
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -1151,7 +1161,6 @@ class SettingManager private constructor() {
 
     private fun onRegisterHvacListener() {
         KeyEvent.KEYCODE_ENTER
-
         if (!connectService) {
             Timber.e("onRegisterHvacListener but app not connect to service!")
             return
@@ -1160,10 +1169,10 @@ class SettingManager private constructor() {
             if (null == hvacManager) {
                 hvacManager = mCarApi!!.getCarManager(Car.HVAC_SERVICE) as CarHvacManager
             }
-            if (null != hvacManager) {
+            hvacManager?.let {
                 val signals = hvacSignal
                 val signalArray = signals.stream().mapToInt { obj: Int -> obj }.toArray()
-                hvacManager!!.registerCallback(hvacEventListener)
+                it.registerCallback(hvacEventListener)
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -1185,8 +1194,7 @@ class SettingManager private constructor() {
                 if (null == mBoxManager) {
                     mBoxManager = TboxManager.getInstance()
                 }
-//                ===================  bb aaa  ==
-             mBoxManager!!.addTBoxChangedListener(boxChangedListener)
+                mBoxManager!!.addTBoxChangedListener(boxChangedListener)
             }
         } catch (e: Exception) {
             e.printStackTrace()

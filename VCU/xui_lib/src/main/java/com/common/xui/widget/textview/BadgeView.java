@@ -19,7 +19,6 @@ import androidx.appcompat.widget.AppCompatTextView;
 
 /**
  * 数字提示
- *
  */
 public class BadgeView extends AppCompatTextView {
 
@@ -162,9 +161,9 @@ public class BadgeView extends AppCompatTextView {
 
     /*
      * Attach the BadgeView to the TabWidget
-     * 
+     *
      * @param target the TabWidget to attach the BadgeView
-     * 
+     *
      * @param tabIndex index of the tab
      */
     public void setTargetView(TabWidget target, int tabIndex) {
@@ -174,7 +173,7 @@ public class BadgeView extends AppCompatTextView {
 
     /*
      * Attach the BadgeView to the target view
-     * 
+     *
      * @param target the view to attach the BadgeView
      */
     public void setTargetView(View target) {

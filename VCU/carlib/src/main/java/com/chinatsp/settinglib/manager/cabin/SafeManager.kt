@@ -62,14 +62,19 @@ class SafeManager private constructor() : BaseManager(), ISwitchManager {
 
     init {
 //        行车播放视频开关 采用写系统Globel属性的方式，属性的Key为DRIVE_VIDEO_PLAYING，值：on = 0x01, off = 0x00
-        VcuUtils.addUriObserver(Constant.DRIVE_VIDEO_PLAYING, object : ContentObserver(BaseApp.instance.mainHandler){
-            override fun onChange(selfChange: Boolean, uri: Uri?) {
-                val node = SwitchNode.DRIVE_SAFE_VIDEO_PLAYING
-                val value = VcuUtils.getInt(key = Constant.DRIVE_VIDEO_PLAYING, value = node.value(node.default))
-                Timber.d("observer onChange node:$node value:$value")
-                doUpdateSwitchValue(node, videoModeFunction, node.isOn(value), instance::doSwitchChanged)
-            }
-        })
+        VcuUtils.addUriObserver(Constant.DRIVE_VIDEO_PLAYING,
+            object : ContentObserver(BaseApp.instance.mainHandler) {
+                override fun onChange(selfChange: Boolean, uri: Uri?) {
+                    val node = SwitchNode.DRIVE_SAFE_VIDEO_PLAYING
+                    val value = VcuUtils.getInt(key = Constant.DRIVE_VIDEO_PLAYING,
+                        value = node.value(node.default))
+                    Timber.d("observer onChange node:$node value:$value")
+                    doUpdateSwitchValue(node,
+                        videoModeFunction,
+                        node.isOn(value),
+                        instance::doSwitchChanged)
+                }
+            })
     }
 
     override val careSerials: Map<Origin, Set<Int>> by lazy {

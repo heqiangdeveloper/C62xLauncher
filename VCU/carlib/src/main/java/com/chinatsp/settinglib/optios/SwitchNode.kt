@@ -21,7 +21,7 @@ enum class SwitchNode(
     val careOn: Boolean = true,//当此值为true表示只有当值等于 get的on时才当为开，当此值为false表示只要值不等于get的off时就当为开
     val area: Area = Area.GLOBAL,
     val validValues: IntArray? = null,
-    val invalidValues: IntArray? = null
+    val invalidValues: IntArray? = null,
 ) {
 
     //-------------------座舱--开始-------------------
@@ -59,8 +59,7 @@ enum class SwitchNode(
 
     /**
      * 座舱--空调--空调自干燥
-     * set -> 自干燥使能开关Self-desiccation Switch
-     *        0x0: Inactive；0x1: Enabled； 0x2: Disabled；0x3: Reserved
+     * set -> 自干燥使能开关 x0: Inactive；0x1: Enabled； 0x2: Disabled；0x3: Reserved
      * get -> self-desiccation 自干燥功能状态显示 0x0:ON 0x1:OFF
      */
     AC_AUTO_ARID(
@@ -122,7 +121,7 @@ enum class SwitchNode(
     SEAT_FORK_DRIVE_MEET(
         get = Norm(),
         set = Norm(),
-        default = true
+        default = false
     ),
 
     /**
@@ -134,7 +133,6 @@ enum class SwitchNode(
      */
     SEAT_HEAT_ALL(
         get = Norm(on = 0x2, off = 0x1, signal = -1),
-//        get = Norm(on = 0x2, off = 0x1, signal = CarCabinManager.ID_HUM_SEAT_HEAT_POS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_DSM_AUTO_HEAT_SW),
         default = true,
         careOn = false
@@ -213,8 +211,7 @@ enum class SwitchNode(
 
     /**
      * 座舱--其它--无线充电灯（no signal）
-     * set -> int类型数据 氛围灯Console软开关[0x1,0,0x0,0x3]
-     *        0x0: Inactive; 0x1: ON
+     * set -> int类型数据 氛围灯Console软开关 0x0: Inactive; 0x1: ON; 0x2: OFF; 0x3: Reserved
      */
     DRIVE_WIRELESS_CHARGING_LAMP(
         get = Norm(on = 0x1, off = 0x0, signal = -1),
@@ -245,7 +242,12 @@ enum class SwitchNode(
     ),
 
     SPEED_VOLUME_OFFSET_INSERT(
-        get = Norm(on = 0x01, off = 0x02, origin = Origin.MCU, signal = CarMcuManager.ID_MCU_RET_AUDIO_INFO),
+        get = Norm(
+            on = 0x01,
+            off = 0x02,
+            origin = Origin.MCU,
+            signal = CarMcuManager.ID_MCU_RET_AUDIO_INFO
+        ),
         set = Norm(on = 0x01, off = 0x02, signal = CarCabinManager.ID_SETVOLUMESPEED),
         default = false
     ),
@@ -320,10 +322,16 @@ enum class SwitchNode(
 
     /**
      * 车门车窗--车窗--遥控升窗/降窗 (no signal)
+     * get -> 遥控升降窗状态反馈 0x0: Initializing  0x1: On  0x2: Off   0x3: Invalid
+     * set -> 遥控升降窗软开关 0x0: Inactive; 0x1: Enabled; 0x2: Disabled; 0x3: Reserved
      */
     WIN_REMOTE_CONTROL(
-        get = Norm(),
-        set = Norm(),
+        get = Norm(
+            on = 0x01,
+            off = 0x02,
+            signal = CarCabinManager.ID_REMOTE_WINDOW_RISE_FALL_STATES
+        ),
+        set = Norm(on = 0x01, off = 0x02, signal = CarCabinManager.ID_REMOTE_WINDOW_RISE_FALL_SW),
         default = false
     ),
 
@@ -351,13 +359,17 @@ enum class SwitchNode(
 
 
     /**
-     * 车门车窗--车窗--雨刮维修 (no signal)
+     * 车门车窗--车窗--雨刮维修
+     * get -> 前雨刮维修模式状态; 0x0:Initializing; 0x1 maitenance mode; 0x2:normal mode; 0x3:Invalid
      * set -> 前雨刮维修模式开关 0x0:Initializing; 0x1:maitenance mode; 0x2:normal mode; 0x3:Invalid
      *
      */
     RAIN_WIPER_REPAIR(
-        //get MCU 信号：FRONT_WIPER_MAINTENNANCE_STS
-        get = Norm(),
+        get = Norm(
+            on = 0x01,
+            off = 0x02,
+            signal = CarCabinManager.ID_FRONT_WIPER_MAINTENNANCE_STATES
+        ),
         set = Norm(on = 0x01, off = 0x02, signal = CarCabinManager.ID_FRONT_WIPER_MAINTENNANCE_SW),
         default = false
     ),
@@ -536,6 +548,7 @@ enum class SwitchNode(
     ADAS_HMA(//向产品确认值
         get = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_HMA_STATUS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HMA_ON_OFF_SWT),
+        validValues = intArrayOf(0, 1, 2, 3, 4, 5, 7),
         default = false,
         careOn = false
     ),
@@ -608,7 +621,7 @@ enum class SwitchNode(
 
     /**
      * 灯光设置--氛围灯--前排氛围灯
-     * get -> 0x0:ALT OFF 0x1:ALT ON 0x2~0x3:Reserved
+     * get -> 前排氛围灯开关状态 0x0: Off; 0x1: On
      * set -> 前排氛围灯软开关[0x1,0,0x0,0x3] 0x0: Inactive 0x1: ON 0x2: OFF 0x3: Reserved
      */
     FRONT_AMBIENT_LIGHTING(
@@ -618,12 +631,13 @@ enum class SwitchNode(
     ),
 
     /**
-     * 灯光设置--氛围灯--后排氛围灯 (no signal)
-     * get -> 后排氛围灯开关状态 0x0:OFF; 0x1:ON
+     * 灯光设置--氛围灯--后排氛围灯
+     * get -> 后排氛围灯开关状态 0x0: Off;  0x1: On
+     * set -> 后排氛围灯软开关[0x1,0,0x0,0x3] x0: Inactive;  0x1: ON; 0x2: OFF;  0x3: Reserved
      */
     BACK_AMBIENT_LIGHTING(
-        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ALC_GEAR_PART_STS),
-        set = Norm(on = 0x1, off = 0x2, signal = -1),
+        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ALC_REAR_PART_STS),
+        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HUM_ALC_REAR_PART_SW),
         default = false
     ),
 
@@ -760,11 +774,16 @@ enum class SwitchNode(
         default = true
     );
 
-    fun value(status: Boolean): Int {
-        return if (status) set.on else set.off
+    fun value(status: Boolean, isGet: Boolean = false): Int {
+        return if (isGet) {
+            if (status) get.on else get.off
+        } else {
+            if (status) set.on else set.off
+        }
     }
 
-    fun isValid(value: Int) = validValues?.contains(value) ?: ((get.on == value) or (get.off == value))
+    fun isValid(value: Int) =
+        validValues?.contains(value) ?: ((get.on == value) or (get.off == value))
 
     fun isOn(value: Int) = if (careOn) get.on == value else get.off != value
 }

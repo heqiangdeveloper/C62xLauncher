@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IOptionListener
+import com.chinatsp.settinglib.listener.IProgressListener
 import com.chinatsp.settinglib.manager.lamp.LightManager
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
@@ -17,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LightingViewModel @Inject constructor(app: Application, model: BaseModel) :
-    BaseViewModel(app, model), IOptionListener {
+    BaseViewModel(app, model), IOptionListener, IProgressListener {
 
     private val manager: LightManager
         get() = LightManager.instance
@@ -85,7 +86,7 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
 
     private fun updateLiveData(
         liveData: MutableLiveData<Boolean>,
-        value: Boolean
+        value: Boolean,
     ): MutableLiveData<Boolean> {
         liveData.takeIf { value xor (liveData.value == true) }?.postValue(value)
         return liveData
@@ -93,7 +94,7 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
 
     private fun updateLiveData(
         liveData: MutableLiveData<Int>,
-        value: Int
+        value: Int,
     ): MutableLiveData<Int> {
         liveData.takeIf { value != liveData.value }?.postValue(value)
         return liveData
@@ -127,6 +128,36 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
                 doUpdate(_ceremonySense, value)
             }
             else -> {}
+        }
+    }
+
+    override fun onProgressChanged(node: Progress, value: Int) {
+        when (node) {
+            Progress.SWITCH_BACKLIGHT_BRIGHTNESS -> {
+                updateVolumeValue(_switchBacklight, node, value)
+            }
+        }
+    }
+
+    private fun updateVolumeValue(liveData: MutableLiveData<Volume>, node: Progress, value: Int) {
+        liveData.value?.let {
+            val isMin = it.min == node.min
+            val isMax = it.max == node.max
+            val isPos = it.pos == value
+            Timber.d("updateVolumeValue mode:$node, value:$value, isMin:$isMin, isMax:$isMax, isPos:$isPos")
+            if (isMin && isMax && isPos) {
+                return
+            }
+            if (!isMin) {
+                it.min = node.min
+            }
+            if (!isMax) {
+                it.max = node.max
+            }
+            if (!isPos) {
+                it.pos = value
+            }
+            liveData.postValue(it)
         }
     }
 

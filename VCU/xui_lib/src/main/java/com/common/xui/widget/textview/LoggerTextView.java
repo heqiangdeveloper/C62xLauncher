@@ -18,7 +18,6 @@ import com.common.xui.utils.ResUtils;
 
 /**
  * 日志打印显示控件
- *
  */
 public class LoggerTextView extends AppCompatTextView {
 
@@ -210,7 +209,6 @@ public class LoggerTextView extends AppCompatTextView {
     /**
      * 默认日志格式化接口
      *
-     * 
      * @since 2021/4/14 1:48 AM
      */
     public static class DefaultLogFormatter implements ILogFormatter {
@@ -224,7 +222,6 @@ public class LoggerTextView extends AppCompatTextView {
     /**
      * 日志格式化接口
      *
-     * 
      * @since 2021/4/14 1:30 AM
      */
     public interface ILogFormatter {
@@ -242,7 +239,6 @@ public class LoggerTextView extends AppCompatTextView {
     /**
      * 默认日志装饰接口
      *
-     * 
      * @since 2021/4/14 1:49 AM
      */
     public static class DefaultLogDecorator implements ILogDecorator {
@@ -279,7 +275,6 @@ public class LoggerTextView extends AppCompatTextView {
     /**
      * 日志装饰接口
      *
-     * 
      * @since 2021/4/14 1:30 AM
      */
     public interface ILogDecorator {

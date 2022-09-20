@@ -3,7 +3,6 @@ package com.common.xui.adapter.recyclerview.sticky;
 /**
  * 粘顶布局滚动变化监听
  *
- *
  * @since 2020/5/2 11:22 AM
  */
 public interface OnStickyChangedListener {

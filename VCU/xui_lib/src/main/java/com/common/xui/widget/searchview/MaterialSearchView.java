@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,6 @@ import java.util.List;
 /**
  * 搜索框
  *
- * 
  * @since 2019/1/2 下午4:01
  */
 public class MaterialSearchView extends FrameLayout implements Filter.FilterListener {

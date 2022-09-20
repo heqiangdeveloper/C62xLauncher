@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.dialog.materialdialog.internal;
 
 import android.content.Context;

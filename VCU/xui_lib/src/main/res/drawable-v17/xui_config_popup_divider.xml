@@ -5,8 +5,9 @@
 
     <size
         android:width="@dimen/xui_list_divider_height_phone"
-        android:height="@dimen/xui_list_divider_height_phone"/>
+        android:height="@dimen/xui_list_divider_height_phone" />
 
-    <padding android:left="@dimen/xui_config_content_spacing_horizontal_phone"
-        android:right="@dimen/xui_config_content_spacing_horizontal_phone"/>
+    <padding
+        android:left="@dimen/xui_config_content_spacing_horizontal_phone"
+        android:right="@dimen/xui_config_content_spacing_horizontal_phone" />
 </shape>

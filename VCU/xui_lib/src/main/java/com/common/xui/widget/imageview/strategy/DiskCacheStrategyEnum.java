@@ -1,8 +1,8 @@
-
 package com.common.xui.widget.imageview.strategy;
 
 /**
  * 磁盘缓存策略枚举
+ *
  * @since 2019-11-09 10:58
  */
 public enum DiskCacheStrategyEnum {

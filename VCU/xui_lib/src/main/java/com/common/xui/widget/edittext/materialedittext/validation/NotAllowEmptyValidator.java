@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 /**
  * 非空检验
- *
  */
 public class NotAllowEmptyValidator extends METValidator {
 

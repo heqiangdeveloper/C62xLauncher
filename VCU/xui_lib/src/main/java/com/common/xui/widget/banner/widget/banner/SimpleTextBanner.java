@@ -11,7 +11,6 @@ import com.common.xui.widget.banner.widget.banner.base.BaseIndicatorBanner;
 /**
  * 简单的文字轮播
  *
- *
  * @since 2018/12/6 下午4:35
  */
 public class SimpleTextBanner extends BaseIndicatorBanner<String, SimpleTextBanner> {

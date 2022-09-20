@@ -1,14 +1,14 @@
 package com.common.xui.logs;
 
-import androidx.annotation.NonNull;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
 /**
  * 默认Logcat日志记录
- *
  */
 public class LogcatLogger implements ILogger {
 
@@ -22,7 +22,7 @@ public class LogcatLogger implements ILogger {
      *
      * @param priority 优先级
      * @param tag      标签
-     * @param message   信息
+     * @param message  信息
      * @param t        出错信息
      */
     @Override

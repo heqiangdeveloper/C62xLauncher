@@ -26,21 +26,21 @@ public class PwdEditText extends AppCompatEditText {
         init();
     }
 
-    private void init(){
-        mInputConnection = new TInputConnection(null,true);
+    private void init() {
+        mInputConnection = new TInputConnection(null, true);
     }
 
     /**
      * 当输入法和EditText建立连接的时候会通过这个方法返回一个InputConnection。
      * 我们需要代理这个方法的父类方法生成的InputConnection并返回我们自己的代理类。
-     * */
+     */
     @Override
     public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
         mInputConnection.setTarget(super.onCreateInputConnection(outAttrs));
         return mInputConnection;
     }
 
-    public void setBackSpaceListener(TInputConnection.BackspaceListener backSpaceListener){
+    public void setBackSpaceListener(TInputConnection.BackspaceListener backSpaceListener) {
         mInputConnection.setBackspaceListener(backSpaceListener);
     }
 }

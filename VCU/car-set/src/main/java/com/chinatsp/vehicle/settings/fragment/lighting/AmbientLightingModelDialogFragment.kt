@@ -63,7 +63,7 @@ class AmbientLightingModelDialogFragment :
     }
 
     override fun getWidthRatio(): Float {
-        return 0.62f
+        return 882f / 1920f
     }
 
     private fun initSwitchOption() {
@@ -121,7 +121,7 @@ class AmbientLightingModelDialogFragment :
     private fun doUpdateViewSelect(
         node: SwitchNode,
         status: Boolean,
-        immediately: Boolean = false
+        immediately: Boolean = false,
     ) {
         val swb = when (node) {
             SwitchNode.SPEED_RHYTHM -> binding.speedRhythm

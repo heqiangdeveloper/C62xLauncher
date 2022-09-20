@@ -11,9 +11,6 @@ import androidx.annotation.Nullable;
 import com.common.xui.R;
 
 /**
- *
- *
- * 
  * @since 2019-06-06 00:48
  */
 public class RotationRatingBar extends AnimationRatingBar {

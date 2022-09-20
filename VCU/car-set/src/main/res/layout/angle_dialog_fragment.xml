@@ -10,45 +10,142 @@
         android:layout_height="match_parent"
         android:background="@drawable/bg_sound_popup_20"
         android:gravity="center"
-        android:orientation="vertical"
-        android:paddingTop="@dimen/x30"
-        android:paddingBottom="@dimen/x20">
+        android:orientation="vertical">
 
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/details_title"
-            style="@style/dialog_title"
-            android:text="@string/car_mirror_dialog_title" />
-
-
-        <ScrollView
-            android:id="@+id/hint_content_scroll_view"
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/set_layout"
             android:layout_width="match_parent"
-            android:layout_margin="@dimen/x10"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:paddingTop="@dimen/x20"
+            android:paddingBottom="@dimen/x20"
+            android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/details_content"
-                style="@style/txt_prompt_style"
+                android:id="@+id/details_title"
+                style="@style/dialog_title"
+                android:text="@string/car_mirror_dialog_title" />
+
+
+            <ScrollView
+                android:id="@+id/hint_content_scroll_view"
                 android:layout_width="match_parent"
-                android:gravity="center"
-                android:lineSpacingExtra="@dimen/x2"
-                android:padding="@dimen/x10"
-                android:text="@string/car_mirror_dialog_content"
-                android:textSize="@dimen/text_15" />
-        </ScrollView>
+                android:layout_margin="@dimen/x10"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/details_content"
+                    style="@style/txt_prompt_style"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/x2"
+                    android:padding="@dimen/x10"
+                    android:text="@string/car_mirror_dialog_content"
+                    android:textSize="@dimen/text_15" />
+            </ScrollView>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/hint_conform"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/lighting_dialog_txt_bg"
-            android:gravity="center"
-            android:text="@string/car_mirror_angle"
-            android:textColor="@color/xui_config_color_white"
-            android:textSize="@dimen/text_14" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/hint_conform"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/lighting_dialog_txt_bg"
+                    android:gravity="center"
+                    android:text="@string/car_mirror_set"
+                    android:textColor="@color/xui_config_color_white"
+                    android:textSize="@dimen/text_14" />
 
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/hint_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/lighting_dialog_txt_bg"
+                    android:gravity="center"
+                    android:text="@string/car_mirror_cancel"
+                    android:textColor="@color/xui_config_color_white"
+                    android:textSize="@dimen/text_14"
+                    android:layout_marginStart="@dimen/x35" />
+            </LinearLayout>
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/save_linear"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/x15"
+            android:paddingBottom="@dimen/x20"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/icon_asset_countdown_140"
+                android:gravity="center">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="120"
+                    android:textColor="@color/pop_text_time"
+                    android:textSize="@dimen/text_17"
+                    android:layout_marginTop="@dimen/x4" />
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/car_mirror_pop_title"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/text_15"
+                android:layout_marginTop="@dimen/x10" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/car_mirror_pop_content"
+                android:textColor="#7C7C84"
+                android:textSize="@dimen/text_14"
+                android:layout_marginTop="@dimen/x3"
+                android:layout_marginBottom="@dimen/x10" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/car_mirror_save_set"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/lighting_dialog_txt_bg"
+                    android:gravity="center"
+                    android:text="@string/car_mirror_save_set"
+                    android:textColor="@color/xui_config_color_white"
+                    android:textSize="@dimen/text_14" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/car_mirror_cancel_set"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/lighting_dialog_txt_bg"
+                    android:gravity="center"
+                    android:text="@string/car_mirror_cancel_set"
+                    android:textColor="@color/xui_config_color_white"
+                    android:textSize="@dimen/text_14"
+                    android:layout_marginStart="@dimen/x35" />
+            </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>

@@ -94,7 +94,6 @@ class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback, 
     }
 
 
-
     /**
      * 小欧不做处理 播报，防止小欧发呆
      */
@@ -180,7 +179,7 @@ class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback, 
             audioHintActionResult("", "发动机没有开启，请打开发动机！")
             return
         }
-        if(carSpeed>120){//车速大于120，不许开窗
+        if (carSpeed > 120) {//车速大于120，不许开窗
             LogManager.d(TAG, "车速过快，建议不要开启天窗！")
             audioHintActionResult("", "车速过快，建议不要开启天窗！")
             return

@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview.nine;
 
 import android.widget.ImageView;
@@ -7,7 +6,6 @@ import java.util.List;
 
 /**
  * 九宫图长按
- *
  */
 public interface ItemImageLongClickListener<T> {
     /**

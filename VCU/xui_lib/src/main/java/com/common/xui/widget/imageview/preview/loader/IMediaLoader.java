@@ -1,9 +1,10 @@
 package com.common.xui.widget.imageview.preview.loader;
 
 import android.content.Context;
+import android.widget.ImageView;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import android.widget.ImageView;
 
 /**
  * 加载器接口

@@ -45,7 +45,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
-            android:name="com.chinatsp.vehicle.settings.MainActivity"
+            android:name="com.chinatsp.vehicle.settings.MainActivity2"
             android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
             android:hardwareAccelerated="true"
             android:launchMode="singleTask"
@@ -58,7 +58,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
-                <action android:name="com.chinatsp.vcu.actions.VCU" />
+                <action android:name="com.chinatsp.vcu.actions.VCU_GENERAL_ROUTER" />
+                <action android:name="com.chinatsp.vcu.actions.VCU_AMBIENT_LIGHTING" />
+                <action android:name="com.chinatsp.vcu.actions.VCU_SCREEN_BRIGHTNESS" />
+                <action android:name="com.chinatsp.vcu.actions.VCU_AUDIO_VOLUME" />
+                <action android:name="com.chinatsp.vcu.actions.VCU_CUSTOM_KEYPAD" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

@@ -264,7 +264,7 @@ public class VSeekBar extends View {
         calculateConvertFactor();
 
         if (mIsFirstInit) {
-            setSelectedValue(mSelectedNumber != -1 ? mSelectedNumber : mMax);
+            setSelectedValue(mSelectedNumber != -1 ? mSelectedNumber : mMax, false);
         }
 
         height += mVerticalPadding;
@@ -738,20 +738,21 @@ public class VSeekBar extends View {
 
     public void setDefaultValue(int value) {
         mSelectedNumber = value;
-        setSelectedValue(value);
+        setSelectedValue(value, true);
         invalidate();
     }
 
     public void setValueNoEvent(int value) {
         mSelectedNumber = value;
-//        setSelectedValue(value);
-        mMaxPosition = Math.round(((value - mMin) / mConvertFactor) + mLineStartX);
+        setSelectedValue(value, false);
         invalidate();
     }
 
-    private void setSelectedValue(int selectedMax) {
+    private void setSelectedValue(int selectedMax, boolean isCallback) {
         mMaxPosition = Math.round(((selectedMax - mMin) / mConvertFactor) + mLineStartX);
-        callMaxChangedCallbacks();
+        if (isCallback) {
+            callMaxChangedCallbacks();
+        }
     }
 
     public void setOnSeekBarListener(OnSeekBarListener listener) {
@@ -786,9 +787,7 @@ public class VSeekBar extends View {
      */
     public void reset() {
         mMaxPosition = mLineEndX;
-        if (mOnSeekBarListener != null) {
-            mOnSeekBarListener.onValueChanged(this, getSelectedNumber());
-        }
+        callMaxChangedCallbacks();
         invalidate();
     }
 

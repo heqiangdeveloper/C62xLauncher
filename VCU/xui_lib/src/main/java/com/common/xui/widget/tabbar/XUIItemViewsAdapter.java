@@ -17,7 +17,6 @@ import java.util.List;
  * cache 功能主要是保证在需要多次刷新数据或布局的情况下（{@link ListView} 或 {@link RecyclerView} 的 itemView）
  * 复用已存在的 {@link View}。
  * XUI 用于 {@link TabSegment} 中 {@link TabSegment.Tab} 与数据的适配。
- *
  */
 public abstract class XUIItemViewsAdapter<T, V extends View> {
     private Pools.Pool<V> mCachePool;

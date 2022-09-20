@@ -41,7 +41,7 @@ interface IRadioManager : IManager {
     fun onRadioChanged(
         node: RadioNode, atomic: AtomicInteger, value: Int,
         update: ((RadioNode, AtomicInteger, Int, ((RadioNode, Int) -> Unit)) -> Unit),
-        block: ((RadioNode, Int) -> Unit)
+        block: ((RadioNode, Int) -> Unit),
     ) {
         update(node, atomic, value, block)
     }
@@ -50,7 +50,7 @@ interface IRadioManager : IManager {
         node: RadioNode,
         atomic: AtomicInteger,
         value: Int,
-        block: ((RadioNode, Int) -> Unit)? = null
+        block: ((RadioNode, Int) -> Unit)? = null,
     ): AtomicInteger {
         val isValid = node.isValid(value)
         val isEqual = value == atomic.get()
@@ -58,10 +58,7 @@ interface IRadioManager : IManager {
             atomic.set(value)
             block?.let { it(node, value) }
         } else {
-            Timber.tag("luohong").e(
-                "doUpdateRadioValue node:$node, value:$value" +
-                        " isValid:$isValid, isEqual:$isEqual"
-            )
+            Timber.e("doUpdateRadioValue node:$node, value:$value, isValid:$isValid, isEqual:$isEqual")
         }
         return atomic
     }

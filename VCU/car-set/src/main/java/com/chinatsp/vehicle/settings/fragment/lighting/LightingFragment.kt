@@ -2,6 +2,8 @@ package com.chinatsp.vehicle.settings.fragment.lighting
 
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatImageView
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.manager.IRadioManager
@@ -58,7 +60,7 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
     }
 
     private fun initViewDisplay() {
-        if (VcuUtils.isCareLevel(Level.LEVEL3, expect = true)||VcuUtils.isCareLevel(Level.LEVEL4, expect = true)) {
+        if (VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4, expect = true)) {
             binding.lightingTurnExternal.visibility = View.GONE
             binding.line4.visibility = View.GONE
             binding.lightingCarInside.visibility = View.GONE
@@ -120,8 +122,13 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
 
     private fun setRadioListener() {
         binding.lightCeremonySenseRadio.let {
-            it.setOnTabSelectionChangedListener { title, value ->
-                doUpdateRadio(RadioNode.LIGHT_CEREMONY_SENSE, value, viewModel.ceremonySense, it)
+            if (binding.lightCeremonySenseSwitch.isChecked) {
+                it.setOnTabSelectionChangedListener { title, value ->
+                    doUpdateRadio(RadioNode.LIGHT_CEREMONY_SENSE,
+                        value,
+                        viewModel.ceremonySense,
+                        it)
+                }
             }
         }
         binding.lightDelayBlackOutRadio.let {
@@ -246,10 +253,16 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
                 updateSeekBarValue(this, it)
             }
         }
+
     }
 
     private fun setSeekBarListener(listener: VSeekBar.OnSeekBarListener) {
         binding.lightSwitchBacklightSeekBar.setOnSeekBarListener(listener)
+        binding.lightCeremonySenseSwitch.let {
+            it.setOnCheckedChangeListener { buttonView, isChecked ->
+                checkDisableOtherDiv(it, isChecked)
+            }
+        }
     }
 
     override fun onValueChanged(seekBar: VSeekBar?, newValue: Int) {
@@ -263,4 +276,40 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
         }
     }
 
+    private fun checkDisableOtherDiv(swb: SwitchButton, status: Boolean) {
+        if (swb == binding.lightCeremonySenseSwitch) {
+            val childCount = binding.lightCeremonySenseRadioConstraint.childCount
+            val intRange = 0 until childCount
+            intRange.forEach {
+                val childAt = binding.lightCeremonySenseRadioConstraint.getChildAt(it)
+                if (null != childAt && childAt != binding.lightingTurnExternal) {
+                    childAt.alpha = if (status) 1.0f else 0.7f
+                    updateViewEnable(childAt, status)
+                }
+            }
+        }
+    }
+
+    private fun updateViewEnable(view: View?, status: Boolean) {
+        if (null == view) {
+            return
+        }
+        if (view is SwitchButton) {
+            view.isEnabled = status
+            return
+        }
+        if (view is AppCompatImageView) {
+            view.isEnabled = status
+            return
+        }
+        if (view is TabControlView) {
+            view.updateEnable(status)
+            return
+        }
+        if (view is ViewGroup) {
+            val childCount = view.childCount
+            val intRange = 0 until childCount
+            intRange.forEach { updateViewEnable(view.getChildAt(it), status) }
+        }
+    }
 }

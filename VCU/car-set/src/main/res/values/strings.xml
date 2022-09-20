@@ -54,7 +54,7 @@
     <string name="cabin_safe_fortify_success_tone">设防成功提示音</string>
     <string name="cabin_safe_fortify_failure_tone">设防失败提示音</string>
     <string name="cabin_safe_video_safe_mode">视频安全模式</string>
-    <string name="cabin_safe_video_safe_mode_content">视频安全模式开启后，⻋速⼤于15km/h时，本地视频将⾃动关闭。</string>
+    <string name="cabin_safe_video_safe_mode_content">视频安全模式开启后，⻋\n速⼤于15km/h时，本地\n视频将⾃动关闭。</string>
 
     <string name="cabin_wheel_electronic_mode">电子助力转向模式</string>
     <string name="cabin_wheel_press_key">方向盘自定义按键</string>
@@ -81,10 +81,10 @@
     <string name="cabin_seat_copilot_top">副驾上车</string>
 
     <string name="cabin_other_trailer_remind">拖车提醒</string>
-    <string name="cabin_other_trailer_remind_content">车辆被摇曳、牵引超过设定的提醒距离时，将通过APP或短信提醒车主。</string>
+    <string name="cabin_other_trailer_remind_content">车辆被摇曳、牵引超过设定\n的提醒距离时，将通过APP\n或短信提醒车主。</string>
     <string name="cabin_other_close">已关闭</string>
-    <string name="cabin_other_battery_optimization">蓄电池优化</string>
-    <string name="cabin_other_battery_optimization_content">监控车辆电能消耗情况，低电量状态下，对整车舒适性功能（空调、大屏等）进行管理</string>
+    <string name="cabin_other_battery_optimization">智能电源管家</string>
+    <string name="cabin_other_battery_optimization_content">监控车辆电能消耗情况，低\n电量状态下，对整车舒适性\n功能（空调、大屏等）进行\n管理。</string>
     <string name="cabin_other_wireless_charging">无线充电</string>
     <string name="cabin_other_wireless_charging_lamp">无线充电灯</string>
     <string name="cabin_other_sensor_sensitivity">传感器灵敏度</string>
@@ -105,9 +105,18 @@
     <string name="car_window_lock_car">锁车自动关窗</string>
     <string name="car_window_rainy_day">雨天自动关窗</string>
     <string name="car_window_wiper">雨刮维修</string>
-    <string name="car_window_lock_content">功能开启后，可通过钥匙遥控关闭/开启四门车窗</string>
-    <string name="car_window_lock_car_content">功能开启后，锁车时，四门车窗，天窗和遮阳帘自动关闭</string>
-    <string name="car_window_wiper_content">对⻛挡玻璃⾬刮器进⾏维护操作时，务必打开⾬刮维修模式。打开⾬刮维修，⾬刮将⾃动运⾏⾄维修位置。功能开启后，⻋速⾸次⼤于120km/h时，天窗⾃动关闭，此时向后拨动天窗开关可再次开启天窗。</string>
+    <string name="car_window_lock_content">功能开启后，可通过钥匙遥\n
+        控关闭/开启四门车窗</string>
+    <string name="car_window_lock_car_content">功能开启后，锁门时，四门车\n
+        窗、天窗和遮阳帘自动关闭</string>
+    <string name="car_window_wiper_content">对⻛挡玻璃⾬刮器进⾏维护\n
+        操作时，务必打开⾬刮维修\n
+        模式。打开⾬刮维修，⾬刮\n
+        将⾃动运⾏⾄维修位置。功\n
+        能开启后，⻋速⾸次⼤于\n
+        120km/h时，天窗⾃动关\n
+        闭，此时向后拨动天窗开关\n
+        可再次开启天窗。</string>
 
     <string name="car_trunk_electric_function">电动尾门电动功能</string>
     <string name="car_trunk_intelligence_into">电动尾门智能进入</string>
@@ -120,18 +129,32 @@
     <string name="car_trunk_buzzer_close">蜂鸣器报警已关闭</string>
     <string name="car_trunk_light_open">灯光闪烁报警已开启</string>
     <string name="car_trunk_light_close">灯光闪烁报警已关闭</string>
-    <string name="car_trunk_content">模式⼀：携带合法智能钥匙进⼊后备箱感应区域内，然后退出此区域，再次进⼊感应区域，电动尾⻔⾃动开启；\n
-        模式⼆：携带合法智能钥匙进⼊后备箱感应区域内，原地站⽴6s以上，电动尾⻔⾃动开启。</string>
+    <string name="car_trunk_content">模式⼀：携带合法智能钥匙\n
+        进⼊后备箱感应区域内，然\n
+        后退出此区域，再次进⼊感\n
+        应区域，电动尾⻔⾃动开\n
+        启；\n
+        模式⼆：携带合法智能钥匙\n
+        进⼊后备箱感应区域内，原\n
+        地站⽴6s以上，电动尾⻔⾃\n
+        动开启。</string>
 
     <string name="car_mirror_automatic_folding">外后视镜自动折叠</string>
     <string name="car_mirror_automatic_folding_close">后视镜自动折叠已关闭</string>
     <string name="car_mirror_automatic_folding_open">后视镜自动折叠已开启</string>
     <string name="car_mirror_automatic_under_double">倒车后视镜下翻</string>
     <string name="car_mirror_angle">修改角度</string>
+    <string name="car_mirror_cancel">取消</string>
+    <string name="car_mirror_set">开始设置</string>
+    <string name="car_mirror_save_set">保存设置</string>
+    <string name="car_mirror_cancel_set">取消保存</string>
     <string name="car_mirror_dialog_title">倒⻋后视镜⻆度设置</string>
+    <string name="car_mirror_pop_title">请在车门物理按键上调节</string>
+    <string name="car_mirror_pop_content">2分钟倒计时结束后自动保存当前位置</string>
     <string name="car_mirror_dialog_btn">保存设置</string>
-    <string name="car_mirror_dialog_content">倒⻋请在⻋⻔的物理按键上调节，在2分钟之内完成 \n
-设置，2分钟倒计时结束后⾃动保存当前位置⻆度设置</string>
+    <string name="car_mirror_dialog_content">请在⻋⻔的物理按键上调节\n
+        在2分钟之内完成设置，2分钟倒计时结\n
+        束后⾃动保存当前位置</string>
 
     <string name="ac_open_window">一键开窗</string>
     <string name="ac_close_window">一键关窗</string>
@@ -154,7 +177,7 @@
     <string name="drive_aeb_title">自动紧急制动AEB</string>
     <string name="drive_aeb_content">检测到危险情况时产生一个短促制动</string>
     <string name="drive_Lane_assist_system">车道辅助系统</string>
-    <string name="drive_Lane_assist_system_content">检测两侧车道线辅助车辆在车道内行驶</string>
+    <string name="drive_Lane_assist_system_content">车道赋值功能请到空调屏进行开启或关闭</string>
     <string name="drive_bsd_title">盲区监测BSD</string>
     <string name="drive_bsd_content">提醒驾驶者后方来车情况</string>
     <string name="drive_dow_title">开门预警DOW</string>
@@ -171,9 +194,9 @@
     <string name="drive_alarm_way">报警方式</string>
     <string name="drive_auxiliary_line">辅助线</string>
     <string name="drive_display_area">显示区域</string>
-    <string name="drive_colour_breathing">色彩呼吸</string>
-    <string name="drive_music_rhythm">音乐律动</string>
-    <string name="drive_car_rhythm">车速律动</string>
+    <string name="drive_colour_breathing">隐私模式</string>
+    <string name="drive_music_rhythm">熄屏</string>
+    <string name="drive_car_rhythm">导航</string>
     <string name="drive_pm_display">PM2.5显示</string>
     <string name="drive_temperature_rhythm">调温律动</string>
     <string name="drive_one_hundred_twenty">120</string>
@@ -231,7 +254,7 @@
     <string name="sound_volume_balance">音量平衡</string>
     <string name="sound_environmental">环境音效</string>
     <string name="sound_standard">标准</string>
-    <string name="sound_loudness_control_content">在小音量时，加强低音和高音；反之，大音量时，降低低音和高音，以让响度均衡</string>
+    <string name="sound_loudness_control_content">在小音量时，加强低音和高\n音；反之，大音量时，降低低\n音和高音，以让响度均衡</string>
 
     <string name="vcu_action_switch_failed">切换失败</string>
     <string name="vcu_eps_action_switch_check">请确认是否满⾜以下条件：\n1.发动机已启动\n2.处于安全⻋速下\n3.其他条件请阅读整⻋说明书</string>
@@ -281,4 +304,5 @@ IACC会优先通过识别⻋道两侧清晰的⻋道线进⾏横向辅助控制�
 的响应触发不同的报警模式，避免在⻋道变换过程中出现碰撞发⽣，当驾驶员开启转向灯准备变道时，提升为⼆级报警。</string>
     <string name="bsc_details">在⻋辆⾏驶过程中，当驾驶员进⾏左（或右）变道或超⻋时，视野被B柱、C柱遮挡存在视野盲区，盲区影像功能可为驾驶
 员提供⻋辆左后⽅（或右后⽅）的盲区影像，辅助驾驶员进⾏安全驾驶。</string>
+    <string name="meb_details">一种帮助驾驶员发现车辆后方障碍物，并在判断有碰撞危险时进行自动刹车制动的功能。</string>
 </resources>

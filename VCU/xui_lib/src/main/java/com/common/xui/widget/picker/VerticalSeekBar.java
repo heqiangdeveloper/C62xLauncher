@@ -99,7 +99,9 @@ public class VerticalSeekBar extends View {
             setProgress(progress);
         }
     }
+
     Rect rectBg = new Rect();
+
     private void makeCustomPaint(Canvas canvas) {
         Paint paint = new Paint();
         paint.setAntiAlias(true);
@@ -115,8 +117,8 @@ public class VerticalSeekBar extends View {
         rectBg.left = 0;
         rectBg.top = 0;
         rectBg.right = bitmap.getWidth();
-        rectBg.bottom =bitmap.getHeight();
-        canvas.drawBitmap(bitmap,rectBg,rf,paint);
+        rectBg.bottom = bitmap.getHeight();
+        canvas.drawBitmap(bitmap, rectBg, rf, paint);
 
         //canvas.drawRect(0, 0, scrWidth, scrHeight, paint);
 

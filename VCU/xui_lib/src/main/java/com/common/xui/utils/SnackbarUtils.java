@@ -1,4 +1,3 @@
-
 package com.common.xui.utils;
 
 import android.annotation.TargetApi;
@@ -6,12 +5,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
-import androidx.annotation.ColorInt;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,16 +15,22 @@ import android.widget.LinearLayout;
 import android.widget.Space;
 import android.widget.TextView;
 
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.snackbar.SnackbarContentLayout;
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
 import com.common.xui.R;
 import com.common.xui.logs.UILog;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.snackbar.SnackbarContentLayout;
 
 import java.lang.ref.WeakReference;
-import java.lang.CharSequence;
 
 /**
  * Snackbar工具类
+ *
  * @since 2018/12/18 下午5:58
  */
 public class SnackbarUtils {

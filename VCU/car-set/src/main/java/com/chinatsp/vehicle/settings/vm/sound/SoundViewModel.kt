@@ -43,7 +43,7 @@ class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
 //        val value = EffectManager.instance.doGetRadioOption(node)
 //        MutableLiveData(value)
 //    }
-    
+
     val volumeLevel: LiveData<Int>
         get() = _volumeLevel
 

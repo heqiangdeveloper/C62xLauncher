@@ -18,7 +18,7 @@ enum class RadioNode(
     val get: RNorm,
     val set: RNorm,
     val default: Int,
-    val area: Area = Area.GLOBAL
+    val area: Area = Area.GLOBAL,
 ) {
 
     AC_COMFORT(
@@ -270,12 +270,13 @@ enum class RadioNode(
 
     /**
      * 车辆音效--声音--仪表报警音量等级 (no signal)
+     * get -> 【反馈】仪表报警音量等级反馈信号 0x0: High; 0x1: medium; 0x2: Low; 0x3: Reserved
      * set -> 仪表报警音量等级开关触发[0x1,0,0x0,0x3] 0x0: Inactive; 0x1: High; 0x2: medium; 0x3: Low
      */
     ICM_VOLUME_LEVEL(
         get = RNorm(
             values = intArrayOf(0x1, 0x2, 0x3),
-            signal = -1
+            signal = CarCabinManager.ID_ICM_HUM_VOLUME_STS
         ),
         set = RNorm(
             values = intArrayOf(0x1, 0x2, 0x3),

@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview;
 
 import android.content.Context;
@@ -15,6 +14,7 @@ import com.common.xui.widget.imageview.strategy.impl.GlideImageLoadStrategy;
 
 /**
  * 图片加载策略管理
+ *
  * @since 2019-07-26 00:27
  */
 public class ImageLoader implements IImageLoadStrategy {

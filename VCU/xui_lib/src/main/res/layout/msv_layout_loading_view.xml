@@ -18,5 +18,4 @@
         android:text="@string/xui_tip_loading_message" />
 
 
-
 </LinearLayout>

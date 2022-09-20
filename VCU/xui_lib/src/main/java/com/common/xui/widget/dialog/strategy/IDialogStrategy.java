@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,12 @@ package com.common.xui.widget.dialog.strategy;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+
 import androidx.annotation.ArrayRes;
 import androidx.annotation.DrawableRes;
 
 /**
  * 对话框的策略
- *
  *
  * @since 2018/11/14 下午11:24
  */
@@ -61,6 +61,7 @@ public interface IDialogStrategy {
     Dialog showTipDialog(Context context, String title, String content, String submitText);
 
     //===============//
+
     /**
      * 显示简要的确认对话框
      *
@@ -102,6 +103,7 @@ public interface IDialogStrategy {
     Dialog showConfirmDialog(Context context, String content, String submitText, DialogInterface.OnClickListener submitListener, String cancelText);
 
     //===============//
+
     /**
      * 显示带输入框的对话框
      *
@@ -144,6 +146,7 @@ public interface IDialogStrategy {
     Dialog showContextMenuDialog(Context context, String title, @ArrayRes int itemsId, DialogInterface.OnClickListener listener);
 
     //===============//
+
     /**
      * 显示带单选项的Dialog
      *

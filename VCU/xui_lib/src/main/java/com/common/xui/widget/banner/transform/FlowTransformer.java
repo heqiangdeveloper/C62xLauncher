@@ -1,12 +1,12 @@
 package com.common.xui.widget.banner.transform;
 
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.ViewPager;
-import android.view.View;
 
 /**
  * 翻转切换
- *
  *
  * @since 2019/1/14 下午10:12
  */

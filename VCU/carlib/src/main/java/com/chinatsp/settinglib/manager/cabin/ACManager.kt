@@ -118,7 +118,7 @@ class ACManager private constructor() : BaseManager(), IAcManager {
         try {
             writeLock.lock()
             unRegisterVcuListener(serial, identity)
-            listenerStore.put(serial, WeakReference(listener))
+            listenerStore[serial] = WeakReference(listener)
         } finally {
             writeLock.unlock()
         }

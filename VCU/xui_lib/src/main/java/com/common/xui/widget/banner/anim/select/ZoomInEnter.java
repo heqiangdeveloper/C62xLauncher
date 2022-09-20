@@ -2,6 +2,7 @@ package com.common.xui.widget.banner.anim.select;
 
 import android.animation.ObjectAnimator;
 import android.view.View;
+
 import com.common.xui.widget.banner.anim.BaseAnimator;
 
 public class ZoomInEnter extends BaseAnimator {

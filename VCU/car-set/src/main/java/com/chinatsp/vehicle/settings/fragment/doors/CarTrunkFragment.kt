@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageView
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.access.SternDoorManager
+import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
@@ -23,26 +25,50 @@ import com.common.xui.widget.picker.ArcSeekBar
 import com.common.xui.widget.popupwindow.PopWindow
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBinding>(),
     ArcSeekBar.OnChangeListener, IOptionAction {
-    private var animationOpenDoor: AnimationDrawable = AnimationDrawable()
-    private var animationCloseDoor: AnimationDrawable = AnimationDrawable()
-    private var animationFlashAlarm: AnimationDrawable = AnimationDrawable()
-    private var animationBuzzerAlarms: AnimationDrawable = AnimationDrawable()
-    private var progress:Int=75
+
+    private var animTrunk: AnimationDrawable = AnimationDrawable()
+    private var animFlashAlarm: AnimationDrawable = AnimationDrawable()
+    private var animBuzzerAlarms: AnimationDrawable = AnimationDrawable()
+
+    private val duration: Int
+        get() = 50
+
+    private var location: Int = 0
 
     private val manager: SternDoorManager
         get() = SternDoorManager.instance
+
+    private val trunkAnimationResource: IntArray by lazy {
+        intArrayOf(
+            R.drawable.trunk_door_00,
+            R.drawable.trunk_door_01,
+            R.drawable.trunk_door_02,
+            R.drawable.trunk_door_03,
+            R.drawable.trunk_door_04,
+            R.drawable.trunk_door_05,
+            R.drawable.trunk_door_06,
+            R.drawable.trunk_door_07,
+            R.drawable.trunk_door_08,
+            R.drawable.trunk_door_09
+        )
+    }
 
     override fun getLayoutId(): Int {
         return R.layout.car_trunk_fragment
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+
         initArcSeekBar()
+        setProgressLiveDataListener()
+
         initAnimation()
+
         initSwitchOption()
         addSwitchLiveDataListener()
         setSwitchListener()
@@ -55,80 +81,96 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         initDetailsClickListener()
     }
 
+    private fun setProgressLiveDataListener() {
+        viewModel.trunkStopPosition.observe(this) {
+            initLocation(it.pos)
+            binding.ivCarTrunk.setImageResource(trunkAnimationResource[location])
+        }
+    }
+
+    private fun initLocation(progress: Int) {
+        val size = trunkAnimationResource.size
+        val scale = size.toFloat() / 50f
+        var pros = progress
+        if (pros < 50) pros = 50
+        if (pros > 100) pros = 100
+        val value = (pros - 50) * scale
+        var position = value.roundToInt()
+        if (position >= size) position = size - 1
+        location = position
+    }
+
     private fun initViewDisplay() {
-        if (VcuUtils.isCareLevel(Level.LEVEL5, expect = true)) {
+        if (VcuUtils.isCareLevel(Level.LEVEL5, Level.LEVEL5_2, expect = true)) {
             binding.linearLayout.visibility = View.GONE
             binding.line2.visibility = View.GONE
         }
     }
 
     private fun initAnimation() {
-        animationCloseDoor.setAnimation(
-            activity,
-            R.drawable.trunk_door_close_animation,
-            binding.ivCarTrunk
-        )
-        animationFlashAlarm.setAnimation(
-            activity,
-            R.drawable.flash_alarm_animation,
-            binding.ivFlashAlarm
-        )
-        animationBuzzerAlarms.setAnimation(
-            activity,
-            R.drawable.buzzer_alarms_animation,
-            binding.ivBuzzerAlarms
-        )
+        var animationId = R.drawable.flash_alarm_animation
+        animFlashAlarm.setAnimation(activity, animationId, binding.ivFlashAlarm)
+        animationId = R.drawable.buzzer_alarms_animation
+        animBuzzerAlarms.setAnimation(activity, animationId, binding.ivBuzzerAlarms)
     }
+
     private fun initDetailsClickListener() {
         binding.electricTailDetails.setOnClickListener {
-            showPopWindow(R.string.car_trunk_content,it)
+            showPopWindow(R.string.car_trunk_content, it)
         }
     }
+
     private fun initArcSeekBar() {
-        binding.arcSeekBar.progress = progress
+        viewModel.trunkStopPosition.value?.let {
+            binding.arcSeekBar.progress = it.pos
+            initLocation(it.pos)
+        }
         binding.arcSeekBar.setOnChangeListener(this)
     }
 
     private fun initRadioOption() {
-        initRadioOption(RadioNode.STERN_SMART_ENTER, viewModel.sternSmartEnterFunction)
+        initRadioOption(RadioNode.STERN_SMART_ENTER, viewModel.sternSmartEnter)
     }
 
     private fun addRadioLiveDataListener() {
-        viewModel.sternSmartEnterFunction.observe(this) {
+        viewModel.sternSmartEnter.observe(this) {
             doUpdateRadio(RadioNode.STERN_SMART_ENTER, it, false)
         }
     }
 
     private fun setRadioListener() {
-        binding.accessSternSmartEnterRadio.let {
+        binding.sternSmartEnterRadio.let {
             it.setOnTabSelectionChangedListener { _, value ->
-                doUpdateRadio(
-                    RadioNode.STERN_SMART_ENTER,
-                    value,
-                    viewModel.sternSmartEnterFunction,
-                    it
-                )
-                if (value.equals("1")) {
-                    binding.carTrunkDoorHeight.visibility = View.GONE
-                    binding.intelligenceInto.visibility = View.GONE
-                    binding.arcSeekBar.visibility = View.VISIBLE
-                } else if (value.equals("2")) {
-                    binding.carTrunkDoorHeight.visibility = View.VISIBLE
-                    binding.intelligenceInto.visibility = View.VISIBLE
-                    binding.arcSeekBar.visibility = View.GONE
-                    binding.carTrunkDoorHeight.setText(R.string.car_trunk_keep_unlock)
-                } else {
-                    binding.carTrunkDoorHeight.visibility = View.VISIBLE
-                    binding.intelligenceInto.visibility = View.VISIBLE
-                    binding.arcSeekBar.visibility = View.GONE
-                    binding.carTrunkDoorHeight.setText(R.string.car_trunk_action_unlock)
-                }
+                doUpdateRadio(RadioNode.STERN_SMART_ENTER, value, viewModel.sternSmartEnter, it)
+                showFollowRadio(it.checked)
+            }
+        }
+    }
+
+    private fun showFollowRadio(value: String) {
+        when (value) {
+            "1" -> {
+                binding.carTrunkDoorHeight.visibility = View.INVISIBLE
+                binding.intelligenceInto.visibility = View.INVISIBLE
+                binding.arcSeekBar.visibility = View.VISIBLE
+            }
+            "2" -> {
+                binding.arcSeekBar.visibility = View.INVISIBLE
+                binding.carTrunkDoorHeight.visibility = View.VISIBLE
+                binding.intelligenceInto.visibility = View.VISIBLE
+                binding.carTrunkDoorHeight.setText(R.string.car_trunk_keep_unlock)
+            }
+            else -> {
+                binding.arcSeekBar.visibility = View.INVISIBLE
+                binding.carTrunkDoorHeight.visibility = View.VISIBLE
+                binding.intelligenceInto.visibility = View.VISIBLE
+                binding.carTrunkDoorHeight.setText(R.string.car_trunk_action_unlock)
             }
         }
     }
 
     private fun setSwitchListener() {
-        binding.accessSternElectricSw.let {
+        binding.sternElectricSwitch.let {
             it.setOnCheckedChangeListener { buttonView, isChecked ->
                 doUpdateSwitchOption(SwitchNode.AS_STERN_ELECTRIC, buttonView, isChecked)
                 checkDisableOtherDiv(it, isChecked)
@@ -154,24 +196,31 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
             binding.carTrunkDoorHeight.setText(R.string.car_trunk_buzzer_close)
             return
         }
-        binding.ivBuzzerAlarms.visibility = View.VISIBLE
-        binding.carTrunkDoorHeight.visibility = View.VISIBLE
         binding.carTrunkDoorHeight.setText(R.string.car_trunk_buzzer_open)
-        animationBuzzerAlarms.start(
-            false, 50,
+        animFlashAlarm.stop()
+        animBuzzerAlarms.start(
+            false, duration,
             object : AnimationDrawable.AnimationLisenter {
                 override fun startAnimation() {
-                    binding.arcSeekBar.visibility = View.GONE
+                    if (isShowSeek()) {
+                        binding.arcSeekBar.visibility = View.INVISIBLE
+                    }
+                    if (isShowKey()) {
+                        binding.intelligenceInto.visibility = View.INVISIBLE
+                    }
+                    binding.ivFlashAlarm.visibility = View.INVISIBLE
+                    binding.ivBuzzerAlarms.visibility = View.VISIBLE
+                    binding.carTrunkDoorHeight.visibility = View.VISIBLE
                 }
 
                 override fun endAnimation() {
-                    if (binding.accessSternElectricSw.isChecked&& binding.intelligenceInto.visibility==View.GONE) {
+                    binding.ivBuzzerAlarms.visibility = View.INVISIBLE
+                    if (isShowSeek()) {
                         binding.arcSeekBar.visibility = View.VISIBLE
-                    } else {
-                        binding.arcSeekBar.visibility = View.GONE
                     }
-                    binding.ivBuzzerAlarms.visibility = View.GONE
-
+                    if (isShowKey()) {
+                        binding.intelligenceInto.visibility = View.VISIBLE
+                    }
                 }
             })
 
@@ -182,58 +231,38 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
             binding.carTrunkDoorHeight.setText(R.string.car_trunk_light_close)
             return
         }
-        binding.ivFlashAlarm.visibility = View.VISIBLE
-        binding.carTrunkDoorHeight.visibility = View.VISIBLE
+        animBuzzerAlarms.stop()
         binding.carTrunkDoorHeight.setText(R.string.car_trunk_light_open)
-        animationFlashAlarm.start(false, 50, object : AnimationDrawable.AnimationLisenter {
+        animFlashAlarm.start(false, duration, object : AnimationDrawable.AnimationLisenter {
             override fun startAnimation() {
-                binding.arcSeekBar.visibility = View.GONE
+                if (isShowSeek()) {
+                    binding.arcSeekBar.visibility = View.INVISIBLE
+                }
+                if (isShowKey()) {
+                    binding.intelligenceInto.visibility = View.INVISIBLE
+                }
+                binding.ivBuzzerAlarms.visibility = View.INVISIBLE
+                binding.ivFlashAlarm.visibility = View.VISIBLE
+                binding.carTrunkDoorHeight.visibility = View.VISIBLE
             }
 
             override fun endAnimation() {
-                binding.ivFlashAlarm.visibility = View.GONE
-                if (binding.accessSternElectricSw.isChecked&& binding.intelligenceInto.visibility==View.GONE) {
+                binding.ivFlashAlarm.visibility = View.INVISIBLE
+                if (isShowSeek()) {
                     binding.arcSeekBar.visibility = View.VISIBLE
-                } else {
-                    binding.arcSeekBar.visibility = View.GONE
+                }
+                if (isShowKey()) {
+                    binding.intelligenceInto.visibility = View.VISIBLE
                 }
             }
         })
     }
 
     private fun doElectricTrunkFollowing(status: Boolean) {
-        if (!status) {
-            animationCloseDoor.start(false, 50, null)
-            binding.carTrunkDoorHeight.visibility = View.GONE
-            binding.intelligenceInto.visibility = View.GONE
-            binding.arcSeekBar.visibility = View.GONE
-            return
-        }
-        binding.carTrunkDoorHeight.visibility = View.VISIBLE
-        if(progress==50){
-            animationOpenDoor.progressStart(progress)
-            binding.arcSeekBar.visibility = View.VISIBLE
-            return
-        }else if(progress in 51..75){
-            animationOpenDoor.setAnimation(activity, R.drawable.trunk_door_animation_1, binding.ivCarTrunk)
-        }else{
-            animationOpenDoor.setAnimation(activity, R.drawable.trunk_door_animation, binding.ivCarTrunk)
-        }
-
-        animationOpenDoor.start(false, 50, object : AnimationDrawable.AnimationLisenter {
-            override fun startAnimation() {
-            }
-
-            override fun endAnimation() {
-                animationOpenDoor.setAnimation(activity, R.drawable.trunk_door_animation, binding.ivCarTrunk)
-                if (binding.accessSternElectricSw.isChecked) {
-                    binding.arcSeekBar.visibility = View.VISIBLE
-                } else {
-                    binding.arcSeekBar.visibility = View.GONE
-                }
-            }
-        })
-
+        binding.carTrunkDoorHeight.visibility = if (status) View.VISIBLE else View.INVISIBLE
+        binding.intelligenceInto.visibility = if (isShowKey()) View.VISIBLE else View.INVISIBLE
+        binding.arcSeekBar.visibility = if (isShowSeek()) View.VISIBLE else View.INVISIBLE
+        onTrunkPositionChanged(viewModel.trunkStopPosition.value!!.pos)
     }
 
 
@@ -259,7 +288,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
         return when (node) {
             SwitchNode.AS_STERN_ELECTRIC -> {
-                binding.accessSternElectricSw
+                binding.sternElectricSwitch
             }
             SwitchNode.STERN_LIGHT_ALARM -> {
                 binding.accessSternLightAlarmSw
@@ -281,7 +310,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
 
     override fun findRadioByNode(node: RadioNode): TabControlView? {
         return when (node) {
-            RadioNode.STERN_SMART_ENTER -> binding.accessSternSmartEnterRadio
+            RadioNode.STERN_SMART_ENTER -> binding.sternSmartEnterRadio
             else -> null
         }
     }
@@ -291,7 +320,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     }
 
     private fun checkDisableOtherDiv(swb: SwitchButton, status: Boolean) {
-        if (swb == binding.accessSternElectricSw) {
+        if (swb == binding.sternElectricSwitch) {
             binding.arcSeekBar.let {
                 it.isEnabledDrag = status
                 it.alpha = if (status) 1.0f else 0.7f
@@ -324,6 +353,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
             view.updateEnable(status)
             return
         }
+
         if (view is ViewGroup) {
             val childCount = view.childCount
             val intRange = 0 until childCount
@@ -336,8 +366,12 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     }
 
     override fun onProgressChanged(progress: Float, max: Float, fromUser: Boolean) {
-        this.progress = progress.toInt()
-        animationOpenDoor.progressStart(progress.toInt())
+//        this.progress = progress.toInt()
+        if (fromUser) {
+            manager.doSetVolume(Progress.TRUNK_STOP_POSITION, progress.toInt())
+            viewModel.onProgressChanged(Progress.TRUNK_STOP_POSITION, progress.toInt())
+        }
+//        animOpenDoor.progressStart(progress.toInt())
     }
 
     override fun onStopTrackingTouch(isCanDrag: Boolean) {
@@ -348,11 +382,41 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
 
     }
 
-    private fun showPopWindow(id:Int, view:View){
-        val popWindow = PopWindow(activity,R.layout.pop_window)
+    private fun showPopWindow(id: Int, view: View) {
+        val popWindow = PopWindow(activity,
+            R.layout.pop_window,
+            activity?.let { AppCompatResources.getDrawable(it, R.drawable.popup_bg_qipao172) })
         val text: TextView = popWindow.findViewById(R.id.content) as TextView
         text.text = resources.getString(id)
-        popWindow.showDown(view)
+        popWindow.showDownLift(view, 30, -130)
+    }
+
+    private fun onTrunkPositionChanged(progress: Int) {
+        val status = binding.sternElectricSwitch.isChecked
+        var resArray = trunkAnimationResource.slice(0..location)
+        if (!status) {
+            resArray = resArray.reversed()
+        }
+        animTrunk.setAnimation(binding.ivCarTrunk, resArray)
+        animTrunk.start(false, duration, object : AnimationDrawable.AnimationLisenter {
+            override fun startAnimation() {
+            }
+
+            override fun endAnimation() {
+                val visibility = if (isShowSeek()) View.VISIBLE else View.GONE
+                binding.arcSeekBar.visibility = visibility
+                val keyVisibility = if (isShowKey()) View.VISIBLE else View.GONE
+                binding.intelligenceInto.visibility = keyVisibility
+            }
+        })
+    }
+
+    fun isShowSeek(): Boolean {
+        return binding.sternElectricSwitch.isChecked && (binding.sternSmartEnterRadio.checked == "1")
+    }
+
+    fun isShowKey(): Boolean {
+        return binding.sternElectricSwitch.isChecked && (binding.sternSmartEnterRadio.checked != "1")
     }
 
 }

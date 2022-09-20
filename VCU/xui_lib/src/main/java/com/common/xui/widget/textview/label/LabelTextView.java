@@ -8,7 +8,6 @@ import androidx.appcompat.widget.AppCompatTextView;
 
 /**
  * 标签文字
- *
  */
 public class LabelTextView extends AppCompatTextView {
 

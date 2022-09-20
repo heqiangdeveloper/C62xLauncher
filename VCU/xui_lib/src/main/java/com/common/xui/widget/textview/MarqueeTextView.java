@@ -229,6 +229,7 @@ public class MarqueeTextView extends AppCompatTextView {
 
     /**
      * 去除展示的消息
+     *
      * @param displayString
      * @return
      */
@@ -238,6 +239,7 @@ public class MarqueeTextView extends AppCompatTextView {
 
     /**
      * 去除展示的消息
+     *
      * @param displayEntity
      * @return
      */
@@ -263,10 +265,11 @@ public class MarqueeTextView extends AppCompatTextView {
 
     /**
      * 判断是否是当前正在滚动展示的消息
+     *
      * @param displayEntity
      * @return
      */
-    private boolean isRollingDisplayEntity(DisplayEntity displayEntity){
+    private boolean isRollingDisplayEntity(DisplayEntity displayEntity) {
         if (!mIsRolling || mShowDisplayEntity == null) {
             return false;
         }
@@ -279,6 +282,7 @@ public class MarqueeTextView extends AppCompatTextView {
 
     /**
      * 去除消息 【只去除一个】
+     *
      * @param displayEntity
      */
     private boolean removeByDisplayEntity(DisplayEntity displayEntity) {
@@ -334,6 +338,7 @@ public class MarqueeTextView extends AppCompatTextView {
 
     /**
      * 滚动显示消息
+     *
      * @param displayEntity
      */
     private void showDisplayEntity(DisplayEntity displayEntity) {
@@ -424,6 +429,7 @@ public class MarqueeTextView extends AppCompatTextView {
 
     /**
      * 滚动显示指定索引的内容
+     *
      * @param index
      */
     private void rollDisplayByIndex(int index) {
@@ -447,6 +453,7 @@ public class MarqueeTextView extends AppCompatTextView {
 
     /**
      * 滚动完毕之后的回调处理
+     *
      * @return
      */
     private boolean onMarqueeFinished() {
@@ -583,6 +590,7 @@ public class MarqueeTextView extends AppCompatTextView {
 
     /**
      * 当前滚动字幕是否有需要滚动的消息
+     *
      * @return
      */
     public boolean hasDisplayMessage() {
@@ -591,6 +599,7 @@ public class MarqueeTextView extends AppCompatTextView {
 
     /**
      * 根据index获取滚动的消息实体
+     *
      * @param index
      * @return
      */
@@ -598,9 +607,10 @@ public class MarqueeTextView extends AppCompatTextView {
         if (mDisplayList != null && index >= 0 && index <= mDisplayList.size() - 1) {
             return mDisplayList.get(index);
         } else {
-            return  null;
+            return null;
         }
     }
+
     /**
      * 清除内容
      */

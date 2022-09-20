@@ -3,10 +3,10 @@ package com.common.xui.widget.popupwindow.easypopup;
 import android.content.Context;
 import android.view.View;
 import android.widget.PopupWindow;
+
 /**
  * 基础自定义弹出框
  *
- * 
  * @since 2018/12/6 下午2:48
  */
 public abstract class BaseCustomPopup extends EasyPopup {

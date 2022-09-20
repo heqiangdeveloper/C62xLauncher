@@ -32,7 +32,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cabin_other_trailer_remind"
             style="@style/install_dialog_layout"
-            android:layout_marginTop="@dimen/x18"
+            android:layout_marginTop="@dimen/x15"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/pop_title">
 

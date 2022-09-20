@@ -85,7 +85,7 @@ class WindowViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private fun updateLiveData(
         liveData: MutableLiveData<Boolean>,
-        value: Boolean
+        value: Boolean,
     ): MutableLiveData<Boolean> {
         liveData.takeIf { value xor liveData.value!! }?.postValue(value)
         return liveData

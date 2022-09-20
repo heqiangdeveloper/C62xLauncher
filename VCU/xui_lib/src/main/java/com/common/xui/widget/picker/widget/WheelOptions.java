@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,6 @@ import io.github.inflationx.calligraphy3.HasTypeface;
 /**
  * 条件滚轮
  *
- * 
  * @since 2019/1/1 下午7:10
  */
 public class WheelOptions<T> implements HasTypeface {
@@ -211,6 +210,7 @@ public class WheelOptions<T> implements HasTypeface {
 
     /**
      * 不联动情况下
+     *
      * @param options1Items
      * @param options2Items
      * @param options3Items

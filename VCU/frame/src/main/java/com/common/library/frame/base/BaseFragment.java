@@ -34,19 +34,18 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 
-import timber.log.Timber;
-
 import com.common.library.frame.R;
 import com.common.library.frame.base.livedata.MessageEvent;
 import com.common.library.frame.base.livedata.StatusEvent;
 
-
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+import timber.log.Timber;
+
 
 /**
- *  框架基于 Google 官方的 JetPack 构建，在使用  时，需遵循一些规范：
+ * 框架基于 Google 官方的 JetPack 构建，在使用  时，需遵循一些规范：
  *
  * <p>如果您继承使用了 BaseFragment 或其子类，你需要参照如下方式添加 @AndroidEntryPoint 注解
  *
@@ -57,8 +56,6 @@ import java.lang.reflect.Type;
  *
  *    }
  * </pre>
- *
- *
  */
 public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDataBinding> extends Fragment implements IView<VM>, BaseNavigator {
 

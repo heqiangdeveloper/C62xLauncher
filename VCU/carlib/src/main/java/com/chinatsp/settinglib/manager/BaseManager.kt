@@ -1,7 +1,9 @@
 package com.chinatsp.settinglib.manager
 
 import android.car.hardware.CarPropertyValue
+import com.chinatsp.settinglib.AppExecutors
 import com.chinatsp.settinglib.SettingManager
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.listener.*
 import com.chinatsp.settinglib.optios.Area
 import com.chinatsp.settinglib.optios.Progress
@@ -39,11 +41,24 @@ abstract class BaseManager : IManager {
 
     fun createAtomicBoolean(
         node: SwitchNode,
-        block: ((AtomicBoolean, Int) -> Unit)
+        block: ((AtomicBoolean, Int) -> Unit),
     ): AtomicBoolean {
         val result = AtomicBoolean(node.default)
         readProperty(node.get.signal, node.get.origin) {
             block(result, it)
+        }
+        return result
+    }
+
+    fun createAtomicBoolean(
+        node: SwitchNode,
+        key: String,
+        block: ((AtomicBoolean, Int) -> Unit),
+    ): AtomicBoolean {
+        val result = AtomicBoolean(node.default)
+        AppExecutors.get()?.singleIO()?.execute {
+            val resultValue = VcuUtils.getInt(key = key, value = node.value(node.default))
+            block(result, resultValue)
         }
         return result
     }
@@ -58,7 +73,7 @@ abstract class BaseManager : IManager {
 
     open fun onDispatchSignal(
         property: CarPropertyValue<*>,
-        origin: Origin = Origin.CABIN
+        origin: Origin = Origin.CABIN,
     ): Boolean {
         if (isCareSignal(property.propertyId, origin)) {
             return onHandleSignal(property, origin)
@@ -137,7 +152,7 @@ abstract class BaseManager : IManager {
         id: Int,
         origin: Origin,
         area: Area = Area.GLOBAL,
-        block: ((Int) -> Unit)
+        block: ((Int) -> Unit),
     ) {
         signalService.readProperty(id, origin, area, block)
     }

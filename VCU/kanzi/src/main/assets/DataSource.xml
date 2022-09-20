@@ -1,0 +1,4 @@
+<KanziInitFinish type="int">0</KanziInitFinish>    <!-- Kanzi加载完毕数据 1：加载完毕 -->
+<LFDoor type="int">0</LFDoor><LRDoor type="int">0</LRDoor><RFDoor type="int">0</RFDoor><RRDoor
+type="int">0
+</RRDoor>

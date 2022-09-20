@@ -1,32 +1,28 @@
 package com.common.xui.widget.tabbar;
 
+import static android.os.Build.VERSION_CODES.JELLY_BEAN;
+
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
-import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import com.common.xui.R;
 import com.common.xui.XUI;
-import com.common.xui.utils.ColorUtils;
 import com.common.xui.utils.ResUtils;
 import com.common.xui.utils.ThemeUtils;
-import com.common.xui.utils.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -36,11 +32,8 @@ import java.util.Map;
 
 import io.github.inflationx.calligraphy3.HasTypeface;
 
-import static android.os.Build.VERSION_CODES.JELLY_BEAN;
-
 /**
  * 选项卡控制器（单选）（RadioButton实现）
- *
  */
 public class TabControlView extends RadioGroup implements HasTypeface {
 
@@ -304,7 +297,6 @@ public class TabControlView extends RadioGroup implements HasTypeface {
 //        selected.setCornerRadii(radiis);
         setRadioButtonBackground(rb, unselected, selected);
     }
-
 
 
     /**

@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview.strategy;
 
 import android.content.Context;
@@ -9,6 +8,7 @@ import androidx.annotation.NonNull;
 
 /**
  * 图片加载策略
+ *
  * @since 2019-07-26 00:06
  */
 public interface IImageLoadStrategy {

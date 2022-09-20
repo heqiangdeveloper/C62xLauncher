@@ -17,7 +17,6 @@ import com.common.xui.utils.DensityUtils;
 /**
  * 最后一个列表项的分割线不画，可自定义分割线的样式
  *
- * 
  * @since 2019-08-11 18:54
  */
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
@@ -78,7 +77,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     /**
      * 自定义分割线
      *
-     * @param context 上下文
+     * @param context       上下文
      * @param orientation   列表方向
      * @param dividerHeight 分割线高度
      * @param dividerColor  分割线颜色
@@ -106,7 +105,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     /**
      * 自定义分割线
      *
-     * @param context 上下文
+     * @param context       上下文
      * @param orientation   列表方向
      * @param dividerHeight 分割线高度
      * @param dividerColor  分割线颜色

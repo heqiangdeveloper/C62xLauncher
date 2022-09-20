@@ -1,17 +1,17 @@
-
 package com.common.xui.widget.grouplist;
 
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import androidx.annotation.IntDef;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+
+import androidx.annotation.IntDef;
 
 import com.common.xui.R;
 import com.common.xui.utils.ThemeUtils;
@@ -78,7 +78,6 @@ import java.lang.annotation.RetentionPolicy;
  *                 })
  *                 .addTo(groupListView);
  * </pre>
- *
  *
  * @since 2019/1/3 上午10:24
  */

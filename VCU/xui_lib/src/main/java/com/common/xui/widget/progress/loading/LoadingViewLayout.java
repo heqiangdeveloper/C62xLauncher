@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,6 @@ import com.common.xui.utils.ThemeUtils;
 /**
  * 自定义加载布局
  *
- * 
  * @since 2019/1/11 下午3:58
  */
 public class LoadingViewLayout extends LinearLayout implements IMessageLoader {
@@ -72,6 +71,7 @@ public class LoadingViewLayout extends LinearLayout implements IMessageLoader {
 
     /**
      * 加载控件
+     *
      * @param context
      */
     private void initView(Context context) {
@@ -95,6 +95,7 @@ public class LoadingViewLayout extends LinearLayout implements IMessageLoader {
 
     /**
      * 初始化属性
+     *
      * @param context
      * @param attrs
      */
@@ -112,6 +113,7 @@ public class LoadingViewLayout extends LinearLayout implements IMessageLoader {
 
     /**
      * 更新提示信息
+     *
      * @param tipMessage
      * @return
      */
@@ -130,6 +132,7 @@ public class LoadingViewLayout extends LinearLayout implements IMessageLoader {
 
     /**
      * 更新提示信息
+     *
      * @param tipMessageId
      * @return
      */
@@ -140,6 +143,7 @@ public class LoadingViewLayout extends LinearLayout implements IMessageLoader {
 
     /**
      * 设置loading的图标
+     *
      * @param icon
      * @return
      */
@@ -166,6 +170,7 @@ public class LoadingViewLayout extends LinearLayout implements IMessageLoader {
 
     /**
      * 设置loading的图标
+     *
      * @param iconResId
      * @return
      */
@@ -219,11 +224,11 @@ public class LoadingViewLayout extends LinearLayout implements IMessageLoader {
     public void setLoadingCancelListener(LoadingCancelListener listener) {
     }
 
-    public String getString(int resId){
+    public String getString(int resId) {
         return getContext().getResources().getString(resId);
     }
 
-    public Drawable getDrawable(int resId){
+    public Drawable getDrawable(int resId) {
         return ResUtils.getDrawable(getContext(), resId);
     }
 }

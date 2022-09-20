@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,6 @@ import com.common.xui.widget.dialog.strategy.impl.MaterialDialogStrategy;
 
 /**
  * 对话框加载者
- *
  *
  * @since 2018/11/15 上午12:16
  */
@@ -200,12 +199,12 @@ public class DialogLoader implements IDialogStrategy {
      * 显示带单选项的Dialog
      *
      * @param context
-     * @param title          标题
-     * @param items          选项集合
-     * @param selectedIndex  默认已选项
-     * @param listener       选项点击监听
-     * @param submitText     确认按钮
-     * @param cancelText     取消按钮
+     * @param title         标题
+     * @param items         选项集合
+     * @param selectedIndex 默认已选项
+     * @param listener      选项点击监听
+     * @param submitText    确认按钮
+     * @param cancelText    取消按钮
      * @return
      */
     @Override
@@ -217,12 +216,12 @@ public class DialogLoader implements IDialogStrategy {
      * 显示带单选项的Dialog
      *
      * @param context
-     * @param title          标题
-     * @param itemsId        选项集合的资源id
-     * @param selectedIndex  默认已选项
-     * @param listener       选项点击监听
-     * @param submitText     确认按钮
-     * @param cancelText     取消按钮
+     * @param title         标题
+     * @param itemsId       选项集合的资源id
+     * @param selectedIndex 默认已选项
+     * @param listener      选项点击监听
+     * @param submitText    确认按钮
+     * @param cancelText    取消按钮
      * @return
      */
     @Override

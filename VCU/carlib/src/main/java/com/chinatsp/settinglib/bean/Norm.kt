@@ -21,5 +21,5 @@ data class Norm(
     val on: Int = 1,
     val off: Int = 2,
     val origin: Origin = Origin.CABIN,
-    val signal: Int = -1
+    val signal: Int = -1,
 )

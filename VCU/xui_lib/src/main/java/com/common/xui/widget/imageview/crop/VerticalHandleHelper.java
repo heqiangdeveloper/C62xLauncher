@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview.crop;
 
 import android.graphics.Rect;
@@ -52,15 +51,15 @@ class VerticalHandleHelper extends HandleHelper {
 
         // Check if we have gone out of bounds on the top or bottom, and fix.
         if (Edge.TOP.isOutsideMargin(imageRect, snapRadius) && !mEdge.isNewRectangleOutOfBounds(Edge.TOP,
-                                                                                                imageRect,
-                                                                                                targetAspectRatio)) {
+                imageRect,
+                targetAspectRatio)) {
             final float offset = Edge.TOP.snapToRect(imageRect);
             Edge.BOTTOM.offset(-offset);
             mEdge.adjustCoordinate(targetAspectRatio);
         }
         if (Edge.BOTTOM.isOutsideMargin(imageRect, snapRadius) && !mEdge.isNewRectangleOutOfBounds(Edge.BOTTOM,
-                                                                                                   imageRect,
-                                                                                                   targetAspectRatio)) {
+                imageRect,
+                targetAspectRatio)) {
             final float offset = Edge.BOTTOM.snapToRect(imageRect);
             Edge.TOP.offset(-offset);
             mEdge.adjustCoordinate(targetAspectRatio);

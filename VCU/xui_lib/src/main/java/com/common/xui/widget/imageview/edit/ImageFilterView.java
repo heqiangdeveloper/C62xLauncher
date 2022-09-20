@@ -1,24 +1,4 @@
-
 package com.common.xui.widget.imageview.edit;
-
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.media.effect.Effect;
-import android.media.effect.EffectContext;
-import android.media.effect.EffectFactory;
-import android.opengl.GLES20;
-import android.opengl.GLSurfaceView;
-import android.opengl.GLUtils;
-import android.os.Handler;
-import android.os.Looper;
-import android.util.AttributeSet;
-import android.util.Log;
-
-import java.util.Map;
-
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
 
 import static android.media.effect.EffectFactory.EFFECT_AUTOFIX;
 import static android.media.effect.EffectFactory.EFFECT_BLACKWHITE;
@@ -44,9 +24,27 @@ import static android.media.effect.EffectFactory.EFFECT_TINT;
 import static android.media.effect.EffectFactory.EFFECT_VIGNETTE;
 import static com.common.xui.widget.imageview.edit.PhotoFilter.NONE;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.media.effect.Effect;
+import android.media.effect.EffectContext;
+import android.media.effect.EffectFactory;
+import android.opengl.GLES20;
+import android.opengl.GLSurfaceView;
+import android.opengl.GLUtils;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.AttributeSet;
+import android.util.Log;
+
+import java.util.Map;
+
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
+
 /**
  * 滤镜处理
- *
  */
 class ImageFilterView extends GLSurfaceView implements GLSurfaceView.Renderer {
 

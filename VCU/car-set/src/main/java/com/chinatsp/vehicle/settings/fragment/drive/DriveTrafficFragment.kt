@@ -40,7 +40,7 @@ class DriveTrafficFragment : BaseFragment<CombineViewModel, DriveTrafficFragment
 
     private fun initDetailsClickListener() {
         binding.driveSlaDetails.setOnClickListener {
-            updateHintMessage(R.string.drive_sla_title, R.string.drive_sla_content)
+            updateHintMessage(R.string.drive_sla_title, R.string.tsr_details)
         }
     }
 

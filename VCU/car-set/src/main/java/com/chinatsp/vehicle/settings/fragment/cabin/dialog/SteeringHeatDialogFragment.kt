@@ -1,6 +1,9 @@
 package com.chinatsp.vehicle.settings.fragment.cabin.dialog
 
 import android.os.Bundle
+import android.view.View
+import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatImageView
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.cabin.WheelManager
 import com.chinatsp.settinglib.optios.Progress
@@ -11,6 +14,8 @@ import com.chinatsp.vehicle.settings.databinding.SteeringHeatingDialogFragmentBi
 import com.chinatsp.vehicle.settings.vm.cabin.SteeringViewModel
 import com.common.library.frame.base.BaseDialogFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
+import com.common.xui.widget.picker.VSeekBar
+import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -38,8 +43,8 @@ class SteeringHeatDialogFragment :
     }
 
     private fun setRangeListener() {
-        binding.steeringHeatingStartTemperatureSeekBar.setOnSeekBarListener { seekBar, newValue ->
-            manager.doSetVolume(Progress.STEERING_ONSET_TEMPERATURE, newValue)
+        binding.steeringHeatingStartTemperatureSeekBar.setOnSeekBarListener { _, value ->
+            manager.doSetVolume(Progress.STEERING_ONSET_TEMPERATURE, value)
         }
     }
 
@@ -68,6 +73,8 @@ class SteeringHeatDialogFragment :
 
     private fun initSwitchOption() {
         initSwitchOption(SwitchNode.DRIVE_WHEEL_AUTO_HEAT, viewModel.swhFunction)
+        checkDisableOtherDiv(binding.steeringAutomaticHeatingSwitch,
+            binding.steeringAutomaticHeatingSwitch.isChecked)
     }
 
     private fun addSwitchLiveDataListener() {
@@ -88,8 +95,52 @@ class SteeringHeatDialogFragment :
     }
 
     private fun setSwitchListener() {
-        binding.steeringAutomaticHeatingSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            doUpdateSwitchOption(SwitchNode.DRIVE_WHEEL_AUTO_HEAT, buttonView, isChecked)
+        binding.steeringAutomaticHeatingSwitch.let {
+            it.setOnCheckedChangeListener { buttonView, isChecked ->
+                doUpdateSwitchOption(SwitchNode.DRIVE_WHEEL_AUTO_HEAT, buttonView, isChecked)
+                checkDisableOtherDiv(it, isChecked)
+            }
+        }
+    }
+
+    private fun checkDisableOtherDiv(swb: SwitchButton, status: Boolean) {
+        if (swb == binding.steeringAutomaticHeatingSwitch) {
+            val childCount = binding.container.childCount
+            val intRange = 0 until childCount
+            intRange.forEach {
+                val childAt = binding.container.getChildAt(it)
+                if (null != childAt && childAt != binding.wheelAutomaticHeating) {
+                    childAt.alpha = if (status) 1.0f else 0.7f
+                    updateViewEnable(childAt, status)
+                }
+            }
+        }
+    }
+
+    private fun updateViewEnable(view: View?, status: Boolean) {
+        if (null == view) {
+            return
+        }
+        if (view is SwitchButton) {
+            view.isEnabled = status
+            return
+        }
+        if (view is AppCompatImageView) {
+            view.isEnabled = status
+            return
+        }
+        if (view is TabControlView) {
+            view.updateEnable(status)
+            return
+        }
+        if (view is VSeekBar) {
+            view.isEnabled = status
+            return
+        }
+        if (view is ViewGroup) {
+            val childCount = view.childCount
+            val intRange = 0 until childCount
+            intRange.forEach { updateViewEnable(view.getChildAt(it), status) }
         }
     }
 

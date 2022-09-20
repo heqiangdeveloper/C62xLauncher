@@ -7,7 +7,6 @@ import android.widget.TextView;
 /**
  * 简单的ViewHolder
  *
- *
  * @since 2019/1/14 下午10:16
  */
 public class ViewHolder {

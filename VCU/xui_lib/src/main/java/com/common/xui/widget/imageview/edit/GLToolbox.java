@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview.edit;
 
 import android.opengl.GLES20;

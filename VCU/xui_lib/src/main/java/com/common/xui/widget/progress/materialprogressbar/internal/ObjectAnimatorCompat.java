@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,8 @@ import android.util.Property;
  */
 public class ObjectAnimatorCompat {
 
-    private ObjectAnimatorCompat() {}
+    private ObjectAnimatorCompat() {
+    }
 
     /**
      * Constructs and returns an ObjectAnimator that animates between color values. A single
@@ -37,11 +38,11 @@ public class ObjectAnimatorCompat {
      * along the way, and an ending value (these values will be distributed evenly across
      * the duration of the animation).
      *
-     * @param target The object whose property is to be animated. This object should have a public
-     *               method on it called {@code setName()}, where {@code name} is the value of the
-     *               {@code propertyName} parameter.
+     * @param target       The object whose property is to be animated. This object should have a public
+     *                     method on it called {@code setName()}, where {@code name} is the value of the
+     *                     {@code propertyName} parameter.
      * @param propertyName The name of the property being animated.
-     * @param values A set of values that the animation will animate between over time.
+     * @param values       A set of values that the animation will animate between over time.
      * @return An ObjectAnimator object that is set up to animate between the given values.
      */
     public static ObjectAnimator ofArgb(Object target, String propertyName, int... values) {
@@ -58,9 +59,9 @@ public class ObjectAnimatorCompat {
      * along the way, and an ending value (these values will be distributed evenly across
      * the duration of the animation).
      *
-     * @param target The object whose property is to be animated.
+     * @param target   The object whose property is to be animated.
      * @param property The property being animated.
-     * @param values A set of values that the animation will animate between over time.
+     * @param values   A set of values that the animation will animate between over time.
      * @return An ObjectAnimator object that is set up to animate between the given values.
      */
     public static <T> ObjectAnimator ofArgb(T target, Property<T, Integer> property,
@@ -78,13 +79,13 @@ public class ObjectAnimatorCompat {
      * that are set to separate properties designated by {@code xPropertyName} and
      * {@code yPropertyName}.
      *
-     * @param target The object whose properties are to be animated. This object should have public
-     *               methods on it called {@code setNameX()} and {@code setNameY}, where
-     *               {@code nameX} and {@code nameY} are the value of the {@code xPropertyName} and
-     *               {@code yPropertyName} parameters, respectively.
+     * @param target        The object whose properties are to be animated. This object should have public
+     *                      methods on it called {@code setNameX()} and {@code setNameY}, where
+     *                      {@code nameX} and {@code nameY} are the value of the {@code xPropertyName} and
+     *                      {@code yPropertyName} parameters, respectively.
      * @param xPropertyName The name of the property for the x coordinate being animated.
      * @param yPropertyName The name of the property for the y coordinate being animated.
-     * @param path The {@code Path} to animate values along.
+     * @param path          The {@code Path} to animate values along.
      * @return An ObjectAnimator object that is set up to animate along {@code path}.
      */
     public static ObjectAnimator ofFloat(Object target, String xPropertyName, String yPropertyName,
@@ -101,10 +102,10 @@ public class ObjectAnimatorCompat {
      * {@code (x, y)} together to follow the line. In this variation, the coordinates are floats
      * that are set to separate properties, {@code xProperty} and {@code yProperty}.
      *
-     * @param target The object whose properties are to be animated.
+     * @param target    The object whose properties are to be animated.
      * @param xProperty The property for the x coordinate being animated.
      * @param yProperty The property for the y coordinate being animated.
-     * @param path The {@code Path} to animate values along.
+     * @param path      The {@code Path} to animate values along.
      * @return An ObjectAnimator object that is set up to animate along {@code path}.
      */
     public static <T> ObjectAnimator ofFloat(T target, Property<T, Float> xProperty,
@@ -122,13 +123,13 @@ public class ObjectAnimatorCompat {
      * that are set to separate properties designated by {@code xPropertyName} and
      * {@code yPropertyName}.
      *
-     * @param target The object whose properties are to be animated. This object should have public
-     *               methods on it called {@code setNameX()} and {@code setNameY}, where
-     *               {@code nameX} and {@code nameY} are the value of {@code xPropertyName} and
-     *               {@code yPropertyName} parameters, respectively.
+     * @param target        The object whose properties are to be animated. This object should have public
+     *                      methods on it called {@code setNameX()} and {@code setNameY}, where
+     *                      {@code nameX} and {@code nameY} are the value of {@code xPropertyName} and
+     *                      {@code yPropertyName} parameters, respectively.
      * @param xPropertyName The name of the property for the x coordinate being animated.
      * @param yPropertyName The name of the property for the y coordinate being animated.
-     * @param path The {@code Path} to animate values along.
+     * @param path          The {@code Path} to animate values along.
      * @return An ObjectAnimator object that is set up to animate along {@code path}.
      */
     public static ObjectAnimator ofInt(Object target, String xPropertyName, String yPropertyName,
@@ -145,10 +146,10 @@ public class ObjectAnimatorCompat {
      * {@code (x, y)} together to follow the line. In this variation, the coordinates are integers
      * that are set to separate properties, {@code xProperty} and {@code yProperty}.
      *
-     * @param target The object whose properties are to be animated.
+     * @param target    The object whose properties are to be animated.
      * @param xProperty The property for the x coordinate being animated.
      * @param yProperty The property for the y coordinate being animated.
-     * @param path The {@code Path} to animate values along.
+     * @param path      The {@code Path} to animate values along.
      * @return An ObjectAnimator object that is set up to animate along {@code path}.
      */
     public static <T> ObjectAnimator ofInt(T target, Property<T, Integer> xProperty,

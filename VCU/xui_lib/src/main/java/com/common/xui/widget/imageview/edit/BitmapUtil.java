@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview.edit;
 
 import android.graphics.Bitmap;
@@ -12,7 +11,6 @@ import javax.microedition.khronos.opengles.GL10;
 
 /**
  * 图片工具类
- *
  */
 class BitmapUtil {
     /**

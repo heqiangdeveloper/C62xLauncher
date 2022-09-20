@@ -3,6 +3,7 @@ package com.chinatsp.vehicle.settings.fragment.cabin
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.ISwitchManager
@@ -56,10 +57,10 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
 
     private fun initDetailsClickListener() {
         binding.cabinOtherTrailerRemindDetails.setOnClickListener {
-            showPopWindow(R.string.cabin_other_trailer_remind_content,it)
+            showPopWindow(R.string.cabin_other_trailer_remind_content, it)
         }
         binding.cabinOtherBatteryOptimizationDetails.setOnClickListener {
-            showPopWindow(R.string.cabin_other_battery_optimization_content,it)
+            showPopWindow(R.string.cabin_other_battery_optimization_content, it)
         }
     }
 
@@ -141,10 +142,36 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
             }
         }
     }
-    private fun showPopWindow(id:Int, view: View){
-        val popWindow = PopWindow(activity,R.layout.pop_window)
-        var text: TextView = popWindow.findViewById(R.id.content) as TextView
+
+    private fun showPopWindow(id: Int, view: View) {
+        val popWindow: PopWindow
+        if (view.id == binding.cabinOtherTrailerRemindDetails.id) {
+            popWindow = PopWindow(activity,
+                R.layout.pop_window,
+                activity?.let {
+                    AppCompatResources.getDrawable(it,
+                        R.drawable.popup_bg_qipao172_7)
+                })
+            popWindow.showDownLift(view, 30, -80)
+        } else if (view.id == binding.cabinOtherBatteryOptimizationDetails.id) {
+            popWindow = PopWindow(activity,
+                R.layout.pop_window,
+                activity?.let {
+                    AppCompatResources.getDrawable(it,
+                        R.drawable.popup_bg_qipao172_8)
+                })
+            popWindow.showDownLift(view, 30, -80)
+        } else {
+            popWindow = PopWindow(activity,
+                R.layout.pop_window,
+                activity?.let {
+                    AppCompatResources.getDrawable(it,
+                        R.drawable.popup_bg_qipao172_1)
+                })
+            popWindow.showDown(view)
+        }
+        val text: TextView = popWindow.findViewById(R.id.content) as TextView
         text.text = resources.getString(id)
-        popWindow.showDown(view)
+
     }
 }

@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import android.view.animation.Animation;
 
 /**
  * 简易动画监听
- *
  *
  * @since 2018/12/27 下午5:33
  */

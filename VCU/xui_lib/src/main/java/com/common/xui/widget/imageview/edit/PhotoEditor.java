@@ -1,4 +1,3 @@
-
 package com.common.xui.widget.imageview.edit;
 
 import android.Manifest;
@@ -33,7 +32,6 @@ import java.util.List;
 
 /**
  * 图片编辑
- *
  *
  * @since 2019-10-28 10:08
  */

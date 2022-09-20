@@ -58,7 +58,6 @@ public class MiniLoadingDialog extends BaseDialog implements IMessageLoader {
     }
 
 
-
     /**
      * 更新提示信息
      *
