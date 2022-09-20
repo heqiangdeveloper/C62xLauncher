@@ -179,6 +179,8 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
         mIvIQuTingNextBtn.setOnClickListener(this);
         mIvIQuTingLike.setOnClickListener(this);
         mIvCardIQuTingButton.setOnClickListener(this);
+        //点击空白处跳转至爱趣听
+        setOnClickListener(this);
 
         NetworkStateReceiver.getInstance().registerObserver(networkObserver);
     }
@@ -825,6 +827,9 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
             mContentId = TYPE_RANKSONGS;
             editor.putInt(IqutingConfigs.CURRENTTAB,TYPE_RANKSONGS);
             editor.commit();
+        }else {
+            //打开爱趣听界面
+            FlowPlayControl.getInstance().startPlayActivity(context);
         }
     }
 
