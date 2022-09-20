@@ -22,6 +22,7 @@ import com.chinatsp.widgetcards.home.smallcard.CardInnerListHelper;
 import com.chinatsp.widgetcards.home.smallcard.OnExpandCardInCard;
 import com.chinatsp.widgetcards.manager.CardManager;
 import com.chinatsp.widgetcards.manager.Events;
+import com.iflytek.autofly.weather.entity.WeatherInfo;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -68,9 +69,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     public void bind(int position, LauncherCard cardEntity) {
         mLauncherCard = cardEntity;
         mHideTitle = checkNeedHideTitle();
-        int smallCardPosition = ExpandStateManager.getInstance().getSmallCardPosition();
-        boolean isSmall = (smallCardPosition == position);
-        EasyLog.i(TAG, "bind smallCardPosition:" + smallCardPosition + " , position:" + position);
+
         resetExpandIcon(cardEntity);
         setTitle(cardEntity.getName());
         if (mOnClickListener == null) {
@@ -93,11 +92,19 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
             }
         });
         itemView.setOnTouchListener(mOnTouchListener);
+
+        int smallCardPosition = ExpandStateManager.getInstance().getSmallCardPosition();
+        boolean isSmall = (smallCardPosition == position);
+        EasyLog.i(TAG, "bind smallCardPosition:" + smallCardPosition + " , position:" + position);
 //        if (isSmall) {
 //            showSmallCardsInnerList();
 //        } else {
 //            hideSmallCardsInnerList();
 //        }
+        if (!ExpandStateManager.getInstance().getExpandState() && mExpandState) {
+            changeExpandState(false);
+        }
+        hideSmallCardsInnerList();
     }
 
     private boolean checkNeedHideTitle() {
@@ -157,10 +164,12 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
             if (adapter.isIncludeDrawer()) {
                 position++;
             }
-            LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
-            if (layoutManager != null) {
-                layoutManager.scrollToPositionWithOffset(position, 0);
-            }
+//            LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
+//            CardScrollUtil.scroll(layoutManager, position);
+
+//            if (layoutManager != null) {
+//                layoutManager.scrollToPositionWithOffset(position, 0);
+//            }
         }
     }
 
@@ -307,7 +316,8 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
                 scrolledInExpand = true;
                 if (position > 2) {
                     EasyLog.d(TAG, "dealExpandScroll , 位于屏幕最右侧时,  列表头需要移动到其左侧1位");
-                    layoutManager.scrollToPositionWithOffset(position - 1, 0);
+//                    layoutManager.scrollToPositionWithOffset(position - 1, 0);
+                    CardScrollUtil.scroll(layoutManager, position-1);
                 }
             }
         } else {
@@ -374,10 +384,10 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
 //                EventBus.getDefault().post(createExpandEvent(cardEntity));
-                dealExpandScroll();
                 EasyLog.d(TAG, "ExpandAnimation end: " + mLauncherCard.getName());
             }
         });
+        dealExpandScroll();
         valueAnimator.start();
     }
 

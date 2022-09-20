@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="260px"
+    android:layout_height="329px"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/drawer_item_bg_selector"
+    >
+
+    <ImageView
+        android:id="@+id/ivIqutingDrawerSongItemCover"
+        android:layout_width="260px"
+        android:layout_height="260px"
+        android:background="#995566"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <ImageView
+        android:id="@+id/ivIqutingDrawerSongItemPlayOrPause"
+        android:src="@drawable/card_iquting_icon_circle_play"
+        android:layout_width="44px"
+        android:layout_height="44px"
+        app:layout_constraintStart_toStartOf="@id/ivIqutingDrawerSongItemCover"
+        app:layout_constraintBottom_toBottomOf="@id/ivIqutingDrawerSongItemCover"
+        android:layout_marginStart="12px"
+        android:layout_marginBottom="12px"
+        />
+
+    <TextView
+        android:layout_width="236px"
+        android:layout_height="33px"
+        android:ellipsize="end"
+        android:text="歌单的名字过长显示牵挂是幸福和压力"
+        style="@style/CardLv4TextView"
+        android:maxLines="1"
+        android:gravity="start|center_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="18px"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>
