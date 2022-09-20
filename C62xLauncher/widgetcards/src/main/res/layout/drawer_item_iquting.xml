@@ -25,6 +25,7 @@
         />
 
     <TextView
+        android:id="@+id/tvDrawerIqutingLogin"
         android:layout_width="match_parent"
         android:layout_height="329px"
         android:layout_marginTop="16px"
@@ -33,18 +34,17 @@
         android:text="@string/iquting_unlogin_slogan"
         style="@style/CardLv4TextView"
         android:background="@drawable/drawer_item_bg_selector"
+        android:visibility="gone"
         />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcvDrawerIqutingLogin"
         android:layout_width="match_parent"
         android:layout_height="329px"
         android:orientation="horizontal"
         android:layout_marginTop="16px"
-        android:padding="34px"
-        android:background="@drawable/drawer_item_bg_selector"
         app:layout_constraintTop_toBottomOf="@id/tvTitle"
-        app:layout_constraintStart_toStartOf="parent"
-        android:visibility="gone"
+        android:visibility="visible"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -125,7 +125,6 @@ public class CardEditorFragment extends BaseFragment implements EditorContract{
         @Override
         public void onClick(View v) {
             if (mBtnFinish == v) {
-                requireActivity().finish();
                 okPage();
             } else if (mBtnCancel == v) {
                 cancelPage();

@@ -8,14 +8,13 @@ import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Handler;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.chinatsp.drawer.DrawerCreator;
 import com.chinatsp.widgetcards.home.CardIndicator;
+import com.chinatsp.widgetcards.home.CardScrollUtil;
 import com.chinatsp.widgetcards.home.ExpandStateManager;
 import com.chinatsp.widgetcards.manager.CardManager;
 import com.chinatsp.widgetcards.home.HomeCardsAdapter;
@@ -47,6 +46,7 @@ public class CardHomeFragment extends BaseFragment {
     @Override
     protected void initViews(View rootView) {
         mCardDividerWidth = getResources().getDimensionPixelOffset(R.dimen.card_divider_width);
+        CardScrollUtil.setDivider(mCardDividerWidth);
         initObservers();
         initCardsRcv(rootView);
         mCardIndicator = rootView.findViewById(R.id.cardIndicator);
@@ -64,6 +64,7 @@ public class CardHomeFragment extends BaseFragment {
                 return false;
             }
         });
+        ExpandStateManager.getInstance().setExpand(false);
     }
 
     @Override
@@ -136,6 +137,7 @@ public class CardHomeFragment extends BaseFragment {
         public void onChanged(List<LauncherCard> baseCardEntities) {
             EasyLog.d(TAG, "mHomeCardsOb  onChanged : " + baseCardEntities);
             mCardsAdapter.setCardEntityList(baseCardEntities);
+            ExpandStateManager.getInstance().setExpand(false);
             mCardsAdapter.notifyDataSetChanged();
             if (mCardsAdapter.isIncludeDrawer()) {
                 scrollToFirstCard();
@@ -148,9 +150,10 @@ public class CardHomeFragment extends BaseFragment {
      */
     private void scrollToFirstCard() {
         LinearLayoutManager layoutManager = (LinearLayoutManager) mRcvCards.getLayoutManager();
-        if (layoutManager != null) {
-            layoutManager.scrollToPositionWithOffset(1, -mCardDividerWidth / 2);
-        }
+//        if (layoutManager != null) {
+//            layoutManager.scrollToPositionWithOffset(1, -mCardDividerWidth / 2);
+//        }
+        CardScrollUtil.scroll(layoutManager, 1);
     }
 
     private void initCardsRcv(View rootView) {
