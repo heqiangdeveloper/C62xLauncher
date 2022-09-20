@@ -92,6 +92,13 @@ enum class RadioNode(
 
     /**
      * 驾驶辅助-智能巡航-前车驶离提示
+     * get -> Response for OBJ_DETECTION
+     *        0x0: Inactive
+     *        0x1: Detect warning
+     *        0x2: Disappare warning
+     *        0x3: Detect and disappear warning(default)
+     *        0x4: Warning off
+     *        0x5~0x7: Reserved
      * set -> object distingguish and disappear switch,if not set'OBJ_DETECTION',
      *       the value of signal is 0x0(inactive)[0x1,0,0x0,0x5]
      *       0x0: Inactive;  0x1: Detect warning; 0x2: Disappare warning
@@ -100,7 +107,7 @@ enum class RadioNode(
     ADAS_LIMBER_LEAVE(
         get = RNorm(
             values = intArrayOf(0x1, 0x2, 0x3),
-            signal = -1//暂时没有找到获取信号
+            signal = CarCabinManager.ID_OBJ_DETECTION_RES
         ),
         set = RNorm(
             values = intArrayOf(0x1, 0x2, 0x3),
@@ -135,7 +142,11 @@ enum class RadioNode(
 
     /**
      * 驾驶辅助-车道辅助-报警方式
-     * get mcu -> LDW_ENABLE_RESPONSE (暂缺中间件信号)
+     * get mcu -> Response for LDW enable swtich
+     *        0x0: Inactive
+     *        0x1: UI warning
+     *        0x2: UI and SPEAKER warning
+     *        0x3: OFF
      * set -> LDW/LKS/TJAICA enable switch,if not set 'LDW_LKS_TJAICA_SWITCH',
      *       the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
      *       0x0: Inacitve; 0x1: UI warning; 0x2: UI and SPEAKER warning(default); 0x3: OFF
@@ -143,7 +154,7 @@ enum class RadioNode(
     ADAS_LDW_STYLE(
         get = RNorm(
             values = intArrayOf(0x1, 0x2),
-            signal = -1
+            signal = CarCabinManager.ID_LDW_ENABLE_RESPONSE
         ),
         set = RNorm(
             values = intArrayOf(0x1, 0x2),
@@ -252,13 +263,13 @@ enum class RadioNode(
 
     /**
      * 灯光设置--灯光--外部灯光仪式感
-     * set -> 0x1: Mode 1; 0x2: Mode 2; 0x3: Mode 3
-     * get -> 0x0:OFF 0x1:Unlock Ceremoial Sense 0x2:Lock Ceremoial Sense 0x3:Panic Ceremoial Sense 0x4~0x7:reserved
+     * set ->0x1: Mode 1    0x2: Mode 2        0x3: Mode 3
+     * get -> 左侧大灯模式选择反馈  0x0: OFF; 0x1: mode 1; 0x2: mode 2; 0x3: mode 3
      */
     LIGHT_CEREMONY_SENSE(
         get = RNorm(
             values = intArrayOf(0x1, 0x2, 0x3),
-            signal = CarCabinManager.ID_BCM_CERE_SENSE_CMD
+            signal = CarCabinManager.ID_LCFL_MODE_STATUS
         ),
         set = RNorm(
             values = intArrayOf(0x1, 0x2, 0x3),

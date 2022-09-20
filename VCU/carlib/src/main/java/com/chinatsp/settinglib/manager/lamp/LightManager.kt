@@ -41,6 +41,7 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
                 add(RadioNode.LIGHT_DELAYED_OUT.get.signal)
                 add(RadioNode.LIGHT_FLICKER.get.signal)
                 add(RadioNode.LIGHT_CEREMONY_SENSE.get.signal)
+                add(SwitchNode.LIGHT_CEREMONY_SENSE.get.signal)
             }
             put(Origin.CABIN, cabinSet)
         }
@@ -52,6 +53,13 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
 //            val value = readIntProperty(node.get.signal, node.get.origin)
 //            doUpdateSwitchValue(node, this, value)
 //        }
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+        }
+    }
+
+    private val lightCeremonySenseSwitch: AtomicBoolean by lazy {
+        val node = SwitchNode.LIGHT_CEREMONY_SENSE
         return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
@@ -207,6 +215,9 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
             SwitchNode.LIGHT_OUTSIDE_MEET -> {
                 outsideMeetLight.get()
             }
+            SwitchNode.LIGHT_CEREMONY_SENSE -> {
+                lightCeremonySenseSwitch.get()
+            }
             else -> false
         }
     }
@@ -218,6 +229,9 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
             }
             SwitchNode.LIGHT_OUTSIDE_MEET -> {
                 writeProperty(node, status, outsideMeetLight)
+            }
+            SwitchNode.LIGHT_CEREMONY_SENSE -> {
+                writeProperty(node, status, lightCeremonySenseSwitch)
             }
             else -> false
         }
@@ -236,6 +250,9 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
             }
             SwitchNode.LIGHT_INSIDE_MEET.get.signal -> {
                 onSwitchChanged(SwitchNode.LIGHT_INSIDE_MEET, insideMeetLight, property)
+            }
+            SwitchNode.LIGHT_CEREMONY_SENSE.get.signal -> {
+                onSwitchChanged(SwitchNode.LIGHT_CEREMONY_SENSE, lightCeremonySenseSwitch, property)
             }
             RadioNode.LIGHT_DELAYED_OUT.get.signal -> {
                 onRadioChanged(RadioNode.LIGHT_DELAYED_OUT, lightDelayOut, property)

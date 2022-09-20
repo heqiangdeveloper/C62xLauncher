@@ -157,7 +157,6 @@
                         <com.common.xui.widget.button.switchbutton.SwitchButton
                             android:id="@+id/light_ceremony_sense_switch"
                             style="@style/switch_button_style"
-                            android:checked="true"
                             android:layout_marginTop="@dimen/x12"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />

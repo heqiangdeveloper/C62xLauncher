@@ -122,35 +122,15 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
 
     private fun setRadioListener() {
         binding.lightCeremonySenseRadio.let {
-            if (binding.lightCeremonySenseSwitch.isChecked) {
-                it.setOnTabSelectionChangedListener { title, value ->
-                    doUpdateRadio(RadioNode.LIGHT_CEREMONY_SENSE,
-                        value,
-                        viewModel.ceremonySense,
-                        it)
-                }
+            it.setOnTabSelectionChangedListener { _, value ->
+                doUpdateRadio(RadioNode.LIGHT_CEREMONY_SENSE, value, viewModel.ceremonySense, it)
             }
         }
         binding.lightDelayBlackOutRadio.let {
             it.setOnTabSelectionChangedListener { _, value ->
-                doUpdateRadio(RadioNode.LIGHT_DELAYED_OUT, value, viewModel.lightOutDelayed, it)
-                if (value.equals("1")) {
-                    binding.homeOpenIv.visibility = View.VISIBLE
-                    animationHomeClose.start(
-                        false,
-                        50,
-                        object : AnimationDrawable.AnimationLisenter {
-                            override fun startAnimation() {
-                            }
-
-                            override fun endAnimation() {
-                                binding.homeOpenIv.visibility = View.GONE
-                            }
-                        })
-                } else {
-                    binding.homeOpenIv.visibility = View.VISIBLE
-                    animationHomeOpen.start(false, 50, null)
-                }
+                val node = RadioNode.LIGHT_DELAYED_OUT
+                doUpdateRadio(node, value, viewModel.lightOutDelayed, it)
+                doAnimationFollowHomeRadio(node, value)
             }
         }
         binding.lightFlickerRadio.let {
@@ -172,14 +152,31 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
                     binding.turnSignalIv1.visibility = View.GONE
                     setTurnAnimation(animationTurnSignal, value)
                 }
-
             }
         }
+    }
+
+    private fun doAnimationFollowHomeRadio(node: RadioNode, value: String) {
+        val isOn = value.toInt() != node.set.values[0]
+        binding.homeOpenIv.visibility = View.VISIBLE
+        if (isOn) {
+            animationHomeOpen.start(false, 50, null)
+            return
+        }
+        animationHomeClose.start(false, 50, object : AnimationDrawable.AnimationLisenter {
+            override fun startAnimation() {
+            }
+
+            override fun endAnimation() {
+                binding.homeOpenIv.visibility = View.GONE
+            }
+        })
     }
 
     private fun initSwitchOption() {
         initSwitchOption(SwitchNode.LIGHT_OUTSIDE_MEET, viewModel.outsideLightMeet)
         initSwitchOption(SwitchNode.LIGHT_INSIDE_MEET, viewModel.insideLightMeet)
+        initSwitchOption(SwitchNode.LIGHT_CEREMONY_SENSE, viewModel.ceremonySenseSwitch)
     }
 
     private fun addSwitchLiveDataListener() {
@@ -189,12 +186,17 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
         viewModel.insideLightMeet.observe(this) {
             doUpdateSwitch(SwitchNode.LIGHT_INSIDE_MEET, it)
         }
+        viewModel.ceremonySenseSwitch.observe(this) {
+            doUpdateSwitch(SwitchNode.LIGHT_CEREMONY_SENSE, it)
+            checkDisableOtherDiv(binding.lightCeremonySenseSwitch, it)
+        }
     }
 
     override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
         return when (node) {
             SwitchNode.LIGHT_OUTSIDE_MEET -> binding.lightOutsideMeetSwitch
             SwitchNode.LIGHT_INSIDE_MEET -> binding.lightInsideMeetSwitch
+            SwitchNode.LIGHT_CEREMONY_SENSE -> binding.lightCeremonySenseSwitch
             else -> null
         }
     }
@@ -217,6 +219,10 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
     }
 
     private fun setSwitchListener() {
+        binding.lightCeremonySenseSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            doUpdateSwitchOption(SwitchNode.LIGHT_CEREMONY_SENSE, buttonView, isChecked)
+            checkDisableOtherDiv(buttonView as SwitchButton, buttonView.isChecked)
+        }
         binding.lightOutsideMeetSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.LIGHT_OUTSIDE_MEET, buttonView, isChecked)
         }
@@ -229,6 +235,7 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
                 binding.welcomeLampIv.visibility = View.GONE
             }
         }
+
     }
 
     private fun setTurnAnimation(animationDrawable: AnimationDrawable, value: String) {
@@ -253,16 +260,10 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
                 updateSeekBarValue(this, it)
             }
         }
-
     }
 
     private fun setSeekBarListener(listener: VSeekBar.OnSeekBarListener) {
         binding.lightSwitchBacklightSeekBar.setOnSeekBarListener(listener)
-        binding.lightCeremonySenseSwitch.let {
-            it.setOnCheckedChangeListener { buttonView, isChecked ->
-                checkDisableOtherDiv(it, isChecked)
-            }
-        }
     }
 
     override fun onValueChanged(seekBar: VSeekBar?, newValue: Int) {
