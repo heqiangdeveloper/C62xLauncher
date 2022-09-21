@@ -3,7 +3,7 @@
     android:layout_width="260px"
     android:layout_height="329px"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/drawer_item_bg_selector"
+    android:background="@drawable/drawer_bg_iquting_song_item"
     >
 
     <ImageView

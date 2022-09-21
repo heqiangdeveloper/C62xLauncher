@@ -26,4 +26,8 @@ public abstract class VolcanoViewHolder {
     public abstract void showLoadingView();
 
     public abstract void hideLoadingView();
+
+    public abstract void showNetworkError();
+
+    public abstract void hideNetworkError();
 }

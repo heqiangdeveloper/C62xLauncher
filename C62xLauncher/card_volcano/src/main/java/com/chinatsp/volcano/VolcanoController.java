@@ -4,12 +4,16 @@ import com.chinatsp.volcano.api.response.VideoListData;
 import com.chinatsp.volcano.repository.IVolcanoLoadListener;
 import com.chinatsp.volcano.repository.VolcanoRepository;
 
+import launcher.base.network.NetworkObserver;
+import launcher.base.network.NetworkStateReceiver;
+
 public class VolcanoController {
     private VolcanoCardView mView;
     private VolcanoRepository mRepository;
     public VolcanoController(VolcanoCardView view) {
         this.mView = view;
         mRepository = VolcanoRepository.getInstance();
+        NetworkStateReceiver.getInstance().registerObserver(mNetworkObserver);
     }
 
 
@@ -41,6 +45,17 @@ public class VolcanoController {
         public void onFail(String msg) {
             if (mView != null) {
                 mView.hideLoading();
+            }
+        }
+    };
+
+    private NetworkObserver mNetworkObserver = new NetworkObserver() {
+        @Override
+        public void onNetworkChanged(boolean isConnected) {
+            if (isConnected) {
+                mView.hideNetWorkError();
+            } else {
+                mView.showNetWorkError();
             }
         }
     };

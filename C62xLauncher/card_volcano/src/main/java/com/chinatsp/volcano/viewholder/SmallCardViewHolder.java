@@ -25,6 +25,8 @@ public class SmallCardViewHolder extends VolcanoViewHolder{
     private TextView tvCardVolcanoVideoName;
     private TextView tvCardVolcanoSource;
     private VolcanoVideo volcanoVideo;
+    private ImageView ivCardVolcanoNetworkErr;
+    private TextView tvCardVolcanoNetworkErr;
 
     public SmallCardViewHolder(View rootView) {
         super(rootView);
@@ -33,6 +35,8 @@ public class SmallCardViewHolder extends VolcanoViewHolder{
         tvCardVolcanoVideoArtist = rootView.findViewById(R.id.tvCardVolcanoVideoArtist);
         tvCardVolcanoVideoName = rootView.findViewById(R.id.tvCardVolcanoVideoName);
         tvCardVolcanoSource = rootView.findViewById(R.id.tvCardVolcanoSource);
+        ivCardVolcanoNetworkErr = rootView.findViewById(R.id.ivCardVolcanoNetworkErr);
+        tvCardVolcanoNetworkErr = rootView.findViewById(R.id.tvCardVolcanoNetworkErr);
 
         rootView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,5 +100,17 @@ public class SmallCardViewHolder extends VolcanoViewHolder{
     @Override
     public void hideLoadingView() {
 
+    }
+
+    @Override
+    public void showNetworkError() {
+        ivCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
+        tvCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideNetworkError() {
+        ivCardVolcanoNetworkErr.setVisibility(View.INVISIBLE);
+        tvCardVolcanoNetworkErr.setVisibility(View.INVISIBLE);
     }
 }
