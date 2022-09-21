@@ -1,8 +1,10 @@
 package com.chinatsp.vehicle.settings.fragment.lighting
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.ISwitchManager
@@ -46,12 +48,74 @@ class AmbientLightingFragment :
         addSeekBarLiveDataListener()
         initBrightnessSeekBar()
         initColorSeekBar()
+        initViewLight()
     }
 
     private fun initViewsDisplay() {
-        if (VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4, expect = true)) {
-            binding.lightingFrontLayout.visibility = View.GONE
+        if (VcuUtils.isCareLevel( Level.LEVEL3,Level.LEVEL4, expect = true)) {
+            binding.lightingFrontLayout.visibility = View.VISIBLE
             binding.lightingBackLayout.visibility = View.GONE
+        } else {
+            binding.lightingFrontLayout.visibility = View.VISIBLE
+            binding.lightingBackLayout.visibility = View.VISIBLE
+        }
+    }
+
+    private fun initViewLight() {
+        if (VcuUtils.isCareLevel(Level.LEVEL3,  expect = true)) {
+            if (binding.ambientFrontLightingSwitch.isChecked) {
+                binding.imgLight1.visibility = View.VISIBLE
+                binding.imgLight2.visibility = View.GONE
+                binding.imgLight3.visibility = View.VISIBLE
+                binding.imgLight4.visibility = View.GONE
+                binding.imgLight5.visibility = View.GONE
+            } else {
+                binding.imgLight1.visibility = View.GONE
+                binding.imgLight2.visibility = View.GONE
+                binding.imgLight3.visibility = View.GONE
+                binding.imgLight4.visibility = View.GONE
+                binding.imgLight5.visibility = View.GONE
+            }
+        } else if (VcuUtils.isCareLevel( Level.LEVEL4, expect = true)) {
+            if (binding.ambientFrontLightingSwitch.isChecked) {
+                binding.imgLight1.visibility = View.VISIBLE
+                binding.imgLight2.visibility = View.GONE
+                binding.imgLight3.visibility = View.VISIBLE
+                binding.imgLight4.visibility = View.VISIBLE
+                binding.imgLight5.visibility = View.GONE
+            } else {
+                binding.imgLight1.visibility = View.GONE
+                binding.imgLight2.visibility = View.GONE
+                binding.imgLight3.visibility = View.GONE
+                binding.imgLight4.visibility = View.GONE
+                binding.imgLight5.visibility = View.GONE
+            }
+        } else if (VcuUtils.isCareLevel(Level.LEVEL5, expect = true)) {
+            if (binding.ambientFrontLightingSwitch.isChecked && binding.ambientBackLightingSwitch.isChecked) {
+                binding.imgLight1.visibility = View.VISIBLE
+                binding.imgLight2.visibility = View.VISIBLE
+                binding.imgLight3.visibility = View.VISIBLE
+                binding.imgLight4.visibility = View.VISIBLE
+                binding.imgLight5.visibility = View.VISIBLE
+            } else if (binding.ambientFrontLightingSwitch.isChecked && !binding.ambientBackLightingSwitch.isChecked) {
+                binding.imgLight1.visibility = View.VISIBLE
+                binding.imgLight2.visibility = View.VISIBLE
+                binding.imgLight3.visibility = View.VISIBLE
+                binding.imgLight4.visibility = View.VISIBLE
+                binding.imgLight5.visibility = View.GONE
+            } else if (!binding.ambientFrontLightingSwitch.isChecked && binding.ambientBackLightingSwitch.isChecked) {
+                binding.imgLight1.visibility = View.GONE
+                binding.imgLight2.visibility = View.GONE
+                binding.imgLight3.visibility = View.GONE
+                binding.imgLight4.visibility = View.GONE
+                binding.imgLight5.visibility = View.VISIBLE
+            } else {
+                binding.imgLight1.visibility = View.GONE
+                binding.imgLight2.visibility = View.GONE
+                binding.imgLight3.visibility = View.GONE
+                binding.imgLight4.visibility = View.GONE
+                binding.imgLight5.visibility = View.GONE
+            }
         }
     }
 
@@ -84,9 +148,11 @@ class AmbientLightingFragment :
     private fun setSwitchListener() {
         binding.ambientFrontLightingSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.FRONT_AMBIENT_LIGHTING, buttonView, isChecked)
+            initViewLight()
         }
         binding.ambientBackLightingSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.BACK_AMBIENT_LIGHTING, buttonView, isChecked)
+            initViewLight()
         }
     }
 
