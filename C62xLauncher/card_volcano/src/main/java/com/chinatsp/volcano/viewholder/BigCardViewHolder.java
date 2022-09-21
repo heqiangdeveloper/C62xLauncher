@@ -32,6 +32,7 @@ public class BigCardViewHolder extends VolcanoViewHolder{
     private ImageView ivCardVolcanoLogoXigua;
     private ImageView ivCardVolcanoLogoDouyin;
     private ImageView ivCardVolcanoLogoToutiao;
+    private TextView tvCardVolcanoNetworkErr;
     private View viewLoading;
 
     private boolean mInitialed;
@@ -46,6 +47,7 @@ public class BigCardViewHolder extends VolcanoViewHolder{
         ivCardVolcanoLogoDouyin = rootView.findViewById(R.id.ivCardVolcanoLogoDouyin);
         ivCardVolcanoLogoToutiao = rootView.findViewById(R.id.ivCardVolcanoLogoToutiao);
         viewLoading = rootView.findViewById(R.id.viewLoading);
+        tvCardVolcanoNetworkErr = rootView.findViewById(R.id.tvCardVolcanoNetworkErr);
         mCardView = cardView;
         initBigCardView(rootView);
         initTypeSelector();
@@ -129,6 +131,16 @@ public class BigCardViewHolder extends VolcanoViewHolder{
     public void hideLoadingView() {
         rcvCardVolcanoVideoList.setVisibility(View.VISIBLE);
         viewLoading.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void showNetworkError() {
+        tvCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideNetworkError() {
+        tvCardVolcanoNetworkErr.setVisibility(View.INVISIBLE);
     }
 
     private void initBigCardView(View largeCardView) {

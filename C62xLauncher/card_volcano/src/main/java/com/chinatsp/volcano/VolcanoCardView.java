@@ -172,6 +172,7 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
             if (mExpand) {
                 mBigCardViewHolder.updateList(videoListData);
             }
+            hideNetWorkError();
             // 无论何种状态, 小卡封面都必须更新为Source对应列表的第一个item
             mSmallCardViewHolder.updateList(videoListData);
         });
@@ -190,6 +191,22 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
             mBigCardViewHolder.hideLoadingView();
         } else {
             mSmallCardViewHolder.hideLoadingView();
+        }
+    }
+
+    public void showNetWorkError() {
+        if (mExpand) {
+            mBigCardViewHolder.showNetworkError();
+        } else {
+            mSmallCardViewHolder.showNetworkError();
+        }
+    }
+
+    public void hideNetWorkError() {
+        if (mExpand) {
+            mBigCardViewHolder.hideNetworkError();
+        } else {
+            mSmallCardViewHolder.hideNetworkError();
         }
     }
 }
