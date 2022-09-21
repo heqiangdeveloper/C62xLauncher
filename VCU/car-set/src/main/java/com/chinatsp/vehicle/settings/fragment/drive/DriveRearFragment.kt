@@ -446,6 +446,30 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
                     R.drawable.ic_lientang_auxiliary_21
                 )
             })
+        }else if(binding.adasSideDowSwitch.isChecked&&!binding.adasSideMebSwitch.isChecked&&
+            binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&binding.adasSideGuidesSwitch.isChecked){
+            binding.videoImage.setImageDrawable(activity?.let {
+                ContextCompat.getDrawable(
+                    it,
+                    R.drawable.ic_lientang_auxiliary_22
+                )
+            })
+        }else if(binding.adasSideDowSwitch.isChecked&&binding.adasSideMebSwitch.isChecked&&
+            binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&!binding.adasSideGuidesSwitch.isChecked){
+            binding.videoImage.setImageDrawable(activity?.let {
+                ContextCompat.getDrawable(
+                    it,
+                    R.drawable.ic_lientang_auxiliary_23
+                )
+            })
+        }else if(binding.adasSideDowSwitch.isChecked&&binding.adasSideMebSwitch.isChecked&&
+            binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&binding.adasSideGuidesSwitch.isChecked){
+            binding.videoImage.setImageDrawable(activity?.let {
+                ContextCompat.getDrawable(
+                    it,
+                    R.drawable.ic_lientang_auxiliary_24
+                )
+            })
         }else {
             binding.videoImage.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(

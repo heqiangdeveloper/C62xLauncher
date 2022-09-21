@@ -3,6 +3,7 @@ package com.chinatsp.vehicle.settings.vm.light
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.listener.IProgressListener
@@ -39,6 +40,13 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
+    val ceremonySenseSwitch: LiveData<Boolean>
+        get() = _ceremonySenseSwitch
+
+    private val _ceremonySenseSwitch: MutableLiveData<Boolean> by lazy {
+        val node = SwitchNode.LIGHT_CEREMONY_SENSE
+        MutableLiveData(manager.doGetSwitchOption(node))    }
+
     val lightOutDelayed: LiveData<Int>
         get() = _lightOutDelayed
 
@@ -62,6 +70,7 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
         val node = RadioNode.LIGHT_CEREMONY_SENSE
         MutableLiveData(manager.doGetRadioOption(node))
     }
+
 
     val switchBacklight: LiveData<Volume>
         get() = _switchBacklight
@@ -160,6 +169,5 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
             liveData.postValue(it)
         }
     }
-
 
 }

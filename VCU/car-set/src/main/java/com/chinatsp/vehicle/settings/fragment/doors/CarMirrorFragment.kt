@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.lifecycle.LiveData
+import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.access.BackMirrorManager
@@ -12,6 +13,7 @@ import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.ISwitchAction
 import com.chinatsp.vehicle.settings.R
+import com.chinatsp.vehicle.settings.app.Toast
 import com.chinatsp.vehicle.settings.databinding.CarMirrorFragmentBinding
 import com.chinatsp.vehicle.settings.fragment.doors.dialog.AngleDialogFragment
 import com.chinatsp.vehicle.settings.vm.accress.MirrorViewModel
@@ -21,10 +23,13 @@ import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding>(), ISwitchAction {
+class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding>(),
+    ISwitchAction, AngleDialogFragment.IAngleInvoke {
 
     private val manager: BackMirrorManager
         get() = BackMirrorManager.instance
+
+    private var angleStatus: Int = Constant.DEFAULT
 
     override fun getLayoutId(): Int {
         return R.layout.car_mirror_fragment
@@ -38,6 +43,16 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
         addSwitchLiveDataListener()
 
         setCheckedChangeListener()
+
+        //=0x1 Memorize fail OR 0x2 Memorize success进行记忆成功/失败的提示。
+        viewModel.angleReturnSignal.observe(this) {
+            if (Constant.ANGLE_SAVE != angleStatus) {
+                return@observe
+            }
+            Toast.showToast(context, if (0x02 == it) "保存成功" else "保存失败", true)
+            angleStatus = Constant.DEFAULT
+        }
+
     }
 
     private fun initViewsDisplay() {
@@ -99,11 +114,9 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
     override fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {
         val status = liveData.value ?: false
         if (node == SwitchNode.BACK_MIRROR_FOLD) {
-            if (status) {
-                binding.rearviewMirror.setText(R.string.car_mirror_automatic_folding_open)
-            } else {
-                binding.rearviewMirror.setText(R.string.car_mirror_automatic_folding_close)
-            }
+            val resId = if (status) R.string.car_mirror_automatic_folding_open
+                        else R.string.car_mirror_automatic_folding_close
+            binding.rearviewMirror.setText(resId)
             checkDisableOtherDiv(binding.accessMirrorMirrorFoldSw, status)
         }
         checkDisableOtherDiv(binding.backMirrorDownSwitch, status)
@@ -112,7 +125,8 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
 
     private fun setCheckedChangeListener() {
         binding.modifyAngle.setOnClickListener {
-            if (binding.accessMirrorMirrorFoldSw.isChecked && binding.backMirrorDownSwitch.isChecked) {
+            if (binding.accessMirrorMirrorFoldSw.isChecked
+                && binding.backMirrorDownSwitch.isChecked) {
                 showReverseAngleFragment()
             }
         }
@@ -121,10 +135,10 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
     private fun showReverseAngleFragment() {
         val fragment = AngleDialogFragment()
         activity?.supportFragmentManager?.let { it ->
+            fragment.angleInvoke = this
             fragment.show(it, fragment.javaClass.simpleName)
         }
     }
-
 
     private fun checkDisableOtherDiv(swb: SwitchButton, status: Boolean) {
         if (swb == binding.accessMirrorMirrorFoldSw) {
@@ -172,4 +186,9 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
             intRange.forEach { updateViewEnable(view.getChildAt(it), status) }
         }
     }
+
+    override fun onAngleUpdate(angleValue: Int) {
+        this.angleStatus = angleValue
+    }
+
 }

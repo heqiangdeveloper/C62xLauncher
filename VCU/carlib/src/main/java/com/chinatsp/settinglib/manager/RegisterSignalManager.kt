@@ -1,5 +1,6 @@
 package com.chinatsp.settinglib.manager
 
+import android.car.hardware.cabin.CarCabinManager
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
@@ -39,6 +40,9 @@ class RegisterSignalManager private constructor() {
                     Progress.values()
                         .filter { it.get.origin == Origin.CABIN && it.get.signal != Constant.INVALID }
                         .forEach { add(it.get.signal) }
+                    //特殊增加 后视镜调节保存反馈信号
+                    add(CarCabinManager.ID_R_MIRROR_MEMORY_STS)
+
                     this.remove(Constant.INVALID)
                 }
             }

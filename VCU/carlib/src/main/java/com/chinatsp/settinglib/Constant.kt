@@ -1,5 +1,7 @@
 package com.chinatsp.settinglib
 
+import android.car.hardware.cabin.CarCabinManager
+
 /**
  * @author : luohong
  * @e-mail : luohong1@bdstar.com
@@ -10,6 +12,10 @@ package com.chinatsp.settinglib
 object Constant {
 
     var ENGINE_STATUS = true
+
+    const val ANGLE_SAVE = 0x11
+
+    const val ANGLE_ADJUST = 0x12
 
     const val INVALID: Int = -1
 
@@ -24,6 +30,9 @@ object Constant {
      * 深色主题（黑夜模式）
      */
     const val DARK_TOPIC: Int = 0x02
+
+    val ANGLE_RETURN_SIGNAL: Int
+        get() = CarCabinManager.ID_R_MIRROR_MEMORY_STS
 
 
     val DIALOG_SERIAL: String

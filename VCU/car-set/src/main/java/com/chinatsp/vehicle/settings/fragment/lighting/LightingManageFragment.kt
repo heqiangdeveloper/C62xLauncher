@@ -1,12 +1,16 @@
 package com.chinatsp.vehicle.settings.fragment.lighting
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.lamp.LampManager
+import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
@@ -88,12 +92,19 @@ class LightingManageFragment : BaseTabFragment<BaseViewModel, LightingManageFrag
         var fragment: Fragment? = null
         when (serial) {
             R.id.lighting_tab -> {
+                binding.constraint.setBackgroundResource(R.drawable.right_bg)
                 fragment = LightingFragment()
             }
             R.id.lighting_atmosphere -> {
+                if (VcuUtils.isCareLevel(Level.LEVEL3, expect = true)) {
+                    binding.constraint.setBackgroundResource(R.drawable.intelligent_model_lv3)
+                } else {
+                    binding.constraint.setBackgroundResource(R.drawable.intelligent_model_lv4_5)
+                }
                 fragment = AmbientLightingFragment()
             }
             R.id.lighting_screen -> {
+                binding.constraint.setBackgroundResource(R.drawable.right_bg)
                 fragment = LightingScreenFragment()
             }
             else -> {

@@ -3,6 +3,7 @@ package com.chinatsp.vehicle.settings.vm.accress
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.manager.access.BackMirrorManager
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -32,6 +33,13 @@ class MirrorViewModel @Inject constructor(app: Application, model: BaseModel) :
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
+    val angleReturnSignal: LiveData<Int>
+        get() = _angleReturnSignal
+
+    private val _angleReturnSignal: MutableLiveData<Int> by lazy {
+        MutableLiveData(Constant.DEFAULT)
+    }
+
 
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {
@@ -45,7 +53,16 @@ class MirrorViewModel @Inject constructor(app: Application, model: BaseModel) :
 
             }
         }
+    }
 
+    override fun isCareSignal(signal: Int): Boolean {
+        return Constant.ANGLE_RETURN_SIGNAL == signal
+    }
+
+    override fun doNonstopValue(signal: Int, value: Int) {
+        if (Constant.ANGLE_RETURN_SIGNAL == signal) {
+            _angleReturnSignal.postValue(value)
+        }
     }
 
 }

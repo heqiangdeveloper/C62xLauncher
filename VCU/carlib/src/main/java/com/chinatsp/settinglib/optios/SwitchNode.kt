@@ -321,7 +321,7 @@ enum class SwitchNode(
     ),
 
     /**
-     * 车门车窗--车窗--遥控升窗/降窗 (no signal)
+     * 车门车窗--车窗--遥控升窗/降窗
      * get -> 遥控升降窗状态反馈 0x0: Initializing  0x1: On  0x2: Off   0x3: Invalid
      * set -> 遥控升降窗软开关 0x0: Inactive; 0x1: Enabled; 0x2: Disabled; 0x3: Reserved
      */
@@ -461,13 +461,17 @@ enum class SwitchNode(
 
     /**
      * 驾驶辅助--智能巡航--前车驶离提示
+     * get -> Response for FRONT_VEHICLE_DRIVE_AWAY
+     *        0x0: Inactive
+     *        0x1: Warning on(default)
+     *        0x2: Warning off
+     *        0x3: Reserved
      * set -> front vehicle drive away switch,if not set'FRONT_VEHICLE_DRIVE_AWAY',
      *        the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
      *        0x0: Inactive; 0x1: Warning on(default); 0x2: Warning off; 0x3: Reserved
      */
     ADAS_LIMBER_LEAVE(
-        //get 暂时没有找到中间件信号
-        get = Norm(on = 0x1, off = 0x0, signal = -1),
+        get = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_FRONT_VEHICLE_DRIVE_AWAY_RES),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_FRONT_VEHICLE_DRIVE_AWAY_SWT),
         default = true
     ),
@@ -498,18 +502,21 @@ enum class SwitchNode(
 
     /**
      * 驾驶辅助--车道辅助--车道辅助系统
-     * get -> LDW/RDP/LKS status. MPC will save the status, while the AVN will not.
-     *        0x0:Off 0x1:Standby 0x2:Active 0x3:Temporary failure 0x4:Camera blocked
-     *        0x5:Permanent failure 0x6:Reserved 0x7:Reserved
-     * set -> LDW/RDP/LKS function enable switch,if not set 'LDW_RDP_LKS_FUNC_ENABLE',
-     *        the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
+     * get -> Operation mode of LDW/RDP/LKS. The default value is 0x1 LDW in C53F, 0x3 LKS in C62X.
+     *        0x0:Initial 0x1:LDW 0x2:RDP 0x3:LKS
+     * set -> LDW/RDP/LKS function enable switch,if not set 'LDW_RDP_LKS_FUNC_ENABLE',the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
      *        C53F send the signal 0x0 all the time
-     *        0x0: Inactive; 0x1: LDW Enable; 0x2: RDP Enable; 0x3: LKS Enable（C62 default）
+     *        0x0: Inactive
+     *        0x1: LDW Enable
+     *        0x2: RDP Enable
+     *        0x3: LKS Enable（C62 default）
      *
      */
-    ADAS_LANE_ASSIST(
-        get = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_LANE_ASSIT_TYPE),
-        set = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_LDW_RDP_LKS_FUNC_EN),
+    ADAS_LANE_ASSIST( //无此开关项
+//        get = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_LANE_ASSIT_TYPE),
+//        set = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_LDW_RDP_LKS_FUNC_EN),
+        get = Norm(on = 0x2, off = 0x0, signal = -1),
+        set = Norm(on = 0x2, off = 0x0, signal = -1),
         default = true,
         careOn = false
     ),
@@ -617,6 +624,22 @@ enum class SwitchNode(
         get = Norm(on = 0x1, off = 0x0, signal = -1),
         set = Norm(on = 0x1, off = 0x2, signal = -1),
         default = true
+    ),
+
+    /**
+     * 灯光设置--灯光--外部灯光仪式感
+     * 软开关0.4增加了信号，外部灯光仪式感设置：车机发0x4 high表示开启，0x1表示关闭。。bdc回0x0表示关，0x3表示开
+     */
+    LIGHT_CEREMONY_SENSE(
+        get = Norm(
+            on = 0x03, off = 0x00,
+            signal = CarCabinManager.ID_BCM_EL_CERE_SENSE_STATUS
+        ),
+        set = Norm(
+            on = 0x04, off = 0x01,
+            signal = CarCabinManager.ID_HMI_EL_CERE_SENSE_TYPE_SET
+        ),
+        default = false
     ),
 
     /**

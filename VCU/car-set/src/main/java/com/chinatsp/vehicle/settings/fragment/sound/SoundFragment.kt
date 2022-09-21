@@ -216,7 +216,7 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
         val popWindow = PopWindow(activity,
             R.layout.pop_window,
             activity?.let { AppCompatResources.getDrawable(it, R.drawable.popup_bg_qipao172_5) })
-        var text: TextView = popWindow.findViewById(R.id.content) as TextView
+        val text: TextView = popWindow.findViewById(R.id.content) as TextView
         text.text = resources.getString(id)
         popWindow.showDownLift(view, 30, -160)
     }
