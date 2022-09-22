@@ -113,6 +113,8 @@ public class HomeCardsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             int cardPosition = mIncludeDrawer ? position - 1 : position;
             EasyLog.d(TAG, "onBindViewHolder : " + mCardEntityList.get(cardPosition).getName() + " , position:" + position);
             ((CardFrameViewHolder) holder).bind(position, mCardEntityList.get(cardPosition));
+        } else if (holder instanceof HomeDrawerCardViewHolder) {
+            ((HomeDrawerCardViewHolder) holder).bind(position);
         }
     }
 
