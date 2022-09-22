@@ -45,7 +45,8 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
 
     private val _ceremonySenseSwitch: MutableLiveData<Boolean> by lazy {
         val node = SwitchNode.LIGHT_CEREMONY_SENSE
-        MutableLiveData(manager.doGetSwitchOption(node))    }
+        MutableLiveData(manager.doGetSwitchOption(node))
+    }
 
     val lightOutDelayed: LiveData<Int>
         get() = _lightOutDelayed
@@ -116,6 +117,9 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
             }
             SwitchNode.LIGHT_INSIDE_MEET -> {
                 doUpdate(_insideLightMeet, status)
+            }
+            SwitchNode.LIGHT_CEREMONY_SENSE -> {
+                doUpdate(_ceremonySenseSwitch, status)
             }
             else -> {}
         }

@@ -17,6 +17,11 @@ open class BaseApp : Application() {
         Handler(mainLooper)
     }
 
+    override fun onCreate() {
+        super.onCreate()
+        TestReceiver().register(context = applicationContext)
+    }
+
     companion object {
         var instance: BaseApp by Delegates.notNull()
     }

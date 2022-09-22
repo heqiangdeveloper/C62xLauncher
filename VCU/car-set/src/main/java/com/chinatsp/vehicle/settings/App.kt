@@ -1,7 +1,6 @@
 package com.chinatsp.vehicle.settings
 
 import android.content.Intent
-import android.util.Log
 import com.chinatsp.settinglib.BaseApp
 import com.chinatsp.settinglib.SettingManager
 import com.chinatsp.settinglib.manager.VehicleManager
@@ -9,6 +8,7 @@ import com.chinatsp.settinglib.service.VehicleService
 import com.chinatsp.vehicle.controller.VcuOutTrader
 import com.chinatsp.vehicle.settings.app.Constants
 import com.king.retrofit.retrofithelper.RetrofitHelper
+import com.orhanobut.logger.*
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
@@ -84,22 +84,23 @@ class App : BaseApp() {
 
     private fun initLogger() {
         //初始化日志打印
-//        val formatStrategy: FormatStrategy = PrettyFormatStrategy.newBuilder()
-//            .showThreadInfo(true) // (Optional) Whether to show thread info or not. Default true
-//            .methodCount(6) // (Optional) How many method line to show. Default 2
-//            .methodOffset(7) // (Optional) Hides internal method calls up to offset. Default 5
-//            .logStrategy(LogcatLogStrategy()) // (Optional) Changes the log strategy to print out. Default LogCat
-//            .tag(Constants.TAG) // (Optional) Global tag for every log. Default PRETTY_LOGGER
-//            .build()
-//        Logger.addLogAdapter(AndroidLogAdapter(formatStrategy))
-        Timber.plant(object : Timber.DebugTree() {
-            override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
-                if (true) {
-//                    Logger.log(priority, tag, message, t)
-                    Log.println(priority, tag, message)
+        if (!BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        } else {
+            val formatStrategy: FormatStrategy = PrettyFormatStrategy.newBuilder()
+                .showThreadInfo(true) // (Optional) Whether to show thread info or not. Default true
+                .methodCount(6) // (Optional) How many method line to show. Default 2
+                .methodOffset(7) // (Optional) Hides internal method calls up to offset. Default 5
+                .logStrategy(LogcatLogStrategy()) // (Optional) Changes the log strategy to print out. Default LogCat
+                .tag(Constants.TAG) // (Optional) Global tag for every log. Default PRETTY_LOGGER
+                .build()
+            Logger.addLogAdapter(AndroidLogAdapter(formatStrategy))
+            Timber.plant(object : Timber.DebugTree() {
+                override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
+                    Logger.log(priority, tag, message, t)
                 }
-            }
-        })
+            })
+        }
     }
 
 }

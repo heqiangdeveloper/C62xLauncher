@@ -97,15 +97,15 @@ class LaneManager : BaseManager(), IOptionManager {
 
     override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
-            CarCabinManager.ID_LANE_ASSIT_TYPE -> {
+            RadioNode.ADAS_LANE_ASSIST_MODE.get.signal -> {
                 onRadioChanged(RadioNode.ADAS_LANE_ASSIST_MODE, laneAssistMode, property)
 //                onRadioOptionChangedAtLaneAssist(property)
             }
-            CarCabinManager.ID_LKS_SENSITIVITY -> {
+            RadioNode.ADAS_LDW_SENSITIVITY.get.signal -> {
                 onRadioChanged(RadioNode.ADAS_LDW_SENSITIVITY, ldwWarningSensitivity, property)
 //                onRadioOptionChangedAtSensitivity(property)
             }
-            CarCabinManager.ID_ACCMFTSTSDISP -> {
+            RadioNode.ADAS_LDW_STYLE.get.signal -> {
                 onRadioChanged(RadioNode.ADAS_LDW_STYLE, ldwWarningStyle, property)
             }
             SwitchNode.ADAS_LANE_ASSIST.get.signal -> {
