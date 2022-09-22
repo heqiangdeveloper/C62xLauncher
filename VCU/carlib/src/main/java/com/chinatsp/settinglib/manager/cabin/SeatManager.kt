@@ -173,7 +173,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
 
     private fun writeProperty(volume: Volume, value: Int): Boolean {
         val success =
-            volume.isValid(value) && writeProperty(volume.type.get.signal, value, Origin.CABIN)
+            volume.isValid(value) && writeProperty(volume.type.set.signal, value, Origin.CABIN)
         if (success && develop) {
             volume.pos = value
 //            doRangeChanged(volume)

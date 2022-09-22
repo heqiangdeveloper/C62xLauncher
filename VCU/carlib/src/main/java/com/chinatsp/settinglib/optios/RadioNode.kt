@@ -207,7 +207,7 @@ enum class RadioNode(
     DRIVE_METER_SYSTEM(
         get = RNorm(
             values = intArrayOf(0x1, 0x2),
-            signal = -1
+            signal = CarCabinManager.ID_ICM_HUM_METRIC_IMPERIAL_STS
         ),
         set = RNorm(
             values = intArrayOf(0x1, 0x2),
@@ -269,7 +269,7 @@ enum class RadioNode(
     LIGHT_CEREMONY_SENSE(
         get = RNorm(
             values = intArrayOf(0x1, 0x2, 0x3),
-            signal = CarCabinManager.ID_LCFL_MODE_STATUS
+            signal = CarCabinManager.ID_BCM_EL_CERE_SENSE_STATUS
         ),
         set = RNorm(
             values = intArrayOf(0x1, 0x2, 0x3),

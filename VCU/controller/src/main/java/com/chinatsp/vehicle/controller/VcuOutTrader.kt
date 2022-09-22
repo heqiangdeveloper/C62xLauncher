@@ -12,11 +12,14 @@ import android.os.Message
 import android.provider.Settings
 import android.text.TextUtils
 import com.chinatsp.vehicle.controller.bean.Cmd
+import com.chinatsp.vehicle.controller.bean.Web
 import com.chinatsp.vehicle.controller.logic.conditioner.ConditionerConstants
 import com.chinatsp.vehicle.controller.semantic.CmdVoiceModel
 import com.chinatsp.vehicle.controller.semantic.GsonUtil
 import com.chinatsp.vehicle.controller.semantic.NlpVoiceModel
 import org.json.JSONObject
+import java.util.*
+import kotlin.collections.HashMap
 import kotlin.random.Random
 
 /**
@@ -102,7 +105,7 @@ class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback, 
     }
 
     private fun audioHintActionResult(audioSerial: String, description: String) {
-        val voiceName = Settings.System.getString(context.contentResolver, "aware")
+        val voiceName = Settings.System.getString(context.contentResolver, "aware") ?: ""
         val map: MutableMap<String, String> = HashMap()
         map["#VOICENAME#"] = voiceName
         LogManager.d(
@@ -198,9 +201,12 @@ class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback, 
 
     override fun doResolverData(data: String?) {
         data?.let {
-            if (BuildConfig.DEBUG) {
+//            val web = GsonUtil.stringToObject(data!!, Web::class.java)
+//            LogManager.d("luohong", web?.toString() ?: "web is null")
+            if (true) {
                 val jsonObject = JSONObject(data)
                 val intentStr = jsonObject.getString("intent")
+                LogManager.d("aa", "intentStr: $intentStr")
                 val entity = GsonUtil.stringToObject(
                     intentStr,
                     com.chinatsp.vehicle.controller.semantic.Intent::class.java
