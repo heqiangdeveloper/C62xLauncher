@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.chinatsp.drawer.DrawerCreator;
 import com.chinatsp.widgetcards.home.CardIndicator;
 import com.chinatsp.widgetcards.home.CardScrollUtil;
 import com.chinatsp.widgetcards.home.ExpandStateManager;
@@ -39,7 +38,6 @@ public class CardHomeFragment extends BaseFragment {
     private RecyclerView mRcvCards;
     private CardIndicator mCardIndicator;
     private PagerSnapHelper mSnapHelper;
-    private DrawerCreator drawerCreator;
     private Handler mUiHandler = new Handler();
     private int mCardDividerWidth;
 
@@ -71,6 +69,7 @@ public class CardHomeFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
 //        drawerCreator.initDrawerRcv();
+        mCardsAdapter.notifyItemChanged(0);
     }
 
     private void initObservers() {

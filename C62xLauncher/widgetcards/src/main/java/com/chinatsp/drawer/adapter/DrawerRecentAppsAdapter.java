@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.chinatsp.widgetcards.R;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import launcher.base.utils.recent.RecentAppHelper;
@@ -54,6 +55,19 @@ public class DrawerRecentAppsAdapter extends RecyclerView.Adapter<DrawerRecentAp
     public int getItemCount() {
         //return recentAppInfos.size();
         return recentAppInfos.size() > 4? 4 : recentAppInfos.size();
+    }
+
+    public void setData(List<HashMap<String, Object>> appInfos) {
+        if (appInfos == null || appInfos.isEmpty()) {
+            return;
+        }
+        if (recentAppInfos == null) {
+            recentAppInfos = new LinkedList<>();
+        } else {
+            recentAppInfos.clear();
+        }
+        recentAppInfos.addAll(appInfos);
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

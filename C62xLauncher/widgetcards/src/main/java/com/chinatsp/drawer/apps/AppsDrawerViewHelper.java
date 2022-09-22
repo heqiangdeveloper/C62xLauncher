@@ -16,18 +16,30 @@ import com.chinatsp.widgetcards.R;
 import java.util.HashMap;
 import java.util.List;
 
+import launcher.base.utils.EasyLog;
 import launcher.base.utils.recent.RecentAppHelper;
 
 public class AppsDrawerViewHelper {
     private RecyclerView recentAppsRcv;
     private TextView recentAppsTv;
     private Context context;
+    private DrawerRecentAppsAdapter mRecentAppsAdapter;
 
     public AppsDrawerViewHelper(View rootView) {
         recentAppsTv = rootView.findViewById(R.id.tvRecentApps);
         recentAppsRcv = rootView.findViewById(R.id.rcvRecentApps);
         this.context = recentAppsRcv.getContext();
-        refreshUI();
+        initRcv();
+    }
+
+    private void initRcv() {
+        mRecentAppsAdapter = new DrawerRecentAppsAdapter(context,
+                RecentAppHelper.getRecentApps(context,20));
+        recentAppsRcv.setAdapter(mRecentAppsAdapter);
+        //recentAppsRcv.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        recentAppsRcv.setLayoutManager(new GridLayoutManager(context, 2));
+        recentAppsRcv.addItemDecoration(new RecentAppsDecoration(15,20));
+
     }
 
     private void refreshUI() {
@@ -38,12 +50,13 @@ public class AppsDrawerViewHelper {
         }else {
             recentAppsRcv.setVisibility(View.VISIBLE);
             recentAppsTv.setVisibility(View.GONE);
-            DrawerRecentAppsAdapter recentAppsAdapter = new DrawerRecentAppsAdapter(context,
-                    RecentAppHelper.getRecentApps(context,20));
-            recentAppsRcv.setAdapter(recentAppsAdapter);
-            //recentAppsRcv.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            recentAppsRcv.setLayoutManager(new GridLayoutManager(context, 2));
-            recentAppsRcv.addItemDecoration(new RecentAppsDecoration(15,20));
+
+            mRecentAppsAdapter.setData(appInfos);
         }
+    }
+
+    public void onBindData() {
+        EasyLog.i("AppsDrawerViewHelper", "onBindData");
+        refreshUI();
     }
 }

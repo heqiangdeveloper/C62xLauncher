@@ -11,9 +11,18 @@ import com.chinatsp.drawer.weather.WeatherDrawerViewHelper;
 import launcher.base.recyclerview.BaseViewHolder;
 
 public class DrawerAppsAndWeatherHolder extends BaseViewHolder<DrawerEntity> {
+
+    private final AppsDrawerViewHelper mAppsDrawerViewHelper;
+
     public DrawerAppsAndWeatherHolder(@NonNull View itemView) {
         super(itemView);
-        AppsDrawerViewHelper appsDrawerViewHelper = new AppsDrawerViewHelper(itemView);
+        mAppsDrawerViewHelper = new AppsDrawerViewHelper(itemView);
         WeatherDrawerViewHelper weatherDrawerViewHelper = new WeatherDrawerViewHelper(itemView);
+    }
+
+    @Override
+    public void bind(int position, DrawerEntity drawerEntity) {
+        super.bind(position, drawerEntity);
+        mAppsDrawerViewHelper.onBindData();
     }
 }
