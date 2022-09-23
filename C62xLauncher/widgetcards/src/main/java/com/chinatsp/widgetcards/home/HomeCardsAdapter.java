@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.chinatsp.drawer.iquting.DrawerIqutingHolder;
 import com.chinatsp.widgetcards.R;
 import com.chinatsp.widgetcards.manager.CardManager;
 

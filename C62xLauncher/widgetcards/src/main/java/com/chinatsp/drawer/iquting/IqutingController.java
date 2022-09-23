@@ -10,10 +10,4 @@ class IqutingController {
         mViewHolder = viewHolder;
     }
 
-    void requestSongs() {
-        List<SongItem> songItemList = new LinkedList<>();
-        songItemList.add(new SongItem());
-        songItemList.add(new SongItem());
-        mViewHolder.showSongs(songItemList);
-    }
 }

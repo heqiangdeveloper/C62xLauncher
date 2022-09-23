@@ -6,6 +6,7 @@
     >
 
     <ImageView
+        android:id="@+id/ivDrawerIqutingDirect"
         android:layout_width="@dimen/card_icon_size_lv3"
         android:layout_height="@dimen/card_icon_size_lv3"
         app:layout_constraintTop_toTopOf="parent"

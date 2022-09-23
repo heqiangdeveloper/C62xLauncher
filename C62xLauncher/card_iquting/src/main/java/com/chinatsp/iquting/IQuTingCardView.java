@@ -23,12 +23,16 @@ import androidx.lifecycle.LifecycleRegistry;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.chinatsp.iquting.callback.INetworkChangeListener;
+import com.chinatsp.iquting.callback.IQueryIqutingLoginStatus;
+import com.chinatsp.iquting.callback.IQueryMusicLists;
 import com.chinatsp.iquting.configs.IqutingConfigs;
 import com.chinatsp.iquting.event.BootEvent;
 import com.chinatsp.iquting.event.ContentConnectEvent;
 import com.chinatsp.iquting.event.ControlEvent;
 import com.chinatsp.iquting.event.Event;
 import com.chinatsp.iquting.event.PlayConnectEvent;
+import com.chinatsp.iquting.service.IqutingBindService;
 import com.chinatsp.iquting.songs.IQuTingSongsAdapter;
 import com.chinatsp.iquting.state.NetWorkDisconnectState;
 import com.chinatsp.iquting.state.NormalState;
@@ -182,16 +186,16 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
         //点击空白处跳转至爱趣听
         setOnClickListener(this);
 
+        //注册网络动态监听
         NetworkStateReceiver.getInstance().registerObserver(networkObserver);
+        //入口
+        addPlayContentListener(IQuTingCardView.this);
     }
 
     private NetworkObserver networkObserver = new NetworkObserver() {
         @Override
         public void onNetworkChanged(boolean isConnected) {
-            Log.d(TAG, "onNetworkChanged:" + isConnected);
-            //有时数据已经打开连上，但是isConnected仍然是false，需要再去主动获取isConnected值
             addPlayContentListener(IQuTingCardView.this);
-            Log.d(TAG_CONTENT,"onNetworkChanged addContentListener");
         }
     };
 
@@ -249,17 +253,50 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
 
     private void addPlayContentListener(View view){
         boolean isConnected = NetworkUtils.isNetworkAvailable(context);
-        if (!isConnected) {
+        Log.d(TAG,"addPlayContentListener network: " + isConnected);
+        if(!isConnected){
             isLogin = false;
+            if(isPlaying){
+                FlowPlayControl.getInstance().doPause();
+            }
             removePlayStateListener();
             removeMediaChangeListener();
             mState = new NetWorkDisconnectState();
             mState.updateViewState(IQuTingCardView.this, mExpand);
-        } else {
-            if(FlowPlayControl.getInstance().isServiceConnected() &&
-                    ContentManager.getInstance().isConnected()){
-                Log.d(TAG,"PlayContentService Connect");
-                checkLoginStatus(view);//查询用户登录状态
+        }else {
+            if(IqutingBindService.getInstance().isServiceConnect()){
+                Log.d(TAG,"addPlayContentListener PlayContentService Connect");
+                //查询用户登录状态
+                IqutingBindService.getInstance().checkLoginStatus(new IQueryIqutingLoginStatus() {
+                    @Override
+                    public void onSuccess(boolean mIsLogin) {
+                        Log.d(TAG,"addPlayContentListener checkLoginStatus: " + mIsLogin);
+                        if(mIsLogin){
+                            isLogin = true;
+                            //因为在onWindowVisibilityChanged窗口不可见时，移除了监听
+                            addIqutingMediaChangeListener();//监听爱趣听媒体的变化
+                            addIqutingPlayStateListener();//监听爱趣听播放状态变化
+                            //if(mState == null || mState instanceof UnLoginState || mState instanceof NetWorkDisconnectState){
+                                mState = new NormalState();
+                                mState.updateViewState(view, mExpand);
+
+                                queryPlayStatus();//查询播放状态
+                           // }
+                            if(mAreaContentResponseBeanDaily == null){
+                                getMusicList(TYPE_DAILYSONGS);//获取每日推荐
+                            }
+                            if(mAreaContentResponseBeanRank == null){
+                                getMusicList(TYPE_RANKSONGS);//获取每日推荐
+                            }
+                        }else {
+                            isLogin = false;
+                            removePlayStateListener();
+                            removeMediaChangeListener();
+                            mState = new UnLoginState();
+                            mState.updateViewState(IQuTingCardView.this, mExpand);
+                        }
+                    }
+                });
             }else {
                 isLogin = false;
                 removePlayStateListener();
@@ -271,98 +308,6 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                 FlowPlayControl.getInstance().bindPlayService(context);//注册爱趣听播放服务
             }
         }
-    }
-
-    private void addContentListener(){
-        boolean isConnected = NetworkUtils.isNetworkAvailable(context);
-        if (!isConnected) {
-            mState = new NetWorkDisconnectState();
-            mState.updateViewState(IQuTingCardView.this, mExpand);
-        } else {
-            mState = new UnLoginState();
-            mState.updateViewState(IQuTingCardView.this, mExpand);
-            if(ContentManager.getInstance().isConnected()){
-                mTvCardIQuTingLoginTip.setText("ContentManager onServiceConnected");
-                Log.d(TAG_CONTENT,"ContentManager onServiceConnected");
-                ContentManager.getInstance().getLoginStatus(new LoginStatusResult() {
-                    @Override
-                    public void success(com.tencent.wecarflow.contentsdk.bean.UserInfo userInfo) {
-                        if(userInfo != null){
-                            mTvCardIQuTingLoginTip.setText("getMusicList");
-                            isLogin = userInfo.isLogin();
-                            Log.d(TAG_CONTENT,"getLoginStatus isLogin: " + isLogin);
-                            getMusicList(TYPE_RANKSONGS);//获取每日推荐
-                            getMusicList(TYPE_DAILYSONGS);//获取每日推荐
-                        }else {
-                            Log.d(TAG_CONTENT,"getLoginStatus userInfo is null");
-                        }
-                    }
-
-                    @Override
-                    public void failed(int i) {
-                        mTvCardIQuTingLoginTip.setText("getLoginStatus failed");
-                        Log.d(TAG_CONTENT,"getLoginStatus failed: " + i);
-                    }
-                });
-            }else {
-                Log.d(TAG_CONTENT,"ContentManager onService disConnected");
-            }
-        }
-    }
-
-    //查询用户登录状态
-    private void checkLoginStatus(View v){
-        FlowPlayControl.getInstance().queryLoginStatus(new QueryCallback<UserInfo>() {
-            @Override
-            public void onError(int i) {
-                Log.d(TAG,"checkLoginStatus onError: " + i);
-                isLogin = false;
-                removePlayStateListener();
-                removeMediaChangeListener();
-                mState = new UnLoginState();
-                mState.updateViewState(IQuTingCardView.this, mExpand);
-            }
-
-            @Override
-            public void onSuccess(UserInfo userInfo) {
-                if(userInfo != null){
-                    if(userInfo.isLogin()){
-                        //因为在onWindowVisibilityChanged窗口不可见时，移除了监听
-                        addIqutingMediaChangeListener();//监听爱趣听媒体的变化
-                        addIqutingPlayStateListener();//监听爱趣听播放状态变化
-                        if(!isLogin){//防止已登录的情况再走一遍
-                            isLogin = true;
-                            Log.d(TAG,"checkLoginStatus onSuccess Login");
-                            mState = new NormalState();
-                            mState.updateViewState(v, mExpand);
-
-                            queryPlayStatus();//查询播放状态
-                        }
-                        if(mAreaContentResponseBeanDaily == null){
-                            getMusicList(TYPE_DAILYSONGS);//获取每日推荐
-                        }
-                        if(mAreaContentResponseBeanRank == null){
-                            getMusicList(TYPE_RANKSONGS);//获取每日推荐
-                        }
-                    }else {
-                        isLogin = false;
-                        Log.d(TAG,"checkLoginStatus onSuccess not Login");
-
-                        removePlayStateListener();
-                        removeMediaChangeListener();
-                        mState = new UnLoginState();
-                        mState.updateViewState(v, mExpand);
-                    }
-                }else {
-                    isLogin = false;
-                    removePlayStateListener();
-                    removeMediaChangeListener();
-                    mState = new UnLoginState();
-                    mState.updateViewState(IQuTingCardView.this, mExpand);
-                    Log.d(TAG,"checkLoginStatus onSuccess,userInfo is null");
-                }
-            }
-        });
     }
 
     /**
@@ -585,9 +530,9 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
     private void getMusicList(int contentId){
         Log.d(TAG_CONTENT,"getMusicList,contentId = " + contentId);
         mContentId = contentId;
-        ContentManager.getInstance().getAreaContentData(new AreaContentResult() {
+        IqutingBindService.getInstance().getMusicList(contentId, new IQueryMusicLists() {
             @Override
-            public void success(AreaContentResponseBean areaContentResponseBean) {
+            public void onSuccess(AreaContentResponseBean areaContentResponseBean) {
                 Log.d(TAG_CONTENT,"getAreaContentData success");
                 List<BaseSongItemBean> songLists = areaContentResponseBean.getSonglist();
                 if(songLists != null){
@@ -617,22 +562,10 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
             }
 
             @Override
-            public void failed(int i) {
-
+            public void onFail(int failCode) {
+                Log.d(TAG_CONTENT,"getAreaContentData onFail: " + failCode);
             }
-        },contentId);
-//        ContentManager.getInstance().getAreaContentData(new ContentListener<AreaContentResponseBean>() {
-//            @Override
-//            public void onContentGot(@Nullable AreaContentResponseBean areaContentResponseBean) {
-//                Log.d(TAG_CONTENT,"onContentGot");
-//                mTvCardIQuTingLoginTip.setText("getAreaContentData success");
-//                List<BaseSongItemBean> songLists = areaContentResponseBean.getSonglist();
-//                for(BaseSongItemBean bean : songLists){
-//                    Log.d(TAG_CONTENT,"" + bean.getAlbum_name() + "," + bean.getAlbum_id() +
-//                            "," + bean.getSinger_name() + "," + bean.getVip());
-//                }
-//            }
-//        },contentId);
+        });
     }
 
     //查询播放状态
@@ -812,6 +745,8 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
             mContentId = TYPE_DAILYSONGS;
             editor.putInt(IqutingConfigs.CURRENTTAB,TYPE_DAILYSONGS);
             editor.commit();
+
+            IqutingBindService.getInstance().setTabClickEvent(TYPE_DAILYSONGS);
         }else if(v.getId() == R.id.tvIQuTingRankSongs){//音乐排行榜
             mTvIQuTingDailySongs.setTextColor(getResources().getColor(R.color.card_blue_default));
             mTvIQuTingRankSongs.setTextColor(getResources().getColor(R.color.card_title_expand));
@@ -827,6 +762,7 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
             mContentId = TYPE_RANKSONGS;
             editor.putInt(IqutingConfigs.CURRENTTAB,TYPE_RANKSONGS);
             editor.commit();
+            IqutingBindService.getInstance().setTabClickEvent(TYPE_RANKSONGS);
         }else {
             //打开爱趣听界面
             FlowPlayControl.getInstance().startPlayActivity(context);
@@ -1043,10 +979,6 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
         }
     }
 
-    private void changeState(IQuTingState newState) {
-        mState = newState;
-    }
-
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
@@ -1092,11 +1024,12 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
     }
 
     private void addEventBus(){
-        EventBus.getDefault().register(this);
+        if(!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
+        }
     }
 
     private void removeEventBus(){
-        EventBus.getDefault().removeAllStickyEvents();
         EventBus.getDefault().unregister(this);
     }
 

@@ -24,6 +24,7 @@ public class AppsDrawerViewHelper {
     private TextView recentAppsTv;
     private Context context;
     private DrawerRecentAppsAdapter mRecentAppsAdapter;
+    public static final int MAX_NUM = 4;
 
     public AppsDrawerViewHelper(View rootView) {
         recentAppsTv = rootView.findViewById(R.id.tvRecentApps);
@@ -34,7 +35,7 @@ public class AppsDrawerViewHelper {
 
     private void initRcv() {
         mRecentAppsAdapter = new DrawerRecentAppsAdapter(context,
-                RecentAppHelper.getRecentApps(context,20));
+                RecentAppHelper.getRecentApps(context,MAX_NUM));
         recentAppsRcv.setAdapter(mRecentAppsAdapter);
         //recentAppsRcv.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         recentAppsRcv.setLayoutManager(new GridLayoutManager(context, 2));
@@ -43,7 +44,7 @@ public class AppsDrawerViewHelper {
     }
 
     private void refreshUI() {
-        List<HashMap<String,Object>> appInfos = RecentAppHelper.getRecentApps(context,20);
+        List<HashMap<String,Object>> appInfos = RecentAppHelper.getRecentApps(context,MAX_NUM);
         if(appInfos.size() == 0){
             recentAppsRcv.setVisibility(View.GONE);
             recentAppsTv.setVisibility(View.VISIBLE);

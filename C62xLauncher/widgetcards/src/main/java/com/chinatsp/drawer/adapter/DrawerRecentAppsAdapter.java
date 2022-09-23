@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.chinatsp.drawer.apps.AppsDrawerViewHelper;
 import com.chinatsp.widgetcards.R;
 
 import java.util.HashMap;
@@ -54,7 +55,7 @@ public class DrawerRecentAppsAdapter extends RecyclerView.Adapter<DrawerRecentAp
     @Override
     public int getItemCount() {
         //return recentAppInfos.size();
-        return recentAppInfos.size() > 4? 4 : recentAppInfos.size();
+        return recentAppInfos.size() > AppsDrawerViewHelper.MAX_NUM ? AppsDrawerViewHelper.MAX_NUM : recentAppInfos.size();
     }
 
     public void setData(List<HashMap<String, Object>> appInfos) {

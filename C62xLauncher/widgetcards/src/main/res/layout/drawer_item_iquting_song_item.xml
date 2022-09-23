@@ -10,7 +10,6 @@
         android:id="@+id/ivIqutingDrawerSongItemCover"
         android:layout_width="260px"
         android:layout_height="260px"
-        android:background="#995566"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -18,7 +17,6 @@
 
     <ImageView
         android:id="@+id/ivIqutingDrawerSongItemPlayOrPause"
-        android:src="@drawable/card_iquting_icon_circle_play"
         android:layout_width="44px"
         android:layout_height="44px"
         app:layout_constraintStart_toStartOf="@id/ivIqutingDrawerSongItemCover"
@@ -28,6 +26,7 @@
         />
 
     <TextView
+        android:id="@+id/tvIqutingDrawerSongItemName"
         android:layout_width="236px"
         android:layout_height="33px"
         android:ellipsize="end"
