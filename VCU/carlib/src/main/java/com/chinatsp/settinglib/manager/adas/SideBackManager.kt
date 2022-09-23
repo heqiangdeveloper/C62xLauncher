@@ -37,7 +37,9 @@ class SideBackManager : BaseManager(), IOptionManager {
                 add(SwitchNode.ADAS_DOW.get.signal)
                 add(SwitchNode.ADAS_BSC.get.signal)
                 add(SwitchNode.ADAS_BSD.get.signal)
+                add(SwitchNode.ADAS_MEB.get.signal)
                 add(SwitchNode.ADAS_GUIDES.get.signal)
+
                 add(RadioNode.ADAS_SIDE_BACK_SHOW_AREA.get.signal)
             }
             put(Origin.CABIN, cabinSet)
@@ -88,6 +90,13 @@ class SideBackManager : BaseManager(), IOptionManager {
         }
     }
 
+    private val mebValue: AtomicBoolean by lazy {
+        val node = SwitchNode.ADAS_MEB
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+        }
+    }
+
     private val guidesValue: AtomicBoolean by lazy {
         val node = SwitchNode.ADAS_GUIDES
         AtomicBoolean(node.default).apply {
@@ -112,6 +121,9 @@ class SideBackManager : BaseManager(), IOptionManager {
             }
             SwitchNode.ADAS_GUIDES.get.signal -> {
                 onSwitchChanged(SwitchNode.ADAS_GUIDES, guidesValue, property)
+            }
+            SwitchNode.ADAS_MEB.get.signal -> {
+                onSwitchChanged(SwitchNode.ADAS_MEB, mebValue, property)
             }
             RadioNode.ADAS_SIDE_BACK_SHOW_AREA.get.signal -> {
                 onRadioChanged(RadioNode.ADAS_SIDE_BACK_SHOW_AREA, showAreaValue, property)
@@ -149,7 +161,7 @@ class SideBackManager : BaseManager(), IOptionManager {
             try {
                 writeLock.lock()
                 unRegisterVcuListener(serial, identity)
-                listenerStore.put(serial, WeakReference(listener))
+                listenerStore[serial] = WeakReference(listener)
             } finally {
                 writeLock.unlock()
             }
@@ -172,6 +184,9 @@ class SideBackManager : BaseManager(), IOptionManager {
             SwitchNode.ADAS_GUIDES -> {
                 guidesValue.get()
             }
+            SwitchNode.ADAS_MEB -> {
+                mebValue.get()
+            }
             else -> false
         }
     }
@@ -186,6 +201,9 @@ class SideBackManager : BaseManager(), IOptionManager {
             }
             SwitchNode.ADAS_BSC -> {
                 doSetSwitchOption(node, status, bscValue)
+            }
+            SwitchNode.ADAS_MEB -> {
+                doSetSwitchOption(node, status, mebValue)
             }
             SwitchNode.ADAS_GUIDES -> {
                 VcuUtils.putInt(key = Constant.AUXILIARY_LINE, value = node.value(status))

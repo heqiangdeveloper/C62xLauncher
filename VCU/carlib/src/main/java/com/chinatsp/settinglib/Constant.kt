@@ -11,6 +11,8 @@ import android.car.hardware.cabin.CarCabinManager
  */
 object Constant {
 
+    const val VehicleSignal = "VehicleSignal"
+
     var ENGINE_STATUS = true
 
     const val ANGLE_SAVE = 0x11

@@ -52,6 +52,13 @@ class SideViewModel @Inject constructor(app: Application, model: BaseModel) :
         MutableLiveData(manager.doGetRadioOption(node))
     }
 
+    val mebValue: LiveData<Boolean> by lazy { _mebValue }
+
+    private val _mebValue: MutableLiveData<Boolean> by lazy {
+        val node = SwitchNode.ADAS_MEB
+        MutableLiveData(manager.doGetSwitchOption(node))
+    }
+
     override fun onCreate() {
         super.onCreate()
         keySerial = manager.onRegisterVcuListener(0, this)
@@ -75,6 +82,9 @@ class SideViewModel @Inject constructor(app: Application, model: BaseModel) :
             }
             SwitchNode.ADAS_GUIDES -> {
                 doUpdate(_guidesValue, status)
+            }
+            SwitchNode.ADAS_MEB -> {
+                doUpdate(_mebValue, status)
             }
             else -> {}
         }

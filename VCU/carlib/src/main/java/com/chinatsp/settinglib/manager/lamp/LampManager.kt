@@ -52,10 +52,10 @@ class LampManager private constructor() : BaseManager(), ITabStore {
         val managers: List<out BaseManager> by lazy {
             ArrayList<BaseManager>().apply {
                 add(LightManager.instance)
+                add(BrightnessManager.instance)
                 add(AmbientLightingManager.instance)
             }
         }
-
     }
 
     override val careSerials: Map<Origin, Set<Int>> by lazy {

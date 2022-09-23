@@ -89,15 +89,16 @@ class BrightnessManager : BaseManager(), IProgressManager {
     }
 
     private fun initVolume(type: Progress): Volume {
-        var value: Int
+        var result: Int
         if (isNewHardware) {
-            value = manager?.brightness ?: type.min
-            value = (value / 10).toDouble().roundToInt()
+            result = manager?.brightness ?: type.min
+            result = (result / 10).toDouble().roundToInt()
         } else {
-            value = thirdScreenService?.getThirdScreenBrightness(if (isLight) 1 else 0) ?: type.min
-            value = getNearestPosition(thirdScreenBrightness, value)
+            result = thirdScreenService?.getThirdScreenBrightness(if (isLight) 1 else 0) ?: type.min
+            result = getNearestPosition(thirdScreenBrightness, result)
         }
-        Timber.d("initVolume type:$type, pos:$value")
+        val value = if (result in type.min..type.max) result else type.def
+        Timber.d("initVolume type:$type, result:$result,, value:$value")
         return Volume(type, type.min, type.max, value)
     }
 
@@ -117,8 +118,9 @@ class BrightnessManager : BaseManager(), IProgressManager {
     }
 
     private fun initProgress(type: Progress): Volume {
-        val value = readIntProperty(type.get.signal, type.get.origin)
-        Timber.d("initProgress type:$type, value:$value")
+        val result = readIntProperty(type.get.signal, type.get.origin)
+        val value = if (result in type.min..type.max) result else type.def
+        Timber.d("initProgress type:$type, result:$result,, value:$value")
         return Volume(type, type.min, type.max, value)
     }
 
@@ -169,9 +171,11 @@ class BrightnessManager : BaseManager(), IProgressManager {
     override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             Progress.METER_SCREEN_BRIGHTNESS.get.signal -> {
+                Timber.d("METER_SCREEN_BRIGHTNESS")
                 doUpdateProgress(meterVolume, property.value as Int, true, this::doProgressChanged)
             }
             Progress.CONDITIONER_SCREEN_BRIGHTNESS.get.signal -> {
+                Timber.d("CONDITIONER_SCREEN_BRIGHTNESS")
                 doUpdateProgress(acVolume, property.value as Int, true, this::doProgressChanged)
             }
             else -> {}

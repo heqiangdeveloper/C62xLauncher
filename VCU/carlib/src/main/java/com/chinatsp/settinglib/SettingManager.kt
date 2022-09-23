@@ -201,11 +201,12 @@ class SettingManager private constructor() {
             }
             mCarCabinManager?.let { it ->
                 val signals = cabinSignal
-                val signalArray = signals.stream().filter { value -> value != -1 }
+                val signalArray = signals.stream().filter { value -> value != Constant.INVALID }
                     .mapToInt { obj: Int -> obj }
                     .toArray()
                 Arrays.stream(signalArray).forEach {
-                    Timber.d("register cabin: hex propertyId:${Integer.toHexString(it)},  dec propertyId:$it")
+                    Timber.tag(Constant.VehicleSignal)
+                        .d("register cabin: hex propertyId:${Integer.toHexString(it)},  dec propertyId:$it")
                 }
                 it.registerCallback(cabinEventListener, signalArray)
             }
@@ -217,19 +218,21 @@ class SettingManager private constructor() {
     private val cabinEventListener = object : CarCabinManager.CarCabinEventCallback {
         override fun onChangeEvent(property: CarPropertyValue<*>) {
             val id = property.propertyId
-            Timber.d("doActionSignal-cabin receive-cabin hex-id::${Integer.toHexString(id)}, dec-id:$id value:${property.value}")
+            Timber.tag(Constant.VehicleSignal)
+                .d("doActionSignal-cabin receive-cabin hex-id::${Integer.toHexString(id)}, dec-id:$id value:${property.value}")
             GlobalManager.instance.onDispatchSignal(property, Origin.CABIN)
         }
 
         override fun onErrorEvent(i: Int, i1: Int) {
-            Timber.d("Cabin onErrorEvent:i:$i, i1:$i1")
+            Timber.tag(Constant.VehicleSignal).e("Cabin onErrorEvent:i:$i, i1:$i1")
         }
     }
 
     private val mcuEventListener = object : CarMcuEventCallback {
         override fun onChangeEvent(property: CarPropertyValue<*>) {
             val id = property.propertyId
-            Timber.d("doActionSignal-mcu receive-mcu hex-id::${Integer.toHexString(id)}, dec-id:$id value:${property.value}")
+            Timber.tag(Constant.VehicleSignal)
+                .d("doActionSignal-mcu receive-mcu hex-id::${Integer.toHexString(id)}, dec-id:$id value:${property.value}")
             GlobalManager.instance.onDispatchSignal(property, Origin.MCU)
 //            switch (property.getPropertyId()) {
 //                case CarMcuManager.ID_VENDOR_MCU_POWER_MODE://电源状态
@@ -288,7 +291,7 @@ class SettingManager private constructor() {
         }
 
         override fun onErrorEvent(i: Int, i1: Int) {
-            Timber.d("Mcu onErrorEvent:i:$i, i1:$i1")
+            Timber.tag(Constant.VehicleSignal).e("Mcu onErrorEvent:i:$i, i1:$i1")
         }
     }
 
@@ -296,12 +299,13 @@ class SettingManager private constructor() {
         override fun onChangeEvent(property: CarPropertyValue<*>) {
             val id = property.propertyId
 //            Timber.d("Hvac onChangeEvent propertyId hex:${Integer.toHexString(id)}, dec:$id value:${property.value}")
-            Timber.d("doActionSignal-hvac receive-hvac hex-id::${Integer.toHexString(id)}, dec-id:$id value:${property.value}")
+            Timber.tag(Constant.VehicleSignal)
+                .d("doActionSignal-hvac receive-hvac hex-id::${Integer.toHexString(id)}, dec-id:$id value:${property.value}")
             GlobalManager.instance.onDispatchSignal(property, Origin.HVAC)
         }
 
         override fun onErrorEvent(i: Int, i1: Int) {
-            Timber.d("Hvac onErrorEvent:i:$i, i1:$i1")
+            Timber.tag(Constant.VehicleSignal).e("Hvac onErrorEvent:i:$i, i1:$i1")
         }
     }
 
@@ -481,11 +485,8 @@ class SettingManager private constructor() {
             AppExecutors.get()?.networkIO()?.execute {
                 try {
                     val hasManager = null != mCarAudioManager
-                    Timber.d(
-                        "doActionSignal-cabin send-cabin hex-id:" + Integer.toHexString(id)
-                                + ", dec-id:" + id + ", value:" + value + ", hasManager:" + hasManager
-                                + ", versionName:" + VcuUtils.versionName
-                    )
+                    Timber.tag(Constant.VehicleSignal)
+                        .d("doActionSignal-cabin send-cabin hex-id:${Integer.toHexString(id)}, dec-id:$id, value:$value, has:$hasManager, versionName:${VcuUtils.versionName}")
                     mCarCabinManager?.setIntProperty(id, areaValue, value)
                 } catch (e: Exception) {
                     Timber.e(e)
@@ -501,11 +502,8 @@ class SettingManager private constructor() {
             AppExecutors.get()?.networkIO()?.execute {
                 try {
                     val hasManager = null != hvacManager
-                    Timber.d(
-                        "doActionSignal-hvac send-hvac hex-id:" + Integer.toHexString(id)
-                                + ", dec-id:" + id + ", value:" + value + ", hasManager:" + hasManager
-                                + ", versionName:" + VcuUtils.versionName
-                    )
+                    Timber.tag(Constant.VehicleSignal)
+                        .d("doActionSignal-hvac send-hvac hex-id:${Integer.toHexString(id)}, dec-id:$id, value:$value, has:$hasManager, versionName:${VcuUtils.versionName}")
                     hvacManager?.setIntProperty(id, areaValue, value)
                 } catch (e: Exception) {
                     Timber.e(e)

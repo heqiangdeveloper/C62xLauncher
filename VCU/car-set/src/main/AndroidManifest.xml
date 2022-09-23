@@ -47,11 +47,12 @@
         <activity
             android:name="com.chinatsp.vehicle.settings.MainActivity2"
             android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
+            android:exported="true"
             android:hardwareAccelerated="true"
             android:launchMode="singleTask"
             android:screenOrientation="landscape"
-            android:windowSoftInputMode="adjustPan|stateHidden"
-            android:theme="@style/ActivityTheme">
+            android:theme="@style/ActivityTheme"
+            android:windowSoftInputMode="adjustPan|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -68,8 +69,17 @@
             </intent-filter>
         </activity>
 
+<!--        <activity android:name=".KanziActivity" android:exported="true">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+<!--        </activity>-->
+
         <activity
             android:name="com.chinatsp.vehicle.settings.app.oil.OilPriceActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
     </application>

@@ -16,6 +16,7 @@ import javax.inject.Inject
 class LaneViewModel @Inject constructor(app: Application, model: BaseModel) :
     BaseViewModel(app, model), IOptionListener {
 
+
     private val manager: LaneManager
         get() = LaneManager.instance
 

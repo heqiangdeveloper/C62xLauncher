@@ -181,18 +181,19 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
 
     private val ambientBrightness: AtomicInteger by lazy {
         val node = Progress.AMBIENT_LIGHT_BRIGHTNESS
-        AtomicInteger(node.min).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            Timber.tag(TAG).d("getBrightness signal:%s, value:%s", node.get.signal, value)
+        AtomicInteger(node.def).apply {
+            val result = readIntProperty(node.get.signal, node.get.origin)
+            val value = if (result in node.min..node.max) result else node.def
+            Timber.d("getBrightness node:$node, result:$result,, value:$value")
             this.set(value)
         }
     }
 
     private val ambientColor: AtomicInteger by lazy {
         val node = Progress.AMBIENT_LIGHT_COLOR
-        AtomicInteger(node.min).apply {
+        AtomicInteger(node.def).apply {
             val value = readIntProperty(node.get.signal, node.get.origin)
-            Timber.tag(TAG).d("getAmbientColor signal:%s, value:%s", node.get.signal, value)
+            Timber.d("getAmbientColor signal:%s, value:%s", node.get.signal, value)
             doUpdateProgress(node, this, value, instance::doProgressChanged)
         }
     }

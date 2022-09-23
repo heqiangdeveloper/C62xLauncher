@@ -218,11 +218,23 @@ enum class RadioNode(
 
     /**
      * 行车--方向盘--电子助力转向模式
+     * set -> HU_IPDayNightControl[0x1,0,0x0,0x7]
+    0x0: Inactive
+    0x1: Standard(default)
+    0x2: Comfort
+    0x3: Sport
+    0x4~0x7: reserved
+     * get ->  state of steering feel tuning
+    0x0: Inactive
+    0x1: Standard(default)
+    0x2: Comfort
+    0x3: Sport
+    0x4~0x7: reserved
      */
     DRIVE_EPS_MODE(
-        get = RNorm(values = intArrayOf(0x8, 0x9), signal = -1),
-        set = RNorm(values = intArrayOf(0x8, 0x9), signal = -1),
-        default = 0x8
+        get = RNorm(values = intArrayOf(0x1, 0x3), signal = CarCabinManager.ID_STEERING_FEEL_STATE),
+        set = RNorm(values = intArrayOf(0x1, 0x3), signal = CarCabinManager.ID_STEERING_FEEL_SET),
+        default = 0x1
     ),
 
     //-------------------灯光设置--开始-------------------

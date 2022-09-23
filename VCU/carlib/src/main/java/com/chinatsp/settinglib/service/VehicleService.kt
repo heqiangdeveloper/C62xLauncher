@@ -33,14 +33,16 @@ class VehicleService : Service() {
         return controller
     }
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        val action = intent.action
-        val data = intent.getStringExtra("data");
-        Timber.d("receive action:$action, data:$data")
-        if ("com.chinatsp.vcu.actions.USER_SETTING_RECOVE" == action) {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        intent?.let {
+            val action = it.action
+            val data = it.getStringExtra("data");
+            Timber.d("receive action:$action, data:$data")
+            if ("com.chinatsp.vcu.actions.USER_SETTING_RECOVE" == action) {
 
-        } else if ("com.chinatsp.vcu.actions.ACOUSTIC_CONTROLER" == action) {
-            controller.doParseSourceData(data)
+            } else if ("com.chinatsp.vcu.actions.ACOUSTIC_CONTROLER" == action) {
+                controller.doParseSourceData(data)
+            }
         }
         return super.onStartCommand(intent, flags, startId)
     }

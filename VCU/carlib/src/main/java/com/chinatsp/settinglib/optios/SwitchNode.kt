@@ -212,9 +212,10 @@ enum class SwitchNode(
     /**
      * 座舱--其它--无线充电灯（no signal）
      * set -> int类型数据 氛围灯Console软开关 0x0: Inactive; 0x1: ON; 0x2: OFF; 0x3: Reserved
+     * get -> 氛围灯Consle软开关状态反馈 0x0: Inactive; 0x1: On; 0x2: Off; 0x3: Reserved
      */
     DRIVE_WIRELESS_CHARGING_LAMP(
-        get = Norm(on = 0x1, off = 0x0, signal = -1),
+        get = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_BDC_ALC_CONSLAMPSWT_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HUM_ALC_CONSLAMP_SWT),
         default = true
     ),
@@ -594,6 +595,24 @@ enum class SwitchNode(
     ADAS_BSC(
         get = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_AVM_BSD_DISP_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_APA_BSD_DISP_SWT),
+        default = true
+    ),
+
+    /**
+     * get -> MEB switch status 对应HUMMEB功能开关信号
+    0x0: Inactive
+    0x1: On
+    0x2: Off
+    0x3: Invalid
+     * set -》MEB功能开关
+    0x0: Inactive
+    0x1: ON
+    0x2: OFF
+    0x3: Invalid
+     */
+    ADAS_MEB(
+        get = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_MEB_SWT_STS),
+        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_APA_MEB_SWT),
         default = true
     ),
 

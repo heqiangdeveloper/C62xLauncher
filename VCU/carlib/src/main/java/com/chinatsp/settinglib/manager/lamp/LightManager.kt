@@ -1,6 +1,7 @@
 package com.chinatsp.settinglib.manager.lamp
 
 import android.car.hardware.CarPropertyValue
+import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.IProgressManager
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IBaseListener
@@ -15,6 +16,7 @@ import timber.log.Timber
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.math.abs
 
 /**
  * @author : luohong
@@ -115,22 +117,50 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
 
     private fun initProgress(type: Progress): Volume {
         val value = readIntProperty(type.get.signal, type.get.origin)
-        val position = findBacklightLevel(value)
+        val position = findBacklightLevel(value, type.def)
         Timber.d("initProgress $type type:$type, value:$value, position:$position")
         return Volume(type, type.min, type.max, position)
     }
 
-    private fun findBacklightLevel(value: Int): Int {
-        val backlightLevel = getBacklightLevel()
-        var level = 0
-        backlightLevel.forEachIndexed { index, i ->
+    private fun findBacklightLevel(value: Int, def: Int): Int {
+        val levels = getBacklightLevel()
+        var level = Constant.INVALID
+        levels.forEachIndexed { index, i ->
             if (i == value) level = index
+        }
+        if (Constant.INVALID == level) {
+            val first = levels.indexOfFirst { it >= value }
+            val last = levels.indexOfLast { it <= value }
+            if (first == last) {
+                level = first
+            }
+            when (Constant.INVALID) {
+                first -> {
+                    level = last
+                }
+                last -> {
+                    level = first
+                }
+                else -> {
+                    val offsetBefore = abs(value - levels[last])
+                    val offsetAfter = abs(value - levels[first])
+                    level = if (offsetBefore > offsetAfter) {
+                        first
+                    } else {
+                        last
+                    }
+                }
+            }
+            Timber.d("findBacklightLevel first:$first, last:$last, level:$level")
+        }
+        if (Constant.INVALID == level) {
+            level = def
         }
         return level
     }
 
     private fun getBacklightLevel(): IntArray {
-        return intArrayOf(0x00, 0x19, 0x33, 0x4C, 0x66, 0x7F, 0x99, 0xB2, 0xCC, 0xE5, 0xFF)
+        return intArrayOf(0x19, 0x33, 0x4C, 0x66, 0x7F, 0x99, 0xB2, 0xCC, 0xE5, 0xFF)
     }
 
     override fun isCareSignal(signal: Int, origin: Origin): Boolean {
@@ -265,8 +295,7 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
             }
             Progress.SWITCH_BACKLIGHT_BRIGHTNESS.get.signal -> {
                 val value = property.value as Int
-                val level = findBacklightLevel(value)
-                Timber.d("onCabinPropertyChanged SWITCH_BACKLIGHT_BRIGHTNESS value:$value, level:$level")
+                val level = findBacklightLevel(value, Progress.SWITCH_BACKLIGHT_BRIGHTNESS.def)
                 doUpdateProgress(switchBacklight, level, true, this::doProgressChanged)
             }
             else -> {}

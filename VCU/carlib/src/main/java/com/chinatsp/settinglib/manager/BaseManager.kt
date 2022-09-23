@@ -123,8 +123,9 @@ abstract class BaseManager : IManager {
         try {
             writeLock.lock()
             listenerStore.takeIf { it.containsKey(serial) }?.let {
-                Timber.d("unRegisterVcuListener serial:$serial, callSerial:$callSerial")
-                it.remove(serial)
+                val obj = it.remove(serial)
+                Timber.d("unRegisterVcuListener serial:$serial, callSerial:$callSerial，" +
+                        " name:${this::class.java.simpleName}, listener:${obj?.javaClass?.simpleName}")
             }
         } finally {
             writeLock.unlock()

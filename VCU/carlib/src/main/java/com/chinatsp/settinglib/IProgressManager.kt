@@ -3,6 +3,7 @@ package com.chinatsp.settinglib
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IManager
 import com.chinatsp.settinglib.optios.Progress
+import timber.log.Timber
 
 /**
  * @author : luohong
@@ -23,6 +24,7 @@ interface IProgressManager : IManager {
         status: Boolean,
         block: ((Progress, Int) -> Unit)? = null,
     ): Volume {
+        Timber.d("doUpdateProgress node : ${volume.type}, value:$value")
         if (status && value != volume.pos) {
             volume.pos = value
             block?.let { it(volume.type, value) }

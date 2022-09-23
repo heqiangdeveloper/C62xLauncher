@@ -144,6 +144,7 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
         initSwitchOption(SwitchNode.ADAS_DOW, viewModel.dowValue)
         initSwitchOption(SwitchNode.ADAS_BSC, viewModel.bscValue)
         initSwitchOption(SwitchNode.ADAS_BSD, viewModel.bsdValue)
+        initSwitchOption(SwitchNode.ADAS_MEB, viewModel.mebValue)
         initSwitchOption(SwitchNode.ADAS_GUIDES, viewModel.guidesValue)
     }
 
@@ -157,6 +158,9 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
         viewModel.bsdValue.observe(this) {
             doUpdateSwitch(SwitchNode.ADAS_BSD, it)
         }
+        viewModel.mebValue.observe(this) {
+            doUpdateSwitch(SwitchNode.ADAS_MEB, it)
+        }
         viewModel.guidesValue.observe(this) {
             doUpdateSwitch(SwitchNode.ADAS_GUIDES, it)
         }
@@ -167,6 +171,7 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
             SwitchNode.ADAS_DOW -> binding.adasSideDowSwitch
             SwitchNode.ADAS_BSC -> binding.adasSideBscSwitch
             SwitchNode.ADAS_BSD -> binding.adasSideBsdSwitch
+            SwitchNode.ADAS_MEB -> binding.adasSideMebSwitch
             SwitchNode.ADAS_GUIDES -> binding.adasSideGuidesSwitch
             else -> null
         }
@@ -239,6 +244,11 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
                 dynamicEffect()
             }
         }
+
+        binding.adasSideMebSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            doUpdateSwitchOption(SwitchNode.ADAS_MEB, buttonView, isChecked)
+        }
+
     }
 
     override fun doUpdateSwitchOption(node: SwitchNode, button: CompoundButton, status: Boolean) {
