@@ -19,7 +19,7 @@ public class RecentAppHelper {
     public static List<String> notInAppManageListApps = Arrays.asList(
             "com.chinatsp.launcher",//launcher
             "com.oushang.datastat",//埋点
-            "com.chinatsp.ifly",//语音
+            "com.iflytek.autofly.voicecoreservice",//语音
             "com.autonavi.amapauto"//高德
     );
 

@@ -32,7 +32,7 @@ public class AppLists {
     public static final String media = "com.chinatsp.media";//多媒体
     public static final String usercenter = "com.chinatsp.usercenter";//个人中心
     public static final String iot = "com.uaes.iot";//行车顾问
-    public static final String ifly = "com.chinatsp.ifly";//语音
+    public static final String ifly = "com.iflytek.autofly.voicecoreservice";//语音
     public static final String userbook = "com.deheshuntian.baic_c62x_f06_om";//电子说明书
     public static final String appmarket = "com.huawei.appmarket.car.landscape";//华为应用商城
     public static final String volcano = "com.bytedance.byteautoservice";//火山车娱
