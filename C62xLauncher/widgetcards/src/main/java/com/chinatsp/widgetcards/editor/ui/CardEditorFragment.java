@@ -136,24 +136,24 @@ public class CardEditorFragment extends BaseFragment implements EditorContract{
         if (mController.checkChanged()) {
             mController.commitEdit();
         }
-        requireActivity().finish();
+        finishActivity();
     }
 
     private void cancelPage() {
         if (!mController.checkChanged()) {
-            requireActivity().finish();
+            finishActivity();
             return;
         }
         DialogMaster dialogMaster = DialogMaster.create(getActivity(), new DialogMaster.OnPressOk() {
                     @Override
                     public void onPress(View v) {
                         mController.commitEdit();
-                        requireActivity().finish();
+                        finishActivity();
                     }
                 }, new DialogMaster.OnPressCancel() {
                     @Override
                     public void onPress(View v) {
-                        requireActivity().finish();
+                        finishActivity();
                     }
                 }, 740, 488
         );

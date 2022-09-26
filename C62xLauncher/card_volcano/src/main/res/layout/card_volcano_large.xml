@@ -95,9 +95,7 @@
         android:id="@+id/tvCardVolcanoNetworkErr"
         style="@style/CardLv2TextView"
         android:layout_width="222px"
-        android:layout_height="92px"
-        android:layout_marginTop="35px"
-        android:gravity="bottom|center"
+        android:layout_height="wrap_content"
         android:letterSpacing="0.01"
         android:lineSpacingMultiplier="1.5"
         android:text="@string/volcano_network_err"
@@ -105,5 +103,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

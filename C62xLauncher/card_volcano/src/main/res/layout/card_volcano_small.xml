@@ -76,7 +76,9 @@
         android:layout_marginTop="155px"
         android:src="@drawable/card_icon_wifi_disconnect"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible"
+        />
 
     <TextView
         android:id="@+id/tvCardVolcanoNetworkErr"
@@ -90,5 +92,7 @@
         android:text="@string/volcano_network_err"
         app:layout_constraintEnd_toEndOf="@id/ivCardVolcanoNetworkErr"
         app:layout_constraintStart_toStartOf="@id/ivCardVolcanoNetworkErr"
-        app:layout_constraintTop_toBottomOf="@id/ivCardVolcanoNetworkErr" />
+        app:layout_constraintTop_toBottomOf="@id/ivCardVolcanoNetworkErr"
+        android:visibility="invisible"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

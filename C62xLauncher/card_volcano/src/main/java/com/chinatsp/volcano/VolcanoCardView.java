@@ -4,6 +4,8 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,7 @@ import com.chinatsp.volcano.viewholder.VolcanoViewHolder;
 
 import card.service.ICardStyleChange;
 import launcher.base.utils.EasyLog;
+import launcher.base.utils.recent.RecentAppHelper;
 import launcher.base.utils.view.LayoutParamUtil;
 
 
@@ -75,6 +78,12 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
             mLargeCardView = LayoutInflater.from(getContext()).inflate(R.layout.card_volcano_large, this, false);
             mBigCardViewHolder = new BigCardViewHolder(mLargeCardView, this);
         }
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentAppHelper.launchApp(getContext(), "com.bytedance.byteautoservice");
+            }
+        });
     }
 
     @Override

@@ -18,6 +18,12 @@ public abstract class BaseFragment extends Fragment {
         return mRootView;
     }
 
+    protected void finishActivity() {
+        if (getActivity() != null){
+            getActivity().finish();
+        }
+    }
+
     protected abstract void initViews(View rootView);
 
     protected abstract int getLayoutId() ;

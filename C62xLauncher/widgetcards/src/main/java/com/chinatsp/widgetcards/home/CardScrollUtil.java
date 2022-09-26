@@ -12,7 +12,6 @@ public class CardScrollUtil {
     }
 
     public static void scroll(LinearLayoutManager layoutManager, int position) {
-
         if (layoutManager == null || position < 0 ) {
             return;
         }
