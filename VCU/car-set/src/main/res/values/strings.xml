@@ -26,7 +26,7 @@
     <string name="table2">灯光设置</string>
     <string name="table3">车辆音效</string>
     <string name="table4">驾驶辅助</string>
-    <string name="table5">座舱</string>
+    <string name="table5">行车</string>
     <string name="table6">BEIJING OS</string>
     <string name="back_navigation">返回</string>
     <string name="car_door">车门</string>
@@ -120,6 +120,7 @@
 
     <string name="car_trunk_electric_function">电动尾门电动功能</string>
     <string name="car_trunk_intelligence_into">电动尾门智能进入</string>
+    <string name="car_trunk_height_adjustment">尾门高度调节</string>
     <string name="car_trunk_light_flashing">灯光闪烁报警</string>
     <string name="car_trunk_buzzer_alarms">蜂鸣器报警开关</string>
     <string name="car_trunk_door_height">尾门高度调节</string>
