@@ -1,5 +1,6 @@
 package com.chinatsp.vehicle.settings.fragment
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.manager.GlobalManager

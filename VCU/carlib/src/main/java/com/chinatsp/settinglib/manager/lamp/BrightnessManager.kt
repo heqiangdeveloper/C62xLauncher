@@ -171,11 +171,9 @@ class BrightnessManager : BaseManager(), IProgressManager {
     override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             Progress.METER_SCREEN_BRIGHTNESS.get.signal -> {
-                Timber.d("METER_SCREEN_BRIGHTNESS")
                 doUpdateProgress(meterVolume, property.value as Int, true, this::doProgressChanged)
             }
             Progress.CONDITIONER_SCREEN_BRIGHTNESS.get.signal -> {
-                Timber.d("CONDITIONER_SCREEN_BRIGHTNESS")
                 doUpdateProgress(acVolume, property.value as Int, true, this::doProgressChanged)
             }
             else -> {}

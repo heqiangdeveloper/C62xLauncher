@@ -496,7 +496,7 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
             intRange.forEach {
                 val childAt = binding.container.getChildAt(it)
                 if (null != childAt && childAt != binding.driveBsdCamera) {
-                    childAt.alpha = if (status) 1.0f else 0.7f
+                    childAt.alpha = if (status) 1.0f else 0.6f
                     updateViewEnable(childAt, status)
                 }
             }

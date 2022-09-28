@@ -39,16 +39,7 @@ class CruiseManager : BaseManager(), IOptionManager {
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
-    private val targetPromptFunction: AtomicBoolean by lazy {
-        val node = SwitchNode.ADAS_TARGET_PROMPT
-//        AtomicBoolean(node.default).apply {
-//            val value = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateSwitchValue(node, this, value)
-//        }
-        return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
-        }
-    }
+
 
     private val limberLeaveFunction: AtomicBoolean by lazy {
         val node = SwitchNode.ADAS_LIMBER_LEAVE
@@ -77,7 +68,6 @@ class CruiseManager : BaseManager(), IOptionManager {
         HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int>().apply {
                 add(SwitchNode.ADAS_IACC.get.signal)
-                add(SwitchNode.ADAS_TARGET_PROMPT.get.signal)
                 add(SwitchNode.ADAS_LIMBER_LEAVE.get.signal)
                 add(RadioNode.ADAS_LIMBER_LEAVE.get.signal)
             }
@@ -89,9 +79,6 @@ class CruiseManager : BaseManager(), IOptionManager {
         when (property.propertyId) {
             SwitchNode.ADAS_IACC.get.signal -> {
                 onSwitchChanged(SwitchNode.ADAS_IACC, iaccFunction, property)
-            }
-            SwitchNode.ADAS_TARGET_PROMPT.get.signal -> {
-                onSwitchChanged(SwitchNode.ADAS_TARGET_PROMPT, targetPromptFunction, property)
             }
             SwitchNode.ADAS_LIMBER_LEAVE.get.signal -> {
                 onSwitchChanged(SwitchNode.ADAS_LIMBER_LEAVE, limberLeaveFunction, property)
@@ -144,9 +131,6 @@ class CruiseManager : BaseManager(), IOptionManager {
             SwitchNode.ADAS_IACC -> {
                 iaccFunction.get()
             }
-            SwitchNode.ADAS_TARGET_PROMPT -> {
-                targetPromptFunction.get()
-            }
             SwitchNode.ADAS_LIMBER_LEAVE -> {
                 limberLeaveFunction.get()
             }
@@ -159,9 +143,7 @@ class CruiseManager : BaseManager(), IOptionManager {
             SwitchNode.ADAS_IACC -> {
                 writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
-            SwitchNode.ADAS_TARGET_PROMPT -> {
-                writeProperty(node.set.signal, node.value(status), node.set.origin)
-            }
+
             SwitchNode.ADAS_LIMBER_LEAVE -> {
                 writeProperty(node.set.signal, node.value(status), node.set.origin)
             }

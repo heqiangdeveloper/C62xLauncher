@@ -101,16 +101,12 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
 
     private fun initSwitchOption() {
         initSwitchOption(SwitchNode.ADAS_IACC, viewModel.cruiseAssistFunction)
-        initSwitchOption(SwitchNode.ADAS_TARGET_PROMPT, viewModel.targetPromptFunction)
         initSwitchOption(SwitchNode.ADAS_LIMBER_LEAVE, viewModel.limberLeaveFunction)
     }
 
     private fun addSwitchLiveDataListener() {
         viewModel.cruiseAssistFunction.observe(this) {
             doUpdateSwitch(SwitchNode.ADAS_IACC, it)
-        }
-        viewModel.targetPromptFunction.observe(this) {
-            doUpdateSwitch(SwitchNode.ADAS_TARGET_PROMPT, it)
         }
         viewModel.limberLeaveFunction.observe(this) {
             doUpdateSwitch(SwitchNode.ADAS_LIMBER_LEAVE, it)
@@ -120,8 +116,7 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
     override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
         return when (node) {
             SwitchNode.ADAS_IACC -> binding.accessCruiseCruiseAssist
-            SwitchNode.ADAS_TARGET_PROMPT -> binding.accessCruiseTargetPrompt
-            SwitchNode.ADAS_LIMBER_LEAVE -> binding.accessCruiseLimberLeave
+            SwitchNode.ADAS_LIMBER_LEAVE -> binding.adasForwardLeaveSwitch
             else -> null
         }
     }
@@ -150,7 +145,8 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
 
     private fun setSwitchListener() {
         binding.accessCruiseCruiseAssist.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
+            doUpdateSwitchOption(SwitchNode.ADAS_IACC, buttonView, isChecked)
+            if (buttonView.isChecked) {
                 //binding.intelligentCruise.visibility = View.GONE
                 val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_acc
                 binding.video.setVideoURI(Uri.parse(uri));
@@ -158,14 +154,10 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
             } else {
                 dynamicEffect()
             }
-            doUpdateSwitchOption(SwitchNode.ADAS_IACC, buttonView, isChecked)
         }
-        binding.accessCruiseTargetPrompt.setOnCheckedChangeListener { buttonView, isChecked ->
-            doUpdateSwitchOption(SwitchNode.ADAS_TARGET_PROMPT, buttonView, isChecked)
+        binding.adasForwardLeaveSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            doUpdateSwitchOption(SwitchNode.ADAS_LIMBER_LEAVE, buttonView, isChecked)
         }
-//        binding.accessCruiseLimberLeave.setOnCheckedChangeListener { buttonView, isChecked ->
-//            doUpdateSwitchOption(SwitchNode.ADAS_LIMBER_LEAVE, buttonView, isChecked)
-//        }
     }
 
 

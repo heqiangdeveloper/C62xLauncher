@@ -26,12 +26,6 @@ class CruiseViewModel @Inject constructor(app: Application, model: BaseModel) :
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val targetPromptFunction: LiveData<Boolean> by lazy { _targetPromptFunction }
-
-    private val _targetPromptFunction: MutableLiveData<Boolean> by lazy {
-        val node = SwitchNode.ADAS_TARGET_PROMPT
-        MutableLiveData(manager.doGetSwitchOption(node))
-    }
 
     val limberLeaveFunction: LiveData<Boolean> by lazy { _limberLeaveFunction }
 
@@ -60,7 +54,6 @@ class CruiseViewModel @Inject constructor(app: Application, model: BaseModel) :
     override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
         when (node) {
             SwitchNode.ADAS_IACC -> doUpdate(_cruiseAssistFunction, status)
-            SwitchNode.ADAS_TARGET_PROMPT -> doUpdate(_targetPromptFunction, status)
             SwitchNode.ADAS_LIMBER_LEAVE -> doUpdate(_limberLeaveFunction, status)
             else -> {}
         }

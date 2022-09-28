@@ -76,7 +76,7 @@
 
 
                 <com.common.xui.widget.button.switchbutton.SwitchButton
-                    android:id="@+id/access_cruise_target_prompt"
+                    android:id="@+id/adas_forward_leave_switch"
                     style="@style/switch_button_style"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -105,14 +105,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-
-                <com.common.xui.widget.button.switchbutton.SwitchButton
-                    android:id="@+id/access_cruise_limber_leave"
-                    style="@style/switch_button_style"
-                    android:layout_marginTop="@dimen/x15"
-                    android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.common.xui.widget.tabbar.TabControlView
                     android:id="@+id/access_cruise_limber_leave_radio"

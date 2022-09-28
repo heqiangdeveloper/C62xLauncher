@@ -153,7 +153,7 @@ class TrailerRemindDialogFragment :
             }
             return
         }
-        val alpha = if (status) 1.0f else 0.7f
+        val alpha = if (status) 1.0f else 0.6f
         view.isEnabled = status
         view.alpha = alpha
 

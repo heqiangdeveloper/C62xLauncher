@@ -282,6 +282,15 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
             SwitchNode.ALC_SMART_MODE -> {
                 alcSmartMode.get()
             }
+            SwitchNode.SPEED_RHYTHM -> {
+                speedRhythm.get()
+            }
+            SwitchNode.MUSIC_RHYTHM -> {
+                musicRhythm.get()
+            }
+            SwitchNode.COLOUR_BREATHE -> {
+                colourBreathe.get()
+            }
             else -> false
         }
     }

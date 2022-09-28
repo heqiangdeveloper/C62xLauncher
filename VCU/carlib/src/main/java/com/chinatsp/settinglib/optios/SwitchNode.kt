@@ -454,11 +454,11 @@ enum class SwitchNode(
      *        0x2: Disappare warning； 0x3: Detect and disappear warning(default)
      *        0x4: Warning off；0x5~0x7:Reserved
      */
-    ADAS_TARGET_PROMPT(
-        get = Norm(on = 0x1, off = 0x0, signal = -1),
-        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_OBJ_DETECTION_SWT),
-        default = true
-    ),
+//    ADAS_TARGET_PROMPT(
+//        get = Norm(on = 0x1, off = 0x0, signal = -1),
+//        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_OBJ_DETECTION_SWT),
+//        default = true
+//    ),
 
     /**
      * 驾驶辅助--智能巡航--前车驶离提示
@@ -578,12 +578,16 @@ enum class SwitchNode(
 
     /**
      * 驾驶辅助--侧后辅助--盲区监测 BSD
-     * set:int类型数据; 0x0: Inactive; 0x1: Enabled; 0x2: Disabled; 0x3: Reserved
-     * get :0x0: OFF 0x1: ON
+     * set -> int类型数据; 0x0: Inactive; 0x1: ON; 0x2: OFF; 0x3: Reserved
+     * get -> Indicate the BSD running status of AVM, used for international car.
+               * 0x0:  Initial; 0x1: BSD off; 0x2: BSD standby; 0x3: BSD on; 0x4: BSD failed; 0x5: Camera blocked
+     *         0x6: Reserved; 0x7: Reserved
+     *         收到AvmBsdSts=1界面关，=2或3显示开，还有两个置灰的状态，你看下文档写的
      */
     ADAS_BSD(
-        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ALC_HUM_BSD_SW_REPONSE),
-        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HUM_ALC_BSD_REMIND_EN),
+        get = Norm(on = 0x3, off = 0x1, signal = CarCabinManager.ID_AVM_BSD_STS),
+        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_APA_BSD_SWT),
+        invalidValues = intArrayOf(0x01, 0x02, 0x03),
         default = true
     ),
 

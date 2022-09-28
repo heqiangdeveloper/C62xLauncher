@@ -116,6 +116,7 @@ public class VSeekBar extends View {
     private LinearGradient linearGradient;
     private final Xfermode xfermode = new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP);
     private final Path path = new Path();
+    private final Path linePath = new Path();
 
     public VSeekBar(Context context) {
         this(context, null);
@@ -280,18 +281,27 @@ public class VSeekBar extends View {
         super.onDraw(canvas);
         canvas.setDrawFilter(paintFlagsDrawFilter);
         layerId = canvas.saveLayer(0, 0, getWidth(), getHeight(), mPaint);
-        drawSelectShadow(canvas);
+//        drawSelectShadow(canvas);
         drawEntireRangeLine(canvas);
         drawSelectedRangeLine(canvas);
-        drawSelectBorder(canvas);
+//        drawSelectBorder(canvas);
 //        if (mIsShowNumber) {
 ////            drawSelectedNumber(canvas);
 //        }
 //        drawRuler(canvas);
 //        drawSelectedTargets(canvas);
-
         drawIcon(canvas);
         canvas.restoreToCount(layerId);
+        layerId = canvas.saveLayer(0, 0, getWidth(), getHeight(), mPaint);
+        drawSelectBorder2(canvas);
+        canvas.restoreToCount(layerId);
+    }
+
+    private void drawSelectBorder2(Canvas canvas) {
+        RectF rectF = new RectF();
+        resetSelectRectF(rectF, selectRectF.left, selectRectF.top, mBorderWidth, selectRectF.right, selectRectF.bottom);
+        canvas.clipRect(rectF);
+        drawSelectBorder(canvas);
     }
 
     private void drawIcon(Canvas canvas) {
@@ -335,10 +345,7 @@ public class VSeekBar extends View {
         normalRectF.bottom = mMiddleY + mOutsideRangeLineStrokeWidth / 2;
         canvas.drawRoundRect(normalRectF, normalRectF.height() / 2, normalRectF.height() / 2, mPaint);*/
 
-        normalRectF.left = mLineStartX;
-        normalRectF.top = mMiddleY - mOutsideRangeLineStrokeWidth / 2;
-        normalRectF.right = mLineEndX;
-        normalRectF.bottom = mMiddleY + mOutsideRangeLineStrokeWidth / 2;
+        resetSelectRectF(normalRectF, mLineStartX, mMiddleY, mOutsideRangeLineStrokeWidth / 2, mLineEndX, mMiddleY);
 
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.luminance_bg_blue);
         rect.left = 0;
@@ -369,10 +376,7 @@ public class VSeekBar extends View {
             linearGradient = new LinearGradient(0, 0, getWidth(), 0, startColor, endColor, Shader.TileMode.CLAMP);
         }
         mPaint.setShader(linearGradient);
-        selectRectF.left = mLineStartX;
-        selectRectF.top = mMiddleY - mOutsideRangeLineStrokeWidth / 2;
-        selectRectF.right = mMaxPosition;
-        selectRectF.bottom = mMiddleY + mOutsideRangeLineStrokeWidth / 2;
+        resetSelectRectF(selectRectF, mLineStartX, mMiddleY, mOutsideRangeLineStrokeWidth / 2, mMaxPosition, mMiddleY);
         canvas.drawRect(selectRectF, mPaint);
 //        canvas.drawRoundRect(selectRectF, selectRectF.height() / 2, selectRectF.height() / 2, mPaint);
         mPaint.setShader(null);
@@ -387,48 +391,62 @@ public class VSeekBar extends View {
     }
 
     private void resetDrawPath() {
-        selectRectF.left = mLineStartX;
-        selectRectF.top = mMiddleY - mOutsideRangeLineStrokeWidth / 2;
-        selectRectF.right = mMaxPosition;
-        selectRectF.bottom = mMiddleY + mOutsideRangeLineStrokeWidth / 2;
-        float closedRadius = 35f;
-        boolean isNearEnd = mMaxPosition >= mLineEndX - 12;
-        float rightRadius = isNearEnd ? closedRadius : 0f;
+//        resetSelectRectF(selectRectF, mLineStartX, mMiddleY, mOutsideRangeLineStrokeWidth / 2, mMaxPosition, mMiddleY);
+//        float closedRadius = 35f;
+//        boolean isNearEnd = mMaxPosition >= mLineEndX - 12;
+//        float rightRadius = isNearEnd ? closedRadius : 0f;
         path.reset();
-        // moveTo此点为多边形的起点
-        path.moveTo(selectRectF.right - rightRadius, selectRectF.top);
-        //上X边线
-        path.lineTo(selectRectF.right - rightRadius, selectRectF.top);
-        path.lineTo(selectRectF.left + closedRadius, selectRectF.top);
-        //圆角线
-        path.quadTo(
-                selectRectF.left, selectRectF.top,
-                selectRectF.left, selectRectF.top + closedRadius
-        );
-        path.lineTo(selectRectF.left, selectRectF.bottom - closedRadius);
-        //圆角线
-        path.quadTo(selectRectF.left, selectRectF.bottom, selectRectF.left + closedRadius, selectRectF.bottom);
-        //底部X轴边线
-        path.lineTo(selectRectF.right - rightRadius, selectRectF.bottom);
-        //最右边圆角部分
-        if (isNearEnd) {
-            //上圆角边线
-            path.moveTo(selectRectF.right - rightRadius, selectRectF.top);
-            path.lineTo(selectRectF.right - closedRadius, selectRectF.top);
-            path.quadTo(
-                    selectRectF.right, selectRectF.top,
-                    selectRectF.right, selectRectF.top + closedRadius
-            );
-            //下圆角边线
-            path.moveTo(selectRectF.right - rightRadius, selectRectF.bottom);
-            path.lineTo(selectRectF.right - closedRadius, selectRectF.bottom);
-            path.quadTo(
-                    selectRectF.right, selectRectF.bottom,
-                    selectRectF.right, selectRectF.bottom - closedRadius
-            );
-        } else {
-            path.close();
+        RectF borderRectF = new RectF(normalRectF.left, normalRectF.top, normalRectF.right, normalRectF.bottom);
+        float radius = borderRectF.height() / 2;
+        path.addRoundRect(borderRectF, radius, radius, Path.Direction.CCW);
+        if (selectRectF.right >= radius && selectRectF.right <= normalRectF.right - radius) {
+            linePath.reset();
+            linePath.moveTo(selectRectF.right - 2 * mBorderWidth, selectRectF.top);
+            linePath.lineTo(selectRectF.right - 2 * mBorderWidth, selectRectF.bottom);
+            path.addPath(linePath);
         }
+//
+//        // moveTo此点为多边形的起点
+//        path.moveTo(selectRectF.right - rightRadius, selectRectF.top);
+//        //上X边线
+//        path.lineTo(selectRectF.right - rightRadius, selectRectF.top);
+//        path.lineTo(selectRectF.left + closedRadius, selectRectF.top);
+//        //圆角线
+//        path.quadTo(
+//                selectRectF.left, selectRectF.top,
+//                selectRectF.left, selectRectF.top + closedRadius
+//        );
+//        path.lineTo(selectRectF.left, selectRectF.bottom - closedRadius);
+//        //圆角线
+//        path.quadTo(selectRectF.left, selectRectF.bottom, selectRectF.left + closedRadius, selectRectF.bottom);
+//        //底部X轴边线
+//        path.lineTo(selectRectF.right - rightRadius, selectRectF.bottom);
+//        //最右边圆角部分
+//        if (isNearEnd) {
+//            //上圆角边线
+//            path.moveTo(selectRectF.right - rightRadius, selectRectF.top);
+//            path.lineTo(selectRectF.right - closedRadius, selectRectF.top);
+//            path.quadTo(
+//                    selectRectF.right, selectRectF.top,
+//                    selectRectF.right, selectRectF.top + closedRadius
+//            );
+//            //下圆角边线
+//            path.moveTo(selectRectF.right - rightRadius, selectRectF.bottom);
+//            path.lineTo(selectRectF.right - closedRadius, selectRectF.bottom);
+//            path.quadTo(
+//                    selectRectF.right, selectRectF.bottom,
+//                    selectRectF.right, selectRectF.bottom - closedRadius
+//            );
+//        } else {
+//            path.close();
+//        }
+    }
+
+    private void resetSelectRectF(RectF selectRectF, float mLineStartX, float mMiddleY, float v, float mMaxPosition, float mMiddleY2) {
+        selectRectF.left = mLineStartX;
+        selectRectF.top = mMiddleY - v;
+        selectRectF.right = mMaxPosition;
+        selectRectF.bottom = mMiddleY2 + v;
     }
 
     private void drawSelectBorder(Canvas canvas) {
@@ -576,6 +594,8 @@ public class VSeekBar extends View {
         }
     }
 
+    boolean isChanged = false;
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (!isEnabled()) {
@@ -630,15 +650,16 @@ public class VSeekBar extends View {
 //                        mMaxPosition = touchX;
 //                        callMaxChangedCallbacks();
 //                    }
-
                     int touchX = (int) event.getX(i);
                     touchX = clamp(touchX, mLineStartX, mLineEndX);
                     mMaxPosition = touchX;
+                    isChanged = isChanged();
                     callMaxChangedCallbacks();
+                    if (lastValue == mMin) mMaxPosition = mLineStartX;
+                    if (lastValue == mMax) mMaxPosition = mLineEndX;
+                    if (isChanged || lastValue == mMin || lastValue == mMax) invalidate();
                 }
-                invalidate();
                 break;
-
             case MotionEvent.ACTION_POINTER_DOWN:
                 updateTouchStatus(true);
 
@@ -711,10 +732,21 @@ public class VSeekBar extends View {
     }
 
 
+    private int lastValue = -1;
+
     private void callMaxChangedCallbacks() {
         if (mOnSeekBarListener != null) {
-            mOnSeekBarListener.onValueChanged(this, getSelectedNumber());
+            int number = getSelectedNumber();
+            if (number != lastValue) {
+                lastValue = number;
+                mOnSeekBarListener.onValueChanged(this, number);
+            }
         }
+    }
+
+    private boolean isChanged() {
+        int number = getSelectedNumber();
+        return number != lastValue;
     }
 
     private boolean isTouchingMinTarget(int pointerIndex, MotionEvent event) {
