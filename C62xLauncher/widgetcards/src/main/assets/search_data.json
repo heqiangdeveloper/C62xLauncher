@@ -1,34 +1,92 @@
 {
   "Keywords": [
     {
-      "DefaultThreshold40": 0,
-      "KeyWord": "开始导航",
-      "KeyWordId": 0
+      "modelName": "系统设置",
+      "chineseFunction": "蓝牙",
+      "chineseFunctionLevel": "连接",
+      "englishFunction": "BT",
+      "englishFunctionLevel": "Wifi connect",
+      "intentAction": "com.chinatsp.settings.SETTINGS",
+      "intentInterface": "open_bluetooth",
+      "dataVersion": "1",
+      "carVersion": "0"
     },
     {
-      "DefaultThreshold40": 0,
-      "KeyWord": "确定",
-      "KeyWordId": 1
+      "modelName": "系统设置",
+      "chineseFunction": "Wi-Fi",
+      "chineseFunctionLevel": "连接",
+      "englishFunction": "Wi-Fi",
+      "englishFunctionLevel": "Wifi connect",
+      "intentAction": "com.chinatsp.vcu.action",
+      "intentInterface": "open_network",
+      "dataVersion": "1",
+      "carVersion": "0"
     },
     {
-      "DefaultThreshold40": 0,
-      "KeyWord": "需要",
-      "KeyWordId": 2
+      "modelName": "系统设置",
+      "chineseFunction": "个人热点",
+      "chineseFunctionLevel": "连接",
+      "englishFunction": "Hot",
+      "englishFunctionLevel": "Wifi connect",
+      "intentAction": "com.chinatsp.settings.SETTINGS",
+      "intentInterface": "open_hotspot",
+      "dataVersion": "1",
+      "carVersion": "0"
     },
     {
-      "DefaultThreshold40": 0,
-      "KeyWord": "取消",
-      "KeyWordId": 3
+      "modelName": "系统设置",
+      "chineseFunction": "主题",
+      "chineseFunctionLevel": "主题与显示",
+      "englishFunction": "theme",
+      "englishFunctionLevel": "theme",
+      "intentAction": "com.chinatsp.settings.SETTINGS",
+      "intentInterface": "open_theme",
+      "dataVersion": "1",
+      "carVersion": "0"
     },
     {
-      "DefaultThreshold40": 0,
-      "KeyWord": "不需要",
-      "KeyWordId": 4
+      "modelName": "系统设置",
+      "chineseFunction": "熄屏显示",
+      "chineseFunctionLevel": "主题与显示",
+      "englishFunction": "display",
+      "englishFunctionLevel": "theme",
+      "intentAction": "com.chinatsp.settings.SETTINGS",
+      "intentInterface": "open_display",
+      "dataVersion": "1",
+      "carVersion": "0"
     },
     {
-      "DefaultThreshold40": 0,
-      "KeyWord": "关闭",
-      "KeyWordId": 5
+      "modelName": "系统设置",
+      "chineseFunction": "系统语言",
+      "chineseFunctionLevel": "通用",
+      "englishFunction": "languagen",
+      "englishFunctionLevel": "common",
+      "intentAction": "com.chinatsp.settings.SETTINGS",
+      "intentInterface": "open_language",
+      "dataVersion": "1",
+      "carVersion": "0"
+    },
+    {
+      "modelName": "系统设置",
+      "chineseFunction": "系统版本",
+      "chineseFunctionLevel": "通用",
+      "englishFunction": "system version",
+      "englishFunctionLevel": "common",
+      "intentAction": "com.chinatsp.settings.SETTINGS",
+      "intentInterface": "open_version",
+      "dataVersion": "1",
+      "carVersion": "0"
+    },
+    {
+      "modelName": "系统语言",
+      "chineseFunction": "系统重置",
+      "chineseFunctionLevel": "通用",
+      "englishFunction": "reset",
+      "englishFunctionLevel": "common",
+      "intentAction": "com.chinatsp.settings.SETTINGS",
+      "intentInterface": "open_reset",
+      "dataVersion": "1",
+      "carVersion": "0"
     }
   ]
 }
