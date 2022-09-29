@@ -1,6 +1,7 @@
 package com.chinatsp.drawer.drive;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -67,5 +68,9 @@ public class DrawerDriveCounselorHolder extends BaseViewHolder<DrawerEntity> {
 
     public void reset() {
 
+    }
+
+    public Context getContext() {
+        return itemView.getContext();
     }
 }

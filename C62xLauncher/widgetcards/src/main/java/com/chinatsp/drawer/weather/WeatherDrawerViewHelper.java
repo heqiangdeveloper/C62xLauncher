@@ -41,7 +41,7 @@ public class WeatherDrawerViewHelper {
     }
 
     public void refreshData(WeatherInfo weatherInfo) {
-        EasyLog.d(TAG, "refreshData:" + weatherInfo);
+//        EasyLog.d(TAG, "refreshData:" + weatherInfo);
         mUiHandler.post(new Runnable() {
             @Override
             public void run() {

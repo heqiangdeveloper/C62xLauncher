@@ -19,17 +19,11 @@ class WeatherDrawerController {
         mViewHelper = viewHelper;
         mWeatherRepository = WeatherRepository.getInstance();
         mWeatherRepository.init(viewHelper.getContext());
+        mWeatherRepository.registerDataCallback(mIRemoteDataCallback);
     }
 
     void requestWeatherInfo() {
-        EasyLog.d(TAG, "requestWeatherInfo");
-        mWeatherRepository.registerDataCallback(new IRemoteDataCallback<List<WeatherInfo>>() {
-            @Override
-            public void notifyData(List<WeatherInfo> weatherInfoList) {
-                EasyLog.d(TAG, "requestWeatherInfo DataCallback, list size: "+weatherInfoList.size());
-                refresh(weatherInfoList);
-            }
-        });
+        EasyLog.d(TAG, "requestWeatherInfo "+this.hashCode());
         mWeatherRepository.requestRefreshWeatherInfo(new IOnRequestListener<List<WeatherInfo>>() {
             @Override
             public void onSuccess(List<WeatherInfo> weatherInfoList) {
@@ -51,5 +45,14 @@ class WeatherDrawerController {
         } else {
             mViewHelper.refreshData(weatherInfoList.get(0));
         }
+    }
+
+    IRemoteDataCallback<List<WeatherInfo>> mIRemoteDataCallback = weatherInfoList -> {
+        EasyLog.d(TAG, "requestWeatherInfo DataCallback, list size: " + weatherInfoList.size());
+        refresh(weatherInfoList);
+    };
+
+    private void removeCallback() {
+        mWeatherRepository.unregisterDataCallback(mIRemoteDataCallback);
     }
 }

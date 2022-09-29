@@ -52,10 +52,9 @@ public class NaviCardView extends ConstraintLayout implements ICardStyleChange {
         mSmallWidth = (int) getResources().getDimension(R.dimen.card_width);
         mLargeWidth = (int) getResources().getDimension(R.dimen.card_width_large);
         LayoutInflater.from(getContext()).inflate(R.layout.card_navigation, this);
-        AutoAidlWidgetManager.getInstance().init(getContext().getApplicationContext());
         mSmallCardView = findViewById(R.id.layoutSmallCardView);
-        mSmallCardHolder = new NaviSmallCardHolder(mSmallCardView);
         mController = new NaviController(this);
+        mSmallCardHolder = new NaviSmallCardHolder(mSmallCardView,mController);
         mController.refreshInitView();
     }
 
@@ -63,7 +62,7 @@ public class NaviCardView extends ConstraintLayout implements ICardStyleChange {
     public void expand() {
         if (mLargeCardView == null) {
             mLargeCardView = LayoutInflater.from(getContext()).inflate(R.layout.card_navigation_large, this, false);
-            mBigCardHolder = new NaviBigCardHolder(mLargeCardView);
+            mBigCardHolder = new NaviBigCardHolder(mLargeCardView, mController);
         }
         mExpand = true;
         addView(mLargeCardView);
@@ -122,5 +121,13 @@ public class NaviCardView extends ConstraintLayout implements ICardStyleChange {
     @Override
     public boolean hideDefaultTitle() {
         return false;
+    }
+
+    public void refreshMyLocation(String myLocationName) {
+        if (mExpand) {
+            mBigCardHolder.setLocation(myLocationName);
+        } else {
+            mSmallCardHolder.setLocation(myLocationName);
+        }
     }
 }

@@ -8,6 +8,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -38,7 +39,6 @@ public class CarLauncher extends AppCompatActivity implements OnGestureAction {
         initVersionInfo();
 
         mGestureDetector = new GestureDetector(new SlideGestureListener(this, this));
-
     }
 
     @Override

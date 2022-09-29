@@ -25,6 +25,9 @@ class DriveInfoDrawerController {
         mDriveInfoRepository = DriveInfoRepository.getInstance();
         mDriveInfoRepository.setDrawerReadDriveInfoListener(mReadDriveInfoListener);
         mDriveInfoRepository.setWidgetCallback(mILauncherWidgetCallback);
+        if (!mDriveInfoRepository.isServiceConnect()) {
+            mDriveInfoRepository.bindServiceAsync(viewHolder.getContext().getApplicationContext());
+        }
     }
 
     private IReadDriveInfoListener mReadDriveInfoListener = new IReadDriveInfoListener() {

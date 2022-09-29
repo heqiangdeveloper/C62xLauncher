@@ -5,26 +5,26 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Set;
 
-import launcher.base.R;
 import launcher.base.async.AsyncSchedule;
 import launcher.base.utils.EasyLog;
+import launcher.base.utils.flowcontrol.PollingTask;
 
 public class BaseRemoteConnector {
 
-    private static final String TAG = BaseRemoteConnector.class.getSimpleName();
     private volatile boolean startBindService = false;
     private volatile boolean mServiceConnect;
     private Set<IConnectListener> mConnectListeners = new HashSet<>();
     private Set<IRemoteDataCallback> mRemoteDataCallbacks = new HashSet<>();
     private RemoteProxy mRemoteProxy;
+    protected String TAG;
 
     public BaseRemoteConnector(@NonNull RemoteProxy remoteProxy) {
         mRemoteProxy = remoteProxy;
         mRemoteProxy.setConnectListener(createConnectListener());
         mRemoteProxy.setRemoteDataCallback(createRemoteDataCallback());
+        TAG = this.getClass().getSimpleName();
     }
 
 
@@ -41,8 +41,15 @@ public class BaseRemoteConnector {
                 mServiceConnect = false;
                 notifyConnectChange(mServiceConnect);
             }
+
+            @Override
+            public void onServiceDied() {
+                mServiceConnect = false;
+                notifyConnectDied();
+            }
         };
     }
+
 
     private IRemoteDataCallback createRemoteDataCallback() {
         return new IRemoteDataCallback() {
@@ -71,7 +78,7 @@ public class BaseRemoteConnector {
         AsyncSchedule.execute(new Runnable() {
             @Override
             public void run() {
-                EasyLog.i(TAG, "notifyDataCallback , listeners:"+mRemoteDataCallbacks );
+                EasyLog.i(TAG, "notifyDataCallback , listeners:" + mRemoteDataCallbacks);
                 for (IRemoteDataCallback remoteDataCallback : mRemoteDataCallbacks) {
                     remoteDataCallback.notifyData(t);
                 }
@@ -91,6 +98,17 @@ public class BaseRemoteConnector {
                     for (IConnectListener connectListener : mConnectListeners) {
                         connectListener.onServiceDisconnected();
                     }
+                }
+            }
+        });
+    }
+
+    private void notifyConnectDied() {
+        AsyncSchedule.execute(new Runnable() {
+            @Override
+            public void run() {
+                for (IConnectListener connectListener : mConnectListeners) {
+                    connectListener.onServiceDied();
                 }
             }
         });
@@ -116,7 +134,18 @@ public class BaseRemoteConnector {
             EasyLog.w(TAG, "start: bindService cancel : already connected.");
             return;
         }
-        mRemoteProxy.connectRemoteService(context);
+        PollingTask pollingTask = new PollingTask(0, 2000, TAG) {
+            @Override
+            protected void executeTask() {
+                mRemoteProxy.connectRemoteService(context);
+            }
+
+            @Override
+            protected boolean enableExit() {
+                return mServiceConnect;
+            }
+        };
+        pollingTask.execute();
     }
 
     public void requestData(IOnRequestListener onRequestListener) {
