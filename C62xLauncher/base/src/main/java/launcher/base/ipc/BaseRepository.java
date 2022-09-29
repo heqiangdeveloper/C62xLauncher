@@ -35,7 +35,13 @@ public abstract class BaseRepository {
         }
     }
 
+    public void registerConnectListener(IConnectListener connectListener) {
+        mRemoteConnector.registerConnectListener(connectListener);
+    }
 
+    public void unregisterConnectListener(IConnectListener connectListener) {
+        mRemoteConnector.unregisterConnectListener(connectListener);
+    }
 
     protected void destroy(){
         mContext = null;

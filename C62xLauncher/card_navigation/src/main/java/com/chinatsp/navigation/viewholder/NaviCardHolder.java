@@ -17,4 +17,5 @@ public abstract class NaviCardHolder {
     public abstract void refreshNavigation();
 
     public abstract void refreshFreeMode();
+    public abstract void setLocation(String myLocationName);
 }

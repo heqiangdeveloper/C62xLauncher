@@ -171,7 +171,7 @@ public class CardHomeFragment extends BaseFragment {
         mSnapHelper.attachToRecyclerView(mRcvCards);
         layoutManager.setOrientation(RecyclerView.HORIZONTAL);
         mRcvCards.setLayoutManager(layoutManager);
-        setItemAnimator();
+//        setItemAnimator();
         if (mRcvCards.getItemDecorationCount() == 0) {
             SimpleRcvDecoration decoration = new SimpleRcvDecoration(mCardDividerWidth, layoutManager);
             mRcvCards.addItemDecoration(decoration);
