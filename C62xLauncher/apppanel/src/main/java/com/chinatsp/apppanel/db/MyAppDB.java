@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import com.anarchy.classifyview.Bean.LocationBean;
+import com.chinatsp.apppanel.AppConfigs.Constant;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class MyAppDB extends SQLiteOpenHelper {
     private static int DATABASE_VERSION = 1;
     private static String DATABASE_NAME = "myapp.db";
     private static String LOCATION_TABLE = "location";
+    private static String DOWNLOAD_TABLE = "download";
     //public static final String ID = "_id";//主键，PK，自增长
     public static final String PARENTINDEX = "parent_index";//父位置
     public static final String CHILDINDEX = "child_index";//子位置
@@ -32,9 +34,9 @@ public class MyAppDB extends SQLiteOpenHelper {
     public static final String PRIORITY = "priority";//优先级
     public static final String INSTALLED = "installed";//是否已安装 0未安装，1已安装
     public static final String CANUNINSTALLED = "canuninstalled";//是否可卸载 0不支持，1支持
-    public static final String RESERVE1 = "reserve1";//预留字段1
-    public static final String RESERVE2 = "reserve2";//预留字段2
-    public static final String RESERVE3 = "reserve3";//预留字段3
+    public static final String RESERVE1 = "reserve1";//应用的版本号
+    public static final String RESERVE2 = "reserve2";//不再提醒时的版本号
+    public static final String RESERVE3 = "reserve3";//有更新推送的版本号
     public static final String RESERVE4 = "reserve4";//预留字段4
     public static final String RESERVE5 = "reserve5";//预留字段5
     public static final String RESERVE6 = "reserve6";//预留字段6
@@ -78,19 +80,27 @@ public class MyAppDB extends SQLiteOpenHelper {
                 RESERVE5 + " text," +
                 RESERVE6 + " text" +
                 ")";
-//        String sql_info = "CREATE TABLE " + INFO_TABLE + "(" +
-//                PACKAGENAMEINFO + " text not null PRIMARY KEY," +
-//                IMAGE + " BLOB," +
-//                NAME + " text," +
-//                REMAIN1 + " text," +
-//                REMAIN2 + " text," +
-//                REMAIN3 + " text," +
-//                REMAIN4 + " text," +
-//                REMAIN5 + " text," +
-//                REMAIN6 + " text" +
-//                ")";
-//        db.execSQL(sql_info);
+        String sql_download = "CREATE TABLE " + DOWNLOAD_TABLE + "(" +
+                PARENTINDEX + " INTEGER," +
+                CHILDINDEX + " INTEGER," +
+                TITLE + " text," +
+                PACKAGENAMELOCATION + " text," +
+                IMAGE + " BLOB," +
+                NAME + " text," +
+                ADDBTN + " INTEGER," +
+                STATUS + " INTEGER," +
+                PRIORITY + " INTEGER," +
+                INSTALLED + " INTEGER," +
+                CANUNINSTALLED + " INTEGER," +
+                RESERVE1 + " text," +
+                RESERVE2 + " text," +
+                RESERVE3 + " text," +
+                RESERVE4 + " text," +
+                RESERVE5 + " text," +
+                RESERVE6 + " text" +
+                ")";
         db.execSQL(sql_location);
+        db.execSQL(sql_download);
     }
 
     //判断表是否存在
@@ -99,6 +109,21 @@ public class MyAppDB extends SQLiteOpenHelper {
         //sqlite_master是sqlite系统表
         Cursor c= db.rawQuery("SELECT count(*) FROM sqlite_master WHERE type='table' AND name= "
                 + "'" + LOCATION_TABLE +"'", null);
+        if(null != c && c.moveToFirst()){
+            if (c.getInt(0)==0) {
+                isTableExist=false;
+            }
+        }
+        c.close();
+        return isTableExist;
+    }
+
+    //判断下载表是否存在
+    private boolean isDownloadTableExist() {
+        boolean isTableExist=true;
+        //sqlite_master是sqlite系统表
+        Cursor c= db.rawQuery("SELECT count(*) FROM sqlite_master WHERE type='table' AND name= "
+                + "'" + DOWNLOAD_TABLE +"'", null);
         if(null != c && c.moveToFirst()){
             if (c.getInt(0)==0) {
                 isTableExist=false;
@@ -132,8 +157,8 @@ public class MyAppDB extends SQLiteOpenHelper {
         List<LocationBean> lists = new ArrayList<>();
         try{
             //select * from (select * from location order by child_index asc) order by parent_index asc
-            String sql = "select * from " + "(select * from " + LOCATION_TABLE + " order by " +
-                    CHILDINDEX + " asc) order by " + PARENTINDEX + " asc";
+            String sql = "select * from " + "(select * from " + LOCATION_TABLE +
+                    " order by " + CHILDINDEX + " asc) order by " + PARENTINDEX + " asc";
             Cursor cursor = db.rawQuery(sql,null);
             cursor.moveToFirst();
             if(null != cursor && cursor.moveToFirst()) {
@@ -207,6 +232,117 @@ public class MyAppDB extends SQLiteOpenHelper {
     }
 
     /*
+     *获取应用下载的数据
+     */
+    public List<LocationBean> getDownloadData(){
+        List<LocationBean> lists = new ArrayList<>();
+        try{
+            //select * from download
+            String sql = "select * from " + DOWNLOAD_TABLE;
+            Cursor cursor = db.rawQuery(sql,null);
+            cursor.moveToFirst();
+            if(null != cursor && cursor.moveToFirst()) {
+                while (!cursor.isAfterLast()) {
+                    LocationBean locationBean = new LocationBean();
+                    locationBean.setParentIndex(cursor.getInt(cursor.getColumnIndex(PARENTINDEX)));
+                    locationBean.setChildIndex(cursor.getInt(cursor.getColumnIndex(CHILDINDEX)));
+                    locationBean.setTitle(cursor.getString(cursor.getColumnIndex(TITLE)));
+                    locationBean.setPackageName(cursor.getString(cursor.getColumnIndex(PACKAGENAMELOCATION)));
+                    locationBean.setImgByte(cursor.getBlob(cursor.getColumnIndex(IMAGE)));
+                    locationBean.setImgDrawable(null);
+                    locationBean.setName(cursor.getString(cursor.getColumnIndex(NAME)));
+                    locationBean.setAddBtn(cursor.getInt(cursor.getColumnIndex(ADDBTN)));
+                    locationBean.setStatus(cursor.getInt(cursor.getColumnIndex(STATUS)));
+                    locationBean.setPriority(cursor.getInt(cursor.getColumnIndex(PRIORITY)));
+                    locationBean.setInstalled(cursor.getInt(cursor.getColumnIndex(INSTALLED)));
+                    locationBean.setCanuninstalled(cursor.getInt(cursor.getColumnIndex(CANUNINSTALLED)));
+                    locationBean.setReserve1(cursor.getString(cursor.getColumnIndex(RESERVE1)));
+                    locationBean.setReserve2(cursor.getString(cursor.getColumnIndex(RESERVE2)));
+                    locationBean.setReserve3(cursor.getString(cursor.getColumnIndex(RESERVE3)));
+                    lists.add(locationBean);
+                    cursor.moveToNext();
+                }
+            }
+            cursor.close();
+        }catch (Exception e){
+            Log.d(TAG,"getDownloadData db exception");
+        }
+        return lists;
+    }
+
+    /*
+     *根据包名，获取location表的数据
+     */
+    public List<LocationBean> getPkgLocationData(String pkgName){
+        List<LocationBean> lists = new ArrayList<>();
+        try{
+            //select * from location where package_name = pkgName
+            String sql = "select * from " + LOCATION_TABLE + " where " + PACKAGENAMELOCATION + " = " + pkgName;
+            Cursor cursor = db.rawQuery(sql,null);
+            cursor.moveToFirst();
+            if(null != cursor && cursor.moveToFirst()) {
+                while (!cursor.isAfterLast()) {
+                    LocationBean locationBean = new LocationBean();
+                    locationBean.setParentIndex(cursor.getInt(cursor.getColumnIndex(PARENTINDEX)));
+                    locationBean.setChildIndex(cursor.getInt(cursor.getColumnIndex(CHILDINDEX)));
+                    locationBean.setTitle(cursor.getString(cursor.getColumnIndex(TITLE)));
+                    locationBean.setPackageName(cursor.getString(cursor.getColumnIndex(PACKAGENAMELOCATION)));
+                    locationBean.setImgByte(cursor.getBlob(cursor.getColumnIndex(IMAGE)));
+                    locationBean.setImgDrawable(null);
+                    locationBean.setName(cursor.getString(cursor.getColumnIndex(NAME)));
+                    locationBean.setAddBtn(cursor.getInt(cursor.getColumnIndex(ADDBTN)));
+                    locationBean.setStatus(cursor.getInt(cursor.getColumnIndex(STATUS)));
+                    locationBean.setPriority(cursor.getInt(cursor.getColumnIndex(PRIORITY)));
+                    locationBean.setInstalled(cursor.getInt(cursor.getColumnIndex(INSTALLED)));
+                    locationBean.setCanuninstalled(cursor.getInt(cursor.getColumnIndex(CANUNINSTALLED)));
+                    lists.add(locationBean);
+                    cursor.moveToNext();
+                }
+            }
+            cursor.close();
+        }catch (Exception e){
+            Log.d(TAG,"getDownloadData db exception");
+        }
+        return lists;
+    }
+
+    /*
+     *根据包名，获取应用下载的数据
+     */
+    public List<LocationBean> getPkgDownloadData(String pkgName){
+        List<LocationBean> lists = new ArrayList<>();
+        try{
+            //select * from download where package_name = pkgName
+            String sql = "select * from " + DOWNLOAD_TABLE + " where " + PACKAGENAMELOCATION + " = " + pkgName;
+            Cursor cursor = db.rawQuery(sql,null);
+            cursor.moveToFirst();
+            if(null != cursor && cursor.moveToFirst()) {
+                while (!cursor.isAfterLast()) {
+                    LocationBean locationBean = new LocationBean();
+                    locationBean.setParentIndex(cursor.getInt(cursor.getColumnIndex(PARENTINDEX)));
+                    locationBean.setChildIndex(cursor.getInt(cursor.getColumnIndex(CHILDINDEX)));
+                    locationBean.setTitle(cursor.getString(cursor.getColumnIndex(TITLE)));
+                    locationBean.setPackageName(cursor.getString(cursor.getColumnIndex(PACKAGENAMELOCATION)));
+                    locationBean.setImgByte(cursor.getBlob(cursor.getColumnIndex(IMAGE)));
+                    locationBean.setImgDrawable(null);
+                    locationBean.setName(cursor.getString(cursor.getColumnIndex(NAME)));
+                    locationBean.setAddBtn(cursor.getInt(cursor.getColumnIndex(ADDBTN)));
+                    locationBean.setStatus(cursor.getInt(cursor.getColumnIndex(STATUS)));
+                    locationBean.setPriority(cursor.getInt(cursor.getColumnIndex(PRIORITY)));
+                    locationBean.setInstalled(cursor.getInt(cursor.getColumnIndex(INSTALLED)));
+                    locationBean.setCanuninstalled(cursor.getInt(cursor.getColumnIndex(CANUNINSTALLED)));
+                    lists.add(locationBean);
+                    cursor.moveToNext();
+                }
+            }
+            cursor.close();
+        }catch (Exception e){
+            Log.d(TAG,"getDownloadData db exception");
+        }
+        return lists;
+    }
+
+    /*
     * 获取所有的标题信息
      */
     public List<String> getAllTitles(){
@@ -247,7 +383,7 @@ public class MyAppDB extends SQLiteOpenHelper {
         return num;
     }
 
-    public void insertLocation(LocationBean locationBean){
+    public synchronized void insertLocation(LocationBean locationBean){
         if(locationBean == null){
             return;
         }
@@ -297,22 +433,92 @@ public class MyAppDB extends SQLiteOpenHelper {
         db.execSQL(sql,new Object[]{locationBean.getParentIndex(),locationBean.getChildIndex(),locationBean.getTitle(),
         locationBean.getPackageName(),locationBean.getImgByte(),locationBean.getName(), locationBean.getAddBtn(),
         locationBean.getStatus(),locationBean.getPriority(), locationBean.getInstalled(),
-        locationBean.getCanuninstalled(),"","","","","",""});
+        locationBean.getCanuninstalled(),locationBean.getReserve1(),locationBean.getReserve2(), locationBean.getReserve3(),"","",""});
     }
 
-    public void updateLocation(LocationBean locationBean){
+    /*
+    * 向下载表插入记录
+     */
+    public synchronized void insertDownload(LocationBean locationBean){
         if(locationBean == null){
             return;
         }
-        if(locationBean.getImgByte() == null){
-            Drawable drawable = locationBean.getImgDrawable();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(bitmap);
-            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-            drawable.draw(canvas);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-            locationBean.setImgByte(baos.toByteArray());
+        Drawable drawable = locationBean.getImgDrawable();
+        if(drawable != null){
+            try{
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+                Canvas canvas = new Canvas(bitmap);
+                drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+                drawable.draw(canvas);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                locationBean.setImgByte(baos.toByteArray());
+                bitmap.recycle();
+                bitmap = null;
+            }catch (Exception e){
+                Log.d(TAG,"Exception: " + e);
+                return;
+            }finally {
+                //释放drawable内存
+                drawable.setCallback(null);
+                drawable = null;
+            }
+        }else if(locationBean.getImgByte() == null){
+            return;
+        }
+
+        String sql = "INSERT into " + DOWNLOAD_TABLE + "(" +
+                PARENTINDEX + "," +
+                CHILDINDEX + "," +
+                TITLE + "," +
+                PACKAGENAMELOCATION + "," +
+                IMAGE + "," +
+                NAME + "," +
+                ADDBTN + "," +
+                STATUS + "," +
+                PRIORITY + "," +
+                INSTALLED + "," +
+                CANUNINSTALLED + "," +
+                RESERVE1 + "," +
+                RESERVE2 + "," +
+                RESERVE3 + "," +
+                RESERVE4 + "," +
+                RESERVE5 + "," +
+                RESERVE6 + ")" +
+                " values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        db.execSQL(sql,new Object[]{locationBean.getParentIndex(),locationBean.getChildIndex(),locationBean.getTitle(),
+                locationBean.getPackageName(),locationBean.getImgByte(),locationBean.getName(), locationBean.getAddBtn(),
+                locationBean.getStatus(),locationBean.getPriority(), locationBean.getInstalled(),
+                locationBean.getCanuninstalled(),locationBean.getReserve1(),locationBean.getReserve2(),
+                locationBean.getReserve3(),"","",""});
+    }
+
+    public synchronized void updateLocation(LocationBean locationBean){
+        if(locationBean == null){
+            return;
+        }
+        Drawable drawable = locationBean.getImgDrawable();
+        if(drawable != null){
+            try{
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+                Canvas canvas = new Canvas(bitmap);
+                drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+                drawable.draw(canvas);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                locationBean.setImgByte(baos.toByteArray());
+                bitmap.recycle();
+                bitmap = null;
+            }catch (Exception e){
+                Log.d(TAG,"Exception: " + e);
+                return;
+            }finally {
+                //释放drawable内存
+                drawable.setCallback(null);
+                drawable = null;
+            }
+        }else if(locationBean.getImgByte() == null){
+            return;
         }
         String sql = "update " + LOCATION_TABLE + " set " +
                 PARENTINDEX + " = ?," +
@@ -337,16 +543,76 @@ public class MyAppDB extends SQLiteOpenHelper {
                 locationBean.getImgByte(),locationBean.getName(),locationBean.getAddBtn(),locationBean.getStatus(),
                 locationBean.getPriority(),locationBean.getInstalled(),locationBean.getCanuninstalled(),"","","","","","",
                 locationBean.getPackageName()});
-//        Log.d("mysql","parentIndex = " + locationBean.getParentIndex() + ",childIndex = " +
-//                locationBean.getChildIndex() + ",package = " + locationBean.getPackageName());
     }
 
-    public void deleteLocation(String packageName){
+    public synchronized void updateDownloadStatusInLocation(LocationBean locationBean){
+        if(locationBean == null){
+            return;
+        }
+        String sql = "update " + LOCATION_TABLE + " set " +
+                NAME + " = ?," +
+                STATUS + " = ?," +
+                INSTALLED + " = ?," +
+                RESERVE1 + " = ?," +
+                RESERVE2 + " = ?," +
+                RESERVE3 + " = ?," +
+                RESERVE4 + " = ?," +
+                RESERVE5 + " = ?," +
+                RESERVE6 + " = ?" +
+                " where " +
+                PACKAGENAMELOCATION + " = ?";
+        db.execSQL(sql,new Object[]{locationBean.getName(),locationBean.getStatus(),
+                locationBean.getInstalled(), locationBean.getReserve1(),locationBean.getReserve2(),
+                locationBean.getReserve3(),"","","",locationBean.getPackageName()});
+    }
+
+    public synchronized void updateDownloadStatusInDownload(LocationBean locationBean){
+        if(locationBean == null){
+            return;
+        }
+        String sql = "update " + DOWNLOAD_TABLE + " set " +
+                NAME + " = ?," +
+                STATUS + " = ?," +
+                INSTALLED + " = ?," +
+                RESERVE1 + " = ?," +
+                RESERVE2 + " = ?," +
+                RESERVE3 + " = ?," +
+                RESERVE4 + " = ?," +
+                RESERVE5 + " = ?," +
+                RESERVE6 + " = ?" +
+                " where " +
+                PACKAGENAMELOCATION + " = ?";
+        db.execSQL(sql,new Object[]{locationBean.getName(),locationBean.getStatus(),
+                locationBean.getInstalled(),locationBean.getReserve1(),locationBean.getReserve2(),
+                locationBean.getReserve3(),"","","",locationBean.getPackageName()});
+    }
+
+    /*
+    * 更新Download表中可更新的版本号
+     */
+    public synchronized void updateAppUpdateInDownload(LocationBean locationBean){
+        if(locationBean == null){
+            return;
+        }
+        String sql = "update " + DOWNLOAD_TABLE + " set " +
+                INSTALLED + " = ?," +
+                RESERVE3 + " = ?" +
+                " where " +
+                PACKAGENAMELOCATION + " = ?";
+        db.execSQL(sql,new Object[]{locationBean.getInstalled(), locationBean.getReserve3(),locationBean.getPackageName()});
+    }
+
+    public synchronized void deleteLocation(String packageName){
         String sql = "delete from " + LOCATION_TABLE + " where " + PACKAGENAMELOCATION + " = '" + packageName + "'";
         db.execSQL(sql);
     }
 
-    public void updateTitle(LocationBean locationBean){
+    public synchronized void deleteDownload(String packageName){
+        String sql = "delete from " + DOWNLOAD_TABLE + " where " + PACKAGENAMELOCATION + " = '" + packageName + "'";
+        db.execSQL(sql);
+    }
+
+    public synchronized void updateTitle(LocationBean locationBean){
         String sql = "update " + LOCATION_TABLE + " set " +
                 TITLE + " = ?" +
                 " where " +
@@ -354,16 +620,23 @@ public class MyAppDB extends SQLiteOpenHelper {
         db.execSQL(sql,new Object[]{locationBean.getTitle(),locationBean.getPackageName()});
     }
 
-    public void updateIndex(LocationBean locationBean){
+    public synchronized void updateIndex(LocationBean locationBean){
         if(locationBean == null){
             return;
         }
         String sql = "update " + LOCATION_TABLE + " set " +
                 PARENTINDEX + " = ?," +
-                CHILDINDEX + " = ?" +
+                CHILDINDEX + " = ?," +
+                INSTALLED + " = ?," +
+                STATUS + " = ?," +
+                RESERVE1 + " = ?," +
+                RESERVE2 + " = ?," +
+                RESERVE3 + " = ?" +
                 " where " +
                 PACKAGENAMELOCATION + " = ?";
-        db.execSQL(sql,new Object[]{locationBean.getParentIndex(),locationBean.getChildIndex(),locationBean.getPackageName()});
+        db.execSQL(sql,new Object[]{locationBean.getParentIndex(),locationBean.getChildIndex(),locationBean.getInstalled(),
+                locationBean.getStatus(),locationBean.getReserve1(),locationBean.getReserve2(),locationBean.getReserve3(),
+                locationBean.getPackageName()});
     }
 
     /*
@@ -375,6 +648,27 @@ public class MyAppDB extends SQLiteOpenHelper {
             num = 0;
         }else {
             String sql = "select count(*) from " + LOCATION_TABLE + " where " + PACKAGENAMELOCATION + " = '" + packageName + "'";
+            Cursor cursor = db.rawQuery(sql,null);
+            cursor.moveToFirst();
+            if(cursor != null){
+                num = cursor.getInt(0);
+                cursor.close();
+            }else {
+                num = 0;
+            }
+        }
+        return num;
+    }
+
+    /*
+     *返回的非0，则说明存在此应用，否则说明不存在此应用
+     */
+    public int isExistPackageInDownload(String packageName){
+        int num = 0;
+        if(!isDownloadTableExist()){
+            num = 0;
+        }else {
+            String sql = "select count(*) from " + DOWNLOAD_TABLE + " where " + PACKAGENAMELOCATION + " = '" + packageName + "'";
             Cursor cursor = db.rawQuery(sql,null);
             cursor.moveToFirst();
             if(cursor != null){

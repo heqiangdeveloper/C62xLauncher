@@ -32,20 +32,27 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.anarchy.classifyview.Bean.LocationBean;
 import com.anarchy.classifyview.event.ChangeTitleEvent;
+import com.anarchy.classifyview.event.Event;
 import com.anarchy.classifyview.event.HideSubContainerEvent;
 import com.anarchy.classifyview.simple.SimpleAdapter;
 import com.anarchy.classifyview.simple.widget.InsertAbleGridView;
 import com.anarchy.classifyview.util.L;
 import com.anarchy.classifyview.util.MyConfigs;
+import com.chinatsp.apppanel.AppConfigs.AppLists;
 import com.chinatsp.apppanel.R;
 import com.chinatsp.apppanel.bean.InfoBean;
 import com.chinatsp.apppanel.db.MyAppDB;
 import com.chinatsp.apppanel.decoration.AppManageDecoration;
+import com.chinatsp.apppanel.event.CancelDownloadEvent;
 import com.chinatsp.apppanel.event.DeletedCallback;
+import com.chinatsp.apppanel.event.NotRemindEvent;
 import com.chinatsp.apppanel.event.SelectedCallback;
 import com.chinatsp.apppanel.event.UninstallCommandEvent;
+import com.chinatsp.apppanel.service.AppStoreService;
 import com.chinatsp.apppanel.utils.Utils;
 import com.chinatsp.apppanel.window.AppManagementWindow;
+import com.huawei.appmarket.launcheragent.CommandType;
+import com.huawei.appmarket.launcheragent.launcher.AppState;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -54,6 +61,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import launcher.base.utils.property.PropertyUtils;
 import launcher.base.utils.recent.RecentAppHelper;
 
 public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapter.ViewHolder> {
@@ -122,15 +130,37 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
                     locationBean.setTitle(titleStr);
                 }
             }
+            //设置下载状态  优先级：下载失败>下载中>暂停中>安装中
+            List<Integer> installedLists = new ArrayList<>();
+            int installed;
+            for(LocationBean locationBean : infos){
+                if(locationBean != null){
+                    installed = locationBean.getInstalled();
+                    installedLists.add(installed);
+                }
+            }
+
+            if(installedLists.contains(AppState.DOWNLOAD_FAIL)){//下载失败
+                setDownloadStatus(holder,AppState.DOWNLOAD_FAIL);
+            }else if(installedLists.contains(AppState.DOWNLOADING)){//下载中
+                setDownloadStatus(holder,AppState.DOWNLOADING);
+            }else if(installedLists.contains(AppState.DOWNLOAD_PAUSED)){//暂停中
+                setDownloadStatus(holder,AppState.DOWNLOAD_PAUSED);
+            }else if(installedLists.contains(AppState.INSTALLING)){//安装中
+                setDownloadStatus(holder,AppState.INSTALLING);
+            }else {//默认正常状态
+                setDownloadStatus(holder,AppState.INSTALLED);
+            }
+
             holder.tvName.setText(titleStr);
             holder.deleteIv.setVisibility(View.GONE);
 
-            for(int i = 0; i < infos.size(); i++){
-                if(infos.get(i) == null){
-                    continue;
-                }
-                LocationBean lb = infos.get(i);
-                holder.deleteIv.setTag(lb.getCanuninstalled());
+//            for(int i = 0; i < infos.size(); i++){
+//                if(infos.get(i) == null){
+//                    continue;
+//                }
+//                LocationBean lb = infos.get(i);
+//                holder.deleteIv.setTag(lb.getCanuninstalled());
                 //这个地方position不可靠，在MyAppFragment getOriginalData保存index
 //                locationBean.setParentIndex(position);
 //                locationBean.setChildIndex(i);
@@ -157,32 +187,36 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
 //                locationBean.setPriority(0);
 //                locationBean.setInstalled(1);
 //                locationBean.setCanuninstalled(1);
-                int num = db.isExistPackage(lb.getPackageName());
-                Log.d("hqtest","dir package is: " + lb.getPackageName() + ",count = " + num + ",parent = " + position + ",child = " + i);
-                if(num == 0){
-                    db.insertLocation(lb);
-                }else {
-                    db.updateTitle(lb);
-                }
-            }
+//                int num = db.isExistPackage(lb.getPackageName());
+//                Log.d("hqtest","dir package is: " + lb.getPackageName() + ",count = " + num + ",parent = " + position + ",child = " + i);
+//                if(num == 0){
+//                    db.insertLocation(lb);
+//                }else {
+//                    db.updateTitle(lb);
+//                }
+//            }
         } else if(infos.size() == 1){
-            holder.tvName.setText(mData.get(position).get(0).getName());
+            //设置应用名称
+            holder.tvName.setText(getName(mData.get(position).get(0)));
             holder.deleteIv.setTag(mData.get(position).get(0).getCanuninstalled());
             //是否显示删除按钮
             showDelete = preferences.getBoolean(MyConfigs.MAINSHOWDELETE,false);
             //修复： 防止上下滑动时，删除错乱
             //if(parentIndex != -1 && parentIndex == position){
             if(showDelete){
-                holder.deleteIv.setVisibility((int)holder.deleteIv.getTag() == 1 ? View.VISIBLE : View.GONE);
+                holder.deleteIv.setVisibility(mData.get(position).get(0).getCanuninstalled() == 1 ? View.VISIBLE : View.GONE);
             }else {
                 holder.deleteIv.setVisibility(View.GONE);
             }
 
-            locationBean = mData.get(position).get(0);
+            //设置下载状态
+            setDownloadStatus(holder,mData.get(position).get(0).getInstalled());
+
+//            locationBean = mData.get(position).get(0);
             //这个地方position不可靠，在MyAppFragment getOriginalData保存index
 //            locationBean.setParentIndex(position);
 //            locationBean.setChildIndex(-1);
-            locationBean.setTitle("");
+//            locationBean.setTitle("");
 //            locationBean.setPackageName(mData.get(position).get(0).getPackageName());
 //            ByteArrayOutputStream baos = new ByteArrayOutputStream();
 //            Drawable drawable;
@@ -199,18 +233,18 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
 //            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
 //            locationBean.setImgByte(baos.toByteArray());
 //            locationBean.setName(mData.get(position).get(0).getName());
-            locationBean.setAddBtn(0);
-            locationBean.setStatus(0);
-            locationBean.setPriority(0);
-            locationBean.setInstalled(1);
+//            locationBean.setAddBtn(0);
+//            locationBean.setStatus(0);
+//            locationBean.setPriority(0);
+//            locationBean.setInstalled(1);
 //            locationBean.setCanuninstalled(1);
-            int num = db.isExistPackage(locationBean.getPackageName());
-            Log.d("hqtest","package package is: " + mData.get(position).get(0).getPackageName() + ",count = " + num + ",parent = " + position + ",child = " + -1);
-            if(num == 0){
-                db.insertLocation(locationBean);
-            }else {
-                db.updateTitle(locationBean);
-            }
+//            int num = db.isExistPackage(locationBean.getPackageName());
+//            Log.d("hqtest","package package is: " + mData.get(position).get(0).getPackageName() + ",count = " + num + ",parent = " + position + ",child = " + -1);
+//            if(num == 0){
+//                db.insertLocation(locationBean);
+//            }else {
+//                db.updateTitle(locationBean);
+//            }
 
 //            showDelete = preferences.getBoolean(MyConfigs.SHOWDELETE ,  false);
 //            if(showDelete){
@@ -219,6 +253,28 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
 //                holder.deleteIv.setVisibility(View.GONE);
 //            }
 
+        }
+    }
+
+    /*
+    *  获取应用名称
+     */
+    private String getName(LocationBean lb){
+        int installed = lb.getInstalled();
+        if(installed == 0 || installed == AppState.INSTALLED || installed == AppState.COULD_UPDATE){//已安装
+            return lb.getName();
+        }else if(installed == AppState.DOWNLOADING){//下载中
+            return context.getString(R.string.download_downloading);
+        }else if(installed == AppState.DOWNLOAD_PAUSED){//暂停中
+            return context.getString(R.string.download_pause);
+        }else if(installed == AppState.COULD_BE_CANCELED){//可取消
+            return lb.getName();
+        }else if(installed == AppState.DOWNLOAD_FAIL){//下载失败
+            return context.getString(R.string.download_fail);
+        }else if(installed == AppState.INSTALLING){//安装中
+            return context.getString(R.string.download_installing);
+        }else {
+            return lb.getName();
         }
     }
 
@@ -251,6 +307,28 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         return lastNumber;
     }
 
+    private void setDownloadStatus(ViewHolder holder,int installed){
+        if(installed == 0 || installed == AppState.INSTALLED || installed == AppState.COULD_UPDATE){//已安装
+            holder.insertAbleGridView.setAlpha(1.0f);
+            holder.loadStatusIv.setVisibility(View.GONE);
+        }else if(installed == AppState.DOWNLOADING){//下载中
+            holder.insertAbleGridView.setAlpha(0.5f);
+            holder.loadStatusIv.setImageResource(R.mipmap.apk_loading);
+            holder.loadStatusIv.setVisibility(View.VISIBLE);
+        }else if(installed == AppState.DOWNLOAD_PAUSED){//下载暂停
+            holder.insertAbleGridView.setAlpha(0.5f);
+            holder.loadStatusIv.setImageResource(R.mipmap.apk_pause_load);
+            holder.loadStatusIv.setVisibility(View.VISIBLE);
+        }else if(installed == AppState.DOWNLOAD_FAIL){//下载失败
+            holder.insertAbleGridView.setAlpha(0.5f);
+            holder.loadStatusIv.setImageResource(R.mipmap.apk_fail_load);
+            holder.loadStatusIv.setVisibility(View.VISIBLE);
+        }else {
+            holder.insertAbleGridView.setAlpha(1.0f);
+            holder.loadStatusIv.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     protected void onBindSubViewHolder(ViewHolder holder, int mainPosition, int subPosition) {
         super.onBindSubViewHolder(holder, mainPosition, subPosition);
@@ -267,7 +345,10 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
                     holder.deleteIv.setVisibility(View.GONE);
                 }
                 holder.tvName.setVisibility(View.VISIBLE);
-                holder.tvName.setText(mData.get(mainPosition).get(subPosition).getName());
+//                holder.tvName.setText(mData.get(mainPosition).get(subPosition).getName());
+                holder.tvName.setText(getName(mData.get(mainPosition).get(subPosition)));
+                //设置下载状态
+                setDownloadStatus(holder,mData.get(mainPosition).get(subPosition).getInstalled());
                 Log.d("hqtest","onBindSubViewHolder package is: " + mData.get(mainPosition).get(subPosition).getPackageName() + ",parent = " + mainPosition + ",child = " + subPosition);
             }
         }
@@ -330,36 +411,91 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
                 AppManagementWindow.getInstance(context).show();
             }
         }else {
-            Log.d("MyAppInfoAdapter","onItemClick isClickDelete: " + isClickDelete);
-            if(isClickDelete){//如果点击的是删除
-                //hideDeleteIcon((RecyclerView) relativeLayout.getParent());
-                //resetDeleteFlag(true,parentIndex);//position不为-1就行,用parentIndex
-                if(index == -1){//main中
-                    editor.putBoolean(MyConfigs.MAINSHOWDELETE,true);
-                    editor.commit();
-                    showDeleteDialog(tv.getText().toString(),mData.get(parentIndex).get(0).getPackageName(),true);
-                }else {//sub中
-                    editor.putBoolean(MyConfigs.SHOWDELETE,true);
-                    editor.commit();
-                    showDeleteDialog(tv.getText().toString(),mData.get(parentIndex).get(index).getPackageName(),false);
-                }
-            }else {
-                editor.putBoolean(MyConfigs.SHOWDELETE,false);
-                editor.putBoolean(MyConfigs.MAINSHOWDELETE,false);
-                editor.commit();
-                hideDeleteIcon((RecyclerView) relativeLayout.getParent());
-                String packageName = "";
-                if(index == -1){//-1 是main area
-                    packageName = mData.get(parentIndex).get(0).getPackageName();
+            if(isTimeEnabled()) {//防抖处理
+                String pkgName = "";
+                if(index == -1){
+                    pkgName = mData.get(parentIndex).get(0).getPackageName();
                 }else {
-                    if(mData.get(parentIndex).get(index) != null){
-                        packageName = mData.get(parentIndex).get(index).getPackageName();
-                    }else {
-                        return;
-                    }
+                    pkgName = mData.get(parentIndex).get(index).getPackageName();
                 }
-                Utils.launchApp(context,packageName);
+                boolean isSystemApp = AppLists.isSystemApplication(context,pkgName);
+                Log.d("MyAppInfoAdapter","onItemClick isClickDelete: " + isClickDelete + ",isSystemApp: " + isSystemApp);
+                if(isClickDelete && !isSystemApp){//如果点击的是删除
+                    //hideDeleteIcon((RecyclerView) relativeLayout.getParent());
+                    //resetDeleteFlag(true,parentIndex);//position不为-1就行,用parentIndex
+
+                    if(index == -1){//main中
+                        editor.putBoolean(MyConfigs.MAINSHOWDELETE,true);
+                        editor.commit();
+                        showDeleteDialog(mData.get(parentIndex).get(0).getName(),pkgName,true);
+                    }else {//sub中
+                        editor.putBoolean(MyConfigs.SHOWDELETE,true);
+                        editor.commit();
+                        showDeleteDialog(mData.get(parentIndex).get(index).getName(),pkgName,false);
+                    }
+                }else {
+                    editor.putBoolean(MyConfigs.SHOWDELETE,false);
+                    editor.putBoolean(MyConfigs.MAINSHOWDELETE,false);
+                    editor.commit();
+                    hideDeleteIcon((RecyclerView) relativeLayout.getParent());
+
+                    if(index == -1){//-1 是main area
+                        doClick(mData.get(parentIndex).get(0));
+                    }else {
+                        if(mData.get(parentIndex).get(index) != null){
+                            doClick(mData.get(parentIndex).get(index));
+                        }else {
+                            return;
+                        }
+                    }
+    //                Utils.launchApp(context,packageName);
+                }
             }
+        }
+    }
+
+    private void doClick(LocationBean locationBean){
+        int installed = locationBean.getInstalled();
+        String pkgName = locationBean.getPackageName();
+        String name = locationBean.getName();
+        if(installed == AppState.DOWNLOAD_PAUSED || installed == AppState.DOWNLOAD_FAIL){//下载暂停，下载失败
+            AppStoreService.getInstance(context).doCommand(CommandType.RESUME,pkgName);
+        }else if(installed == AppState.DOWNLOADING){//下载中
+            AppStoreService.getInstance(context).doCommand(CommandType.PAUSE,pkgName);
+        }else if(installed == 0 || installed == AppState.INSTALLED){//已安装
+            RecentAppHelper.launchApp(context,pkgName);
+        }else if(installed == AppState.COULD_UPDATE){//更新
+            /*
+            *  需求：不再提醒就是针对当前的APP，本次版本更新不再提示。也就是说有新版本更新还是要提示
+            *  实现：判断reverse3>reverse1，且reverse3 ！= reverse2，则弹出提示框；
+             */
+            //弹出更新应用弹窗
+            String reverse1 = locationBean.getReserve1();//当前应用的版本号
+            String reverse2 = locationBean.getReserve2();//不再提醒的版本号
+            String reverse3 = locationBean.getReserve3();//待更新的版本号
+            if(TextUtils.isEmpty(reverse3)){
+                RecentAppHelper.launchApp(context,pkgName);
+            }else {
+                if(!TextUtils.isEmpty(reverse1)){
+                    if(Integer.parseInt(reverse3) > Integer.parseInt(reverse1)){
+                        //如果是 上次选择了不再提醒
+                        if(!TextUtils.isEmpty(reverse2) &&
+                                Integer.parseInt(reverse3) == Integer.parseInt(reverse2)){
+                            RecentAppHelper.launchApp(context,pkgName);
+                        }else {//如果是 上次未做选择
+                            showUpdateDialog(name,pkgName,reverse3);
+                        }
+                    }else {
+                        RecentAppHelper.launchApp(context,pkgName);
+                    }
+                }else {
+                    RecentAppHelper.launchApp(context,pkgName);
+                }
+            }
+        }else if(installed == AppState.INSTALLING){//安装中
+            //安装中不支持打断
+        }else {
+            RecentAppHelper.launchApp(context,pkgName);
         }
     }
 
@@ -848,7 +984,14 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         positiveTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                uninstall(packageName);
+                boolean isInstalled = PropertyUtils.checkPkgInstalled(context,packageName);
+                if(isInstalled){//已安装
+                    uninstall(packageName);
+                }else {//未安装
+                    //发送取消下载指令，并移除桌面上的该应用图标
+                    AppStoreService.getInstance(context).doCommand(CommandType.CANCEL,packageName);
+                    EventBus.getDefault().post(new CancelDownloadEvent(packageName));
+                }
                 dialog.dismiss();
                 if(isSendCount) EventBus.getDefault().post(new UninstallCommandEvent());//发送倒计时退出编辑的事件
             }
@@ -858,6 +1001,52 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             public void onClick(View view) {
                 dialog.dismiss();
                 if(isSendCount) EventBus.getDefault().post(new UninstallCommandEvent());//发送倒计时退出编辑的事件
+            }
+        });
+        dialog.setCancelable(false);
+        dialog.show();
+    }
+
+    private void showUpdateDialog(String name,String packageName,String reverse3){
+        Dialog dialog = new Dialog(context, com.anarchy.classifyview.R.style.mydialog);
+        dialog.setContentView(R.layout.update_dialog);
+        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+        dialog.getWindow().setGravity(Gravity.CENTER);
+        dialog.getWindow().setAttributes(params);
+        TextView openTv = (TextView) dialog.getWindow().findViewById(R.id.update_dialog_open_tv);
+        TextView updateTv = (TextView) dialog.getWindow().findViewById(R.id.update_dialog_update_tv);
+        ImageView selectIv = (ImageView) dialog.getWindow().findViewById(R.id.update_dialog_select_iv);
+        TextView titleTv = (TextView) dialog.getWindow().findViewById(R.id.update_dialog_title);
+        titleTv.setText(context.getString(R.string.update_dialog_title,name));
+        openTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                if(selectIv.isSelected()){
+                    EventBus.getDefault().post(new NotRemindEvent(packageName,reverse3));
+                }
+                RecentAppHelper.launchApp(context,packageName);
+            }
+        });
+        updateTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                if(selectIv.isSelected()){
+                    EventBus.getDefault().post(new NotRemindEvent(packageName,reverse3));
+                }
+                //发送更新指令
+                AppStoreService.getInstance(context).doCommand(CommandType.UPDATE,packageName);
+            }
+        });
+        selectIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(selectIv.isSelected()){
+                    selectIv.setSelected(false);
+                }else {
+                    selectIv.setSelected(true);
+                }
             }
         });
         dialog.setCancelable(false);
