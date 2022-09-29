@@ -9,9 +9,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/bg_sound_popup_20"
         android:paddingTop="40px"
-        android:paddingBottom="40px"
-        android:background="@drawable/bg_sound_popup_20">
+        android:paddingBottom="40px">
 
         <RelativeLayout
             android:id="@+id/pop_title"
@@ -63,6 +63,7 @@
             app:layout_constraintTop_toBottomOf="@id/wheel_automatic_heating" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/seat_heating_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/x45"

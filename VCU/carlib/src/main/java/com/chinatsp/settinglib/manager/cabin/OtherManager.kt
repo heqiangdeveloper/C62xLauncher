@@ -233,8 +233,7 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
                 onSwitchChanged(SwitchNode.DRIVE_WIRELESS_CHARGING, wirelessCharging, property)
             }
             SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP.get.signal -> {
-                val node = SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP
-                onSwitchChanged(node, wirelessChargingLamp, property)
+                onSwitchChanged(SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP, wirelessChargingLamp, property)
             }
             else -> {}
         }

@@ -117,12 +117,12 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
 
     private fun initProgress(type: Progress): Volume {
         val value = readIntProperty(type.get.signal, type.get.origin)
-        val position = findBacklightLevel(value, type.def)
+        val position = findBacklightLevel(value, type)
         Timber.d("initProgress $type type:$type, value:$value, position:$position")
         return Volume(type, type.min, type.max, position)
     }
 
-    private fun findBacklightLevel(value: Int, def: Int): Int {
+    private fun findBacklightLevel(value: Int, type: Progress): Int {
         val levels = getBacklightLevel()
         var level = Constant.INVALID
         levels.forEachIndexed { index, i ->
@@ -154,9 +154,9 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
             Timber.d("findBacklightLevel first:$first, last:$last, level:$level")
         }
         if (Constant.INVALID == level) {
-            level = def
+            level = type.def
         }
-        return level
+        return level + type.min
     }
 
     private fun getBacklightLevel(): IntArray {
@@ -214,8 +214,9 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
         return when (type) {
             Progress.SWITCH_BACKLIGHT_BRIGHTNESS -> {
                 val backlightLevel = getBacklightLevel()
-                if (position in 0..backlightLevel.size) {
-                    val value = backlightLevel[position]
+                val index = position - 1
+                if (index in backlightLevel.indices) {
+                    val value = backlightLevel[index]
                     return writeProperty(type.set.signal, value, type.set.origin)
                 }
                 false
@@ -295,7 +296,7 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
             }
             Progress.SWITCH_BACKLIGHT_BRIGHTNESS.get.signal -> {
                 val value = property.value as Int
-                val level = findBacklightLevel(value, Progress.SWITCH_BACKLIGHT_BRIGHTNESS.def)
+                val level = findBacklightLevel(value, Progress.SWITCH_BACKLIGHT_BRIGHTNESS)
                 doUpdateProgress(switchBacklight, level, true, this::doProgressChanged)
             }
             else -> {}

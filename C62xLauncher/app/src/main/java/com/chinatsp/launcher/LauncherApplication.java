@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.util.Log;
 
 import com.chinatsp.carservice.AppCarService;
+import com.chinatsp.drawer.search.manager.SearchManager;
 import com.chinatsp.iquting.service.IqutingBindService;
 import com.chinatsp.iquting.service.TencentSdkService;
 import com.chinatsp.widgetcards.manager.CardManager;
@@ -28,6 +29,7 @@ public class LauncherApplication extends Application {
 
     private void initServices() {
         CardManager.getInstance().init(this);
+        SearchManager.getInstance().init(this);
         AppServiceManager.addService(AppServiceManager.SERVICE_PLATFORM, new PlatformService());
         AppServiceManager.addService(AppServiceManager.SERVICE_THEME, new ThemeService(this));
         AppServiceManager.addService(AppServiceManager.SERVICE_CAR, new AppCarService(this));

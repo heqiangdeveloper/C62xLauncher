@@ -33,7 +33,7 @@ interface ISwitchManager : IManager {
     fun onSwitchChanged(node: SwitchNode, atomic: AtomicBoolean, p: CarPropertyValue<*>) {
         val value = p.value
         if (value !is Int) {
-            Timber.e("onSwitchChanged but value is not Int! node:$node, id:${p.propertyId}")
+            Timber.e("onSwitchChanged but value is not Int! node:$node, id:${p.propertyId}, value:${value.javaClass.simpleName}")
             return
         }
         Timber.d("doSwitchChanged node:$node, value:$value, status:${node.isOn(value)}")
@@ -71,12 +71,12 @@ interface ISwitchManager : IManager {
         status: Boolean,
         block: ((SwitchNode, Boolean) -> Unit)? = null,
     ): AtomicBoolean {
-        val isNotEqual = atomic.get() xor status
+        val isNotEqual = atomic.get() != status
         if (isNotEqual) {
             atomic.set(status)
             block?.let { it(node, status) }
         } else {
-            Timber.e("updateSwitchValue but isNotEqual:$isNotEqual, node:$node, status:$status")
+            Timber.e("updateSwitchValue but isNotEqual:$isNotEqual, node:$node, status:$status, oldValue:${atomic.get()}")
         }
         return atomic
     }

@@ -323,14 +323,14 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         if (swb == binding.sternElectricSwitch) {
             binding.arcSeekBar.let {
                 it.isEnabledDrag = status
-                it.alpha = if (status) 1.0f else 0.7f
+                it.alpha = if (status) 1.0f else 0.6f
             }
             val childCount = binding.layoutContent.childCount
             val intRange = 0 until childCount
             intRange.forEach {
                 val childAt = binding.layoutContent.getChildAt(it)
                 if (null != childAt && childAt != binding.carTrunkElectricFunction) {
-                    childAt.alpha = if (status) 1.0f else 0.7f
+                    childAt.alpha = if (status) 1.0f else 0.6f
                     updateViewEnable(childAt, status)
                 }
             }

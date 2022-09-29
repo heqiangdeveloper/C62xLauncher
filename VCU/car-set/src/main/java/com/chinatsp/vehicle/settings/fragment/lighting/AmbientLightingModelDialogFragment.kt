@@ -166,7 +166,7 @@ class AmbientLightingModelDialogFragment :
             intRange.forEach {
                 val childAt = binding.layoutContent.getChildAt(it)
                 if (null != childAt && childAt != binding.alcSmartModelSwitch) {
-                    childAt.alpha = if (status) 1.0f else 0.7f
+                    childAt.alpha = if (status) 1.0f else 0.6f
                     updateViewEnable(childAt, status)
                 }
 

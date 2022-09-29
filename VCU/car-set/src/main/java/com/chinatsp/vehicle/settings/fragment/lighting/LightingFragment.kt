@@ -23,6 +23,7 @@ import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.picker.VSeekBar
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding>(),
@@ -270,6 +271,7 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
         seekBar?.run {
             when (this) {
                 binding.lightSwitchBacklightSeekBar -> {
+                    Timber.d("onValueChanged newValue:$newValue")
                     manager.doSetVolume(Progress.SWITCH_BACKLIGHT_BRIGHTNESS, newValue)
                 }
                 else -> {}
@@ -284,7 +286,7 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
             intRange.forEach {
                 val childAt = binding.lightCeremonySenseRadioConstraint.getChildAt(it)
                 if (null != childAt && childAt != binding.lightingTurnExternal) {
-                    childAt.alpha = if (status) 1.0f else 0.7f
+                    childAt.alpha = if (status) 1.0f else 0.6f
                     updateViewEnable(childAt, status)
                 }
             }

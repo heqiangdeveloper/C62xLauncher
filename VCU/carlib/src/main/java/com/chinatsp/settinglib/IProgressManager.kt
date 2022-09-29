@@ -24,10 +24,14 @@ interface IProgressManager : IManager {
         status: Boolean,
         block: ((Progress, Int) -> Unit)? = null,
     ): Volume {
-        Timber.d("doUpdateProgress node : ${volume.type}, value:$value")
-        if (status && value != volume.pos) {
+        val valid = volume.isValid(value)
+        val notSame = value != volume.pos
+        status && volume.isValid(value) && value != volume.pos
+        if (status && valid && notSame) {
             volume.pos = value
             block?.let { it(volume.type, value) }
+        } else {
+            Timber.d("doUpdateProgress node : ${volume.type}, status:$status, valid:$valid, notSame:$notSame, value:$value")
         }
         return volume
     }

@@ -147,7 +147,7 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
             intRange.forEach {
                 val childAt = binding.constraint.getChildAt(it)
                 if (null != childAt && childAt != binding.carTrunkElectricFunction) {
-                    childAt.alpha = if (status) 1.0f else 0.7f
+                    childAt.alpha = if (status) 1.0f else 0.6f
                     updateViewEnable(childAt, status)
                 }
             }
@@ -157,7 +157,7 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
             intRange.forEach {
                 val childAt = binding.modifyAngle.getChildAt(it)
                 if (null != childAt && childAt != binding.reverseAngle) {
-                    childAt.alpha = if (status) 1.0f else 0.7f
+                    childAt.alpha = if (status) 1.0f else 0.6f
                     updateViewEnable(childAt, status)
                 }
             }

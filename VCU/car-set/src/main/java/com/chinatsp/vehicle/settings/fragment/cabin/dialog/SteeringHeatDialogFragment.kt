@@ -73,13 +73,14 @@ class SteeringHeatDialogFragment :
 
     private fun initSwitchOption() {
         initSwitchOption(SwitchNode.DRIVE_WHEEL_AUTO_HEAT, viewModel.swhFunction)
-        checkDisableOtherDiv(binding.steeringAutomaticHeatingSwitch,
-            binding.steeringAutomaticHeatingSwitch.isChecked)
+        checkDisableOtherDiv(binding.steeringAutomaticHeatingSwitch.isChecked, binding.container)
+
     }
 
     private fun addSwitchLiveDataListener() {
         viewModel.swhFunction.observe(this) {
             doUpdateSwitch(SwitchNode.DRIVE_WHEEL_AUTO_HEAT, it)
+            checkDisableOtherDiv(it, binding.container)
         }
     }
 
@@ -98,22 +99,20 @@ class SteeringHeatDialogFragment :
         binding.steeringAutomaticHeatingSwitch.let {
             it.setOnCheckedChangeListener { buttonView, isChecked ->
                 doUpdateSwitchOption(SwitchNode.DRIVE_WHEEL_AUTO_HEAT, buttonView, isChecked)
-                checkDisableOtherDiv(it, isChecked)
+                checkDisableOtherDiv(it.isChecked, binding.container)
             }
         }
     }
 
-    private fun checkDisableOtherDiv(swb: SwitchButton, status: Boolean) {
-        if (swb == binding.steeringAutomaticHeatingSwitch) {
-            val childCount = binding.container.childCount
-            val intRange = 0 until childCount
-            intRange.forEach {
-                val childAt = binding.container.getChildAt(it)
-                if (null != childAt && childAt != binding.wheelAutomaticHeating) {
-                    childAt.alpha = if (status) 1.0f else 0.7f
-                    updateViewEnable(childAt, status)
-                }
+    private fun checkDisableOtherDiv(status: Boolean, view: View) {
+        if (view is ViewGroup) {
+            for (index in 0 until view.childCount) {
+                val child = view.getChildAt(index)
+                checkDisableOtherDiv(status, child)
             }
+        } else {
+            view.alpha = if (status) 1.0f else 0.6f
+            view.isEnabled = status
         }
     }
 

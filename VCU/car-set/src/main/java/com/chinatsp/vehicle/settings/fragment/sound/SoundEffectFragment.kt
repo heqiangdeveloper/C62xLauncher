@@ -137,7 +137,7 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
     private fun checkDisableOtherDiv(swb: SwitchButton, status: Boolean) {
         if (swb == binding.soundEnvironmentalSw) {
             val child = binding.soundEnvironmentalTab
-            child.alpha = if (status) 1.0f else 0.7f
+            child.alpha = if (status) 1.0f else 0.6f
             binding.soundEnvironmentalTab.updateEnable(status)
             val childCount = binding.layoutContent.childCount
             val intRange = 0 until childCount
