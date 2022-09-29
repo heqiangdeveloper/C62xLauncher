@@ -2,11 +2,15 @@ package com.chinatsp.launcher;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -18,14 +22,19 @@ import com.chinatsp.apppanel.AppConfigs.Constant;
 import com.chinatsp.apppanel.ApppanelActivity;
 import com.chinatsp.apppanel.receiver.AppInstallStatusReceiver;
 import com.chinatsp.apppanel.receiver.AppManagementReceiver;
+import com.chinatsp.apppanel.service.AppStoreService;
+import com.chinatsp.apppanel.service.LauncherService;
 import com.chinatsp.iquting.receiver.BootBroadcastReceiver;
 
 public class CarLauncher extends AppCompatActivity implements OnGestureAction {
+    private static final String TAG = CarLauncher.class.getName();
     private IntentFilter intentFilter;
     private AppInstallStatusReceiver receiver;
     private BootBroadcastReceiver bootBroadcastReceiver;
     private AppManagementReceiver appManagementReceiver;
     GestureDetector mGestureDetector;
+    private Intent launcherServiceintent;
+    private AppStoreService appStoreService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,9 +45,14 @@ public class CarLauncher extends AppCompatActivity implements OnGestureAction {
         registerAppInstallBroadcast();
         //注册监听打开或关闭应用管理的广播
         registerAppManagementBroadcast();
+        //启动launcher服务，让应用商城连接
+        startLauncherService();
+        //绑定应用市场服务
+        registerAppStoreService(getApplicationContext());
         initVersionInfo();
 
         mGestureDetector = new GestureDetector(new SlideGestureListener(this, this));
+
     }
 
     @Override
@@ -91,12 +105,32 @@ public class CarLauncher extends AppCompatActivity implements OnGestureAction {
         registerReceiver(appManagementReceiver,intentFilter);
     }
 
+    private void registerAppStoreService(Context context){
+        appStoreService = AppStoreService.getInstance(context);
+        appStoreService.bindService();
+    }
+
+    private void unRegisterAppStoreService(){
+        appStoreService.unbindService();
+    }
+
+    private void startLauncherService(){
+        launcherServiceintent = new Intent(this, LauncherService.class);
+        startService(launcherServiceintent);
+    }
+
+    private void stopLauncherService(){
+        stopService(launcherServiceintent);
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(receiver);
         unregisterReceiver(bootBroadcastReceiver);
         unregisterReceiver(appManagementReceiver);
+        stopLauncherService();
+        unRegisterAppStoreService();
     }
 
     @Override

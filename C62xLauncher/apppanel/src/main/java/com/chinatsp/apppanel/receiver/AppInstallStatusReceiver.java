@@ -3,6 +3,7 @@ package com.chinatsp.apppanel.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
@@ -11,7 +12,9 @@ import android.util.Log;
 import com.anarchy.classifyview.Bean.LocationBean;
 import com.anarchy.classifyview.event.AppInstallStatusEvent;
 import com.chinatsp.apppanel.AppConfigs.AppLists;
+import com.chinatsp.apppanel.AppConfigs.Priorities;
 import com.chinatsp.apppanel.db.MyAppDB;
+import com.huawei.appmarket.launcheragent.launcher.AppState;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -24,6 +27,9 @@ public class AppInstallStatusReceiver extends BroadcastReceiver {
     private MyAppDB db;
     private LocationBean locationBean;
     private int maxParentIndex = -1;
+    private PackageManager pm;
+    private PackageInfo pi;
+    private String versionCode;
     @Override
     public void onReceive(Context context, Intent intent) {
         if(intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)){
@@ -32,6 +38,10 @@ public class AppInstallStatusReceiver extends BroadcastReceiver {
             String packageName = intent.getData().getSchemeSpecificPart();
             if(!AppLists.isInBlackListApp(packageName)){
                 db = new MyAppDB(context);
+                int count = db.isExistPackageInDownload(packageName);
+                if(count != 0){
+                    return;
+                }
                 if(db.isExistPackage(packageName) == 0){//如果数据库中没有记录
                     locationBean = new LocationBean();
                     maxParentIndex = db.getMaxParentIndex();
@@ -55,9 +65,18 @@ public class AppInstallStatusReceiver extends BroadcastReceiver {
                             locationBean.setTitle("");
                             locationBean.setAddBtn(0);
                             locationBean.setStatus(0);
-                            locationBean.setPriority(0);
-                            locationBean.setInstalled(1);
+                            locationBean.setPriority(Priorities.MIN_PRIORITY);
+                            locationBean.setInstalled(AppState.INSTALLED);
                             locationBean.setCanuninstalled(AppLists.isSystemApplication(context,info.activityInfo.packageName) ? 0:1);
+                            try {
+                                pm = context.getPackageManager();
+                                pi = pm.getPackageInfo(locationBean.getPackageName(), 0);
+                                versionCode = String.valueOf(pi.versionCode);
+                            }catch (Exception e){
+                                versionCode = "";
+                            }
+                            locationBean.setReserve1(versionCode);
+                            locationBean.setReserve2(versionCode);
                             break A;
                         }
                     }

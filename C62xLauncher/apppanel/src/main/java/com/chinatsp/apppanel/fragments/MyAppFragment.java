@@ -3,6 +3,7 @@ package com.chinatsp.apppanel.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
@@ -31,12 +32,20 @@ import com.anarchy.classifyview.event.ReStoreDataEvent;
 import com.anarchy.classifyview.listener.SoftKeyBoardListener;
 import com.anarchy.classifyview.util.MyConfigs;
 import com.chinatsp.apppanel.AppConfigs.AppLists;
+import com.chinatsp.apppanel.AppConfigs.Constant;
 import com.chinatsp.apppanel.AppConfigs.Priorities;
 import com.chinatsp.apppanel.R;
 import com.chinatsp.apppanel.adapter.AddAppAdapter;
 import com.chinatsp.apppanel.adapter.MyAppInfoAdapter;
 import com.chinatsp.apppanel.db.MyAppDB;
+import com.chinatsp.apppanel.event.CancelDownloadEvent;
+import com.chinatsp.apppanel.event.DownloadEvent;
+import com.chinatsp.apppanel.event.NotRemindEvent;
+import com.chinatsp.apppanel.event.StartDownloadEvent;
 import com.chinatsp.apppanel.event.UninstallCommandEvent;
+import com.chinatsp.apppanel.event.UpdateEvent;
+import com.huawei.appmarket.launcheragent.StoreAppInfo;
+import com.huawei.appmarket.launcheragent.launcher.AppState;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -85,6 +94,10 @@ public class MyAppFragment extends Fragment {
     private static boolean isStoringData = false;
     private List<String> canUninstallNameLists = new ArrayList<>();
     private boolean isNeedSort = false;//是否需要排序
+    private List<String> downloadPkgs = new ArrayList<>();
+    private String versionCode = "";
+    private PackageManager pm;
+    private PackageInfo pi;
     public MyAppFragment() {
         // Required empty public constructor
     }
@@ -117,6 +130,7 @@ public class MyAppFragment extends Fragment {
         db = new MyAppDB(getContext());
         preferences = getContext().getSharedPreferences(MyConfigs.APPPANELSP, Context.MODE_PRIVATE);
         editor = preferences.edit();
+        pm = getContext().getPackageManager();
         resetMainDeleteFlag(false);
         resetSubDeleteFlag(false);
         EventBus.getDefault().register(this);
@@ -153,6 +167,7 @@ public class MyAppFragment extends Fragment {
         if(isNeedSort){//首次使用，需要按默认顺序排序
             sortWithPriority();
         }
+        addDownloadApps();//添加正在下载的apps
         loadingTv.setVisibility(View.GONE);
         mMyAppInfoAdapter = new MyAppInfoAdapter(view.getContext(), data);
         appInfoClassifyView.setAdapter(mMyAppInfoAdapter);
@@ -216,9 +231,19 @@ public class MyAppFragment extends Fragment {
             }
             locationBean.setPriority(getPriority(locationBean.getPackageName()));
             locationBean.setCanuninstalled(AppLists.isSystemApplication(getContext(),locationBean.getPackageName()) ? 0:1);
+            locationBean.setInstalled(AppState.INSTALLED);
             locationBean.setTitle("");
             locationBean.setImgByte(null);
             locationBean.setImgDrawable(drawable);
+            try {
+                pi = pm.getPackageInfo(locationBean.getPackageName(), 0);
+                versionCode = String.valueOf(pi.versionCode);
+            }catch (Exception e){
+                versionCode = "";
+            }
+            locationBean.setReserve1(versionCode);
+            locationBean.setReserve2(versionCode);
+
             num = db.isExistPackage(locationBean.getPackageName());
             if(num == 0){
                 db.insertLocation(locationBean);
@@ -231,7 +256,7 @@ public class MyAppFragment extends Fragment {
     }
 
     /*
-    *  删除掉未安装的应用，应用管理除外
+    *  删除掉未安装的应用，应用管理除外,要排除还在下载中的情况
      */
     private void deleteUninstallApp(){
         List<ResolveInfo> allApps = getApps();
@@ -248,7 +273,9 @@ public class MyAppFragment extends Fragment {
             List<LocationBean> list = data.get(i);
             for(int j = 0; j < list.size(); j++){
                 String pkgName = list.get(j).getPackageName();
-                if(!pkgName.equals(AppLists.APPMANAGEMENT) && !packageLists.contains(pkgName)){
+                int installed = list.get(j).getInstalled();
+                if(!pkgName.equals(AppLists.APPMANAGEMENT) && !packageLists.contains(pkgName) &&
+                        (installed == AppState.INSTALLED || installed == AppState.COULD_UPDATE)){
                     AsyncSchedule.execute(new Runnable() {
                         @Override
                         public void run() {
@@ -300,10 +327,18 @@ public class MyAppFragment extends Fragment {
                 if(allApps.get(i).activityInfo.loadIcon(getContext().getPackageManager()) != null){
                     locationBean.setImgDrawable(allApps.get(i).activityInfo.loadIcon(getContext().getPackageManager()));
                     locationBean.setName(allApps.get(i).activityInfo.loadLabel(getContext().getPackageManager()).toString());
-
+                    locationBean.setInstalled(AppState.INSTALLED);
                     locationBean.setCanuninstalled(AppLists.isSystemApplication(getContext(),locationBean.getPackageName()) ? 0:1);
                     locationBean.setTitle("");
                     locationBean.setImgByte(null);
+                    try {
+                        pi = pm.getPackageInfo(locationBean.getPackageName(), 0);
+                        versionCode = String.valueOf(pi.versionCode);
+                    }catch (Exception e){
+                        versionCode = "";
+                    }
+                    locationBean.setReserve1(versionCode);
+                    locationBean.setReserve2(versionCode);
 
                     int num = db.isExistPackage(locationBean.getPackageName());
                     if(num == 0){
@@ -420,6 +455,7 @@ public class MyAppFragment extends Fragment {
             String packageName = ((AppInstallStatusEvent) event).getPackageName();
             Log.d(TAG,"status = " + status + ",pacakageName is: " + packageName);
             if(status == 1){//安装
+                resetMainDeleteFlag(false);
                 data = db.getData1();
                 if(data.size() == 0){
                     getOriginalData();
@@ -478,9 +514,206 @@ public class MyAppFragment extends Fragment {
             }
         }else if(event instanceof ReStoreDataEvent){
             if(!isStoringData) storeData();
-        }else if(event instanceof UninstallCommandEvent){//倒计时退出编辑的事件
-            Log.d("CountTimer","UninstallCommandEvent start count");
+        }else if(event instanceof UninstallCommandEvent) {//倒计时退出编辑的事件
+            Log.d("CountTimer", "UninstallCommandEvent start count");
             appInfoClassifyView.startCountTimer();
+        } else if(event instanceof StartDownloadEvent){//开始下载事件
+            Log.d("DownloadEvent","StartDownloadEvent");
+            locationBean = ((StartDownloadEvent) event).getLocationBean();
+            String pkgName = locationBean.getPackageName();
+
+            if(data != null && data.size() != 0){
+                List<LocationBean> lists;
+                LocationBean mLocationBean;
+                int k;
+                //如果data中有此下载的应用
+                A:for(k = 0; k < data.size(); k++) {
+                    lists = data.get(k);
+                    if (lists == null) continue;//如果是 添加按钮，跳过
+                    for(int i = 0; i < lists.size(); i++){
+                        mLocationBean = lists.get(i);
+                        if(mLocationBean != null && pkgName.equals(mLocationBean.getPackageName())){
+                            //do nothing
+                            Log.d("DownloadEvent","StartDownloadEvent data already has " + pkgName);
+                            break A;
+                        }
+                    }
+                }
+
+                //说明data中还未有此下载的应用
+                if(k >= data.size()){
+                    Log.d("DownloadEvent","StartDownloadEvent data not has " + pkgName);
+                    locationBean.setParentIndex(data.size());
+                    locationBean.setChildIndex(-1);
+
+                    List<LocationBean> inner = new ArrayList<>();
+                    inner.add(locationBean);
+                    data.add(inner);
+                    mMyAppInfoAdapter.notifyItemChanged(data.size());
+
+                    int num = db.isExistPackage(locationBean.getPackageName());
+                    if(num == 0){
+                        db.insertLocation(locationBean);
+                    }else {
+                        db.updateLocation(locationBean);
+                    }
+                }
+            }
+        }else if(event instanceof DownloadEvent){//下载事件
+            Log.d("DownloadEvent","DownloadEvent");
+            locationBean = ((DownloadEvent) event).getLocationBean();
+            int appState = locationBean.getInstalled();
+            String pkgName = locationBean.getPackageName();
+            if(data != null && data.size() != 0){
+                //刷新该应用桌面状态
+                List<LocationBean> lists = null;
+                LocationBean mLocationBean = null;
+                int k;
+                A:for(k = 0; k < data.size(); k++) {
+                    lists = data.get(k);
+                    if (lists == null) continue;//如果是 添加按钮，跳过
+                    for(int i = 0; i < lists.size(); i++) {
+                        mLocationBean = lists.get(i);
+                        if (mLocationBean != null && pkgName.equals(mLocationBean.getPackageName())) {
+                            Log.d("DownloadEvent",pkgName + " download status " + locationBean.getStatus());
+                            mLocationBean.setName(locationBean.getName());
+                            mLocationBean.setInstalled(locationBean.getInstalled());
+                            mLocationBean.setStatus(locationBean.getStatus());
+                            mLocationBean.setReserve1(locationBean.getReserve1());
+                            mLocationBean.setReserve2(locationBean.getReserve2());
+                            break A;
+                        }
+                    }
+                }
+                //data中存在此应用
+                if(k < data.size()){
+                    mMyAppInfoAdapter.notifyItemChanged(k);
+                    boolean isSubShow = appInfoClassifyView.isSubContainerShow();
+                    if(isSubShow && lists != null){
+                        mMyAppInfoAdapter.getSubAdapter().initData(k,lists);
+                    }
+
+
+                    int num = db.isExistPackage(pkgName);
+                    if(num == 0){
+                        db.insertLocation(mLocationBean);
+                    }else {
+                        db.updateDownloadStatusInLocation(mLocationBean);
+                    }
+                    if(appState == AppState.INSTALLED){
+                        //安装后删除download表中的数据
+                        db.deleteDownload(pkgName);
+                    }
+                }
+            }
+        }else if(event instanceof CancelDownloadEvent){
+            String packageName = ((CancelDownloadEvent) event).getPackageName();
+            if(data != null && data.size() != 0){
+                //刷新该应用桌面状态
+                List<LocationBean> lists;
+                LocationBean mLocationBean;
+                int k;
+                A:for(k = 0; k < data.size(); k++) {
+                    lists = data.get(k);
+                    if (lists == null) continue;//如果是 添加按钮，跳过
+                    for(int i = 0; i < lists.size(); i++) {
+                        mLocationBean = lists.get(i);
+                        if (mLocationBean != null && packageName.equals(mLocationBean.getPackageName())) {
+                            data.remove(k);
+                            mMyAppInfoAdapter.notifyDataSetChanged();
+                            break A;
+                        }
+                    }
+                }
+
+                if(db.isExistPackage(packageName) != 0){
+                    db.deleteLocation(packageName);
+                }
+
+                if(db.isExistPackageInDownload(packageName) != 0){
+                    db.deleteDownload(packageName);
+                }
+            }
+        }else if(event instanceof UpdateEvent){
+            Log.d("DownloadEvent","UpdateEvent");
+            locationBean = ((UpdateEvent) event).getLocationBean();
+            String pkgName = locationBean.getPackageName();
+            if(data != null && data.size() != 0){
+                //刷新该应用桌面状态
+                List<LocationBean> lists = null;
+                LocationBean mLocationBean = null;
+                int k;
+                A:for(k = 0; k < data.size(); k++) {
+                    lists = data.get(k);
+                    if (lists == null) continue;//如果是 添加按钮，跳过
+                    for(int i = 0; i < lists.size(); i++) {
+                        mLocationBean = lists.get(i);
+                        if (mLocationBean != null && pkgName.equals(mLocationBean.getPackageName())) {
+                            mLocationBean.setInstalled(locationBean.getInstalled());
+                            mLocationBean.setReserve3(locationBean.getReserve3());
+                            break A;
+                        }
+                    }
+                }
+
+                //data中存在此应用
+                if(k < data.size()){
+                    mMyAppInfoAdapter.notifyItemChanged(k);
+                    boolean isSubShow = appInfoClassifyView.isSubContainerShow();
+                    if(isSubShow && lists != null){
+                        mMyAppInfoAdapter.getSubAdapter().initData(k,lists);
+                    }
+
+                    int num = db.isExistPackage(pkgName);
+                    if(num == 0){
+                        db.insertLocation(mLocationBean);
+                    }else {
+                        db.updateDownloadStatusInLocation(mLocationBean);
+                    }
+                    //删除download表中的数据
+                    db.deleteDownload(pkgName);
+                }
+            }
+        }else if(event instanceof NotRemindEvent){//可更新时 不再提醒事件
+            Log.d("DownloadEvent","NotRemindEvent");
+            String reverse3 = ((NotRemindEvent) event).getReverse3();
+            String pkgName = ((NotRemindEvent) event).getPackageName();
+            if(data != null && data.size() != 0){
+                //刷新该应用桌面状态
+                List<LocationBean> lists = null;
+                LocationBean mLocationBean = null;
+                int k;
+                A:for(k = 0; k < data.size(); k++) {
+                    lists = data.get(k);
+                    if (lists == null) continue;//如果是 添加按钮，跳过
+                    for(int i = 0; i < lists.size(); i++) {
+                        mLocationBean = lists.get(i);
+                        if (mLocationBean != null && pkgName.equals(mLocationBean.getPackageName())) {
+                            //将不再提醒时的版本号 设置为与 待更新的版本号一致
+                            mLocationBean.setReserve2(reverse3);
+                            break A;
+                        }
+                    }
+                }
+
+                //data中存在此应用
+                if(k < data.size()){
+                    mMyAppInfoAdapter.notifyItemChanged(k);
+                    boolean isSubShow = appInfoClassifyView.isSubContainerShow();
+                    if(isSubShow && lists != null){
+                        mMyAppInfoAdapter.getSubAdapter().initData(k,lists);
+                    }
+
+                    int num = db.isExistPackage(pkgName);
+                    if(num == 0){
+                        db.insertLocation(mLocationBean);
+                    }else {
+                        db.updateDownloadStatusInLocation(mLocationBean);
+                    }
+                    //删除download表中的数据
+                    db.deleteDownload(pkgName);
+                }
+            }
         }
     }
 
@@ -573,6 +806,59 @@ public class MyAppFragment extends Fragment {
         });
 
         //更新存储数据的工作在onResume()中进行
+    }
+
+    /*
+    * 添加正在下载的apps
+     */
+    private void addDownloadApps(){
+        List<LocationBean> downloadLists = db.getDownloadData();
+        List<LocationBean> inner;
+        List<LocationBean> dataLists;
+        LocationBean mLocationBean;
+        String pkgName;
+        for(int i = 0; i < downloadLists.size(); i++){
+            locationBean = downloadLists.get(i);
+            pkgName = locationBean.getPackageName();
+
+            //如果data中有此下载的应用
+            int k;
+            A:for(k = 0; k < data.size(); k++) {
+                dataLists = data.get(k);
+                if (dataLists == null) continue;//如果是 添加按钮，跳过
+                for(int j = 0; j < dataLists.size(); j++){
+                    mLocationBean = dataLists.get(j);
+                    if(mLocationBean != null && pkgName.equals(mLocationBean.getPackageName())){
+                        if(locationBean.getInstalled() == AppState.COULD_UPDATE){
+                            mLocationBean.setInstalled(locationBean.getInstalled());
+                            mLocationBean.setReserve3(locationBean.getReserve3());
+                        }else {
+                            mLocationBean.setInstalled(locationBean.getInstalled());
+                            mLocationBean.setName(locationBean.getName());
+                            mLocationBean.setStatus(locationBean.getStatus());
+                            mLocationBean.setReserve1(locationBean.getReserve1());
+                            mLocationBean.setReserve2(locationBean.getReserve2());
+                            mLocationBean.setReserve3(locationBean.getReserve3());
+                        }
+                        break A;
+                    }
+                }
+            }
+            //说明data中还未有此下载的应用
+            if(k >= data.size()){
+                locationBean.setParentIndex(data.size());
+                locationBean.setChildIndex(-1);
+                inner = new ArrayList<>();
+                inner.add(locationBean);
+                data.add(inner);
+            }
+            //onResume的时候会存储至location表
+
+            int isInstalled = locationBean.getInstalled();
+            if(isInstalled == AppState.INSTALLED){
+                db.deleteDownload(pkgName);
+            }
+        }
     }
 
     @Override

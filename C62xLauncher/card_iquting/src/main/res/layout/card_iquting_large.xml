@@ -23,7 +23,7 @@
         android:text="@string/iquting_tab_daily_music"
         android:clickable="true"
         android:layout_width="119px"
-        android:layout_height="32px"
+        android:layout_height="92px"
         style="@style/CardLv3TextView"
         android:textColor="@color/card_title_expand"
         app:layout_constraintTop_toTopOf="@id/tvIQuTingRankSongs"
