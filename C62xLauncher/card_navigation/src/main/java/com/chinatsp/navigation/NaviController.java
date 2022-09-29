@@ -48,7 +48,7 @@ public class NaviController implements INaviCallback {
         BitmapDrawable drawable = (BitmapDrawable) AppCompatResources.getDrawable(context, R.drawable.card_bg_large);
 //        BitmapDrawable drawable = (BitmapDrawable) AppCompatResources.getDrawable(context, R.drawable.testgaode);
         Bitmap bitmap = drawable.getBitmap();
-        AutoAidlWidgetManager.getInstance().setShadeBitmap(bitmap);
+//        AutoAidlWidgetManager.getInstance().setShadeBitmap(bitmap);
     }
     public void refreshInitView() {
         mState = STATE_FREE;

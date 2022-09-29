@@ -47,7 +47,7 @@ public class RequestParamCreator {
     public String createMyLocation() {
         JSONObject jsonObject = createCommonParamJson();
         try {
-            putProtocolId(jsonObject,ProtocolIds.MY_LOCATION);
+            putProtocolId(jsonObject, ProtocolIds.MY_LOCATION);
             JSONObject dataObj = new JSONObject();
             dataObj.put("type", 0);
             jsonObject.put("data", dataObj);
@@ -60,7 +60,7 @@ public class RequestParamCreator {
     public String createNavigationStatus() {
         JSONObject jsonObject = createCommonParamJson();
         try {
-            putProtocolId(jsonObject,ProtocolIds.NAVIGATION_STATUS);
+            putProtocolId(jsonObject, ProtocolIds.NAVIGATION_STATUS);
             JSONObject dataObj = new JSONObject();
             jsonObject.put("data", dataObj);
         } catch (JSONException e) {
@@ -68,10 +68,11 @@ public class RequestParamCreator {
         }
         return jsonObject.toString();
     }
+
     public String createNavigationToHomeOrCompany(int destType) {
         JSONObject jsonObject = createCommonParamJson();
         try {
-            putProtocolId(jsonObject,ProtocolIds.NAVIGATION_HOME_OR_COMPANY);
+            putProtocolId(jsonObject, ProtocolIds.NAVIGATION_HOME_OR_COMPANY);
             JSONObject dataObj = new JSONObject();
             jsonObject.put("destType", destType);
             jsonObject.put("directNavi", 0);
@@ -85,4 +86,16 @@ public class RequestParamCreator {
         return jsonObject.toString();
     }
 
+    public String createJumpPage(int pageType) {
+        JSONObject jsonObject = createCommonParamJson();
+        try {
+            putProtocolId(jsonObject, 30306);
+            JSONObject dataObj = new JSONObject();
+            dataObj.put("pageType", pageType);
+            jsonObject.put("data", dataObj);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject.toString();
+    }
 }
