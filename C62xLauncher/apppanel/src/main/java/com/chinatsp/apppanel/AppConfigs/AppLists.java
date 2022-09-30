@@ -3,9 +3,12 @@ package com.chinatsp.apppanel.AppConfigs;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.text.TextUtils;
 
 import java.util.Arrays;
 import java.util.List;
+
+import launcher.base.utils.property.PropertyUtils;
 
 /*
 *  launcher 黑名单
@@ -99,11 +102,14 @@ public class AppLists {
      * @return true是 false不是
      */
     public static boolean isSystemApplication(Context context, String packageName) {
-        if (context == null) {
+        if (context == null || TextUtils.isEmpty(packageName)) {
             return false;
         }
         if(cannotUninstallListApps.contains(packageName)){
             return true;
+        }
+        if(!PropertyUtils.checkPkgInstalled(context,packageName)){
+            return false;
         }
         PackageManager packageManager = context.getPackageManager();
         if (packageManager == null || packageName == null || packageName.length() == 0) {
