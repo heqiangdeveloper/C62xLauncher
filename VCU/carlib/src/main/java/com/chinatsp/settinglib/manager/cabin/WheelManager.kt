@@ -1,6 +1,10 @@
 package com.chinatsp.settinglib.manager.cabin
 
 import android.car.hardware.CarPropertyValue
+import android.car.hardware.cabin.CarCabinManager
+import android.content.Intent
+import androidx.core.content.ContextCompat.startActivity
+import com.chinatsp.settinglib.BaseApp
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.Volume
@@ -8,10 +12,12 @@ import com.chinatsp.settinglib.listener.sound.ISoundListener
 import com.chinatsp.settinglib.listener.sound.ISoundManager
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
+import com.chinatsp.settinglib.navigation.RouterSerial
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
+import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -57,6 +63,7 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
             val cabinSet = HashSet<Int>().apply {
                 add(SwitchNode.DRIVE_WHEEL_AUTO_HEAT.get.signal)
                 add(RadioNode.DRIVE_EPS_MODE.get.signal)
+                add(CarCabinManager.ID_SWS_KEY_USER_DEFINED)
             }
             put(Origin.CABIN, cabinSet)
         }
@@ -153,8 +160,33 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
             SwitchNode.DRIVE_WHEEL_AUTO_HEAT.get.signal -> {
                 onSwitchChanged(SwitchNode.DRIVE_WHEEL_AUTO_HEAT, swhFunction, property)
             }
+            CarCabinManager.ID_SWS_KEY_USER_DEFINED -> {
+                doHandleCustomKeyboard(property)
+            }
             else -> {}
         }
+    }
+
+    private fun doHandleCustomKeyboard(property: CarPropertyValue<*>) {
+        val value = property.value
+        if (value is Int) {
+            if (0x02 == value) {
+                doSendAction(Constant.VCU_CUSTOM_KEYPAD)
+            } else if (0x01 == value) {
+
+            }
+        }
+    }
+
+    private fun doSendAction(action: String) {
+        var location =
+            RouterSerial.makeRouteSerial(4, 0, 1)
+        val intent = Intent(action)
+        Timber.e("doSendAction====================action:$action")
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.putExtra("ROUTE_SERIAL", location)
+        intent.putExtra("DIALOG_SERIAL", "")
+        BaseApp.instance.startActivity(intent)
     }
 
     private fun writeProperty(volume: Volume, value: Int): Boolean {

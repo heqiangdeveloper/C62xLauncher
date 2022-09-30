@@ -42,6 +42,7 @@ class RegisterSignalManager private constructor() {
                         .forEach { add(it.get.signal) }
                     //特殊增加 后视镜调节保存反馈信号
                     add(CarCabinManager.ID_R_MIRROR_MEMORY_STS)
+                    add(CarCabinManager.ID_SWS_KEY_USER_DEFINED)
 
                     this.remove(Constant.INVALID)
                 }

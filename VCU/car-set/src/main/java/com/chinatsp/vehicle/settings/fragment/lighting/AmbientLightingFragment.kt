@@ -122,14 +122,23 @@ class AmbientLightingFragment :
     private fun initSwitchOption() {
         initSwitchOption(SwitchNode.FRONT_AMBIENT_LIGHTING, viewModel.frontLighting)
         initSwitchOption(SwitchNode.BACK_AMBIENT_LIGHTING, viewModel.backLighting)
+        updateLayoutEnable()
+    }
+
+    private fun updateLayoutEnable() {
+        val status =
+            binding.ambientFrontLightingSwitch.isChecked || binding.ambientBackLightingSwitch.isChecked
+        checkDisableOtherDiv(status, binding.lightingTitleLayout)
     }
 
     private fun addSwitchLiveDataListener() {
         viewModel.frontLighting.observe(this) {
             doUpdateSwitch(SwitchNode.FRONT_AMBIENT_LIGHTING, it)
+            updateLayoutEnable()
         }
         viewModel.backLighting.observe(this) {
             doUpdateSwitch(SwitchNode.BACK_AMBIENT_LIGHTING, it)
+            updateLayoutEnable()
         }
     }
 
@@ -149,10 +158,12 @@ class AmbientLightingFragment :
         binding.ambientFrontLightingSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.FRONT_AMBIENT_LIGHTING, buttonView, isChecked)
             initViewLight()
+            updateLayoutEnable()
         }
         binding.ambientBackLightingSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.BACK_AMBIENT_LIGHTING, buttonView, isChecked)
             initViewLight()
+            updateLayoutEnable()
         }
     }
 
@@ -232,12 +243,12 @@ class AmbientLightingFragment :
         binding.ambientLightingBrightness.setValueNoEvent(viewModel.ambientBrightness.value!!)
         binding.ambientLightingBrightness.setOnSeekBarListener { _, value ->
             status = value == 0
-            checkDisableOtherDiv(status)
+//            checkDisableOtherDiv(status)
             viewModel.doBrightnessChanged(node, value)
             binding.ambientLightingBrightness.setValueNoEvent(viewModel.ambientBrightness.value!!)
         }
         status = viewModel.ambientBrightness.value == 0
-        checkDisableOtherDiv(status)
+//        checkDisableOtherDiv(status)
     }
 
     private fun checkDisableOtherDiv(status: Boolean) {
@@ -300,6 +311,19 @@ class AmbientLightingFragment :
 
     override fun onStopTrackingTouch(picker: ColorPickerView?) {
 
+    }
+
+    private fun checkDisableOtherDiv(status: Boolean, view: View) {
+        if (view is ViewGroup) {
+            view.isEnabled = status
+            for (index in 0 until view.childCount) {
+                val child = view.getChildAt(index)
+                checkDisableOtherDiv(status, child)
+            }
+        } else {
+            view.alpha = if (status) 1.0f else 0.6f
+            view.isEnabled = status
+        }
     }
 
 
