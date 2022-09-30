@@ -88,4 +88,32 @@
         android:layout_marginTop="132px"
         />
 
+    <ImageView
+        android:id="@+id/ivCardNetworkErr"
+        android:layout_width="@dimen/card_icon_size_lv0"
+        android:layout_height="@dimen/card_icon_size_lv0"
+        android:layout_marginStart="194px"
+        android:layout_marginTop="155px"
+        android:src="@drawable/card_icon_wifi_disconnect"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible"
+        />
+
+    <TextView
+        android:id="@+id/tvCardNetworkErr"
+        style="@style/CardLv2TextView"
+        android:layout_width="222px"
+        android:layout_height="92px"
+        android:layout_marginTop="35px"
+        android:gravity="bottom|center"
+        android:letterSpacing="0.01"
+        android:lineSpacingMultiplier="1.5"
+        android:text="@string/card_network_err"
+        app:layout_constraintEnd_toEndOf="@id/ivCardNetworkErr"
+        app:layout_constraintStart_toStartOf="@id/ivCardNetworkErr"
+        app:layout_constraintTop_toBottomOf="@id/ivCardNetworkErr"
+        android:visibility="invisible"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

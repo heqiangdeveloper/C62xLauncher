@@ -50,11 +50,12 @@ public class NaviRepository extends BaseRepository {
     public void startNaviToCompanyPage() {
         // 1: 去公司
         jsonProtocolManager.request(new RequestParamCreator().createNavigationToHomeOrCompany(1));
+//        jsonProtocolManager.request(new RequestParamCreator().createJumpPage(8));
     }
 
     public void startNaviToHomePage() {
         // 0: 回家
         jsonProtocolManager.request(new RequestParamCreator().createNavigationToHomeOrCompany(0));
-
+//        jsonProtocolManager.request(new RequestParamCreator().createJumpPage(7));
     }
 }

@@ -18,4 +18,8 @@ public abstract class NaviCardHolder {
 
     public abstract void refreshFreeMode();
     public abstract void setLocation(String myLocationName);
+
+    public abstract void showNetworkError();
+
+    public abstract void hideNetworkError();
 }

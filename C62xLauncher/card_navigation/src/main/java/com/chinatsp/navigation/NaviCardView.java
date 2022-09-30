@@ -70,6 +70,7 @@ public class NaviCardView extends ConstraintLayout implements ICardStyleChange {
         mSmallCardView.setVisibility(GONE);
         LayoutParamUtil.setWidth(mLargeWidth, this);
         runExpandAnim();
+        mController.refreshPageState();
     }
 
     private void runExpandAnim() {
@@ -89,6 +90,7 @@ public class NaviCardView extends ConstraintLayout implements ICardStyleChange {
         mLargeCardView.setVisibility(GONE);
         removeView(mLargeCardView);
         LayoutParamUtil.setWidth(mSmallWidth, this);
+        mController.refreshPageState();
     }
 
     public void refreshState(int state) {
@@ -128,6 +130,21 @@ public class NaviCardView extends ConstraintLayout implements ICardStyleChange {
             mBigCardHolder.setLocation(myLocationName);
         } else {
             mSmallCardHolder.setLocation(myLocationName);
+        }
+    }
+    public void showNetWorkError() {
+        if (mExpand) {
+            mBigCardHolder.showNetworkError();
+        } else {
+            mSmallCardHolder.showNetworkError();
+        }
+    }
+
+    public void hideNetWorkError() {
+        if (mExpand) {
+            mBigCardHolder.hideNetworkError();
+        } else {
+            mSmallCardHolder.hideNetworkError();
         }
     }
 }

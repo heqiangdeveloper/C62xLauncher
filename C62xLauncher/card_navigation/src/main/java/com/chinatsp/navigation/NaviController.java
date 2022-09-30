@@ -3,7 +3,6 @@ package com.chinatsp.navigation;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -21,14 +20,17 @@ import com.chinatsp.navigation.repository.ResponseParser;
 
 import launcher.base.ipc.IConnectListener;
 import launcher.base.ipc.IRemoteDataCallback;
+import launcher.base.network.NetworkObserver;
+import launcher.base.network.NetworkStateReceiver;
+import launcher.base.network.NetworkUtils;
 
 public class NaviController implements INaviCallback {
     private NaviCardView mView;
     private String TAG = "NaviController ";
-    public static final int STATE_FREE = 0;
-    public static final int STATE_IN_NAVIGATION = 1;
-    private int mState = STATE_FREE;
-    private boolean isInNavigation; // 是否在导航状态中
+    public static final int STATUS_CRUISE = NavigationStatus.STATUS_CRUISE;
+    public static final int STATE_IN_NAVIGATION = NavigationStatus.STATUS_IN_NAVIGATION;
+    public static final int STATE_IN_NAVIGATION_MOCK = NavigationStatus.STATUS_IN_NAVIGATION_MOCK; // 模拟导航
+    private int mState = STATUS_CRUISE;
     private NaviRepository mNaviRepository = NaviRepository.getInstance();
     private Handler mHandler = new android.os.Handler(Looper.getMainLooper());
 
@@ -40,6 +42,16 @@ public class NaviController implements INaviCallback {
         initAidlWidgetManager(context);
         mNaviRepository.registerDataCallback(mIRemoteDataCallback);
         mNaviRepository.registerConnectListener(mConnectListener);
+        NetworkStateReceiver.getInstance().registerObserver(mNetworkObserver);
+
+    }
+
+    private void checkNetwork() {
+        if (!NetworkUtils.isNetworkAvailable(mView.getContext())) {
+            mView.showNetWorkError();
+        } else {
+            mView.hideNetWorkError();
+        }
     }
 
     private void initAidlWidgetManager(Context context) {
@@ -50,10 +62,11 @@ public class NaviController implements INaviCallback {
         Bitmap bitmap = drawable.getBitmap();
 //        AutoAidlWidgetManager.getInstance().setShadeBitmap(bitmap);
     }
-    public void refreshInitView() {
-        mState = STATE_FREE;
-        mView.refreshState(mState);
 
+    public void refreshInitView() {
+        mState = STATUS_CRUISE;
+        mView.refreshState(mState);
+        checkNetwork();
     }
 
     IRemoteDataCallback<String> mIRemoteDataCallback = new IRemoteDataCallback<String>() {
@@ -85,6 +98,22 @@ public class NaviController implements INaviCallback {
         }
     };
 
+    private NetworkObserver mNetworkObserver = new NetworkObserver() {
+        @Override
+        public void onNetworkChanged(boolean isConnected) {
+            if (isConnected) {
+                hideNetWorkError();
+            } else {
+                mView.showNetWorkError();
+            }
+        }
+    };
+
+    private void hideNetWorkError() {
+        mView.hideNetWorkError();
+        mView.refreshState(mState);
+    }
+
     public void goMyLocation() {
         NavigationUtil.logD(TAG + "goMyLocation");
         mNaviRepository.getLocation();
@@ -99,10 +128,8 @@ public class NaviController implements INaviCallback {
     public void receiveMyLocation(GaoDeResponse<Address> gaoDeResponse) {
         Address address = gaoDeResponse.getData();
         NavigationUtil.logD(TAG + "receiveMyLocation address:" + address);
-        if (!isInNavigation) {
-            if (address != null) {
-                mView.refreshMyLocation(address.getPoiName());
-            }
+        if (address != null) {
+            mView.refreshMyLocation(address.getPoiName());
         }
     }
 
@@ -111,7 +138,7 @@ public class NaviController implements INaviCallback {
         NavigationStatus status = gaoDeResponse.getData();
         NavigationUtil.logD(TAG + "receiveNavigationStatus status:" + status);
         if (status != null) {
-            isInNavigation = (status.getStatus() == NavigationStatus.STATUS_IN_NAVIGATION);
+            mState = status.getStatus();
         }
     }
 
@@ -119,22 +146,28 @@ public class NaviController implements INaviCallback {
     public void receiveCurRoadInfo(GaoDeResponse<RoadInfo> gaoDeResponse) {
         RoadInfo roadInfo = gaoDeResponse.getData();
         NavigationUtil.logD(TAG + "receiveCurRoadInfo roadInfo:" + roadInfo);
-        if (!isInNavigation) {
-            if (roadInfo != null) {
-                mView.refreshMyLocation(roadInfo.getCurRoadName());
-            }
+        if (roadInfo != null) {
+            mView.refreshMyLocation(roadInfo.getCurRoadName());
         }
     }
 
     public void startSearch() {
+        NavigationUtil.logD(TAG + "startSearch");
         mNaviRepository.startSearchPage();
     }
 
     public void naviToCompany() {
+        NavigationUtil.logD(TAG + "naviToCompany");
         mNaviRepository.startNaviToCompanyPage();
     }
 
     public void naviToHome() {
+        NavigationUtil.logD(TAG + "naviToHome");
         mNaviRepository.startNaviToHomePage();
+    }
+
+    public void refreshPageState() {
+        mView.refreshState(mState);
+        checkNetwork();
     }
 }
