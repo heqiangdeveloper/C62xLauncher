@@ -93,17 +93,14 @@ public class NaviSmallCardHolder extends NaviCardHolder {
     };
 
     private void toSearch() {
-        Toast.makeText(mContext, "搜索地址", Toast.LENGTH_SHORT).show();
         mController.startSearch();
     }
 
     private void naviToCompany() {
-        Toast.makeText(mContext, "导航去公司", Toast.LENGTH_SHORT).show();
         mController.naviToCompany();
     }
 
     private void naviToHome() {
-        Toast.makeText(mContext, "导航回家", Toast.LENGTH_SHORT).show();
         mController.naviToHome();
     }
 }

@@ -44,6 +44,7 @@ public class NaviRepository extends BaseRepository {
     }
 
     public void startSearchPage() {
+        jsonProtocolManager.request(new RequestParamCreator().createJumpPage(1));
     }
 
     public void startNaviToCompanyPage() {

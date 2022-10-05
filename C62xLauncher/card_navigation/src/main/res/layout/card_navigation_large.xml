@@ -91,6 +91,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginStart="541px"
         android:layout_marginTop="153px"
+        android:visibility="invisible"
         />
     <TextView
         android:text="未知位置"
