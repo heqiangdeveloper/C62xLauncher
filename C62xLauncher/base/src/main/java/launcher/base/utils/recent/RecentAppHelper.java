@@ -17,16 +17,24 @@ import java.util.List;
 public class RecentAppHelper {
     //不出现在应用管理中的应用名单
     public static List<String> notInAppManageListApps = Arrays.asList(
-            "com.chinatsp.launcher",//launcher
-            "com.oushang.datastat",//埋点
-            "com.iflytek.autofly.voicecoreservice",//语音
-            "com.autonavi.amapauto"//高德
+        "com.chinatsp.launcher",//launcher
+        "com.oushang.datastat",//埋点
+        "com.iflytek.autofly.voicecoreservice",//语音
+        "com.autonavi.amapauto"//高德
     );
 
+    //不出现在常用推荐中的应用名单
+    public static List<String> notInRecentAppListApps = Arrays.asList(
+        "com.chinatsp.launcher",//launcher
+        "com.oushang.datastat"//埋点
+    );
+
+    public static final int FROM_APPMANAGEMENT = 1;
+    public static final int FROM_RECENTAPP = 2;
     /**
      * @param appNumber 最多返回的个数
      */
-    public static List<HashMap<String,Object>> getRecentApps(Context context, int appNumber) {
+    public static List<HashMap<String,Object>> getRecentApps(Context context, int appNumber,int from) {
         List<HashMap<String,Object>> appInfos = new ArrayList<HashMap<String,Object>>();
         int MAX_RECENT_TASKS = appNumber; // allow for some discards
         int repeatCount = appNumber;// 保证上面两个值相等,设定存放的程序个数
@@ -52,11 +60,21 @@ public class RecentAppHelper {
         ActivityInfo homeInfo = new Intent(Intent.ACTION_MAIN).addCategory(
                 Intent.CATEGORY_HOME).resolveActivityInfo(pm, 0);
         //去掉不会显示的应用
-        for(int i = 0; i < recentTasks.size(); i++){
-            if(recentTasks.get(i) != null &&
-                    notInAppManageListApps.contains(recentTasks.get(i).baseIntent.getComponent().getPackageName())){
-                recentTasks.remove(i);
-                i--;
+        if(from == FROM_APPMANAGEMENT){
+            for(int i = 0; i < recentTasks.size(); i++){
+                if(recentTasks.get(i) != null &&
+                        notInAppManageListApps.contains(recentTasks.get(i).baseIntent.getComponent().getPackageName())){
+                    recentTasks.remove(i);
+                    i--;
+                }
+            }
+        }else if(from == FROM_RECENTAPP){
+            for(int i = 0; i < recentTasks.size(); i++){
+                if(recentTasks.get(i) != null &&
+                        notInRecentAppListApps.contains(recentTasks.get(i).baseIntent.getComponent().getPackageName())){
+                    recentTasks.remove(i);
+                    i--;
+                }
             }
         }
         int numTasks = recentTasks.size();

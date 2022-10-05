@@ -170,7 +170,7 @@ public class ClassifyView extends FrameLayout {
     private SharedPreferences.Editor editor;
     private boolean isSoftKeyBoardShow = false;
     private boolean isInSubDrag = false;
-    private List<String> canUninstallNameLists;
+    private List<String> canUninstallNameLists = new ArrayList<>();
     private boolean isHasDeletedItems = false;//sub中是否有可删除的item
     private CountTimer countTimerView;
     public ClassifyView(Context context) {
@@ -193,14 +193,6 @@ public class ClassifyView extends FrameLayout {
     public ClassifyView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context, attrs, defStyleAttr);
-    }
-
-    public List<String> getCanUninstallNameLists() {
-        return canUninstallNameLists;
-    }
-
-    public void setCanUninstallNameLists(List<String> canUninstallNameLists) {
-        this.canUninstallNameLists = canUninstallNameLists;
     }
 
     /**
@@ -280,8 +272,25 @@ public class ClassifyView extends FrameLayout {
                 //重置delete标签
                 editor.putBoolean(MyConfigs.SHOWDELETE,false);
                 editor.commit();
-                L.d("mMainShadowView OnClick isInDeletedMode: " + isInDeletedMode);
-                if(isInDeletedMode){
+                List<LocationBean> subDatas = mSubCallBack.getSubData();
+                LocationBean locationBean;
+                int num;
+                A:for(num = 0; num < subDatas.size(); num++){
+                    locationBean = subDatas.get(num);
+                    if(locationBean != null){
+                        if(locationBean.getCanuninstalled() == 1){
+                            isHasDeletedItems = true;
+                            break A;
+                        }
+                    }
+                }
+                if(num >= subDatas.size()){
+                    isHasDeletedItems = false;
+                }
+
+                L.d("mMainShadowView OnClick isInDeletedMode: " + isInDeletedMode + ",isHasDeletedItems: " + isHasDeletedItems);
+                //如果处于删除模式 且 有可删除的items
+                if(isInDeletedMode && isHasDeletedItems){
                     for(int i = 0; i < mSubRecyclerView.getChildCount(); i++){
                         relativeLayout = (RelativeLayout) mSubRecyclerView.getChildAt(i);
                         insertAbleGridView = (InsertAbleGridView) relativeLayout.getChildAt(0);
@@ -389,6 +398,7 @@ public class ClassifyView extends FrameLayout {
 
         //editRl.addView(titleTv,titleTvParams);
         editRl.addView(titleEt,titleEtParams);
+        titleEt.setSelection(titleEt.getText().toString().trim().length());
         editRl.addView(clearIv,clearIvParams);
         titleTv.setVisibility(View.GONE);
         editRl.setVisibility(View.GONE);
@@ -1303,14 +1313,24 @@ public class ClassifyView extends FrameLayout {
                         //判断sub中是否有可删除的
                         isHasDeletedItems = false;
                         List<LocationBean> subDatas = mSubCallBack.getSubData();
+                        LocationBean locationBean;
+                        if(canUninstallNameLists != null) canUninstallNameLists.clear();
                         for(int i = 0; i < subDatas.size(); i++){
-                            if(subDatas.get(i) != null && canUninstallNameLists != null &&
-                                    canUninstallNameLists.contains(subDatas.get(i).getName())){
-                                isHasDeletedItems = true;
-                                break;
+                            locationBean = subDatas.get(i);
+                            if(locationBean != null){
+                                if(locationBean.getCanuninstalled() == 1){
+                                    canUninstallNameLists.add(locationBean.getName());
+                                }
                             }
                         }
 
+                        if(canUninstallNameLists != null && canUninstallNameLists.size() != 0){
+                            isHasDeletedItems = true;
+                        }else {
+                            isHasDeletedItems = false;
+                        }
+
+                        L.d("Sub ACTION_DRAG_STARTED isHasDeletedItems: " + isHasDeletedItems);
                         if(isHasDeletedItems){
                             //getChildCount得到的是当前正在显示的item的个数,所以这里只能显示正在显示的item的删除按钮
                             for(int i = 0; i < mSubRecyclerView.getChildCount(); i++){
@@ -1419,7 +1439,7 @@ public class ClassifyView extends FrameLayout {
                     //存储在SP中，在MyAppInfoAdapter中刷新时再判断是否显示删除按钮
                     SharedPreferences sp = getContext().getSharedPreferences(MyConfigs.APPPANELSP,Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sp.edit();
-                    L.d("isHasDeletedItems: " + isHasDeletedItems);
+                    L.d("isHasDeletedItems: " + isHasDeletedItems + ",isInDeleteMode: " + isInDeleteMode);
                     editor.putBoolean(MyConfigs.SHOWDELETE,isInDeleteMode && isHasDeletedItems ? true : false);
                     editor.commit();
                     break;
