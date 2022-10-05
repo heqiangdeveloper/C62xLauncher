@@ -94,16 +94,16 @@ public class SmallCardViewHolder extends VolcanoViewHolder{
 
     @Override
     public void showLoadingView() {
-        ivCardVolcanoSourceLogo.setVisibility(View.INVISIBLE);
-        ivCardVolcanoVideoCover.setVisibility(View.INVISIBLE);
-        tvCardVolcanoVideoName.setVisibility(View.INVISIBLE);
+//        ivCardVolcanoSourceLogo.setVisibility(View.INVISIBLE);
+//        ivCardVolcanoVideoCover.setVisibility(View.INVISIBLE);
+//        tvCardVolcanoVideoName.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void hideLoadingView() {
-        ivCardVolcanoSourceLogo.setVisibility(View.VISIBLE);
-        ivCardVolcanoVideoCover.setVisibility(View.VISIBLE);
-        tvCardVolcanoVideoName.setVisibility(View.VISIBLE);
+//        ivCardVolcanoSourceLogo.setVisibility(View.VISIBLE);
+//        ivCardVolcanoVideoCover.setVisibility(View.VISIBLE);
+//        tvCardVolcanoVideoName.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -111,7 +111,8 @@ public class SmallCardViewHolder extends VolcanoViewHolder{
         ivCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
         tvCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
         ivCardVolcanoSourceLogo.setVisibility(View.INVISIBLE);
-        tvCardVolcanoVideoName.setVisibility(View.INVISIBLE);
+        tvCardVolcanoSource.setVisibility(View.INVISIBLE);
+        ivCardVolcanoVideoCover.setVisibility(View.INVISIBLE);
         tvCardVolcanoVideoName.setVisibility(View.INVISIBLE);
     }
 
@@ -120,6 +121,7 @@ public class SmallCardViewHolder extends VolcanoViewHolder{
         ivCardVolcanoNetworkErr.setVisibility(View.INVISIBLE);
         tvCardVolcanoNetworkErr.setVisibility(View.INVISIBLE);
         ivCardVolcanoSourceLogo.setVisibility(View.VISIBLE);
+        tvCardVolcanoSource.setVisibility(View.VISIBLE);
         ivCardVolcanoVideoCover.setVisibility(View.VISIBLE);
         tvCardVolcanoVideoName.setVisibility(View.VISIBLE);
     }

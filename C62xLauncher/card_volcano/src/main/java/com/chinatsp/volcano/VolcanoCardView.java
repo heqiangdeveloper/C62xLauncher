@@ -98,6 +98,7 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
         runExpandAnim();
         long time2 = System.currentTimeMillis();
         EasyLog.d(TAG, "Trace expand cost:" + (time2 - time1) + "ms");
+        mController.refreshPageState();
     }
 
     private void runExpandAnim() {
@@ -126,6 +127,7 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
         mLargeCardView.setVisibility(GONE);
         removeView(mLargeCardView);
         LayoutParamUtil.setWidth(mSmallWidth, this);
+        mController.refreshPageState();
     }
 
     public void switchSource(String source) {

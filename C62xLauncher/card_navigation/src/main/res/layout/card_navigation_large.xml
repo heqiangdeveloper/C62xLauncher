@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
+        android:id="@+id/ivCardNaviBigDefaultMap"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/card_navi_default_map_large"
@@ -25,6 +26,7 @@
         />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutCardNaviStatus"
         android:layout_width="500px"
         android:layout_height="187px"
         android:background="@drawable/card_navi_top_message"
@@ -105,6 +107,7 @@
         android:visibility="invisible"
         />
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutCardNaviCruise"
         android:layout_width="456px"
         android:layout_height="112px"
         android:orientation="horizontal"
@@ -197,5 +200,38 @@
 
 
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutCardNetworkError"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        >
+
+        <ImageView
+            android:id="@+id/ivCardNetworkErr"
+            android:layout_width="@dimen/card_icon_size_lv0"
+            android:layout_height="@dimen/card_icon_size_lv0"
+            android:layout_marginTop="152px"
+            android:src="@drawable/card_icon_wifi_disconnect"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/tvCardNetworkErr"
+            style="@style/CardLv2TextView"
+            android:layout_width="222px"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48px"
+            android:gravity="bottom|center"
+            android:letterSpacing="0.01"
+            android:lineSpacingMultiplier="1.5"
+            android:text="@string/card_network_err"
+            app:layout_constraintEnd_toEndOf="@id/ivCardNetworkErr"
+            app:layout_constraintStart_toStartOf="@id/ivCardNetworkErr"
+            app:layout_constraintTop_toBottomOf="@id/ivCardNetworkErr"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

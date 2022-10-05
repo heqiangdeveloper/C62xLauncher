@@ -33,6 +33,7 @@ public class BigCardViewHolder extends VolcanoViewHolder{
     private ImageView ivCardVolcanoLogoDouyin;
     private ImageView ivCardVolcanoLogoToutiao;
     private TextView tvCardVolcanoNetworkErr;
+    private ImageView ivCardVolcanoNetworkErr;
     private View viewLoading;
 
     private boolean mInitialed;
@@ -48,6 +49,7 @@ public class BigCardViewHolder extends VolcanoViewHolder{
         ivCardVolcanoLogoToutiao = rootView.findViewById(R.id.ivCardVolcanoLogoToutiao);
         viewLoading = rootView.findViewById(R.id.viewLoading);
         tvCardVolcanoNetworkErr = rootView.findViewById(R.id.tvCardVolcanoNetworkErr);
+        ivCardVolcanoNetworkErr = rootView.findViewById(R.id.ivCardVolcanoNetworkErr);
         mCardView = cardView;
         initBigCardView(rootView);
         initTypeSelector();
@@ -89,6 +91,7 @@ public class BigCardViewHolder extends VolcanoViewHolder{
 
     }
 
+
     @Override
     public void updateList(VideoListData videoListData) {
         EasyLog.d(TAG, "updateList "+videoListData);
@@ -112,7 +115,7 @@ public class BigCardViewHolder extends VolcanoViewHolder{
         if (mInitialed) {
             return;
         }
-        mTypeViewSelector.selectFirst();
+        mTypeViewSelector.setCurrent(0);
         mInitialed = true;
     }
 
@@ -135,12 +138,25 @@ public class BigCardViewHolder extends VolcanoViewHolder{
 
     @Override
     public void showNetworkError() {
+        rcvCardVolcanoVideoList.setVisibility(View.INVISIBLE);
+        setSourceTabsVisible(false);
+        viewLoading.setVisibility(View.INVISIBLE);
+        ivCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
         tvCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideNetworkError() {
+        setSourceTabsVisible(true);
+        ivCardVolcanoNetworkErr.setVisibility(View.INVISIBLE);
         tvCardVolcanoNetworkErr.setVisibility(View.INVISIBLE);
+    }
+
+    private void setSourceTabsVisible(boolean show) {
+        int visible = show ? View.VISIBLE : View.INVISIBLE;
+        ivCardVolcanoLogoToutiao.setVisibility(visible);
+        ivCardVolcanoLogoDouyin.setVisibility(visible);
+        ivCardVolcanoLogoXigua.setVisibility(visible);
     }
 
     private void initBigCardView(View largeCardView) {

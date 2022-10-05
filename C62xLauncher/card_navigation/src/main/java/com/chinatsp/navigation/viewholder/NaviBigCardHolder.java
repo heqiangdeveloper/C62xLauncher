@@ -13,10 +13,15 @@ import com.autonavi.autoaidlwidget.AutoAidlWidgetManager;
 import com.chinatsp.navigation.NaviController;
 import com.chinatsp.navigation.R;
 
-public class NaviBigCardHolder extends NaviCardHolder{
+public class NaviBigCardHolder extends NaviCardHolder {
     private ImageView ivCardNaviSearch;
     private ImageView ivCardNaviHome;
     private ImageView ivCardNaviCompany;
+    private ImageView ivCardNaviBigDefaultMap;
+    private View layoutCardNetworkError;
+    private View layoutCardNaviStatus;
+    private View layoutCardNaviCruise;
+    private View surfaceViewNavi;
 
     public NaviBigCardHolder(@NonNull View rootView, NaviController controller) {
         this(rootView);
@@ -30,9 +35,16 @@ public class NaviBigCardHolder extends NaviCardHolder{
     public NaviBigCardHolder(View rootView) {
         super(rootView);
 
+        surfaceViewNavi = rootView.findViewById(R.id.surfaceViewNavi);
+        ivCardNaviBigDefaultMap = rootView.findViewById(R.id.ivCardNaviBigDefaultMap);
+
+
         ivCardNaviSearch = rootView.findViewById(R.id.ivCardNaviSearch);
         ivCardNaviHome = rootView.findViewById(R.id.ivCardNaviHome);
         ivCardNaviCompany = rootView.findViewById(R.id.ivCardNaviCompany);
+        layoutCardNetworkError = rootView.findViewById(R.id.layoutCardNetworkError);
+        layoutCardNaviStatus = rootView.findViewById(R.id.layoutCardNaviStatus);
+        layoutCardNaviCruise = rootView.findViewById(R.id.layoutCardNaviCruise);
 
         ivCardNaviSearch.setOnClickListener(mOnClickListener);
         ivCardNaviHome.setOnClickListener(mOnClickListener);
@@ -41,16 +53,38 @@ public class NaviBigCardHolder extends NaviCardHolder{
 
     @Override
     public void refreshNavigation() {
-
+        surfaceViewNavi.setVisibility(View.VISIBLE);
+        layoutCardNaviStatus.setVisibility(View.VISIBLE);
+        layoutCardNaviCruise.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void refreshFreeMode() {
-
+        surfaceViewNavi.setVisibility(View.VISIBLE);
+        layoutCardNaviStatus.setVisibility(View.INVISIBLE);
+        layoutCardNaviCruise.setVisibility(View.VISIBLE);
     }
+
     @Override
     public void setLocation(String myLocationName) {
-        
+
+    }
+
+    @Override
+    public void showNetworkError() {
+        surfaceViewNavi.setVisibility(View.INVISIBLE);
+        layoutCardNaviStatus.setVisibility(View.INVISIBLE);
+        layoutCardNaviCruise.setVisibility(View.INVISIBLE);
+
+        layoutCardNetworkError.setVisibility(View.VISIBLE);
+        ivCardNaviBigDefaultMap.setVisibility(View.VISIBLE);
+        layoutCardNaviCruise.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideNetworkError() {
+        layoutCardNetworkError.setVisibility(View.GONE);
+        ivCardNaviBigDefaultMap.setVisibility(View.GONE);
     }
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {

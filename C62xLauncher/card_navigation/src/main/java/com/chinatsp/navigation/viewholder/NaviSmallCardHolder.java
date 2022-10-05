@@ -22,6 +22,8 @@ public class NaviSmallCardHolder extends NaviCardHolder {
     private TextView tvCardNaviMyLocation;
     private ImageView ivCardNaviInstruction;
     private TextView tvCardNaviInstruction;
+    private ImageView ivCardNetworkErr;
+    private TextView tvCardNetworkErr;
 
     public NaviSmallCardHolder(@NonNull View rootView, NaviController controller) {
         this(rootView);
@@ -40,6 +42,8 @@ public class NaviSmallCardHolder extends NaviCardHolder {
         tvCardNaviMyLocation = rootView.findViewById(R.id.tvCardNaviMyLocation);
         ivCardNaviInstruction = rootView.findViewById(R.id.ivCardNaviInstruction);
         tvCardNaviInstruction = rootView.findViewById(R.id.tvCardNaviInstruction);
+        ivCardNetworkErr = rootView.findViewById(R.id.ivCardNetworkErr);
+        tvCardNetworkErr = rootView.findViewById(R.id.tvCardNetworkErr);
 
         ivCardNaviSearch.setOnClickListener(mOnClickListener);
         ivCardNaviHome.setOnClickListener(mOnClickListener);
@@ -48,10 +52,6 @@ public class NaviSmallCardHolder extends NaviCardHolder {
 
     @Override
     public void refreshNavigation() {
-        ivCardNaviCompany.setVisibility(View.VISIBLE);
-        ivCardNaviHome.setVisibility(View.VISIBLE);
-        ivCardNaviSearch.setVisibility(View.VISIBLE);
-
         ivCardNaviArrow.setVisibility(View.GONE);
         tvCardNaviMyLocation.setVisibility(View.GONE);
 
@@ -62,9 +62,6 @@ public class NaviSmallCardHolder extends NaviCardHolder {
     @Override
     public void refreshFreeMode() {
         NavigationUtil.logD(TAG + "refreshFreeMode");
-        ivCardNaviCompany.setVisibility(View.VISIBLE);
-        ivCardNaviHome.setVisibility(View.VISIBLE);
-        ivCardNaviSearch.setVisibility(View.VISIBLE);
 
         ivCardNaviInstruction.setVisibility(View.GONE);
         tvCardNaviInstruction.setVisibility(View.GONE);
@@ -77,6 +74,22 @@ public class NaviSmallCardHolder extends NaviCardHolder {
     @Override
     public void setLocation(String myLocationName) {
         tvCardNaviMyLocation.setText(myLocationName);
+    }
+
+    @Override
+    public void showNetworkError() {
+        ivCardNaviArrow.setVisibility(View.GONE);
+        tvCardNaviMyLocation.setVisibility(View.GONE);
+        ivCardNaviInstruction.setVisibility(View.GONE);
+        tvCardNaviInstruction.setVisibility(View.GONE);
+        ivCardNetworkErr.setVisibility(View.VISIBLE);
+        tvCardNetworkErr.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideNetworkError() {
+        ivCardNetworkErr.setVisibility(View.GONE);
+        tvCardNetworkErr.setVisibility(View.GONE);
     }
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {

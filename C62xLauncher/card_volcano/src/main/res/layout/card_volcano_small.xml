@@ -89,7 +89,7 @@
         android:gravity="bottom|center"
         android:letterSpacing="0.01"
         android:lineSpacingMultiplier="1.5"
-        android:text="@string/volcano_network_err"
+        android:text="@string/card_network_err"
         app:layout_constraintEnd_toEndOf="@id/ivCardVolcanoNetworkErr"
         app:layout_constraintStart_toStartOf="@id/ivCardVolcanoNetworkErr"
         app:layout_constraintTop_toBottomOf="@id/ivCardVolcanoNetworkErr"
