@@ -3,6 +3,8 @@ package com.chinatsp.vehicle.settings.vm.adas
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.bean.RadioState
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.manager.adas.LaneManager
 import com.chinatsp.settinglib.optios.RadioNode
@@ -20,30 +22,30 @@ class LaneViewModel @Inject constructor(app: Application, model: BaseModel) :
     private val manager: LaneManager
         get() = LaneManager.instance
 
-    val laneAssistFunction: LiveData<Boolean> by lazy { _laneAssistFunction }
+    val laneAssistFunction: LiveData<SwitchState> by lazy { _laneAssistFunction }
 
-    private val _laneAssistFunction: MutableLiveData<Boolean> by lazy {
+    private val _laneAssistFunction: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.ADAS_LANE_ASSIST
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val laneAssistMode: LiveData<Int> by lazy { _laneAssistMode }
+    val laneAssistMode: LiveData<RadioState> by lazy { _laneAssistMode }
 
-    private val _laneAssistMode: MutableLiveData<Int> by lazy {
+    private val _laneAssistMode: MutableLiveData<RadioState> by lazy {
         val node = RadioNode.ADAS_LANE_ASSIST_MODE
         MutableLiveData(manager.doGetRadioOption(node))
     }
 
-    val ldwStyle: LiveData<Int> by lazy { _ldwStyle }
+    val ldwStyle: LiveData<RadioState> by lazy { _ldwStyle }
 
-    private val _ldwStyle: MutableLiveData<Int> by lazy {
+    private val _ldwStyle: MutableLiveData<RadioState> by lazy {
         val node = RadioNode.ADAS_LDW_STYLE
         MutableLiveData(manager.doGetRadioOption(node))
     }
 
-    val ldwSensitivity: LiveData<Int> by lazy { _ldwSensitivity }
+    val ldwSensitivity: LiveData<RadioState> by lazy { _ldwSensitivity }
 
-    private val _ldwSensitivity: MutableLiveData<Int> by lazy {
+    private val _ldwSensitivity: MutableLiveData<RadioState> by lazy {
         val node = RadioNode.ADAS_LDW_SENSITIVITY
         MutableLiveData(manager.doGetRadioOption(node))
     }
@@ -59,7 +61,7 @@ class LaneViewModel @Inject constructor(app: Application, model: BaseModel) :
     }
 
 
-    override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
+    override fun onSwitchOptionChanged(status: SwitchState, node: SwitchNode) {
         when (node) {
             SwitchNode.ADAS_LANE_ASSIST -> {
                 doUpdate(_laneAssistFunction, status)
@@ -68,7 +70,7 @@ class LaneViewModel @Inject constructor(app: Application, model: BaseModel) :
         }
     }
 
-    override fun onRadioOptionChanged(node: RadioNode, value: Int) {
+    override fun onRadioOptionChanged(node: RadioNode, value: RadioState) {
         when (node) {
             RadioNode.ADAS_LANE_ASSIST_MODE -> {
                 doUpdate(_laneAssistMode, value)

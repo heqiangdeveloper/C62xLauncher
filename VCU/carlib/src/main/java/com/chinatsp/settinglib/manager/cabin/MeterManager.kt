@@ -1,12 +1,12 @@
 package com.chinatsp.settinglib.manager.cabin
 
 import android.car.hardware.CarPropertyValue
+import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.sign.Origin
-import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author : luohong
@@ -28,7 +28,7 @@ class MeterManager private constructor() : BaseManager(), IRadioManager {
         }
     }
 
-    private val meterSystemRadioOption: AtomicInteger by lazy {
+    private val meterSystemRadioOption: RadioState by lazy {
         val node = RadioNode.DRIVE_METER_SYSTEM
 //        AtomicInteger(node.default).apply {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
@@ -68,12 +68,10 @@ class MeterManager private constructor() : BaseManager(), IRadioManager {
         }
     }
 
-    override fun doGetRadioOption(node: RadioNode): Int {
+    override fun doGetRadioOption(node: RadioNode): RadioState? {
         return when (node) {
-            RadioNode.DRIVE_METER_SYSTEM -> {
-                meterSystemRadioOption.get()
-            }
-            else -> -1
+            RadioNode.DRIVE_METER_SYSTEM -> meterSystemRadioOption.copy()
+            else -> null
         }
     }
 
@@ -86,7 +84,7 @@ class MeterManager private constructor() : BaseManager(), IRadioManager {
         }
     }
 
-    private fun writeProperty(node: RadioNode, value: Int, atomic: AtomicInteger): Boolean {
+    private fun writeProperty(node: RadioNode, value: Int, atomic: RadioState): Boolean {
         val success = node.isValid(value, false)
                 && writeProperty(node.set.signal, value, node.set.origin)
         if (success && develop) {

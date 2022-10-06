@@ -6,6 +6,8 @@ import android.car.hardware.cabin.CarCabinManager
 import com.chinatsp.settinglib.AppExecutors
 import com.chinatsp.settinglib.IProgressManager
 import com.chinatsp.settinglib.VcuUtils
+import com.chinatsp.settinglib.bean.RadioState
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.constants.OffLine
 import com.chinatsp.settinglib.listener.IBaseListener
@@ -20,8 +22,6 @@ import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.annotation.Action
 import com.chinatsp.vehicle.controller.bean.Cmd
 import java.lang.ref.WeakReference
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author : luohong
@@ -41,45 +41,29 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
         }
     }
 
-    private val _electricFunction: AtomicBoolean by lazy {
+    private val electricSwitchState: SwitchState by lazy {
         val node = SwitchNode.AS_STERN_ELECTRIC
-//        AtomicBoolean(node.default).apply {
-//            val result = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateSwitchValue(node, this, result)
-//        }
         return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
-    private val _lightAlarmFunction: AtomicBoolean by lazy {
+    private val lightAlarmSwitchState: SwitchState by lazy {
         val node = SwitchNode.STERN_LIGHT_ALARM
-//        AtomicBoolean(node.default).apply {
-//            val result = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateSwitchValue(node, this, result)
-//        }
         return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
-    private val _audioAlarmFunction: AtomicBoolean by lazy {
+    private val audioAlarmSwitchState: SwitchState by lazy {
         val node = SwitchNode.STERN_AUDIO_ALARM
-//        AtomicBoolean(node.default).apply {
-//            val result = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateSwitchValue(node, this, result)
-//        }
         return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
-    private val sternSmartEnter: AtomicInteger by lazy {
+    private val sternSmartEnter: RadioState by lazy {
         val node = RadioNode.STERN_SMART_ENTER
-//        AtomicInteger(node.default).apply {
-//            val result = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateRadioValue(node, this, result)
-//        }
         return@lazy createAtomicInteger(node) { result, value ->
             doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
@@ -117,12 +101,12 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
         return careSerials[origin] ?: HashSet()
     }
 
-    override fun doGetRadioOption(node: RadioNode): Int {
+    override fun doGetRadioOption(node: RadioNode): RadioState? {
         return when (node) {
             RadioNode.STERN_SMART_ENTER -> {
-                sternSmartEnter.get()
+                sternSmartEnter.copy()
             }
-            else -> -1
+            else -> null
         }
     }
 
@@ -166,26 +150,20 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
         return serial
     }
 
-    override fun doGetSwitchOption(node: SwitchNode): Boolean {
+    override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.AS_STERN_ELECTRIC -> {
-                _electricFunction.get()
-            }
-            SwitchNode.STERN_LIGHT_ALARM -> {
-                _lightAlarmFunction.get()
-            }
-            SwitchNode.STERN_AUDIO_ALARM -> {
-                _audioAlarmFunction.get()
-            }
-            else -> false
+            SwitchNode.AS_STERN_ELECTRIC -> electricSwitchState.copy()
+            SwitchNode.STERN_LIGHT_ALARM -> lightAlarmSwitchState.copy()
+            SwitchNode.STERN_AUDIO_ALARM -> audioAlarmSwitchState.copy()
+            else -> null
         }
     }
 
     override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
         val result = when (node) {
-            SwitchNode.STERN_AUDIO_ALARM -> _audioAlarmFunction
-            SwitchNode.STERN_LIGHT_ALARM -> _lightAlarmFunction
-            SwitchNode.AS_STERN_ELECTRIC -> _electricFunction
+            SwitchNode.STERN_AUDIO_ALARM -> audioAlarmSwitchState
+            SwitchNode.STERN_LIGHT_ALARM -> lightAlarmSwitchState
+            SwitchNode.AS_STERN_ELECTRIC -> electricSwitchState
             else -> null
         }
         return result?.let {
@@ -200,13 +178,13 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
     override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
             SwitchNode.AS_STERN_ELECTRIC.get.signal -> {
-                onSwitchChanged(SwitchNode.AS_STERN_ELECTRIC, _electricFunction, property)
+                onSwitchChanged(SwitchNode.AS_STERN_ELECTRIC, electricSwitchState, property)
             }
             SwitchNode.STERN_LIGHT_ALARM.get.signal -> {
-                onSwitchChanged(SwitchNode.STERN_LIGHT_ALARM, _lightAlarmFunction, property)
+                onSwitchChanged(SwitchNode.STERN_LIGHT_ALARM, lightAlarmSwitchState, property)
             }
             SwitchNode.STERN_AUDIO_ALARM.get.signal -> {
-                onSwitchChanged(SwitchNode.STERN_AUDIO_ALARM, _audioAlarmFunction, property)
+                onSwitchChanged(SwitchNode.STERN_AUDIO_ALARM, audioAlarmSwitchState, property)
             }
             RadioNode.STERN_SMART_ENTER.get.signal -> {
                 onRadioChanged(RadioNode.STERN_SMART_ENTER, sternSmartEnter, property)

@@ -5,6 +5,8 @@ import android.car.hardware.mcu.CarMcuManager
 import android.car.media.CarAudioManager
 import com.chinatsp.settinglib.SettingManager
 import com.chinatsp.settinglib.VcuUtils
+import com.chinatsp.settinglib.bean.RadioState
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.sound.ISoundManager
@@ -16,8 +18,6 @@ import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import timber.log.Timber
 import java.lang.ref.WeakReference
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author : luohong
@@ -37,7 +37,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    private val toneAtomic: AtomicBoolean by lazy {
+    private val toneAtomic: SwitchState by lazy {
         val node = SwitchNode.AUDIO_SOUND_TONE
 //        AtomicBoolean(node.default).apply {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
@@ -47,7 +47,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
-    private val huaweiAtomic: AtomicBoolean by lazy {
+    private val huaweiAtomic: SwitchState by lazy {
         val node = SwitchNode.AUDIO_SOUND_HUAWEI
 //        AtomicBoolean(node.default).apply {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
@@ -58,7 +58,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    private val offsetAtomic: AtomicBoolean by lazy {
+    private val offsetAtomic: SwitchState by lazy {
         val node = SwitchNode.SPEED_VOLUME_OFFSET
 //        AtomicBoolean(node.default).apply {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
@@ -69,7 +69,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    private val loudnessAtomic: AtomicBoolean by lazy {
+    private val loudnessAtomic: SwitchState by lazy {
         val node = SwitchNode.AUDIO_SOUND_LOUDNESS
 //        AtomicBoolean(node.default).apply {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
@@ -80,7 +80,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    private val audioEffectStatus: AtomicBoolean by lazy {
+    private val audioEffectStatus: SwitchState by lazy {
         val node = SwitchNode.AUDIO_ENVI_AUDIO
 //        AtomicBoolean(node.default).apply {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
@@ -91,7 +91,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    private val audioEffectOption: AtomicInteger by lazy {
+    private val audioEffectOption: RadioState by lazy {
         val node = RadioNode.AUDIO_ENVI_AUDIO
 //        AtomicInteger(node.default).apply {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
@@ -102,9 +102,9 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    private val eqMode: AtomicInteger by lazy {
+    private val eqMode: RadioState by lazy {
         val node = RadioNode.SYSTEM_SOUND_EFFECT
-        AtomicInteger(node.default).apply {
+        RadioState(node.def).apply {
             val eqId = getDefaultEqSerial()
             set(eqId)
 //            doUpdateRadioValue(node, this, eqId, instance::doOptionChanged)
@@ -244,15 +244,11 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         return serial
     }
 
-    override fun doGetRadioOption(node: RadioNode): Int {
+    override fun doGetRadioOption(node: RadioNode): RadioState? {
         return when (node) {
-            RadioNode.SYSTEM_SOUND_EFFECT -> {
-                eqMode.get()
-            }
-            RadioNode.AUDIO_ENVI_AUDIO -> {
-                audioEffectOption.get()
-            }
-            else -> -1
+            RadioNode.SYSTEM_SOUND_EFFECT -> eqMode.copy()
+            RadioNode.AUDIO_ENVI_AUDIO -> audioEffectOption.copy()
+            else -> null
         }
     }
 
@@ -276,24 +272,14 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         return true
     }
 
-    override fun doGetSwitchOption(node: SwitchNode): Boolean {
+    override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.AUDIO_SOUND_TONE -> {
-                toneAtomic.get()
-            }
-            SwitchNode.AUDIO_SOUND_HUAWEI -> {
-                huaweiAtomic.get()
-            }
-            SwitchNode.SPEED_VOLUME_OFFSET -> {
-                offsetAtomic.get()
-            }
-            SwitchNode.AUDIO_SOUND_LOUDNESS -> {
-                loudnessAtomic.get()
-            }
-            SwitchNode.AUDIO_ENVI_AUDIO -> {
-                audioEffectStatus.get()
-            }
-            else -> false
+            SwitchNode.AUDIO_SOUND_TONE -> toneAtomic.copy()
+            SwitchNode.AUDIO_SOUND_HUAWEI -> huaweiAtomic.copy()
+            SwitchNode.SPEED_VOLUME_OFFSET -> offsetAtomic.copy()
+            SwitchNode.AUDIO_SOUND_LOUDNESS -> loudnessAtomic.copy()
+            SwitchNode.AUDIO_ENVI_AUDIO -> audioEffectStatus.copy()
+            else -> null
         }
     }
 

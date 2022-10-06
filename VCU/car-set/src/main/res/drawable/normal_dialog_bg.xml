@@ -3,7 +3,6 @@
 
     <item android:drawable="@drawable/choice_218" android:state_selected="true" />
     <item android:drawable="@drawable/choice_218" android:state_pressed="true" />
-    <item android:drawable="@drawable/choice_218" android:state_enabled="false" />
     <item android:drawable="@drawable/normal_218" />
 
 </selector>

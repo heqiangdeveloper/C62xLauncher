@@ -1,8 +1,6 @@
 package com.chinatsp.vehicle.settings.fragment.cabin.dialog
 
 import android.os.Bundle
-import android.view.View
-import android.view.ViewGroup
 import com.chinatsp.settinglib.listener.IThemeChangeListener
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.ISwitchManager
@@ -12,12 +10,12 @@ import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.service.ThemeService
 import com.chinatsp.vehicle.settings.IOptionAction
 import com.chinatsp.vehicle.settings.R
+import com.chinatsp.vehicle.settings.app.Toast
 import com.chinatsp.vehicle.settings.databinding.TrailerRemindDialogFragmentBinding
 import com.chinatsp.vehicle.settings.vm.cabin.TrailerViewModel
 import com.common.library.frame.base.BaseDialogFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.tabbar.TabControlView
-import com.king.base.util.ToastUtils
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -95,12 +93,15 @@ class TrailerRemindDialogFragment :
 
     private fun initSwitchOption() {
         initSwitchOption(SwitchNode.DRIVE_TRAILER_REMIND, viewModel.trailerFunction)
+        updateRadioEnable(RadioNode.DEVICE_TRAILER_DISTANCE)
+        updateRadioEnable(RadioNode.DEVICE_TRAILER_SENSITIVITY)
     }
 
     private fun addSwitchLiveDataListener() {
         viewModel.trailerFunction.observe(this) {
             doUpdateSwitch(SwitchNode.DRIVE_TRAILER_REMIND, it)
-            resetFollowTrailerSwitch(it)
+            updateRadioEnable(RadioNode.DEVICE_TRAILER_DISTANCE)
+            updateRadioEnable(RadioNode.DEVICE_TRAILER_SENSITIVITY)
         }
     }
 
@@ -109,6 +110,11 @@ class TrailerRemindDialogFragment :
             SwitchNode.DRIVE_TRAILER_REMIND -> binding.trailerRemindSwitch
             else -> null
         }
+    }
+
+    override fun obtainDependByNode(node: RadioNode): Boolean {
+        return binding.trailerRemindSwitch.isChecked || (viewModel.trailerFunction.value?.get()
+            ?: false)
     }
 
     override fun getSwitchManager(): ISwitchManager {
@@ -130,33 +136,34 @@ class TrailerRemindDialogFragment :
     private fun setSwitchListener() {
         binding.trailerRemindSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.DRIVE_TRAILER_REMIND, buttonView, isChecked)
-            resetFollowTrailerSwitch(binding.trailerRemindSwitch.isChecked)
-            if (!isChecked) {
-                ToastUtils.showToast(context, getString(R.string.cabin_other_toast_content))
+            updateRadioEnable(RadioNode.DEVICE_TRAILER_DISTANCE)
+            updateRadioEnable(RadioNode.DEVICE_TRAILER_SENSITIVITY)
+            if (!buttonView.isChecked) {
+                Toast.showToast(context, getString(R.string.cabin_other_toast_content), true)
             }
         }
     }
 
-    private fun resetFollowTrailerSwitch(status: Boolean) {
-        updateViewEnable(binding.sensorSensitivityLinearLayout, status)
-        updateViewEnable(binding.trailerRemindDistance, status)
-    }
-
-    private fun updateViewEnable(view: View, status: Boolean) {
-        if (view is ViewGroup) {
-            val childCount = view.childCount
-            val intRange = 0 until childCount
-            intRange.forEach {
-                view.getChildAt(it)?.let {
-                    updateViewEnable(it, status)
-                }
-            }
-            return
-        }
-        val alpha = if (status) 1.0f else 0.6f
-        view.isEnabled = status
-        view.alpha = alpha
-
-    }
+//    private fun resetFollowTrailerSwitch(status: Boolean) {
+//        updateViewEnable(binding.sensorSensitivityLinearLayout, status)
+//        updateViewEnable(binding.trailerRemindDistance, status)
+//    }
+//
+//    private fun updateViewEnable(view: View, status: Boolean) {
+//        if (view is ViewGroup) {
+//            val childCount = view.childCount
+//            val intRange = 0 until childCount
+//            intRange.forEach {
+//                view.getChildAt(it)?.let {
+//                    updateViewEnable(it, status)
+//                }
+//            }
+//            return
+//        }
+//        val alpha = if (status) 1.0f else 0.6f
+//        view.isEnabled = status
+//        view.alpha = alpha
+//
+//    }
 
 }

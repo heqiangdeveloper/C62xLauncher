@@ -93,9 +93,9 @@
                 android:gravity="center">
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/clock"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="120"
                     android:textColor="@color/pop_text_time"
                     android:textSize="@dimen/text_17"
                     android:layout_marginTop="@dimen/x4" />

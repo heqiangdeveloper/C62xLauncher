@@ -3,10 +3,11 @@ package com.chinatsp.settinglib.manager.cabin
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
 import android.content.Intent
-import androidx.core.content.ContextCompat.startActivity
 import com.chinatsp.settinglib.BaseApp
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
+import com.chinatsp.settinglib.bean.RadioState
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.sound.ISoundListener
 import com.chinatsp.settinglib.listener.sound.ISoundManager
@@ -18,8 +19,6 @@ import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import timber.log.Timber
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author : luohong
@@ -31,7 +30,7 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class WheelManager private constructor() : BaseManager(), ISoundManager {
 
-    private val swhFunction: AtomicBoolean by lazy {
+    private val swhFunction: SwitchState by lazy {
         val node = SwitchNode.DRIVE_WHEEL_AUTO_HEAT
 //        AtomicBoolean(node.default).apply {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
@@ -42,7 +41,7 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    private val epsMode: AtomicInteger by lazy {
+    private val epsMode: RadioState by lazy {
         val node = RadioNode.DRIVE_EPS_MODE
 //        AtomicInteger(node.default).apply {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
@@ -91,12 +90,10 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
 
     }
 
-    override fun doGetRadioOption(node: RadioNode): Int {
+    override fun doGetRadioOption(node: RadioNode): RadioState? {
         return when (node) {
-            RadioNode.DRIVE_EPS_MODE -> {
-                epsMode.get()
-            }
-            else -> -1
+            RadioNode.DRIVE_EPS_MODE -> epsMode.copy()
+            else -> null
         }
     }
 
@@ -110,12 +107,10 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
     }
 
 
-    override fun doGetSwitchOption(node: SwitchNode): Boolean {
+    override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.DRIVE_WHEEL_AUTO_HEAT -> {
-                swhFunction.get()
-            }
-            else -> false
+            SwitchNode.DRIVE_WHEEL_AUTO_HEAT -> swhFunction.copy()
+            else -> null
         }
     }
 
@@ -160,6 +155,9 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
             SwitchNode.DRIVE_WHEEL_AUTO_HEAT.get.signal -> {
                 onSwitchChanged(SwitchNode.DRIVE_WHEEL_AUTO_HEAT, swhFunction, property)
             }
+            RadioNode.DRIVE_EPS_MODE.get.signal -> {
+                onRadioChanged(RadioNode.DRIVE_EPS_MODE, epsMode, property)
+            }
             CarCabinManager.ID_SWS_KEY_USER_DEFINED -> {
                 doHandleCustomKeyboard(property)
             }
@@ -199,7 +197,7 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
         return success
     }
 
-    private fun writeProperty(node: SwitchNode, status: Boolean, atomic: AtomicBoolean): Boolean {
+    private fun writeProperty(node: SwitchNode, status: Boolean, atomic: SwitchState): Boolean {
         val success = writeProperty(node.set.signal, node.value(status), node.set.origin)
         if (success && develop) {
             doUpdateSwitchValue(node, atomic, status) { _node, _status ->
@@ -209,11 +207,12 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
         return success
     }
 
-    private fun writeProperty(node: RadioNode, value: Int, atomic: AtomicInteger): Boolean {
+    private fun writeProperty(node: RadioNode, value: Int, atomic: RadioState): Boolean {
         val success = node.isValid(value, false)
                 && writeProperty(node.set.signal, value, node.set.origin)
         if (success && develop) {
-            doUpdateRadioValue(node, atomic, value) { _node, _value ->
+            val newValue = node.obtainSelectValue(value, false)
+            doUpdateRadioValue(node, atomic, newValue) { _node, _value ->
                 doOptionChanged(_node, _value)
             }
         }

@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.Constant
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.manager.access.BackMirrorManager
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -19,16 +20,16 @@ class MirrorViewModel @Inject constructor(app: Application, model: BaseModel) :
     private val manager: BackMirrorManager
         get() = BackMirrorManager.instance
 
-    val mirrorFoldFunction: LiveData<Boolean> by lazy { _mirrorFoldFunction }
+    val mirrorFoldFunction: LiveData<SwitchState> by lazy { _mirrorFoldFunction }
 
-    private val _mirrorFoldFunction: MutableLiveData<Boolean> by lazy {
+    private val _mirrorFoldFunction: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.BACK_MIRROR_FOLD
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val mirrorDownFunction: LiveData<Boolean> by lazy { _mirrorDownFunction }
+    val mirrorDownFunction: LiveData<SwitchState> by lazy { _mirrorDownFunction }
 
-    private val _mirrorDownFunction: MutableLiveData<Boolean> by lazy {
+    private val _mirrorDownFunction: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.BACK_MIRROR_DOWN
         MutableLiveData(manager.doGetSwitchOption(node))
     }
@@ -40,8 +41,18 @@ class MirrorViewModel @Inject constructor(app: Application, model: BaseModel) :
         MutableLiveData(Constant.DEFAULT)
     }
 
+    override fun onCreate() {
+        super.onCreate()
+        keySerial = manager.onRegisterVcuListener(listener = this)
+    }
 
-    override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
+    override fun onDestroy() {
+        manager.unRegisterVcuListener(keySerial)
+        super.onDestroy()
+    }
+
+
+    override fun onSwitchOptionChanged(status: SwitchState, node: SwitchNode) {
         when (node) {
             SwitchNode.BACK_MIRROR_FOLD -> {
                 doUpdate(_mirrorFoldFunction, status)

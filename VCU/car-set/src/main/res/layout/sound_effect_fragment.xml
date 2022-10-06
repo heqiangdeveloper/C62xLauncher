@@ -121,14 +121,22 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <com.common.xui.widget.tabbar.TabControlView
-                        android:id="@+id/sound_environmental_tab"
-                        style="@style/tdv_common_style"
-                        android:layout_marginTop="@dimen/x11"
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/sound_environmental_title"
-                        app:tcv_defaultSelection="1"
-                        app:tcv_items="@array/sound_environmental_option" />
+                        app:layout_constraintTop_toBottomOf="@id/sound_environmental_title">
+
+                        <com.common.xui.widget.tabbar.TabControlView
+                            android:id="@+id/sound_environmental_tab"
+                            style="@style/tdv_common_style"
+                            android:layout_marginTop="@dimen/x11"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/sound_environmental_title"
+                            app:tcv_defaultSelection="1"
+                            app:tcv_items="@array/sound_environmental_option" />
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -147,6 +155,7 @@
                     app:layout_constraintTop_toBottomOf="@id/line1">
 
                     <TextView
+                        android:id="@+id/equalizer"
                         style="@style/switch_row_option_style"
                         android:text="@string/sound_equalizer"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -192,6 +201,7 @@
                     app:layout_constraintTop_toBottomOf="@id/line2">
 
                     <TextView
+                        android:id="@+id/volume_balance"
                         style="@style/switch_row_option_style"
                         android:text="@string/sound_volume_balance"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -231,9 +241,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/switch_item_option_height"
                     android:orientation="horizontal"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/line3"
-                    android:visibility="gone">
+                    app:layout_constraintTop_toBottomOf="@id/line3">
 
                     <TextView
                         android:id="@+id/sound_loudness_text"

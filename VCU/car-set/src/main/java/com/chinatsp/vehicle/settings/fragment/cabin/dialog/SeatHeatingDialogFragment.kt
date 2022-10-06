@@ -1,8 +1,6 @@
 package com.chinatsp.vehicle.settings.fragment.cabin.dialog
 
 import android.os.Bundle
-import android.view.View
-import android.view.ViewGroup
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.cabin.SeatManager
 import com.chinatsp.settinglib.optios.Progress
@@ -70,13 +68,16 @@ class SeatHeatingDialogFragment :
 
     private fun initSwitchOption() {
         initSwitchOption(SwitchNode.SEAT_HEAT_ALL, viewModel.seatHeat)
-        checkDisableOtherDiv(binding.seatAutomaticHeatingSwitch.isChecked, binding.seatHeatingLayout)
+        updateEnable(binding.seatHeatingStartTemperatureSeekBar,
+            true,
+            binding.seatAutomaticHeatingSwitch.isChecked)
+
     }
 
     private fun addSwitchLiveDataListener() {
         viewModel.seatHeat.observe(this) {
             doUpdateSwitch(SwitchNode.SEAT_HEAT_ALL, it)
-            checkDisableOtherDiv(it, binding.seatHeatingLayout)
+            updateEnable(binding.seatHeatingStartTemperatureSeekBar, true, it.get())
         }
     }
 
@@ -94,19 +95,10 @@ class SeatHeatingDialogFragment :
     private fun setSwitchListener() {
         binding.seatAutomaticHeatingSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.SEAT_HEAT_ALL, buttonView, isChecked)
-            checkDisableOtherDiv(binding.seatAutomaticHeatingSwitch.isChecked, binding.seatHeatingLayout)
+            updateEnable(binding.seatHeatingStartTemperatureSeekBar,
+                true,
+                binding.seatAutomaticHeatingSwitch.isChecked)
         }
     }
 
-    private fun checkDisableOtherDiv(status: Boolean, view: View) {
-        if (view is ViewGroup) {
-            for (index in 0 until view.childCount) {
-                val child = view.getChildAt(index)
-                checkDisableOtherDiv(status, child)
-            }
-        } else {
-            view.alpha = if (status) 1.0f else 0.6f
-            view.isEnabled = status
-        }
-    }
 }

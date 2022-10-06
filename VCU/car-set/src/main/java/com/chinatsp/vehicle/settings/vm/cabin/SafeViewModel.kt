@@ -3,6 +3,7 @@ package com.chinatsp.vehicle.settings.vm.cabin
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.manager.cabin.SafeManager
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -24,27 +25,27 @@ class SafeViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val manager: SafeManager by lazy { SafeManager.instance }
 
-    val alcLockHint: LiveData<Boolean>
+    val alcLockHint: LiveData<SwitchState>
         get() = _alcLockHint
 
-    private val _alcLockHint: MutableLiveData<Boolean> by lazy {
+    private val _alcLockHint: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.ALC_LOCK_HINT
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val fortifyToneFunction: LiveData<Boolean>
+    val fortifyToneFunction: LiveData<SwitchState>
         get() = _fortifyToneFunction
 
-    private val _fortifyToneFunction: MutableLiveData<Boolean> by lazy {
+    private val _fortifyToneFunction: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.DRIVE_SAFE_FORTIFY_SOUND
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
 
-    val videoModeFunction: LiveData<Boolean>
+    val videoModeFunction: LiveData<SwitchState>
         get() = _videoModeFunction
 
-    private val _videoModeFunction: MutableLiveData<Boolean> by lazy {
+    private val _videoModeFunction: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.DRIVE_SAFE_VIDEO_PLAYING
         MutableLiveData(manager.doGetSwitchOption(node))
     }
@@ -60,7 +61,7 @@ class SafeViewModel @Inject constructor(app: Application, model: BaseModel) :
     }
 
 
-    override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
+    override fun onSwitchOptionChanged(status: SwitchState, node: SwitchNode) {
         when (node) {
             SwitchNode.DRIVE_SAFE_FORTIFY_SOUND -> {
                 doUpdate(_fortifyToneFunction, status)

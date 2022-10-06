@@ -108,7 +108,7 @@ class EqualizerDialogFragment :
         val node = RadioNode.SYSTEM_SOUND_EFFECT
         val values = node.get.values
         viewModel.currentEffect.let {
-            if (it.value == values.last()) {
+            if (it.value!!.data == values.last()) {
                 val progress = binding.smoothChartView.obtainProgress()
                 var lev1 = 0
                 var lev2 = 0
@@ -122,7 +122,7 @@ class EqualizerDialogFragment :
                     lev4 = progress[3]
                     lev5 = progress[4]
                 }
-                manager.doSetEQ(it.value!!, lev1, lev2, lev3, lev4, lev5)
+                manager.doSetEQ(it.value!!.data, lev1, lev2, lev3, lev4, lev5)
             }
         }
     }

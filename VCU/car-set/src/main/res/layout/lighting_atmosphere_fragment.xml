@@ -18,7 +18,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="@dimen/x72"
-            android:layout_marginStart="@dimen/x417"/>
+            android:layout_marginStart="@dimen/x417" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img_light_2"
@@ -28,7 +28,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="@dimen/x100"
-            android:layout_marginStart="@dimen/x340"/>
+            android:layout_marginStart="@dimen/x340" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img_light_3"
@@ -38,7 +38,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="@dimen/x93"
-            android:layout_marginStart="@dimen/x242"/>
+            android:layout_marginStart="@dimen/x242" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img_light_4"
@@ -48,7 +48,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="@dimen/x77"
-            android:layout_marginStart="@dimen/x386"/>
+            android:layout_marginStart="@dimen/x386" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img_light_5"
@@ -57,7 +57,7 @@
             android:src="@drawable/img_light_5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="@dimen/x4"/>
+            android:layout_marginTop="@dimen/x4" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

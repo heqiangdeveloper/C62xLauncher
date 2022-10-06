@@ -4,6 +4,8 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.SettingManager
+import com.chinatsp.settinglib.bean.RadioState
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.manager.sound.EffectManager
 import com.chinatsp.settinglib.optios.RadioNode
@@ -24,34 +26,34 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
 
     private val manager: EffectManager by lazy { EffectManager.instance }
 
-    val currentEffect: LiveData<Int>
+    val currentEffect: LiveData<RadioState>
         get() = _currentEffect
 
-    private val _currentEffect: MutableLiveData<Int> by lazy {
+    private val _currentEffect: MutableLiveData<RadioState> by lazy {
         val value = EffectManager.instance.doGetRadioOption(RadioNode.SYSTEM_SOUND_EFFECT)
         MutableLiveData(value)
     }
 
-    val effectOption: LiveData<Int>
+    val effectOption: LiveData<RadioState>
         get() = _effectOption
 
-    private val _effectOption: MutableLiveData<Int> by lazy {
+    private val _effectOption: MutableLiveData<RadioState> by lazy {
         val node = RadioNode.AUDIO_ENVI_AUDIO
         MutableLiveData(EffectManager.instance.doGetRadioOption(node))
     }
 
-    val effectStatus: LiveData<Boolean>
+    val effectStatus: LiveData<SwitchState>
         get() = _effectStatus
 
-    private val _effectStatus: MutableLiveData<Boolean> by lazy {
+    private val _effectStatus: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.AUDIO_ENVI_AUDIO
         MutableLiveData(EffectManager.instance.doGetSwitchOption(node))
     }
 
-    val audioLoudness: LiveData<Boolean>
+    val audioLoudness: LiveData<SwitchState>
         get() = _audioLoudness
 
-    private val _audioLoudness: MutableLiveData<Boolean> by lazy {
+    private val _audioLoudness: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.AUDIO_SOUND_LOUDNESS
         MutableLiveData(EffectManager.instance.doGetSwitchOption(node))
     }
@@ -93,7 +95,7 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
         return manager.getAudioVoice(id)
     }
 
-    override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
+    override fun onSwitchOptionChanged(status: SwitchState, node: SwitchNode) {
         when (node) {
             SwitchNode.AUDIO_ENVI_AUDIO -> {
                 doUpdate(_effectStatus, status)
@@ -102,7 +104,7 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
         }
     }
 
-    override fun onRadioOptionChanged(node: RadioNode, value: Int) {
+    override fun onRadioOptionChanged(node: RadioNode, value: RadioState) {
         when (node) {
             RadioNode.AUDIO_ENVI_AUDIO -> {
                 doUpdate(_effectOption, value)

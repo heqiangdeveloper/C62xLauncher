@@ -2,8 +2,6 @@ package com.chinatsp.vehicle.settings.fragment.lighting
 
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatImageView
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.manager.IRadioManager
@@ -58,6 +56,18 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
         initSeekLiveData()
 
         initViewDisplay()
+
+        updateOptionActive()
+    }
+
+    private fun updateOptionActive() {
+        updateSwitchEnable(SwitchNode.LIGHT_OUTSIDE_MEET)
+        updateSwitchEnable(SwitchNode.LIGHT_INSIDE_MEET)
+        updateSwitchEnable(SwitchNode.LIGHT_CEREMONY_SENSE)
+
+        updateRadioEnable(RadioNode.LIGHT_DELAYED_OUT)
+        updateRadioEnable(RadioNode.LIGHT_FLICKER)
+        updateRadioEnable(RadioNode.LIGHT_CEREMONY_SENSE)
     }
 
     private fun initViewDisplay() {
@@ -69,7 +79,6 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
         }
     }
 
-
     private fun initRadioOption() {
         initRadioOption(RadioNode.LIGHT_DELAYED_OUT, viewModel.lightOutDelayed)
         initRadioOption(RadioNode.LIGHT_FLICKER, viewModel.lightFlicker)
@@ -80,8 +89,7 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
         animationHomeOpen.setAnimation(
             activity,
             R.drawable.home_open_animation,
-            binding.homeOpenIv
-        )
+            binding.homeOpenIv)
         animationHomeClose.setAnimation(
             activity,
             R.drawable.home_close_animation,
@@ -182,14 +190,20 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
 
     private fun addSwitchLiveDataListener() {
         viewModel.outsideLightMeet.observe(this) {
-            doUpdateSwitch(SwitchNode.LIGHT_OUTSIDE_MEET, it)
+            val node = SwitchNode.LIGHT_OUTSIDE_MEET
+            doUpdateSwitch(node, it)
+            updateSwitchEnable(node)
         }
         viewModel.insideLightMeet.observe(this) {
-            doUpdateSwitch(SwitchNode.LIGHT_INSIDE_MEET, it)
+            val node = SwitchNode.LIGHT_INSIDE_MEET
+            doUpdateSwitch(node, it)
+            updateSwitchEnable(node)
         }
         viewModel.ceremonySenseSwitch.observe(this) {
-            doUpdateSwitch(SwitchNode.LIGHT_CEREMONY_SENSE, it)
-            checkDisableOtherDiv(binding.lightCeremonySenseSwitch, it)
+            val node = SwitchNode.LIGHT_CEREMONY_SENSE
+            doUpdateSwitch(node, it)
+            updateSwitchEnable(node)
+            updateRadioEnable(RadioNode.LIGHT_CEREMONY_SENSE)
         }
     }
 
@@ -199,6 +213,33 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
             SwitchNode.LIGHT_INSIDE_MEET -> binding.lightInsideMeetSwitch
             SwitchNode.LIGHT_CEREMONY_SENSE -> binding.lightCeremonySenseSwitch
             else -> null
+        }
+    }
+
+    override fun obtainActiveByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.LIGHT_OUTSIDE_MEET -> viewModel.outsideLightMeet.value?.enable() ?: false
+            SwitchNode.LIGHT_INSIDE_MEET -> viewModel.insideLightMeet.value?.enable() ?: false
+            SwitchNode.LIGHT_CEREMONY_SENSE -> viewModel.ceremonySenseSwitch.value?.enable()
+                ?: false
+            else -> super.obtainActiveByNode(node)
+        }
+    }
+
+    override fun obtainActiveByNode(node: RadioNode): Boolean {
+        return when (node) {
+            RadioNode.LIGHT_DELAYED_OUT -> viewModel.lightOutDelayed.value?.enable() ?: false
+            RadioNode.LIGHT_FLICKER -> viewModel.lightFlicker.value?.enable() ?: false
+            RadioNode.LIGHT_CEREMONY_SENSE -> viewModel.ceremonySense.value?.enable() ?: false
+            else -> super.obtainActiveByNode(node)
+        }
+    }
+
+    override fun obtainDependByNode(node: RadioNode): Boolean {
+        return when (node) {
+            RadioNode.LIGHT_CEREMONY_SENSE -> obtainActiveByNode(RadioNode.LIGHT_CEREMONY_SENSE)
+                    && binding.lightCeremonySenseSwitch.isChecked
+            else -> super.obtainActiveByNode(node)
         }
     }
 
@@ -222,7 +263,9 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
     private fun setSwitchListener() {
         binding.lightCeremonySenseSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.LIGHT_CEREMONY_SENSE, buttonView, isChecked)
-            checkDisableOtherDiv(buttonView as SwitchButton, buttonView.isChecked)
+//            checkDisableOtherDiv(buttonView as SwitchButton, buttonView.isChecked)
+            updateRadioEnable(RadioNode.LIGHT_CEREMONY_SENSE)
+
         }
         binding.lightOutsideMeetSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.LIGHT_OUTSIDE_MEET, buttonView, isChecked)
@@ -279,40 +322,40 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
         }
     }
 
-    private fun checkDisableOtherDiv(swb: SwitchButton, status: Boolean) {
-        if (swb == binding.lightCeremonySenseSwitch) {
-            val childCount = binding.lightCeremonySenseRadioConstraint.childCount
-            val intRange = 0 until childCount
-            intRange.forEach {
-                val childAt = binding.lightCeremonySenseRadioConstraint.getChildAt(it)
-                if (null != childAt && childAt != binding.lightingTurnExternal) {
-                    childAt.alpha = if (status) 1.0f else 0.6f
-                    updateViewEnable(childAt, status)
-                }
-            }
-        }
-    }
-
-    private fun updateViewEnable(view: View?, status: Boolean) {
-        if (null == view) {
-            return
-        }
-        if (view is SwitchButton) {
-            view.isEnabled = status
-            return
-        }
-        if (view is AppCompatImageView) {
-            view.isEnabled = status
-            return
-        }
-        if (view is TabControlView) {
-            view.updateEnable(status)
-            return
-        }
-        if (view is ViewGroup) {
-            val childCount = view.childCount
-            val intRange = 0 until childCount
-            intRange.forEach { updateViewEnable(view.getChildAt(it), status) }
-        }
-    }
+//    private fun checkDisableOtherDiv(swb: SwitchButton, status: Boolean) {
+//        if (swb == binding.lightCeremonySenseSwitch) {
+//            val childCount = binding.lightCeremonySenseRadioConstraint.childCount
+//            val intRange = 0 until childCount
+//            intRange.forEach {
+//                val childAt = binding.lightCeremonySenseRadioConstraint.getChildAt(it)
+//                if (null != childAt && childAt != binding.lightingTurnExternal) {
+//                    childAt.alpha = if (status) 1.0f else 0.6f
+//                    updateViewEnable(childAt, status)
+//                }
+//            }
+//        }
+//    }
+//
+//    private fun updateViewEnable(view: View?, status: Boolean) {
+//        if (null == view) {
+//            return
+//        }
+//        if (view is SwitchButton) {
+//            view.isEnabled = status
+//            return
+//        }
+//        if (view is AppCompatImageView) {
+//            view.isEnabled = status
+//            return
+//        }
+//        if (view is TabControlView) {
+//            view.updateEnable(status)
+//            return
+//        }
+//        if (view is ViewGroup) {
+//            val childCount = view.childCount
+//            val intRange = 0 until childCount
+//            intRange.forEach { updateViewEnable(view.getChildAt(it), status) }
+//        }
+//    }
 }

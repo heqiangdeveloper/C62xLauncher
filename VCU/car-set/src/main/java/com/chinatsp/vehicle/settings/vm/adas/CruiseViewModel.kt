@@ -3,6 +3,8 @@ package com.chinatsp.vehicle.settings.vm.adas
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.bean.RadioState
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.manager.adas.CruiseManager
 import com.chinatsp.settinglib.optios.RadioNode
@@ -19,24 +21,24 @@ class CruiseViewModel @Inject constructor(app: Application, model: BaseModel) :
     private val manager: CruiseManager
         get() = CruiseManager.instance
 
-    val cruiseAssistFunction: LiveData<Boolean> by lazy { _cruiseAssistFunction }
+    val cruiseAssistFunction: LiveData<SwitchState> by lazy { _cruiseAssistFunction }
 
-    private val _cruiseAssistFunction: MutableLiveData<Boolean> by lazy {
+    private val _cruiseAssistFunction: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.ADAS_IACC
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
 
-    val limberLeaveFunction: LiveData<Boolean> by lazy { _limberLeaveFunction }
+    val limberLeaveFunction: LiveData<SwitchState> by lazy { _limberLeaveFunction }
 
-    private val _limberLeaveFunction: MutableLiveData<Boolean> by lazy {
+    private val _limberLeaveFunction: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.ADAS_LIMBER_LEAVE
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val limberLeaveRadio: LiveData<Int> by lazy { _limberLeaveRadio }
+    val limberLeaveRadio: LiveData<RadioState> by lazy { _limberLeaveRadio }
 
-    private val _limberLeaveRadio: MutableLiveData<Int> by lazy {
+    private val _limberLeaveRadio: MutableLiveData<RadioState> by lazy {
         val node = RadioNode.ADAS_LIMBER_LEAVE
         MutableLiveData(manager.doGetRadioOption(node))
     }
@@ -51,7 +53,7 @@ class CruiseViewModel @Inject constructor(app: Application, model: BaseModel) :
         super.onDestroy()
     }
 
-    override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
+    override fun onSwitchOptionChanged(status: SwitchState, node: SwitchNode) {
         when (node) {
             SwitchNode.ADAS_IACC -> doUpdate(_cruiseAssistFunction, status)
             SwitchNode.ADAS_LIMBER_LEAVE -> doUpdate(_limberLeaveFunction, status)
@@ -59,7 +61,7 @@ class CruiseViewModel @Inject constructor(app: Application, model: BaseModel) :
         }
     }
 
-    override fun onRadioOptionChanged(node: RadioNode, value: Int) {
+    override fun onRadioOptionChanged(node: RadioNode, value: RadioState) {
         if (RadioNode.ADAS_LIMBER_LEAVE == node) {
             doUpdate(_limberLeaveRadio, value)
         }

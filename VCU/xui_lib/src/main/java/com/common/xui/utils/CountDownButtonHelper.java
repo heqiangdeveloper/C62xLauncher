@@ -58,12 +58,12 @@ public class CountDownButtonHelper {
         // 因此，设置间隔的时候，默认减去了10ms，从而减去误差。
         // 经过以上的微调，最后一秒的显示时间会由于10ms延迟的积累，导致显示时间比1s长max*10ms的时间，其他时间的显示正常,总时间正常
         if (mCountDownTimer == null) {
-            mCountDownTimer = new CountDownTimer(mCountDownTime * 1000, mInterval * 1000 - 10) {
+            mCountDownTimer = new CountDownTimer(mCountDownTime * 1000, mInterval * 1000) {
 
                 @Override
                 public void onTick(long time) {
                     // 第一次调用会有1-10ms的误差，因此需要+15ms，防止第一个数不显示，第二个数显示2s
-                    int surplusTime = (int) ((time + 15) / 1000);
+                    int surplusTime = (int) ((time) / 1000);
                     if (mListener != null) {
                         mListener.onCountDown(surplusTime);
                     } else {

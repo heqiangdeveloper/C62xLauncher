@@ -2,11 +2,10 @@ package com.chinatsp.vehicle.settings.fragment.doors
 
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.access.BackMirrorManager
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -19,7 +18,6 @@ import com.chinatsp.vehicle.settings.fragment.doors.dialog.AngleDialogFragment
 import com.chinatsp.vehicle.settings.vm.accress.MirrorViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
-import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -53,7 +51,15 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
             angleStatus = Constant.DEFAULT
         }
 
+        updateOptionActive()
     }
+
+    private fun updateOptionActive() {
+        updateSwitchEnable(SwitchNode.BACK_MIRROR_FOLD)
+        updateSwitchEnable(SwitchNode.BACK_MIRROR_DOWN)
+        updateEnable(binding.backMirrorDownAngle, true, isAngle)
+    }
+
 
     private fun initViewsDisplay() {
         if (VcuUtils.isCareLevel(Level.LEVEL3)) {
@@ -63,24 +69,29 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
     }
 
     private fun setSwitchListener() {
-        binding.accessMirrorMirrorFoldSw.let {
+        binding.backMirrorFoldSwitch.let {
             it.setOnCheckedChangeListener { buttonView, isChecked ->
-                checkDisableOtherDiv(it, isChecked)
-                val node = SwitchNode.BACK_MIRROR_FOLD
-                val result = manager.doSetSwitchOption(node, isChecked)
-                takeUnless { result }?.doUpdateSwitch(buttonView as SwitchButton, !isChecked, false)
+//                checkDisableOtherDiv(it, isChecked)
+//                val node = SwitchNode.BACK_MIRROR_FOLD
+//                val result = manager.doSetSwitchOption(node, isChecked)
+//                takeUnless { result }?.recoverSwitch(buttonView as SwitchButton, !isChecked, false)
+                doUpdateSwitchOption(SwitchNode.BACK_MIRROR_FOLD, buttonView, isChecked)
+
                 if (buttonView.isChecked) {
                     binding.rearviewMirror.setText(R.string.car_mirror_automatic_folding_open)
                 } else {
                     binding.rearviewMirror.setText(R.string.car_mirror_automatic_folding_close)
                 }
+                updateOptionActive()
             }
         }
         binding.backMirrorDownSwitch.let {
             it.setOnCheckedChangeListener { buttonView, isChecked ->
-                val result = manager.doSetSwitchOption(SwitchNode.BACK_MIRROR_DOWN, isChecked)
-                takeUnless { result }?.doUpdateSwitch(buttonView as SwitchButton, !isChecked, false)
-                checkDisableOtherDiv(it, isChecked)
+//                val result = manager.doSetSwitchOption(SwitchNode.BACK_MIRROR_DOWN, isChecked)
+//                takeUnless { result }?.recoverSwitch(buttonView as SwitchButton, !isChecked, false)
+                doUpdateSwitchOption(SwitchNode.BACK_MIRROR_DOWN, buttonView, isChecked)
+//                checkDisableOtherDiv(it, isChecked)
+                updateOptionActive()
             }
         }
     }
@@ -101,9 +112,25 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
 
     override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
         return when (node) {
-            SwitchNode.BACK_MIRROR_FOLD -> binding.accessMirrorMirrorFoldSw
+            SwitchNode.BACK_MIRROR_FOLD -> binding.backMirrorFoldSwitch
             SwitchNode.BACK_MIRROR_DOWN -> binding.backMirrorDownSwitch
             else -> null
+        }
+    }
+
+    override fun obtainActiveByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.BACK_MIRROR_FOLD -> viewModel.mirrorFoldFunction.value?.enable() ?: false
+            SwitchNode.BACK_MIRROR_DOWN -> viewModel.mirrorDownFunction.value?.enable() ?: false
+            else -> super.obtainActiveByNode(node)
+        }
+    }
+
+    override fun obtainDependByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.BACK_MIRROR_FOLD -> true
+            SwitchNode.BACK_MIRROR_DOWN -> binding.backMirrorFoldSwitch.isChecked
+            else -> super.obtainDependByNode(node)
         }
     }
 
@@ -111,22 +138,23 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
         return manager
     }
 
-    override fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {
-        val status = liveData.value ?: false
+    override fun initSwitchOption(node: SwitchNode, liveData: LiveData<SwitchState>) {
+        val status = liveData.value?.get() ?: false
         if (node == SwitchNode.BACK_MIRROR_FOLD) {
             val resId = if (status) R.string.car_mirror_automatic_folding_open
-                        else R.string.car_mirror_automatic_folding_close
+            else R.string.car_mirror_automatic_folding_close
             binding.rearviewMirror.setText(resId)
-            checkDisableOtherDiv(binding.accessMirrorMirrorFoldSw, status)
+//            checkDisableOtherDiv(binding.accessMirrorMirrorFoldSw, status)
         }
-        checkDisableOtherDiv(binding.backMirrorDownSwitch, status)
-        doUpdateSwitch(node, status, true)
+//        checkDisableOtherDiv(binding.backMirrorDownSwitch, status)
+        liveData.value?.let {
+            doUpdateSwitch(node, it, true)
+        }
     }
 
     private fun setCheckedChangeListener() {
         binding.modifyAngle.setOnClickListener {
-            if (binding.accessMirrorMirrorFoldSw.isChecked
-                && binding.backMirrorDownSwitch.isChecked) {
+            if (isAngle) {
                 showReverseAngleFragment()
             }
         }
@@ -140,55 +168,58 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
         }
     }
 
-    private fun checkDisableOtherDiv(swb: SwitchButton, status: Boolean) {
-        if (swb == binding.accessMirrorMirrorFoldSw) {
-            val childCount = binding.constraint.childCount
-            val intRange = 0 until childCount
-            intRange.forEach {
-                val childAt = binding.constraint.getChildAt(it)
-                if (null != childAt && childAt != binding.carTrunkElectricFunction) {
-                    childAt.alpha = if (status) 1.0f else 0.6f
-                    updateViewEnable(childAt, status)
-                }
-            }
-        } else if (swb == binding.backMirrorDownSwitch) {
-            val childCount = binding.modifyAngle.childCount
-            val intRange = 0 until childCount
-            intRange.forEach {
-                val childAt = binding.modifyAngle.getChildAt(it)
-                if (null != childAt && childAt != binding.reverseAngle) {
-                    childAt.alpha = if (status) 1.0f else 0.6f
-                    updateViewEnable(childAt, status)
-                }
-            }
-        }
-    }
-
-    private fun updateViewEnable(view: View?, status: Boolean) {
-        if (null == view) {
-            return
-        }
-        if (view is SwitchButton) {
-            view.isEnabled = status
-            return
-        }
-        if (view is AppCompatImageView) {
-            view.isEnabled = status
-            return
-        }
-        if (view is TabControlView) {
-            view.updateEnable(status)
-            return
-        }
-        if (view is ViewGroup) {
-            val childCount = view.childCount
-            val intRange = 0 until childCount
-            intRange.forEach { updateViewEnable(view.getChildAt(it), status) }
-        }
-    }
+//    private fun checkDisableOtherDiv(swb: SwitchButton, status: Boolean) {
+//        if (swb == binding.accessMirrorMirrorFoldSw) {
+//            val childCount = binding.constraint.childCount
+//            val intRange = 0 until childCount
+//            intRange.forEach {
+//                val childAt = binding.constraint.getChildAt(it)
+//                if (null != childAt && childAt != binding.carTrunkElectricFunction) {
+//                    childAt.alpha = if (status) 1.0f else 0.6f
+//                    updateViewEnable(childAt, status)
+//                }
+//            }
+//        } else if (swb == binding.backMirrorDownSwitch) {
+//            val childCount = binding.modifyAngle.childCount
+//            val intRange = 0 until childCount
+//            intRange.forEach {
+//                val childAt = binding.modifyAngle.getChildAt(it)
+//                if (null != childAt && childAt != binding.reverseAngle) {
+//                    childAt.alpha = if (status) 1.0f else 0.6f
+//                    updateViewEnable(childAt, status)
+//                }
+//            }
+//        }
+//    }
+//
+//    private fun updateViewEnable(view: View?, status: Boolean) {
+//        if (null == view) {
+//            return
+//        }
+//        if (view is SwitchButton) {
+//            view.isEnabled = status
+//            return
+//        }
+//        if (view is AppCompatImageView) {
+//            view.isEnabled = status
+//            return
+//        }
+//        if (view is TabControlView) {
+//            view.updateEnable(status)
+//            return
+//        }
+//        if (view is ViewGroup) {
+//            val childCount = view.childCount
+//            val intRange = 0 until childCount
+//            intRange.forEach { updateViewEnable(view.getChildAt(it), status) }
+//        }
+//    }
 
     override fun onAngleUpdate(angleValue: Int) {
         this.angleStatus = angleValue
     }
+
+    private val isAngle: Boolean
+        get() = binding.backMirrorFoldSwitch.isChecked && binding.backMirrorDownSwitch.isChecked
 
 }

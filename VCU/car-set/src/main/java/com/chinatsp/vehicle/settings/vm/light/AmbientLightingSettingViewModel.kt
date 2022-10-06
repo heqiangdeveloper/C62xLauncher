@@ -3,6 +3,7 @@ package com.chinatsp.vehicle.settings.vm.light
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.lamp.AmbientLightingManager
@@ -19,42 +20,42 @@ class AmbientLightingSettingViewModel @Inject constructor(app: Application, mode
     private val manager: IOptionManager
         get() = AmbientLightingManager.instance
 
-    val alcDoorHint: LiveData<Boolean>
+    val alcDoorHint: LiveData<SwitchState>
         get() = _alcDoorHint
 
-    private val _alcDoorHint: MutableLiveData<Boolean> by lazy {
+    private val _alcDoorHint: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.ALC_DOOR_HINT
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val alcLockHint: LiveData<Boolean>
+    val alcLockHint: LiveData<SwitchState>
         get() = _alcLockHint
 
-    private val _alcLockHint: MutableLiveData<Boolean> by lazy {
+    private val _alcLockHint: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.ALC_LOCK_HINT
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val alcBreatheHint: LiveData<Boolean>
+    val alcBreatheHint: LiveData<SwitchState>
         get() = _alcBreatheHint
 
-    private val _alcBreatheHint: MutableLiveData<Boolean> by lazy {
+    private val _alcBreatheHint: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.ALC_BREATHE_HINT
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val alcComingHint: LiveData<Boolean>
+    val alcComingHint: LiveData<SwitchState>
         get() = _alcComingHint
 
-    private val _alcComingHint: MutableLiveData<Boolean> by lazy {
+    private val _alcComingHint: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.ALC_COMING_HINT
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val alcRelatedTopics: LiveData<Boolean>
+    val alcRelatedTopics: LiveData<SwitchState>
         get() = _alcRelatedTopics
 
-    private val _alcRelatedTopics: MutableLiveData<Boolean> by lazy {
+    private val _alcRelatedTopics: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.ALC_RELATED_TOPICS
         MutableLiveData(manager.doGetSwitchOption(node))
     }
@@ -85,7 +86,7 @@ class AmbientLightingSettingViewModel @Inject constructor(app: Application, mode
         return liveData
     }
 
-    override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
+    override fun onSwitchOptionChanged(status: SwitchState, node: SwitchNode) {
         when (node) {
             SwitchNode.ALC_DOOR_HINT -> {
                 doUpdate(_alcDoorHint, status)

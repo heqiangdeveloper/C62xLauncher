@@ -3,6 +3,7 @@ package com.chinatsp.vehicle.settings.fragment.cabin
 import android.os.Bundle
 import android.widget.TextView
 import androidx.lifecycle.LiveData
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.sound.ISoundManager
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.cabin.SeatManager
@@ -47,8 +48,9 @@ class CabinSeatFragment : BaseFragment<SeatViewModel, CabinSeatFragmentBinding>(
         updateSwitchTextHint(binding.seatSeatHeatTv, viewModel.seatHeat)
     }
 
-    private fun updateSwitchTextHint(textView: TextView, liveData: LiveData<Boolean>) {
-        val hintId = if (liveData.value == true) {
+    private fun updateSwitchTextHint(textView: TextView, liveData: LiveData<SwitchState>) {
+        val static = liveData.value?.get() ?: false
+        val hintId = if (static) {
             R.string.switch_turn_on
         } else {
             R.string.switch_turn_off

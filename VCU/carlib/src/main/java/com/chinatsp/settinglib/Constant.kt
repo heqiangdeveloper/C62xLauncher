@@ -23,6 +23,8 @@ object Constant {
 
     const val DEFAULT: Int = INVALID
 
+    const val VIEW_ENABLE = 0x1
+
     /**
      * 浅色主题（白天模式）
      */
@@ -36,6 +38,7 @@ object Constant {
     val ANGLE_RETURN_SIGNAL: Int
         get() = CarCabinManager.ID_R_MIRROR_MEMORY_STS
 
+    const val CUSTOM_KEYPAD = "CUSTOM_KEYPAD"
 
     val DIALOG_SERIAL: String
         get() = "DIALOG_SERIAL"

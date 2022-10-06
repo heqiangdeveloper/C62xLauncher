@@ -3,6 +3,7 @@ package com.chinatsp.vehicle.settings.vm.light
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IProgressListener
 import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.manager.lamp.AmbientLightingManager
@@ -11,7 +12,6 @@ import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.common.library.frame.base.BaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,18 +21,18 @@ class AmbientLightingViewModel @Inject constructor(app: Application, model: Base
     private val manager: AmbientLightingManager
         get() = AmbientLightingManager.instance
 
-    val frontLighting: LiveData<Boolean>
+    val frontLighting: LiveData<SwitchState>
         get() = _frontLighting
 
-    private val _frontLighting: MutableLiveData<Boolean> by lazy {
+    private val _frontLighting: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.FRONT_AMBIENT_LIGHTING
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val backLighting: LiveData<Boolean>
+    val backLighting: LiveData<SwitchState>
         get() = _backLighting
 
-    private val _backLighting: MutableLiveData<Boolean> by lazy {
+    private val _backLighting: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.BACK_AMBIENT_LIGHTING
         MutableLiveData(manager.doGetSwitchOption(node))
     }
@@ -79,13 +79,13 @@ class AmbientLightingViewModel @Inject constructor(app: Application, model: Base
         return ld
     }
 
-    override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
+    override fun onSwitchOptionChanged(status: SwitchState, node: SwitchNode) {
         when (node) {
             SwitchNode.FRONT_AMBIENT_LIGHTING -> {
-                updateLiveData(_frontLighting, status)
+                doUpdate(_frontLighting, status)
             }
             SwitchNode.BACK_AMBIENT_LIGHTING -> {
-                updateLiveData(_backLighting, status)
+                doUpdate(_backLighting, status)
             }
             else -> {}
         }
@@ -105,10 +105,9 @@ class AmbientLightingViewModel @Inject constructor(app: Application, model: Base
 
     fun onAmbientColorChanged(value: Int) {
         val result = manager.doSetProgress(Progress.AMBIENT_LIGHT_COLOR, value)
-        if (result) {
-            doUpdate(_ambientColor, value)
-        }
-        Timber.d("onAmbientColorChanged progress:AMBIENT_LIGHT_COLOR, color:%s", value)
+//        if (result) {
+//            doUpdate(_ambientColor, value)
+//        }
     }
 
     fun doBrightnessChanged(node: Progress, value: Int) {

@@ -5,9 +5,7 @@ import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import android.widget.CompoundButton
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IOptionManager
@@ -62,10 +60,10 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
         binding.driveBsdCameraDetails.setOnClickListener {
             updateHintMessage(R.string.drive_bsd_camera_title, R.string.bsc_details)
         }
-        binding.dowDetails.setOnClickListener{
+        binding.dowDetails.setOnClickListener {
             updateHintMessage(R.string.drive_dow_title, R.string.dow_details)
         }
-        binding.mebDetails.setOnClickListener{
+        binding.mebDetails.setOnClickListener {
             updateHintMessage(R.string.adas_meb_title, R.string.meb_details)
         }
     }
@@ -146,23 +144,36 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
         initSwitchOption(SwitchNode.ADAS_BSD, viewModel.bsdValue)
         initSwitchOption(SwitchNode.ADAS_MEB, viewModel.mebValue)
         initSwitchOption(SwitchNode.ADAS_GUIDES, viewModel.guidesValue)
+
+        updateSwitchEnable(SwitchNode.ADAS_DOW)
+        updateSwitchEnable(SwitchNode.ADAS_BSC)
+        updateSwitchEnable(SwitchNode.ADAS_BSD)
+        updateSwitchEnable(SwitchNode.ADAS_MEB)
+        updateSwitchEnable(SwitchNode.ADAS_GUIDES)
     }
 
     private fun addSwitchLiveDataListener() {
         viewModel.dowValue.observe(this) {
             doUpdateSwitch(SwitchNode.ADAS_DOW, it)
+            updateSwitchEnable(SwitchNode.ADAS_DOW)
         }
         viewModel.bscValue.observe(this) {
             doUpdateSwitch(SwitchNode.ADAS_BSC, it)
+            updateSwitchEnable(SwitchNode.ADAS_BSC)
+            updateSwitchEnable(SwitchNode.ADAS_GUIDES)
+            updateRadioEnable(RadioNode.ADAS_SIDE_BACK_SHOW_AREA)
         }
         viewModel.bsdValue.observe(this) {
             doUpdateSwitch(SwitchNode.ADAS_BSD, it)
+            updateSwitchEnable(SwitchNode.ADAS_BSD)
         }
         viewModel.mebValue.observe(this) {
             doUpdateSwitch(SwitchNode.ADAS_MEB, it)
+            updateSwitchEnable(SwitchNode.ADAS_MEB)
         }
         viewModel.guidesValue.observe(this) {
             doUpdateSwitch(SwitchNode.ADAS_GUIDES, it)
+            updateSwitchEnable(SwitchNode.ADAS_GUIDES)
         }
     }
 
@@ -177,6 +188,40 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
         }
     }
 
+    override fun obtainActiveByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.ADAS_DOW -> viewModel.dowValue.value?.enable() ?: false
+            SwitchNode.ADAS_BSC -> viewModel.bscValue.value?.enable() ?: false
+            SwitchNode.ADAS_BSD -> viewModel.bsdValue.value?.enable() ?: false
+            SwitchNode.ADAS_MEB -> viewModel.mebValue.value?.enable() ?: false
+            SwitchNode.ADAS_GUIDES -> viewModel.guidesValue.value?.enable() ?: false
+            else -> super.obtainActiveByNode(node)
+        }
+    }
+
+    override fun obtainDependByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.ADAS_GUIDES -> binding.adasSideBscSwitch.isChecked
+                    && (viewModel.guidesValue.value?.enable() ?: false)
+            else -> super.obtainActiveByNode(node)
+        }
+    }
+
+    override fun obtainActiveByNode(node: RadioNode): Boolean {
+        return when (node) {
+            RadioNode.ADAS_SIDE_BACK_SHOW_AREA -> viewModel.showAreaValue.value?.enable() ?: false
+            else -> super.obtainActiveByNode(node)
+        }
+    }
+
+    override fun obtainDependByNode(node: RadioNode): Boolean {
+        return when (node) {
+            RadioNode.ADAS_SIDE_BACK_SHOW_AREA -> binding.adasSideBscSwitch.isChecked
+                    && (viewModel.showAreaValue.value?.enable() ?: false)
+            else -> super.obtainActiveByNode(node)
+        }
+    }
+
     override fun getSwitchManager(): ISwitchManager {
         return manager
     }
@@ -184,7 +229,7 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
     override fun onPostChecked(button: SwitchButton, status: Boolean) {
         if (0 == index) {
             dynamicEffect()
-            checkDisableOtherDiv(button, status)
+//            checkDisableOtherDiv(button, status)
         }
     }
 
@@ -200,7 +245,7 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
     }
 
     private fun setSwitchListener() {
-        binding.adasSideMebSwitch.setOnCheckedChangeListener{buttonView, isChecked ->
+        binding.adasSideMebSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             //doUpdateSwitchOption(SwitchNode.ADAS_MEB, buttonView, isChecked)
             if (isChecked) {
                 startVideo(R.raw.video_meb)
@@ -228,7 +273,8 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
         binding.adasSideBscSwitch.let {
             it.setOnCheckedChangeListener { buttonView, isChecked ->
                 doUpdateSwitchOption(SwitchNode.ADAS_BSC, buttonView, isChecked)
-                checkDisableOtherDiv(it, isChecked)
+                updateSwitchEnable(SwitchNode.ADAS_GUIDES)
+                updateRadioEnable(RadioNode.ADAS_SIDE_BACK_SHOW_AREA)
                 if (isChecked) {
                     startVideo(R.raw.video_camera)
                 } else {
@@ -288,199 +334,223 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
             }
             return
         }
-        if (binding.adasSideDowSwitch.isChecked&&!binding.adasSideMebSwitch.isChecked&&
-            !binding.adasSideBsdSwitch.isChecked&&!binding.adasSideBscSwitch.isChecked) {
+        if (binding.adasSideDowSwitch.isChecked && !binding.adasSideMebSwitch.isChecked &&
+            !binding.adasSideBsdSwitch.isChecked && !binding.adasSideBscSwitch.isChecked
+        ) {
             binding.videoImage.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(
                     it,
                     R.drawable.ic_lientang_auxiliary_1
                 )
             })
-        }else if(!binding.adasSideDowSwitch.isChecked&&binding.adasSideMebSwitch.isChecked&&
-            !binding.adasSideBsdSwitch.isChecked&&!binding.adasSideBscSwitch.isChecked){
+        } else if (!binding.adasSideDowSwitch.isChecked && binding.adasSideMebSwitch.isChecked &&
+            !binding.adasSideBsdSwitch.isChecked && !binding.adasSideBscSwitch.isChecked
+        ) {
             binding.videoImage.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(
                     it,
                     R.drawable.ic_lientang_auxiliary_2
                 )
             })
-        }else if(!binding.adasSideDowSwitch.isChecked&&!binding.adasSideMebSwitch.isChecked&&
-            binding.adasSideBsdSwitch.isChecked&&!binding.adasSideBscSwitch.isChecked){
+        } else if (!binding.adasSideDowSwitch.isChecked && !binding.adasSideMebSwitch.isChecked &&
+            binding.adasSideBsdSwitch.isChecked && !binding.adasSideBscSwitch.isChecked
+        ) {
             binding.videoImage.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(
                     it,
                     R.drawable.ic_lientang_auxiliary_3
                 )
             })
-        } else if(!binding.adasSideDowSwitch.isChecked&&!binding.adasSideMebSwitch.isChecked&&
-            !binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&!binding.adasSideGuidesSwitch.isChecked){
+        } else if (!binding.adasSideDowSwitch.isChecked && !binding.adasSideMebSwitch.isChecked &&
+            !binding.adasSideBsdSwitch.isChecked && binding.adasSideBscSwitch.isChecked && !binding.adasSideGuidesSwitch.isChecked
+        ) {
             binding.videoImage.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(
                     it,
                     R.drawable.ic_lientang_auxiliary_4
                 )
             })
-        }else if(!binding.adasSideDowSwitch.isChecked&&!binding.adasSideMebSwitch.isChecked&&
-            !binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&binding.adasSideGuidesSwitch.isChecked){
+        } else if (!binding.adasSideDowSwitch.isChecked && !binding.adasSideMebSwitch.isChecked &&
+            !binding.adasSideBsdSwitch.isChecked && binding.adasSideBscSwitch.isChecked && binding.adasSideGuidesSwitch.isChecked
+        ) {
             binding.videoImage.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(
                     it,
                     R.drawable.ic_lientang_auxiliary_5
                 )
             })
-        }else if(binding.adasSideDowSwitch.isChecked&&binding.adasSideMebSwitch.isChecked&&
-            !binding.adasSideBsdSwitch.isChecked&&!binding.adasSideBscSwitch.isChecked){
+        } else if (binding.adasSideDowSwitch.isChecked && binding.adasSideMebSwitch.isChecked &&
+            !binding.adasSideBsdSwitch.isChecked && !binding.adasSideBscSwitch.isChecked
+        ) {
             binding.videoImage.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(
                     it,
                     R.drawable.ic_lientang_auxiliary_6
                 )
             })
-        } else if(binding.adasSideDowSwitch.isChecked&&!binding.adasSideMebSwitch.isChecked&&
-            binding.adasSideBsdSwitch.isChecked&&!binding.adasSideBscSwitch.isChecked){
+        } else if (binding.adasSideDowSwitch.isChecked && !binding.adasSideMebSwitch.isChecked &&
+            binding.adasSideBsdSwitch.isChecked && !binding.adasSideBscSwitch.isChecked
+        ) {
             binding.videoImage.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(
                     it,
                     R.drawable.ic_lientang_auxiliary_7
                 )
             })
-        }else if(binding.adasSideDowSwitch.isChecked&&!binding.adasSideMebSwitch.isChecked&&
-            !binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&!binding.adasSideGuidesSwitch.isChecked){
+        } else if (binding.adasSideDowSwitch.isChecked && !binding.adasSideMebSwitch.isChecked &&
+            !binding.adasSideBsdSwitch.isChecked && binding.adasSideBscSwitch.isChecked && !binding.adasSideGuidesSwitch.isChecked
+        ) {
             binding.videoImage.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(
                     it,
                     R.drawable.ic_lientang_auxiliary_8
                 )
             })
-        }else if(binding.adasSideDowSwitch.isChecked&&!binding.adasSideMebSwitch.isChecked&&
-            !binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&binding.adasSideGuidesSwitch.isChecked){
+        } else if (binding.adasSideDowSwitch.isChecked && !binding.adasSideMebSwitch.isChecked &&
+            !binding.adasSideBsdSwitch.isChecked && binding.adasSideBscSwitch.isChecked && binding.adasSideGuidesSwitch.isChecked
+        ) {
             binding.videoImage.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(
                     it,
                     R.drawable.ic_lientang_auxiliary_9
                 )
             })
-        } else if(!binding.adasSideDowSwitch.isChecked&&binding.adasSideMebSwitch.isChecked&&
-            binding.adasSideBsdSwitch.isChecked&&!binding.adasSideBscSwitch.isChecked){
+        } else if (!binding.adasSideDowSwitch.isChecked && binding.adasSideMebSwitch.isChecked &&
+            binding.adasSideBsdSwitch.isChecked && !binding.adasSideBscSwitch.isChecked
+        ) {
             binding.videoImage.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(
                     it,
                     R.drawable.ic_lientang_auxiliary_10
                 )
             })
-        }  else if(!binding.adasSideDowSwitch.isChecked&&binding.adasSideMebSwitch.isChecked&&
-            !binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&!binding.adasSideGuidesSwitch.isChecked){
+        } else if (!binding.adasSideDowSwitch.isChecked && binding.adasSideMebSwitch.isChecked &&
+            !binding.adasSideBsdSwitch.isChecked && binding.adasSideBscSwitch.isChecked && !binding.adasSideGuidesSwitch.isChecked
+        ) {
             binding.videoImage.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(
                     it,
                     R.drawable.ic_lientang_auxiliary_11
                 )
             })
-        }else if(!binding.adasSideDowSwitch.isChecked&&binding.adasSideMebSwitch.isChecked&&
-            !binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&binding.adasSideGuidesSwitch.isChecked){
+        } else if (!binding.adasSideDowSwitch.isChecked && binding.adasSideMebSwitch.isChecked &&
+            !binding.adasSideBsdSwitch.isChecked && binding.adasSideBscSwitch.isChecked && binding.adasSideGuidesSwitch.isChecked
+        ) {
             binding.videoImage.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(
                     it,
                     R.drawable.ic_lientang_auxiliary_12
                 )
             })
-        }else if(!binding.adasSideDowSwitch.isChecked&&!binding.adasSideMebSwitch.isChecked&&
-            binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&binding.adasSideGuidesSwitch.isChecked){
+        } else if (!binding.adasSideDowSwitch.isChecked && !binding.adasSideMebSwitch.isChecked &&
+            binding.adasSideBsdSwitch.isChecked && binding.adasSideBscSwitch.isChecked && binding.adasSideGuidesSwitch.isChecked
+        ) {
             binding.videoImage.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(
                     it,
                     R.drawable.ic_lientang_auxiliary_13
                 )
             })
-        }else if(!binding.adasSideDowSwitch.isChecked&&!binding.adasSideMebSwitch.isChecked&&
-            binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&!binding.adasSideGuidesSwitch.isChecked){
+        } else if (!binding.adasSideDowSwitch.isChecked && !binding.adasSideMebSwitch.isChecked &&
+            binding.adasSideBsdSwitch.isChecked && binding.adasSideBscSwitch.isChecked && !binding.adasSideGuidesSwitch.isChecked
+        ) {
             binding.videoImage.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(
                     it,
                     R.drawable.ic_lientang_auxiliary_14
                 )
             })
-        }else if(binding.adasSideDowSwitch.isChecked&&binding.adasSideMebSwitch.isChecked&&
-            binding.adasSideBsdSwitch.isChecked&&!binding.adasSideBscSwitch.isChecked){
+        } else if (binding.adasSideDowSwitch.isChecked && binding.adasSideMebSwitch.isChecked &&
+            binding.adasSideBsdSwitch.isChecked && !binding.adasSideBscSwitch.isChecked
+        ) {
             binding.videoImage.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(
                     it,
                     R.drawable.ic_lientang_auxiliary_15
                 )
             })
-        }else if(!binding.adasSideDowSwitch.isChecked&&binding.adasSideMebSwitch.isChecked&&
-            binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&binding.adasSideGuidesSwitch.isChecked){
+        } else if (!binding.adasSideDowSwitch.isChecked && binding.adasSideMebSwitch.isChecked &&
+            binding.adasSideBsdSwitch.isChecked && binding.adasSideBscSwitch.isChecked && binding.adasSideGuidesSwitch.isChecked
+        ) {
             binding.videoImage.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(
                     it,
                     R.drawable.ic_lientang_auxiliary_16
                 )
             })
-        }else if(binding.adasSideDowSwitch.isChecked&&!binding.adasSideMebSwitch.isChecked&&
-            binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&!binding.adasSideGuidesSwitch.isChecked){
+        } else if (binding.adasSideDowSwitch.isChecked && !binding.adasSideMebSwitch.isChecked &&
+            binding.adasSideBsdSwitch.isChecked && binding.adasSideBscSwitch.isChecked && !binding.adasSideGuidesSwitch.isChecked
+        ) {
             binding.videoImage.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(
                     it,
                     R.drawable.ic_lientang_auxiliary_17
                 )
             })
-        }else if(binding.adasSideDowSwitch.isChecked&&binding.adasSideMebSwitch.isChecked&&
-            !binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&!binding.adasSideGuidesSwitch.isChecked){
+        } else if (binding.adasSideDowSwitch.isChecked && binding.adasSideMebSwitch.isChecked &&
+            !binding.adasSideBsdSwitch.isChecked && binding.adasSideBscSwitch.isChecked && !binding.adasSideGuidesSwitch.isChecked
+        ) {
             binding.videoImage.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(
                     it,
                     R.drawable.ic_lientang_auxiliary_18
                 )
             })
-        }else if(binding.adasSideDowSwitch.isChecked&&binding.adasSideMebSwitch.isChecked&&
-            !binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&binding.adasSideGuidesSwitch.isChecked){
+        } else if (binding.adasSideDowSwitch.isChecked && binding.adasSideMebSwitch.isChecked &&
+            !binding.adasSideBsdSwitch.isChecked && binding.adasSideBscSwitch.isChecked && binding.adasSideGuidesSwitch.isChecked
+        ) {
             binding.videoImage.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(
                     it,
                     R.drawable.ic_lientang_auxiliary_19
                 )
             })
-        }else if(!binding.adasSideDowSwitch.isChecked&&binding.adasSideMebSwitch.isChecked&&
-            binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&binding.adasSideGuidesSwitch.isChecked){
+        } else if (!binding.adasSideDowSwitch.isChecked && binding.adasSideMebSwitch.isChecked &&
+            binding.adasSideBsdSwitch.isChecked && binding.adasSideBscSwitch.isChecked && binding.adasSideGuidesSwitch.isChecked
+        ) {
             binding.videoImage.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(
                     it,
                     R.drawable.ic_lientang_auxiliary_20
                 )
             })
-        }else if(!binding.adasSideDowSwitch.isChecked&&binding.adasSideMebSwitch.isChecked&&
-            binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&!binding.adasSideGuidesSwitch.isChecked){
+        } else if (!binding.adasSideDowSwitch.isChecked && binding.adasSideMebSwitch.isChecked &&
+            binding.adasSideBsdSwitch.isChecked && binding.adasSideBscSwitch.isChecked && !binding.adasSideGuidesSwitch.isChecked
+        ) {
             binding.videoImage.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(
                     it,
                     R.drawable.ic_lientang_auxiliary_21
                 )
             })
-        }else if(binding.adasSideDowSwitch.isChecked&&!binding.adasSideMebSwitch.isChecked&&
-            binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&binding.adasSideGuidesSwitch.isChecked){
+        } else if (binding.adasSideDowSwitch.isChecked && !binding.adasSideMebSwitch.isChecked &&
+            binding.adasSideBsdSwitch.isChecked && binding.adasSideBscSwitch.isChecked && binding.adasSideGuidesSwitch.isChecked
+        ) {
             binding.videoImage.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(
                     it,
                     R.drawable.ic_lientang_auxiliary_22
                 )
             })
-        }else if(binding.adasSideDowSwitch.isChecked&&binding.adasSideMebSwitch.isChecked&&
-            binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&!binding.adasSideGuidesSwitch.isChecked){
+        } else if (binding.adasSideDowSwitch.isChecked && binding.adasSideMebSwitch.isChecked &&
+            binding.adasSideBsdSwitch.isChecked && binding.adasSideBscSwitch.isChecked && !binding.adasSideGuidesSwitch.isChecked
+        ) {
             binding.videoImage.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(
                     it,
                     R.drawable.ic_lientang_auxiliary_23
                 )
             })
-        }else if(binding.adasSideDowSwitch.isChecked&&binding.adasSideMebSwitch.isChecked&&
-            binding.adasSideBsdSwitch.isChecked&&binding.adasSideBscSwitch.isChecked&&binding.adasSideGuidesSwitch.isChecked){
+        } else if (binding.adasSideDowSwitch.isChecked && binding.adasSideMebSwitch.isChecked &&
+            binding.adasSideBsdSwitch.isChecked && binding.adasSideBscSwitch.isChecked && binding.adasSideGuidesSwitch.isChecked
+        ) {
             binding.videoImage.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(
                     it,
                     R.drawable.ic_lientang_auxiliary_24
                 )
             })
-        }else {
+        } else {
             binding.videoImage.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(
                     it,
@@ -489,40 +559,41 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
             })
         }
     }
-    private fun checkDisableOtherDiv(swb: SwitchButton, status: Boolean) {
-        if (swb == binding.adasSideBscSwitch) {
-            val childCount = binding.container.childCount
-            val intRange = 0 until childCount
-            intRange.forEach {
-                val childAt = binding.container.getChildAt(it)
-                if (null != childAt && childAt != binding.driveBsdCamera) {
-                    childAt.alpha = if (status) 1.0f else 0.6f
-                    updateViewEnable(childAt, status)
-                }
-            }
-        }
-    }
 
-    private fun updateViewEnable(view: View?, status: Boolean) {
-        if (null == view) {
-            return
-        }
-        if (view is SwitchButton) {
-            view.isEnabled = status
-            return
-        }
-        if (view is AppCompatImageView) {
-            view.isEnabled = status
-            return
-        }
-        if (view is TabControlView) {
-            view.updateEnable(status)
-            return
-        }
-        if (view is ViewGroup) {
-            val childCount = view.childCount
-            val intRange = 0 until childCount
-            intRange.forEach { updateViewEnable(view.getChildAt(it), status) }
-        }
-    }
+//    private fun checkDisableOtherDiv(swb: SwitchButton, status: Boolean) {
+//        if (swb == binding.adasSideBscSwitch) {
+//            val childCount = binding.container.childCount
+//            val intRange = 0 until childCount
+//            intRange.forEach {
+//                val childAt = binding.container.getChildAt(it)
+//                if (null != childAt && childAt != binding.driveBsdCamera) {
+//                    childAt.alpha = if (status) 1.0f else 0.6f
+//                    updateViewEnable(childAt, status)
+//                }
+//            }
+//        }
+//    }
+
+//    private fun updateViewEnable(view: View?, status: Boolean) {
+//        if (null == view) {
+//            return
+//        }
+//        if (view is SwitchButton) {
+//            view.isEnabled = status
+//            return
+//        }
+//        if (view is AppCompatImageView) {
+//            view.isEnabled = status
+//            return
+//        }
+//        if (view is TabControlView) {
+//            view.updateEnable(status)
+//            return
+//        }
+//        if (view is ViewGroup) {
+//            val childCount = view.childCount
+//            val intRange = 0 until childCount
+//            intRange.forEach { updateViewEnable(view.getChildAt(it), status) }
+//        }
+//    }
 }

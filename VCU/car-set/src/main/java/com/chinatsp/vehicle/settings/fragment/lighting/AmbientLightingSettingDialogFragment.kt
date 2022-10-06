@@ -2,6 +2,7 @@ package com.chinatsp.vehicle.settings.fragment.lighting
 
 import android.os.Bundle
 import androidx.lifecycle.LiveData
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.lamp.AmbientLightingManager
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -58,7 +59,7 @@ class AmbientLightingSettingDialogFragment :
         setSwitchListener(binding.alcRelatedTopicsSwitch, SwitchNode.ALC_RELATED_TOPICS)
     }
 
-    private fun addSwitchLiveDataListener(liveData: LiveData<Boolean>, node: SwitchNode) {
+    private fun addSwitchLiveDataListener(liveData: LiveData<SwitchState>, node: SwitchNode) {
         liveData.observe(this) {
             doUpdateSwitch(node, it)
         }

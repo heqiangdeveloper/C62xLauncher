@@ -62,7 +62,7 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
     private fun initVideoListener() {
         val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_fcw
         binding.video.setAudioFocusRequest(AudioManager.AUDIOFOCUS_NONE)
-        binding.video.setVideoURI(Uri.parse(uri));
+        binding.video.setVideoURI(Uri.parse(uri))
         binding.video.setOnCompletionListener {
             dynamicEffect()
         }
@@ -72,7 +72,7 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
         }
         binding.video.setOnPreparedListener {
             it.setOnInfoListener { _, _, _ ->
-                binding.video.setBackgroundColor(Color.TRANSPARENT);
+                binding.video.setBackgroundColor(Color.TRANSPARENT)
                 binding.videoImage.visibility = View.GONE
                 true
             }
@@ -91,6 +91,9 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
     private fun initSwitchOption() {
         initSwitchOption(SwitchNode.ADAS_FCW, viewModel.fcwFunction)
         initSwitchOption(SwitchNode.ADAS_AEB, viewModel.aebFunction)
+
+        updateSwitchEnable(SwitchNode.ADAS_FCW)
+        updateSwitchEnable(SwitchNode.ADAS_AEB)
     }
 
     override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
@@ -98,6 +101,14 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
             SwitchNode.ADAS_FCW -> binding.adasForwardFcwSwitch
             SwitchNode.ADAS_AEB -> binding.adasForwardAebSwitch
             else -> null
+        }
+    }
+
+    override fun obtainActiveByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.ADAS_FCW -> viewModel.fcwFunction.value?.enable() ?: false
+            SwitchNode.ADAS_AEB -> viewModel.aebFunction.value?.enable() ?: false
+            else -> super.obtainActiveByNode(node)
         }
     }
 
@@ -114,7 +125,7 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
             if (isChecked) {
                 //binding.videoImage.visibility = View.GONE
                 val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_fcw
-                binding.video.setVideoURI(Uri.parse(uri));
+                binding.video.setVideoURI(Uri.parse(uri))
                 binding.video.start()
             } else {
                 dynamicEffect()
@@ -126,7 +137,7 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
                 doUpdateSwitchOption(SwitchNode.ADAS_AEB, buttonView, isChecked)
                 binding.videoImage.visibility = View.GONE
                 val url = "android.resource://" + activity?.packageName + "/" + R.raw.video_abe
-                binding.video.setVideoURI(Uri.parse(url));
+                binding.video.setVideoURI(Uri.parse(url))
                 binding.video.start()
             } else {
 //                dynamicEffect()

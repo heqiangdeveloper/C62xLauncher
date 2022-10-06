@@ -3,9 +3,11 @@ package com.chinatsp.vehicle.settings.vm.cabin
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.bean.RadioState
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
+import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.listener.IProgressListener
-import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.manager.cabin.WheelManager
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
@@ -25,14 +27,14 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class SteeringViewModel @Inject constructor(app: Application, model: BaseModel) :
-    BaseViewModel(app, model), IProgressListener, ISwitchListener {
+    BaseViewModel(app, model), IProgressListener, IOptionListener {
 
     private val manager: WheelManager by lazy { WheelManager.instance }
 
-    val swhFunction: LiveData<Boolean>
+    val swhFunction: LiveData<SwitchState>
         get() = _swhFunction
 
-    private val _swhFunction: MutableLiveData<Boolean> by lazy {
+    private val _swhFunction: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.DRIVE_WHEEL_AUTO_HEAT
         MutableLiveData(manager.doGetSwitchOption(node))
     }
@@ -47,10 +49,10 @@ class SteeringViewModel @Inject constructor(app: Application, model: BaseModel) 
         }
     }
 
-    val epsMode: LiveData<Int>
+    val epsMode: LiveData<RadioState>
         get() = _epsMode
 
-    private val _epsMode: MutableLiveData<Int> by lazy {
+    private val _epsMode: MutableLiveData<RadioState> by lazy {
         val node = RadioNode.DRIVE_EPS_MODE
         MutableLiveData(manager.doGetRadioOption(node))
     }
@@ -67,10 +69,19 @@ class SteeringViewModel @Inject constructor(app: Application, model: BaseModel) 
     }
 
 
-    override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
+    override fun onSwitchOptionChanged(status: SwitchState, node: SwitchNode) {
         when (node) {
             SwitchNode.DRIVE_WHEEL_AUTO_HEAT -> {
                 doUpdate(_swhFunction, status)
+            }
+            else -> {}
+        }
+    }
+
+    override fun onRadioOptionChanged(node: RadioNode, value: RadioState) {
+        when (node) {
+            RadioNode.DRIVE_EPS_MODE -> {
+                doUpdate(_epsMode, value)
             }
             else -> {}
         }

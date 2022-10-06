@@ -1,7 +1,8 @@
 package com.chinatsp.settinglib.manager.adas
 
 import android.car.hardware.CarPropertyValue
-import android.car.hardware.cabin.CarCabinManager
+import com.chinatsp.settinglib.bean.RadioState
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.manager.BaseManager
@@ -11,8 +12,6 @@ import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import java.lang.ref.WeakReference
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author : luohong
@@ -32,7 +31,7 @@ class LaneManager : BaseManager(), IOptionManager {
         }
     }
 
-    private val laneAssistMode: AtomicInteger by lazy {
+    private val laneAssistMode: RadioState by lazy {
         val node = RadioNode.ADAS_LANE_ASSIST_MODE
 //        AtomicInteger(node.default).apply {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
@@ -43,7 +42,7 @@ class LaneManager : BaseManager(), IOptionManager {
         }
     }
 
-    private val ldwWarningSensitivity: AtomicInteger by lazy {
+    private val ldwWarningSensitivity: RadioState by lazy {
         val node = RadioNode.ADAS_LDW_SENSITIVITY
 //        AtomicInteger(node.default).apply {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
@@ -54,7 +53,7 @@ class LaneManager : BaseManager(), IOptionManager {
         }
     }
 
-    private val ldwWarningStyle: AtomicInteger by lazy {
+    private val ldwWarningStyle: RadioState by lazy {
         val node = RadioNode.ADAS_LDW_STYLE
 //        AtomicInteger(node.default).apply {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
@@ -65,7 +64,7 @@ class LaneManager : BaseManager(), IOptionManager {
         }
     }
 
-    private val laneAssistFunction: AtomicBoolean by lazy {
+    private val laneAssistFunction: SwitchState by lazy {
         val node = SwitchNode.ADAS_LANE_ASSIST
 //        AtomicBoolean(node.default).apply {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
@@ -115,18 +114,12 @@ class LaneManager : BaseManager(), IOptionManager {
         }
     }
 
-    override fun doGetRadioOption(node: RadioNode): Int {
+    override fun doGetRadioOption(node: RadioNode): RadioState? {
         return when (node) {
-            RadioNode.ADAS_LANE_ASSIST_MODE -> {
-                laneAssistMode.get()
-            }
-            RadioNode.ADAS_LDW_STYLE -> {
-                ldwWarningStyle.get()
-            }
-            RadioNode.ADAS_LDW_SENSITIVITY -> {
-                ldwWarningSensitivity.get()
-            }
-            else -> -1
+            RadioNode.ADAS_LANE_ASSIST_MODE -> laneAssistMode.copy()
+            RadioNode.ADAS_LDW_STYLE -> ldwWarningStyle.copy()
+            RadioNode.ADAS_LDW_SENSITIVITY -> ldwWarningSensitivity.copy()
+            else -> null
         }
     }
 
@@ -198,12 +191,10 @@ class LaneManager : BaseManager(), IOptionManager {
         return result
     }
 
-    override fun doGetSwitchOption(node: SwitchNode): Boolean {
+    override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.ADAS_LANE_ASSIST -> {
-                laneAssistFunction.get()
-            }
-            else -> false
+            SwitchNode.ADAS_LANE_ASSIST -> laneAssistFunction.copy()
+            else -> null
         }
     }
 

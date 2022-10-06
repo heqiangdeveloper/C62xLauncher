@@ -1,6 +1,7 @@
 package com.chinatsp.settinglib.manager.adas
 
 import android.car.hardware.CarPropertyValue
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.manager.BaseManager
@@ -9,7 +10,6 @@ import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import java.lang.ref.WeakReference
-import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * @author : luohong
@@ -27,7 +27,7 @@ class CombineManager : BaseManager(), ISwitchManager {
         }
     }
 
-    private val slaValue: AtomicBoolean by lazy {
+    private val slaValue: SwitchState by lazy {
         val node = SwitchNode.ADAS_TSR
 //        AtomicBoolean(node.default).apply {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
@@ -38,7 +38,7 @@ class CombineManager : BaseManager(), ISwitchManager {
         }
     }
 
-    private val hmaValue: AtomicBoolean by lazy {
+    private val hmaValue: SwitchState by lazy {
         val node = SwitchNode.ADAS_HMA
 //        AtomicBoolean(node.default).apply {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
@@ -72,15 +72,11 @@ class CombineManager : BaseManager(), ISwitchManager {
     }
 
 
-    override fun doGetSwitchOption(node: SwitchNode): Boolean {
+    override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.ADAS_HMA -> {
-                hmaValue.get()
-            }
-            SwitchNode.ADAS_TSR -> {
-                slaValue.get()
-            }
-            else -> false
+            SwitchNode.ADAS_HMA -> hmaValue.copy()
+            SwitchNode.ADAS_TSR -> slaValue.copy()
+            else -> null
         }
     }
 

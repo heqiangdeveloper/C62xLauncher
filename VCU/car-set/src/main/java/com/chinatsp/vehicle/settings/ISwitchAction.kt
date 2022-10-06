@@ -2,6 +2,7 @@ package com.chinatsp.vehicle.settings
 
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.common.xui.widget.button.switchbutton.SwitchButton
@@ -13,9 +14,17 @@ import com.common.xui.widget.button.switchbutton.SwitchButton
  * @desc   :
  * @version: 1.0
  */
-interface ISwitchAction {
+interface ISwitchAction : IAction {
 
     fun findSwitchByNode(node: SwitchNode): SwitchButton?
+
+    fun obtainActiveByNode(node: SwitchNode): Boolean {
+        return true
+    }
+
+    fun obtainDependByNode(node: SwitchNode): Boolean {
+        return true
+    }
 
     fun getSwitchManager(): ISwitchManager
 
@@ -27,26 +36,44 @@ interface ISwitchAction {
 
     }
 
-    fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {
-        val status = liveData.value ?: false
-        doUpdateSwitch(node, status, true)
+    fun initSwitchOption(node: SwitchNode, liveData: LiveData<SwitchState>) {
+//        val status = liveData.value ?: false
+        liveData.value?.let {
+            doUpdateSwitch(node, it, true)
+        }
     }
 
     fun doUpdateSwitchOption(node: SwitchNode, button: CompoundButton, status: Boolean) {
         val result = getSwitchManager().doSetSwitchOption(node, status)
         if (!result && button is SwitchButton) {
-            doUpdateSwitch(button, !status, timely = true)
+            recoverSwitch(button, !status, timely = true)
         }
     }
 
-    fun doUpdateSwitch(node: SwitchNode, status: Boolean, timely: Boolean = false) {
+    fun doUpdateSwitch(node: SwitchNode, status: SwitchState, timely: Boolean = false) {
         val button = findSwitchByNode(node)
         button?.let {
             doUpdateSwitch(it, status, timely)
         }
     }
 
-    fun doUpdateSwitch(swb: SwitchButton, status: Boolean, timely: Boolean = false) {
+    fun recoverSwitch(node: SwitchNode, status: Boolean, timely: Boolean = false) {
+        val button = findSwitchByNode(node)
+        button?.let {
+            recoverSwitch(it, status, timely)
+        }
+    }
+
+    fun doUpdateSwitch(swb: SwitchButton, status: SwitchState, timely: Boolean = false) {
+        if (!timely) {
+            swb.setCheckedNoEvent(status.get())
+        } else {
+            swb.setCheckedImmediatelyNoEvent(status.get())
+        }
+        onPostChecked(swb, status.get())
+    }
+
+    fun recoverSwitch(swb: SwitchButton, status: Boolean, timely: Boolean = false) {
         if (!timely) {
             swb.setCheckedNoEvent(status)
         } else {
@@ -54,4 +81,11 @@ interface ISwitchAction {
         }
         onPostChecked(swb, status)
     }
+
+    fun updateSwitchEnable(node: SwitchNode) {
+        findSwitchByNode(node)?.let {
+            updateEnable(it, obtainActiveByNode(node), obtainDependByNode(node))
+        }
+    }
+
 }

@@ -18,13 +18,10 @@ data class RNorm(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-
         other as RNorm
-
         if (!values.contentEquals(other.values)) return false
         if (origin != other.origin) return false
         if (signal != other.signal) return false
-
         return true
     }
 

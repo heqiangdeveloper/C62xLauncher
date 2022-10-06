@@ -3,7 +3,9 @@ package com.chinatsp.vehicle.settings.vm
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.chinatsp.settinglib.listener.cabin.IACListener
+import com.chinatsp.settinglib.bean.RadioState
+import com.chinatsp.settinglib.bean.SwitchState
+import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.manager.cabin.ACManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -21,40 +23,40 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class CabinACViewModel @Inject constructor(app: Application, model: BaseModel) :
-    BaseViewModel(app, model), IACListener {
+    BaseViewModel(app, model), IOptionListener {
 
     private val manager: ACManager by lazy { ACManager.instance }
 
-    private val _aridLiveData: MutableLiveData<Boolean> by lazy {
+    private val _aridLiveData: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.AC_AUTO_ARID
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val aridLiveData: LiveData<Boolean> by lazy { _aridLiveData }
+    val aridLiveData: LiveData<SwitchState> by lazy { _aridLiveData }
 
-    private val _demistLiveData: MutableLiveData<Boolean> by lazy {
+    private val _demistLiveData: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.AC_AUTO_DEMIST
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val demistLiveData: LiveData<Boolean> by lazy { _demistLiveData }
+    val demistLiveData: LiveData<SwitchState> by lazy { _demistLiveData }
 
 
-    private val _windLiveData: MutableLiveData<Boolean> by lazy {
+    private val _windLiveData: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.AC_ADVANCE_WIND
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val windLiveData: LiveData<Boolean>
+    val windLiveData: LiveData<SwitchState>
         get() = _windLiveData
 
 
-    private val _comfortLiveData: MutableLiveData<Int> by lazy {
+    private val _comfortLiveData: MutableLiveData<RadioState> by lazy {
         val node = RadioNode.AC_COMFORT
         MutableLiveData(manager.doGetRadioOption(node))
     }
 
-    val comfortLiveData: LiveData<Int> by lazy { _comfortLiveData }
+    val comfortLiveData: LiveData<RadioState> by lazy { _comfortLiveData }
 
     override fun onCreate() {
         super.onCreate()
@@ -66,7 +68,7 @@ class CabinACViewModel @Inject constructor(app: Application, model: BaseModel) :
         manager.unRegisterVcuListener(keySerial, keySerial)
     }
 
-    override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
+    override fun onSwitchOptionChanged(status: SwitchState, node: SwitchNode) {
         val liveData = when (node) {
             SwitchNode.AC_AUTO_ARID -> _aridLiveData
             SwitchNode.AC_AUTO_DEMIST -> _demistLiveData
@@ -78,7 +80,7 @@ class CabinACViewModel @Inject constructor(app: Application, model: BaseModel) :
         }
     }
 
-    override fun onRadioOptionChanged(node: RadioNode, value: Int) {
+    override fun onRadioOptionChanged(node: RadioNode, value: RadioState) {
         when (node) {
             RadioNode.AC_COMFORT -> {
                 doUpdate(_comfortLiveData, value)

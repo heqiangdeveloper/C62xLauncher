@@ -3,6 +3,8 @@ package com.chinatsp.vehicle.settings.vm.cabin
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.bean.RadioState
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IProgressListener
 import com.chinatsp.settinglib.listener.ISwitchListener
@@ -29,26 +31,26 @@ class SeatViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val manager: SeatManager by lazy { SeatManager.instance }
 
-    val mainMeet: LiveData<Boolean>
+    val mainMeet: LiveData<SwitchState>
         get() = _mainMeetFunction
 
-    private val _mainMeetFunction: MutableLiveData<Boolean> by lazy {
+    private val _mainMeetFunction: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.SEAT_MAIN_DRIVE_MEET
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val forkMeet: LiveData<Boolean>
+    val forkMeet: LiveData<SwitchState>
         get() = _forkMeetFunction
 
-    private val _forkMeetFunction: MutableLiveData<Boolean> by lazy {
+    private val _forkMeetFunction: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.SEAT_FORK_DRIVE_MEET
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val seatHeat: LiveData<Boolean>
+    val seatHeat: LiveData<SwitchState>
         get() = _seatHeatFunction
 
-    private val _seatHeatFunction: MutableLiveData<Boolean> by lazy {
+    private val _seatHeatFunction: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.SEAT_HEAT_ALL
         MutableLiveData(manager.doGetSwitchOption(node))
     }
@@ -63,10 +65,10 @@ class SeatViewModel @Inject constructor(app: Application, model: BaseModel) :
         }
     }
 
-    val epsMode: LiveData<Int>
+    val epsMode: LiveData<RadioState>
         get() = _epsMode
 
-    private val _epsMode: MutableLiveData<Int> by lazy {
+    private val _epsMode: MutableLiveData<RadioState> by lazy {
         val node = RadioNode.DRIVE_EPS_MODE
         MutableLiveData(manager.doGetRadioOption(node))
     }
@@ -83,7 +85,7 @@ class SeatViewModel @Inject constructor(app: Application, model: BaseModel) :
     }
 
 
-    override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
+    override fun onSwitchOptionChanged(status: SwitchState, node: SwitchNode) {
         when (node) {
             SwitchNode.SEAT_MAIN_DRIVE_MEET -> {
                 doUpdate(_mainMeetFunction, status)

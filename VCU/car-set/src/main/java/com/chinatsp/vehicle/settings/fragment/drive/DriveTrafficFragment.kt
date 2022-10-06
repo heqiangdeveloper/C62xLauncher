@@ -19,6 +19,9 @@ import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * 交通标识
+ */
 @AndroidEntryPoint
 class DriveTrafficFragment : BaseFragment<CombineViewModel, DriveTrafficFragmentBinding>(),
     ISwitchAction {
@@ -75,11 +78,13 @@ class DriveTrafficFragment : BaseFragment<CombineViewModel, DriveTrafficFragment
 
     private fun initSwitchOption() {
         initSwitchOption(SwitchNode.ADAS_TSR, viewModel.slaValue)
+        updateSwitchEnable(SwitchNode.ADAS_TSR)
     }
 
     private fun addSwitchLiveDataListener() {
         viewModel.slaValue.observe(this) {
             doUpdateSwitch(SwitchNode.ADAS_TSR, it)
+            updateSwitchEnable(SwitchNode.ADAS_TSR)
         }
     }
 
@@ -87,6 +92,13 @@ class DriveTrafficFragment : BaseFragment<CombineViewModel, DriveTrafficFragment
         return when (node) {
             SwitchNode.ADAS_TSR -> binding.adasTrafficSlaSwitch
             else -> null
+        }
+    }
+
+    override fun obtainActiveByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.ADAS_TSR -> viewModel.slaValue.value?.enable() ?: false
+            else -> super.obtainActiveByNode(node)
         }
     }
 

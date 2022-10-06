@@ -1,9 +1,6 @@
 package com.chinatsp.vehicle.settings.fragment.cabin.dialog
 
 import android.os.Bundle
-import android.view.View
-import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatImageView
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.cabin.WheelManager
 import com.chinatsp.settinglib.optios.Progress
@@ -14,8 +11,6 @@ import com.chinatsp.vehicle.settings.databinding.SteeringHeatingDialogFragmentBi
 import com.chinatsp.vehicle.settings.vm.cabin.SteeringViewModel
 import com.common.library.frame.base.BaseDialogFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
-import com.common.xui.widget.picker.VSeekBar
-import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -73,14 +68,18 @@ class SteeringHeatDialogFragment :
 
     private fun initSwitchOption() {
         initSwitchOption(SwitchNode.DRIVE_WHEEL_AUTO_HEAT, viewModel.swhFunction)
-        checkDisableOtherDiv(binding.steeringAutomaticHeatingSwitch.isChecked, binding.container)
-
+//        checkDisableOtherDiv(binding.steeringAutomaticHeatingSwitch.isChecked, binding.container)
+        updateEnable(binding.steeringHeatingStartTemperatureSeekBar,
+            true,
+            binding.steeringAutomaticHeatingSwitch.isChecked)
     }
 
     private fun addSwitchLiveDataListener() {
         viewModel.swhFunction.observe(this) {
             doUpdateSwitch(SwitchNode.DRIVE_WHEEL_AUTO_HEAT, it)
-            checkDisableOtherDiv(it, binding.container)
+//            checkDisableOtherDiv(it.get(), binding.container)
+            updateEnable(binding.steeringHeatingStartTemperatureSeekBar, true, it.get())
+
         }
     }
 
@@ -99,49 +98,50 @@ class SteeringHeatDialogFragment :
         binding.steeringAutomaticHeatingSwitch.let {
             it.setOnCheckedChangeListener { buttonView, isChecked ->
                 doUpdateSwitchOption(SwitchNode.DRIVE_WHEEL_AUTO_HEAT, buttonView, isChecked)
-                checkDisableOtherDiv(it.isChecked, binding.container)
+//                checkDisableOtherDiv(it.isChecked, binding.container)
+                updateEnable(binding.steeringHeatingStartTemperatureSeekBar, true, it.isChecked)
             }
         }
     }
 
-    private fun checkDisableOtherDiv(status: Boolean, view: View) {
-        if (view is ViewGroup) {
-            for (index in 0 until view.childCount) {
-                val child = view.getChildAt(index)
-                checkDisableOtherDiv(status, child)
-            }
-        } else {
-            view.alpha = if (status) 1.0f else 0.6f
-            view.isEnabled = status
-        }
-    }
+//    private fun checkDisableOtherDiv(status: Boolean, view: View) {
+//        if (view is ViewGroup) {
+//            for (index in 0 until view.childCount) {
+//                val child = view.getChildAt(index)
+//                checkDisableOtherDiv(status, child)
+//            }
+//        } else {
+//            view.alpha = if (status) 1.0f else 0.6f
+//            view.isEnabled = status
+//        }
+//    }
 
-    private fun updateViewEnable(view: View?, status: Boolean) {
-        if (null == view) {
-            return
-        }
-        if (view is SwitchButton) {
-            view.isEnabled = status
-            return
-        }
-        if (view is AppCompatImageView) {
-            view.isEnabled = status
-            return
-        }
-        if (view is TabControlView) {
-            view.updateEnable(status)
-            return
-        }
-        if (view is VSeekBar) {
-            view.isEnabled = status
-            return
-        }
-        if (view is ViewGroup) {
-            val childCount = view.childCount
-            val intRange = 0 until childCount
-            intRange.forEach { updateViewEnable(view.getChildAt(it), status) }
-        }
-    }
+//    private fun updateViewEnable(view: View?, status: Boolean) {
+//        if (null == view) {
+//            return
+//        }
+//        if (view is SwitchButton) {
+//            view.isEnabled = status
+//            return
+//        }
+//        if (view is AppCompatImageView) {
+//            view.isEnabled = status
+//            return
+//        }
+//        if (view is TabControlView) {
+//            view.updateEnable(status)
+//            return
+//        }
+//        if (view is VSeekBar) {
+//            view.isEnabled = status
+//            return
+//        }
+//        if (view is ViewGroup) {
+//            val childCount = view.childCount
+//            val intRange = 0 until childCount
+//            intRange.forEach { updateViewEnable(view.getChildAt(it), status) }
+//        }
+//    }
 
 }
 

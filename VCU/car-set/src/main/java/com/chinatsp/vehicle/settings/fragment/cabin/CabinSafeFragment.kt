@@ -26,7 +26,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class CabinSafeFragment : BaseFragment<SafeViewModel, CabinSafeFragmentBinding>(), ISwitchAction {
 
-
     private val manager: SafeManager
         get() = SafeManager.instance
 
@@ -44,6 +43,7 @@ class CabinSafeFragment : BaseFragment<SafeViewModel, CabinSafeFragmentBinding>(
     private fun addSwitchLiveDataListener() {
         viewModel.fortifyToneFunction.observe(this) {
             doUpdateSwitch(SwitchNode.DRIVE_SAFE_FORTIFY_SOUND, it)
+            updateSwitchEnable(SwitchNode.DRIVE_SAFE_FORTIFY_SOUND)
         }
         viewModel.videoModeFunction.observe(this) {
             doUpdateSwitch(SwitchNode.DRIVE_SAFE_VIDEO_PLAYING, it)
@@ -59,6 +59,8 @@ class CabinSafeFragment : BaseFragment<SafeViewModel, CabinSafeFragmentBinding>(
     private fun initSwitchOption() {
         initSwitchOption(SwitchNode.DRIVE_SAFE_FORTIFY_SOUND, viewModel.fortifyToneFunction)
         initSwitchOption(SwitchNode.DRIVE_SAFE_VIDEO_PLAYING, viewModel.videoModeFunction)
+
+        updateSwitchEnable(SwitchNode.DRIVE_SAFE_FORTIFY_SOUND)
     }
 
     override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
@@ -69,6 +71,15 @@ class CabinSafeFragment : BaseFragment<SafeViewModel, CabinSafeFragmentBinding>(
         }
     }
 
+    override fun obtainActiveByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.DRIVE_SAFE_FORTIFY_SOUND -> viewModel.fortifyToneFunction.value?.enable()
+                ?: false
+            SwitchNode.DRIVE_SAFE_VIDEO_PLAYING -> true
+            else -> super.obtainActiveByNode(node)
+        }
+    }
+
     override fun getSwitchManager(): ISwitchManager {
         return manager
     }
@@ -76,6 +87,7 @@ class CabinSafeFragment : BaseFragment<SafeViewModel, CabinSafeFragmentBinding>(
     private fun setSwitchListener() {
         binding.cabinSafeFortifySwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.DRIVE_SAFE_FORTIFY_SOUND, buttonView, isChecked)
+            updateSwitchEnable(SwitchNode.DRIVE_SAFE_FORTIFY_SOUND)
         }
         binding.cabinSafeMovieSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.DRIVE_SAFE_VIDEO_PLAYING, buttonView, isChecked)

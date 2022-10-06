@@ -43,6 +43,14 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
 
         initViewDisplay()
         initDetailsClickListener()
+        updateOptionActive()
+    }
+
+    private fun updateOptionActive() {
+        updateSwitchEnable(SwitchNode.WIN_REMOTE_CONTROL)
+        updateSwitchEnable(SwitchNode.WIN_CLOSE_FOLLOW_LOCK)
+        updateSwitchEnable(SwitchNode.WIN_CLOSE_WHILE_RAIN)
+        updateSwitchEnable(SwitchNode.RAIN_WIPER_REPAIR)
     }
 
     private fun initViewDisplay() {
@@ -69,16 +77,9 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
     }
 
     private fun initAnimation() {
-        animationCarWindow.setAnimation(
-            activity,
-            R.drawable.car_window_animation,
-            binding.carWindowIv
-        )
-        animationWiper.setAnimation(
-            activity,
-            R.drawable.wiper_animation,
-            binding.carWinper
-        )
+        val cxt = activity
+        animationCarWindow.setAnimation(cxt, R.drawable.car_window_animation, binding.carWindowIv)
+        animationWiper.setAnimation(cxt, R.drawable.wiper_animation, binding.carWinper)
     }
 
     private fun initSwitchOption() {
@@ -110,6 +111,17 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
             SwitchNode.WIN_CLOSE_WHILE_RAIN -> binding.carWindowRainyDaySwb
             SwitchNode.RAIN_WIPER_REPAIR -> binding.carWindowWiperSwb
             else -> null
+        }
+    }
+
+    override fun obtainActiveByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.WIN_REMOTE_CONTROL -> viewModel.winRemoteControl.value?.enable() ?: false
+            SwitchNode.WIN_CLOSE_FOLLOW_LOCK -> viewModel.closeWinFollowLock.value?.enable()
+                ?: false
+            SwitchNode.WIN_CLOSE_WHILE_RAIN -> viewModel.closeWinWhileRain.value?.enable() ?: false
+            SwitchNode.RAIN_WIPER_REPAIR -> viewModel.rainWiperRepair.value?.enable() ?: false
+            else -> false
         }
     }
 

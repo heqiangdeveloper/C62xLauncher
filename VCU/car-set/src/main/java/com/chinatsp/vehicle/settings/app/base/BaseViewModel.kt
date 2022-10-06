@@ -3,6 +3,8 @@ package com.chinatsp.vehicle.settings.app.base
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.chinatsp.settinglib.bean.RadioState
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.vehicle.settings.api.ApiService
 import com.chinatsp.vehicle.settings.bean.Result
 import com.common.library.frame.base.BaseModel
@@ -61,13 +63,37 @@ open class BaseViewModel @Inject constructor(application: Application, model: Ba
         }
     }
 
-    fun doUpdate(liveData: MutableLiveData<Boolean>, status: Boolean) {
-        if (null == liveData.value) {
-            liveData.postValue(status)
+    fun doUpdate(liveData: MutableLiveData<SwitchState>, status: SwitchState) {
+        do {
+            if (null == liveData.value) {
+                liveData.postValue(status)
+                break
+            }
+            val state = liveData.value!!
+            val statusChanged = state.get() xor status.get()
+            val enableChanged = state.enable != status.enable
+            if (statusChanged) {
+                state.set(status.get())
+            }
+            if (enableChanged) {
+                state.enable = status.enable
+            }
+            if (statusChanged || enableChanged) {
+                liveData.postValue(state)
+            }
+        } while (false)
+    }
+
+    fun doUpdate(liveData: MutableLiveData<RadioState>, value: RadioState, valid: Boolean = true) {
+        if (!valid) {
             return
         }
-        if (liveData.value!! xor status) {
-            liveData.postValue(status)
+        if (null == liveData.value) {
+            liveData.postValue(value)
+            return
+        }
+        if (liveData.value!! != value) {
+            liveData.postValue(value)
         }
     }
 

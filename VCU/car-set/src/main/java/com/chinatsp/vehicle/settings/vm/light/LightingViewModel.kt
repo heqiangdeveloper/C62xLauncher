@@ -3,7 +3,8 @@ package com.chinatsp.vehicle.settings.vm.light
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.chinatsp.settinglib.Constant
+import com.chinatsp.settinglib.bean.RadioState
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.listener.IProgressListener
@@ -24,50 +25,50 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
     private val manager: LightManager
         get() = LightManager.instance
 
-    val insideLightMeet: LiveData<Boolean>
+    val insideLightMeet: LiveData<SwitchState>
         get() = _insideLightMeet
 
-    private val _insideLightMeet: MutableLiveData<Boolean> by lazy {
+    private val _insideLightMeet: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.LIGHT_INSIDE_MEET
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val outsideLightMeet: LiveData<Boolean>
+    val outsideLightMeet: LiveData<SwitchState>
         get() = _outsideLightMeet
 
-    private val _outsideLightMeet: MutableLiveData<Boolean> by lazy {
+    private val _outsideLightMeet: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.LIGHT_OUTSIDE_MEET
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val ceremonySenseSwitch: LiveData<Boolean>
+    val ceremonySenseSwitch: LiveData<SwitchState>
         get() = _ceremonySenseSwitch
 
-    private val _ceremonySenseSwitch: MutableLiveData<Boolean> by lazy {
+    private val _ceremonySenseSwitch: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.LIGHT_CEREMONY_SENSE
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val lightOutDelayed: LiveData<Int>
+    val lightOutDelayed: LiveData<RadioState>
         get() = _lightOutDelayed
 
-    private val _lightOutDelayed: MutableLiveData<Int> by lazy {
+    private val _lightOutDelayed: MutableLiveData<RadioState> by lazy {
         val node = RadioNode.LIGHT_DELAYED_OUT
         MutableLiveData(manager.doGetRadioOption(node))
     }
 
-    val lightFlicker: LiveData<Int>
+    val lightFlicker: LiveData<RadioState>
         get() = _lightFlicker
 
-    private val _lightFlicker: MutableLiveData<Int> by lazy {
+    private val _lightFlicker: MutableLiveData<RadioState> by lazy {
         val node = RadioNode.LIGHT_FLICKER
         MutableLiveData(manager.doGetRadioOption(node))
     }
 
-    val ceremonySense: LiveData<Int>
+    val ceremonySense: LiveData<RadioState>
         get() = _ceremonySense
 
-    private val _ceremonySense: MutableLiveData<Int> by lazy {
+    private val _ceremonySense: MutableLiveData<RadioState> by lazy {
         val node = RadioNode.LIGHT_CEREMONY_SENSE
         MutableLiveData(manager.doGetRadioOption(node))
     }
@@ -94,23 +95,23 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
         super.onDestroy()
     }
 
-    private fun updateLiveData(
-        liveData: MutableLiveData<Boolean>,
-        value: Boolean,
-    ): MutableLiveData<Boolean> {
-        liveData.takeIf { value xor (liveData.value == true) }?.postValue(value)
-        return liveData
-    }
+//    private fun updateLiveData(
+//        liveData: MutableLiveData<Boolean>,
+//        value: Boolean,
+//    ): MutableLiveData<Boolean> {
+//        liveData.takeIf { value xor (liveData.value == true) }?.postValue(value)
+//        return liveData
+//    }
+//
+//    private fun updateLiveData(
+//        liveData: MutableLiveData<Int>,
+//        value: Int,
+//    ): MutableLiveData<Int> {
+//        liveData.takeIf { value != liveData.value }?.postValue(value)
+//        return liveData
+//    }
 
-    private fun updateLiveData(
-        liveData: MutableLiveData<Int>,
-        value: Int,
-    ): MutableLiveData<Int> {
-        liveData.takeIf { value != liveData.value }?.postValue(value)
-        return liveData
-    }
-
-    override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
+    override fun onSwitchOptionChanged(status: SwitchState, node: SwitchNode) {
         when (node) {
             SwitchNode.LIGHT_OUTSIDE_MEET -> {
                 doUpdate(_outsideLightMeet, status)
@@ -125,11 +126,7 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
         }
     }
 
-    override fun onRadioOptionChanged(node: RadioNode, value: Int) {
-        if (!node.isValid(value)) {
-            Timber.d("onRadioOptionChanged node:$node, value:$value")
-            return
-        }
+    override fun onRadioOptionChanged(node: RadioNode, value: RadioState) {
         when (node) {
             RadioNode.LIGHT_DELAYED_OUT -> {
                 doUpdate(_lightOutDelayed, value)
@@ -149,6 +146,7 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
             Progress.SWITCH_BACKLIGHT_BRIGHTNESS -> {
                 updateVolumeValue(_switchBacklight, node, value)
             }
+            else -> {}
         }
     }
 

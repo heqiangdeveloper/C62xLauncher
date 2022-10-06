@@ -3,6 +3,8 @@ package com.chinatsp.vehicle.settings.vm.adas
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.bean.RadioState
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.manager.adas.SideBackManager
 import com.chinatsp.settinglib.optios.RadioNode
@@ -19,42 +21,42 @@ class SideViewModel @Inject constructor(app: Application, model: BaseModel) :
     private val manager: SideBackManager
         get() = SideBackManager.instance
 
-    val dowValue: LiveData<Boolean> by lazy { _dowValue }
+    val dowValue: LiveData<SwitchState> by lazy { _dowValue }
 
-    private val _dowValue: MutableLiveData<Boolean> by lazy {
+    private val _dowValue: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.ADAS_DOW
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val bsdValue: LiveData<Boolean> by lazy { _bsdValue }
+    val bsdValue: LiveData<SwitchState> by lazy { _bsdValue }
 
-    private val _bsdValue: MutableLiveData<Boolean> by lazy {
+    private val _bsdValue: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.ADAS_BSD
         MutableLiveData(manager.doGetSwitchOption(node))
     }
-    val bscValue: LiveData<Boolean> by lazy { _bscValue }
+    val bscValue: LiveData<SwitchState> by lazy { _bscValue }
 
-    private val _bscValue: MutableLiveData<Boolean> by lazy {
+    private val _bscValue: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.ADAS_BSC
         MutableLiveData(manager.doGetSwitchOption(node))
     }
-    val guidesValue: LiveData<Boolean> by lazy { _guidesValue }
+    val guidesValue: LiveData<SwitchState> by lazy { _guidesValue }
 
-    private val _guidesValue: MutableLiveData<Boolean> by lazy {
+    private val _guidesValue: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.ADAS_GUIDES
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val showAreaValue: LiveData<Int> by lazy { _showAreaValue }
+    val showAreaValue: LiveData<RadioState> by lazy { _showAreaValue }
 
-    private val _showAreaValue: MutableLiveData<Int> by lazy {
+    private val _showAreaValue: MutableLiveData<RadioState> by lazy {
         val node = RadioNode.ADAS_SIDE_BACK_SHOW_AREA
         MutableLiveData(manager.doGetRadioOption(node))
     }
 
-    val mebValue: LiveData<Boolean> by lazy { _mebValue }
+    val mebValue: LiveData<SwitchState> by lazy { _mebValue }
 
-    private val _mebValue: MutableLiveData<Boolean> by lazy {
+    private val _mebValue: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.ADAS_MEB
         MutableLiveData(manager.doGetSwitchOption(node))
     }
@@ -69,7 +71,7 @@ class SideViewModel @Inject constructor(app: Application, model: BaseModel) :
         super.onDestroy()
     }
 
-    override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
+    override fun onSwitchOptionChanged(status: SwitchState, node: SwitchNode) {
         when (node) {
             SwitchNode.ADAS_DOW -> {
                 doUpdate(_dowValue, status)
@@ -90,7 +92,7 @@ class SideViewModel @Inject constructor(app: Application, model: BaseModel) :
         }
     }
 
-    override fun onRadioOptionChanged(node: RadioNode, value: Int) {
+    override fun onRadioOptionChanged(node: RadioNode, value: RadioState) {
         when (node) {
             RadioNode.ADAS_SIDE_BACK_SHOW_AREA -> {
                 doUpdate(_showAreaValue, value)

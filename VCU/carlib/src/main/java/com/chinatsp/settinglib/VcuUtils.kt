@@ -57,7 +57,7 @@ object VcuUtils {
         val actual = levels.contains(value)
         val result = !(actual xor expect)
         Timber.d("isCareLevel value: $value, actual:$actual, result:$result")
-        return result
+        return false
     }
 
     fun getLevelValue(): Int {

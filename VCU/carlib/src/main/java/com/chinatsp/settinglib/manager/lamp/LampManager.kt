@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class LampManager private constructor() : BaseManager(), ITabStore {
 
-    private var followers: List<out BaseManager>? = null
+    private var followers: List<BaseManager>? = null
 
     override val tabSerial: AtomicInteger by lazy {
         AtomicInteger(-1)
@@ -49,7 +49,7 @@ class LampManager private constructor() : BaseManager(), ITabStore {
             LampManager()
         }
 
-        val managers: List<out BaseManager> by lazy {
+        val managers: List<BaseManager> by lazy {
             ArrayList<BaseManager>().apply {
                 add(LightManager.instance)
                 add(BrightnessManager.instance)
