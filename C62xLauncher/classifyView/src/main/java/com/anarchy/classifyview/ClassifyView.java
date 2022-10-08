@@ -871,7 +871,7 @@ public class ClassifyView extends FrameLayout {
                     titleEt.setFocusable(true);
                     titleEt.setFocusableInTouchMode(true);
                     titleEt.requestFocus();
-                    titleEt.setSelection(0,titleEt.getText().toString().length());
+                    titleEt.setSelection(titleEt.getText().toString().length());
                     imm.showSoftInput(titleEt,0);
                 }
             }

@@ -20,7 +20,8 @@ public class RecentAppHelper {
         "com.chinatsp.launcher",//launcher
         "com.oushang.datastat",//埋点
         "com.iflytek.autofly.voicecoreservice",//语音
-        "com.autonavi.amapauto"//高德
+        "com.autonavi.amapauto",//高德
+        "com.hmi.beic62.pc"//BEIJING OS,OTA升级用
     );
 
     //不出现在常用推荐中的应用名单
