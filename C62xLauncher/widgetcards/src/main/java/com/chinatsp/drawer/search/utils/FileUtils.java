@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -103,7 +104,8 @@ public class FileUtils {
             SpannableStringBuilder spBuilder = new SpannableStringBuilder(wholeStr);
             for(int i = 0;i<keyStr.length;i++){
                 CharacterStyle charaStyle = new ForegroundColorSpan(contex.getResources().getColor(keyStrColor));
-                int start = wholeStr.indexOf(keyStr[i]);
+               // int start = wholeStr.indexOf(keyStr[i]);
+                int start = wholeStr.toLowerCase().indexOf(keyStr[i]);
                 int end = start + keyStr[i].length();
                 spBuilder.setSpan(charaStyle, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
@@ -115,5 +117,14 @@ public class FileUtils {
 
     }
 
-
+    public static int getLanguage() {
+        int type;
+        String lang = Locale.getDefault().getLanguage();
+        if ("en".equals(lang)) {
+            type = 0;//英文
+        } else {
+            type = 1;//中文
+        }
+        return type;
+    }
 }

@@ -44,6 +44,7 @@ public class SearchManager {
 
     private void initDB() {
         db = new SearchDB(mContext);
+        db.deleteLocation();
         //获取search_data数据
         JsonParser parser = new JsonParser();
         JsonObject jsonObject = parser.parse(FileUtils.getFromAssets(mContext, "search_data.json")).getAsJsonObject();
@@ -99,28 +100,39 @@ public class SearchManager {
      */
     private List<SearchBean> getDesktopList() {
         List<SearchBean> list = new ArrayList<>();
-        for (int i = 0; i < getApps().size(); i++) {
-            for (int y = 0; y < blackListApps.size(); y++) {
-                if (!getApps().get(i).activityInfo.packageName.equals(blackListApps.get(y))) {
-                    SearchBean searchBean = new SearchBean();
-                    searchBean.setModelName("");
-                    searchBean.setIntentAction(getApps().get(i).activityInfo.packageName);
-                    searchBean.setChineseFunction(getApps().get(i).activityInfo.loadLabel(mContext.getPackageManager()).toString());
-                    searchBean.setChineseFunctionLevel("");
+        List<ResolveInfo> resolveInfoList = getApps();
+        for (int i = 0; i < resolveInfoList.size(); i++) {
+            if (!blackListApps.contains(resolveInfoList.get(i).activityInfo.packageName)) {
+                SearchBean searchBean = new SearchBean();
+                searchBean.setModelName("");
+                searchBean.setIntentAction(resolveInfoList.get(i).activityInfo.packageName);
+                if(FileUtils.getLanguage() ==1){
+                    searchBean.setChineseFunction(resolveInfoList.get(i).activityInfo.loadLabel(mContext.getPackageManager()).toString());
                     searchBean.setEnglishFunction("");
-                    searchBean.setEnglishFunctionLevel("");
-                    searchBean.setIntentInterface("");
-                    searchBean.setCarVersion("");
-                    searchBean.setDataVersion("1");
-                    list.add(searchBean);
+                }else{
+                    searchBean.setChineseFunction("");
+                    searchBean.setEnglishFunction(resolveInfoList.get(i).activityInfo.loadLabel(mContext.getPackageManager()).toString());
                 }
+                searchBean.setChineseFunctionLevel("");
+                searchBean.setEnglishFunctionLevel("");
+                searchBean.setIntentInterface("");
+                searchBean.setCarVersion("");
+                searchBean.setDataVersion("1");
+                list.add(searchBean);
             }
         }
+
         //单独添加应用管理
         SearchBean searchBean = new SearchBean();
         searchBean.setModelName("");
         searchBean.setIntentAction("com.chinatsp.appmanagement");
-        searchBean.setChineseFunction("应用管理");
+        if(FileUtils.getLanguage() ==1){
+            searchBean.setChineseFunction("应用管理");
+            searchBean.setEnglishFunction("");
+        }else{
+            searchBean.setChineseFunction("");
+            searchBean.setEnglishFunction("Application management");
+        }
         searchBean.setChineseFunctionLevel("");
         searchBean.setEnglishFunction("");
         searchBean.setEnglishFunctionLevel("");
@@ -134,7 +146,7 @@ public class SearchManager {
     /**
      * 插入数据库
      */
-    private void insertDB(){
+    public void insertDB(){
         JsonParser parser = new JsonParser();
         JsonObject jsonObject = parser.parse(FileUtils.getFromAssets(mContext, "search_data.json")).getAsJsonObject();
         List<SearchBean> searchBeanList = new ArrayList<>();

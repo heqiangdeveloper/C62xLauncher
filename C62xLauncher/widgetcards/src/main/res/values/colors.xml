@@ -3,4 +3,7 @@
     <color name="drawer_content_bg">#FF353E52</color>
     <color name="search_item_bg">#26C3FE</color>
     <color name="search_item_text">#FFFFFF</color>
+    <color name="search_historical_start">#019CDD</color>
+    <color name="search_historical_end">#147CCC</color>
+    <color name="search_historical_color">#303E56 </color>
 </resources>
