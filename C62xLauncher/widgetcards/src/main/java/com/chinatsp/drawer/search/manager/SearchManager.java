@@ -128,7 +128,7 @@ public class SearchManager {
         searchBean.setIntentAction("com.chinatsp.appmanagement");
         if(FileUtils.getLanguage() ==1){
             searchBean.setChineseFunction("应用管理");
-            searchBean.setEnglishFunction("");
+            searchBean.setEnglishFunction("Application management");
         }else{
             searchBean.setChineseFunction("");
             searchBean.setEnglishFunction("Application management");

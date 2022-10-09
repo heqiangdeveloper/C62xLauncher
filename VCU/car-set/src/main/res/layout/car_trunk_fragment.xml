@@ -187,7 +187,9 @@
             android:text="@string/car_trunk_door_height"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:drawableEnd="@drawable/information_selector"
+            android:drawablePadding="@dimen/x2"/>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/intelligence_into"

@@ -74,8 +74,6 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
         if (VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4, expect = true)) {
             binding.lightingTurnExternal.visibility = View.GONE
             binding.line4.visibility = View.GONE
-            binding.lightingCarInside.visibility = View.GONE
-            binding.line7.visibility = View.GONE
         }
     }
 

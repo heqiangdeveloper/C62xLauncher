@@ -16,5 +16,6 @@
         android:textColor="@color/pop_text"
         android:textSize="@dimen/text_14"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="start" />
 </androidx.constraintlayout.widget.ConstraintLayout>
