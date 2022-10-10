@@ -71,6 +71,11 @@ public class CustomDialog extends AlertDialog {
             mBtnOk.setText(stringId);
         }
     }
+    public void setBtnCancelText(int stringId) {
+        if (mBtnCancel != null) {
+            mBtnCancel.setText(stringId);
+        }
+    }
 
     public void setTitleIcon(int iconResId) {
         if (ivDialogIcon != null) {

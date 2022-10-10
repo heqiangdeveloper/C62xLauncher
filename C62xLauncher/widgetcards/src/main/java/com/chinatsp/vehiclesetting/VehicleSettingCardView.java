@@ -11,6 +11,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.chinatsp.widgetcards.R;
 
+import launcher.base.utils.recent.RecentAppHelper;
+
 
 public class VehicleSettingCardView extends ConstraintLayout {
 
@@ -42,6 +44,7 @@ public class VehicleSettingCardView extends ConstraintLayout {
         ivCloseWindow = findViewById(R.id.ivVehicleSettingCloseWindow);
         ivOpenWindow.setOnClickListener(mOnClickListener);
         ivCloseWindow.setOnClickListener(mOnClickListener);
+        setOnClickListener(mOnClickListener);
     }
 
     private OnClickListener mOnClickListener = new OnClickListener() {
@@ -51,6 +54,8 @@ public class VehicleSettingCardView extends ConstraintLayout {
                 openWindow();
             } else if (v == ivCloseWindow) {
                 closeWindow();
+            } else {
+                RecentAppHelper.launchApp(getContext(), "com.chinatsp.vehicle.settings");
             }
         }
 

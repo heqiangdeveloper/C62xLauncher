@@ -74,11 +74,11 @@ public class RequestParamCreator {
         try {
             putProtocolId(jsonObject, ProtocolIds.NAVIGATION_HOME_OR_COMPANY);
             JSONObject dataObj = new JSONObject();
-            jsonObject.put("destType", destType);
-            jsonObject.put("directNavi", 0);
-            jsonObject.put("dev", 0);
-            jsonObject.put("strategy", 0);
-            jsonObject.put("newStrategy", -100);
+            dataObj.put("destType", destType);
+            dataObj.put("directNavi", 0);
+            dataObj.put("dev", 0);
+            dataObj.put("strategy", 0);
+            dataObj.put("newStrategy", -100);
             jsonObject.put("data", dataObj);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -92,6 +92,18 @@ public class RequestParamCreator {
             putProtocolId(jsonObject, 30306);
             JSONObject dataObj = new JSONObject();
             dataObj.put("pageType", pageType);
+            jsonObject.put("data", dataObj);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject.toString();
+    }
+    public String createJumpMainMapPage() {
+        JSONObject jsonObject = createCommonParamJson();
+        try {
+            putProtocolId(jsonObject, 80044);
+            JSONObject dataObj = new JSONObject();
+            dataObj.put("sourceApp", "Launcher");
             jsonObject.put("data", dataObj);
         } catch (JSONException e) {
             e.printStackTrace();

@@ -2,6 +2,7 @@ package com.chinatsp.launcher;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +26,8 @@ import com.chinatsp.apppanel.receiver.AppManagementReceiver;
 import com.chinatsp.apppanel.service.AppStoreService;
 import com.chinatsp.apppanel.service.LauncherService;
 import com.chinatsp.iquting.receiver.BootBroadcastReceiver;
+
+import launcher.base.utils.EasyLog;
 
 public class CarLauncher extends AppCompatActivity implements OnGestureAction {
     private static final String TAG = CarLauncher.class.getName();
@@ -53,7 +56,18 @@ public class CarLauncher extends AppCompatActivity implements OnGestureAction {
 
         mGestureDetector = new GestureDetector(new SlideGestureListener(this, this));
 
+        EasyLog.d(TAG, "onCreate ... Hashcode:"+hashCode());
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        ActivityManager.RunningTaskInfo runningTaskInfo = activityManager.getRunningTasks(1).get(0);
+        EasyLog.d(TAG, "onResume ... Hashcode:"+hashCode()+" , task: "+runningTaskInfo.id);
+//        EasyLog.d(TAG, "onResume ... Hashcode:"+hashCode());
+    }
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -131,6 +145,13 @@ public class CarLauncher extends AppCompatActivity implements OnGestureAction {
         unregisterReceiver(appManagementReceiver);
         stopLauncherService();
         unRegisterAppStoreService();
+        EasyLog.d(TAG, "onDestroy ... Hashcode:"+hashCode());
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EasyLog.d(TAG, "onStop ... Hashcode:"+hashCode());
     }
 
     @Override

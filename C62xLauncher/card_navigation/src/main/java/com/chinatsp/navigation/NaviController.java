@@ -170,4 +170,9 @@ public class NaviController implements INaviCallback {
         mView.refreshState(mState);
         checkNetwork();
     }
+
+    public void toMainMap() {
+        NavigationUtil.logD(TAG + "toMainMap");
+        mNaviRepository.startMainMapPage();
+    }
 }

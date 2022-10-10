@@ -258,8 +258,10 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
         if (adapter.isIncludeDrawer()) {
             smallCardPosition--;
         }
-        CardFrameViewHolder smallViewHolder = (CardFrameViewHolder) adapter.find(CardManager.getInstance().getHomeList().get(smallCardPosition));
-        smallViewHolder.hideSmallCardsInnerList();
+        if (smallCardPosition >= 0) {
+            CardFrameViewHolder smallViewHolder = (CardFrameViewHolder) adapter.find(CardManager.getInstance().getHomeList().get(smallCardPosition));
+            smallViewHolder.hideSmallCardsInnerList();
+        }
     }
 
     private void collapseAnotherIfNeed() {

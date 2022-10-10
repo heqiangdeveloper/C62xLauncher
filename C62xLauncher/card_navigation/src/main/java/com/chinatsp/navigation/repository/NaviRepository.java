@@ -19,7 +19,6 @@ public class NaviRepository extends BaseRepository {
     }
 
 
-
     private static class Holder{
         private static NaviRepository instance = new NaviRepository();
     }
@@ -58,4 +57,9 @@ public class NaviRepository extends BaseRepository {
         jsonProtocolManager.request(new RequestParamCreator().createNavigationToHomeOrCompany(0));
 //        jsonProtocolManager.request(new RequestParamCreator().createJumpPage(7));
     }
+
+    public void startMainMapPage() {
+        jsonProtocolManager.request(new RequestParamCreator().createJumpMainMapPage());
+    }
+
 }

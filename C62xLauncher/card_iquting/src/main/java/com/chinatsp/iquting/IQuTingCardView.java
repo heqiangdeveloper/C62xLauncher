@@ -23,7 +23,6 @@ import androidx.lifecycle.LifecycleRegistry;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.chinatsp.iquting.callback.INetworkChangeListener;
 import com.chinatsp.iquting.callback.IQueryIqutingLoginStatus;
 import com.chinatsp.iquting.callback.IQueryMusicLists;
 import com.chinatsp.iquting.configs.IqutingConfigs;
@@ -42,8 +41,6 @@ import com.chinatsp.iquting.utils.ToolUtils;
 import com.tencent.wecarflow.contentsdk.ContentManager;
 import com.tencent.wecarflow.contentsdk.bean.AreaContentResponseBean;
 import com.tencent.wecarflow.contentsdk.bean.BaseSongItemBean;
-import com.tencent.wecarflow.contentsdk.callback.AreaContentResult;
-import com.tencent.wecarflow.contentsdk.callback.LoginStatusResult;
 import com.tencent.wecarflow.contentsdk.callback.MediaPlayResult;
 import com.tencent.wecarflow.controlsdk.FlowPlayControl;
 import com.tencent.wecarflow.controlsdk.MediaChangeListener;
@@ -52,7 +49,6 @@ import com.tencent.wecarflow.controlsdk.PlayStateListener;
 import com.tencent.wecarflow.controlsdk.QueryCallback;
 import com.tencent.wecarflow.controlsdk.data.LaunchConfig;
 import com.tencent.wecarflow.controlsdk.data.NavigationInfo;
-import com.tencent.wecarflow.controlsdk.data.UserInfo;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -732,7 +728,7 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
             RecentAppHelper.launchApp(context,"com.tencent.wecarflow");
         }else if(v.getId() == R.id.tvIQuTingDailySongs){//每日推荐
             mTvIQuTingRankSongs.setTextColor(getResources().getColor(R.color.card_blue_default));
-            mTvIQuTingDailySongs.setTextColor(getResources().getColor(R.color.card_title_expand));
+            mTvIQuTingDailySongs.setTextColor(getResources().getColor(R.color.card_main_theme));
 
             Log.d(TAG,"onClick tvIQuTingDailySongs  isLogin: " + isLogin);
             if(isLogin){
@@ -749,7 +745,7 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
             IqutingBindService.getInstance().setTabClickEvent(TYPE_DAILYSONGS);
         }else if(v.getId() == R.id.tvIQuTingRankSongs){//音乐排行榜
             mTvIQuTingDailySongs.setTextColor(getResources().getColor(R.color.card_blue_default));
-            mTvIQuTingRankSongs.setTextColor(getResources().getColor(R.color.card_title_expand));
+            mTvIQuTingRankSongs.setTextColor(getResources().getColor(R.color.card_main_theme));
 
             Log.d(TAG,"onClick tvIQuTingRankSongs isLogin: " + isLogin);
             if(isLogin){
@@ -804,11 +800,11 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
             mNormalBigCardViewHolder.updateSongs(currentTab == 1 ? dailySongLists : rankSongLists);
         }
         if(currentTab == TYPE_DAILYSONGS){
-            mTvIQuTingDailySongs.setTextColor(getResources().getColor(R.color.card_title_expand));
+            mTvIQuTingDailySongs.setTextColor(getResources().getColor(R.color.card_main_theme));
             mTvIQuTingRankSongs.setTextColor(getResources().getColor(R.color.card_blue_default));
         }else {
             mTvIQuTingDailySongs.setTextColor(getResources().getColor(R.color.card_blue_default));
-            mTvIQuTingRankSongs.setTextColor(getResources().getColor(R.color.card_title_expand));
+            mTvIQuTingRankSongs.setTextColor(getResources().getColor(R.color.card_main_theme));
         }
 
         mContentId = currentTab;
