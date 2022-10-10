@@ -464,11 +464,14 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
                         if(mData.get(parentIndex).get(index) != null){
                             doClick(mData.get(parentIndex).get(index));
                         }else {
+                            Log.d("MyAppInfoAdapter","get location is null");
                             return;
                         }
                     }
     //                Utils.launchApp(context,packageName);
                 }
+            }else {
+                Log.d("MyAppInfoAdapter","click too fast,ignore");
             }
         }
     }
@@ -477,6 +480,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         int installed = locationBean.getInstalled();
         String pkgName = locationBean.getPackageName();
         String name = locationBean.getName();
+        Log.d("MyAppInfoAdapter","doClick installed = " + installed);
         if(installed == AppState.DOWNLOAD_PAUSED || installed == AppState.DOWNLOAD_FAIL){//下载暂停，下载失败
             AppStoreService.getInstance(context).doCommand(CommandType.RESUME,pkgName);
         }else if(installed == AppState.DOWNLOADING){//下载中
@@ -513,6 +517,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             }
         }else if(installed == AppState.INSTALLING){//安装中
             //安装中不支持打断
+            Log.d("MyAppInfoAdapter","doClick INSTALLING...");
         }else {
             RecentAppHelper.launchApp(context,pkgName);
         }
@@ -798,7 +803,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
     //dialog防抖
     protected boolean isTimeEnabled() {
         long currentTimeMillis = System.currentTimeMillis();
-        if ((currentTimeMillis - lastTimeMillis) > MIN_CLICK_INTERVAL) {
+        if (Math.abs(currentTimeMillis - lastTimeMillis) > MIN_CLICK_INTERVAL) {
             lastTimeMillis = currentTimeMillis;
             return true;
         }
