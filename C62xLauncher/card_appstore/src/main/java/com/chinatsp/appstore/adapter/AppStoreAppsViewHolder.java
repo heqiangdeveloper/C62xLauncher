@@ -68,6 +68,4 @@ public class AppStoreAppsViewHolder extends BaseViewHolder<AppInfo> {
             }
         });
     }
-
-
 }

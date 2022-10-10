@@ -29,6 +29,8 @@ public class CircleProgressView extends View {
     private RectF _rectF;
     private Rect _rect;
     private long _current = 0, _max = 100;
+    private boolean isVisible;
+    private String text = "";
     //圆弧（也可以说是圆环）的宽度
     private float _arcWidth = 5;
     //控件的宽度
@@ -110,12 +112,22 @@ public class CircleProgressView extends View {
         //绘制圆弧
         canvas.drawArc(_rectF, 270, _current * 360 / _max, false, _paint);
         //计算百分比
-//        String txt = _current * 100 / _max + "%";
-//        _paint.setStrokeWidth(0);
-//        _paint.setTextSize(40);
-//        _paint.getTextBounds(txt, 0, txt.length(), _rect);
-//        _paint.setColor(mColorProgress);
+        String txt = text;
+        _paint.setTextSize(30);
+        _paint.setTextAlign(Paint.Align.CENTER);
+        _paint.getTextBounds(txt, 0, txt.length(), _rect);
+        if(isVisible){
+            _paint.setColor(mColorProgress);
+        }else {
+            _paint.setColor(Color.TRANSPARENT);
+        }
         //绘制百分比
-        //canvas.drawText(txt, bigCircleRadius - _rect.width() / 2, bigCircleRadius + _rect.height() / 2, _paint);
+        canvas.drawText(txt, bigCircleRadius - _rect.width() / 8, bigCircleRadius + _rect.height() / 4, _paint);
+    }
+
+    public void setTextVisible(String text,boolean isVisible){
+        this.text = text;
+        this.isVisible = isVisible;
+        invalidate();
     }
 }

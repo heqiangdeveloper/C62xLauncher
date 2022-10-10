@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:padding="0dp"
-              android:layout_width="200dp"
-              android:layout_height="200dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="0dp"
+    android:layout_width="200dp"
+    android:layout_height="200dp"
     android:layout_marginTop="0dp"
     android:id="@+id/root_rl">
 
@@ -15,15 +16,24 @@
 
     </com.anarchy.classifyview.simple.widget.InsertAbleGridView>
 
-    <!--显示下载状态-->
-    <ImageView
-        android:visibility="gone"
-        android:id="@+id/load_status_iv"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_centerInParent="true"
-        android:scaleType="center"
-        android:src="@mipmap/apk_loading"/>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+        <!--显示下载状态-->
+        <ImageView
+            android:id="@+id/load_status_iv"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="center"
+            android:src="@mipmap/apk_loading"/>
+        <launcher.base.utils.view.CircleProgressView
+            android:visibility="gone"
+            android:id="@+id/load_status_circleProgressView"
+            android:layout_width="75px"
+            android:layout_height="75px"
+            app:circleProgressColor="#FFFFFF" />
+    </RelativeLayout>
 
     <ImageView
         android:id="@+id/delete_iv"
