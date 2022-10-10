@@ -12,7 +12,7 @@
         android:id="@+id/circleProgressView"
         android:layout_width="110px"
         android:layout_height="110px"
-        app:circleProgressColor="@color/card_title_expand"
+        app:circleProgressColor="@color/card_main_theme"
         app:layout_constraintStart_toStartOf="parent"
 
         app:layout_constraintBottom_toBottomOf="parent"

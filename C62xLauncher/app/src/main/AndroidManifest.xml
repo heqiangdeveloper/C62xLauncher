@@ -30,8 +30,8 @@
         android:theme="@style/Theme.C62xLauncher">
         <activity
             android:name=".CarLauncher"
-            android:screenOrientation="landscape"
             android:launchMode="singleInstance"
+            android:screenOrientation="landscape"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

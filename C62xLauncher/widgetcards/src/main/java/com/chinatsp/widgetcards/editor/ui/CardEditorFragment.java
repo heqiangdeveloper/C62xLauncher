@@ -1,6 +1,7 @@
 package com.chinatsp.widgetcards.editor.ui;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -29,6 +30,7 @@ import launcher.base.recyclerview.SimpleRcvDecoration;
 import launcher.base.utils.EasyLog;
 import launcher.base.utils.collection.IndexCheck;
 import launcher.base.utils.collection.ListKit;
+import launcher.base.utils.view.B561Toast;
 
 public class CardEditorFragment extends BaseFragment implements EditorContract{
 
@@ -136,6 +138,8 @@ public class CardEditorFragment extends BaseFragment implements EditorContract{
         if (mController.checkChanged()) {
             mController.commitEdit();
         }
+        Context applicationContext = getContext().getApplicationContext();
+        B561Toast.showShort(applicationContext,R.string.card_edit_msg_ok);
         finishActivity();
     }
 
@@ -147,8 +151,7 @@ public class CardEditorFragment extends BaseFragment implements EditorContract{
         DialogMaster dialogMaster = DialogMaster.create(getActivity(), new DialogMaster.OnPressOk() {
                     @Override
                     public void onPress(View v) {
-                        mController.commitEdit();
-                        finishActivity();
+                        okPage();
                     }
                 }, new DialogMaster.OnPressCancel() {
                     @Override
@@ -158,6 +161,8 @@ public class CardEditorFragment extends BaseFragment implements EditorContract{
                 }, 740, 488
         );
         CustomDialog editDialog = dialogMaster.getDialog();
+        editDialog.setBtnOkText(R.string.card_edit_btn_save);
+        editDialog.setBtnCancelText(R.string.card_edit_btn_cancel);
         editDialog.setTitleIcon(R.drawable.card_icon_wifi_warning);
         editDialog.show();
     }

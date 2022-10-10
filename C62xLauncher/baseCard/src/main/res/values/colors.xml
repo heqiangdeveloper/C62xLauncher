@@ -2,6 +2,7 @@
 <resources>
     <color name="white">#FFFFFF</color>
     <color name="card_blue_default">#ABD3E1</color>
+    <color name="card_main_theme">#26C3FE</color>
     <color name="card_title_expand">#26C3FE</color>
     <color name="card_grey_default">#7B7B82</color>
     <color name="card_transparent_30">#32000000</color>

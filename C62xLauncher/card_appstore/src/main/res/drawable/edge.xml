@@ -8,7 +8,7 @@
     <corners android:radius="10px"/>
 
     <!-- 设置几何形状绘制边框 红色边框 -->
-    <stroke android:color="@color/card_title_expand"
+    <stroke android:color="@color/card_main_theme"
         android:width="2px"/>
 
 </shape>

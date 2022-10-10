@@ -3,12 +3,15 @@ package com.chinatsp.econnect;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.chinatsp.widgetcards.R;
+
+import launcher.base.utils.recent.RecentAppHelper;
 
 
 public class EConnectCardView extends ConstraintLayout {
@@ -35,6 +38,12 @@ public class EConnectCardView extends ConstraintLayout {
 
     private void init(){
         LayoutInflater.from(getContext()).inflate(R.layout.card_e_connect, this);
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentAppHelper.launchApp(getContext(), "net.easyconn");
+            }
+        });
     }
 
 }

@@ -48,6 +48,7 @@ public class NaviSmallCardHolder extends NaviCardHolder {
         ivCardNaviSearch.setOnClickListener(mOnClickListener);
         ivCardNaviHome.setOnClickListener(mOnClickListener);
         ivCardNaviCompany.setOnClickListener(mOnClickListener);
+        rootView.setOnClickListener(mOnClickListener);
     }
 
     @Override
@@ -101,9 +102,15 @@ public class NaviSmallCardHolder extends NaviCardHolder {
                 toSearch();
             } else if (v == ivCardNaviHome) {
                 naviToHome();
+            } else {
+                toApp();
             }
         }
     };
+
+    private void toApp() {
+        mController.toMainMap();
+    }
 
     private void toSearch() {
         mController.startSearch();
