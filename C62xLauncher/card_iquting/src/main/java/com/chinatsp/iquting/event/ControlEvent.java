@@ -3,10 +3,12 @@ package com.chinatsp.iquting.event;
 public class ControlEvent extends Event{
     private int position;
     private String songId;
+    private int type;
 
-    public ControlEvent(int position, String songId) {
+    public ControlEvent(int type, int position, String songId) {
         this.position = position;
         this.songId = songId;
+        this.type = type;
     }
 
     public int getPosition() {
@@ -23,5 +25,13 @@ public class ControlEvent extends Event{
 
     public void setSongId(String songId) {
         this.songId = songId;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

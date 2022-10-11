@@ -212,16 +212,21 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
             Log.d(TAG_CONTENT,"boot addContentListener");
             //addContentListener();
         }else if(event instanceof ControlEvent){
+            int type = ((ControlEvent)event).getType();
             int position = ((ControlEvent)event).getPosition();
             String songId = ((ControlEvent)event).getSongId();
-            int currentTab = sp.getInt(IqutingConfigs.CURRENTTAB,1);
-            Log.d(TAG_CONTENT,"ControlEvent,position = " + position + ",songId = " + songId + ",currentTab = " + currentTab);
-            if(itemUUID.equals(songId)){
+            Log.d(TAG_CONTENT,"ControlEvent,position = " + position + ",songId = " + songId + ",type = " + type);
+            if(itemUUID.equals(songId) && type == IqutingConfigs.CLICK_TYPE_ITEM){
                 if(isPlaying){
                     FlowPlayControl.getInstance().doPause();
                 }else {
                     FlowPlayControl.getInstance().doPlay();
                 }
+            }else if(itemUUID.equals(songId) && type == IqutingConfigs.CLICK_TYPE_COVER){
+                if(!isPlaying){
+                    FlowPlayControl.getInstance().doPlay();
+                }
+                FlowPlayControl.getInstance().openPlayDetail(getContext());
             }else {
                 if(isPlaying){
                     FlowPlayControl.getInstance().doPause();
@@ -233,6 +238,9 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                             @Override
                             public void success() {
                                 Log.d(TAG_CONTENT,"MediaPlayResult success");
+                                if(type == IqutingConfigs.CLICK_TYPE_COVER){
+                                    FlowPlayControl.getInstance().openPlayDetail(getContext());
+                                }
                             }
 
                             @Override
@@ -240,6 +248,9 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                                 Log.d(TAG_CONTENT,"MediaPlayResult failed: " + i);
                                 if(i == PLAY_ERROR_NO_AUTHORITY){
                                     Toast.makeText(getContext(),"当前是vip歌曲没有权限,已为你播放其他歌曲",Toast.LENGTH_LONG).show();
+                                    if(type == IqutingConfigs.CLICK_TYPE_COVER){
+                                        FlowPlayControl.getInstance().openPlayDetail(getContext());
+                                    }
                                 }
                             }
                         });

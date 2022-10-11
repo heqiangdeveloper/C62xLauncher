@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 
 import com.chinatsp.iquting.IQuTingCardView;
 import com.chinatsp.iquting.R;
+import com.chinatsp.iquting.configs.IqutingConfigs;
 import com.chinatsp.iquting.event.ControlEvent;
 import com.tencent.wecarflow.contentsdk.ContentManager;
 import com.tencent.wecarflow.contentsdk.bean.BaseSongItemBean;
@@ -56,14 +57,16 @@ public class IQuTingSongViewHolder extends BaseViewHolder<BaseSongItemBean> {
             @Override
             public void onClick(View v) {
                 Log.d(TAG,"onClick: " + position);
-                updateSelectItem(0,!IQuTingCardView.isPlaying);
-                EventBus.getDefault().post(new ControlEvent(position,String.valueOf(baseSongItemBean.getSong_id())));
+//                updateSelectItem(0,!IQuTingCardView.isPlaying);
+//                EventBus.getDefault().post(new ControlEvent(position,String.valueOf(baseSongItemBean.getSong_id())));
+                notifyItemClick(IqutingConfigs.CLICK_TYPE_ITEM,position,String.valueOf(baseSongItemBean.getSong_id()));
             }
         });
         mSongCover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FlowPlayControl.getInstance().openPlayDetail(mSongCover.getContext());
+//                FlowPlayControl.getInstance().openPlayDetail(mSongCover.getContext());
+                notifyItemClick(IqutingConfigs.CLICK_TYPE_COVER,position,String.valueOf(baseSongItemBean.getSong_id()));
             }
         });
         if(IQuTingCardView.itemUUID.equals(String.valueOf(baseSongItemBean.getSong_id()))){
@@ -73,6 +76,10 @@ public class IQuTingSongViewHolder extends BaseViewHolder<BaseSongItemBean> {
             mIvIqutingSongItemPlayBtn.setImageResource(R.drawable.card_iquting_icon_circle_pause);
             mIvIqutingCoverContainer.setVisibility(View.INVISIBLE);
         }
+    }
+
+    private void notifyItemClick(int type,int position,String songId){
+        EventBus.getDefault().post(new ControlEvent(type,position,songId));
     }
 
     public void updateSelectItem(int position,boolean isPlaying){
