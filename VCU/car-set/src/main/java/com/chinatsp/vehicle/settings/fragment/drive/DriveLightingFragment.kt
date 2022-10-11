@@ -19,6 +19,9 @@ import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * 灯光辅助
+ */
 @AndroidEntryPoint
 class DriveLightingFragment : BaseFragment<CombineViewModel, DriveLightingFragmentBinding>(),
     ISwitchAction {
@@ -77,11 +80,13 @@ class DriveLightingFragment : BaseFragment<CombineViewModel, DriveLightingFragme
 
     private fun initSwitchOption() {
         initSwitchOption(SwitchNode.ADAS_HMA, viewModel.hmaValue)
+        updateSwitchEnable(SwitchNode.ADAS_HMA)
     }
 
     private fun addSwitchLiveDataListener() {
         viewModel.hmaValue.observe(this) {
             doUpdateSwitch(SwitchNode.ADAS_HMA, it)
+            updateSwitchEnable(SwitchNode.ADAS_HMA)
         }
     }
 
@@ -89,6 +94,13 @@ class DriveLightingFragment : BaseFragment<CombineViewModel, DriveLightingFragme
         return when (node) {
             SwitchNode.ADAS_HMA -> binding.adasLightHmaSwitch
             else -> null
+        }
+    }
+
+    override fun obtainActiveByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.ADAS_HMA -> viewModel.hmaValue.value?.enable() ?: false
+            else -> super.obtainActiveByNode(node)
         }
     }
 

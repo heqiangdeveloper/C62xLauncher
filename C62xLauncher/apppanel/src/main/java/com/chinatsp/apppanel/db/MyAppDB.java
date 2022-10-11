@@ -103,6 +103,30 @@ public class MyAppDB extends SQLiteOpenHelper {
         db.execSQL(sql_download);
     }
 
+    //创建download表
+    private void createDownloadTable(){
+        String sql_download = "CREATE TABLE " + DOWNLOAD_TABLE + "(" +
+                PARENTINDEX + " INTEGER," +
+                CHILDINDEX + " INTEGER," +
+                TITLE + " text," +
+                PACKAGENAMELOCATION + " text," +
+                IMAGE + " BLOB," +
+                NAME + " text," +
+                ADDBTN + " INTEGER," +
+                STATUS + " INTEGER," +
+                PRIORITY + " INTEGER," +
+                INSTALLED + " INTEGER," +
+                CANUNINSTALLED + " INTEGER," +
+                RESERVE1 + " text," +
+                RESERVE2 + " text," +
+                RESERVE3 + " text," +
+                RESERVE4 + " text," +
+                RESERVE5 + " text," +
+                RESERVE6 + " text" +
+                ")";
+        db.execSQL(sql_download);
+    }
+
     //判断表是否存在
     private boolean isTableExist() {
         boolean isTableExist=true;
@@ -117,6 +141,7 @@ public class MyAppDB extends SQLiteOpenHelper {
         c.close();
         return isTableExist;
     }
+
 
     //判断下载表是否存在
     private boolean isDownloadTableExist() {
@@ -443,6 +468,10 @@ public class MyAppDB extends SQLiteOpenHelper {
         if(locationBean == null){
             return;
         }
+        //判断download表是否存在
+        if(!isDownloadTableExist()){
+            createDownloadTable();
+        }
         Drawable drawable = locationBean.getImgDrawable();
         if(drawable != null){
             try{
@@ -566,6 +595,18 @@ public class MyAppDB extends SQLiteOpenHelper {
                 locationBean.getReserve3(),"","","",locationBean.getPackageName()});
     }
 
+    //更新下载失败至location表
+    public synchronized void updateFailDownloadInLocation(LocationBean locationBean){
+        if(locationBean == null){
+            return;
+        }
+        String sql = "update " + LOCATION_TABLE + " set " +
+                INSTALLED + " = ?" +
+                " where " +
+                PACKAGENAMELOCATION + " = ?";
+        db.execSQL(sql,new Object[]{locationBean.getInstalled(),locationBean.getPackageName()});
+    }
+
     public synchronized void updateDownloadStatusInDownload(LocationBean locationBean){
         if(locationBean == null){
             return;
@@ -588,7 +629,21 @@ public class MyAppDB extends SQLiteOpenHelper {
     }
 
     /*
-    * 更新Download表中可更新的版本号
+    * 更新Download表中失败状态
+     */
+    public synchronized void updateFailDownloadInDownload(LocationBean locationBean){
+        if(locationBean == null){
+            return;
+        }
+        String sql = "update " + DOWNLOAD_TABLE + " set " +
+                INSTALLED + " = ?" +
+                " where " +
+                PACKAGENAMELOCATION + " = ?";
+        db.execSQL(sql,new Object[]{locationBean.getInstalled(), locationBean.getPackageName()});
+    }
+
+    /*
+     * 更新Download表中可更新的版本号
      */
     public synchronized void updateAppUpdateInDownload(LocationBean locationBean){
         if(locationBean == null){

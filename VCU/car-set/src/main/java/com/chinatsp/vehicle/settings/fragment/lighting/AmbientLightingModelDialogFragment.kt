@@ -2,26 +2,26 @@ package com.chinatsp.vehicle.settings.fragment.lighting
 
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
-import android.widget.CompoundButton
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.VcuUtils
+import com.chinatsp.settinglib.bean.SwitchState
+import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.lamp.AmbientLightingManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
+import com.chinatsp.vehicle.settings.ISwitchAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.LightingModelDialogFragmentBinding
 import com.chinatsp.vehicle.settings.vm.light.AmbientLightingSmartModeViewModel
 import com.common.library.frame.base.BaseDialogFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
-import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AmbientLightingModelDialogFragment :
-    BaseDialogFragment<AmbientLightingSmartModeViewModel, LightingModelDialogFragmentBinding>() {
+    BaseDialogFragment<AmbientLightingSmartModeViewModel, LightingModelDialogFragmentBinding>(),
+    ISwitchAction {
 
     private val manager: AmbientLightingManager
         get() = AmbientLightingManager.instance
@@ -39,6 +39,8 @@ class AmbientLightingModelDialogFragment :
 
         initViewSelect()
         initViewSelectListener()
+
+        updateEnable(binding.speedRhythm, true, binding.alcSmartModelSwitch.isChecked)
     }
 
     private fun initViewSelectListener() {
@@ -65,19 +67,39 @@ class AmbientLightingModelDialogFragment :
             }
         }
     }
+
     private fun initViewsDisplay() {
         //根据不同车型选择不同车模及灯光
-        if (VcuUtils.isCareLevel(Level.LEVEL3,  expect = true)) {
-            binding.carModel.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.intelligent_model_lv3_mix) })
-            binding.carLight.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.img_carlight_lv3mix) })
-        }else if (VcuUtils.isCareLevel(Level.LEVEL4,  expect = true)) {
-            binding.carModel.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.intelligent_model_lv4_5_mix) })
-            binding.carLight.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.img_carlight_lv4_mix) })
-        } else if (VcuUtils.isCareLevel(Level.LEVEL5,  expect = true)) {
-            binding.carModel.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.intelligent_model_lv4_5_mix) })
-            binding.carLight.setImageDrawable(activity?.let { ContextCompat.getDrawable(it, R.drawable.img_carlight_lv5_mix) })
+        if (VcuUtils.isCareLevel(Level.LEVEL3, expect = true)) {
+            binding.carModel.setImageDrawable(activity?.let {
+                ContextCompat.getDrawable(it,
+                    R.drawable.intelligent_model_lv3_mix)
+            })
+            binding.carLight.setImageDrawable(activity?.let {
+                ContextCompat.getDrawable(it,
+                    R.drawable.img_carlight_lv3mix)
+            })
+        } else if (VcuUtils.isCareLevel(Level.LEVEL4, expect = true)) {
+            binding.carModel.setImageDrawable(activity?.let {
+                ContextCompat.getDrawable(it,
+                    R.drawable.intelligent_model_lv4_5_mix)
+            })
+            binding.carLight.setImageDrawable(activity?.let {
+                ContextCompat.getDrawable(it,
+                    R.drawable.img_carlight_lv4_mix)
+            })
+        } else if (VcuUtils.isCareLevel(Level.LEVEL5, expect = true)) {
+            binding.carModel.setImageDrawable(activity?.let {
+                ContextCompat.getDrawable(it,
+                    R.drawable.intelligent_model_lv4_5_mix)
+            })
+            binding.carLight.setImageDrawable(activity?.let {
+                ContextCompat.getDrawable(it,
+                    R.drawable.img_carlight_lv5_mix)
+            })
         }
     }
+
     override fun getWidthRatio(): Float {
         return 882f / 1920f
     }
@@ -101,27 +123,39 @@ class AmbientLightingModelDialogFragment :
         }
     }
 
-    private fun initSwitchOption(node: SwitchNode, liveData: LiveData<Boolean>) {
-        val status = liveData.value ?: node.default
-        doUpdateSwitch(node, status, true)
-    }
-
-    private fun doUpdateSwitch(node: SwitchNode, status: Boolean, immediately: Boolean = false) {
-        val swb = when (node) {
+    override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
+        return when (node) {
             SwitchNode.ALC_SMART_MODE -> binding.alcSmartModelSwitch
             else -> null
         }
-        takeIf { null != swb }?.doUpdateSwitch(swb!!, status, immediately)
     }
 
-    private fun doUpdateSwitch(swb: SwitchButton, status: Boolean, immediately: Boolean = false) {
-        if (!immediately) {
-            swb.setCheckedNoEvent(status)
-        } else {
-            swb.setCheckedImmediatelyNoEvent(status)
-        }
-        checkDisableOtherDiv(swb, status)
+    override fun getSwitchManager(): ISwitchManager {
+        return manager
     }
+
+//    private fun initSwitchOption(node: SwitchNode, liveData: LiveData<SwitchState>) {
+//        val status = liveData.value ?: node.default
+//        liveData.value?.let {
+//            doUpdateSwitch(node, it, true)
+//        }
+//    }
+//
+//    override fun doUpdateSwitch(node: SwitchNode, status: SwitchState, immediately: Boolean) {
+//        val swb = when (node) {
+//            SwitchNode.ALC_SMART_MODE -> binding.alcSmartModelSwitch
+//            else -> null
+//        }
+//    }
+
+//    private fun doUpdateSwitch(swb: SwitchButton, status: SwitchState, immediately: Boolean = false) {
+//        if (!immediately) {
+//            swb.setCheckedNoEvent(status.get())
+//        } else {
+//            swb.setCheckedImmediatelyNoEvent(status.get())
+//        }
+//        checkDisableOtherDiv(swb, status.get())
+//    }
 
     private fun initViewSelect() {
         initViewSelect(SwitchNode.SPEED_RHYTHM, viewModel.speedRhythm)
@@ -129,14 +163,16 @@ class AmbientLightingModelDialogFragment :
         initViewSelect(SwitchNode.COLOUR_BREATHE, viewModel.colourBreathe)
     }
 
-    private fun initViewSelect(node: SwitchNode, liveData: LiveData<Boolean>) {
+    private fun initViewSelect(node: SwitchNode, liveData: LiveData<SwitchState>) {
         val status = liveData.value ?: node.default
-        doUpdateViewSelect(node, status, true)
+        liveData.value?.let {
+            doUpdateViewSelect(node, it, true)
+        }
     }
 
     private fun doUpdateViewSelect(
         node: SwitchNode,
-        status: Boolean,
+        status: SwitchState,
         immediately: Boolean = false,
     ) {
         val swb = when (node) {
@@ -148,60 +184,69 @@ class AmbientLightingModelDialogFragment :
         takeIf { null != swb }?.doUpdateViewSelect(swb!!, status, immediately)
     }
 
-    private fun doUpdateViewSelect(view: View, status: Boolean, immediately: Boolean = false) {
-        view.isSelected = status
+    private fun doUpdateViewSelect(view: View, status: SwitchState, immediately: Boolean = false) {
+        view.isSelected = status.get()
     }
 
     private fun setSwitchListener() {
         binding.alcSmartModelSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            checkDisableOtherDiv(binding.alcSmartModelSwitch, isChecked)
             doUpdateSwitchOption(SwitchNode.ALC_SMART_MODE, buttonView, isChecked)
+            updateEnable(binding.speedRhythm, true, binding.alcSmartModelSwitch.isChecked)
         }
     }
 
-    private fun checkDisableOtherDiv(swb: SwitchButton, status: Boolean) {
-        if (swb == binding.alcSmartModelSwitch) {
-            val childCount = binding.layoutContent.childCount
-            val intRange = 0 until childCount
-            intRange.forEach {
-                val childAt = binding.layoutContent.getChildAt(it)
-                if (null != childAt && childAt != binding.alcSmartModelSwitch) {
-                    childAt.alpha = if (status) 1.0f else 0.6f
-                    updateViewEnable(childAt, status)
-                }
-
+    override fun onPostChecked(button: SwitchButton, status: Boolean) {
+        when (button) {
+            binding.alcSmartModelSwitch -> {
+                updateEnable(binding.speedRhythm, true, button.isChecked)
             }
+            else -> {}
         }
     }
 
-    private fun updateViewEnable(view: View?, status: Boolean) {
-        if (null == view) {
-            return
-        }
-        if (view is SwitchButton) {
-            view.isEnabled = status
-            return
-        }
-        if (view is TabControlView) {
-            view.updateEnable(status)
-            return
-        }
-        if (view is AppCompatTextView) {
-            view.isClickable = status
-            return
-        }
-        if (view is ViewGroup) {
-            val childCount = view.childCount
-            val intRange = 0 until childCount
-            intRange.forEach { updateViewEnable(view.getChildAt(it), status) }
-        }
-    }
-
-    private fun doUpdateSwitchOption(node: SwitchNode, button: CompoundButton, status: Boolean) {
-        val result = manager.doSetSwitchOption(node, status)
-        if (!result && button is SwitchButton) {
-            button.setCheckedImmediatelyNoEvent(!status)
-        }
-    }
+//    private fun checkDisableOtherDiv(swb: SwitchButton, status: Boolean) {
+//        if (swb == binding.alcSmartModelSwitch) {
+//            val childCount = binding.layoutContent.childCount
+//            val intRange = 0 until childCount
+//            intRange.forEach {
+//                val childAt = binding.layoutContent.getChildAt(it)
+//                if (null != childAt && childAt != binding.alcSmartModelSwitch) {
+//                    childAt.alpha = if (status) 1.0f else 0.6f
+//                    updateViewEnable(childAt, status)
+//                }
+//
+//            }
+//        }
+//    }
+//
+//    private fun updateViewEnable(view: View?, status: Boolean) {
+//        if (null == view) {
+//            return
+//        }
+//        if (view is SwitchButton) {
+//            view.isEnabled = status
+//            return
+//        }
+//        if (view is TabControlView) {
+//            view.updateEnable(status)
+//            return
+//        }
+//        if (view is AppCompatTextView) {
+//            view.isClickable = status
+//            return
+//        }
+//        if (view is ViewGroup) {
+//            val childCount = view.childCount
+//            val intRange = 0 until childCount
+//            intRange.forEach { updateViewEnable(view.getChildAt(it), status) }
+//        }
+//    }
+//
+//    private fun doUpdateSwitchOption(node: SwitchNode, button: CompoundButton, status: Boolean) {
+//        val result = manager.doSetSwitchOption(node, status)
+//        if (!result && button is SwitchButton) {
+//            button.setCheckedImmediatelyNoEvent(!status)
+//        }
+//    }
 
 }

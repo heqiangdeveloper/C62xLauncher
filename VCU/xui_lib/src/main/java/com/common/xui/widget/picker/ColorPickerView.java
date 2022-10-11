@@ -113,12 +113,10 @@ public class ColorPickerView extends View {
          * 水平
          */
         HORIZONTAL, // 0
-
         /**
          * 竖直
          */
         VERTICAL // 1
-
     }
 
     {
@@ -150,12 +148,9 @@ public class ColorPickerView extends View {
         this.context = context;
         final TypedArray array = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ColorPickerView, defStyleAttr, 0);
         mIndicatorColor = array.getColor(R.styleable.ColorPickerView_indicatorColor, Color.WHITE);
-
         int or = array.getInteger(R.styleable.ColorPickerView_orientation, 0);
         orientation = or == 0 ? Orientation.HORIZONTAL : Orientation.VERTICAL;
-
         mIndicatorEnable = array.getBoolean(R.styleable.ColorPickerView_indicatorEnable, true);
-
         array.recycle();
         addColorList();
     }
@@ -354,7 +349,6 @@ public class ColorPickerView extends View {
         }
         // 绘制颜色条
         canvas.drawBitmap(bitmapForColor, null, rect, paint);
-        ;
         paint.setAntiAlias(true);
         if (mIndicatorEnable) {
             if (needReDrawIndicator) {

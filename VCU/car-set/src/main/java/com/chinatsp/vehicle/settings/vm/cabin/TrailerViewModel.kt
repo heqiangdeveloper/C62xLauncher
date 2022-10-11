@@ -3,6 +3,8 @@ package com.chinatsp.vehicle.settings.vm.cabin
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.bean.RadioState
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.manager.cabin.OtherManager
 import com.chinatsp.settinglib.optios.RadioNode
@@ -25,26 +27,26 @@ class TrailerViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val manager: OtherManager by lazy { OtherManager.instance }
 
-    val trailerFunction: LiveData<Boolean>
+    val trailerFunction: LiveData<SwitchState>
         get() = _trailerFunction
 
-    private val _trailerFunction: MutableLiveData<Boolean> by lazy {
+    private val _trailerFunction: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.DRIVE_TRAILER_REMIND
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val sensitivity: LiveData<Int>
+    val sensitivity: LiveData<RadioState>
         get() = _sensitivity
 
-    private val _sensitivity: MutableLiveData<Int> by lazy {
+    private val _sensitivity: MutableLiveData<RadioState> by lazy {
         val node = RadioNode.DEVICE_TRAILER_SENSITIVITY
         MutableLiveData(manager.doGetRadioOption(node))
     }
 
-    val distance: LiveData<Int>
+    val distance: LiveData<RadioState>
         get() = _distance
 
-    private val _distance: MutableLiveData<Int> by lazy {
+    private val _distance: MutableLiveData<RadioState> by lazy {
         val node = RadioNode.DEVICE_TRAILER_DISTANCE
         MutableLiveData(manager.doGetRadioOption(node))
     }
@@ -60,7 +62,7 @@ class TrailerViewModel @Inject constructor(app: Application, model: BaseModel) :
     }
 
 
-    override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
+    override fun onSwitchOptionChanged(status: SwitchState, node: SwitchNode) {
         when (node) {
             SwitchNode.DRIVE_TRAILER_REMIND -> {
                 doUpdate(_trailerFunction, status)
@@ -69,7 +71,7 @@ class TrailerViewModel @Inject constructor(app: Application, model: BaseModel) :
         }
     }
 
-    override fun onRadioOptionChanged(node: RadioNode, value: Int) {
+    override fun onRadioOptionChanged(node: RadioNode, value: RadioState) {
         when (node) {
             RadioNode.DEVICE_TRAILER_DISTANCE -> {
                 doUpdate(_distance, value)
@@ -81,16 +83,16 @@ class TrailerViewModel @Inject constructor(app: Application, model: BaseModel) :
         }
     }
 
-    fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
-        Thread { manager.doSetRadioOption(node, value) }.start()
-        return true
-//        return manager.doSetRadioOption(node, value)
-    }
-
-    fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
-        Thread { manager.doSetSwitchOption(node, status) }.start()
-        return true
-//        return manager.doSetSwitchOption(node, status)
-    }
+//    fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
+//        Thread { manager.doSetRadioOption(node, value) }.start()
+//        return true
+////        return manager.doSetRadioOption(node, value)
+//    }
+//
+//    fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
+//        Thread { manager.doSetSwitchOption(node, status) }.start()
+//        return true
+////        return manager.doSetSwitchOption(node, status)
+//    }
 
 }

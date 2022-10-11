@@ -20,19 +20,18 @@ enum class SwitchNode(
     val default: Boolean = true,
     val careOn: Boolean = true,//当此值为true表示只有当值等于 get的on时才当为开，当此值为false表示只要值不等于get的off时就当为开
     val area: Area = Area.GLOBAL,
-    val validValues: IntArray? = null,
-    val invalidValues: IntArray? = null,
+    val inactive: IntArray? = null,
 ) {
 
     //-------------------座舱--开始-------------------
     /**
      * 座舱--方向盘--方向盘加热设置 [0x1,0,0x0,0x3]
-     * set: 0x0: Inactive; 0x1: On; 0x2: Off; 0x3: Reserved
+     * set ->【设置】0x0: Inactive  0x1: On Press  0x2: OFF  0x3: Reserved
      * get: 0x0:not heating; 0x1:heating
      */
     DRIVE_WHEEL_AUTO_HEAT(
-        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_SWH_STATUS),
-        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_SWS_HEAT_SWT),
+        get = Norm(on = 0x1, off = 0x0, signal = -1),
+        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_SWS_AUTO_HEAT_SW),
         default = true
     ),
 
@@ -44,6 +43,7 @@ enum class SwitchNode(
     DRIVE_SAFE_FORTIFY_SOUND(
         get = Norm(on = 0x2, off = 0x1, signal = CarCabinManager.ID_LOCK_SUCCESS_SOUND_STATUE),
         set = Norm(on = 0x2, off = 0x1, signal = CarCabinManager.ID_LOCK_SUCCESS_SOUND_SET),
+        inactive = intArrayOf(0x0),
         default = false
     ),
 
@@ -86,6 +86,7 @@ enum class SwitchNode(
             on = 0x1, off = 0x2, origin = Origin.HVAC,
             signal = CarHvacManager.ID_HVAC_AVN_KEY_DEFROST
         ),
+        inactive = intArrayOf(0x3),
         default = false
     ),
 
@@ -134,6 +135,7 @@ enum class SwitchNode(
     SEAT_HEAT_ALL(
         get = Norm(on = 0x2, off = 0x1, signal = -1),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_DSM_AUTO_HEAT_SW),
+        inactive = intArrayOf(0x0),
         default = true,
         careOn = false
     ),
@@ -194,7 +196,7 @@ enum class SwitchNode(
     DRIVE_BATTERY_OPTIMIZE(
         get = Norm(on = 0x0, off = 0x4, signal = CarCabinManager.ID_LOU_PWR_MNGT_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_LOU_PWR_MNG_SWT),
-        validValues = intArrayOf(0x0, 0x1, 0x2, 0x3, 0x4, 0x5),
+        inactive = intArrayOf(0x1, 0x2, 0x3, 0x5),
         default = true
     ),
 
@@ -210,13 +212,14 @@ enum class SwitchNode(
     ),
 
     /**
-     * 座舱--其它--无线充电灯（no signal）
+     * 座舱--其它--无线充电灯
      * set -> int类型数据 氛围灯Console软开关 0x0: Inactive; 0x1: ON; 0x2: OFF; 0x3: Reserved
      * get -> 氛围灯Consle软开关状态反馈 0x0: Inactive; 0x1: On; 0x2: Off; 0x3: Reserved
      */
     DRIVE_WIRELESS_CHARGING_LAMP(
         get = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_BDC_ALC_CONSLAMPSWT_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HUM_ALC_CONSLAMP_SWT),
+        inactive = intArrayOf(0x0),
         default = true
     ),
     //-------------------座舱--结束-------------------
@@ -264,7 +267,7 @@ enum class SwitchNode(
 
     /**
      * 车辆音效--声音--响度控制
-     * set -> Loudness switch响度开关[0x1,0,0x0,0x2] 0x0: Inactive 0x1: ON(default) 0x2: OFF 0x3: Reserved
+     * set -> 响度开关[0x1,0,0x0,0x2] 0x0: Inactive 0x1: ON(default) 0x2: OFF 0x3: Reserved
      * get -> Loudness switch status响度开关状态 0x0: OFF 0x1: ON
      */
     AUDIO_SOUND_LOUDNESS(
@@ -297,12 +300,8 @@ enum class SwitchNode(
             on = CarAudioManager.BEEP_VOLUME_LEVEL_MIDDLE,
             off = CarAudioManager.BEEP_VOLUME_LEVEL_CLOSE, origin = Origin.SPECIAL
         ),
-        validValues = intArrayOf(
-            CarAudioManager.BEEP_VOLUME_LEVEL_CLOSE,
-            CarAudioManager.BEEP_VOLUME_LEVEL_LOW,
-            CarAudioManager.BEEP_VOLUME_LEVEL_MIDDLE,
-            CarAudioManager.BEEP_VOLUME_LEVEL_HIGH,
-        ),
+        inactive = intArrayOf(
+            CarAudioManager.BEEP_VOLUME_LEVEL_LOW, CarAudioManager.BEEP_VOLUME_LEVEL_HIGH),
         default = false,
         careOn = false
     ),
@@ -313,7 +312,7 @@ enum class SwitchNode(
     /**
      * 车门车窗--车门--车门智能进入
      * set -> 0x1: Enabled; 0x2: Disabled
-     * get -> 0x0: No anthentication or failure 0x1: Anthentication success
+     * get -> 0x0: No anthentication or failure; 0x1: Anthentication success
      */
     DOOR_SMART_ENTER(
         get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_SMART_ENTRY_STS),
@@ -328,11 +327,12 @@ enum class SwitchNode(
      */
     WIN_REMOTE_CONTROL(
         get = Norm(
-            on = 0x01,
-            off = 0x02,
+            on = 0x1,
+            off = 0x2,
             signal = CarCabinManager.ID_REMOTE_WINDOW_RISE_FALL_STATES
         ),
-        set = Norm(on = 0x01, off = 0x02, signal = CarCabinManager.ID_REMOTE_WINDOW_RISE_FALL_SW),
+        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_REMOTE_WINDOW_RISE_FALL_SW),
+        inactive = intArrayOf(0x0, 0x3),
         default = false
     ),
 
@@ -372,6 +372,7 @@ enum class SwitchNode(
             signal = CarCabinManager.ID_FRONT_WIPER_MAINTENNANCE_STATES
         ),
         set = Norm(on = 0x01, off = 0x02, signal = CarCabinManager.ID_FRONT_WIPER_MAINTENNANCE_SW),
+        inactive = intArrayOf(0x0, 0x3),
         default = false
     ),
 
@@ -416,6 +417,7 @@ enum class SwitchNode(
     BACK_MIRROR_FOLD(
         get = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_MIRROR_FADE_IN_OUT_STATUE),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_MIRROR_FADE_IN_OUT_SET),
+        inactive = intArrayOf(0x0),
         default = true
     ),
 
@@ -474,6 +476,7 @@ enum class SwitchNode(
     ADAS_LIMBER_LEAVE(
         get = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_FRONT_VEHICLE_DRIVE_AWAY_RES),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_FRONT_VEHICLE_DRIVE_AWAY_SWT),
+        inactive = intArrayOf(0x0),
         default = true
     ),
 
@@ -487,6 +490,7 @@ enum class SwitchNode(
     ADAS_FCW(
         get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_FCW_STATUS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_FCW_SWT),
+        inactive = intArrayOf(0x0),
         default = true
     ),
 
@@ -541,14 +545,16 @@ enum class SwitchNode(
     ADAS_TSR(
         get = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_TSR_OPERATING_STATUS),
         set = Norm(on = 0x2, off = 0x3, signal = CarCabinManager.ID_TSR_SWT),
+        inactive = intArrayOf(0x1, 0x3, 0x4, 0x5, 0x6, 0x7),
         default = true,
         careOn = false
     ),
 
     /**
      * 驾驶辅助--灯光辅助--智能远光灯辅助 HMA
-     * get -> HMA status 0x0:HMA OFF 0x1:HMA passive 0x2:HMA active 0x3:Temporary failure
-     *        0x4:Camera blocked 0x5:Permanent failure 0x6: Reserved 0x7: HMA not configured
+     * get -> HMA status
+     *        0x0:HMA OFF; 0x1:HMA passive; 0x2:HMA active; 0x3:Temporary failure
+     *        0x4:Camera blocked; 0x5:Permanent failure; 0x6: Reserved; 0x7: HMA not configured
      * set -> not used in C40D/C53F HMA funtion switch signal,if not set 'HMAOnOffReq' ,
      *        the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
      *        0x0: Inactive; 0x1: On; 0x2: Off; 0x3: Reserved
@@ -556,7 +562,7 @@ enum class SwitchNode(
     ADAS_HMA(//向产品确认值
         get = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_HMA_STATUS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HMA_ON_OFF_SWT),
-        validValues = intArrayOf(0, 1, 2, 3, 4, 5, 7),
+        inactive = intArrayOf(0x1, 0x3, 0x4, 0x5, 0x6, 0x7),
         default = false,
         careOn = false
     ),
@@ -568,26 +574,34 @@ enum class SwitchNode(
      *        0x2: DOW standby（待机）; 0x3: DOW active（开启）;0x4: DOW failed（错误）
      *        0x5: CAMERA blocked（遮挡）;0x6~0x7: reserved（预留）
      *        set -> DOW开关 0x0: Inactive; 0x1: ON; 0x2: OFF;0x3: Invalid
+     * set -> DOW开关  0x0: Inactive; 0x1: ON; 0x2: OFF; 0x3: Invalid
      */
     ADAS_DOW(
         get = Norm(on = 0x3, off = 0x1, signal = CarCabinManager.ID_AVM_DOW_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_APA_AVM_DOW_SWT),
+        inactive = intArrayOf(0x0, 0x2, 0x4, 0x5, 0x6, 0x7),
         default = true,
         careOn = false
     ),
 
     /**
      * 驾驶辅助--侧后辅助--盲区监测 BSD
-     * set -> int类型数据; 0x0: Inactive; 0x1: ON; 0x2: OFF; 0x3: Reserved
-     * get -> Indicate the BSD running status of AVM, used for international car.
-               * 0x0:  Initial; 0x1: BSD off; 0x2: BSD standby; 0x3: BSD on; 0x4: BSD failed; 0x5: Camera blocked
-     *         0x6: Reserved; 0x7: Reserved
-     *         收到AvmBsdSts=1界面关，=2或3显示开，还有两个置灰的状态，你看下文档写的
+     * set -> BSD Switch. BsdSwt
+     *        0x0: Inactive; 0x1: On; 0x2: Off; 0x3: Invalid
+     * get -> Indicate the BSD running status of AVM, used for international car. AvmBsdSts
+     *        0x0:  Initial
+     *        0x1: BSD off
+     *        0x2: BSD standby
+     *        0x3: BSD on
+     *        0x4: BSD failed
+     *        0x5: Camera blocked
+     *        0x6: Reserved
+     *        0x7: Reserved
      */
     ADAS_BSD(
         get = Norm(on = 0x3, off = 0x1, signal = CarCabinManager.ID_AVM_BSD_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_APA_BSD_SWT),
-        invalidValues = intArrayOf(0x01, 0x02, 0x03),
+        inactive = intArrayOf(0x0, 0x2, 0x4, 0x5, 0x6, 0x7),
         default = true
     ),
 
@@ -599,24 +613,19 @@ enum class SwitchNode(
     ADAS_BSC(
         get = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_AVM_BSD_DISP_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_APA_BSD_DISP_SWT),
+        inactive = intArrayOf(0x0, 0x3),
         default = true
     ),
 
     /**
      * get -> MEB switch status 对应HUMMEB功能开关信号
-    0x0: Inactive
-    0x1: On
-    0x2: Off
-    0x3: Invalid
-     * set -》MEB功能开关
-    0x0: Inactive
-    0x1: ON
-    0x2: OFF
-    0x3: Invalid
+     *        0x0: Inactive; 0x1: On; 0x2: Off; 0x3: Invalid
+     * set -》MEB功能开关   0x0: Inactive; 0x1: ON; 0x2: OFF; 0x3: Invalid
      */
     ADAS_MEB(
         get = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_MEB_SWT_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_APA_MEB_SWT),
+        inactive = intArrayOf(0x0, 0x3),
         default = true
     ),
 
@@ -651,17 +660,22 @@ enum class SwitchNode(
 
     /**
      * 灯光设置--灯光--外部灯光仪式感
-     * 软开关0.4增加了信号，外部灯光仪式感设置：车机发0x4 high表示开启，0x1表示关闭。。bdc回0x0表示关，0x3表示开
+     * set -> 外部灯光仪式感设置：车机发0x4 high表示开启，0x1表示关闭
+     *        0x1: Disable; 0x2: low Varient(reserved);
+     *        0x3: Middle Varient(reserved); 0x4: Hign Varient
+     * get -> bdc回 0x0表示关，0x3表示开
+     *        0x0:Disabled; 0x1:low Varient(reserved); 0x2:Middle Varient(reserved); 0x3:Hign Varient
      */
     LIGHT_CEREMONY_SENSE(
         get = Norm(
-            on = 0x03, off = 0x00,
+            on = 0x3, off = 0x0,
             signal = CarCabinManager.ID_BCM_EL_CERE_SENSE_STATUS
         ),
         set = Norm(
-            on = 0x04, off = 0x01,
+            on = 0x4, off = 0x1,
             signal = CarCabinManager.ID_HMI_EL_CERE_SENSE_TYPE_SET
         ),
+        inactive = intArrayOf(0x1, 0x2),
         default = false
     ),
 
@@ -706,9 +720,7 @@ enum class SwitchNode(
     ALC_LOCK_HINT(
         get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ALC_HUM_LUCK_SW_RESPONSE),
         set = Norm(
-            on = 0x1, off = 0x2,
-            signal = CarCabinManager.ID_ALC_HUM_ALC_SW_LOCK_REMIND_ENABLE
-        ),
+            on = 0x1, off = 0x2, signal = CarCabinManager.ID_ALC_HUM_ALC_SW_LOCK_REMIND_ENABLE),
         default = false
     ),
 
@@ -753,9 +765,7 @@ enum class SwitchNode(
     ALC_SMART_MODE(
         get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ALC_INTE_MODE_SW_RESPONSE),
         set = Norm(
-            on = 0x1, off = 0x2,
-            signal = CarCabinManager.ID_ALC_HUM_ALC_INTELLIGENT_MODE_SW
-        ),
+            on = 0x1, off = 0x2, signal = CarCabinManager.ID_ALC_HUM_ALC_INTELLIGENT_MODE_SW),
         default = true
     ),
 
@@ -828,8 +838,12 @@ enum class SwitchNode(
         }
     }
 
-    fun isValid(value: Int) =
-        validValues?.contains(value) ?: ((get.on == value) or (get.off == value))
+//    fun isValid(value: Int) = isActive(value) or isInactive(value)
+
+    fun isActive(value: Int) = (get.on == value) or (get.off == value)
+
+    fun isInactive(value: Int) =
+        inactive?.contains(value) ?: false
 
     fun isOn(value: Int) = if (careOn) get.on == value else get.off != value
 }

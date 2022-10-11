@@ -1,5 +1,6 @@
 package com.chinatsp.settinglib.listener
 
+import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.optios.RadioNode
 
 /**
@@ -11,6 +12,6 @@ import com.chinatsp.settinglib.optios.RadioNode
  */
 interface IRadioListener : IBaseListener {
 
-    fun onRadioOptionChanged(node: RadioNode, value: Int)
+    fun onRadioOptionChanged(node: RadioNode, value: RadioState)
 
 }

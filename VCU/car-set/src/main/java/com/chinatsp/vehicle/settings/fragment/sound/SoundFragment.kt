@@ -23,7 +23,6 @@ import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.popupwindow.PopWindow
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 @AndroidEntryPoint
 class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), IOptionAction {
@@ -118,7 +117,6 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
             doUpdateSwitch(SwitchNode.AUDIO_SOUND_HUAWEI, it)
         }
         viewModel.touchToneStatus.observe(this) {
-            Timber.d("addSwitchLiveDataListener node:${SwitchNode.TOUCH_PROMPT_TONE}, status:$it")
             doUpdateSwitch(SwitchNode.TOUCH_PROMPT_TONE, it)
         }
         viewModel.speedVolumeOffset.observe(this) {

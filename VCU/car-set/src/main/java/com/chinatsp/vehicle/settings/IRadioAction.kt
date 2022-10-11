@@ -1,6 +1,7 @@
 package com.chinatsp.vehicle.settings
 
 import androidx.lifecycle.LiveData
+import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.common.xui.widget.tabbar.TabControlView
@@ -13,33 +14,36 @@ import timber.log.Timber
  * @desc   :
  * @version: 1.0
  */
-interface IRadioAction {
+interface IRadioAction : IAction {
 
     fun findRadioByNode(node: RadioNode): TabControlView?
 
+    fun obtainActiveByNode(node: RadioNode): Boolean {
+        return true
+    }
+
+    fun obtainDependByNode(node: RadioNode): Boolean {
+        return true
+    }
+
     fun getRadioManager(): IRadioManager
 
-    fun onPrevSelected(node: RadioNode, value: Int) {
+    fun onPrevSelected(node: RadioNode, value: Int) {}
 
-    }
+    fun onPostSelected(node: RadioNode, value: Int) {}
 
-    fun onPostSelected(node: RadioNode, value: Int) {
+    fun onPostSelected(tabView: TabControlView, value: Int) {}
 
-    }
-
-    fun onPostSelected(tabView: TabControlView, value: Int) {
-
-    }
-
-
-    fun initRadioOption(node: RadioNode, liveData: LiveData<Int>) {
-        val value = liveData.value ?: node.default
-        doUpdateRadio(node, value, isInit = true)
+    fun initRadioOption(node: RadioNode, liveData: LiveData<RadioState>) {
+//        val value = liveData.value?.get() ?: node.def
+        liveData.value?.let {
+            doUpdateRadio(node, it, isInit = true)
+        }
     }
 
     fun doUpdateRadio(
         node: RadioNode,
-        value: Int,
+        value: RadioState,
         timely: Boolean = false,
         isInit: Boolean = false,
     ) {
@@ -50,26 +54,26 @@ interface IRadioAction {
     fun doUpdateRadio(
         node: RadioNode,
         value: String,
-        liveData: LiveData<Int>,
+        liveData: LiveData<RadioState>,
         tabView: TabControlView,
     ) {
         val result = isCanToInt(value) && getRadioManager().doSetRadioOption(node, value.toInt())
         Timber.tag("IRadioAction").d("doUpdateRadio value:$value, result:$result, node:$node")
         tabView.takeIf { !result }?.let {
-            doUpdateRadio(it, node.obtainSelectValue(liveData.value!!))
+            doUpdateRadio(it, node.obtainSelectValue(liveData.value!!.data))
         }
     }
 
     fun doUpdateRadio(
         node: RadioNode,
-        value: Int,
+        value: RadioState,
         tabView: TabControlView?,
         timely: Boolean = false,
         isInit: Boolean = false,
     ) {
         tabView?.let {
             bindRadioData(node, tabView, isInit)
-            val result = node.obtainSelectValue(value)
+            val result = node.obtainSelectValue(value.get())
             doUpdateRadio(it, result, timely)
             onPostSelected(node, result)
         }
@@ -89,6 +93,12 @@ interface IRadioAction {
             val names = tabView.nameArray.map { it.toString() }.toTypedArray()
             val values = node.set.values.map { it.toString() }.toTypedArray()
             tabView.setItems(names, values)
+        }
+    }
+
+    fun updateRadioEnable(node: RadioNode) {
+        findRadioByNode(node)?.let {
+            updateEnable(it, obtainActiveByNode(node), obtainDependByNode(node))
         }
     }
 }

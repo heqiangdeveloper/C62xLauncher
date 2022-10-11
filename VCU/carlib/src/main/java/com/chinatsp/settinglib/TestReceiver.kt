@@ -27,8 +27,8 @@ class TestReceiver : BroadcastReceiver() {
         val value = intent.getIntExtra("value", -1)
         Timber.d("receiver ${intent.action} signal:$signal, area:$area, value:$value")
         when (intent.action) {
-            receiver_havc_signal-> {}
-            receiver_canbin_signal-> {
+            receiver_havc_signal -> {}
+            receiver_canbin_signal -> {
                 val pro = CarPropertyValue(signal!!.toInt(), area!!.toInt(), value!!.toInt())
                 GlobalManager.instance.onDispatchSignal(pro, Origin.CABIN)
             }

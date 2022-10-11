@@ -1,16 +1,16 @@
 package com.chinatsp.settinglib.manager.cabin
 
 import android.car.hardware.CarPropertyValue
+import com.chinatsp.settinglib.bean.RadioState
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IBaseListener
-import com.chinatsp.settinglib.listener.cabin.IAcManager
 import com.chinatsp.settinglib.manager.BaseManager
+import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import java.lang.ref.WeakReference
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author : luohong
@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 
 
-class ACManager private constructor() : BaseManager(), IAcManager {
+class ACManager private constructor() : BaseManager(), IOptionManager {
 
     companion object : ISignal {
         override val TAG: String = ACManager::class.java.simpleName
@@ -45,7 +45,7 @@ class ACManager private constructor() : BaseManager(), IAcManager {
         }
     }
 
-    private val aridStatus: AtomicBoolean by lazy {
+    private val aridStatus: SwitchState by lazy {
         val node = SwitchNode.AC_AUTO_ARID
 //        AtomicBoolean(node.default).apply {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
@@ -56,7 +56,7 @@ class ACManager private constructor() : BaseManager(), IAcManager {
         }
     }
 
-    private val demistStatus: AtomicBoolean by lazy {
+    private val demistStatus: SwitchState by lazy {
         val node = SwitchNode.AC_AUTO_DEMIST
 //        AtomicBoolean(node.default).apply {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
@@ -67,7 +67,7 @@ class ACManager private constructor() : BaseManager(), IAcManager {
         }
     }
 
-    private val windStatus: AtomicBoolean by lazy {
+    private val windStatus: SwitchState by lazy {
         val node = SwitchNode.AC_ADVANCE_WIND
 //        AtomicBoolean(node.default).apply {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
@@ -78,7 +78,7 @@ class ACManager private constructor() : BaseManager(), IAcManager {
         }
     }
 
-    private val comfortOption: AtomicInteger by lazy {
+    private val comfortOption: RadioState by lazy {
         val node = RadioNode.AC_COMFORT
 //        AtomicInteger(node.default).apply {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
@@ -89,12 +89,10 @@ class ACManager private constructor() : BaseManager(), IAcManager {
         }
     }
 
-    override fun doGetRadioOption(node: RadioNode): Int {
+    override fun doGetRadioOption(node: RadioNode): RadioState? {
         return when (node) {
-            RadioNode.AC_COMFORT -> {
-                comfortOption.get()
-            }
-            else -> -1
+            RadioNode.AC_COMFORT -> comfortOption.copy()
+            else -> null
         }
     }
 
@@ -125,18 +123,12 @@ class ACManager private constructor() : BaseManager(), IAcManager {
         return serial
     }
 
-    override fun doGetSwitchOption(node: SwitchNode): Boolean {
+    override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.AC_AUTO_ARID -> {
-                aridStatus.get()
-            }
-            SwitchNode.AC_ADVANCE_WIND -> {
-                windStatus.get()
-            }
-            SwitchNode.AC_AUTO_DEMIST -> {
-                demistStatus.get()
-            }
-            else -> false
+            SwitchNode.AC_AUTO_ARID -> aridStatus.copy()
+            SwitchNode.AC_ADVANCE_WIND -> windStatus.copy()
+            SwitchNode.AC_AUTO_DEMIST -> demistStatus.copy()
+            else -> null
         }
     }
 

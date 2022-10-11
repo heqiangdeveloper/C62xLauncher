@@ -22,7 +22,9 @@ import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
 
-
+/**
+ * 智能巡航
+ */
 @AndroidEntryPoint
 class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentFragmentBinding>(),
     IOptionAction {
@@ -61,6 +63,7 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
 
     private fun initRadioOption() {
         initRadioOption(RadioNode.ADAS_LIMBER_LEAVE, viewModel.limberLeaveRadio)
+        updateRadioEnable(RadioNode.ADAS_LIMBER_LEAVE)
     }
 
     private fun initVideoListener() {
@@ -88,6 +91,7 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
     private fun addRadioLiveDataListener() {
         viewModel.limberLeaveRadio.observe(this) {
             doUpdateRadio(RadioNode.ADAS_LIMBER_LEAVE, it, false)
+            updateRadioEnable(RadioNode.ADAS_LIMBER_LEAVE)
         }
     }
 
@@ -102,14 +106,19 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
     private fun initSwitchOption() {
         initSwitchOption(SwitchNode.ADAS_IACC, viewModel.cruiseAssistFunction)
         initSwitchOption(SwitchNode.ADAS_LIMBER_LEAVE, viewModel.limberLeaveFunction)
+
+        updateSwitchEnable(SwitchNode.ADAS_IACC)
+        updateSwitchEnable(SwitchNode.ADAS_LIMBER_LEAVE)
     }
 
     private fun addSwitchLiveDataListener() {
         viewModel.cruiseAssistFunction.observe(this) {
             doUpdateSwitch(SwitchNode.ADAS_IACC, it)
+            updateSwitchEnable(SwitchNode.ADAS_IACC)
         }
         viewModel.limberLeaveFunction.observe(this) {
             doUpdateSwitch(SwitchNode.ADAS_LIMBER_LEAVE, it)
+            updateSwitchEnable(SwitchNode.ADAS_LIMBER_LEAVE)
         }
     }
 
@@ -118,6 +127,21 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
             SwitchNode.ADAS_IACC -> binding.accessCruiseCruiseAssist
             SwitchNode.ADAS_LIMBER_LEAVE -> binding.adasForwardLeaveSwitch
             else -> null
+        }
+    }
+
+    override fun obtainActiveByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.ADAS_IACC -> viewModel.cruiseAssistFunction.value?.enable() ?: false
+            SwitchNode.ADAS_LIMBER_LEAVE -> viewModel.limberLeaveFunction.value?.enable() ?: false
+            else -> super.obtainActiveByNode(node)
+        }
+    }
+
+    override fun obtainActiveByNode(node: RadioNode): Boolean {
+        return when (node) {
+            RadioNode.ADAS_LIMBER_LEAVE -> viewModel.limberLeaveRadio.value?.enable() ?: false
+            else -> super.obtainActiveByNode(node)
         }
     }
 

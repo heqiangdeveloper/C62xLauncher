@@ -3,6 +3,7 @@ package com.chinatsp.settinglib.manager.access
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
 import com.chinatsp.settinglib.Constant
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.manager.BaseManager
@@ -12,9 +13,7 @@ import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.optios.Area
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
-import timber.log.Timber
 import java.lang.ref.WeakReference
-import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * @author : luohong
@@ -27,23 +26,15 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class BackMirrorManager private constructor() : BaseManager(), ISwitchManager {
 
-    private val backMirrorFold: AtomicBoolean by lazy {
+    private val backMirrorFold: SwitchState by lazy {
         val node = SwitchNode.BACK_MIRROR_FOLD
-//        AtomicBoolean(node.default).apply {
-//            val result = readIntProperty(node.get.signal, node.get.origin, Area.GLOBAL)
-//            doUpdateSwitchValue(node, this, result)
-//        }
         return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
-    private val backMirrorDown: AtomicBoolean by lazy {
+    private val backMirrorDown: SwitchState by lazy {
         val node = SwitchNode.BACK_MIRROR_DOWN
-//        AtomicBoolean(node.default).apply {
-//            val result = readIntProperty(node.get.signal, node.get.origin, Area.GLOBAL)
-//            doUpdateSwitchValue(node, this, result)
-//        }
         return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
@@ -68,15 +59,11 @@ class BackMirrorManager private constructor() : BaseManager(), ISwitchManager {
         }
     }
 
-    override fun doGetSwitchOption(node: SwitchNode): Boolean {
+    override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.BACK_MIRROR_FOLD -> {
-                backMirrorFold.get()
-            }
-            SwitchNode.BACK_MIRROR_DOWN -> {
-                backMirrorDown.get()
-            }
-            else -> false
+            SwitchNode.BACK_MIRROR_FOLD -> backMirrorFold.copy()
+            SwitchNode.BACK_MIRROR_DOWN -> backMirrorDown.copy()
+            else -> null
         }
     }
 

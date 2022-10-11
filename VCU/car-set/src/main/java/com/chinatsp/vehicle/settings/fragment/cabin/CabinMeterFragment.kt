@@ -38,11 +38,13 @@ class CabinMeterFragment : BaseFragment<MeterViewModel, CabinMeterFragmentBindin
 
     private fun initRadioOption() {
         initRadioOption(RadioNode.DRIVE_METER_SYSTEM, viewModel.systemRadioOption)
+        updateRadioEnable(RadioNode.DRIVE_METER_SYSTEM)
     }
 
     private fun addRadioLiveDataListener() {
         viewModel.systemRadioOption.observe(this) {
             doUpdateRadio(RadioNode.DRIVE_METER_SYSTEM, it, false)
+            updateRadioEnable(RadioNode.DRIVE_METER_SYSTEM)
         }
     }
 
@@ -58,6 +60,13 @@ class CabinMeterFragment : BaseFragment<MeterViewModel, CabinMeterFragmentBindin
         return when (node) {
             RadioNode.DRIVE_METER_SYSTEM -> binding.cabinMeterSystemOptions
             else -> null
+        }
+    }
+
+    override fun obtainActiveByNode(node: RadioNode): Boolean {
+        return when (node) {
+            RadioNode.DRIVE_METER_SYSTEM -> viewModel.systemRadioOption.value?.enable() ?: false
+            else -> super.obtainActiveByNode(node)
         }
     }
 
@@ -80,17 +89,11 @@ class CabinMeterFragment : BaseFragment<MeterViewModel, CabinMeterFragmentBindin
         }
         if (selectIndex == 1) {
             binding.ivMeasurement.setImageDrawable(activity?.let {
-                ContextCompat.getDrawable(
-                    it,
-                    R.drawable.company_mph
-                )
+                ContextCompat.getDrawable(it, R.drawable.company_mph)
             })
         } else {
             binding.ivMeasurement.setImageDrawable(activity?.let {
-                ContextCompat.getDrawable(
-                    it,
-                    R.drawable.company_km
-                )
+                ContextCompat.getDrawable(it, R.drawable.company_km)
             })
         }
     }

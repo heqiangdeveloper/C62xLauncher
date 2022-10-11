@@ -1,6 +1,7 @@
 package com.chinatsp.drawer.search;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -9,13 +10,20 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.chinatsp.drawer.adapter.SearchAdapter;
 import com.chinatsp.drawer.bean.SearchBean;
+import com.chinatsp.drawer.bean.SearchHistoricalBean;
 import com.chinatsp.drawer.search.db.SearchDB;
+import com.chinatsp.drawer.search.manager.SearchManager;
 import com.chinatsp.drawer.search.utils.FileUtils;
+import com.chinatsp.drawer.search.utils.Flowlayout;
 import com.chinatsp.widgetcards.R;
 
 import java.util.List;
@@ -25,12 +33,13 @@ import launcher.base.utils.EasyLog;
 
 public class LauncherSearchActivity extends AppCompatActivity implements SearchAdapter.OnItemClickListerner {
     private final String TAG = "LauncherSearchActivity";
-
+    private Flowlayout tagLayout;
     private EditText mEdittextSearchWord;
     private SearchDB db;
     private RecyclerView rcvSearch;
     private SearchAdapter adapter;
 
+    // 存放标签数据的数组
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +51,8 @@ public class LauncherSearchActivity extends AppCompatActivity implements SearchA
         rcvSearch.setLayoutManager(new LinearLayoutManager(
                 LauncherSearchActivity.this,
                 LinearLayoutManager.VERTICAL, false));
+        tagLayout = findViewById(R.id.tagLayout);
+        initLayout();
     }
 
     public void clickBackBtn(View view) {
@@ -74,24 +85,35 @@ public class LauncherSearchActivity extends AppCompatActivity implements SearchA
             if (s.toString().length() > 0) {
                 findViewById(R.id.search_hint).setVisibility(View.GONE);
                 //List<SearchBean> beans = FileUtils.fuzzySearch(s.toString(),db.getData());
+                if (!db.isTableExist() && db.countLocation() == 0) {
+                    SearchManager.getInstance().insertDB();
+                }
                 List<SearchBean> beans = db.getData1(s.toString());
                 if (beans.size() == 0) {
                     findViewById(R.id.rcvSearch).setVisibility(View.GONE);
+                    findViewById(R.id.historical_layout).setVisibility(View.GONE);
                     findViewById(R.id.list_hint).setVisibility(View.VISIBLE);
                 } else {
                     findViewById(R.id.rcvSearch).setVisibility(View.VISIBLE);
                     findViewById(R.id.list_hint).setVisibility(View.GONE);
-                    adapter = new SearchAdapter(LauncherSearchActivity.this, beans,s.toString());
+                    findViewById(R.id.historical_layout).setVisibility(View.GONE);
+                    adapter = new SearchAdapter(LauncherSearchActivity.this, beans, s.toString());
                     adapter.setOnItemClickListerner(LauncherSearchActivity.this);
                     rcvSearch.setAdapter(adapter);
                 }
             } else {
                 findViewById(R.id.search_hint).setVisibility(View.VISIBLE);
+                findViewById(R.id.historical_layout).setVisibility(View.VISIBLE);
                 findViewById(R.id.rcvSearch).setVisibility(View.GONE);
                 findViewById(R.id.list_hint).setVisibility(View.GONE);
             }
         }
     };
+
+    public void clearHistorical() {
+        db.deleteHistorical();
+        initLayout();
+    }
 
     @Override
     protected void onDestroy() {
@@ -104,15 +126,77 @@ public class LauncherSearchActivity extends AppCompatActivity implements SearchA
         findViewById(R.id.search_hint).setVisibility(View.VISIBLE);
         findViewById(R.id.rcvSearch).setVisibility(View.GONE);
         findViewById(R.id.list_hint).setVisibility(View.GONE);
-        mEdittextSearchWord.setText("");
-        if(TextUtils.isEmpty(bean.getIntentInterface())){
+        List<SearchHistoricalBean> list = db.getHistoricalData();
+        if (list.size() == 0) {
+            db.insertSearchHistorical(mEdittextSearchWord.getText().toString());
+            initLayout();
+        } else {
+            boolean historicalIdentical = false;
+            for (int i = 0; i < list.size(); i++) {
+                //判断是否数据库有相同内容，如果有就不插入数据库
+                if (list.get(i).getContent().equals(mEdittextSearchWord.getText().toString())) {
+                    historicalIdentical = true;
+                    break;
+                }
+            }
+            if (!historicalIdentical) {
+                if (list.size() == 10) {
+                    db.deleteLocation1();
+                }
+                //插入搜索历史记录
+                db.insertSearchHistorical(mEdittextSearchWord.getText().toString());
+                initLayout();
+            }
+        }
+        if (TextUtils.isEmpty(bean.getIntentInterface())) {
             //打开应用
-            FileUtils.launchApp(this,bean.getIntentAction());
-        }else {
+            FileUtils.launchApp(this, bean.getIntentAction());
+        } else {
             //打开某个应用某个模块
             Intent intent = new Intent(bean.getIntentAction());
             intent.putExtra("type", bean.getIntentInterface());
             startActivity(intent);
+        }
+        mEdittextSearchWord.setText("");
+    }
+
+    private void initLayout() {
+        List<SearchHistoricalBean> list = db.getHistoricalData();
+        tagLayout.removeAllViewsInLayout();
+        if (list.size() == 0) {
+            findViewById(R.id.historical_layout).setVisibility(View.GONE);
+        } else {
+            findViewById(R.id.historical_layout).setVisibility(View.VISIBLE);
+        }
+        for (int i = 0; i < list.size(); i++) {
+            final View view = LayoutInflater.from(LauncherSearchActivity.this).inflate(R.layout.search_historical, tagLayout, false);
+            final TextView text = view.findViewById(R.id.text);  //查找  到当前     textView
+            final ImageView icon = view.findViewById(R.id.delete_icon);  //查找  到当前  删除小图标
+            text.setText(list.get(i).getContent());
+            int finalI = i;
+            text.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mEdittextSearchWord.setText(list.get(finalI).getContent());
+                    mEdittextSearchWord.setSelection(list.get(finalI).getContent().length());//将光标移到文字最后
+                }
+            });
+            text.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    icon.setVisibility(View.VISIBLE);
+                    text.setBackground(ContextCompat.getDrawable(LauncherSearchActivity.this, R.drawable.soushuo_sel_bg_198));
+                    return true;
+                }
+            });
+            icon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    db.deleteCountHistorical(list.get(finalI).getContent());
+                    initLayout();
+                }
+            });
+            tagLayout.addView(view);
         }
     }
 }

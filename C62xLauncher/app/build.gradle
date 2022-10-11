@@ -10,7 +10,7 @@ android {
         applicationId "com.chinatsp.launcher"
         minSdkVersion rootProject.ext.android.minSdkVersion
         targetSdkVersion rootProject.ext.android.targetSdkVersion
-        versionCode 20220929
+        versionCode 20221010
         versionName "1.10"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

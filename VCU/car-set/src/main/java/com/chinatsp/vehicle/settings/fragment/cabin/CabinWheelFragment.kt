@@ -57,6 +57,8 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
         setRadioListener()
         initRouteListener()
         initViewsDisplay()
+
+        updateRadioEnable(RadioNode.DRIVE_EPS_MODE)
     }
 
     private fun showHintDialog(title: Int, content: Int) {
@@ -77,13 +79,13 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
 
     private fun initSwitchOption() {
         val hintId =
-            if (viewModel.swhFunction.value == true) R.string.switch_turn_on else R.string.switch_turn_off
+            if (viewModel.swhFunction.value?.get() == true) R.string.switch_turn_on else R.string.switch_turn_off
         binding.wheelAutomaticHeatingTv.text = ResUtils.getString(hintId)
     }
 
     private fun addSwitchLiveDataListener() {
         viewModel.swhFunction.observe(this) {
-            val hintId = if (it) R.string.switch_turn_on else R.string.switch_turn_off
+            val hintId = if (it.get()) R.string.switch_turn_on else R.string.switch_turn_off
             binding.wheelAutomaticHeatingTv.text = ResUtils.getString(hintId)
         }
     }
@@ -95,6 +97,7 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
     private fun addRadioLiveDataListener() {
         viewModel.epsMode.observe(this) {
             doUpdateRadio(RadioNode.DRIVE_EPS_MODE, it, false)
+            updateRadioEnable(RadioNode.DRIVE_EPS_MODE)
         }
     }
 
@@ -129,6 +132,13 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
             else -> null
         }
         return tabView
+    }
+
+    override fun obtainActiveByNode(node: RadioNode): Boolean {
+        return when (node) {
+            RadioNode.DRIVE_EPS_MODE -> viewModel.epsMode.value?.enable() ?: false
+            else -> super.obtainActiveByNode(node)
+        }
     }
 
     override fun getRadioManager(): IRadioManager {

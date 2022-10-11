@@ -3,6 +3,7 @@ package com.chinatsp.weaher.viewholder;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,6 +21,7 @@ import com.iflytek.autofly.weather.entity.WeatherInfo;
 import java.util.List;
 
 import launcher.base.recyclerview.SimpleRcvDecoration;
+import launcher.base.utils.recent.RecentAppHelper;
 
 public class WeatherBigCardHolder extends WeatherCardHolder{
     private final Resources mResources;
@@ -65,6 +67,16 @@ public class WeatherBigCardHolder extends WeatherCardHolder{
             SimpleRcvDecoration decoration = new SimpleRcvDecoration(44, layoutManager);
             mRcvCardWeatherWeek.addItemDecoration(decoration);
         }
+        //点击RecyclerView空白区域，跳转至天气
+        mRcvCardWeatherWeek.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(v.getId() != 0){
+                    RecentAppHelper.launchApp(v.getContext(),"com.iflytek.autofly.weather");
+                }
+                return false;
+            }
+        });
         mRcvCardWeatherWeek.setLayoutManager(layoutManager);
         mRcvCardWeatherWeek.setAdapter(mWeekDayAdapter);
     }

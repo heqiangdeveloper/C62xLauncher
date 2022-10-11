@@ -1,7 +1,6 @@
 package com.chinatsp.settinglib.manager.sound
 
 import android.car.hardware.CarPropertyValue
-import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.mcu.CarMcuManager
 import android.car.media.CarAudioManager
 import android.content.ContentUris
@@ -9,6 +8,8 @@ import android.database.ContentObserver
 import android.net.Uri
 import com.chinatsp.settinglib.BaseApp
 import com.chinatsp.settinglib.VcuUtils
+import com.chinatsp.settinglib.bean.RadioState
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.constants.OffLine
 import com.chinatsp.settinglib.listener.IBaseListener
@@ -22,8 +23,6 @@ import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import timber.log.Timber
 import java.lang.ref.WeakReference
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author : luohong
@@ -47,9 +46,7 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
 
     fun injectAudioManager(audioManager: CarAudioManager) {
         this.manager = audioManager
-        manager?.let {
-            it.registerVolumeChangeObserver(volumeListener)
-        }
+        manager?.registerVolumeChangeObserver(volumeListener)
     }
 
     override val careSerials: Map<Origin, Set<Int>> by lazy {
@@ -80,7 +77,7 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    private val toneAtomic: AtomicBoolean by lazy {
+    private val toneAtomic: SwitchState by lazy {
         val node = SwitchNode.AUDIO_SOUND_TONE
 //        AtomicBoolean(node.default).apply {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
@@ -91,9 +88,9 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    private val touchTone: AtomicBoolean by lazy {
+    private val touchTone: SwitchState by lazy {
         val node = SwitchNode.TOUCH_PROMPT_TONE
-        AtomicBoolean(node.default).apply {
+        SwitchState(node.default).apply {
             val result = getPromptToneLevel(node)
             val status = node.isOn(result)
             Timber.d("initAtomicBoolean node:$node, status:$status, result:$result, current:${get()}")
@@ -111,7 +108,7 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    private val huaweiAtomic: AtomicBoolean by lazy {
+    private val huaweiAtomic: SwitchState by lazy {
         val node = SwitchNode.AUDIO_SOUND_HUAWEI
 //        AtomicBoolean(node.default).apply {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
@@ -122,7 +119,7 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    private val offsetAtomic: AtomicBoolean by lazy {
+    private val offsetAtomic: SwitchState by lazy {
         val node = volumeSpeedSwitch
 //        AtomicBoolean(node.default).apply {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
@@ -132,7 +129,7 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
-    private val loudnessAtomic: AtomicBoolean by lazy {
+    private val loudnessAtomic: SwitchState by lazy {
         val node = SwitchNode.AUDIO_SOUND_LOUDNESS
 //        AtomicBoolean(node.default).apply {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
@@ -143,25 +140,25 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    private val icmVolumeLevel: AtomicInteger by lazy {
+    private val icmVolumeLevel: RadioState by lazy {
         val node = RadioNode.ICM_VOLUME_LEVEL
-        AtomicInteger(node.default).apply {
+        RadioState(node.def).apply {
             val value = readIntValue(node)
             doUpdateRadioValue(node, this, value)
         }
     }
 
-    private val naviAudioMixing: AtomicInteger by lazy {
+    private val naviAudioMixing: RadioState by lazy {
         val node = RadioNode.NAVI_AUDIO_MIXING
-        AtomicInteger(node.default).apply {
+        RadioState(node.def).apply {
             val value = VcuUtils.getConfigParameters(OffLine.NAVI_MIXING, 2)
             doUpdateRadioValue(node, this, value)
         }
     }
 
-    private val speedVolumeOffset: AtomicInteger by lazy {
+    private val speedVolumeOffset: RadioState by lazy {
         val node = RadioNode.SPEED_VOLUME_OFFSET
-        AtomicInteger(node.default).apply {
+        RadioState(node.def).apply {
             val value = readIntValue(node)
             doUpdateRadioValue(node, this, value)
         }
@@ -286,7 +283,7 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    fun onSwitchChanged(node: SwitchNode, atomic: AtomicBoolean, value: Any?) {
+    fun onSwitchChanged(node: SwitchNode, atomic: SwitchState, value: Any?) {
         if (value !is Int) {
             Timber.e("onSwitchChanged but value is not Int! node:$node, value:$value")
             return
@@ -360,18 +357,12 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         return serial
     }
 
-    override fun doGetRadioOption(node: RadioNode): Int {
+    override fun doGetRadioOption(node: RadioNode): RadioState? {
         return when (node) {
-            RadioNode.ICM_VOLUME_LEVEL -> {
-                icmVolumeLevel.get()
-            }
-            RadioNode.NAVI_AUDIO_MIXING -> {
-                naviAudioMixing.get()
-            }
-            RadioNode.SPEED_VOLUME_OFFSET -> {
-                speedVolumeOffset.get()
-            }
-            else -> -1
+            RadioNode.ICM_VOLUME_LEVEL -> icmVolumeLevel.copy()
+            RadioNode.NAVI_AUDIO_MIXING -> naviAudioMixing.copy()
+            RadioNode.SPEED_VOLUME_OFFSET -> speedVolumeOffset.copy()
+            else -> null
         }
     }
 
@@ -390,24 +381,14 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    override fun doGetSwitchOption(node: SwitchNode): Boolean {
+    override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.AUDIO_SOUND_TONE -> {
-                toneAtomic.get()
-            }
-            SwitchNode.AUDIO_SOUND_HUAWEI -> {
-                huaweiAtomic.get()
-            }
-            volumeSpeedSwitch -> {
-                offsetAtomic.get()
-            }
-            SwitchNode.AUDIO_SOUND_LOUDNESS -> {
-                loudnessAtomic.get()
-            }
-            SwitchNode.TOUCH_PROMPT_TONE -> {
-                touchTone.get()
-            }
-            else -> false
+            SwitchNode.AUDIO_SOUND_TONE -> toneAtomic.copy()
+            SwitchNode.AUDIO_SOUND_HUAWEI -> huaweiAtomic.copy()
+            SwitchNode.AUDIO_SOUND_LOUDNESS -> loudnessAtomic.copy()
+            SwitchNode.TOUCH_PROMPT_TONE -> touchTone.copy()
+            volumeSpeedSwitch -> offsetAtomic.copy()
+            else -> null
         }
     }
 
@@ -431,23 +412,6 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
             else -> false
         }
     }
-
-
-    /**
-     *
-     * @param switchNode 开关选项
-     * @param isStatus 开关期望状态
-     */
-    fun doSwitchOption(switchNode: SwitchNode, isStatus: Boolean): Boolean {
-        return when (switchNode) {
-            SwitchNode.AUDIO_SOUND_LOUDNESS -> {
-                val signal = CarCabinManager.ID_HUM_LOUD_SW
-                writeProperty(signal, switchNode.value(isStatus), Origin.CABIN)
-            }
-            else -> false
-        }
-    }
-
 
     override fun onHvacPropertyChanged(property: CarPropertyValue<*>) {
         super.onHvacPropertyChanged(property)
@@ -548,9 +512,7 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
 
     private fun getPromptToneLevel(node: SwitchNode): Int {
         if (node.get.origin == Origin.SPECIAL) {
-            val result = manager?.let {
-                it.beepLevel
-            } ?: node.get.off
+            val result = manager?.beepLevel ?: node.get.off
             Timber.d("doActionSignal GET: node:%s, result:%s", node, result)
             return result
         }
@@ -588,22 +550,24 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    private fun writeProperty(node: RadioNode, value: Int, atomic: AtomicInteger): Boolean {
+    private fun writeProperty(node: RadioNode, value: Int, atomic: RadioState): Boolean {
         val success = node.isValid(value, false)
                 && writeProperty(node.set.signal, value, node.set.origin)
         if (success && develop) {
-            doUpdateRadioValue(node, atomic, value) { _node, _value ->
+            val newValue = node.obtainSelectValue(value, false)
+            doUpdateRadioValue(node, atomic, newValue) { _node, _value ->
                 doOptionChanged(_node, _value)
             }
         }
         return success
     }
 
-    private fun writeNaviMixing(node: RadioNode, value: Int, atomic: AtomicInteger): Boolean {
+    private fun writeNaviMixing(node: RadioNode, value: Int, atomic: RadioState): Boolean {
         val success = node.isValid(value, false)
                 && VcuUtils.setConfigParameters(OffLine.NAVI_MIXING, value)
         if (success && develop) {
-            doUpdateRadioValue(node, atomic, value) { _node, _value ->
+            val newValue = node.obtainSelectValue(value, false)
+            doUpdateRadioValue(node, atomic, newValue) { _node, _value ->
                 doOptionChanged(_node, _value)
             }
         }

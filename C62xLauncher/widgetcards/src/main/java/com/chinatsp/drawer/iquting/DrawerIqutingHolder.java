@@ -31,6 +31,8 @@ import com.tencent.wecarflow.controlsdk.FlowPlayControl;
 import com.tencent.wecarflow.controlsdk.MediaChangeListener;
 import com.tencent.wecarflow.controlsdk.MediaInfo;
 import com.tencent.wecarflow.controlsdk.PlayStateListener;
+import com.tencent.wecarflow.controlsdk.QueryCallback;
+import com.tencent.wecarflow.controlsdk.data.LaunchConfig;
 import com.tencent.wecarflow.controlsdk.data.NavigationInfo;
 
 import java.util.List;
@@ -54,7 +56,7 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
     private static final int TYPE_NO_NETWORK = 1;
     private static final int TYPE_NO_LOGIN = 2;
     private static final int TYPE_NORMAL = 3;
-    public String itemUUID = "";
+    public static String itemUUIDInDrawer = "";
     public static boolean isPlaying = false;
     private SharedPreferences sp;
     private AreaContentResponseBean mAreaContentResponseBeanDaily;
@@ -108,8 +110,8 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
         mSongsAdapter = new SongsAdapter(mContext, new IPlayItemCallback() {
             @Override
             public void onItemClick(int position, long songId) {
-                Log.d(TAG,"onItemClick,position = " + position + ",songId = " + songId);
-                if(itemUUID.equals(songId)){
+                Log.d(TAG,"onItemClick,position = " + position + ",songId = " + songId + ",itemUUIDInDrawer = " + itemUUIDInDrawer);
+                if(itemUUIDInDrawer.equals(String.valueOf(songId))){
                     if(isPlaying){
                         FlowPlayControl.getInstance().doPause();
                     }else {
@@ -160,6 +162,7 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
                             addIqutingMediaChangeListener();//监听爱趣听媒体的变化
                             addIqutingPlayStateListener();//监听爱趣听播放状态变化
 
+                            queryPlayStatus();//查看当前的歌曲信息
                             showUI(TYPE_NORMAL);
                             int currentTab = sp.getInt(IqutingConfigs.CURRENTTAB,1);
                             if(currentTab == TYPE_DAILYSONGS){
@@ -201,6 +204,49 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
                 mServiceConnectTask.execute();
             }
         }
+    }
+
+    //查询播放状态
+    private void queryPlayStatus(){
+        FlowPlayControl.getInstance().queryPlaying(new QueryCallback<Boolean>() {
+            @Override
+            public void onError(int i) {
+                Log.d(TAG,"queryPlayStatus onError: " + i);
+            }
+
+            @Override
+            public void onSuccess(Boolean aBoolean) {
+                Log.d(TAG,"queryPlayStatus onSuccess: isPlaying=" + aBoolean);
+                if(!aBoolean){
+                    //爱趣听没有播放，需要先调起爱趣听播放服务
+                    LaunchConfig launchConfig = new LaunchConfig(false,false);
+                    FlowPlayControl.getInstance().launchPlayService(mContext,launchConfig);
+                }
+                isPlaying = aBoolean;
+                getCurrentMediaInfo();
+            }
+        });
+    }
+
+    //获取当前的媒体信息
+    private void getCurrentMediaInfo(){
+        FlowPlayControl.getInstance().queryCurrent(new QueryCallback<MediaInfo>() {
+            @Override
+            public void onError(int i) {
+                Log.d(TAG,"getCurrentMediaInfo onError i = " + i);
+            }
+
+            @Override
+            public void onSuccess(MediaInfo mediaInfo) {
+                if(mediaInfo != null){
+                    itemUUIDInDrawer = mediaInfo.getItemUUID();
+                    Log.d(TAG,"getCurrentMediaInfo onSuccess " + itemUUIDInDrawer);
+                }else{
+                    itemUUIDInDrawer = "";
+                    Log.d(TAG,"mediaInfo is null");
+                }
+            }
+        });
     }
 
     private void getMusicList(int contentId){
@@ -256,10 +302,10 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
             @Override
             public void onMediaChange(MediaInfo mediaInfo) {
                 if(mediaInfo != null){
-                    itemUUID = mediaInfo.getItemUUID();
-                    Log.d(TAG,"onMediaChange " + itemUUID);
+                    itemUUIDInDrawer = mediaInfo.getItemUUID();
+                    Log.d(TAG,"onMediaChange " + itemUUIDInDrawer);
                 }else {
-                    itemUUID = "";
+                    itemUUIDInDrawer = "";
                     Log.d(TAG,"onMediaChange, mediaInfo is null");
                 }
             }

@@ -1,10 +1,8 @@
 package com.chinatsp.vehicle.settings.fragment.lighting
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.view.ViewGroup
-import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.ISwitchManager
@@ -20,7 +18,6 @@ import com.chinatsp.vehicle.settings.vm.light.AmbientLightingViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.picker.ColorPickerView
-import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -28,7 +25,10 @@ import timber.log.Timber
 class AmbientLightingFragment :
     BaseFragment<AmbientLightingViewModel, LightingAtmosphereFragmentBinding>(),
     ColorPickerView.OnColorPickerChangeListener, ISwitchAction {
-    var status: Boolean = false
+
+    var modeFragment: DialogFragment? = null
+    var settingFragment: DialogFragment? = null
+
     private val manager: AmbientLightingManager
         get() = AmbientLightingManager.instance
 
@@ -49,10 +49,31 @@ class AmbientLightingFragment :
         initBrightnessSeekBar()
         initColorSeekBar()
         initViewLight()
+
+        updateOptionActive()
+    }
+
+    private fun isLightingActive(): Boolean {
+        return isFront || isBack
+    }
+
+    private val isFront: Boolean
+        get() = binding.ambientFrontLightingSwitch.isChecked && (viewModel.frontLighting.value?.enable()
+            ?: false)
+
+    private val isBack: Boolean
+        get() = binding.ambientBackLightingSwitch.isChecked && (viewModel.backLighting.value?.enable()
+            ?: false)
+
+    private fun updateOptionActive() {
+        updateSwitchEnable(SwitchNode.FRONT_AMBIENT_LIGHTING)
+        updateSwitchEnable(SwitchNode.BACK_AMBIENT_LIGHTING)
+
+        updateEnable(binding.brightnessLayout, true, isLightingActive())
     }
 
     private fun initViewsDisplay() {
-        if (VcuUtils.isCareLevel( Level.LEVEL3,Level.LEVEL4, expect = true)) {
+        if (VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4, expect = true)) {
             binding.lightingFrontLayout.visibility = View.VISIBLE
             binding.lightingBackLayout.visibility = View.GONE
         } else {
@@ -62,8 +83,8 @@ class AmbientLightingFragment :
     }
 
     private fun initViewLight() {
-        if (VcuUtils.isCareLevel(Level.LEVEL3,  expect = true)) {
-            if (binding.ambientFrontLightingSwitch.isChecked) {
+        if (VcuUtils.isCareLevel(Level.LEVEL3, expect = true)) {
+            if (isFront) {
                 binding.imgLight1.visibility = View.VISIBLE
                 binding.imgLight2.visibility = View.GONE
                 binding.imgLight3.visibility = View.VISIBLE
@@ -76,8 +97,8 @@ class AmbientLightingFragment :
                 binding.imgLight4.visibility = View.GONE
                 binding.imgLight5.visibility = View.GONE
             }
-        } else if (VcuUtils.isCareLevel( Level.LEVEL4, expect = true)) {
-            if (binding.ambientFrontLightingSwitch.isChecked) {
+        } else if (VcuUtils.isCareLevel(Level.LEVEL4, expect = true)) {
+            if (isFront) {
                 binding.imgLight1.visibility = View.VISIBLE
                 binding.imgLight2.visibility = View.GONE
                 binding.imgLight3.visibility = View.VISIBLE
@@ -91,19 +112,19 @@ class AmbientLightingFragment :
                 binding.imgLight5.visibility = View.GONE
             }
         } else if (VcuUtils.isCareLevel(Level.LEVEL5, expect = true)) {
-            if (binding.ambientFrontLightingSwitch.isChecked && binding.ambientBackLightingSwitch.isChecked) {
+            if (isFront && isBack) {
                 binding.imgLight1.visibility = View.VISIBLE
                 binding.imgLight2.visibility = View.VISIBLE
                 binding.imgLight3.visibility = View.VISIBLE
                 binding.imgLight4.visibility = View.VISIBLE
                 binding.imgLight5.visibility = View.VISIBLE
-            } else if (binding.ambientFrontLightingSwitch.isChecked && !binding.ambientBackLightingSwitch.isChecked) {
+            } else if (isFront && !isBack) {
                 binding.imgLight1.visibility = View.VISIBLE
                 binding.imgLight2.visibility = View.VISIBLE
                 binding.imgLight3.visibility = View.VISIBLE
                 binding.imgLight4.visibility = View.VISIBLE
                 binding.imgLight5.visibility = View.GONE
-            } else if (!binding.ambientFrontLightingSwitch.isChecked && binding.ambientBackLightingSwitch.isChecked) {
+            } else if (!isFront && isBack) {
                 binding.imgLight1.visibility = View.GONE
                 binding.imgLight2.visibility = View.GONE
                 binding.imgLight3.visibility = View.GONE
@@ -122,23 +143,25 @@ class AmbientLightingFragment :
     private fun initSwitchOption() {
         initSwitchOption(SwitchNode.FRONT_AMBIENT_LIGHTING, viewModel.frontLighting)
         initSwitchOption(SwitchNode.BACK_AMBIENT_LIGHTING, viewModel.backLighting)
-        updateLayoutEnable()
+//        updateLayoutEnable()
     }
 
-    private fun updateLayoutEnable() {
-        val status =
-            binding.ambientFrontLightingSwitch.isChecked || binding.ambientBackLightingSwitch.isChecked
-        checkDisableOtherDiv(status, binding.lightingTitleLayout)
-    }
+//    private fun updateLayoutEnable() {
+//        val status =
+//            binding.ambientFrontLightingSwitch.isChecked || binding.ambientBackLightingSwitch.isChecked
+//        checkDisableOtherDiv(status, binding.lightingTitleLayout)
+//    }
 
     private fun addSwitchLiveDataListener() {
         viewModel.frontLighting.observe(this) {
             doUpdateSwitch(SwitchNode.FRONT_AMBIENT_LIGHTING, it)
-            updateLayoutEnable()
+            updateEnable(binding.brightnessLayout, true, isLightingActive())
+            resetDisplay()
         }
         viewModel.backLighting.observe(this) {
             doUpdateSwitch(SwitchNode.BACK_AMBIENT_LIGHTING, it)
-            updateLayoutEnable()
+            updateEnable(binding.brightnessLayout, true, isLightingActive())
+            resetDisplay()
         }
     }
 
@@ -150,6 +173,15 @@ class AmbientLightingFragment :
         }
     }
 
+    override fun obtainActiveByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.FRONT_AMBIENT_LIGHTING -> viewModel.frontLighting.value?.enable() ?: false
+            SwitchNode.BACK_AMBIENT_LIGHTING -> viewModel.backLighting.value?.enable() ?: false
+            else -> super.obtainActiveByNode(node)
+        }
+    }
+
+
     override fun getSwitchManager(): ISwitchManager {
         return manager
     }
@@ -158,25 +190,23 @@ class AmbientLightingFragment :
         binding.ambientFrontLightingSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.FRONT_AMBIENT_LIGHTING, buttonView, isChecked)
             initViewLight()
-            updateLayoutEnable()
+            updateEnable(binding.brightnessLayout, true, isLightingActive())
+            resetDisplay()
         }
         binding.ambientBackLightingSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.BACK_AMBIENT_LIGHTING, buttonView, isChecked)
             initViewLight()
-            updateLayoutEnable()
+            updateEnable(binding.brightnessLayout, true, isLightingActive())
+            resetDisplay()
         }
     }
 
     private fun setCheckedChangeListener() {
         binding.lightingInstall.setOnClickListener {
-            if (!status) {
-                showSettingFragment()
-            }
+            showSettingFragment()
         }
         binding.lightingIntelligentModel.setOnClickListener {
-            if (!status) {
-                showModeFragment()
-            }
+            showModeFragment()
         }
 
         binding.brightnessLayout.setOnClickListener {
@@ -184,48 +214,77 @@ class AmbientLightingFragment :
             binding.brightnessAdjust.visibility = View.VISIBLE
         }
         binding.closeIv.setOnClickListener {
-            binding.lightingTitleLayout.visibility = View.VISIBLE
             binding.brightnessAdjust.visibility = View.GONE
+            binding.lightingTitleLayout.visibility = View.VISIBLE
         }
         binding.colorLayout.setOnClickListener {
-            if (!status) {
-                binding.lightingTitleLayout.visibility = View.GONE
-                binding.pickerLayout.visibility = View.VISIBLE
-            }
+            binding.lightingTitleLayout.visibility = View.GONE
+            binding.pickerLayout.visibility = View.VISIBLE
         }
+
         binding.pickerCloseIv.setOnClickListener {
-            binding.lightingTitleLayout.visibility = View.VISIBLE
             binding.pickerLayout.visibility = View.GONE
+            binding.lightingTitleLayout.visibility = View.VISIBLE
         }
     }
 
     private fun showModeFragment() {
-        val fragment = AmbientLightingModelDialogFragment()
+        modeFragment = AmbientLightingModelDialogFragment()
         activity?.supportFragmentManager?.let {
-            fragment.show(it, fragment::javaClass.name)
+            modeFragment!!.show(it, modeFragment!!::javaClass.name)
         }
         cleanPopupSerial(Constant.AMBIENT_LIGHTING_MODE)
     }
 
     private fun showSettingFragment() {
-        val fragment = AmbientLightingSettingDialogFragment()
+        settingFragment = AmbientLightingSettingDialogFragment()
         activity?.supportFragmentManager?.let {
-            fragment.show(it, fragment::javaClass.name)
+            settingFragment!!.show(it, settingFragment!!::javaClass.name)
         }
         cleanPopupSerial(Constant.AMBIENT_LIGHTING_SETTING)
     }
 
+    private fun resetDisplay() {
+        if (!isLightingActive()) {
+            var view: View = binding.brightnessAdjust
+            val visibility = View.GONE
+            if (visibility != view.visibility) {
+                view.visibility = visibility
+            }
+            view = binding.pickerLayout
+            if (visibility != view.visibility) {
+                view.visibility = visibility
+            }
+            modeFragment?.let {
+                if (it.showsDialog || it.isAdded) {
+                    it.dismiss()
+                }
+                modeFragment = null
+            }
+            settingFragment?.let {
+                if (it.showsDialog || it.isAdded) {
+                    it.dismiss()
+                }
+                settingFragment = null
+            }
+            view = binding.lightingTitleLayout
+            if (View.VISIBLE != view.visibility) {
+                view.visibility = View.VISIBLE
+            }
+        }
+    }
+
     private fun cleanPopupSerial(serial: String) {
         if (activity is IRoute) {
-            val iroute = activity as IRoute
-            iroute.cleanPopupLiveDate(serial)
+            val route = activity as IRoute
+            route.cleanPopupLiveDate(serial)
         }
     }
 
     private fun initRouteListener() {
         if (activity is IRoute) {
-            val iroute = activity as IRoute
-            val liveData = iroute.obtainPopupLiveData()
+            val route = activity as IRoute
+            val liveData = route.obtainPopupLiveData()
             liveData.observe(this) {
                 if (it.equals(Constant.AMBIENT_LIGHTING_MODE)) {
                     showModeFragment()
@@ -242,55 +301,49 @@ class AmbientLightingFragment :
         binding.ambientLightingBrightness.max = node.max
         binding.ambientLightingBrightness.setValueNoEvent(viewModel.ambientBrightness.value!!)
         binding.ambientLightingBrightness.setOnSeekBarListener { _, value ->
-            status = value == 0
-//            checkDisableOtherDiv(status)
             viewModel.doBrightnessChanged(node, value)
             binding.ambientLightingBrightness.setValueNoEvent(viewModel.ambientBrightness.value!!)
         }
-        status = viewModel.ambientBrightness.value == 0
-//        checkDisableOtherDiv(status)
     }
 
-    private fun checkDisableOtherDiv(status: Boolean) {
-        val childCount = binding.lightingTitleLayout.childCount
-        val intRange = 0 until childCount
-        intRange.forEach {
-            val childAt = binding.lightingTitleLayout.getChildAt(it)
-            if (null != childAt && childAt != binding.brightnessLayout) {
-                childAt.alpha = if (status) 0.7f else 1.0f
-                updateViewEnable(childAt, status)
-            }
-        }
-
-    }
-
-    private fun updateViewEnable(view: View?, status: Boolean) {
-        if (null == view) {
-            return
-        }
-        if (view is SwitchButton) {
-            view.isEnabled = status
-            return
-        }
-        if (view is TabControlView) {
-            view.updateEnable(status)
-            return
-        }
-        if (view is ViewGroup) {
-            val childCount = view.childCount
-            val intRange = 0 until childCount
-            intRange.forEach { updateViewEnable(view.getChildAt(it), status) }
-        }
-    }
+//    private fun checkDisableOtherDiv(status: Boolean) {
+//        val childCount = binding.lightingTitleLayout.childCount
+//        val intRange = 0 until childCount
+//        intRange.forEach {
+//            val childAt = binding.lightingTitleLayout.getChildAt(it)
+//            if (null != childAt && childAt != binding.brightnessLayout) {
+//                childAt.alpha = if (status) 0.7f else 1.0f
+//                updateViewEnable(childAt, status)
+//            }
+//        }
+//
+//    }
+//
+//    private fun updateViewEnable(view: View?, status: Boolean) {
+//        if (null == view) {
+//            return
+//        }
+//        if (view is SwitchButton) {
+//            view.isEnabled = status
+//            return
+//        }
+//        if (view is TabControlView) {
+//            view.updateEnable(status)
+//            return
+//        }
+//        if (view is ViewGroup) {
+//            val childCount = view.childCount
+//            val intRange = 0 until childCount
+//            intRange.forEach { updateViewEnable(view.getChildAt(it), status) }
+//        }
+//    }
 
     private fun addSeekBarLiveDataListener() {
         viewModel.ambientBrightness.observe(this) {
             binding.ambientLightingBrightness.setValueNoEvent(it)
-            Timber.d("addSeekBarLiveDataListener Brightness index:%s", it)
         }
         viewModel.ambientColor.observe(this) {
-            Timber.d("addSeekBarLiveDataListener ambientColor index:%s", it)
-            binding.picker.setIndicatorColorIndex(it)
+            binding.picker.setIndicatorIndex(it)
         }
     }
 
@@ -313,18 +366,18 @@ class AmbientLightingFragment :
 
     }
 
-    private fun checkDisableOtherDiv(status: Boolean, view: View) {
-        if (view is ViewGroup) {
-            view.isEnabled = status
-            for (index in 0 until view.childCount) {
-                val child = view.getChildAt(index)
-                checkDisableOtherDiv(status, child)
-            }
-        } else {
-            view.alpha = if (status) 1.0f else 0.6f
-            view.isEnabled = status
-        }
-    }
+//    private fun checkDisableOtherDiv(status: Boolean, view: View) {
+//        if (view is ViewGroup) {
+//            view.isEnabled = status
+//            for (index in 0 until view.childCount) {
+//                val child = view.getChildAt(index)
+//                checkDisableOtherDiv(status, child)
+//            }
+//        } else {
+//            view.alpha = if (status) 1.0f else 0.6f
+//            view.isEnabled = status
+//        }
+//    }
 
 
 }

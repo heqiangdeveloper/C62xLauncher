@@ -85,17 +85,24 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
         initRadioOption(RadioNode.ADAS_LANE_ASSIST_MODE, viewModel.laneAssistMode)
         initRadioOption(RadioNode.ADAS_LDW_STYLE, viewModel.ldwStyle)
         initRadioOption(RadioNode.ADAS_LDW_SENSITIVITY, viewModel.ldwSensitivity)
+
+        updateRadioEnable(RadioNode.ADAS_LANE_ASSIST_MODE)
+        updateRadioEnable(RadioNode.ADAS_LDW_STYLE)
+        updateRadioEnable(RadioNode.ADAS_LDW_SENSITIVITY)
     }
 
     private fun addRadioLiveDataListener() {
         viewModel.laneAssistMode.observe(this) {
             doUpdateRadio(RadioNode.ADAS_LANE_ASSIST_MODE, it, false)
+            updateRadioEnable(RadioNode.ADAS_LANE_ASSIST_MODE)
         }
         viewModel.ldwStyle.observe(this) {
             doUpdateRadio(RadioNode.ADAS_LDW_STYLE, it, false)
+            updateRadioEnable(RadioNode.ADAS_LDW_STYLE)
         }
         viewModel.ldwSensitivity.observe(this) {
             doUpdateRadio(RadioNode.ADAS_LDW_SENSITIVITY, it, false)
+            updateRadioEnable(RadioNode.ADAS_LDW_SENSITIVITY)
         }
     }
 
@@ -113,8 +120,7 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
         binding.adasLaneLdwSensitivityRadio.let {
             it.setOnTabSelectionChangedListener { _, value ->
                 doUpdateRadio(
-                    RadioNode.ADAS_LDW_SENSITIVITY, value, viewModel.ldwSensitivity, it
-                )
+                    RadioNode.ADAS_LDW_SENSITIVITY, value, viewModel.ldwSensitivity, it)
             }
         }
     }
@@ -122,11 +128,13 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
 
     private fun initSwitchOption() {
         initSwitchOption(SwitchNode.ADAS_LANE_ASSIST, viewModel.laneAssistFunction)
+        updateSwitchEnable(SwitchNode.ADAS_LANE_ASSIST)
     }
 
     private fun addSwitchLiveDataListener() {
         viewModel.laneAssistFunction.observe(this) {
             doUpdateSwitch(SwitchNode.ADAS_LANE_ASSIST, it)
+            updateSwitchEnable(SwitchNode.ADAS_LANE_ASSIST)
         }
     }
 
@@ -134,6 +142,22 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
         return when (node) {
             SwitchNode.ADAS_LANE_ASSIST -> binding.adasLaneLaneAssistSwitch
             else -> null
+        }
+    }
+
+    override fun obtainActiveByNode(node: RadioNode): Boolean {
+        return when (node) {
+            RadioNode.ADAS_LANE_ASSIST_MODE -> viewModel.laneAssistMode.value?.enable() ?: false
+            RadioNode.ADAS_LDW_STYLE -> viewModel.ldwStyle.value?.enable() ?: false
+            RadioNode.ADAS_LDW_SENSITIVITY -> viewModel.ldwSensitivity.value?.enable() ?: false
+            else -> super.obtainActiveByNode(node)
+        }
+    }
+
+    override fun obtainActiveByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.ADAS_LANE_ASSIST -> viewModel.laneAssistFunction.value?.enable() ?: false
+            else -> super.obtainActiveByNode(node)
         }
     }
 
@@ -147,10 +171,7 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
 
     override fun findRadioByNode(node: RadioNode): TabControlView? {
         return when (node) {
-            RadioNode.ADAS_LANE_ASSIST_MODE -> {
-//                binding.adasLaneLaneAssistRadio.getChildAt(0).visibility = View.GONE
-                binding.adasLaneLaneAssistRadio
-            }
+            RadioNode.ADAS_LANE_ASSIST_MODE -> binding.adasLaneLaneAssistRadio
             RadioNode.ADAS_LDW_STYLE -> binding.adasLaneLdwStyleRadio
             RadioNode.ADAS_LDW_SENSITIVITY -> binding.adasLaneLdwSensitivityRadio
             else -> null

@@ -3,6 +3,7 @@ package com.chinatsp.vehicle.settings.vm.adas
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.manager.adas.ForwardManager
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -18,18 +19,18 @@ class ForwardViewModel @Inject constructor(app: Application, model: BaseModel) :
     private val manager: ForwardManager
         get() = ForwardManager.instance
 
-    val fcwFunction: LiveData<Boolean>
+    val fcwFunction: LiveData<SwitchState>
         get() = _fcwFunction
 
-    private val _fcwFunction: MutableLiveData<Boolean> by lazy {
+    private val _fcwFunction: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.ADAS_FCW
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val aebFunction: LiveData<Boolean>
+    val aebFunction: LiveData<SwitchState>
         get() = _aebFunction
 
-    private val _aebFunction: MutableLiveData<Boolean> by lazy {
+    private val _aebFunction: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.ADAS_AEB
         MutableLiveData(manager.doGetSwitchOption(node))
     }
@@ -44,7 +45,7 @@ class ForwardViewModel @Inject constructor(app: Application, model: BaseModel) :
         super.onDestroy()
     }
 
-    override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
+    override fun onSwitchOptionChanged(status: SwitchState, node: SwitchNode) {
         when (node) {
             SwitchNode.ADAS_FCW -> {
                 doUpdate(_fcwFunction, status)

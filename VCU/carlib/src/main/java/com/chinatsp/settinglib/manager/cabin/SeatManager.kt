@@ -3,6 +3,8 @@ package com.chinatsp.settinglib.manager.cabin
 import android.car.hardware.CarPropertyValue
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
+import com.chinatsp.settinglib.bean.RadioState
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.sound.ISoundListener
 import com.chinatsp.settinglib.listener.sound.ISoundManager
@@ -12,8 +14,6 @@ import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author : luohong
@@ -32,7 +32,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    private val mainMeetFunction: AtomicBoolean by lazy {
+    private val mainMeetFunction: SwitchState by lazy {
         val node = SwitchNode.SEAT_MAIN_DRIVE_MEET
 //        AtomicBoolean(node.default).apply {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
@@ -43,7 +43,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    private val forkMeetFunction: AtomicBoolean by lazy {
+    private val forkMeetFunction: SwitchState by lazy {
         val node = SwitchNode.SEAT_FORK_DRIVE_MEET
 //        AtomicBoolean(node.default).apply {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
@@ -54,7 +54,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    private val seatHeatFunction: AtomicBoolean by lazy {
+    private val seatHeatFunction: SwitchState by lazy {
         val node = SwitchNode.SEAT_HEAT_ALL
         return@lazy createAtomicBoolean(node, Constant.SEAT_HEAT_SWITCH) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
@@ -105,8 +105,8 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
     }
 
 
-    override fun doGetRadioOption(node: RadioNode): Int {
-        return -1
+    override fun doGetRadioOption(node: RadioNode): RadioState? {
+        return null
     }
 
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
@@ -114,18 +114,12 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
     }
 
 
-    override fun doGetSwitchOption(node: SwitchNode): Boolean {
+    override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.SEAT_MAIN_DRIVE_MEET -> {
-                mainMeetFunction.get()
-            }
-            SwitchNode.SEAT_FORK_DRIVE_MEET -> {
-                forkMeetFunction.get()
-            }
-            SwitchNode.SEAT_HEAT_ALL -> {
-                seatHeatFunction.get()
-            }
-            else -> false
+            SwitchNode.SEAT_MAIN_DRIVE_MEET -> mainMeetFunction.copy()
+            SwitchNode.SEAT_FORK_DRIVE_MEET -> forkMeetFunction.copy()
+            SwitchNode.SEAT_HEAT_ALL -> seatHeatFunction.copy()
+            else -> null
         }
     }
 
@@ -181,7 +175,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
         return success
     }
 
-    private fun writeProperty(node: SwitchNode, status: Boolean, atomic: AtomicBoolean): Boolean {
+    private fun writeProperty(node: SwitchNode, status: Boolean, atomic: SwitchState): Boolean {
         val success = writeProperty(node.set.signal, node.value(status), node.set.origin)
         if (success && develop) {
             doUpdateSwitchValue(node, atomic, status) { _node, _status ->
@@ -191,7 +185,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
         return success
     }
 
-    private fun writeProperty(node: RadioNode, value: Int, atomic: AtomicInteger): Boolean {
+    private fun writeProperty(node: RadioNode, value: Int, atomic: RadioState): Boolean {
         val success = node.isValid(value, false)
                 && writeProperty(node.set.signal, value, node.set.origin)
         if (success && develop) {

@@ -48,7 +48,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull SearchAdapter.ViewHolder holder, int position) {
         //holder.name.setText(searchBeanList.get(position).getChineseFunction());
-        holder.secondaryName.setText(searchBeanList.get(position).getChineseFunctionLevel());
         holder.itemSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,7 +61,14 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         for (int i = 0; i < searchStr.length(); i++) {
             str[i] = searchStr.charAt(i) + "";
         }
-        holder.name.append(FileUtils.fillColor(context,searchBeanList.get(position).getChineseFunction(),str,R.color.search_item_bg));
+        if(FileUtils.getLanguage() ==1){
+            holder.secondaryName.setText(searchBeanList.get(position).getChineseFunctionLevel());
+            holder.name.append(FileUtils.fillColor(context,searchBeanList.get(position).getChineseFunction(),str,R.color.search_item_bg));
+        }else{
+            holder.secondaryName.setText(searchBeanList.get(position).getEnglishFunctionLevel());
+            holder.name.append(FileUtils.fillColor(context,searchBeanList.get(position).getEnglishFunction(),str,R.color.search_item_bg));
+        }
+
     }
 
     @Override

@@ -4,6 +4,8 @@ import android.car.hardware.CarPropertyValue
 import com.chinatsp.settinglib.AppExecutors
 import com.chinatsp.settinglib.SettingManager
 import com.chinatsp.settinglib.VcuUtils
+import com.chinatsp.settinglib.bean.RadioState
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.*
 import com.chinatsp.settinglib.optios.Area
 import com.chinatsp.settinglib.optios.Progress
@@ -14,8 +16,6 @@ import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.bean.Cmd
 import timber.log.Timber
 import java.lang.ref.WeakReference
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.locks.ReadWriteLock
 import java.util.concurrent.locks.ReentrantReadWriteLock
 
@@ -41,9 +41,9 @@ abstract class BaseManager : IManager {
 
     fun createAtomicBoolean(
         node: SwitchNode,
-        block: ((AtomicBoolean, Int) -> Unit),
-    ): AtomicBoolean {
-        val result = AtomicBoolean(node.default)
+        block: ((SwitchState, Int) -> Unit),
+    ): SwitchState {
+        val result = SwitchState(node.default)
         readProperty(node.get.signal, node.get.origin) {
             block(result, it)
         }
@@ -53,9 +53,9 @@ abstract class BaseManager : IManager {
     fun createAtomicBoolean(
         node: SwitchNode,
         key: String,
-        block: ((AtomicBoolean, Int) -> Unit),
-    ): AtomicBoolean {
-        val result = AtomicBoolean(node.default)
+        block: ((SwitchState, Int) -> Unit),
+    ): SwitchState {
+        val result = SwitchState(node.default)
         AppExecutors.get()?.singleIO()?.execute {
             val resultValue = VcuUtils.getInt(key = key, value = node.value(node.default))
             block(result, resultValue)
@@ -63,8 +63,8 @@ abstract class BaseManager : IManager {
         return result
     }
 
-    fun createAtomicInteger(node: RadioNode, block: ((AtomicInteger, Int) -> Unit)): AtomicInteger {
-        val result = AtomicInteger(node.default)
+    fun createAtomicInteger(node: RadioNode, block: ((RadioState, Int) -> Unit)): RadioState {
+        val result = RadioState(node.def)
         readProperty(node.get.signal, node.get.origin) {
             block(result, it)
         }
@@ -158,11 +158,7 @@ abstract class BaseManager : IManager {
         signalService.readProperty(id, origin, area, block)
     }
 
-//    fun readProperty(id: Int, origin: Origin, areaValue: Int, block:((Int)->Unit)) {
-//        signalService.readProperty(id, origin, areaValue, block)
-//    }
-
-    override fun doSwitchChanged(node: SwitchNode, status: Boolean) {
+    override fun doSwitchChanged(node: SwitchNode, status: SwitchState) {
         val readLock = readWriteLock.readLock()
         try {
             readLock.lock()
@@ -178,7 +174,7 @@ abstract class BaseManager : IManager {
         }
     }
 
-    override fun doOptionChanged(node: RadioNode, value: Int) {
+    override fun doOptionChanged(node: RadioNode, value: RadioState) {
         val readLock = readWriteLock.readLock()
         try {
             readLock.lock()

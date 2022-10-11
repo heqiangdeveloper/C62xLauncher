@@ -3,6 +3,8 @@ package com.chinatsp.settinglib.manager.adas
 import android.car.hardware.CarPropertyValue
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
+import com.chinatsp.settinglib.bean.RadioState
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.manager.BaseManager
@@ -12,8 +14,6 @@ import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import java.lang.ref.WeakReference
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author : luohong
@@ -46,9 +46,9 @@ class SideBackManager : BaseManager(), IOptionManager {
         }
     }
 
-    private val showAreaValue: AtomicInteger by lazy {
+    private val showAreaValue: RadioState by lazy {
         val node = RadioNode.ADAS_SIDE_BACK_SHOW_AREA
-        AtomicInteger(node.default).apply {
+        RadioState(node.def).apply {
             val value = VcuUtils.getInt(
                 key = Constant.SHOW_AREA,
                 value = node.get.values[0]
@@ -57,7 +57,7 @@ class SideBackManager : BaseManager(), IOptionManager {
         }
     }
 
-    private val dowValue: AtomicBoolean by lazy {
+    private val dowValue: SwitchState by lazy {
         val node = SwitchNode.ADAS_DOW
 //        AtomicBoolean(node.default).apply {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
@@ -68,7 +68,7 @@ class SideBackManager : BaseManager(), IOptionManager {
         }
     }
 
-    private val bsdValue: AtomicBoolean by lazy {
+    private val bsdValue: SwitchState by lazy {
         val node = SwitchNode.ADAS_BSD
 //        AtomicBoolean(node.default).apply {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
@@ -79,7 +79,7 @@ class SideBackManager : BaseManager(), IOptionManager {
         }
     }
 
-    private val bscValue: AtomicBoolean by lazy {
+    private val bscValue: SwitchState by lazy {
         val node = SwitchNode.ADAS_BSC
 //        AtomicBoolean(node.default).apply {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
@@ -90,16 +90,16 @@ class SideBackManager : BaseManager(), IOptionManager {
         }
     }
 
-    private val mebValue: AtomicBoolean by lazy {
+    private val mebValue: SwitchState by lazy {
         val node = SwitchNode.ADAS_MEB
         return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
-    private val guidesValue: AtomicBoolean by lazy {
+    private val guidesValue: SwitchState by lazy {
         val node = SwitchNode.ADAS_GUIDES
-        AtomicBoolean(node.default).apply {
+        SwitchState(node.default).apply {
             val result = VcuUtils.getInt(
                 key = Constant.AUXILIARY_LINE,
                 value = node.get.on
@@ -133,12 +133,12 @@ class SideBackManager : BaseManager(), IOptionManager {
 
     }
 
-    override fun doGetRadioOption(node: RadioNode): Int {
+    override fun doGetRadioOption(node: RadioNode): RadioState? {
         return when (node) {
             RadioNode.ADAS_SIDE_BACK_SHOW_AREA -> {
-                showAreaValue.get()
+                showAreaValue.copy()
             }
-            else -> -1
+            else -> null
         }
     }
 
@@ -170,24 +170,14 @@ class SideBackManager : BaseManager(), IOptionManager {
         return result
     }
 
-    override fun doGetSwitchOption(node: SwitchNode): Boolean {
+    override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.ADAS_DOW -> {
-                dowValue.get()
-            }
-            SwitchNode.ADAS_BSD -> {
-                bsdValue.get()
-            }
-            SwitchNode.ADAS_BSC -> {
-                bscValue.get()
-            }
-            SwitchNode.ADAS_GUIDES -> {
-                guidesValue.get()
-            }
-            SwitchNode.ADAS_MEB -> {
-                mebValue.get()
-            }
-            else -> false
+            SwitchNode.ADAS_DOW -> dowValue.copy()
+            SwitchNode.ADAS_BSD -> bsdValue.copy()
+            SwitchNode.ADAS_BSC -> bscValue.copy()
+            SwitchNode.ADAS_MEB -> mebValue.copy()
+            SwitchNode.ADAS_GUIDES -> guidesValue.copy()
+            else -> null
         }
     }
 
@@ -212,7 +202,7 @@ class SideBackManager : BaseManager(), IOptionManager {
         }
     }
 
-    fun doSetSwitchOption(node: SwitchNode, status: Boolean, atomic: AtomicBoolean): Boolean {
+    fun doSetSwitchOption(node: SwitchNode, status: Boolean, atomic: SwitchState): Boolean {
         val success = writeProperty(node.set.signal, node.value(status), node.set.origin)
         if (success && develop) {
             doUpdateSwitchValue(node, atomic, status) { _node, _status ->

@@ -3,6 +3,8 @@ package com.chinatsp.vehicle.settings.vm.adas
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.bean.RadioState
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.manager.adas.CombineManager
 import com.chinatsp.settinglib.optios.RadioNode
@@ -19,16 +21,16 @@ class CombineViewModel @Inject constructor(app: Application, model: BaseModel) :
     private val manager: CombineManager
         get() = CombineManager.instance
 
-    val hmaValue: LiveData<Boolean> by lazy { _hmaValue }
+    val hmaValue: LiveData<SwitchState> by lazy { _hmaValue }
 
-    private val _hmaValue: MutableLiveData<Boolean> by lazy {
+    private val _hmaValue: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.ADAS_HMA
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val slaValue: LiveData<Boolean> by lazy { _slaValue }
+    val slaValue: LiveData<SwitchState> by lazy { _slaValue }
 
-    private val _slaValue: MutableLiveData<Boolean> by lazy {
+    private val _slaValue: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.ADAS_TSR
         MutableLiveData(manager.doGetSwitchOption(node))
     }
@@ -44,7 +46,7 @@ class CombineViewModel @Inject constructor(app: Application, model: BaseModel) :
     }
 
 
-    override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
+    override fun onSwitchOptionChanged(status: SwitchState, node: SwitchNode) {
         when (node) {
             SwitchNode.ADAS_HMA -> {
                 doUpdate(_hmaValue, status)
@@ -56,7 +58,7 @@ class CombineViewModel @Inject constructor(app: Application, model: BaseModel) :
         }
     }
 
-    override fun onRadioOptionChanged(node: RadioNode, value: Int) {
+    override fun onRadioOptionChanged(node: RadioNode, value: RadioState) {
 
     }
 

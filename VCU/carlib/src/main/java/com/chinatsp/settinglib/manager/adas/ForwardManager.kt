@@ -1,6 +1,7 @@
 package com.chinatsp.settinglib.manager.adas
 
 import android.car.hardware.CarPropertyValue
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.manager.BaseManager
@@ -9,7 +10,6 @@ import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import java.lang.ref.WeakReference
-import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * @author : luohong
@@ -27,7 +27,7 @@ class ForwardManager : BaseManager(), ISwitchManager {
         }
     }
 
-    private val fcwStatus: AtomicBoolean by lazy {
+    private val fcwStatus: SwitchState by lazy {
         val node = SwitchNode.ADAS_FCW
 //        AtomicBoolean(node.default).apply {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
@@ -38,7 +38,7 @@ class ForwardManager : BaseManager(), ISwitchManager {
         }
     }
 
-    private val aebStatus: AtomicBoolean by lazy {
+    private val aebStatus: SwitchState by lazy {
         val node = SwitchNode.ADAS_AEB
 //        AtomicBoolean(node.default).apply {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
@@ -86,11 +86,11 @@ class ForwardManager : BaseManager(), ISwitchManager {
 //        }
 //    }
 
-    override fun doGetSwitchOption(node: SwitchNode): Boolean {
+    override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.ADAS_FCW -> fcwStatus.get()
-            SwitchNode.ADAS_AEB -> aebStatus.get()
-            else -> false
+            SwitchNode.ADAS_FCW -> fcwStatus.copy()
+            SwitchNode.ADAS_AEB -> aebStatus.copy()
+            else -> null
         }
     }
 

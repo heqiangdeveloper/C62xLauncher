@@ -139,7 +139,11 @@
         进⼊后备箱感应区域内，原\n
         地站⽴6s以上，电动尾⻔⾃\n
         动开启。</string>
-
+    <string name="car_trunk_height_content">电动尾⻔⾼度调节建议：\n
+       身⾼1.6⽶以下的⽤户使⽤，建议开启⾼度为80%；\n
+       身⾼1.6-1.7⽶的⽤户使⽤，建议开启⾼度为90%；\n
+       身⾼1.7⽶以上的⽤户使⽤，建议开启⾼度为100%。\n
+       相关⾼度调节建议，仅供参考</string>
     <string name="car_mirror_automatic_folding">外后视镜自动折叠</string>
     <string name="car_mirror_automatic_folding_close">后视镜自动折叠已关闭</string>
     <string name="car_mirror_automatic_folding_open">后视镜自动折叠已开启</string>

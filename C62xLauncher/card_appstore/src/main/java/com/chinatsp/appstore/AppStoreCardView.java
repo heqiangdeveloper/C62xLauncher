@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -82,7 +83,7 @@ public class AppStoreCardView extends ConstraintLayout implements ICardStyleChan
     }
 
     private static final String TAG = "AppStoreCardView";
-    private static final String APPSTOREPKG = "";
+    private static final String APPSTOREPKG = "com.huawei.appmarket.car.landscape";
     private View mLargeCardView;
     private View mSmallCardView;
     private NormalSmallCardViewHolder mNormalSmallCardViewHolder;
@@ -122,6 +123,8 @@ public class AppStoreCardView extends ConstraintLayout implements ICardStyleChan
         mIvAppStoreButton.setOnClickListener(this);
         mIvAppIconTop.setOnClickListener(this);
         mIvAppIconBottom.setOnClickListener(this);
+        //点击空白处跳转至应用商城
+        setOnClickListener(this);
 
         NetworkStateReceiver.getInstance().registerObserver(networkObserver);
         loadData();
@@ -160,9 +163,7 @@ public class AppStoreCardView extends ConstraintLayout implements ICardStyleChan
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.ivAppStoreButton){//跳转至应用商城
-            RecentAppHelper.launchApp(getContext(),APPSTOREPKG);
-        }else if(v.getId() == R.id.ivAppIconTop){
+        if(v.getId() == R.id.ivAppIconTop){
             //如果该应用已经安装就打开它，否则跳转到下载详情
             String pkgName = infos.get(0).getPackageName();
             boolean isPkgInstalled = PropertyUtils.checkPkgInstalled(v.getContext(),pkgName);
@@ -180,6 +181,8 @@ public class AppStoreCardView extends ConstraintLayout implements ICardStyleChan
             }else {
                 AppStoreJump.jumpAppMarket(pkgName, v.getContext());
             }
+        }else{
+            RecentAppHelper.launchApp(getContext(),APPSTOREPKG);
         }
     }
 
@@ -397,6 +400,16 @@ public class AppStoreCardView extends ConstraintLayout implements ICardStyleChan
         rcvCardIQuTingSongList.setAdapter(adapter);
         rcvCardIQuTingSongList.getItemAnimator().setChangeDuration(0); //防止recyclerView刷新闪屏
 
+        //点击RecyclerView空白区域，跳转至应用商城
+        rcvCardIQuTingSongList.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(v.getId() != 0){
+                    RecentAppHelper.launchApp(getContext(),APPSTOREPKG);
+                }
+                return false;
+            }
+        });
         mNormalBigCardViewHolder.setAppsAdapter(adapter);
     }
 

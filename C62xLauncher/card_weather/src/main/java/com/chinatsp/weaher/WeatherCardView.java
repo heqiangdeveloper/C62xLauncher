@@ -27,6 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import card.service.ICardStyleChange;
+import launcher.base.utils.recent.RecentAppHelper;
 import launcher.base.utils.view.LayoutParamUtil;
 
 
@@ -79,6 +80,13 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
             @Override
             public void onClick(View v) {
                 mController.requestWeatherInfo();
+            }
+        });
+        //点击空白跳转至天气
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentAppHelper.launchApp(getContext(),"com.iflytek.autofly.weather");
             }
         });
         mController.requestWeatherInfo();

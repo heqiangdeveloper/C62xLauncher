@@ -3,6 +3,7 @@ package com.chinatsp.vehicle.settings.vm.cabin
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.manager.cabin.OtherManager
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -24,46 +25,46 @@ class OtherViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val manager: OtherManager by lazy { OtherManager.instance }
 
-    val trailerRemind: LiveData<Boolean>
+    val trailerRemind: LiveData<SwitchState>
         get() = _trailerRemind
 
-    private val _trailerRemind: MutableLiveData<Boolean> by lazy {
+    private val _trailerRemind: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.DRIVE_TRAILER_REMIND
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val batteryOptimize: LiveData<Boolean>
+    val batteryOptimize: LiveData<SwitchState>
         get() = _batteryOptimize
 
-    private val _batteryOptimize: MutableLiveData<Boolean> by lazy {
-        val node = SwitchNode.DRIVE_SAFE_VIDEO_PLAYING
+    private val _batteryOptimize: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.DRIVE_BATTERY_OPTIMIZE
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val wirelessCharging: LiveData<Boolean>
+    val wirelessCharging: LiveData<SwitchState>
         get() = _wirelessCharging
 
-    private val _wirelessCharging: MutableLiveData<Boolean> by lazy {
+    private val _wirelessCharging: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.DRIVE_WIRELESS_CHARGING
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val wirelessChargingLamp: LiveData<Boolean>
+    val wirelessChargingLamp: LiveData<SwitchState>
         get() = _wirelessChargingLamp
 
-    private val _wirelessChargingLamp: MutableLiveData<Boolean> by lazy {
+    private val _wirelessChargingLamp: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
 
-    private fun updateLiveData(
-        liveData: MutableLiveData<Boolean>,
-        value: Boolean,
-    ): MutableLiveData<Boolean> {
-        liveData.takeIf { value xor liveData.value!! }?.postValue(value)
-        return liveData
-    }
+//    private fun updateLiveData(
+//        liveData: MutableLiveData<Boolean>,
+//        value: Boolean,
+//    ): MutableLiveData<Boolean> {
+//        liveData.takeIf { value xor liveData.value!! }?.postValue(value)
+//        return liveData
+//    }
 
 
     override fun onCreate() {
@@ -77,7 +78,7 @@ class OtherViewModel @Inject constructor(app: Application, model: BaseModel) :
     }
 
 
-    override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
+    override fun onSwitchOptionChanged(status: SwitchState, node: SwitchNode) {
         when (node) {
             SwitchNode.DRIVE_TRAILER_REMIND -> {
                 doUpdate(_trailerRemind, status)

@@ -1,6 +1,8 @@
 package com.chinatsp.settinglib.manager.adas
 
 import android.car.hardware.CarPropertyValue
+import com.chinatsp.settinglib.bean.RadioState
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.manager.BaseManager
@@ -10,8 +12,6 @@ import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import java.lang.ref.WeakReference
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author : luohong
@@ -29,7 +29,7 @@ class CruiseManager : BaseManager(), IOptionManager {
         }
     }
 
-    private val iaccFunction: AtomicBoolean by lazy {
+    private val iaccFunction: SwitchState by lazy {
         val node = SwitchNode.ADAS_IACC
 //        AtomicBoolean(node.default).apply {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
@@ -41,7 +41,7 @@ class CruiseManager : BaseManager(), IOptionManager {
     }
 
 
-    private val limberLeaveFunction: AtomicBoolean by lazy {
+    private val limberLeaveFunction: SwitchState by lazy {
         val node = SwitchNode.ADAS_LIMBER_LEAVE
 //        AtomicBoolean(node.default).apply {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
@@ -52,7 +52,7 @@ class CruiseManager : BaseManager(), IOptionManager {
         }
     }
 
-    private val limberLeaveRadio: AtomicInteger by lazy {
+    private val limberLeaveRadio: RadioState by lazy {
         val node = RadioNode.ADAS_LIMBER_LEAVE
 //        AtomicInteger(node.default).apply {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
@@ -90,12 +90,10 @@ class CruiseManager : BaseManager(), IOptionManager {
     }
 
 
-    override fun doGetRadioOption(node: RadioNode): Int {
+    override fun doGetRadioOption(node: RadioNode): RadioState? {
         return when (node) {
-            RadioNode.ADAS_LIMBER_LEAVE -> {
-                limberLeaveRadio.get()
-            }
-            else -> -1
+            RadioNode.ADAS_LIMBER_LEAVE -> limberLeaveRadio.copy()
+            else -> null
         }
     }
 
@@ -126,15 +124,11 @@ class CruiseManager : BaseManager(), IOptionManager {
         return result
     }
 
-    override fun doGetSwitchOption(node: SwitchNode): Boolean {
+    override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.ADAS_IACC -> {
-                iaccFunction.get()
-            }
-            SwitchNode.ADAS_LIMBER_LEAVE -> {
-                limberLeaveFunction.get()
-            }
-            else -> false
+            SwitchNode.ADAS_IACC -> iaccFunction.copy()
+            SwitchNode.ADAS_LIMBER_LEAVE -> limberLeaveFunction.copy()
+            else -> null
         }
     }
 

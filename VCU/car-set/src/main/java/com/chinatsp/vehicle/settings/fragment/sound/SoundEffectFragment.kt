@@ -44,6 +44,14 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
         addRadioLiveDataListener()
         setRadioListener()
         initDetailsClickListener()
+        updateOptionActive()
+    }
+
+    private fun updateOptionActive() {
+        updateRadioEnable(RadioNode.AUDIO_ENVI_AUDIO)
+        val depend = !binding.soundEnvironmentalSw.isChecked
+        updateEnable(binding.equalizer, true, depend)
+        updateEnable(binding.volumeBalance, true, depend)
     }
 
     private fun initViewsDisplay() {
@@ -69,9 +77,10 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
         }
         viewModel.currentEffect.observe(this) {
             val array = resources.getStringArray(R.array.sound_equalizer_option)
-            binding.soundEffectHint.text = array[it]
+            binding.soundEffectHint.text = array[it.data]
         }
     }
+
 
     private fun setRadioListener() {
         binding.soundEnvironmentalTab.let {
@@ -84,17 +93,18 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
     private fun initSwitchOption() {
         initSwitchOption(SwitchNode.AUDIO_ENVI_AUDIO, viewModel.effectStatus)
         initSwitchOption(SwitchNode.AUDIO_SOUND_LOUDNESS, viewModel.audioLoudness)
-        binding.soundEnvironmentalSw.run {
-            checkDisableOtherDiv(this, this.isChecked)
-        }
+//        binding.soundEnvironmentalSw.run {
+//            checkDisableOtherDiv(this, this.isChecked)
+//        }
     }
 
     private fun addSwitchLiveDataListener() {
         viewModel.effectStatus.observe(this) {
             doUpdateSwitch(SwitchNode.AUDIO_ENVI_AUDIO, it)
-            binding.soundEnvironmentalSw.run {
-                checkDisableOtherDiv(this, this.isChecked)
-            }
+//            binding.soundEnvironmentalSw.run {
+//                checkDisableOtherDiv(this, this.isChecked)
+//            }
+            updateOptionActive()
         }
         viewModel.audioLoudness.observe(this) {
             doUpdateSwitch(SwitchNode.AUDIO_SOUND_LOUDNESS, it)
@@ -106,6 +116,20 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
             SwitchNode.AUDIO_ENVI_AUDIO -> binding.soundEnvironmentalSw
             SwitchNode.AUDIO_SOUND_LOUDNESS -> binding.audioEffectLoudnessSwitch
             else -> null
+        }
+    }
+
+    override fun obtainActiveByNode(node: RadioNode): Boolean {
+        return when (node) {
+            RadioNode.AUDIO_ENVI_AUDIO -> viewModel.effectOption.value?.enable() ?: false
+            else -> super.obtainActiveByNode(node)
+        }
+    }
+
+    override fun obtainDependByNode(node: RadioNode): Boolean {
+        return when (node) {
+            RadioNode.AUDIO_ENVI_AUDIO -> binding.soundEnvironmentalSw.isChecked
+            else -> super.obtainActiveByNode(node)
         }
     }
 
@@ -127,7 +151,8 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
     private fun setSwitchListener() {
         binding.soundEnvironmentalSw.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.AUDIO_ENVI_AUDIO, buttonView, isChecked)
-            checkDisableOtherDiv(binding.soundEnvironmentalSw, buttonView.isChecked)
+//            checkDisableOtherDiv(binding.soundEnvironmentalSw, buttonView.isChecked)
+            updateOptionActive()
         }
         binding.audioEffectLoudnessSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.AUDIO_SOUND_LOUDNESS, buttonView, isChecked)

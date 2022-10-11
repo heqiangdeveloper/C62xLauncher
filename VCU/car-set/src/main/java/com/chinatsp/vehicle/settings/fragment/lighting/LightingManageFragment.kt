@@ -1,9 +1,7 @@
 package com.chinatsp.vehicle.settings.fragment.lighting
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction

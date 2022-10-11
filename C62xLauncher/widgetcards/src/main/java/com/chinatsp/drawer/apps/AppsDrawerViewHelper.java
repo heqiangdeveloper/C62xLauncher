@@ -35,7 +35,7 @@ public class AppsDrawerViewHelper {
 
     private void initRcv() {
         mRecentAppsAdapter = new DrawerRecentAppsAdapter(context,
-                RecentAppHelper.getRecentApps(context,MAX_NUM));
+                RecentAppHelper.getRecentApps(context,MAX_NUM * 2,RecentAppHelper.FROM_RECENTAPP));
         recentAppsRcv.setAdapter(mRecentAppsAdapter);
         //recentAppsRcv.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         recentAppsRcv.setLayoutManager(new GridLayoutManager(context, 2));
@@ -44,7 +44,8 @@ public class AppsDrawerViewHelper {
     }
 
     private void refreshUI() {
-        List<HashMap<String,Object>> appInfos = RecentAppHelper.getRecentApps(context,MAX_NUM);
+        List<HashMap<String,Object>> appInfos = RecentAppHelper.getRecentApps(context,
+                MAX_NUM * 2,RecentAppHelper.FROM_RECENTAPP);
         if(appInfos.size() == 0){
             recentAppsRcv.setVisibility(View.GONE);
             recentAppsTv.setVisibility(View.VISIBLE);

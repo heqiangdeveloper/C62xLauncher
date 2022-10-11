@@ -24,10 +24,10 @@ class NoteUsersDialogFragment :
 
     private fun setBackListener() {
         binding.noteUsersAgree.setOnClickListener {
-            this.dismiss()
+            dismiss()
         }
         binding.noteUsersCancel.setOnClickListener {
-            this.dismiss()
+            dismiss()
         }
     }
 }

@@ -3,6 +3,8 @@ package com.chinatsp.settinglib.manager.lamp
 import android.car.hardware.CarPropertyValue
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.IProgressManager
+import com.chinatsp.settinglib.bean.RadioState
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.manager.BaseManager
@@ -14,8 +16,6 @@ import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import timber.log.Timber
 import java.lang.ref.WeakReference
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.abs
 
 /**
@@ -49,7 +49,7 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
         }
     }
 
-    private val insideMeetLight: AtomicBoolean by lazy {
+    private val insideMeetLight: SwitchState by lazy {
         val node = SwitchNode.LIGHT_INSIDE_MEET
 //        AtomicBoolean(node.default).apply {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
@@ -60,14 +60,14 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
         }
     }
 
-    private val lightCeremonySenseSwitch: AtomicBoolean by lazy {
+    private val lightCeremonySenseSwitch: SwitchState by lazy {
         val node = SwitchNode.LIGHT_CEREMONY_SENSE
         return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
-    private val outsideMeetLight: AtomicBoolean by lazy {
+    private val outsideMeetLight: SwitchState by lazy {
         val node = SwitchNode.LIGHT_OUTSIDE_MEET
 //        AtomicBoolean(node.default).apply {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
@@ -78,7 +78,7 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
         }
     }
 
-    private val lightDelayOut: AtomicInteger by lazy {
+    private val lightDelayOut: RadioState by lazy {
         val node = RadioNode.LIGHT_DELAYED_OUT
 //        AtomicInteger(node.default).apply {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
@@ -89,7 +89,7 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
         }
     }
 
-    private val lightFlicker: AtomicInteger by lazy {
+    private val lightFlicker: RadioState by lazy {
         val node = RadioNode.LIGHT_FLICKER
 //        AtomicInteger(node.default).apply {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
@@ -100,7 +100,7 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
         }
     }
 
-    private val lightCeremonySense: AtomicInteger by lazy {
+    private val lightCeremonySense: RadioState by lazy {
         val node = RadioNode.LIGHT_CEREMONY_SENSE
 //        AtomicInteger(node.default).apply {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
@@ -172,15 +172,12 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
         return careSerials[origin] ?: HashSet()
     }
 
-    override fun doGetRadioOption(node: RadioNode): Int {
+    override fun doGetRadioOption(node: RadioNode): RadioState? {
         return when (node) {
-            RadioNode.LIGHT_DELAYED_OUT -> {
-                lightDelayOut.get()
-            }
-            RadioNode.LIGHT_FLICKER -> {
-                lightFlicker.get()
-            }
-            else -> -1
+            RadioNode.LIGHT_DELAYED_OUT -> lightDelayOut.copy()
+            RadioNode.LIGHT_FLICKER -> lightFlicker.copy()
+            RadioNode.LIGHT_CEREMONY_SENSE -> lightCeremonySense.copy()
+            else -> null
         }
     }
 
@@ -238,18 +235,12 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
         return serial
     }
 
-    override fun doGetSwitchOption(node: SwitchNode): Boolean {
+    override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.LIGHT_INSIDE_MEET -> {
-                insideMeetLight.get()
-            }
-            SwitchNode.LIGHT_OUTSIDE_MEET -> {
-                outsideMeetLight.get()
-            }
-            SwitchNode.LIGHT_CEREMONY_SENSE -> {
-                lightCeremonySenseSwitch.get()
-            }
-            else -> false
+            SwitchNode.LIGHT_INSIDE_MEET -> insideMeetLight.copy()
+            SwitchNode.LIGHT_OUTSIDE_MEET -> outsideMeetLight.copy()
+            SwitchNode.LIGHT_CEREMONY_SENSE -> lightCeremonySenseSwitch.copy()
+            else -> null
         }
     }
 
@@ -303,7 +294,7 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
         }
     }
 
-    private fun writeProperty(node: RadioNode, value: Int, atomic: AtomicInteger): Boolean {
+    private fun writeProperty(node: RadioNode, value: Int, atomic: RadioState): Boolean {
         val success = node.isValid(value, false)
                 && writeProperty(node.set.signal, value, node.set.origin)
         if (success && develop) {
@@ -314,7 +305,7 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
         return success
     }
 
-    private fun writeProperty(node: SwitchNode, value: Boolean, atomic: AtomicBoolean): Boolean {
+    private fun writeProperty(node: SwitchNode, value: Boolean, atomic: SwitchState): Boolean {
         val success = writeProperty(node.set.signal, node.value(value), node.set.origin)
         if (success && develop) {
             doUpdateSwitchValue(node, atomic, value) { _node, _value ->

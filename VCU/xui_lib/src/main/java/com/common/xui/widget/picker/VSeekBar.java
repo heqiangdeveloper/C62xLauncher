@@ -314,6 +314,11 @@ public class VSeekBar extends View {
         left = normalRectF.right - xOffset - bitmap.getWidth();
         canvas.drawBitmap(bitmap, left, top, null);
 
+
+        drawSplitPoint(canvas);
+    }
+
+    private void drawSplitPoint2(Canvas canvas) {
         float dis = 80;
         float pointRangeWidth = normalRectF.width() - 2 * normalRectF.height() - dis;
         int count = (int) (pointRangeWidth / dis);
@@ -321,13 +326,26 @@ public class VSeekBar extends View {
         float append = spare / (float) count;
         float locationX = normalRectF.left + normalRectF.height() + dis / 2;
         float locationY = normalRectF.top + (normalRectF.height() / 2);
-        float offset = -2;
-
+        float offset;
         for (int index = 0; index < count + 1; index++) {
             offset = (dis + append) * index - 2;
             canvas.drawCircle(locationX + offset, locationY, 2, paint);
         }
+    }
 
+    private void drawSplitPoint(Canvas canvas) {
+//        float dis = 80;
+        float pointRangeWidth = normalRectF.width();
+        int count = mMax - mMin;
+        float spare = pointRangeWidth / (float) count;
+        float locationX = normalRectF.left;
+        float locationY = normalRectF.top + (normalRectF.height() / 2);
+        float offset;
+
+        for (int index = 0; index < count - 1; index++) {
+            offset = (index + 1) * spare - 2;
+            canvas.drawCircle(locationX + offset, locationY, 2, paint);
+        }
     }
 
     RectF normalRectF = new RectF();
@@ -401,8 +419,8 @@ public class VSeekBar extends View {
         path.addRoundRect(borderRectF, radius, radius, Path.Direction.CCW);
         if (selectRectF.right >= radius && selectRectF.right <= normalRectF.right - radius) {
             linePath.reset();
-            linePath.moveTo(selectRectF.right - 2 * mBorderWidth, selectRectF.top);
-            linePath.lineTo(selectRectF.right - 2 * mBorderWidth, selectRectF.bottom);
+            linePath.moveTo(selectRectF.right - mBorderWidth, selectRectF.top);
+            linePath.lineTo(selectRectF.right - mBorderWidth, selectRectF.bottom);
             path.addPath(linePath);
         }
 //
@@ -585,11 +603,13 @@ public class VSeekBar extends View {
         //user has touched outside the target, lets jump to that position
         if (event.getX(index) > mMaxPosition && event.getX(index) <= mLineEndX) {
             mMaxPosition = (int) event.getX(index);
-            invalidate();
+//            invalidate();
+            tryInvalidate();
             callMaxChangedCallbacks();
         } else if (event.getX(index) < mMaxPosition && event.getX(index) >= mLineStartX) {
             mMaxPosition = (int) event.getX(index);
-            invalidate();
+//            invalidate();
+            tryInvalidate();
             callMaxChangedCallbacks();
         }
     }
@@ -609,17 +629,18 @@ public class VSeekBar extends View {
             case MotionEvent.ACTION_DOWN:
                 updateTouchStatus(true);
 
-                if (mLastTouchedMin) {
-                    if (!checkTouchingMinTarget(actionIndex, event)
-                            && !checkTouchingMaxTarget(actionIndex, event)) {
-                        jumpToPosition(actionIndex, event);
-                    }
-                } else if (!checkTouchingMaxTarget(actionIndex, event)
-                        && !checkTouchingMinTarget(actionIndex, event)) {
-                    jumpToPosition(actionIndex, event);
-                }
-                Log.d("VSeekBar", "MotionEvent.ACTION_DOWN");
-                invalidate();
+//                if (mLastTouchedMin) {
+//                    if (!checkTouchingMinTarget(actionIndex, event)
+//                            && !checkTouchingMaxTarget(actionIndex, event)) {
+//                        jumpToPosition(actionIndex, event);
+//                    }
+//                } else if (!checkTouchingMaxTarget(actionIndex, event)
+//                        && !checkTouchingMinTarget(actionIndex, event)) {
+//                    jumpToPosition(actionIndex, event);
+//                }
+//                Log.d("VSeekBar", "MotionEvent.ACTION_DOWN");
+//                invalidate();
+                jumpToPosition(actionIndex, event);
                 break;
 
             case MotionEvent.ACTION_UP:
@@ -629,13 +650,14 @@ public class VSeekBar extends View {
                 mTouchingMinTarget.remove(event.getPointerId(actionIndex));
                 mTouchingMaxTarget.remove(event.getPointerId(actionIndex));
                 Log.d("VSeekBar", "MotionEvent.ACTION_POINTER_UP");
-                invalidate();
+//            invalidate();
+                tryInvalidate();
                 break;
 
             case MotionEvent.ACTION_MOVE:
                 updateTouchStatus(true);
 
-                for (int i = 0; i < event.getPointerCount(); i++) {
+//                for (int i = 0; i < event.getPointerCount(); i++) {
 //                    if (mTouchingMinTarget.contains(event.getPointerId(i))) {
 //                        int touchX = (int) event.getX(i);
 //                        touchX = clamp(touchX, mLineStartX, mLineEndX);
@@ -650,41 +672,45 @@ public class VSeekBar extends View {
 //                        mMaxPosition = touchX;
 //                        callMaxChangedCallbacks();
 //                    }
-                    int touchX = (int) event.getX(i);
+                    int touchX = (int) event.getX();
                     touchX = clamp(touchX, mLineStartX, mLineEndX);
                     mMaxPosition = touchX;
                     isChanged = isChanged();
                     callMaxChangedCallbacks();
                     if (lastValue == mMin) mMaxPosition = mLineStartX;
                     if (lastValue == mMax) mMaxPosition = mLineEndX;
-                    if (isChanged || lastValue == mMin || lastValue == mMax) invalidate();
-                }
+                    if (isChanged || lastValue == mMin || lastValue == mMax) //            invalidate();
+                        tryInvalidate();
+//                }
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
                 updateTouchStatus(true);
 
-                for (int i = 0; i < event.getPointerCount(); i++) {
-                    if (mLastTouchedMin) {
-                        if (!checkTouchingMinTarget(i, event)
-                                && !checkTouchingMaxTarget(i, event)) {
-                            jumpToPosition(i, event);
-                        }
-                    } else if (!checkTouchingMaxTarget(i, event)
-                            && !checkTouchingMinTarget(i, event)) {
-                        jumpToPosition(i, event);
-                    }
-                }
+//                for (int i = 0; i < event.getPointerCount(); i++) {
+//                    if (mLastTouchedMin) {
+//                        if (!checkTouchingMinTarget(i, event)
+//                                && !checkTouchingMaxTarget(i, event)) {
+//                            jumpToPosition(i, event);
+//                        }
+//                    } else if (!checkTouchingMaxTarget(i, event)
+//                            && !checkTouchingMinTarget(i, event)) {
+//                        jumpToPosition(i, event);
+//                    }
+//                }
+                jumpToPosition(actionIndex, event);
                 Log.d("VSeekBar", "MotionEvent.ACTION_POINTER_DOWN");
                 break;
 
             case MotionEvent.ACTION_CANCEL:
                 updateTouchStatus(false);
 
-                mTouchingMinTarget.clear();
-                mTouchingMaxTarget.clear();
+//                mTouchingMinTarget.clear();
+//                mTouchingMaxTarget.clear();
                 Log.d("VSeekBar", "MotionEvent.ACTION_CANCEL");
 
-                invalidate();
+//                invalidate();
+                jumpToPosition(actionIndex, event);
+
                 break;
 
             default:
@@ -734,6 +760,8 @@ public class VSeekBar extends View {
 
     private int lastValue = -1;
 
+    private int displayValue = -1;
+
     private void callMaxChangedCallbacks() {
         if (mOnSeekBarListener != null) {
             int number = getSelectedNumber();
@@ -741,6 +769,15 @@ public class VSeekBar extends View {
                 lastValue = number;
                 mOnSeekBarListener.onValueChanged(this, number);
             }
+        }
+    }
+
+    private void tryInvalidate() {
+        int number = getSelectedNumber();
+        if (displayValue != number) {
+            mMaxPosition = Math.round(((number - mMin) / mConvertFactor) + mLineStartX);
+            invalidate();
+            displayValue = number;
         }
     }
 
@@ -777,7 +814,8 @@ public class VSeekBar extends View {
     public void setValueNoEvent(int value) {
         mSelectedNumber = value;
         setSelectedValue(value, false);
-        invalidate();
+//        invalidate();
+        tryInvalidate();
     }
 
     private void setSelectedValue(int selectedMax, boolean isCallback) {

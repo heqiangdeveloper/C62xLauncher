@@ -1,6 +1,8 @@
 package com.chinatsp.settinglib.manager.access
 
 import android.car.hardware.CarPropertyValue
+import com.chinatsp.settinglib.bean.RadioState
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.IOptionManager
@@ -9,8 +11,6 @@ import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import java.lang.ref.WeakReference
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author : luohong
@@ -23,34 +23,22 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class DoorManager private constructor() : BaseManager(), IOptionManager {
 
-    private val smartAccess: AtomicBoolean by lazy {
+    private val smartAccess: SwitchState by lazy {
         val node = SwitchNode.DOOR_SMART_ENTER
-//        AtomicBoolean(node.default).apply {
-//            val value = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateSwitchValue(node, this, value)
-//        }
         return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
-    private val driveAutoLock: AtomicInteger by lazy {
+    private val driveAutoLock: RadioState by lazy {
         val node = RadioNode.DOOR_DRIVE_LOCK
-//        AtomicInteger(node.default).apply {
-//            val value = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateRadioValue(node, this, value)
-//        }
         return@lazy createAtomicInteger(node) { result, value ->
             doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
     }
 
-    private val flameoutAutoUnlock: AtomicInteger by lazy {
+    private val flameoutAutoUnlock: RadioState by lazy {
         val node = RadioNode.DOOR_FLAMEOUT_UNLOCK
-//        AtomicInteger(node.default).apply {
-//            val value = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateRadioValue(node, this, value)
-//        }
         return@lazy createAtomicInteger(node) { result, value ->
             doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
@@ -90,12 +78,10 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
         return serial
     }
 
-    override fun doGetSwitchOption(node: SwitchNode): Boolean {
+    override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.DOOR_SMART_ENTER -> {
-                smartAccess.get()
-            }
-            else -> false
+            SwitchNode.DOOR_SMART_ENTER -> smartAccess.copy()
+            else -> null
         }
     }
 
@@ -108,15 +94,15 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
         }
     }
 
-    override fun doGetRadioOption(node: RadioNode): Int {
+    override fun doGetRadioOption(node: RadioNode): RadioState? {
         return when (node) {
             RadioNode.DOOR_DRIVE_LOCK -> {
-                driveAutoLock.get()
+                driveAutoLock.copy()
             }
             RadioNode.DOOR_FLAMEOUT_UNLOCK -> {
-                flameoutAutoUnlock.get()
+                flameoutAutoUnlock.copy()
             }
-            else -> -1
+            else -> null
         }
     }
 

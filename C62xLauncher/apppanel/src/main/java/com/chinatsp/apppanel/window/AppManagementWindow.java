@@ -104,7 +104,7 @@ public class AppManagementWindow {
         RecyclerView rv = (RecyclerView) view.findViewById(R.id.appmanage_recyclerview);
         TextView warnTv = (TextView) view.findViewById(R.id.warn_tv);
 
-        appInfos = RecentAppHelper.getRecentApps(mContext,MAX_RECENT_APPS);
+        appInfos = RecentAppHelper.getRecentApps(mContext,MAX_RECENT_APPS,RecentAppHelper.FROM_APPMANAGEMENT);
         if(appInfos.size() == 0){
             warnTv.setVisibility(View.VISIBLE);
             clearTv.setVisibility(View.GONE);

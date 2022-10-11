@@ -70,7 +70,7 @@ class SongsAdapter extends BaseRcvAdapter<BaseSongItemBean> {
                 @Override
                 public void onClick(View v) {
                     Log.d(TAG,"onClick: " + position);
-                    updateSelectItem(0,!IQuTingCardView.isPlaying);
+                    //updateSelectItem(0,!DrawerIqutingHolder.isPlaying);
                     //通知item更新状态
                     iPlayItemCallback.onItemClick(position,songId);
                 }
@@ -81,8 +81,8 @@ class SongsAdapter extends BaseRcvAdapter<BaseSongItemBean> {
                     FlowPlayControl.getInstance().openPlayDetail(mIvIqutingDrawerSongItemCover.getContext());
                 }
             });
-            if(IQuTingCardView.itemUUID.equals(String.valueOf(baseSongItemBean.getSong_id()))){
-                updateSelectItem(0,IQuTingCardView.isPlaying);
+            if(DrawerIqutingHolder.itemUUIDInDrawer.equals(String.valueOf(baseSongItemBean.getSong_id()))){
+                updateSelectItem(0,DrawerIqutingHolder.isPlaying);
             }else {
                 mIvIqutingDrawerSongItemPlayOrPause.setImageResource(com.chinatsp.iquting.R.drawable.card_iquting_icon_circle_pause);
             }

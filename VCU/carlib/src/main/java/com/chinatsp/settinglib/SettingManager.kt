@@ -27,10 +27,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
-import android.database.ContentObserver
 import android.hardware.automotive.vehicle.V2_0.VehicleProperty
 import android.media.AudioManager
-import android.net.Uri
 import android.os.*
 import android.provider.Settings
 import android.text.format.DateFormat
@@ -56,6 +54,7 @@ import java.util.concurrent.Executors
  * @author
  */
 class SettingManager private constructor() {
+    //        val uri = Settings.System.getUriFor(Settings.System.SCREEN_BRIGHTNESS)
 
     private val mAudioManager: AudioManager by lazy {
         context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
@@ -77,7 +76,7 @@ class SettingManager private constructor() {
     private var mCarCabinManager: CarCabinManager? = null
     private var hvacManager: CarHvacManager? = null
     private var mCarApi: Car? = null
-    private var connectService = false
+    private var status = false
 
 
     private fun unBindService() {
@@ -122,19 +121,9 @@ class SettingManager private constructor() {
         }
     }
 
-    private val mCarAdapterList: MutableList<CarAdapter> = ArrayList()
-    fun addCarListener(carAdapter: CarAdapter) {
-        if (!mCarAdapterList.contains(carAdapter)) {
-            mCarAdapterList.add(carAdapter)
-        }
-    }
-
-    fun removeCarListener(carAdapter: CarAdapter) {
-        mCarAdapterList.remove(carAdapter)
-    }
 
     private fun onRegisterMcuListener() {
-        if (!connectService) {
+        if (!status) {
             return
         }
         try {
@@ -192,7 +181,7 @@ class SettingManager private constructor() {
     }
 
     private fun onRegisterCabinListener() {
-        if (!connectService) {
+        if (!status) {
             return
         }
         try {
@@ -234,60 +223,6 @@ class SettingManager private constructor() {
             Timber.tag(Constant.VehicleSignal)
                 .d("doActionSignal-mcu receive-mcu hex-id::${Integer.toHexString(id)}, dec-id:$id value:${property.value}")
             GlobalManager.instance.onDispatchSignal(property, Origin.MCU)
-//            switch (property.getPropertyId()) {
-//                case CarMcuManager.ID_VENDOR_MCU_POWER_MODE://电源状态
-//                    int powerStatus = (Integer) property.getValue();
-//                    LogManager.Companion.Timber.d("powerStatus= " + powerStatus);//6 8 4
-//                    if (powerStatus == MCU.POWER_ON) {//6
-//                        for (int i = 0; i < mCarAdapterList.size(); i++) {
-//                            mCarAdapterList.get(i).onAccStatusChange(true);
-//                        }
-//                    } else if (powerStatus == MCU.POWER_OFF) {//4
-//                        for (int i = 0; i < mCarAdapterList.size(); i++) {
-//                            mCarAdapterList.get(i).onAccStatusChange(false);
-//                        }
-//                    }
-//
-//                    break;
-//                case CarMcuManager.ID_REVERSE_SIGNAL://倒车状态
-//                    int reverseStatus = (Integer) property.getValue();
-//                    LogManager.Companion.Timber.d("ID_REVERSE_SIGNAL= " + reverseStatus);
-//                    if (reverseStatus == VEHICLE.ON) {
-//                        for (int i = 0; i < mCarAdapterList.size(); i++) {
-//                            mCarAdapterList.get(i).onReverseStatusChange(true);
-//                        }
-//                    } else if (reverseStatus == VEHICLE.OFF) {
-//                        for (int i = 0; i < mCarAdapterList.size(); i++) {
-//                            mCarAdapterList.get(i).onReverseStatusChange(false);
-//                        }
-//                    }
-//                    break;
-//                case CarMcuManager.ID_VENDOR_LIGHT_NIGHT_MODE_STATE://显示模式
-//                    break;
-//                case CarMcuManager.ID_MCU_ACC_STATE:
-//                    int mcu_acc_state = (Integer) property.getValue();
-//                    LogManager.Companion.Timber.d("ID_MCU_ACC_STATE= " + mcu_acc_state);
-//                    if (mcu_acc_state == CarSensorEvent.IGNITION_STATE_ACC ||
-//                            mcu_acc_state == CarSensorEvent.IGNITION_STATE_ON ||
-//                            mcu_acc_state == CarSensorEvent.IGNITION_STATE_START) {
-//                        for (int i = 0; i < mCarAdapterList.size(); i++) {
-//                            mCarAdapterList.get(i).onPowerStatusChange(mcu_acc_state);
-//                        }
-//                    } //else if (mcu_acc_state == CarSensorEvent.IGNITION_STATE_OFF) { }
-//                    break;
-//                case CarMcuManager.ID_MCU_LOST_CANID:
-//                    Integer[] lostCanidStatus = (Integer[]) property.getValue();//CAN节点丢失 0x00-正常 0x01-丢失
-//                    LogManager.Companion.Timber.d("ID_MCU_LOST_CANID= " + Arrays.toString(lostCanidStatus));
-//                    break;
-//                case CarMcuManager.ID_VENDOR_PHOTO_REQ:
-//                    if (property.getAreaId() == VehicleAreaSeat.SEAT_ROW_1_CENTER) {
-//                        LogManager.Companion.d("ID_VENDOR_PHOTO_REQ " + property.getValue());
-//                        for (int i = 0; i < mCarAdapterList.size(); i++) {
-//                            mCarAdapterList.get(i).onPhotoReqChange(true);
-//                        }
-//                    }
-//                    break;
-//            }
         }
 
         override fun onErrorEvent(i: Int, i1: Int) {
@@ -298,7 +233,6 @@ class SettingManager private constructor() {
     private val hvacEventListener = object : CarHvacEventCallback {
         override fun onChangeEvent(property: CarPropertyValue<*>) {
             val id = property.propertyId
-//            Timber.d("Hvac onChangeEvent propertyId hex:${Integer.toHexString(id)}, dec:$id value:${property.value}")
             Timber.tag(Constant.VehicleSignal)
                 .d("doActionSignal-hvac receive-hvac hex-id::${Integer.toHexString(id)}, dec-id:$id value:${property.value}")
             GlobalManager.instance.onDispatchSignal(property, Origin.HVAC)
@@ -327,11 +261,6 @@ class SettingManager private constructor() {
             CarSensorManager.SENSOR_TYPE_NIGHT -> {
                 val isNight = carSensorEvent.getNightData(null).isNightMode //小灯，白天黑夜
                 Timber.d("littleLight change,isNight state=$isNight")
-                var i = 0
-                while (i < mCarAdapterList.size) {
-                    mCarAdapterList[i].onLittleLightStatusChange(isNight)
-                    i++
-                }
             }
         }
     }
@@ -398,32 +327,6 @@ class SettingManager private constructor() {
             }
             return false
         }
-    val isCarServiceRunning: Boolean
-        get() {
-            val rel = mCarApi != null && mCarApi!!.isConnected
-            Timber.d("isCarServiceRunning =$rel")
-            if (!rel) {
-                onBindService()
-            }
-            return rel
-        }
-
-    fun unInit() {
-        Timber.d("unInit")
-        mCarApi!!.disconnect()
-    }
-
-    fun registerVolumeChangeObserver(observer: ContentObserver?) {
-        //mContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor("android.car.VOLUME_GROUP/"), true, observer);
-        mCarAudioManager!!.registerVolumeChangeObserver(observer)
-        Timber.d("registerVolumeChangeObserver")
-    }
-
-    fun unregisterVolumeChangeObserver(observer: ContentObserver?) {
-        Timber.d("unregisterVolumeChangeObserver")
-        mCarAudioManager!!.unregisterVolumeChangeObserver(observer)
-        //mContext.getContentResolver().unregisterContentObserver(observer);
-    }
 
     var isMobileNetworkON = false
         private set
@@ -461,7 +364,7 @@ class SettingManager private constructor() {
     }
 
     fun doSetProperty(id: Int, value: Int, origin: Origin?, area: Area): Boolean {
-        return if (!connectService) {
+        return if (!status) {
             false
         } else when (origin) {
             Origin.CABIN -> doSetCabinProperty(id, value, area.id)
@@ -471,7 +374,7 @@ class SettingManager private constructor() {
     }
 
     fun doSetProperty(id: Int, value: Int, origin: Origin?, areaValue: Int): Boolean {
-        return if (!connectService) {
+        return if (!status) {
             false
         } else when (origin) {
             Origin.CABIN -> doSetCabinProperty(id, value, areaValue)
@@ -552,7 +455,7 @@ class SettingManager private constructor() {
 
     fun readIntProperty(id: Int, origin: Origin, areaValue: Int): Int {
         var result = Constant.DEFAULT
-        if (!connectService) {
+        if (!status) {
             Timber.d("readIntProperty propertyId:$id, origin:$origin, connectService: false!")
             return result
         }
@@ -569,7 +472,7 @@ class SettingManager private constructor() {
     }
 
     fun readProperty(id: Int, origin: Origin, areaValue: Int, block: ((Int) -> Unit)) {
-        if (!connectService) {
+        if (!status) {
             Timber.d("readIntProperty propertyId:$id, origin:$origin, connectService: false!")
             block(Constant.DEFAULT)
             return
@@ -737,34 +640,6 @@ class SettingManager private constructor() {
         return -1
     }
 
-
-    private val mContentObserver = object : ContentObserver(mHandler) {
-        override fun deliverSelfNotifications(): Boolean {
-            return super.deliverSelfNotifications()
-        }
-
-        override fun onChange(selfChange: Boolean) {
-            super.onChange(selfChange)
-        }
-
-        override fun onChange(selfChange: Boolean, uri: Uri?) {
-            super.onChange(selfChange, uri)
-            Timber.d("onChange getBrightness")
-            for (i in mCarAdapterList.indices) {
-                mCarAdapterList[i].onBrightnessChange(brightness)
-            }
-        }
-    }
-
-    fun setBrightnessChangeListener() {
-        val uri = Settings.System.getUriFor(Settings.System.SCREEN_BRIGHTNESS)
-        context!!.contentResolver.registerContentObserver(uri, false, mContentObserver)
-    }
-
-    fun removeBrightnessChangeListener() {
-        //mCarPowerManager.clearListener();
-        context!!.contentResolver.unregisterContentObserver(mContentObserver)
-    }
 
     //mCarMcuManager.setIntProperty(CarMcuManager.ID_DISPLAY_BRIGHTNESS, VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL, brigness);
     //Settings.System.putInt(mContext.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS,brigness);
@@ -1105,7 +980,7 @@ class SettingManager private constructor() {
     private inner class CarServiceConnection : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
             Timber.d("onServiceConnected start")
-            connectService = true
+            status = true
             onRegisterBoxListener()
             initAudioManager()
             onRegisterMcuListener()
@@ -1113,27 +988,24 @@ class SettingManager private constructor() {
             onRegisterCabinListener()
             onRegisterHvacListener()
             onRegisterPowerListener()
-            updateAdapterConnect()
             Timber.d("onServiceConnected end")
         }
 
         override fun onServiceDisconnected(name: ComponentName) {
             Timber.e("onServiceDisconnected")
-            connectService = false
-            updateAdapterConnect()
+            status = false
             mHandler.removeCallbacks(reConnectCarRunnable)
             mHandler.postDelayed(reConnectCarRunnable, 1500)
         }
 
         override fun onBindingDied(name: ComponentName) {
             Timber.e("onBindingDied")
-            connectService = false
-            updateAdapterConnect()
+            status = false
         }
     }
 
     private fun onRegisterPowerListener() {
-        if (!connectService) {
+        if (!status) {
             return
         }
         try {
@@ -1147,7 +1019,7 @@ class SettingManager private constructor() {
     }
 
     private fun initAudioManager() {
-        if (connectService && null == mCarAudioManager) {
+        if (status && null == mCarAudioManager) {
             try {
                 mCarAudioManager = mCarApi?.getCarManager(Car.AUDIO_SERVICE) as CarAudioManager
                 VoiceManager.instance.injectAudioManager(mCarAudioManager!!)
@@ -1159,7 +1031,7 @@ class SettingManager private constructor() {
 
     private fun onRegisterHvacListener() {
         KeyEvent.KEYCODE_ENTER
-        if (!connectService) {
+        if (!status) {
             Timber.e("onRegisterHvacListener but app not connect to service!")
             return
         }
@@ -1177,10 +1049,6 @@ class SettingManager private constructor() {
         }
     }
 
-    private fun updateAdapterConnect() {
-        mCarAdapterList.stream().filter { obj: CarAdapter? -> Objects.nonNull(obj) }
-            .forEach { it: CarAdapter -> it.onCarServiceBound(connectService) }
-    }
 
     private fun onRegisterBoxListener() {
         try {

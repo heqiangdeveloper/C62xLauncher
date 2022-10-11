@@ -1,6 +1,7 @@
 package com.chinatsp.settinglib.manager.adas
 
 import android.car.VehicleAreaSeat
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.manager.ISwitchManager
@@ -35,8 +36,8 @@ class RoadSignManager : BaseManager(), ISwitchManager {
     }
 
 
-    override fun doGetSwitchOption(node: SwitchNode): Boolean {
-        TODO("Not yet implemented")
+    override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
+        return null
     }
 
     override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {

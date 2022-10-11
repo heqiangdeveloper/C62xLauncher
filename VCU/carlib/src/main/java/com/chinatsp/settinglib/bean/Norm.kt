@@ -12,11 +12,9 @@ import com.chinatsp.settinglib.sign.Origin
 /**
  * @param on 中间伯反馈 开关状态 开 的值
  * @param off 中间伯反馈 开关状态 关 的值
- * @param uon 设置给中间伯 开关状态 开 的值
- * @param uoff 设置给中间伯 开关状态 开关的值
- * @param def 默认开关值
+ * @param origin 设置给中间伯 开关状态 开 的值
+ * @param signal 设置给中间伯 开关状态 开关的值
  */
-//data class Norm(val don: Int = 1, val doff: Int = 2, val uon: Int = 1, val uoff: Int = 2, val def: Boolean = true) {
 data class Norm(
     val on: Int = 1,
     val off: Int = 2,

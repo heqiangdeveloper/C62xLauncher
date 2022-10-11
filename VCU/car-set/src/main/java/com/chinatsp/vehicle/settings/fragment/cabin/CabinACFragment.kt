@@ -96,7 +96,6 @@ class CabinACFragment : BaseFragment<CabinACViewModel, CabinAcFragmentBinding>()
         }
     }
 
-
     private fun initRadioOption() {
         initRadioOption(RadioNode.AC_COMFORT, viewModel.comfortLiveData)
     }

@@ -12,6 +12,7 @@ import com.chinatsp.apppanel.adapter.MyAppInfoAdapter;
 import com.chinatsp.apppanel.db.MyAppDB;
 import com.chinatsp.apppanel.event.CancelDownloadEvent;
 import com.chinatsp.apppanel.event.DownloadEvent;
+import com.chinatsp.apppanel.event.FailDownloadEvent;
 import com.chinatsp.apppanel.event.StartDownloadEvent;
 import com.chinatsp.apppanel.event.UpdateEvent;
 import com.huawei.appmarket.launcheragent.ILauncherProxy;
@@ -108,6 +109,7 @@ public class LauncherBinder extends ILauncherProxy.Stub {
             appState = AppState.INSTALLING;
         }
         locationBean.setInstalled(appState);
+        locationBean.setCanuninstalled(1);
         locationBean.setName(appName);
         locationBean.setStatus(downloadProgress);
         locationBean.setReserve1(String.valueOf(versionCode));
@@ -133,6 +135,7 @@ public class LauncherBinder extends ILauncherProxy.Stub {
         Log.d(TAG,"notifyAppUpdate " + pkgName + "," + appVersionCode + "," + updateType);
         locationBean = new LocationBean();
         locationBean.setPackageName(pkgName);
+        locationBean.setCanuninstalled(1);
         locationBean.setInstalled(AppState.COULD_UPDATE);
         locationBean.setReserve3(String.valueOf(appVersionCode));
         int num = db.isExistPackageInDownload(pkgName);
@@ -154,7 +157,17 @@ public class LauncherBinder extends ILauncherProxy.Stub {
     @Override
     public void notifyAppError(String pkgName, int errorCode) throws RemoteException {
         Log.d(TAG,"notifyAppError " + pkgName + "," + errorCode);
-        db.deleteDownload(pkgName);
-        EventBus.getDefault().post(new CancelDownloadEvent(pkgName));
+        locationBean = new LocationBean();
+        locationBean.setPackageName(pkgName);
+        locationBean.setCanuninstalled(1);
+        locationBean.setInstalled(AppState.DOWNLOAD_FAIL);
+        int num = db.isExistPackageInDownload(pkgName);
+        Log.d(TAG,"notifyAppError " + pkgName + " num is: " + num);
+        if(num == 0) {
+            db.insertDownload(locationBean);
+        }else {
+            db.updateFailDownloadInDownload(locationBean);//更新Download表中失败状态
+        }
+        EventBus.getDefault().post(new FailDownloadEvent(locationBean));
     }
 }

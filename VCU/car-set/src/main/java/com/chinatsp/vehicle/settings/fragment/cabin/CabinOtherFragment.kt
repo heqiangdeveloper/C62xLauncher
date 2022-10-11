@@ -6,6 +6,7 @@ import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.VcuUtils
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.cabin.OtherManager
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -69,10 +70,15 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
         initSwitchOption(SwitchNode.DRIVE_WIRELESS_CHARGING, viewModel.wirelessCharging)
         initSwitchOption(SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP, viewModel.wirelessChargingLamp)
         updateSwitchTextHint(binding.otherTrailerRemindTextView, viewModel.trailerRemind)
+
+        updateSwitchEnable(SwitchNode.DRIVE_BATTERY_OPTIMIZE)
+        updateSwitchEnable(SwitchNode.DRIVE_WIRELESS_CHARGING)
+        updateSwitchEnable(SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP)
     }
 
-    private fun updateSwitchTextHint(textView: TextView, liveData: LiveData<Boolean>) {
-        val hintId = if (liveData.value == true) {
+    private fun updateSwitchTextHint(textView: TextView, liveData: LiveData<SwitchState>) {
+        val static = liveData.value?.get() ?: false
+        val hintId = if (static) {
             R.string.switch_turn_on
         } else {
             R.string.switch_turn_off
@@ -84,16 +90,19 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
         viewModel.batteryOptimize.let { ld ->
             ld.observe(this) {
                 doUpdateSwitch(SwitchNode.DRIVE_BATTERY_OPTIMIZE, it)
+                updateSwitchEnable(SwitchNode.DRIVE_BATTERY_OPTIMIZE)
             }
         }
         viewModel.wirelessCharging.let { ld ->
             ld.observe(this) {
                 doUpdateSwitch(SwitchNode.DRIVE_WIRELESS_CHARGING, it)
+                updateSwitchEnable(SwitchNode.DRIVE_WIRELESS_CHARGING)
             }
         }
         viewModel.wirelessChargingLamp.let { ld ->
             ld.observe(this) {
                 doUpdateSwitch(SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP, it)
+                updateSwitchEnable(SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP)
             }
         }
         viewModel.trailerRemind.let { ld ->
@@ -109,6 +118,17 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
             SwitchNode.DRIVE_WIRELESS_CHARGING -> binding.otherWirelessChargingSwitch
             SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP -> binding.otherWirelessChargingLampSwitch
             else -> null
+        }
+    }
+
+    override fun obtainActiveByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.DRIVE_BATTERY_OPTIMIZE -> viewModel.batteryOptimize.value?.enable() ?: false
+            SwitchNode.DRIVE_WIRELESS_CHARGING -> viewModel.wirelessCharging.value?.enable()
+                ?: false
+            SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP -> viewModel.wirelessChargingLamp.value?.enable()
+                ?: false
+            else -> super.obtainActiveByNode(node)
         }
     }
 

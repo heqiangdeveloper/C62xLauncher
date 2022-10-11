@@ -3,6 +3,8 @@ package com.chinatsp.vehicle.settings.vm.accress
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.bean.RadioState
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.listener.IProgressListener
@@ -22,30 +24,30 @@ class SternDoorViewModel @Inject constructor(app: Application, model: BaseModel)
     private val manager: SternDoorManager
         get() = SternDoorManager.instance
 
-    val electricFunction: LiveData<Boolean> get() = _electricFunction
+    val electricFunction: LiveData<SwitchState> get() = _electricFunction
 
-    private val _electricFunction: MutableLiveData<Boolean> by lazy {
+    private val _electricFunction: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.AS_STERN_ELECTRIC
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val lightAlarmFunction: LiveData<Boolean> get() = _lightAlarmFunction
+    val lightAlarmFunction: LiveData<SwitchState> get() = _lightAlarmFunction
 
-    private val _lightAlarmFunction: MutableLiveData<Boolean> by lazy {
+    private val _lightAlarmFunction: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.STERN_LIGHT_ALARM
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val audioAlarmFunction: LiveData<Boolean> get() = _audioAlarmFunction
+    val audioAlarmFunction: LiveData<SwitchState> get() = _audioAlarmFunction
 
-    private val _audioAlarmFunction: MutableLiveData<Boolean> by lazy {
+    private val _audioAlarmFunction: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.STERN_AUDIO_ALARM
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val sternSmartEnter: LiveData<Int> get() = _sternSmartEnter
+    val sternSmartEnter: LiveData<RadioState> get() = _sternSmartEnter
 
-    private val _sternSmartEnter: MutableLiveData<Int> by lazy {
+    private val _sternSmartEnter: MutableLiveData<RadioState> by lazy {
         val node = RadioNode.STERN_SMART_ENTER
         MutableLiveData(manager.doGetRadioOption(node))
     }
@@ -69,7 +71,7 @@ class SternDoorViewModel @Inject constructor(app: Application, model: BaseModel)
         super.onDestroy()
     }
 
-    override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
+    override fun onSwitchOptionChanged(status: SwitchState, node: SwitchNode) {
         when (node) {
             SwitchNode.AS_STERN_ELECTRIC -> {
                 doUpdate(_electricFunction, status)
@@ -84,7 +86,7 @@ class SternDoorViewModel @Inject constructor(app: Application, model: BaseModel)
         }
     }
 
-    override fun onRadioOptionChanged(node: RadioNode, value: Int) {
+    override fun onRadioOptionChanged(node: RadioNode, value: RadioState) {
         if (RadioNode.STERN_SMART_ENTER == node) {
             doUpdate(_sternSmartEnter, value)
         }

@@ -3,6 +3,7 @@ package com.chinatsp.vehicle.settings.vm.light
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.lamp.AmbientLightingManager
@@ -19,30 +20,30 @@ class AmbientLightingSmartModeViewModel @Inject constructor(app: Application, mo
     private val manager: IOptionManager
         get() = AmbientLightingManager.instance
 
-    val alcSmartMode: LiveData<Boolean>
+    val alcSmartMode: LiveData<SwitchState>
         get() = _alcSmartMode
-    private val _alcSmartMode: MutableLiveData<Boolean> by lazy {
+    private val _alcSmartMode: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.ALC_SMART_MODE
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val colourBreathe: LiveData<Boolean>
+    val colourBreathe: LiveData<SwitchState>
         get() = _colourBreathe
-    private val _colourBreathe: MutableLiveData<Boolean> by lazy {
+    private val _colourBreathe: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.COLOUR_BREATHE
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val musicRhythm: LiveData<Boolean>
+    val musicRhythm: LiveData<SwitchState>
         get() = _musicRhythm
-    private val _musicRhythm: MutableLiveData<Boolean> by lazy {
+    private val _musicRhythm: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.MUSIC_RHYTHM
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val speedRhythm: LiveData<Boolean>
+    val speedRhythm: LiveData<SwitchState>
         get() = _speedRhythm
-    private val _speedRhythm: MutableLiveData<Boolean> by lazy {
+    private val _speedRhythm: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.SPEED_RHYTHM
         MutableLiveData(manager.doGetSwitchOption(node))
     }
@@ -73,7 +74,7 @@ class AmbientLightingSmartModeViewModel @Inject constructor(app: Application, mo
         return liveData
     }
 
-    override fun onSwitchOptionChanged(status: Boolean, node: SwitchNode) {
+    override fun onSwitchOptionChanged(status: SwitchState, node: SwitchNode) {
         when (node) {
             SwitchNode.ALC_SMART_MODE -> {
                 doUpdate(_alcSmartMode, status)
@@ -93,15 +94,15 @@ class AmbientLightingSmartModeViewModel @Inject constructor(app: Application, mo
 
     fun doUpdateViewStatus(node: SwitchNode, status: Boolean): Boolean {
         val result = manager.doSetSwitchOption(node, status)
-        if (result) {
-            val liveData = when (node) {
-                SwitchNode.SPEED_RHYTHM -> _speedRhythm
-                SwitchNode.MUSIC_RHYTHM -> _musicRhythm
-                SwitchNode.COLOUR_BREATHE -> _colourBreathe
-                else -> null
-            }
-            liveData?.value = status
-        }
+//        if (result) {
+//            val liveData = when (node) {
+//                SwitchNode.SPEED_RHYTHM -> _speedRhythm
+//                SwitchNode.MUSIC_RHYTHM -> _musicRhythm
+//                SwitchNode.COLOUR_BREATHE -> _colourBreathe
+//                else -> null
+//            }
+//            liveData?.value = status
+//        }
         return result
     }
 

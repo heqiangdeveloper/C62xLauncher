@@ -8,7 +8,7 @@ package com.chinatsp.vehicle.controller.bean
  * @version: 1.0
  */
 data class Web(
-    val intent: Intent
+    val intent: Intent,
 )
 
 data class Intent(
@@ -24,23 +24,23 @@ data class Intent(
     val semantic: Semantic,
     val service: String,
     val text: String,
-    val version: String
+    val version: String,
 )
 
 data class Data(
-    val result: Any
+    val result: Any,
 )
 
 data class DemandSemantic(
     val name: String,
     val operation: String,
-    val service: String
+    val service: String,
 )
 
 data class Semantic(
-    val slots: Slots
+    val slots: Slots,
 )
 
 data class Slots(
-    val name: String
+    val name: String,
 )

@@ -39,15 +39,15 @@ class GlobalManager private constructor() : BaseManager() {
         AtomicInteger(if (isLevel3) 1 else 0)
     }
 
-//    val level1: AtomicInteger by lazy {
+//    val level1: RadioState by lazy {
 //        AtomicInteger(Constant.INVALID)
 //    }
 //
-//    val level2: AtomicInteger by lazy {
+//    val level2: RadioState by lazy {
 //        AtomicInteger(Constant.INVALID)
 //    }
 //
-//    val level3: AtomicInteger by lazy {
+//    val level3: RadioState by lazy {
 //        AtomicInteger(Constant.INVALID)
 //    }
 

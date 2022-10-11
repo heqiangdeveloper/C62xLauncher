@@ -6,13 +6,13 @@ import android.net.Uri
 import com.chinatsp.settinglib.BaseApp
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import timber.log.Timber
-import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class SafeManager private constructor() : BaseManager(), ISwitchManager {
 
-    private val fortifyToneFunction: AtomicBoolean by lazy {
+    private val fortifyToneFunction: SwitchState by lazy {
         val node = SwitchNode.DRIVE_SAFE_FORTIFY_SOUND
 //        AtomicBoolean(node.default).apply {
 //            val result = readIntProperty(node.get.signal, node.get.origin)
@@ -36,7 +36,7 @@ class SafeManager private constructor() : BaseManager(), ISwitchManager {
         }
     }
 
-    private val alcLockHint: AtomicBoolean by lazy {
+    private val alcLockHint: SwitchState by lazy {
         val node = SwitchNode.ALC_LOCK_HINT
 //        AtomicBoolean(node.default).apply {
 //            val value = readIntProperty(node.get.signal, node.get.origin)
@@ -47,9 +47,9 @@ class SafeManager private constructor() : BaseManager(), ISwitchManager {
         }
     }
 
-    private val videoModeFunction: AtomicBoolean by lazy {
+    private val videoModeFunction: SwitchState by lazy {
         val node = SwitchNode.DRIVE_SAFE_VIDEO_PLAYING
-        AtomicBoolean(node.default).apply {
+        SwitchState(node.default).apply {
             val result = VcuUtils.getInt(
                 key = Constant.DRIVE_VIDEO_PLAYING,
                 value = node.value(node.default)
@@ -133,15 +133,11 @@ class SafeManager private constructor() : BaseManager(), ISwitchManager {
         }
     }
 
-    override fun doGetSwitchOption(node: SwitchNode): Boolean {
+    override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.DRIVE_SAFE_FORTIFY_SOUND -> {
-                fortifyToneFunction.get()
-            }
-            SwitchNode.DRIVE_SAFE_VIDEO_PLAYING -> {
-                videoModeFunction.get()
-            }
-            else -> false
+            SwitchNode.DRIVE_SAFE_FORTIFY_SOUND -> fortifyToneFunction.copy()
+            SwitchNode.DRIVE_SAFE_VIDEO_PLAYING -> videoModeFunction.copy()
+            else -> null
         }
     }
 

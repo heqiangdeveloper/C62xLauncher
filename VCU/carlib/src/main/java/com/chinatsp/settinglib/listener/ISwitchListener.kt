@@ -1,5 +1,6 @@
 package com.chinatsp.settinglib.listener
 
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.optios.SwitchNode
 
 /**
@@ -11,6 +12,6 @@ import com.chinatsp.settinglib.optios.SwitchNode
  */
 interface ISwitchListener : IBaseListener {
 
-    fun onSwitchOptionChanged(status: Boolean, node: SwitchNode)
+    fun onSwitchOptionChanged(status: SwitchState, node: SwitchNode)
 
 }
