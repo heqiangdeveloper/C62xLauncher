@@ -15,7 +15,7 @@
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="42px"
-        android:text="今日头条"
+        android:text="火山车娱"
         style="@style/CardLv2TextView"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"

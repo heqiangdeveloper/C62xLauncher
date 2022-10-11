@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import launcher.base.utils.EasyLog;
+import launcher.base.utils.recent.RecentAppHelper;
 
 
 public class DriveCounselorCardView extends ConstraintLayout {
@@ -60,13 +61,13 @@ public class DriveCounselorCardView extends ConstraintLayout {
     }
 
     private void initViews() {
-        View ivCardDriveReturn = findViewById(R.id.ivCardDriveReturn);
-        ivCardDriveReturn.setOnClickListener(new OnClickListener() {
+        setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mController.readInfo();
+                RecentAppHelper.launchApp(getContext(), "com.uaes.adviser");
             }
         });
+
     }
 
     @Override
