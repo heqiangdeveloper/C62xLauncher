@@ -21,13 +21,16 @@ data class Intent(
     val uuid: String?,
     val version: String?,
 ) {
-    fun convert2NlpVoiceModel(): NlpVoiceModel {
-        val nlpVoiceModel = NlpVoiceModel()
-        nlpVoiceModel.service = service
-        nlpVoiceModel.operation = operation
-        nlpVoiceModel.semantic = GsonUtil.objectToString(semantic)
-        nlpVoiceModel.text = text
-        nlpVoiceModel.response = this.toString()
-        return nlpVoiceModel
+    fun convert2NlpVoiceModel(): NlpVoiceModel? {
+        if (semantic?.slots != null) {
+            val nlpVoiceModel = NlpVoiceModel()
+            nlpVoiceModel.service = service
+            nlpVoiceModel.operation = operation
+            nlpVoiceModel.slots = semantic.slots
+            nlpVoiceModel.text = text
+            nlpVoiceModel.response = this.toString()
+            return nlpVoiceModel
+        }
+        return null
     }
 }

@@ -1,7 +1,6 @@
 package com.chinatsp.vehicle.controller.utils;
 
-public interface ConstantsVolume {
-
+public interface Keywords {
     /**
      * 操作指令，表示为打开的操作数组
      */
@@ -10,6 +9,10 @@ public interface ConstantsVolume {
      * 操作指令，表示为关闭的操作数组
      */
     String[] OPT_CLOSES = {"EXIT", "CLOSE"};
+
+    String[] AIR_MODES = {"制冷", "压缩机"};
+
+    String[] SKYLIGHTS = {"天窗", "天窗透气", "天窗通风", "打开透气", "天窗换气", "天窗翘起"};
 
     String SKYLIGHT = "天窗";
     String SKYLIGHT_OPEN = "天窗透气";
@@ -37,8 +40,8 @@ public interface ConstantsVolume {
     String WINDOW = "窗户";
     String WINDOW_VENTILATE = "车窗透气";
 
-    String WINDOW_FRONT = " 前车窗";
-    String WINDOW_FRONT2 = " 前排";
+    String WINDOW_FRONT = "前车窗";
+    String WINDOW_FRONT2 = "前排";
     String WINDOW_BACK2 = "后排";
     String WINDOW_LEFT_BACK2 = "后排左车窗";
     String WINDOW_RIGHT_BACK2 = "后排右车窗";
@@ -58,6 +61,9 @@ public interface ConstantsVolume {
 
     String OIL_SHROUD = "油箱盖";
     String OIL_SHROUD_TEXT = "油箱";
+
+    String[] OIL_SHROUDS = {"油箱盖", "油箱"};
+
 
     String[] HOODS = {"前罩", "前罩盖", "前舱盖", "引擎盖", "电动前罩"};
     String[] TRUNKS = {"电动后备厢", "后背门", "电动后背门", "电动尾门", "尾门", "后备箱", "电动后备箱", "尾箱", "电动尾箱", "背门", "电动背门"};

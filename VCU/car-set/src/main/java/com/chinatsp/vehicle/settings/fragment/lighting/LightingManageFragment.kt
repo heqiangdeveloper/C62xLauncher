@@ -2,6 +2,7 @@ package com.chinatsp.vehicle.settings.fragment.lighting
 
 import android.os.Bundle
 import android.view.View
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -13,6 +14,7 @@ import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.chinatsp.vehicle.settings.databinding.LightingManageFragmentBinding
+import com.common.library.frame.base.BaseFragment
 import com.common.library.frame.base.BaseTabFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,9 +23,6 @@ class LightingManageFragment : BaseTabFragment<BaseViewModel, LightingManageFrag
 
     private val manager: LampManager
         get() = LampManager.instance
-
-    override val nodeId: Int
-        get() = 2
 
     override val tabLocation: MutableLiveData<Int> by lazy { MutableLiveData(manager.getTabSerial()) }
 
@@ -34,6 +33,10 @@ class LightingManageFragment : BaseTabFragment<BaseViewModel, LightingManageFrag
     override fun initData(savedInstanceState: Bundle?) {
         initTabOptions()
         initTabLocation()
+    }
+
+    private fun obtainRouter(): IRoute? {
+        return if (activity is IRoute) activity as IRoute else null
     }
 
     private fun initTabLocation() {
@@ -87,11 +90,13 @@ class LightingManageFragment : BaseTabFragment<BaseViewModel, LightingManageFrag
     }
 
     private fun checkOutFragment(serial: Int): Fragment? {
-        var fragment: Fragment? = null
+        var fragment: BaseFragment<out BaseViewModel, out ViewDataBinding>? = null
         when (serial) {
             R.id.lighting_tab -> {
                 binding.constraint.setBackgroundResource(R.drawable.right_bg)
                 fragment = LightingFragment()
+                fragment.pid = uid
+                fragment.uid = 1
             }
             R.id.lighting_atmosphere -> {
                 if (VcuUtils.isCareLevel(Level.LEVEL3, expect = true)) {
@@ -100,10 +105,14 @@ class LightingManageFragment : BaseTabFragment<BaseViewModel, LightingManageFrag
                     binding.constraint.setBackgroundResource(R.drawable.intelligent_model_lv4_5)
                 }
                 fragment = AmbientLightingFragment()
+                fragment.pid = uid
+                fragment.uid = 2
             }
             R.id.lighting_screen -> {
                 binding.constraint.setBackgroundResource(R.drawable.right_bg)
                 fragment = LightingScreenFragment()
+                fragment.pid = uid
+                fragment.uid = 3
             }
             else -> {
             }
@@ -112,14 +121,16 @@ class LightingManageFragment : BaseTabFragment<BaseViewModel, LightingManageFrag
     }
 
     private fun initRouteListener() {
-        if (activity is IRoute) {
-            val route = activity as IRoute
-            val liveData = route.obtainLevelLiveData()
+        val router = obtainRouter()
+        if (null != router) {
+            val liveData = router.obtainLevelLiveData()
             liveData.observe(this) {
-                initRouteLocation(it)
+                syncRouterLocation(it)
             }
         }
     }
 
-
+    override fun resetRouter(lv1: Int, lv2: Int, lv3: Int) {
+        obtainRouter()?.resetLevelRouter(lv1, lv2, lv3)
+    }
 }

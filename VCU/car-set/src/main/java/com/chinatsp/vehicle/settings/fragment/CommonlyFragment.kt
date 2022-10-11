@@ -17,10 +17,8 @@ import timber.log.Timber
 @AndroidEntryPoint
 class CommonlyFragment : BaseTabFragment<BaseViewModel, AccessFragmentBinding>() {
 
-    override val nodeId: Int
-        get() = 0
-
     private var mDataFeeder: AndroidDataSourceManager? = null
+
     private var mSharedData: SharedData? = null
 
     override val tabLocation: MutableLiveData<Int> by lazy { MutableLiveData(0) }
@@ -79,6 +77,10 @@ class CommonlyFragment : BaseTabFragment<BaseViewModel, AccessFragmentBinding>()
                 }
             }
         }
+    }
+
+    override fun resetRouter(lv1: Int, lv2: Int, lv3: Int) {
+
     }
 
 }

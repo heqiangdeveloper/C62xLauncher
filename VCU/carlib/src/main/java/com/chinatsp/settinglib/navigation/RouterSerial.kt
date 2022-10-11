@@ -15,13 +15,19 @@ object RouterSerial {
     private const val LEVEL1_SHIFT = 3 * SHIFT_UNIT
     private const val LEVEL2_SHIFT = 2 * SHIFT_UNIT
     private const val LEVEL3_SHIFT = SHIFT_UNIT
+
     private const val LEVEL1_MASK = 0xf shl LEVEL1_SHIFT
     private const val LEVEL2_MASK = 0xf shl LEVEL2_SHIFT
     private const val LEVEL3_MASK = 0xf shl LEVEL3_SHIFT
     private const val LEVEL4_MASK = 0xf
+
     const val UNIVERSAL = 0x1
     const val ACCESS = 0x2
-    const val LIGHTING = 0x2
+    const val LIGHTING = 0x3
+    const val SOUND = 0x4
+    const val DRIVE = 0x5
+    const val ADAS = 0x6
+
     fun makeRouteSerial(
         @IntRange(from = 0, to = 0xf) level1: Int,
         @IntRange(from = 0, to = 0xf) level2: Int,

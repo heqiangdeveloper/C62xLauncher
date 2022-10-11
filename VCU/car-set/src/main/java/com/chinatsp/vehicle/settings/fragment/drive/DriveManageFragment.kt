@@ -2,6 +2,7 @@ package com.chinatsp.vehicle.settings.fragment.drive
 
 import android.os.Bundle
 import android.view.View
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -11,6 +12,7 @@ import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.chinatsp.vehicle.settings.databinding.DriveManageFragmentBinding
+import com.common.library.frame.base.BaseFragment
 import com.common.library.frame.base.BaseTabFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,11 +22,7 @@ class DriveManageFragment : BaseTabFragment<BaseViewModel, DriveManageFragmentBi
     private val manager: AdasManager
         get() = AdasManager.instance
 
-    override val nodeId: Int
-        get() = 5
-
     override val tabLocation: MutableLiveData<Int> by lazy { MutableLiveData(manager.getTabSerial()) }
-
 
     private fun onClick(view: View) {
         tabLocation.takeIf { it.value != view.id }?.value = view.id
@@ -37,6 +35,10 @@ class DriveManageFragment : BaseTabFragment<BaseViewModel, DriveManageFragmentBi
     override fun initData(savedInstanceState: Bundle?) {
         initTabOptions()
         initTabLocation()
+    }
+
+    private fun obtainRouter(): IRoute? {
+        return if (activity is IRoute) activity as IRoute else null
     }
 
     private fun initTabLocation() {
@@ -67,11 +69,11 @@ class DriveManageFragment : BaseTabFragment<BaseViewModel, DriveManageFragmentBi
     }
 
     private fun initRouteListener() {
-        if (activity is IRoute) {
-            val iroute = activity as IRoute
-            val liveData = iroute.obtainLevelLiveData()
+        val router = obtainRouter()
+        if (null != router) {
+            val liveData = router.obtainLevelLiveData()
             liveData.observe(this) {
-                initRouteLocation(it)
+                syncRouterLocation(it)
             }
         }
     }
@@ -95,30 +97,46 @@ class DriveManageFragment : BaseTabFragment<BaseViewModel, DriveManageFragmentBi
     }
 
     private fun checkOutFragment(serial: Int): Fragment? {
-        var fragment: Fragment? = null
+        var fragment: BaseFragment<out BaseViewModel, out ViewDataBinding>? = null
         when (serial) {
             R.id.drive_intelligent_cruise -> {
                 fragment = DriveIntelligentFragment()
+                fragment.pid = uid
+                fragment.uid = 0
             }
             R.id.drive_forward_assist -> {
                 fragment = DriveForwardFragment()
+                fragment.pid = uid
+                fragment.uid = 1
             }
             R.id.drive_lane_assist -> {
                 fragment = DriveLaneFragment()
+                fragment.pid = uid
+                fragment.uid = 2
             }
             R.id.drive_rear_assist -> {
                 fragment = DriveRearFragment()
+                fragment.pid = uid
+                fragment.uid = 3
             }
             R.id.drive_lighting_assist -> {
                 fragment = DriveLightingFragment()
+                fragment.pid = uid
+                fragment.uid = 4
             }
             R.id.drive_traffic -> {
                 fragment = DriveTrafficFragment()
+                fragment.pid = uid
+                fragment.uid = 5
             }
             else -> {
             }
         }
         return fragment
+    }
+
+    override fun resetRouter(lv1: Int, lv2: Int, lv3: Int) {
+        obtainRouter()?.resetLevelRouter(lv1, lv2, lv3)
     }
 
 }

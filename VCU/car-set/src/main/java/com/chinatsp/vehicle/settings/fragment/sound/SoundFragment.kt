@@ -18,7 +18,6 @@ import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.SoundFragmentBinding
 import com.chinatsp.vehicle.settings.vm.sound.SoundViewModel
 import com.common.library.frame.base.BaseLazyFragment
-import com.common.xui.utils.ViewUtils
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.popupwindow.PopWindow
 import com.common.xui.widget.tabbar.TabControlView
@@ -29,11 +28,15 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
 
     private val manager: VoiceManager by lazy { VoiceManager.instance }
 
+    private val map: HashMap<Int, View> = HashMap()
+
     override fun getLayoutId(): Int {
         return R.layout.sound_fragment
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+        initClickView()
+
         setCheckedChangeListener()
         initSwitchOption()
         addSwitchLiveDataListener()
@@ -43,9 +46,47 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
         addRadioLiveDataListener()
         setRadioListener()
 
-        initRouteListener()
         initViewsDisplay()
         initDetailsClickListener()
+        initRouteListener()
+    }
+
+    private fun initClickView() {
+        map[1] = binding.soundVolumeAdjustment
+        map[2] = binding.soundLoudnessDetails
+    }
+
+    private fun obtainRouter(): IRoute? {
+        return if (activity is IRoute) activity as IRoute else null
+    }
+
+    private fun initRouteListener() {
+        val router = obtainRouter()
+        if (null != router) {
+            val liveData = router.obtainLevelLiveData()
+            liveData.observe(this) {
+                it.takeIf { it.valid && it.uid == pid }?.let { level1 ->
+                    level1.cnode?.takeIf { child -> child.valid && child.uid == uid }
+                        .let { level2 ->
+                            level2?.cnode?.let { lv3Node ->
+                                map[lv3Node.uid]?.run { onViewClick(this, lv3Node.uid, true) }
+                            }
+                        }
+                }
+            }
+        }
+    }
+
+    private fun onViewClick(view: View, clickUid: Int, frank: Boolean) {
+        onViewClick(view)
+        obtainRouter()?.resetLevelRouter(pid, uid, clickUid)
+    }
+
+    private fun onViewClick(it: View) {
+        when (it) {
+            binding.soundVolumeAdjustment -> showVolumeFragment()
+            binding.soundLoudnessDetails -> showPopWindow(R.string.sound_loudness_control_content, it)
+        }
     }
 
     private fun initViewsDisplay() {
@@ -56,9 +97,7 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
     }
 
     private fun initDetailsClickListener() {
-        binding.soundLoudnessDetails.setOnClickListener {
-            showPopWindow(R.string.sound_loudness_control_content, it)
-        }
+        binding.soundLoudnessDetails.setOnClickListener(this::onViewClick)
     }
 
     private fun initRadioOption() {
@@ -171,12 +210,7 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
     }
 
     private fun setCheckedChangeListener() {
-        binding.soundVolumeViews.apply {
-            ViewUtils.expendTouchArea(this, 40)
-            setOnClickListener {
-                showVolumeFragment()
-            }
-        }
+        binding.soundVolumeAdjustment.setOnClickListener(this::onViewClick)
     }
 
     private fun cleanPopupSerial(serial: String) {
@@ -186,17 +220,17 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
         }
     }
 
-    private fun initRouteListener() {
-        if (activity is IRoute) {
-            val iroute = activity as IRoute
-            val liveData = iroute.obtainPopupLiveData()
-            liveData.observe(this) {
-                if (it.equals(Constant.DEVICE_AUDIO_VOLUME)) {
-                    showVolumeFragment()
-                }
-            }
-        }
-    }
+//    private fun initRouteListener() {
+//        if (activity is IRoute) {
+//            val route = activity as IRoute
+//            val liveData = route.obtainPopupLiveData()
+//            liveData.observe(this) {
+//                if (it.equals(Constant.DEVICE_AUDIO_VOLUME)) {
+//                    showVolumeFragment()
+//                }
+//            }
+//        }
+//    }
 
     private fun showVolumeFragment() {
         val fragment = VolumeDialogFragment()

@@ -29,6 +29,8 @@ class AmbientLightingFragment :
     var modeFragment: DialogFragment? = null
     var settingFragment: DialogFragment? = null
 
+    private val map: HashMap<Int, View> = HashMap()
+
     private val manager: AmbientLightingManager
         get() = AmbientLightingManager.instance
 
@@ -37,11 +39,13 @@ class AmbientLightingFragment :
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+
+        initClickView()
+
         setCheckedChangeListener()
         initSwitchOption()
         addSwitchLiveDataListener()
         setSwitchListener()
-        initRouteListener()
 
         initViewsDisplay()
 
@@ -51,6 +55,45 @@ class AmbientLightingFragment :
         initViewLight()
 
         updateOptionActive()
+        initRouteListener()
+    }
+
+    private fun initClickView() {
+        map[1] = binding.lightingInstall
+        map[2] = binding.lightingIntelligentModel
+    }
+
+    private fun obtainRouter(): IRoute? {
+        return if (activity is IRoute) activity as IRoute else null
+    }
+
+    private fun initRouteListener() {
+        val router = obtainRouter()
+        if (null != router) {
+            val liveData = router.obtainLevelLiveData()
+            liveData.observe(this) {
+                it.takeIf { it.valid && it.uid == pid }?.let { level1 ->
+                    level1.cnode?.takeIf { child -> child.valid && child.uid == uid }
+                        .let { level2 ->
+                            level2?.cnode?.let { lv3Node ->
+                                map[lv3Node.uid]?.run { onViewClick(this, lv3Node.uid, true) }
+                            }
+                        }
+                }
+            }
+        }
+    }
+
+    private fun onViewClick(view: View, clickUid: Int, frank: Boolean) {
+        onViewClick(view)
+        obtainRouter()?.resetLevelRouter(pid, uid, clickUid)
+    }
+
+    private fun onViewClick(it: View) {
+        when (it) {
+            binding.lightingInstall -> showSettingFragment()
+            binding.lightingIntelligentModel -> showModeFragment()
+        }
     }
 
     private fun isLightingActive(): Boolean {
@@ -229,17 +272,21 @@ class AmbientLightingFragment :
     }
 
     private fun showModeFragment() {
-        modeFragment = AmbientLightingModelDialogFragment()
-        activity?.supportFragmentManager?.let {
-            modeFragment!!.show(it, modeFragment!!::javaClass.name)
+        if (isLightingActive()) {
+            modeFragment = AmbientLightingModelDialogFragment()
+            activity?.supportFragmentManager?.let {
+                modeFragment!!.show(it, modeFragment!!::javaClass.name)
+            }
         }
         cleanPopupSerial(Constant.AMBIENT_LIGHTING_MODE)
     }
 
     private fun showSettingFragment() {
-        settingFragment = AmbientLightingSettingDialogFragment()
-        activity?.supportFragmentManager?.let {
-            settingFragment!!.show(it, settingFragment!!::javaClass.name)
+        if (isLightingActive()) {
+            settingFragment = AmbientLightingSettingDialogFragment()
+            activity?.supportFragmentManager?.let {
+                settingFragment!!.show(it, settingFragment!!::javaClass.name)
+            }
         }
         cleanPopupSerial(Constant.AMBIENT_LIGHTING_SETTING)
     }
@@ -281,19 +328,19 @@ class AmbientLightingFragment :
         }
     }
 
-    private fun initRouteListener() {
-        if (activity is IRoute) {
-            val route = activity as IRoute
-            val liveData = route.obtainPopupLiveData()
-            liveData.observe(this) {
-                if (it.equals(Constant.AMBIENT_LIGHTING_MODE)) {
-                    showModeFragment()
-                } else if (it.equals(Constant.AMBIENT_LIGHTING_SETTING)) {
-                    showSettingFragment()
-                }
-            }
-        }
-    }
+//    private fun initRouteListener() {
+//        if (activity is IRoute) {
+//            val route = activity as IRoute
+//            val liveData = route.obtainPopupLiveData()
+//            liveData.observe(this) {
+//                if (it.equals(Constant.AMBIENT_LIGHTING_MODE)) {
+//                    showModeFragment()
+//                } else if (it.equals(Constant.AMBIENT_LIGHTING_SETTING)) {
+//                    showSettingFragment()
+//                }
+//            }
+//        }
+//    }
 
     private fun initBrightnessSeekBar() {
         val node = Progress.AMBIENT_LIGHT_BRIGHTNESS

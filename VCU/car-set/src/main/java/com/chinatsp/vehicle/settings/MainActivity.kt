@@ -86,9 +86,9 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
                 val level3 = RouterSerial.getLevel(value, 3)
 //                node = Node(level1)
                 val node2 = level2Node.value
-                node2?.id = level2
-                node2?.presentId = level1
-                node2?.valid = true
+                node2?.uid = level2
+                node2?.pid = level1
+//                node2?.valid = true
                 val value = it.getStringExtra(Constant.DIALOG_SERIAL)
                 tabLocation.value = level1
                 level2Node.value = node2
@@ -269,6 +269,10 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
             return true
         }
         return false
+    }
+
+    override fun resetLevelRouter(lv1: Int, lv2: Int, lv3: Int) {
+        TODO("Not yet implemented")
     }
 
 }

@@ -1,9 +1,9 @@
 // ICmdCallback.aidl
 package com.chinatsp.vehicle.controller;
 
-import com.chinatsp.vehicle.controller.bean.Cmd;
+import com.chinatsp.vehicle.controller.bean.BaseCmd;
 
 interface ICmdCallback {
 
-    void onCmdHandleResult(in Cmd cmd);
+    void onCmdHandleResult(in BaseCmd cmd);
 }

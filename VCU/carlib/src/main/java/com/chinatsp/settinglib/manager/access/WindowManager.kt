@@ -14,7 +14,7 @@ import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.annotation.Action
 import com.chinatsp.vehicle.controller.annotation.IStatus
 import com.chinatsp.vehicle.controller.annotation.Model
-import com.chinatsp.vehicle.controller.bean.Cmd
+import com.chinatsp.vehicle.controller.bean.CarCmd
 import timber.log.Timber
 import java.lang.ref.WeakReference
 
@@ -31,7 +31,7 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
 //    超速时，用户触发语音开启指令后弹窗及语音播报提示“车速过快，建议不要开启天窗” 此时不用说“好的”
 //    此功能仅针对天窗的打开信号进行判断，关闭指令不受影响
 
-    private var speed: Int = 130
+    private var speed: Int = 0
 
     private val autoCloseWinInRain: SwitchState by lazy {
         val node = SwitchNode.WIN_CLOSE_WHILE_RAIN
@@ -184,7 +184,7 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
         }
     }
 
-    override fun doOuterControlCommand(cmd: Cmd, callback: ICmdCallback?) {
+    override fun doCarControlCommand(cmd: CarCmd, callback: ICmdCallback?) {
         Timber.d("doOuterControlCommand $cmd")
         if (Model.ACCESS_WINDOW == cmd.model) {
             cmd.status = IStatus.RUNNING
@@ -196,25 +196,33 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
     /**
      * 天窗控制
      */
-    private fun doControlLouver(cmd: Cmd, callback: ICmdCallback?) {
-        Timber.d("doControlLouver $cmd")
+    private fun doControlLouver(cmd: CarCmd, callback: ICmdCallback?) {
+        if (Action.OPEN == cmd.action || Action.MAX == cmd.action) {
+
+        }
+
+        if (Action.CLOSE == cmd.action) {
+            cmd.status = IStatus.SUCCESS
+            cmd.message = "天窗已打开"
+            callback?.onCmdHandleResult(cmd)
+        }
         if (Action.OPEN == cmd.action) {
             if (speed >= 120) {
                 cmd.status = IStatus.FAILED
                 cmd.message = "车速过快，建议不要开启天窗"
                 callback?.onCmdHandleResult(cmd)
             } else {
-                TODO("打开天窗指令")
                 cmd.status = IStatus.SUCCESS
                 cmd.message = "天窗已打开"
                 callback?.onCmdHandleResult(cmd)
             }
         } else if (Action.CLOSE == cmd.action) {
-            TODO("关闭天窗指令")
             cmd.status = IStatus.SUCCESS
             cmd.message = "天窗已打开"
             callback?.onCmdHandleResult(cmd)
         }
+
+        Timber.d("doControlLouver $cmd")
     }
 
 }

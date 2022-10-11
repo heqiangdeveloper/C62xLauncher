@@ -2,6 +2,7 @@ package com.chinatsp.vehicle.settings.fragment.sound
 
 import android.os.Bundle
 import android.view.View
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -11,6 +12,7 @@ import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.chinatsp.vehicle.settings.databinding.SoundManageFragmentBinding
+import com.common.library.frame.base.BaseFragment
 import com.common.library.frame.base.BaseTabFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -19,9 +21,6 @@ class SoundManageFragment : BaseTabFragment<BaseViewModel, SoundManageFragmentBi
 
     private val manager: AudioManager
         get() = AudioManager.instance
-
-    override val nodeId: Int
-        get() = 3
 
     override val tabLocation: MutableLiveData<Int> by lazy { MutableLiveData(manager.getTabSerial()) }
 
@@ -32,6 +31,10 @@ class SoundManageFragment : BaseTabFragment<BaseViewModel, SoundManageFragmentBi
     override fun initData(savedInstanceState: Bundle?) {
         initTabOptions()
         initTabLocation()
+    }
+
+    private fun obtainRouter(): IRoute? {
+        return if (activity is IRoute) activity as IRoute else null
     }
 
     private fun initTabLocation() {
@@ -62,11 +65,11 @@ class SoundManageFragment : BaseTabFragment<BaseViewModel, SoundManageFragmentBi
     }
 
     private fun initRouteListener() {
-        if (activity is IRoute) {
-            val route = activity as IRoute
-            val liveData = route.obtainLevelLiveData()
+        val router = obtainRouter()
+        if (null != router) {
+            val liveData = router.obtainLevelLiveData()
             liveData.observe(this) {
-                initRouteLocation(it)
+                syncRouterLocation(it)
             }
         }
     }
@@ -93,13 +96,17 @@ class SoundManageFragment : BaseTabFragment<BaseViewModel, SoundManageFragmentBi
     }
 
     private fun checkOutFragment(serial: Int): Fragment? {
-        var fragment: Fragment? = null
+        var fragment: BaseFragment<out BaseViewModel, out ViewDataBinding>? = null
         when (serial) {
             R.id.sound_tab -> {
                 fragment = SoundFragment()
+                fragment.pid = uid
+                fragment.uid = 0
             }
             R.id.sound_effect -> {
                 fragment = SoundEffectFragment()
+                fragment.pid = uid
+                fragment.uid = 1
             }
             else -> {
             }
@@ -107,5 +114,8 @@ class SoundManageFragment : BaseTabFragment<BaseViewModel, SoundManageFragmentBi
         return fragment
     }
 
+    override fun resetRouter(lv1: Int, lv2: Int, lv3: Int) {
+        obtainRouter()?.resetLevelRouter(lv1, lv2, lv3)
+    }
 
 }

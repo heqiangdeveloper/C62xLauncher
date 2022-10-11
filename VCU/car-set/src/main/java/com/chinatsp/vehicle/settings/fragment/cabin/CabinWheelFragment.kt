@@ -42,12 +42,16 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
     private val manager: WheelManager
         get() = WheelManager.instance
 
+    private val map: HashMap<Int, View> = HashMap()
+
     override fun getLayoutId(): Int {
         return R.layout.cabin_whell_fragment
     }
 
 
     override fun initData(savedInstanceState: Bundle?) {
+
+
         setCheckedChangeListener()
         initSwitchOption()
         addSwitchLiveDataListener()
@@ -55,10 +59,50 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
         initRadioOption()
         addRadioLiveDataListener()
         setRadioListener()
-        initRouteListener()
         initViewsDisplay()
 
         updateRadioEnable(RadioNode.DRIVE_EPS_MODE)
+
+        initClickView()
+        initRouteListener()
+    }
+
+    private fun initClickView() {
+        map[1] = binding.wheelCustomKeys
+        map[2] = binding.wheelAutomaticHeating
+    }
+
+    private fun obtainRouter(): IRoute? {
+        return if (activity is IRoute) activity as IRoute else null
+    }
+
+    private fun initRouteListener() {
+        val router = obtainRouter()
+        if (null != router) {
+            val liveData = router.obtainLevelLiveData()
+            liveData.observe(this) {
+                it.takeIf { it.valid && it.uid == pid }?.let { level1 ->
+                    level1.cnode?.takeIf { child -> child.valid && child.uid == uid }
+                        .let { level2 ->
+                            level2?.cnode?.let { lv3Node ->
+                                map[lv3Node.uid]?.run { onViewClick(this, lv3Node.uid, true) }
+                            }
+                        }
+                }
+            }
+        }
+    }
+
+    private fun onViewClick(view: View, clickUid: Int, frank: Boolean) {
+        onViewClick(view)
+        obtainRouter()?.resetLevelRouter(pid, uid, clickUid)
+    }
+
+    private fun onViewClick(it: View) {
+        when (it) {
+            binding.wheelCustomKeys ->  showDialogFragment(Constant.STEERING_CUSTOM_KEYPAD)
+            binding.wheelAutomaticHeating -> showDialogFragment(Constant.STEERING_HEATING_SETTING)
+        }
     }
 
     private fun showHintDialog(title: Int, content: Int) {
@@ -147,12 +191,8 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
 
 
     private fun setCheckedChangeListener() {
-        binding.wheelCustomKeys.setOnClickListener {
-            showDialogFragment(Constant.STEERING_CUSTOM_KEYPAD)
-        }
-        binding.wheelAutomaticHeating.setOnClickListener {
-            showDialogFragment(Constant.STEERING_HEATING_SETTING)
-        }
+        binding.wheelCustomKeys.setOnClickListener(this::onViewClick)
+        binding.wheelAutomaticHeating.setOnClickListener(this::onViewClick)
     }
 
     private fun showDialogFragment(serial: String) {
@@ -177,17 +217,17 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
         }
     }
 
-    private fun initRouteListener() {
-        if (activity is IRoute) {
-            val route = activity as IRoute
-            val liveData = route.obtainPopupLiveData()
-            liveData.observe(this) {
-                if (it.equals(Constant.STEERING_CUSTOM_KEYPAD)) {
-                    showDialogFragment(it)
-                } else if (it.equals(Constant.STEERING_HEATING_SETTING)) {
-                    showDialogFragment(it)
-                }
-            }
-        }
-    }
+//    private fun initRouteListener() {
+//        if (activity is IRoute) {
+//            val route = activity as IRoute
+//            val liveData = route.obtainPopupLiveData()
+//            liveData.observe(this) {
+//                if (it.equals(Constant.STEERING_CUSTOM_KEYPAD)) {
+//                    showDialogFragment(it)
+//                } else if (it.equals(Constant.STEERING_HEATING_SETTING)) {
+//                    showDialogFragment(it)
+//                }
+//            }
+//        }
+//    }
 }

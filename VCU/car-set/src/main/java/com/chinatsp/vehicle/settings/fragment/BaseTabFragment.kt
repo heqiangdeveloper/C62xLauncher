@@ -3,6 +3,7 @@ package com.common.library.frame.base
 import android.view.View
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.Constant
 import com.chinatsp.vehicle.settings.Node
 
 /**
@@ -29,13 +30,19 @@ abstract class BaseTabFragment<VM : BaseViewModel<*>, VDB : ViewDataBinding> :
 
     abstract val tabLocation: MutableLiveData<Int>
 
-    abstract val nodeId: Int
-
-    protected fun initRouteLocation(it: Node) {
-        if (it.valid && it.presentId == nodeId && it.id in tabOptions.indices) {
-            tabLocation.value = tabOptions[it.id].id
-            it.valid = false
+    protected fun syncRouterLocation(node: Node) {
+        node.takeIf { it.valid && it.uid == uid}?.let {
+            val child = it.cnode
+            child?.takeIf { c -> c.valid && c.uid in tabOptions.indices}?.let { c ->
+                val location = tabOptions[c.uid].id
+                if (tabLocation.value != location) {
+                    tabLocation.postValue(location)
+                }
+                resetRouter(uid, c.uid)
+            }
         }
     }
+
+    abstract fun resetRouter(lv1: Int, lv2: Int, lv3: Int = Constant.INVALID);
 
 }

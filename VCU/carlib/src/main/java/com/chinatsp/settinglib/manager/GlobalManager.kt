@@ -5,6 +5,7 @@ import android.car.hardware.cabin.CarCabinManager
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.access.AccessManager
 import com.chinatsp.settinglib.manager.adas.AdasManager
+import com.chinatsp.settinglib.manager.cabin.ACManager
 import com.chinatsp.settinglib.manager.cabin.CabinManager
 import com.chinatsp.settinglib.manager.lamp.LampManager
 import com.chinatsp.settinglib.manager.sound.AudioManager
@@ -12,7 +13,8 @@ import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.controller.annotation.Model
-import com.chinatsp.vehicle.controller.bean.Cmd
+import com.chinatsp.vehicle.controller.bean.AirCmd
+import com.chinatsp.vehicle.controller.bean.CarCmd
 import com.chinatsp.vehicle.controller.utils.Utils
 import timber.log.Timber
 import java.util.*
@@ -38,18 +40,6 @@ class GlobalManager private constructor() : BaseManager() {
         val isLevel3 = VcuUtils.isCareLevel(Level.LEVEL3, expect = true)
         AtomicInteger(if (isLevel3) 1 else 0)
     }
-
-//    val level1: RadioState by lazy {
-//        AtomicInteger(Constant.INVALID)
-//    }
-//
-//    val level2: RadioState by lazy {
-//        AtomicInteger(Constant.INVALID)
-//    }
-//
-//    val level3: RadioState by lazy {
-//        AtomicInteger(Constant.INVALID)
-//    }
 
     fun getTabSerial() = tabSerial.get()
 
@@ -86,19 +76,27 @@ class GlobalManager private constructor() : BaseManager() {
         return hashSet
     }
 
-    override fun doOuterControlCommand(cmd: Cmd, callback: ICmdCallback?) {
+    override fun doAirControlCommand(cmd: AirCmd, callback: ICmdCallback?) {
         val modelSerial = Model.obtainEchelon(cmd.model)
-        Timber.d("doOuterControlCommand ------modelSerial:${Utils.toFullBinary(modelSerial)}")
+        Timber.d("doAirControlCommand modelSerial:${Utils.toFullBinary(modelSerial)}")
+        if (Model.CABIN_AIR == cmd.model) {
+            ACManager.instance.doAirControlCommand(cmd, callback)
+        }
+    }
+
+    override fun doCarControlCommand(cmd: CarCmd, callback: ICmdCallback?) {
+        val modelSerial = Model.obtainEchelon(cmd.model)
+        Timber.d("doOuterControlCommand modelSerial:${Utils.toFullBinary(modelSerial)}")
         if (Model.ACCESS == modelSerial) {
-            AccessManager.instance.doOuterControlCommand(cmd, callback)
+            AccessManager.instance.doCarControlCommand(cmd, callback)
         } else if (Model.LIGHT == modelSerial) {
-            LampManager.instance.doOuterControlCommand(cmd, callback)
+            LampManager.instance.doCarControlCommand(cmd, callback)
         } else if (Model.AUDIO == modelSerial) {
-            AudioManager.instance.doOuterControlCommand(cmd, callback)
+            AudioManager.instance.doCarControlCommand(cmd, callback)
         } else if (Model.CABIN == modelSerial) {
-            CabinManager.instance.doOuterControlCommand(cmd, callback)
+            CabinManager.instance.doCarControlCommand(cmd, callback)
         } else if (Model.ADAS == modelSerial) {
-            AdasManager.instance.doOuterControlCommand(cmd, callback)
+            AdasManager.instance.doCarControlCommand(cmd, callback)
         }
     }
 

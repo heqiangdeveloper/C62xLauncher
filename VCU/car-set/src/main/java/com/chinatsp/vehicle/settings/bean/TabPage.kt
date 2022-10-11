@@ -9,7 +9,7 @@ import com.chinatsp.vehicle.settings.fragment.drive.DriveManageFragment
 import com.chinatsp.vehicle.settings.fragment.lighting.LightingManageFragment
 import com.chinatsp.vehicle.settings.fragment.sound.SoundManageFragment
 
-enum class TabPage(val position: Int, val desc: String, val className: String) {
+enum class TabPage(val uid: Int, val desc: String, val className: String) {
 
     COMMONLY(0,
         BaseApp.instance.resources.getString(R.string.table0),
@@ -32,6 +32,7 @@ enum class TabPage(val position: Int, val desc: String, val className: String) {
 //    UPGRADE(6, BaseApp.instance.resources.getString(R.string.table6), SystemFragment::class.java.name);
 
     companion object {
+
         @JvmStatic
         fun getPage(position: Int): TabPage {
             return values()[position]

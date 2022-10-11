@@ -10,6 +10,7 @@ import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.adas.CombineManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.HintHold
+import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.ISwitchAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.DriveLightingFragmentBinding
@@ -26,9 +27,10 @@ import dagger.hilt.android.AndroidEntryPoint
 class DriveLightingFragment : BaseFragment<CombineViewModel, DriveLightingFragmentBinding>(),
     ISwitchAction {
 
-
     private val manager: ISwitchManager
         get() = CombineManager.instance
+
+    private val map: HashMap<Int, View> = HashMap()
 
     override fun getLayoutId(): Int {
         return R.layout.drive_lighting_fragment
@@ -41,12 +43,48 @@ class DriveLightingFragment : BaseFragment<CombineViewModel, DriveLightingFragme
         setSwitchListener()
 
         initDetailsClickListener()
+        initClickView()
+        initRouteListener()
+    }
+
+    private fun initClickView() {
+        map[1] = binding.driveHmaDetails
+    }
+
+    private fun obtainRouter(): IRoute? {
+        return if (activity is IRoute) activity as IRoute else null
+    }
+
+    private fun initRouteListener() {
+        val router = obtainRouter()
+        if (null != router) {
+            val liveData = router.obtainLevelLiveData()
+            liveData.observe(this) {
+                it.takeIf { it.valid && it.uid == pid }?.let { level1 ->
+                    level1.cnode?.takeIf { child -> child.valid && child.uid == uid }
+                        .let { level2 ->
+                            level2?.cnode?.let { lv3Node ->
+                                map[lv3Node.uid]?.run { onViewClick(this, lv3Node.uid, true) }
+                            }
+                        }
+                }
+            }
+        }
+    }
+
+    private fun onViewClick(view: View, clickUid: Int, frank: Boolean) {
+        onViewClick(view)
+        obtainRouter()?.resetLevelRouter(pid, uid, clickUid)
+    }
+
+    private fun onViewClick(it: View) {
+        when (it) {
+            binding.driveHmaDetails -> updateHintMessage(R.string.drive_hma_title, R.string.hma_details)
+        }
     }
 
     private fun initDetailsClickListener() {
-        binding.driveHmaDetails.setOnClickListener {
-            updateHintMessage(R.string.drive_hma_title, R.string.hma_details)
-        }
+        binding.driveHmaDetails.setOnClickListener(this::onViewClick)
     }
 
     private fun updateHintMessage(title: Int, content: Int) {

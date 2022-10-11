@@ -9,8 +9,10 @@ import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.access.WindowManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
+import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.ISwitchAction
 import com.chinatsp.vehicle.settings.R
+import com.chinatsp.vehicle.settings.ShellUtils
 import com.chinatsp.vehicle.settings.databinding.CarWindowFragmentBinding
 import com.chinatsp.vehicle.settings.vm.accress.WindowViewModel
 import com.common.animationlib.AnimationDrawable
@@ -26,6 +28,8 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
 
     private var animationWiper: AnimationDrawable = AnimationDrawable()
 
+    private val map: HashMap<Int, View> = HashMap()
+
     private val manager: WindowManager
         get() = WindowManager.instance
 
@@ -35,6 +39,9 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+
+        initClickView()
+
         initAnimation()
 
         initSwitchOption()
@@ -44,6 +51,30 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
         initViewDisplay()
         initDetailsClickListener()
         updateOptionActive()
+
+        initRouteListener()
+    }
+
+    private fun initClickView() {
+        map[1] = binding.remoteRoseWindowDetails
+        map[2] = binding.carLockDetails
+        map[3] = binding.carWiperDetails
+    }
+
+    private fun initRouteListener() {
+        val router = obtainRouter()
+        if (null != router) {
+            val liveData = router.obtainLevelLiveData()
+            liveData.observe(this) {
+                it.takeIf { it.valid && it.uid == pid }?.let { level1 ->
+                    level1.cnode?.takeIf { child -> child.valid && child.uid == uid }.let { level2 ->
+                        level2?.cnode?.let { lv3Node ->
+                            map[lv3Node.uid]?.run { onViewClick(this, lv3Node.uid, true) }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun updateOptionActive() {
@@ -54,7 +85,6 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
     }
 
     private fun initViewDisplay() {
-
         if (VcuUtils.isCareLevel(Level.LEVEL3, expect = true)) {
             binding.carWindowRainyDay.visibility = View.GONE
             binding.line3.visibility = View.GONE
@@ -65,15 +95,32 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
     }
 
     private fun initDetailsClickListener() {
-        binding.remoteRoseWindowDetails.setOnClickListener {
-            showPopWindow(R.string.car_window_lock_content, it)
+        binding.carLockDetails.setOnClickListener(this::onViewClick)
+        binding.carWiperDetails.setOnClickListener(this::onViewClick)
+        binding.remoteRoseWindowDetails.setOnClickListener(this::onViewClick)
+    }
+
+    private fun onViewClick(view: View, clickUid: Int, frank: Boolean) {
+        onViewClick(view)
+        obtainRouter()?.resetLevelRouter(pid, uid, clickUid)
+    }
+
+    private fun onViewClick(it: View) {
+        when (it) {
+            binding.carLockDetails -> {
+                showPopWindow(R.string.car_window_lock_car_content, it)
+            }
+            binding.carWiperDetails -> {
+                showPopWindow(R.string.car_window_wiper_content, it)
+            }
+            binding.remoteRoseWindowDetails -> {
+                showPopWindow(R.string.car_window_lock_content, it)
+            }
         }
-        binding.carLockDetails.setOnClickListener {
-            showPopWindow(R.string.car_window_lock_car_content, it)
-        }
-        binding.carWiperDetails.setOnClickListener {
-            showPopWindow(R.string.car_window_wiper_content, it)
-        }
+    }
+
+    private fun obtainRouter(): IRoute? {
+        return if (activity is IRoute) activity as IRoute else null
     }
 
     private fun initAnimation() {

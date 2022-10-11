@@ -10,6 +10,7 @@ import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.access.BackMirrorManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
+import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.ISwitchAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.app.Toast
@@ -29,11 +30,15 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
 
     private var angleStatus: Int = Constant.DEFAULT
 
+    private val map: HashMap<Int, View> = HashMap()
+
     override fun getLayoutId(): Int {
         return R.layout.car_mirror_fragment
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+        initClickView()
+
         initViewsDisplay()
 
         initSwitchOption()
@@ -52,6 +57,46 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
         }
 
         updateOptionActive()
+        initRouteListener()
+    }
+
+    private fun initClickView() {
+        map[1] = binding.modifyAngle
+    }
+
+    private fun obtainRouter(): IRoute? {
+        return if (activity is IRoute) activity as IRoute else null
+    }
+
+    private fun initRouteListener() {
+        val router = obtainRouter()
+        if (null != router) {
+            val liveData = router.obtainLevelLiveData()
+            liveData.observe(this) {
+                it.takeIf { it.valid && it.uid == pid }?.let { level1 ->
+                    level1.cnode?.takeIf { child -> child.valid && child.uid == uid }.let { level2 ->
+                        level2?.cnode?.let { lv3Node ->
+                            map[lv3Node.uid]?.run { onViewClick(this, lv3Node.uid, true) }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun onViewClick(view: View, clickUid: Int, frank: Boolean) {
+        onViewClick(view)
+        obtainRouter()?.resetLevelRouter(pid, uid, clickUid)
+    }
+
+    private fun onViewClick(it: View) {
+        when (it) {
+            binding.modifyAngle -> {
+                if (isAngle) {
+                    showReverseAngleFragment()
+                }
+            }
+        }
     }
 
     private fun updateOptionActive() {
@@ -153,11 +198,7 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
     }
 
     private fun setCheckedChangeListener() {
-        binding.modifyAngle.setOnClickListener {
-            if (isAngle) {
-                showReverseAngleFragment()
-            }
-        }
+        binding.modifyAngle.setOnClickListener(this::onViewClick)
     }
 
     private fun showReverseAngleFragment() {

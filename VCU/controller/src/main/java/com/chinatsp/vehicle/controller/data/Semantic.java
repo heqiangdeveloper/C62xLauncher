@@ -1,205 +1,88 @@
 package com.chinatsp.vehicle.controller.data;
 
-public class Semantic {
+import android.os.Parcel;
+import android.os.Parcelable;
 
-    /**
-     * slots : {"endLoc":{"ori_loc":"公司","topic":"others","type":"USR_DEF"},"startLoc":{"ori_loc":"CURRENT_ORI_LOC"}}
-     * <p>
-     * {
-     * "slots": {
-     * "endLoc": {
-     * "ori_loc": "沙坪坝",
-     * "topic": "others"
-     * },
-     * "startLoc": {
-     * "ori_loc": "CURRENT_ORI_LOC"
-     * },
-     * "viaLoc": {
-     * "ori_loc": "火车站",
-     * "topic": "others"
-     * }
-     * }
-     * }
-     */
-    public SlotsBean slots;
+public final class Semantic implements Parcelable {
 
-    public static class SlotsBean {
-        /**
-         * endLoc : {"ori_loc":"公司","topic":"others","type":"USR_DEF"}
-         * startLoc : {"ori_loc":"CURRENT_ORI_LOC"}
-         */
-        public EndLocBean endLoc;
-        public EndLocBean viaLoc;
-        public EndLocBean viaLocNext;
-        public StartLocBean startLoc;
-        public Object temperature;
-        public Object fanSpeed;
-        /**
-         * datetime : {"date":"2019-04-09","dateOrig":"明天","type":"DT_BASIC"}
-         */
-        public DatetimeBean datetime;
+    public Slots slots;
 
-        /**
-         * "location": { "city": "首尔","cityAddr": "首尔", "type": "LOC_BASIC"},
-         */
-        public LocationBean location;
+    public static class Slots implements Parcelable{
+
+        public String temperature = "";
+        public String fanSpeed = "";
         /**
          * "productName": "小t"
          */
-        public String productName;
-        public DateBean startDate;
-
-        public PosRankBean posRank;
-        public PageRankBean pageRank;
+        public String productName = "";
+//        public DateBean startDate;
+//
+//        public PosRankBean posRank;
+//        public PageRankBean pageRank;
 
         public String routeCondition;
 
-        public String naviInfo;
+        public String content = "";
 
-        public String content;
+        public String contentType = "";
 
-        public String contentType;
+        public String receiver = "";
 
-        public String receiver;
-
-        public String money;
+        public String money = "";
 
 
         /**
          * "insType": "OPEN"
          */
-        public String insType;
+        public String insType = "";
 
-        public String tag;
+        public String tag = "";
 
         /**
          * "waveband": "fm"
          */
-        public String waveband;
+        public String waveband = "";
 
         /**
          * 93.8
          */
-        public String code;
+        public String code = "";
 
         /**
          * "category": "方向盘按键"
          */
-        public String category;
+        public String category = "";
 
         /**
          * 亮度，音量调节中的具体值
          */
-        public String series;
+        public String series = "";
 
-        /**
-         * "presenter": "王钢蛋"
-         */
-        public String presenter;
-        /**
-         * "artist": "刘德华",
-         * "operation": "PLAY",
-         * "service": "musicX",
-         * "source": "谢谢你的爱",
-         * "sourceType": "专辑"
-         */
-        public String artist;
-        public String song;
-        public String source;
-        public String sourceType;
-        public String album;
-        public String moreArtist;
-        public String band;
-        public String gender;
-        public String genre;
-        public String area;
-        public String lang;
-        public String tags;
-        public String version;
-        public String episode;
-        public String mediaSource;
+        public String area = "";
+        public String lang = "";
+        public String tags = "";
+        public String version = "";
 
-        /**
-         * "program": "二货一箩筐"
-         */
-        public String program;
-        public String famous;
-        public String name;
-        public String nameValue;
-        public String nameOrig;
-        public Object chapter;
-        public String alias_name;
+        public String name = "";
         //空调中的模式
-        public String mode;
-        public String modeValue;
+        public String mode = "";
+        public String modeValue = "";
 
         /**
          * "fuzzyPart": "4379"
          */
-        public String fuzzyPart;
+        public String fuzzyPart = "";
         /**
          * "headNum": "189"
          */
-        public String headNum;
-        public String action;
+        public String headNum = "";
+        public String action = "";
         //public String nameValue;
         //氛围灯颜色
-        public String color;
+        public String color = "";
 
         //空调吹面，吹脚
-        public String airflowDirection;
-        //股票市场:深证/上证
-        public String market;
-        public String viewCmd;
-
-        public String direction;
-
-        public static class EndLocBean {
-            /**
-             * ori_loc : 公司
-             * topic : others
-             * type : USR_DEF
-             */
-            public String ori_loc;
-            public String topic;
-            public String type;
-            public String city;
-            public String cityAddr;
-        }
-
-        public static class StartLocBean {
-            /**
-             * ori_loc : CURRENT_ORI_LOC
-             */
-            public String ori_loc;
-            public String type;
-            public String city;
-            public String cityAddr;
-        }
-
-        public static class DatetimeBean {
-            /**
-             * date : 2019-04-09
-             * dateOrig : 明天
-             * type : DT_BASIC
-             */
-            public String date;
-            public String dateOrig;
-            public String type;
-        }
-
-        public static class LocationBean {
-            /**
-             * city : 首尔
-             * cityAddr : 首尔
-             * type : LOC_BASIC
-             */
-            public String country;
-            public String province;
-            public String city;
-            public String cityAddr;
-            public String type;
-        }
+        public String airflowDirection = "";
 
         public static class DateBean {
             /**
@@ -226,5 +109,106 @@ public class Semantic {
             public String type;
         }
 
+        protected Slots(Parcel in) {
+            temperature = in.readString();
+            fanSpeed = in.readString();
+            productName = in.readString();
+            routeCondition = in.readString();
+            content = in.readString();
+            contentType = in.readString();
+            receiver = in.readString();
+            money = in.readString();
+            insType = in.readString();
+            tag = in.readString();
+            waveband = in.readString();
+            code = in.readString();
+            category = in.readString();
+            series = in.readString();
+            area = in.readString();
+            lang = in.readString();
+            tags = in.readString();
+            version = in.readString();
+            name = in.readString();
+            mode = in.readString();
+            modeValue = in.readString();
+            fuzzyPart = in.readString();
+            headNum = in.readString();
+            action = in.readString();
+            color = in.readString();
+            airflowDirection = in.readString();
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(temperature);
+            dest.writeString(fanSpeed);
+            dest.writeString(productName);
+            dest.writeString(routeCondition);
+            dest.writeString(content);
+            dest.writeString(contentType);
+            dest.writeString(receiver);
+            dest.writeString(money);
+            dest.writeString(insType);
+            dest.writeString(tag);
+            dest.writeString(waveband);
+            dest.writeString(code);
+            dest.writeString(category);
+            dest.writeString(series);
+            dest.writeString(area);
+            dest.writeString(lang);
+            dest.writeString(tags);
+            dest.writeString(version);
+            dest.writeString(name);
+            dest.writeString(mode);
+            dest.writeString(modeValue);
+            dest.writeString(fuzzyPart);
+            dest.writeString(headNum);
+            dest.writeString(action);
+            dest.writeString(color);
+            dest.writeString(airflowDirection);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        public static final Creator<Slots> CREATOR = new Creator<Slots>() {
+            @Override
+            public Slots createFromParcel(Parcel in) {
+                return new Slots(in);
+            }
+
+            @Override
+            public Slots[] newArray(int size) {
+                return new Slots[size];
+            }
+        };
     }
+
+    private Semantic(Parcel in) {
+        slots = in.readParcelable(Slots.class.getClassLoader());
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(slots, flags);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Semantic> CREATOR = new Creator<Semantic>() {
+        @Override
+        public Semantic createFromParcel(Parcel in) {
+            return new Semantic(in);
+        }
+
+        @Override
+        public Semantic[] newArray(int size) {
+            return new Semantic[size];
+        }
+    };
 }

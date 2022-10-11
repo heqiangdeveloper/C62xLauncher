@@ -9,11 +9,16 @@ import com.chinatsp.settinglib.Constant
  * @desc   :
  * @version: 1.0
  */
-class Node(var id: Int = Constant.INVALID, var presentId: Int = Constant.INVALID) {
-    var valid: Boolean = false
+class Node(var uid: Int = Constant.INVALID, var pid: Int = Constant.INVALID) {
+
+    var valid: Boolean = true
+
+    var pnode: Node? = null
+
+    var cnode: Node? = null
 
     override fun toString(): String {
-        return "Node(id=$id, presentId=$presentId, valid=$valid)"
+        return "Node(uid=$uid, pid=$pid, valid=$valid)"
     }
 
 

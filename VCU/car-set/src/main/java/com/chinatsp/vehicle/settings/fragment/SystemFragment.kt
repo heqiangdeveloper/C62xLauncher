@@ -11,9 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SystemFragment : BaseTabFragment<BaseViewModel, FragmentSimpleTabBinding>() {
-
-    override val nodeId: Int
-        get() = 7
+    
 
     override val tabLocation: MutableLiveData<Int> by lazy { MutableLiveData(0) }
 
@@ -23,6 +21,10 @@ class SystemFragment : BaseTabFragment<BaseViewModel, FragmentSimpleTabBinding>(
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+
+    }
+
+    override fun resetRouter(lv1: Int, lv2: Int, lv3: Int) {
 
     }
 
