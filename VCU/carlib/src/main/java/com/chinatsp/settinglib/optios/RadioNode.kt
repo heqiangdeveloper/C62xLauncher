@@ -425,6 +425,10 @@ enum class RadioNode(
         }
     }
 
+    open fun isInactive(value: Int): Boolean {
+        return inactive?.contains(value) ?: false
+    }
+
 //    fun indexOf(value: Int, isGet: Boolean = true): Int {
 //        return if (isGet) get.values.indexOf(value) else set.values.indexOf(value)
 //    }

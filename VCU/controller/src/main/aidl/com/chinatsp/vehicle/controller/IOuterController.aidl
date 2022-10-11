@@ -1,14 +1,17 @@
 package com.chinatsp.vehicle.controller;
 
-import com.chinatsp.vehicle.controller.bean.Cmd;
+import com.chinatsp.vehicle.controller.bean.AirCmd;
+import com.chinatsp.vehicle.controller.bean.CarCmd;
 import com.chinatsp.vehicle.controller.ICmdCallback;
 import com.chinatsp.vehicle.controller.IDataResolver;
 
 interface IOuterController {
 
-    void doBindDataResolver(in IDataResolver resolver);
-
     boolean isEngineStatus(in String packageName);
 
-    void doOuterControlCommand(in Cmd cmd, in ICmdCallback callback);
+    void doBindDataResolver(in IDataResolver resolver);
+
+    void doAirControlCommand(in AirCmd cmd, in ICmdCallback callback);
+
+    void doCarControlCommand(in CarCmd cmd, in ICmdCallback callback);
 }

@@ -84,6 +84,25 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
 
     private static final long IGNORE_INTERVAL_TIME = 500;
 
+    protected int uid = -1;
+
+    protected int pid = -1;
+
+    public int getUid() {
+        return uid;
+    }
+
+    public void setUid(int uid) {
+        this.uid = uid;
+    }
+
+    public int getPid() {
+        return pid;
+    }
+
+    public void setPid(int pid) {
+        this.pid = pid;
+    }
 
     @Nullable
     @Override

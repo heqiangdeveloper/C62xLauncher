@@ -11,7 +11,7 @@ import android.os.IBinder
 import android.os.Message
 import android.provider.Settings
 import android.text.TextUtils
-import com.chinatsp.vehicle.controller.bean.Cmd
+import com.chinatsp.vehicle.controller.bean.BaseCmd
 import com.chinatsp.vehicle.controller.logic.conditioner.ConditionerConstants
 import com.chinatsp.vehicle.controller.semantic.CmdVoiceModel
 import com.chinatsp.vehicle.controller.semantic.GsonUtil
@@ -88,9 +88,11 @@ class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback, 
 
     private fun onSrAction(nlpVoiceModel: NlpVoiceModel?) {
         LogManager.d(TAG, "onSrAction() called with: nlpVoiceModel = $nlpVoiceModel")
-        val message = handler.obtainMessage(WHAT_SR_ACTION)
-        message.obj = nlpVoiceModel
-        message.sendToTarget()
+        nlpVoiceModel?.let {
+            val message = handler.obtainMessage(WHAT_SR_ACTION)
+            message.obj = nlpVoiceModel
+            message.sendToTarget()
+        } ?: defaultHandleSpeech()
     }
 
 
@@ -137,9 +139,9 @@ class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback, 
 
 
     inner class CmdHandleCallback : ICmdCallback.Stub() {
-        override fun onCmdHandleResult(cmd: Cmd) {
+        override fun onCmdHandleResult(cmd: BaseCmd) {
             LogManager.d(TAG, "onCmdHandleResult $cmd")
-            audioHintActionResult("yydsC10", cmd.message)
+            audioHintActionResult("yydsC10", cmd.slots?.area ?: "")
         }
     }
 
@@ -196,26 +198,20 @@ class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback, 
         return null
     }
 
-    override fun doResolverData(data: String?) {
-        data?.let {
+    override fun doResolverData(data: String) {
 //            val web = GsonUtil.stringToObject(data!!, Web::class.java)
 //            LogManager.d("luohong", web?.toString() ?: "web is null")
-            if (true) {
-                val jsonObject = JSONObject(data)
-                val intentStr = jsonObject.getString("intent")
-                LogManager.d("aa", "intentStr: $intentStr")
-                val entity = GsonUtil.stringToObject(
-                    intentStr,
-                    com.chinatsp.vehicle.controller.semantic.Intent::class.java
-                )
-                onSrAction(entity.convert2NlpVoiceModel())
-            } else {
-                val entity = GsonUtil.stringToObject(
-                    data,
-                    com.chinatsp.vehicle.controller.semantic.Intent::class.java
-                )
-                onSrAction(entity.convert2NlpVoiceModel())
-            }
+        if (true) {
+            val jsonObject = JSONObject(data)
+            val intent = jsonObject.getString("intent")
+            LogManager.d("aa", "intent: $intent")
+            val entity = GsonUtil.stringToObject(
+                intent, com.chinatsp.vehicle.controller.semantic.Intent::class.java)
+            onSrAction(entity.convert2NlpVoiceModel())
+        } else {
+            val entity = GsonUtil.stringToObject(
+                data, com.chinatsp.vehicle.controller.semantic.Intent::class.java)
+            onSrAction(entity.convert2NlpVoiceModel())
         }
     }
 

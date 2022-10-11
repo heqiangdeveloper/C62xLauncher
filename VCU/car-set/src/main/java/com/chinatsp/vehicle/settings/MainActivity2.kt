@@ -4,7 +4,6 @@ import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.Constant
@@ -18,6 +17,7 @@ import com.chinatsp.vehicle.settings.fragment.CommonlyFragment
 import com.chinatsp.vehicle.settings.fragment.drive.DriveManageFragment
 import com.chinatsp.vehicle.settings.vm.MainViewModel
 import com.common.library.frame.base.BaseActivity
+import com.common.library.frame.base.BaseFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,7 +36,9 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
         MutableLiveData(manager.getTabSerial())
     }
 
-    private val level2Node: MutableLiveData<Node> by lazy { MutableLiveData(Node()) }
+    //    private val level1: MutableLiveData<Node> by lazy { MutableLiveData(Node()) }
+    private val level1: MutableLiveData<Node> by lazy { MutableLiveData(Node()) }
+//    private val level3: MutableLiveData<Node> by lazy { MutableLiveData(Node()) }
 
     private val popupLiveData: MutableLiveData<String> by lazy { MutableLiveData("") }
 
@@ -50,16 +52,18 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
     override fun initData(savedInstanceState: Bundle?) {
         initTabLayout()
         checkOutRoute(intent)
-        tabLocation.observe(this) { position ->
-            manager.setTabSerial(position)
-            binding.tabLayout.let { tabLayout ->
-                if (position != tabLayout.selectedTabPosition) {
-                    tabLayout.selectTab(tabLayout.getTabAt(position), true)
-                }
-            }
-        }
+        observeLocation()
         binding.deviceUpgrade.setOnClickListener {
             doRouteToDeviceUpgrade()
+        }
+    }
+
+    private fun observeLocation() {
+        tabLocation.observe(this) { position ->
+            manager.setTabSerial(position)
+            binding.tabLayout.takeIf { position != it.selectedTabPosition }?.let { tabLayout ->
+                tabLayout.selectTab(tabLayout.getTabAt(position), true)
+            }
         }
     }
 
@@ -88,6 +92,8 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
             } else if (Constant.VCU_GENERAL_ROUTER == action) {
                 routeValue = it.getIntExtra(Constant.ROUTE_SERIAL, Constant.INVALID)
                 popupSerial = it.getStringExtra(Constant.DIALOG_SERIAL) ?: ""
+                doNavigation(routeValue, popupSerial, general = true)
+                return
             } else {
                 routeValue = Constant.INVALID
                 popupSerial = ""
@@ -96,18 +102,37 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
         }
     }
 
-    private fun doNavigation(routeValue: Int, popupSerial: String) {
+    private fun doNavigation(routeValue: Int, route: String, general: Boolean = false) {
+        if (general) {
+            val list = route.split("_")
+            Timber.d("==================route:%s, size:%s", route, list.size)
+            if (list.size == 3) {
+                val locations = list.map { it.toInt() }
+                val node1 = Node(uid = locations[0] - 1000)
+                val node2 = Node(uid = locations[1] - 2000)
+                val node3 = Node(uid = locations[2] - 3000)
+                node1.cnode = node2
+                node2.cnode = node3
+                node3.pnode = node2
+                node2.pnode = node1
+                level1.postValue(node1)
+                if (node1.valid && node1.uid in obtainTabs().map { tab -> tab.uid }.toSet()) {
+                    tabLocation.postValue(node1.uid)
+                }
+            }
+            return
+        }
         if (Constant.INVALID != routeValue) {
             val level1 = RouterSerial.getLevel(routeValue, 1)
             val level2 = RouterSerial.getLevel(routeValue, 2)
             val level3 = RouterSerial.getLevel(routeValue, 3)
-            val node2 = level2Node.value
-            node2?.id = level2
-            node2?.presentId = level1
-            node2?.valid = true
+            val node2 = this.level1.value
+            node2?.uid = level2
+            node2?.pid = level1
+//            node2?.valid = true
             tabLocation.value = level1
-            level2Node.value = node2
-            popupLiveData.value = popupSerial
+            this.level1.value = node2
+            popupLiveData.value = route
         }
     }
 
@@ -115,10 +140,7 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
         with(this) {
             binding.tabLayout.tabMode = TabLayout.MODE_AUTO
             binding.tabLayout.addOnTabSelectedListener(this)
-            var values = TabPage.values()
-            if (VcuUtils.isCareLevel(Level.LEVEL3, expect = true)) {
-                values = values.dropWhile { it == TabPage.COMMONLY }.toTypedArray()
-            }
+            val values = obtainTabs()
             values.forEach {
                 val tab = binding.tabLayout.newTab()
                 tab.text = it.desc
@@ -130,11 +152,17 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
         }
     }
 
+    private fun obtainTabs(): Array<TabPage> {
+        var values = TabPage.values()
+        if (VcuUtils.isCareLevel(Level.LEVEL3, expect = true)) {
+            values = values.dropWhile { it == TabPage.COMMONLY }.toTypedArray()
+        }
+        return values
+    }
+
     fun onClick(view: View) {
-        when (view.id) {
-            R.id.back -> this.onBackPressed()
-            else -> {
-            }
+        if (view.id == R.id.back) {
+            onBackPressed()
         }
     }
 
@@ -152,14 +180,16 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
         }
     }
 
-    private fun showFragment(name: String) {
-        val manager = supportFragmentManager ?: return
+    private fun showFragment(name: String, uid: Int) {
+        val manager = supportFragmentManager
         var fragment = manager.findFragmentByTag(name)
         if (null == fragment) {
-            fragment = Class.forName(name).newInstance() as Fragment
+            val newInstance = Class.forName(name).newInstance() as BaseFragment<*, *>
+            newInstance.uid = uid
             val transaction = supportFragmentManager.beginTransaction()
 //            transaction.setCustomAnimations(R.anim.activity_enter, R.anim.activity_exit);
-            transaction.replace(R.id.vcu_content_container, fragment!!, name)
+            fragment = newInstance
+            transaction.replace(R.id.vcu_content_container, fragment, name)
             transaction.commitAllowingStateLoss()
         }
     }
@@ -187,7 +217,7 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
                     binding.constraint.setBackgroundResource(R.drawable.right_bg)
                 }
             }
-            showFragment(tag.className)
+            showFragment(tag.className, tag.uid)
         }
 
         if (firstCreate) {
@@ -203,7 +233,7 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
     }
 
     override fun obtainLevelLiveData(): LiveData<Node> {
-        return level2Node
+        return level1
     }
 
     override fun obtainPopupLiveData(): LiveData<String> {
@@ -216,6 +246,23 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
             return true
         }
         return false
+    }
+
+    override fun resetLevelRouter(lv1: Int, lv2: Int, lv3: Int) {
+        level1.value?.let {
+            if (it.valid && it.uid == lv1 && it.cnode?.uid == lv2 && it.cnode?.cnode?.uid == lv3) {
+                resetNode(it)
+            }
+        }
+    }
+
+    private fun resetNode(node: Node) {
+        if (node.valid) {
+            if (null != node.cnode) {
+                resetNode(node.cnode!!)
+            }
+            node.valid = false
+        }
     }
 
 }

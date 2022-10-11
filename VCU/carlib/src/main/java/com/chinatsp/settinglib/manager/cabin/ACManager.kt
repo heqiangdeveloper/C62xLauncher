@@ -1,6 +1,12 @@
 package com.chinatsp.settinglib.manager.cabin
 
 import android.car.hardware.CarPropertyValue
+import android.car.hardware.hvac.CarHvacManager
+import android.os.Handler
+import android.os.HandlerThread
+import android.os.Message
+import com.chinatsp.settinglib.Constant
+import com.chinatsp.settinglib.bean.AirCmdParcel
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IBaseListener
@@ -10,7 +16,12 @@ import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
+import com.chinatsp.vehicle.controller.ICmdCallback
+import com.chinatsp.vehicle.controller.annotation.Action
+import com.chinatsp.vehicle.controller.annotation.IAirFun
+import com.chinatsp.vehicle.controller.bean.AirCmd
 import java.lang.ref.WeakReference
+import java.util.concurrent.Delayed
 
 /**
  * @author : luohong
@@ -22,6 +33,8 @@ import java.lang.ref.WeakReference
 
 
 class ACManager private constructor() : BaseManager(), IOptionManager {
+
+    private val airSupplier: AirSupplier by lazy { AirSupplier(this) }
 
     companion object : ISignal {
         override val TAG: String = ACManager::class.java.simpleName
@@ -47,10 +60,6 @@ class ACManager private constructor() : BaseManager(), IOptionManager {
 
     private val aridStatus: SwitchState by lazy {
         val node = SwitchNode.AC_AUTO_ARID
-//        AtomicBoolean(node.default).apply {
-//            val result = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateSwitchValue(node, this, result)
-//        }
         return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
@@ -58,10 +67,6 @@ class ACManager private constructor() : BaseManager(), IOptionManager {
 
     private val demistStatus: SwitchState by lazy {
         val node = SwitchNode.AC_AUTO_DEMIST
-//        AtomicBoolean(node.default).apply {
-//            val result = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateSwitchValue(node, this, result)
-//        }
         return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
@@ -69,10 +74,6 @@ class ACManager private constructor() : BaseManager(), IOptionManager {
 
     private val windStatus: SwitchState by lazy {
         val node = SwitchNode.AC_ADVANCE_WIND
-//        AtomicBoolean(node.default).apply {
-//            val result = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateSwitchValue(node, this, result)
-//        }
         return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
@@ -80,10 +81,6 @@ class ACManager private constructor() : BaseManager(), IOptionManager {
 
     private val comfortOption: RadioState by lazy {
         val node = RadioNode.AC_COMFORT
-//        AtomicInteger(node.default).apply {
-//            val result = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateRadioValue(node, this, result)
-//        }
         return@lazy createAtomicInteger(node) { result, value ->
             doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
@@ -176,23 +173,10 @@ class ACManager private constructor() : BaseManager(), IOptionManager {
         }
     }
 
-//    private fun onRadioChanged(node: RadioNode, atomic: AtomicInteger, property: CarPropertyValue<*>) {
-//        val value = property.value
-//        if (value is Int) {
-//            onRadioChanged(node, atomic, value, this::doUpdateRadioValue) {
-//                    newNode, newValue -> doRadioChanged(newNode, newValue)
-//            }
-//        }
-//    }
-//
-//    private fun onSwitchChanged(node: SwitchNode, atomic: AtomicBoolean, property: CarPropertyValue<*>) {
-//        val value = property.value
-//        if (value is Int) {
-//            onSwitchChanged(node, atomic, value, this::doUpdateSwitchValue) {
-//                    newNode, newValue -> doSwitchChanged(newNode, newValue)
-//            }
-//        }
-//    }
+    override fun doAirControlCommand(cmd: AirCmd, callback: ICmdCallback?) {
+        val airCmdParcel = AirCmdParcel(cmd, callback)
+        airSupplier.doAirControlCommand(airCmdParcel)
+    }
 
 
 }

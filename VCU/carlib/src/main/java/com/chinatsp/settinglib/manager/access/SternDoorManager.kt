@@ -20,7 +20,7 @@ import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.annotation.Action
-import com.chinatsp.vehicle.controller.bean.Cmd
+import com.chinatsp.vehicle.controller.bean.CarCmd
 import java.lang.ref.WeakReference
 
 /**
@@ -196,7 +196,7 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
         }
     }
 
-    override fun doOuterControlCommand(cmd: Cmd, callback: ICmdCallback?) {
+    override fun doCarControlCommand(cmd: CarCmd, callback: ICmdCallback?) {
         if (Action.OPEN == cmd.action) {
             doControlTrunk(cmd, callback, true)
             callback?.onCmdHandleResult(cmd)
@@ -206,7 +206,7 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
         }
     }
 
-    private fun doControlTrunk(cmd: Cmd, callback: ICmdCallback?, open: Boolean) {
+    private fun doControlTrunk(cmd: CarCmd, callback: ICmdCallback?, open: Boolean) {
         if (!VcuUtils.isSupportFunction(OffLine.ETRUNK)) {
             cmd.message = "您的爱车不支持此功能！"
             return

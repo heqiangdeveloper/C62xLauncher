@@ -13,6 +13,7 @@ import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.IOptionAction
+import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CarTrunkFragmentBinding
 import com.chinatsp.vehicle.settings.vm.accress.SternDoorViewModel
@@ -23,6 +24,7 @@ import com.common.xui.widget.picker.ArcSeekBar
 import com.common.xui.widget.popupwindow.PopWindow
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.HashMap
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
@@ -33,10 +35,11 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     private var animFlashAlarm: AnimationDrawable = AnimationDrawable()
     private var animBuzzerAlarms: AnimationDrawable = AnimationDrawable()
 
-    private val duration: Int
-        get() = 50
+    private val duration: Int get() = 50
 
     private var location: Int = 0
+
+    private val map: HashMap<Int, View> = HashMap()
 
     private val manager: SternDoorManager
         get() = SternDoorManager.instance
@@ -61,7 +64,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-
+        initClickView()
         initArcSeekBar()
         setProgressLiveDataListener()
 
@@ -79,6 +82,12 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         initDetailsClickListener()
 
         updateOptionActive()
+
+        initRouteListener()
+    }
+
+    private fun initClickView() {
+        map[1] = binding.electricTailDetails
     }
 
     private fun updateOptionActive() {
@@ -86,6 +95,26 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         updateSwitchEnable(SwitchNode.STERN_LIGHT_ALARM)
         updateSwitchEnable(SwitchNode.STERN_AUDIO_ALARM)
         updateRadioEnable(RadioNode.STERN_SMART_ENTER)
+    }
+
+    private fun initRouteListener() {
+        val router = obtainRouter()
+        if (null != router) {
+            val liveData = router.obtainLevelLiveData()
+            liveData.observe(this) {
+                it.takeIf { it.valid && it.uid == pid }?.let { level1 ->
+                    level1.cnode?.takeIf { child -> child.valid && child.uid == uid }.let { level2 ->
+                        level2?.cnode?.let { lv3Node ->
+                            map[lv3Node.uid]?.run { onViewClick(this, lv3Node.uid, true) }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun obtainRouter(): IRoute?{
+        return if (activity is IRoute) activity as IRoute else null
     }
 
     private fun setProgressLiveDataListener() {
@@ -122,8 +151,17 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     }
 
     private fun initDetailsClickListener() {
-        binding.electricTailDetails.setOnClickListener {
-            showPopWindow(R.string.car_trunk_content, it)
+        binding.electricTailDetails.setOnClickListener(this::onViewClick)
+    }
+
+    private fun onViewClick(view: View, clickUid: Int, frank: Boolean) {
+        onViewClick(view)
+        obtainRouter()?.resetLevelRouter(pid, uid, clickUid)
+    }
+
+    private fun onViewClick(view: View) {
+        if (view == binding.electricTailDetails) {
+            showPopWindow(R.string.car_trunk_content, view)
         }
         binding.carTrunkDoorHeight.setOnClickListener{
             if(binding.carTrunkDoorHeight.text.equals(activity?.getString(R.string.car_trunk_door_height))) {

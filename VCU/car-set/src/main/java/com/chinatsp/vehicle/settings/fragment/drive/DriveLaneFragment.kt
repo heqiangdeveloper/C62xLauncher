@@ -13,6 +13,7 @@ import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.HintHold
 import com.chinatsp.vehicle.settings.IOptionAction
+import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.DriveLaneFragmentBinding
 import com.chinatsp.vehicle.settings.fragment.drive.dialog.DetailsDialogFragment
@@ -27,6 +28,8 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
 
     private val manager: LaneManager
         get() = LaneManager.instance
+
+    private val map: HashMap<Int, View> = HashMap()
 
     override fun getLayoutId(): Int {
         return R.layout.drive_lane_fragment
@@ -44,12 +47,48 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
         setRadioListener()
 
         initDetailsClickListener()
+        initClickView()
+        initRouteListener()
+    }
+
+    private fun initClickView() {
+        map[1] = binding.laneAssistSystemDetails
+    }
+
+    private fun obtainRouter(): IRoute? {
+        return if (activity is IRoute) activity as IRoute else null
+    }
+
+    private fun initRouteListener() {
+        val router = obtainRouter()
+        if (null != router) {
+            val liveData = router.obtainLevelLiveData()
+            liveData.observe(this) {
+                it.takeIf { it.valid && it.uid == pid }?.let { level1 ->
+                    level1.cnode?.takeIf { child -> child.valid && child.uid == uid }
+                        .let { level2 ->
+                            level2?.cnode?.let { lv3Node ->
+                                map[lv3Node.uid]?.run { onViewClick(this, lv3Node.uid, true) }
+                            }
+                        }
+                }
+            }
+        }
+    }
+
+    private fun onViewClick(view: View, clickUid: Int, frank: Boolean) {
+        onViewClick(view)
+        obtainRouter()?.resetLevelRouter(pid, uid, clickUid)
+    }
+
+    private fun onViewClick(it: View) {
+        when (it) {
+            binding.laneAssistSystemDetails ->  updateHintMessage(R.string.drive_Lane_assist_system, R.string.lane_assist_details)
+        }
     }
 
     private fun initDetailsClickListener() {
-        binding.laneAssistSystemDetails.setOnClickListener {
-            updateHintMessage(R.string.drive_Lane_assist_system, R.string.lane_assist_details)
-        }
+        binding.laneAssistSystemDetails.setOnClickListener(this::onViewClick)
     }
 
     private fun updateHintMessage(title: Int, content: Int) {

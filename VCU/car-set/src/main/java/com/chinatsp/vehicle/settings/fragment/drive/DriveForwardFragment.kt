@@ -9,9 +9,7 @@ import androidx.core.content.ContextCompat
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.adas.ForwardManager
 import com.chinatsp.settinglib.optios.SwitchNode
-import com.chinatsp.vehicle.settings.HintHold
-import com.chinatsp.vehicle.settings.ISwitchAction
-import com.chinatsp.vehicle.settings.R
+import com.chinatsp.vehicle.settings.*
 import com.chinatsp.vehicle.settings.databinding.DriveForwardFragmentBinding
 import com.chinatsp.vehicle.settings.fragment.drive.dialog.CloseBrakeDialogFragment
 import com.chinatsp.vehicle.settings.fragment.drive.dialog.DetailsDialogFragment
@@ -27,6 +25,8 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
     private val manager: ForwardManager
         get() = ForwardManager.instance
 
+    private val map: HashMap<Int, View> = HashMap()
+
     override fun getLayoutId(): Int {
         return R.layout.drive_forward_fragment
     }
@@ -39,15 +39,51 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
         setSwitchListener()
 
         initDetailsClickListener()
+        initClickView()
+        initRouteListener()
+    }
+
+    private fun initClickView() {
+        map[1] = binding.driveWarningFcwDetails
+        map[2] = binding.driveAebDetails
+    }
+
+    private fun obtainRouter(): IRoute? {
+        return if (activity is IRoute) activity as IRoute else null
+    }
+
+    private fun initRouteListener() {
+        val router = obtainRouter()
+        if (null != router) {
+            val liveData = router.obtainLevelLiveData()
+            liveData.observe(this) {
+                it.takeIf { it.valid && it.uid == pid }?.let { level1 ->
+                    level1.cnode?.takeIf { child -> child.valid && child.uid == uid }
+                        .let { level2 ->
+                            level2?.cnode?.let { lv3Node ->
+                                map[lv3Node.uid]?.run { onViewClick(this, lv3Node.uid, true) }
+                            }
+                        }
+                }
+            }
+        }
+    }
+
+    private fun onViewClick(view: View, clickUid: Int, frank: Boolean) {
+        onViewClick(view)
+        obtainRouter()?.resetLevelRouter(pid, uid, clickUid)
+    }
+
+    private fun onViewClick(it: View) {
+        when (it) {
+            binding.driveAebDetails ->  updateHintMessage(R.string.drive_warning_fcw, R.string.fcw_details)
+            binding.driveWarningFcwDetails -> updateHintMessage(R.string.drive_aeb_title, R.string.aeb_details)
+        }
     }
 
     private fun initDetailsClickListener() {
-        binding.driveWarningFcwDetails.setOnClickListener {
-            updateHintMessage(R.string.drive_warning_fcw, R.string.fcw_details)
-        }
-        binding.driveAebDetails.setOnClickListener {
-            updateHintMessage(R.string.drive_aeb_title, R.string.aeb_details)
-        }
+        binding.driveWarningFcwDetails.setOnClickListener(this::onViewClick)
+        binding.driveAebDetails.setOnClickListener(this::onViewClick)
     }
 
     private fun updateHintMessage(title: Int, content: Int) {

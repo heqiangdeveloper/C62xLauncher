@@ -13,6 +13,7 @@ import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.HintHold
 import com.chinatsp.vehicle.settings.IOptionAction
+import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.DriveIntelligentFragmentBinding
 import com.chinatsp.vehicle.settings.fragment.drive.dialog.DetailsDialogFragment
@@ -32,6 +33,8 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
     private val manager: CruiseManager
         get() = CruiseManager.instance
 
+    private val map: HashMap<Int, View> = HashMap()
+
     override fun getLayoutId(): Int {
         return R.layout.drive_intelligent_fragment
     }
@@ -48,17 +51,56 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
         setRadioListener()
 
         initDetailsClickListener()
+
+        initClickView()
+        initRouteListener()
+    }
+
+    private fun initClickView() {
+        map[1] = binding.cruiseAssistantDetails
+    }
+
+    private fun obtainRouter(): IRoute? {
+        return if (activity is IRoute) activity as IRoute else null
+    }
+
+    private fun initRouteListener() {
+        val router = obtainRouter()
+        if (null != router) {
+            val liveData = router.obtainLevelLiveData()
+            liveData.observe(this) {
+                it.takeIf { it.valid && it.uid == pid }?.let { level1 ->
+                    level1.cnode?.takeIf { child -> child.valid && child.uid == uid }
+                        .let { level2 ->
+                            level2?.cnode?.let { lv3Node ->
+                                map[lv3Node.uid]?.run { onViewClick(this, lv3Node.uid, true) }
+                            }
+                        }
+                }
+            }
+        }
+    }
+
+    private fun onViewClick(view: View, clickUid: Int, frank: Boolean) {
+        onViewClick(view)
+        obtainRouter()?.resetLevelRouter(pid, uid, clickUid)
+    }
+
+    private fun onViewClick(it: View) {
+        when (it) {
+            binding.cruiseAssistantDetails -> {
+                val fragment = DetailsDialogFragment()
+                HintHold.setTitle(R.string.drive_intelligent_cruise_assistant)
+                HintHold.setContent(R.string.iacc_details)
+                activity?.supportFragmentManager?.let {
+                    fragment.show(it, fragment.javaClass.simpleName)
+                }
+            }
+        }
     }
 
     private fun initDetailsClickListener() {
-        binding.cruiseAssistantDetails.setOnClickListener {
-            val fragment = DetailsDialogFragment()
-            HintHold.setTitle(R.string.drive_intelligent_cruise_assistant)
-            HintHold.setContent(R.string.iacc_details)
-            activity?.supportFragmentManager?.let {
-                fragment.show(it, fragment.javaClass.simpleName)
-            }
-        }
+        binding.cruiseAssistantDetails.setOnClickListener(this::onViewClick)
     }
 
     private fun initRadioOption() {

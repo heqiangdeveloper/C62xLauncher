@@ -92,8 +92,18 @@ open class BaseViewModel @Inject constructor(application: Application, model: Ba
             liveData.postValue(value)
             return
         }
-        if (liveData.value!! != value) {
-            liveData.postValue(value)
+
+        val state = liveData.value!!
+        val statusChanged = state.get() != value.get()
+        val enableChanged = state.enable != value.enable
+        if (statusChanged) {
+            state.set(value.get())
+        }
+        if (enableChanged) {
+            state.enable = value.enable
+        }
+        if (statusChanged || enableChanged) {
+            liveData.postValue(state)
         }
     }
 

@@ -17,6 +17,7 @@ import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.HintHold
 import com.chinatsp.vehicle.settings.IOptionAction
+import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.DriveRearFragmentBinding
 import com.chinatsp.vehicle.settings.fragment.drive.dialog.DetailsDialogFragment
@@ -30,6 +31,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(), IOptionAction {
 
     var index: Int = 0;
+
+    private val map: HashMap<Int, View> = HashMap()
 
     private val manager: IOptionManager
         get() = SideBackManager.instance
@@ -51,21 +54,57 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
 
         initViewsDisplay()
         initDetailsClickListener()
+        initClickView()
+        initRouteListener()
+    }
+
+    private fun initClickView() {
+        map[1] = binding.dowDetails
+        map[2] = binding.mebDetails
+        map[3] = binding.driveBsdDetails
+        map[4] = binding.driveBsdCameraDetails
+    }
+
+    private fun obtainRouter(): IRoute? {
+        return if (activity is IRoute) activity as IRoute else null
+    }
+
+    private fun initRouteListener() {
+        val router = obtainRouter()
+        if (null != router) {
+            val liveData = router.obtainLevelLiveData()
+            liveData.observe(this) {
+                it.takeIf { it.valid && it.uid == pid }?.let { level1 ->
+                    level1.cnode?.takeIf { child -> child.valid && child.uid == uid }
+                        .let { level2 ->
+                            level2?.cnode?.let { lv3Node ->
+                                map[lv3Node.uid]?.run { onViewClick(this, lv3Node.uid, true) }
+                            }
+                        }
+                }
+            }
+        }
+    }
+
+    private fun onViewClick(view: View, clickUid: Int, frank: Boolean) {
+        onViewClick(view)
+        obtainRouter()?.resetLevelRouter(pid, uid, clickUid)
+    }
+
+    private fun onViewClick(it: View) {
+        when (it) {
+            binding.dowDetails -> updateHintMessage(R.string.drive_dow_title, R.string.dow_details)
+            binding.mebDetails -> updateHintMessage(R.string.adas_meb_title, R.string.meb_details)
+            binding.driveBsdDetails -> updateHintMessage(R.string.drive_bsd_title, R.string.bsd_details)
+            binding.driveBsdCameraDetails -> updateHintMessage(R.string.drive_bsd_camera_title, R.string.bsc_details)
+        }
     }
 
     private fun initDetailsClickListener() {
-        binding.driveBsdDetails.setOnClickListener {
-            updateHintMessage(R.string.drive_bsd_title, R.string.bsd_details)
-        }
-        binding.driveBsdCameraDetails.setOnClickListener {
-            updateHintMessage(R.string.drive_bsd_camera_title, R.string.bsc_details)
-        }
-        binding.dowDetails.setOnClickListener {
-            updateHintMessage(R.string.drive_dow_title, R.string.dow_details)
-        }
-        binding.mebDetails.setOnClickListener {
-            updateHintMessage(R.string.adas_meb_title, R.string.meb_details)
-        }
+        binding.driveBsdDetails.setOnClickListener(this::onViewClick)
+        binding.driveBsdCameraDetails.setOnClickListener(this::onViewClick)
+        binding.dowDetails.setOnClickListener(this::onViewClick)
+        binding.mebDetails.setOnClickListener(this::onViewClick)
     }
 
     private fun updateHintMessage(title: Int, content: Int) {

@@ -13,7 +13,8 @@ import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.ICmdCallback
-import com.chinatsp.vehicle.controller.bean.Cmd
+import com.chinatsp.vehicle.controller.bean.AirCmd
+import com.chinatsp.vehicle.controller.bean.CarCmd
 import timber.log.Timber
 import java.lang.ref.WeakReference
 import java.util.concurrent.locks.ReadWriteLock
@@ -210,6 +211,8 @@ abstract class BaseManager : IManager {
 
     protected open fun onMcuPropertyChanged(property: CarPropertyValue<*>) {}
 
-    open fun doOuterControlCommand(cmd: Cmd, callback: ICmdCallback?) {}
+    open fun doAirControlCommand(cmd: AirCmd, callback: ICmdCallback?) {}
+
+    open fun doCarControlCommand(cmd: CarCmd, callback: ICmdCallback?) {}
 }
 

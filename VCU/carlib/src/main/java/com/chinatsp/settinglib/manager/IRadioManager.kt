@@ -53,13 +53,24 @@ interface IRadioManager : IManager {
         block: ((RadioNode, RadioState) -> Unit)? = null,
     ): RadioState {
         val isValid = node.isValid(value)
-        val isEqual = value == atomic.get()
-        if (isValid && !isEqual) {
-            atomic.set(value)
+        if (isValid) {
+            if (value != atomic.get()) {
+                atomic.set(value)
+            }
+            if (!atomic.enable()) {
+                atomic.enable = 0x1
+            }
             block?.let { it(node, atomic) }
-        } else {
-            Timber.e("doUpdateRadioValue node:$node, value:$value, isValid:$isValid, isEqual:$isEqual")
+            return atomic
         }
+        val inactive = node.isInactive(value)
+        if (inactive xor atomic.enable()) {
+            atomic.enable = if (inactive) 0x2 else 0x1
+            block?.let { it(node, atomic) }
+            return atomic
+        }
+        Timber.e("doUpdateRadioValue node:$node, value:$value," +
+                " isValid:$isValid, inactive:$inactive, oldValue:${atomic.get()}")
         return atomic
     }
 

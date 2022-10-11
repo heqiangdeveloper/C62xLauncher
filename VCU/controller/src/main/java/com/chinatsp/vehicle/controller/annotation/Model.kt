@@ -32,6 +32,7 @@ annotation class Model {
         const val ADAS = 0x06 shl 28
 
         const val INVALID = -1
+
         const val ACCESS_DOOR = 0x01 or ACCESS
         const val ACCESS_WINDOW = 0x02 or ACCESS
         const val ACCESS_STERN = 0x03 or ACCESS

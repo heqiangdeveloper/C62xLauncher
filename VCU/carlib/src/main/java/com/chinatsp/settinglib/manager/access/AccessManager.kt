@@ -7,7 +7,7 @@ import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.annotation.Model
-import com.chinatsp.vehicle.controller.bean.Cmd
+import com.chinatsp.vehicle.controller.bean.CarCmd
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
@@ -76,13 +76,13 @@ class AccessManager private constructor() : BaseManager(), ITabStore {
         }
     }
 
-    override fun doOuterControlCommand(cmd: Cmd, callback: ICmdCallback?) {
+    override fun doCarControlCommand(cmd: CarCmd, callback: ICmdCallback?) {
         if (Model.ACCESS_WINDOW == cmd.model) {
-            WindowManager.instance.doOuterControlCommand(cmd, callback)
+            WindowManager.instance.doCarControlCommand(cmd, callback)
         } else if (Model.ACCESS_DOOR == cmd.model) {
-            DoorManager.instance.doOuterControlCommand(cmd, callback)
+            DoorManager.instance.doCarControlCommand(cmd, callback)
         } else if (Model.ACCESS_STERN == cmd.model) {
-            SternDoorManager.instance.doOuterControlCommand(cmd, callback)
+            SternDoorManager.instance.doCarControlCommand(cmd, callback)
         }
     }
 

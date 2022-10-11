@@ -2,7 +2,6 @@ package com.chinatsp.vehicle.settings.fragment.sound
 
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import com.chinatsp.settinglib.VcuUtils
@@ -13,6 +12,7 @@ import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.IOptionAction
+import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.SoundEffectFragmentBinding
 import com.chinatsp.vehicle.settings.fragment.doors.dialog.EqualizerDialogFragment
@@ -28,11 +28,15 @@ import dagger.hilt.android.AndroidEntryPoint
 class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragmentBinding>(),
     IOptionAction {
 
+    private val map: HashMap<Int, View> = HashMap()
+
     override fun getLayoutId(): Int {
         return R.layout.sound_effect_fragment
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+        initClickView()
+
         setCheckedChangeListener()
         initViewsDisplay()
 
@@ -45,6 +49,46 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
         setRadioListener()
         initDetailsClickListener()
         updateOptionActive()
+
+        initRouteListener()
+    }
+
+    private fun initClickView() {
+        map[1] = binding.soundEqualizerCompensation
+        map[2] = binding.soundVolumeBalanceCompensation
+    }
+
+    private fun obtainRouter(): IRoute? {
+        return if (activity is IRoute) activity as IRoute else null
+    }
+
+    private fun initRouteListener() {
+        val router = obtainRouter()
+        if (null != router) {
+            val liveData = router.obtainLevelLiveData()
+            liveData.observe(this) {
+                it.takeIf { it.valid && it.uid == pid }?.let { level1 ->
+                    level1.cnode?.takeIf { child -> child.valid && child.uid == uid }
+                        .let { level2 ->
+                            level2?.cnode?.let { lv3Node ->
+                                map[lv3Node.uid]?.run { onViewClick(this, lv3Node.uid, true) }
+                            }
+                        }
+                }
+            }
+        }
+    }
+
+    private fun onViewClick(view: View, clickUid: Int, frank: Boolean) {
+        onViewClick(view)
+        obtainRouter()?.resetLevelRouter(pid, uid, clickUid)
+    }
+
+    private fun onViewClick(it: View) {
+        when (it) {
+            binding.soundEqualizerCompensation -> showEqualizerFragment()
+            binding.soundVolumeBalanceCompensation -> showVolumeFragment()
+        }
     }
 
     private fun updateOptionActive() {
@@ -159,57 +203,61 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
         }
     }
 
-    private fun checkDisableOtherDiv(swb: SwitchButton, status: Boolean) {
-        if (swb == binding.soundEnvironmentalSw) {
-            val child = binding.soundEnvironmentalTab
-            child.alpha = if (status) 1.0f else 0.6f
-            binding.soundEnvironmentalTab.updateEnable(status)
-            val childCount = binding.layoutContent.childCount
-            val intRange = 0 until childCount
-            intRange.forEach {
-                val childAt = binding.layoutContent.getChildAt(it)
-                if (null != childAt && childAt != binding.soundEnvironmentalCompensation) {
-                    childAt.alpha = if (status) 0.7f else 1.0f
-                    updateViewEnable(childAt, status, filterView = swb)
-                }
-            }
-        }
-    }
+//    private fun checkDisableOtherDiv(swb: SwitchButton, status: Boolean) {
+//        if (swb == binding.soundEnvironmentalSw) {
+//            val child = binding.soundEnvironmentalTab
+//            child.alpha = if (status) 1.0f else 0.6f
+//            binding.soundEnvironmentalTab.updateEnable(status)
+//            val childCount = binding.layoutContent.childCount
+//            val intRange = 0 until childCount
+//            intRange.forEach {
+//                val childAt = binding.layoutContent.getChildAt(it)
+//                if (null != childAt && childAt != binding.soundEnvironmentalCompensation) {
+//                    childAt.alpha = if (status) 0.7f else 1.0f
+//                    updateViewEnable(childAt, status, filterView = swb)
+//                }
+//            }
+//        }
+//    }
 
-    private fun updateViewEnable(view: View?, status: Boolean, filterView: View? = null) {
-        if (null == view) {
-            return
-        }
-        if (view is SwitchButton && view != filterView) {
-            view.isEnabled = !status
-            return
-        }
-        if (view is TabControlView) {
-            view.updateEnable(status)
-            return
-        }
-        if (view is ViewGroup) {
-            val childCount = view.childCount
-            val intRange = 0 until childCount
-            intRange.forEach { updateViewEnable(view.getChildAt(it), status, filterView) }
-        }
-    }
+//    private fun updateViewEnable(view: View?, status: Boolean, filterView: View? = null) {
+//        if (null == view) {
+//            return
+//        }
+//        if (view is SwitchButton && view != filterView) {
+//            view.isEnabled = !status
+//            return
+//        }
+//        if (view is TabControlView) {
+//            view.updateEnable(status)
+//            return
+//        }
+//        if (view is ViewGroup) {
+//            val childCount = view.childCount
+//            val intRange = 0 until childCount
+//            intRange.forEach { updateViewEnable(view.getChildAt(it), status, filterView) }
+//        }
+//    }
 
     private fun setCheckedChangeListener() {
-        binding.soundEqualizerCompensation.setOnClickListener {
-            if (!binding.soundEnvironmentalSw.isChecked) {
-                val fragment = EqualizerDialogFragment()
-                activity?.supportFragmentManager?.let {
-                    fragment.show(it, fragment.javaClass.simpleName)
-                }
+        binding.soundEqualizerCompensation.setOnClickListener(this::onViewClick)
+        binding.soundVolumeBalanceCompensation.setOnClickListener(this::onViewClick)
+    }
+
+    private fun showVolumeFragment() {
+        if (!binding.soundEnvironmentalSw.isChecked) {
+            val fragment = VolumeDialogFragment()
+            activity?.supportFragmentManager?.let {
+                fragment.show(it, fragment.javaClass.simpleName)
             }
         }
-        binding.soundVolumeBalanceCompensation.setOnClickListener {
-            if (!binding.soundEnvironmentalSw.isChecked) {
-                val fragment = VolumeDialogFragment()
-                activity?.supportFragmentManager?.let {
-                    fragment.show(it, fragment.javaClass.simpleName)
-                }
+    }
+
+    private fun showEqualizerFragment() {
+        if (!binding.soundEnvironmentalSw.isChecked) {
+            val fragment = EqualizerDialogFragment()
+            activity?.supportFragmentManager?.let {
+                fragment.show(it, fragment.javaClass.simpleName)
             }
         }
     }
@@ -218,7 +266,7 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
         val popWindow = PopWindow(activity,
             R.layout.pop_window,
             activity?.let { AppCompatResources.getDrawable(it, R.drawable.popup_bg_qipao172_5) })
-        var text: TextView = popWindow.findViewById(R.id.content) as TextView
+        val text: TextView = popWindow.findViewById(R.id.content) as TextView
         text.text = resources.getString(id)
         popWindow.showDownLift(view, 30, -160)
     }

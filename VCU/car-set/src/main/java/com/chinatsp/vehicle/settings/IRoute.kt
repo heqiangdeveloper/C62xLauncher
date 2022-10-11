@@ -1,6 +1,7 @@
 package com.chinatsp.vehicle.settings
 
 import androidx.lifecycle.LiveData
+import com.chinatsp.settinglib.Constant
 
 /**
  * @author : luohong
@@ -16,5 +17,7 @@ interface IRoute {
     fun obtainPopupLiveData(): LiveData<String>
 
     fun cleanPopupLiveDate(serial: String): Boolean
+
+    fun resetLevelRouter(lv1: Int, lv2: Int, lv3: Int = Constant.INVALID)
 
 }

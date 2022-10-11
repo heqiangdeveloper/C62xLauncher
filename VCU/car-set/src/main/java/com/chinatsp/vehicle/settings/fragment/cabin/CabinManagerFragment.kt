@@ -3,6 +3,7 @@ package com.chinatsp.vehicle.settings.fragment.cabin
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.get
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -14,6 +15,7 @@ import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.chinatsp.vehicle.settings.databinding.CabinFragmentBinding
+import com.common.library.frame.base.BaseFragment
 import com.common.library.frame.base.BaseTabFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,9 +32,6 @@ class CabinManagerFragment : BaseTabFragment<BaseViewModel, CabinFragmentBinding
     private val manager: CabinManager
         get() = CabinManager.instance
 
-    override val nodeId: Int
-        get() = 4
-
     override val tabLocation: MutableLiveData<Int> by lazy { MutableLiveData(manager.getTabSerial()) }
 
     override fun getLayoutId(): Int {
@@ -46,6 +45,10 @@ class CabinManagerFragment : BaseTabFragment<BaseViewModel, CabinFragmentBinding
     override fun initData(savedInstanceState: Bundle?) {
         initTabOptions()
         initTabLocation()
+    }
+
+    private fun obtainRouter(): IRoute? {
+        return if (activity is IRoute) activity as IRoute else null
     }
 
     private fun initTabLocation() {
@@ -79,11 +82,11 @@ class CabinManagerFragment : BaseTabFragment<BaseViewModel, CabinFragmentBinding
     }
 
     private fun initRouteListener() {
-        if (activity is IRoute) {
-            val iroute = activity as IRoute
-            val liveData = iroute.obtainLevelLiveData()
+        val router = obtainRouter()
+        if (null != router) {
+            val liveData = router.obtainLevelLiveData()
             liveData.observe(this) {
-                initRouteLocation(it)
+                syncRouterLocation(it)
             }
         }
     }
@@ -113,25 +116,37 @@ class CabinManagerFragment : BaseTabFragment<BaseViewModel, CabinFragmentBinding
     }
 
     private fun checkOutFragment(serial: Int): Fragment? {
-        var fragment: Fragment? = null
+        var fragment: BaseFragment<out BaseViewModel, out ViewDataBinding>? = null
         when (serial) {
             R.id.cabin_wheel -> {
                 fragment = CabinWheelFragment()
+                fragment.pid = uid
+                fragment.uid = 0
             }
             R.id.cabin_seat -> {
                 fragment = CabinSeatFragment()
+                fragment.pid = uid
+                fragment.uid = 1
             }
             R.id.cabin_air_conditioner -> {
                 fragment = CabinACFragment()
+                fragment.pid = uid
+                fragment.uid = 2
             }
             R.id.cabin_safety -> {
                 fragment = CabinSafeFragment()
+                fragment.pid = uid
+                fragment.uid = 3
             }
             R.id.cabin_instrument -> {
                 fragment = CabinMeterFragment()
+                fragment.pid = uid
+                fragment.uid = 4
             }
             R.id.cabin_other -> {
                 fragment = CabinOtherFragment()
+                fragment.pid = uid
+                fragment.uid = 5
             }
             else -> {}
         }
@@ -164,5 +179,8 @@ class CabinManagerFragment : BaseTabFragment<BaseViewModel, CabinFragmentBinding
         return fragment
     }
 
+    override fun resetRouter(lv1: Int, lv2: Int, lv3: Int) {
+        obtainRouter()?.resetLevelRouter(lv1, lv2, lv3)
+    }
 
 }
