@@ -137,9 +137,9 @@ public class CardEditorFragment extends BaseFragment implements EditorContract{
     private void okPage() {
         if (mController.checkChanged()) {
             mController.commitEdit();
+            Context applicationContext = getContext().getApplicationContext();
+            B561Toast.showShort(applicationContext,R.string.card_edit_msg_ok);
         }
-        Context applicationContext = getContext().getApplicationContext();
-        B561Toast.showShort(applicationContext,R.string.card_edit_msg_ok);
         finishActivity();
     }
 

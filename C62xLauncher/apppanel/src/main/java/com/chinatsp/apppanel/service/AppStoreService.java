@@ -62,7 +62,13 @@ public class AppStoreService {
     }
 
     public void unbindService(){
-        mContext.unbindService(connection);
+        if (bindService) {
+            try {
+                mContext.unbindService(connection);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void doCommand(int commandType, String pkgName) {

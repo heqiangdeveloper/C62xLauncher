@@ -81,7 +81,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
             @Override
             public boolean onLongClick(View v) {
                 int fingerCount = mPointsDown.size();
-                EasyLog.d(TAG, "onLongClick " + cardEntity.getName() + ",  fingerCount:" + fingerCount);
+                EasyLog.d(TAG, "onLongClick " + cardEntity.getName() + ",  fingerCount:" + fingerCount+" , itemView :"+itemView);
                 if (fingerCount > 1) {
                     return false;
                 }
