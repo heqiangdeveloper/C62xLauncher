@@ -2,6 +2,7 @@ package com.chinatsp.widgetcards.editor.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -140,12 +141,19 @@ public class CardEditorFragment extends BaseFragment implements EditorContract{
             Context applicationContext = getContext().getApplicationContext();
             B561Toast.showShort(applicationContext,R.string.card_edit_msg_ok);
         }
+        goBackHome();
+    }
+
+    private void goBackHome() {
         finishActivity();
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        startActivity(intent);
     }
 
     private void cancelPage() {
         if (!mController.checkChanged()) {
-            finishActivity();
+            goBackHome();
             return;
         }
         DialogMaster dialogMaster = DialogMaster.create(getActivity(), new DialogMaster.OnPressOk() {
@@ -156,7 +164,7 @@ public class CardEditorFragment extends BaseFragment implements EditorContract{
                 }, new DialogMaster.OnPressCancel() {
                     @Override
                     public void onPress(View v) {
-                        finishActivity();
+                        goBackHome();
                     }
                 }, 740, 488
         );
@@ -184,5 +192,6 @@ public class CardEditorFragment extends BaseFragment implements EditorContract{
     public void onDestroy() {
         super.onDestroy();
         mController.onDestroy();
+        EasyLog.w(TAG, "onDestroy");
     }
 }

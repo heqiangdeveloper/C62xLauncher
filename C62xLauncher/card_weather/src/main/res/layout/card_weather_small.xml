@@ -27,7 +27,7 @@
         android:id="@+id/tvCardWeatherCity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="北京"
+        android:text=""
         android:textColor="@color/card_weather_location"
         android:textSize="@dimen/card_text_size_lv3"
         app:layout_constraintBottom_toBottomOf="@id/ivCardWeatherLocation"
@@ -50,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/card_weather_temperature_width"
         android:layout_marginTop="19px"
-        android:text="19 ~ 33 ℃"
+        android:text=""
         app:layout_constraintEnd_toEndOf="@id/ivCardWeatherIcon"
         app:layout_constraintStart_toStartOf="@id/ivCardWeatherIcon"
         app:layout_constraintTop_toBottomOf="@id/ivCardWeatherIcon" />
@@ -60,7 +60,7 @@
         style="@style/CardLv2TextView"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/card_weather_temperature_width"
-        android:text="2022.5.17 周二"
+        android:text=""
         app:layout_constraintEnd_toEndOf="@id/tvCardWeatherTemperature"
         app:layout_constraintStart_toStartOf="@id/tvCardWeatherTemperature"
         app:layout_constraintTop_toBottomOf="@id/tvCardWeatherTemperature" />

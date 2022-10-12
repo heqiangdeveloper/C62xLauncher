@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import launcher.base.utils.EasyLog;
+
 public class CardWrapperLayout extends ConstraintLayout {
     private static final String TAG = "CommonCardLayout";
     private boolean mLongPressTriggered = false;
@@ -29,15 +31,20 @@ public class CardWrapperLayout extends ConstraintLayout {
     public CardWrapperLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
+
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         int mask = ev.getActionMasked();
+        boolean handle = super.dispatchTouchEvent(ev);
         if (mask == MotionEvent.ACTION_DOWN) {
             mLongPressTriggered = false;
         }
-        boolean handle = super.dispatchTouchEvent(ev);
         if (mask == MotionEvent.ACTION_DOWN && isLongClickable()) {
             scheduleLongPress();
+        }
+        if (mask == MotionEvent.ACTION_MOVE) {
+            removeLongPress();
         }
         if (ev.getActionMasked() == MotionEvent.ACTION_UP
                 || ev.getActionMasked() == MotionEvent.ACTION_CANCEL) {
@@ -47,7 +54,9 @@ public class CardWrapperLayout extends ConstraintLayout {
     }
 
     private void scheduleLongPress() {
-        postDelayed(longClickRunnable, ViewConfiguration.getLongPressTimeout());
+        EasyLog.d(TAG, "scheduleLongPress");
+//        postDelayed(longClickRunnable, ViewConfiguration.getLongPressTimeout());
+        postDelayed(longClickRunnable, 1500);
     }
 
     @Override
@@ -62,11 +71,12 @@ public class CardWrapperLayout extends ConstraintLayout {
         @Override
         public void run() {
             mLongPressTriggered = performLongClick();
-            Log.d(TAG, "run() called" + mLongPressTriggered);
+            Log.d(TAG, "run() called : " + mLongPressTriggered);
         }
     };
 
     private void removeLongPress() {
+        EasyLog.w(TAG, "removeLongPress");
         removeCallbacks(longClickRunnable);
     }
 
