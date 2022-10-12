@@ -22,8 +22,8 @@ android {
             storePassword 'android'
         }
     }
-    dataBinding{
-        enabled = true
+    buildFeatures{
+        dataBinding = true
     }
     buildTypes {
         release {
