@@ -85,7 +85,7 @@ public class LauncherSearchActivity extends AppCompatActivity implements SearchA
             if (s.toString().length() > 0) {
                 findViewById(R.id.search_hint).setVisibility(View.GONE);
                 //List<SearchBean> beans = FileUtils.fuzzySearch(s.toString(),db.getData());
-                if (!db.isTableExist() && db.countLocation() == 0) {
+                if (!db.isTableExist() || db.countLocation() == 0) {
                     SearchManager.getInstance().insertDB();
                 }
                 List<SearchBean> beans = db.getData1(s.toString());
@@ -110,7 +110,7 @@ public class LauncherSearchActivity extends AppCompatActivity implements SearchA
         }
     };
 
-    public void clearHistorical() {
+    public void clearHistorical(View view) {
         db.deleteHistorical();
         initLayout();
     }

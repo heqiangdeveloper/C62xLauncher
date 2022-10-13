@@ -44,7 +44,6 @@ public class SearchManager {
 
     private void initDB() {
         db = new SearchDB(mContext);
-        db.deleteLocation();
         //获取search_data数据
         JsonParser parser = new JsonParser();
         JsonObject jsonObject = parser.parse(FileUtils.getFromAssets(mContext, "search_data.json")).getAsJsonObject();
@@ -60,7 +59,7 @@ public class SearchManager {
                 db.deleteLocation();
                 //插入数据库
                 insertDB();
-             }
+            }
         } else {
             insertDB();
         }
