@@ -5,4 +5,5 @@ public class ProtocolIds {
     public static final int NAVIGATION_STATUS = 80005;
     public static final int NAVIGATION_HOME_OR_COMPANY = 30400;
     public static final int CURRENT_ROAD_NAME = 80057;
+    public static final int NAVI_GUIDE_INFO = 30407;
 }

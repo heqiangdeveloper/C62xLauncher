@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.autonavi.autoaidlwidget.AutoAidlWidgetManager;
+import com.chinatsp.navigation.gaode.bean.GuideInfo;
 import com.chinatsp.navigation.viewholder.NaviBigCardHolder;
 import com.chinatsp.navigation.viewholder.NaviSmallCardHolder;
 
@@ -19,6 +20,8 @@ import launcher.base.utils.view.LayoutParamUtil;
 
 
 public class NaviCardView extends ConstraintLayout implements ICardStyleChange {
+    private static final String TAG = "NaviCardView ";
+
     public NaviCardView(@NonNull Context context) {
         super(context);
         init();
@@ -146,5 +149,14 @@ public class NaviCardView extends ConstraintLayout implements ICardStyleChange {
         } else {
             mSmallCardHolder.hideNetworkError();
         }
+    }
+
+    public void refreshGuideInfo(GuideInfo guideInfo) {
+        NavigationUtil.logI(TAG + "refreshGuideInfo");
+        NavigationUtil.logD(TAG + guideInfo.getType());
+        NavigationUtil.logD(TAG + guideInfo.getCurRoadName());
+        NavigationUtil.logD(TAG + guideInfo.getEndPOIName());
+        NavigationUtil.logD(TAG + guideInfo.getEndPOIAddr());
+
     }
 }

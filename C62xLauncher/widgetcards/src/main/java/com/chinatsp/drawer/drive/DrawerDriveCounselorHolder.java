@@ -14,6 +14,7 @@ import com.chinatsp.widgetcards.R;
 
 import launcher.base.recyclerview.BaseViewHolder;
 import launcher.base.utils.EasyLog;
+import launcher.base.utils.recent.RecentAppHelper;
 
 public class DrawerDriveCounselorHolder extends BaseViewHolder<DrawerEntity> {
     private final DriveInfoDrawerController mController;
@@ -34,6 +35,13 @@ public class DrawerDriveCounselorHolder extends BaseViewHolder<DrawerEntity> {
         tvDrawerDriveRanking = itemView.findViewById(R.id.tvDrawerDriveRanking);
         progressDrawerDriveDistance = itemView.findViewById(R.id.progressDrawerDriveDistance);
         mController.readDriveInfo();
+
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RecentAppHelper.launchApp(getContext(), "com.uaes.adviser");
+            }
+        });
     }
 
     public void updateHealthyLevel(String healthLevel) {

@@ -14,6 +14,7 @@ import com.chinatsp.widgetcards.R;
 import com.iflytek.autofly.weather.entity.WeatherInfo;
 
 import launcher.base.utils.EasyLog;
+import launcher.base.utils.recent.RecentAppHelper;
 
 public class WeatherDrawerViewHelper {
     private final String TAG = "WeatherDrawerViewHelper";
@@ -34,6 +35,13 @@ public class WeatherDrawerViewHelper {
         mTvDrawerWeatherWord = mRootView.findViewById(R.id.tvDrawerWeatherWord);
         mTvDrawerWeatherTemperature = mRootView.findViewById(R.id.tvDrawerWeatherTemperature);
         mTvDrawerWeatherCity = mRootView.findViewById(R.id.tvDrawerWeatherCity);
+
+        mRootView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RecentAppHelper.launchApp(getContext(),"com.iflytek.autofly.weather");
+            }
+        });
     }
 
     public void refreshDefault() {

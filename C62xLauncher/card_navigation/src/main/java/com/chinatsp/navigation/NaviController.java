@@ -11,6 +11,7 @@ import androidx.appcompat.content.res.AppCompatResources;
 import com.autonavi.autoaidlwidget.AutoAidlWidgetManager;
 import com.chinatsp.navigation.gaode.bean.Address;
 import com.chinatsp.navigation.gaode.bean.GaoDeResponse;
+import com.chinatsp.navigation.gaode.bean.GuideInfo;
 import com.chinatsp.navigation.gaode.bean.NavigationStatus;
 import com.chinatsp.navigation.gaode.bean.RoadInfo;
 import com.chinatsp.navigation.repository.INaviCallback;
@@ -148,6 +149,15 @@ public class NaviController implements INaviCallback {
         NavigationUtil.logD(TAG + "receiveCurRoadInfo roadInfo:" + roadInfo);
         if (roadInfo != null) {
             mView.refreshMyLocation(roadInfo.getCurRoadName());
+        }
+    }
+
+    @Override
+    public void receiveNaviGuideInfo(GaoDeResponse<GuideInfo> gaoDeResponse) {
+        GuideInfo guideInfo = gaoDeResponse.getData();
+        NavigationUtil.logD(TAG + "receiveNaviGuideInfo");
+        if (guideInfo != null) {
+            mView.refreshGuideInfo(guideInfo);
         }
     }
 
