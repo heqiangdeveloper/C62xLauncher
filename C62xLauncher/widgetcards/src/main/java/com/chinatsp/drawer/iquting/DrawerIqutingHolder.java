@@ -92,6 +92,12 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
         NetworkStateReceiver.getInstance().registerObserver(networkObserver);
         //入口
         //addPlayContentListener(89);
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FlowPlayControl.getInstance().startPlayActivity(itemView.getContext());
+            }
+        });
     }
 
     private NetworkObserver networkObserver = new NetworkObserver() {

@@ -66,6 +66,9 @@ public class ResponseParser {
             case ProtocolIds.CURRENT_ROAD_NAME:
                 mCallback.receiveCurRoadInfo(gaoDeResponse);
                 break;
+            case ProtocolIds.NAVI_GUIDE_INFO:
+                mCallback.receiveNaviGuideInfo(gaoDeResponse);
+                break;
         }
     }
 

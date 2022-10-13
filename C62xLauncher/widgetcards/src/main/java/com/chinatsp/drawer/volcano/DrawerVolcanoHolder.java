@@ -16,6 +16,7 @@ import com.chinatsp.widgetcards.R;
 import kotlin.jvm.internal.PropertyReference0Impl;
 import launcher.base.recyclerview.BaseViewHolder;
 import launcher.base.utils.EasyLog;
+import launcher.base.utils.recent.RecentAppHelper;
 
 public class DrawerVolcanoHolder extends BaseViewHolder<DrawerEntity> {
     private RecyclerView rcvDrawerVolcanoVideos;
@@ -27,6 +28,12 @@ public class DrawerVolcanoHolder extends BaseViewHolder<DrawerEntity> {
         tvDrawerVolcanoLoginSlogan = itemView.findViewById(R.id.tvDrawerVolcanoLoginSlogan);
         initVideoRcv();
         loadVideoList();
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RecentAppHelper.launchApp(itemView.getContext(), "com.bytedance.byteautoservice");
+            }
+        });
     }
 
     private void initVideoRcv() {

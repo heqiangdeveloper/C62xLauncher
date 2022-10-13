@@ -42,6 +42,8 @@ public class ResponseConvert<T> {
                 return NavigationStatus.parseFrom(jsonObject);
             case ProtocolIds.CURRENT_ROAD_NAME:
                 return RoadInfo.parseFrom(jsonObject);
+            case ProtocolIds.NAVI_GUIDE_INFO:
+                return GuideInfo.parseFrom(jsonObject);
         }
         return null;
     }
