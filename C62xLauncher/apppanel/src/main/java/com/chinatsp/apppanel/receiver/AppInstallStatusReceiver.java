@@ -66,7 +66,7 @@ public class AppInstallStatusReceiver extends BroadcastReceiver {
                             locationBean.setAddBtn(0);
                             locationBean.setStatus(0);
                             locationBean.setPriority(Priorities.MIN_PRIORITY);
-                            locationBean.setInstalled(AppState.INSTALLED);
+                            locationBean.setInstalled(AppState.INSTALLED_COMPLETELY);
                             locationBean.setCanuninstalled(AppLists.isSystemApplication(context,info.activityInfo.packageName) ? 0:1);
                             try {
                                 pm = context.getPackageManager();

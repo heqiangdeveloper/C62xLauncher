@@ -21,12 +21,11 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true">
         <!--显示下载状态-->
-        <ImageView
+        <launcher.base.utils.view.RoundImageView
             android:id="@+id/load_status_iv"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:scaleType="center"
-            android:src="@mipmap/apk_loading"/>
+            android:scaleType="center"/>
         <launcher.base.utils.view.CircleProgressView
             android:visibility="gone"
             android:id="@+id/load_status_circleProgressView"

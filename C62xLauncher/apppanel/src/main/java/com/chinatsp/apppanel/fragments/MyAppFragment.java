@@ -14,9 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -32,7 +30,6 @@ import com.anarchy.classifyview.event.ReStoreDataEvent;
 import com.anarchy.classifyview.listener.SoftKeyBoardListener;
 import com.anarchy.classifyview.util.MyConfigs;
 import com.chinatsp.apppanel.AppConfigs.AppLists;
-import com.chinatsp.apppanel.AppConfigs.Constant;
 import com.chinatsp.apppanel.AppConfigs.Priorities;
 import com.chinatsp.apppanel.R;
 import com.chinatsp.apppanel.adapter.AddAppAdapter;
@@ -41,11 +38,11 @@ import com.chinatsp.apppanel.db.MyAppDB;
 import com.chinatsp.apppanel.event.CancelDownloadEvent;
 import com.chinatsp.apppanel.event.DownloadEvent;
 import com.chinatsp.apppanel.event.FailDownloadEvent;
+import com.chinatsp.apppanel.event.InstalledAnimEndEvent;
 import com.chinatsp.apppanel.event.NotRemindEvent;
 import com.chinatsp.apppanel.event.StartDownloadEvent;
 import com.chinatsp.apppanel.event.UninstallCommandEvent;
 import com.chinatsp.apppanel.event.UpdateEvent;
-import com.huawei.appmarket.launcheragent.StoreAppInfo;
 import com.huawei.appmarket.launcheragent.launcher.AppState;
 
 import org.greenrobot.eventbus.EventBus;
@@ -236,7 +233,7 @@ public class MyAppFragment extends Fragment {
             }
             locationBean.setPriority(getPriority(locationBean.getPackageName()));
             locationBean.setCanuninstalled(AppLists.isSystemApplication(getContext(),locationBean.getPackageName()) ? 0:1);
-            locationBean.setInstalled(AppState.INSTALLED);
+            locationBean.setInstalled(AppState.INSTALLED_COMPLETELY);
             locationBean.setTitle("");
             locationBean.setImgByte(null);
             locationBean.setImgDrawable(drawable);
@@ -280,7 +277,8 @@ public class MyAppFragment extends Fragment {
                 String pkgName = list.get(j).getPackageName();
                 int installed = list.get(j).getInstalled();
                 if(!pkgName.equals(AppLists.APPMANAGEMENT) && !packageLists.contains(pkgName) &&
-                        (installed == AppState.INSTALLED || installed == AppState.COULD_UPDATE)){
+                        (installed == AppState.INSTALLED || installed == AppState.COULD_UPDATE ||
+                                installed == AppState.INSTALLED_COMPLETELY)){
                     AsyncSchedule.execute(new Runnable() {
                         @Override
                         public void run() {
@@ -332,7 +330,7 @@ public class MyAppFragment extends Fragment {
                 if(allApps.get(i).activityInfo.loadIcon(getContext().getPackageManager()) != null){
                     locationBean.setImgDrawable(allApps.get(i).activityInfo.loadIcon(getContext().getPackageManager()));
                     locationBean.setName(allApps.get(i).activityInfo.loadLabel(getContext().getPackageManager()).toString());
-                    locationBean.setInstalled(AppState.INSTALLED);
+                    locationBean.setInstalled(AppState.INSTALLED_COMPLETELY);
                     locationBean.setCanuninstalled(AppLists.isSystemApplication(getContext(),locationBean.getPackageName()) ? 0:1);
                     locationBean.setTitle("");
                     locationBean.setImgByte(null);
@@ -606,7 +604,7 @@ public class MyAppFragment extends Fragment {
                     }else {
                         db.updateDownloadStatusInLocation(mLocationBean);
                     }
-                    if(appState == AppState.INSTALLED){
+                    if(appState == AppState.INSTALLED || appState == AppState.INSTALLED_COMPLETELY){
                         //安装后删除download表中的数据
                         db.deleteDownload(pkgName);
                     }
@@ -753,10 +751,43 @@ public class MyAppFragment extends Fragment {
                     if(num == 0){
                         db.insertLocation(mLocationBean);
                     }else {
-                        db.updateFailDownloadInLocation(mLocationBean);
+                        db.updateInstalledInLocation(mLocationBean);
                     }
                     //删除download表中的数据
                     db.deleteDownload(pkgName);
+                }
+            }
+        }else if(event instanceof InstalledAnimEndEvent){//安装完成的事件
+            Log.d("DownloadEvent","InstalledAnimEndEvent");
+            List<String> installedPackages = ((InstalledAnimEndEvent) event).getInstalledPackages();
+            if(installedPackages != null){
+                if(data != null && data.size() != 0){
+                    //刷新该应用桌面状态
+                    List<LocationBean> lists = null;
+                    LocationBean mLocationBean = null;
+                    int k;
+                    boolean isSubShow;
+                    int num;
+                    A:for(k = 0; k < data.size(); k++) {
+                        lists = data.get(k);
+                        if (lists == null) continue;//如果是 添加按钮，跳过
+                        for(int i = 0; i < lists.size(); i++) {
+                            mLocationBean = lists.get(i);
+                            if (mLocationBean != null && installedPackages.contains(mLocationBean.getPackageName())) {
+                                mLocationBean.setInstalled(AppState.INSTALLED_COMPLETELY);
+
+                                mMyAppInfoAdapter.notifyItemChanged(k);
+                                isSubShow = appInfoClassifyView.isSubContainerShow();
+                                if(isSubShow && lists != null){
+                                    mMyAppInfoAdapter.getSubAdapter().initData(k,lists);
+                                }
+                                num = db.isExistPackage(mLocationBean.getPackageName());
+                                if(num != 0){
+                                    db.updateInstalledInLocation(mLocationBean);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -900,7 +931,7 @@ public class MyAppFragment extends Fragment {
             //onResume的时候会存储至location表
 
             int isInstalled = locationBean.getInstalled();
-            if(isInstalled == AppState.INSTALLED){
+            if(isInstalled == AppState.INSTALLED || isInstalled == AppState.INSTALLED_COMPLETELY){
                 db.deleteDownload(pkgName);
             }
         }

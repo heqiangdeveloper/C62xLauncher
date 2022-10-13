@@ -596,7 +596,7 @@ public class MyAppDB extends SQLiteOpenHelper {
     }
 
     //更新下载失败至location表
-    public synchronized void updateFailDownloadInLocation(LocationBean locationBean){
+    public synchronized void updateInstalledInLocation(LocationBean locationBean){
         if(locationBean == null){
             return;
         }

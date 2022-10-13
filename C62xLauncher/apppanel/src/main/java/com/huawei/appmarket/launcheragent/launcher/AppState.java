@@ -20,7 +20,7 @@ public interface AppState {
     int COULD_BE_CANCELED = 3;
 
     /**
-     * 已安装
+     * 已安装，应用商城通知过来的
      */
     int INSTALLED = 4;
 
@@ -38,4 +38,9 @@ public interface AppState {
      * 安装中
      */
     int INSTALLING = 70;
+
+    /**
+     * 完全已安装，如系统应用，下载安装并扫光完成的
+     */
+    int INSTALLED_COMPLETELY = 80;
 }
