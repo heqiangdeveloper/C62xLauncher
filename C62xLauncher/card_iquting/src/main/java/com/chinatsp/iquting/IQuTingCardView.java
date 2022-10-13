@@ -422,7 +422,8 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
             }
             iv.setVisibility(View.VISIBLE);
         }else {
-            iv.setVisibility(View.GONE);
+            //当不显示收藏时，使用GONE会导致依赖的下方控制区位置错乱
+            iv.setVisibility(View.INVISIBLE);
         }
     }
 
