@@ -491,8 +491,10 @@ public class ClassifyView extends FrameLayout {
         Log.d("hideKeyBoard","isSoftKeyBoardShow = " + isSoftKeyBoardShow + ",isInSubDrag = " + isInSubDrag);
         if(mSubContainer != null && !isInSubDrag){
             FrameLayout.LayoutParams params =  (FrameLayout.LayoutParams)mSubContainer.getLayoutParams();
-            params.gravity = isShow ? Gravity.CENTER_HORIZONTAL : Gravity.CENTER;
-            mSubContainer.setLayoutParams(params);
+            if(params != null){
+                params.gravity = isShow ? Gravity.CENTER_HORIZONTAL : Gravity.CENTER;
+                mSubContainer.setLayoutParams(params);
+            }
         }
     }
 

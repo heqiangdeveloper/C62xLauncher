@@ -5,6 +5,7 @@
     <application>
         <activity
             android:name="com.chinatsp.drawer.search.LauncherSearchActivity"
+            android:launchMode="singleInstance"
             android:exported="false" />
         <activity
             android:name=".editor.ui.CardEditorActivity"
