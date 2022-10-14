@@ -7,6 +7,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -131,6 +132,7 @@ public class RecentAppHelper {
             Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
             intent.addCategory(Intent.CATEGORY_DEFAULT);
             context.startActivity(intent);
+            Log.d("RecentAppHelper","open: " + packageName);
         }catch (Exception e){
             Toast.makeText(context,"该应用还未下载",Toast.LENGTH_SHORT).show();
         }
