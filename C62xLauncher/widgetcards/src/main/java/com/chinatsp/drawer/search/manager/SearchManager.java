@@ -2,11 +2,13 @@ package com.chinatsp.drawer.search.manager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 
 import com.chinatsp.drawer.bean.SearchBean;
 import com.chinatsp.drawer.search.db.SearchDB;
+import com.chinatsp.drawer.search.receiver.AppInstallStatusReceiver;
 import com.chinatsp.drawer.search.utils.FileUtils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -40,6 +42,8 @@ public class SearchManager {
     public void init(Context context) {
         this.mContext = context;
         initDB();
+        //注册监听APP安装卸载广播
+        registerAppInstallBroadcast();
     }
 
     private void initDB() {
@@ -48,13 +52,13 @@ public class SearchManager {
         JsonParser parser = new JsonParser();
         JsonObject jsonObject = parser.parse(FileUtils.getFromAssets(mContext, "search_data.json")).getAsJsonObject();
         //存在数据库表及数据
-        if (db.isTableExist()&&db.countLocation()>0) {
+        if (db.isTableExist() && db.countLocation() > 0) {
             //本地数据
             List<SearchBean> fileList = FileUtils.stringToList(jsonObject.get("Keywords").toString(), SearchBean.class);
             int dbVersion = Integer.parseInt(db.getData().get(0).getDataVersion());
             int fileVersion = Integer.parseInt(fileList.get(0).getDataVersion());
             //数据库版本小于文件版本，就更新
-            if(dbVersion<fileVersion){
+            if (dbVersion < fileVersion) {
                 //删除之前数据库
                 db.deleteLocation();
                 //插入数据库
@@ -105,10 +109,10 @@ public class SearchManager {
                 SearchBean searchBean = new SearchBean();
                 searchBean.setModelName("");
                 searchBean.setIntentAction(resolveInfoList.get(i).activityInfo.packageName);
-                if(FileUtils.getLanguage() ==1){
+                if (FileUtils.getLanguage() == 1) {
                     searchBean.setChineseFunction(resolveInfoList.get(i).activityInfo.loadLabel(mContext.getPackageManager()).toString());
                     searchBean.setEnglishFunction("");
-                }else{
+                } else {
                     searchBean.setChineseFunction("");
                     searchBean.setEnglishFunction(resolveInfoList.get(i).activityInfo.loadLabel(mContext.getPackageManager()).toString());
                 }
@@ -125,10 +129,10 @@ public class SearchManager {
         SearchBean searchBean = new SearchBean();
         searchBean.setModelName("");
         searchBean.setIntentAction("com.chinatsp.appmanagement");
-        if(FileUtils.getLanguage() ==1){
+        if (FileUtils.getLanguage() == 1) {
             searchBean.setChineseFunction("应用管理");
             searchBean.setEnglishFunction("Application management");
-        }else{
+        } else {
             searchBean.setChineseFunction("");
             searchBean.setEnglishFunction("Application management");
         }
@@ -145,7 +149,7 @@ public class SearchManager {
     /**
      * 插入数据库
      */
-    public void insertDB(){
+    public void insertDB() {
         JsonParser parser = new JsonParser();
         JsonObject jsonObject = parser.parse(FileUtils.getFromAssets(mContext, "search_data.json")).getAsJsonObject();
         List<SearchBean> searchBeanList = new ArrayList<>();
@@ -154,5 +158,21 @@ public class SearchManager {
         for (int i = 0; i < searchBeanList.size(); i++) {
             db.insertSearch(searchBeanList.get(i));//循环插入数据库
         }
+    }
+
+    private void registerAppInstallBroadcast() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
+        intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        intentFilter.addDataScheme("package");
+        AppInstallStatusReceiver receiver = new AppInstallStatusReceiver();
+        mContext.registerReceiver(receiver, intentFilter);
+    }
+
+    /**
+     * 删除数据库数据
+     */
+    public void deleteDB() {
+        db.deleteLocation();//循环插入数据库
     }
 }

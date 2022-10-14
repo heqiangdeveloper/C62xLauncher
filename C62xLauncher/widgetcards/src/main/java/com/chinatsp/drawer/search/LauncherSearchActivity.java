@@ -5,6 +5,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -13,6 +14,8 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -61,10 +64,19 @@ public class LauncherSearchActivity extends AppCompatActivity implements SearchA
 
     public void clearSearchText(View view) {
         //mEdittextSearchWord.setText(mEdittextSearchWord.getText().toString().charAt(mEdittextSearchWord.getText().length()-1));
+        FileUtils.hideSoftInput(this);
         int index = mEdittextSearchWord.getSelectionStart();   //获取Edittext光标所在位置
         String str = mEdittextSearchWord.getText().toString();
         if (!str.equals("")) {//判断输入框不为空，执行删除
             mEdittextSearchWord.getText().delete(index - 1, index);
+        }
+    }
+
+    public void SearchText(View view) {
+        //mEdittextSearchWord.setText(mEdittextSearchWord.getText().toString().charAt(mEdittextSearchWord.getText().length()-1));
+        String str = mEdittextSearchWord.getText().toString();
+        if (!str.equals("")) {//判断输入框不为空，执行删除
+            searchEdit(str);
         }
     }
 
@@ -82,31 +94,7 @@ public class LauncherSearchActivity extends AppCompatActivity implements SearchA
         @Override
         public void afterTextChanged(Editable s) {
             EasyLog.d(TAG, "word length:" + s.toString().length());
-            if (s.toString().length() > 0) {
-                findViewById(R.id.search_hint).setVisibility(View.GONE);
-                //List<SearchBean> beans = FileUtils.fuzzySearch(s.toString(),db.getData());
-                if (!db.isTableExist() || db.countLocation() == 0) {
-                    SearchManager.getInstance().insertDB();
-                }
-                List<SearchBean> beans = db.getData1(s.toString());
-                if (beans.size() == 0) {
-                    findViewById(R.id.rcvSearch).setVisibility(View.GONE);
-                    findViewById(R.id.historical_layout).setVisibility(View.GONE);
-                    findViewById(R.id.list_hint).setVisibility(View.VISIBLE);
-                } else {
-                    findViewById(R.id.rcvSearch).setVisibility(View.VISIBLE);
-                    findViewById(R.id.list_hint).setVisibility(View.GONE);
-                    findViewById(R.id.historical_layout).setVisibility(View.GONE);
-                    adapter = new SearchAdapter(LauncherSearchActivity.this, beans, s.toString());
-                    adapter.setOnItemClickListerner(LauncherSearchActivity.this);
-                    rcvSearch.setAdapter(adapter);
-                }
-            } else {
-                findViewById(R.id.search_hint).setVisibility(View.VISIBLE);
-                findViewById(R.id.historical_layout).setVisibility(View.VISIBLE);
-                findViewById(R.id.rcvSearch).setVisibility(View.GONE);
-                findViewById(R.id.list_hint).setVisibility(View.GONE);
-            }
+            searchEdit(s.toString());
         }
     };
 
@@ -199,4 +187,33 @@ public class LauncherSearchActivity extends AppCompatActivity implements SearchA
             tagLayout.addView(view);
         }
     }
+
+    private void searchEdit(String searchStr) {
+        if (searchStr.length() > 0) {
+            findViewById(R.id.search_hint).setVisibility(View.GONE);
+            //List<SearchBean> beans = FileUtils.fuzzySearch(s.toString(),db.getData());
+            if (!db.isTableExist() || db.countLocation() == 0) {
+                SearchManager.getInstance().insertDB();
+            }
+            List<SearchBean> beans = db.getData1(searchStr);
+            if (beans.size() == 0) {
+                findViewById(R.id.rcvSearch).setVisibility(View.GONE);
+                findViewById(R.id.historical_layout).setVisibility(View.GONE);
+                findViewById(R.id.list_hint).setVisibility(View.VISIBLE);
+            } else {
+                findViewById(R.id.rcvSearch).setVisibility(View.VISIBLE);
+                findViewById(R.id.list_hint).setVisibility(View.GONE);
+                findViewById(R.id.historical_layout).setVisibility(View.GONE);
+                adapter = new SearchAdapter(LauncherSearchActivity.this, beans, searchStr);
+                adapter.setOnItemClickListerner(LauncherSearchActivity.this);
+                rcvSearch.setAdapter(adapter);
+            }
+        } else {
+            findViewById(R.id.search_hint).setVisibility(View.VISIBLE);
+            findViewById(R.id.historical_layout).setVisibility(View.VISIBLE);
+            findViewById(R.id.rcvSearch).setVisibility(View.GONE);
+            findViewById(R.id.list_hint).setVisibility(View.GONE);
+        }
+    }
+
 }

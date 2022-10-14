@@ -1,5 +1,6 @@
 package com.chinatsp.drawer.search.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.Spannable;
@@ -7,6 +8,7 @@ import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.chinatsp.drawer.bean.SearchBean;
@@ -93,17 +95,17 @@ public class FileUtils {
 
     /**
      * textview指定位置或字段设置指定颜色
-     * @param contex 上下文
+     * @param context 上下文
      * @param wholeStr 全部文字
      * @param keyStr 关键字
      * @param keyStrColor 关键字颜色
      * @return
      */
-    public static SpannableStringBuilder fillColor(Context contex,String wholeStr, String[] keyStr, int keyStrColor) {
+    public static SpannableStringBuilder fillColor(Context context,String wholeStr, String[] keyStr, int keyStrColor) {
         if (!TextUtils.isEmpty(wholeStr) ) {
             SpannableStringBuilder spBuilder = new SpannableStringBuilder(wholeStr);
             for(int i = 0;i<keyStr.length;i++){
-                CharacterStyle charaStyle = new ForegroundColorSpan(contex.getResources().getColor(keyStrColor));
+                CharacterStyle charaStyle = new ForegroundColorSpan(context.getResources().getColor(keyStrColor));
                // int start = wholeStr.indexOf(keyStr[i]);
                 int start = wholeStr.toLowerCase().indexOf(keyStr[i]);
                 int end = start + keyStr[i].length();
@@ -126,5 +128,23 @@ public class FileUtils {
             type = 1;//中文
         }
         return type;
+    }
+    /**
+     * 隐藏输入法
+     *
+     * @param activity 当前页面
+     */
+
+    public static void hideSoftInput(Activity activity) {
+        if (activity == null || activity.getCurrentFocus() == null) {
+            return;
+        }
+        int times = 0;
+        boolean isClosed = false;
+        InputMethodManager manager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        while (!isClosed && times <= 5) {
+            times++;
+            isClosed = manager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+        }
     }
 }
