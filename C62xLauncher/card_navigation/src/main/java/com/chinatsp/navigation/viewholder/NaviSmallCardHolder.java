@@ -11,6 +11,7 @@ import com.autonavi.autoaidlwidget.AutoAidlWidgetView;
 import com.chinatsp.navigation.NaviController;
 import com.chinatsp.navigation.NavigationUtil;
 import com.chinatsp.navigation.R;
+import com.chinatsp.navigation.gaode.bean.GuideInfo;
 
 import launcher.base.utils.EasyLog;
 
@@ -22,8 +23,10 @@ public class NaviSmallCardHolder extends NaviCardHolder {
     private TextView tvCardNaviMyLocation;
     private ImageView ivCardNaviInstruction;
     private TextView tvCardNaviInstruction;
+    private TextView tvCardNaviRoadTip;
     private ImageView ivCardNetworkErr;
     private TextView tvCardNetworkErr;
+    private View layoutCardNaviInstruction;
 
     public NaviSmallCardHolder(@NonNull View rootView, NaviController controller) {
         this(rootView);
@@ -42,12 +45,17 @@ public class NaviSmallCardHolder extends NaviCardHolder {
         tvCardNaviMyLocation = rootView.findViewById(R.id.tvCardNaviMyLocation);
         ivCardNaviInstruction = rootView.findViewById(R.id.ivCardNaviInstruction);
         tvCardNaviInstruction = rootView.findViewById(R.id.tvCardNaviInstruction);
+        tvCardNaviRoadTip = rootView.findViewById(R.id.tvCardNaviRoadTip);
         ivCardNetworkErr = rootView.findViewById(R.id.ivCardNetworkErr);
         tvCardNetworkErr = rootView.findViewById(R.id.tvCardNetworkErr);
+
+        layoutCardNaviInstruction = rootView.findViewById(R.id.layoutCardNaviInstruction);
 
         ivCardNaviSearch.setOnClickListener(mOnClickListener);
         ivCardNaviHome.setOnClickListener(mOnClickListener);
         ivCardNaviCompany.setOnClickListener(mOnClickListener);
+
+
         rootView.setOnClickListener(mOnClickListener);
     }
 
@@ -56,16 +64,16 @@ public class NaviSmallCardHolder extends NaviCardHolder {
         ivCardNaviArrow.setVisibility(View.GONE);
         tvCardNaviMyLocation.setVisibility(View.GONE);
 
-        ivCardNaviInstruction.setVisibility(View.VISIBLE);
-        tvCardNaviInstruction.setVisibility(View.VISIBLE);
+        layoutCardNaviInstruction.setVisibility(View.VISIBLE);
+
     }
 
     @Override
     public void refreshFreeMode() {
         NavigationUtil.logD(TAG + "refreshFreeMode");
 
-        ivCardNaviInstruction.setVisibility(View.GONE);
-        tvCardNaviInstruction.setVisibility(View.GONE);
+        layoutCardNaviInstruction.setVisibility(View.GONE);
+
 
         ivCardNaviArrow.setVisibility(View.VISIBLE);
         tvCardNaviMyLocation.setVisibility(View.VISIBLE);
@@ -81,10 +89,9 @@ public class NaviSmallCardHolder extends NaviCardHolder {
     public void showNetworkError() {
         ivCardNaviArrow.setVisibility(View.GONE);
         tvCardNaviMyLocation.setVisibility(View.GONE);
-        ivCardNaviInstruction.setVisibility(View.GONE);
-        tvCardNaviInstruction.setVisibility(View.GONE);
         ivCardNetworkErr.setVisibility(View.VISIBLE);
         tvCardNetworkErr.setVisibility(View.VISIBLE);
+        layoutCardNaviInstruction.setVisibility(View.GONE);
     }
 
     @Override
@@ -122,5 +129,14 @@ public class NaviSmallCardHolder extends NaviCardHolder {
 
     private void naviToHome() {
         mController.naviToHome();
+    }
+
+    public void refreshNaviGuideInfo(GuideInfo guideInfo) {
+        if (guideInfo == null) {
+            return;
+        }
+        ivCardNaviInstruction.setImageResource(R.drawable.card_navi_icon_turn_right);
+        tvCardNaviInstruction.setText("前方直行");
+        tvCardNaviRoadTip.setText("进入"+guideInfo.getNextRoadName());
     }
 }

@@ -4,6 +4,7 @@
     android:layout_width="@dimen/card_width"
     android:layout_height="@dimen/card_height"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:focusable="false"
     android:background="@drawable/card_bg_small">
 
     <androidx.recyclerview.widget.RecyclerView

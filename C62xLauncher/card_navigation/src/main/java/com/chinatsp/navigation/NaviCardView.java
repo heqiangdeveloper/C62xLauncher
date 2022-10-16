@@ -16,6 +16,7 @@ import com.chinatsp.navigation.viewholder.NaviBigCardHolder;
 import com.chinatsp.navigation.viewholder.NaviSmallCardHolder;
 
 import card.service.ICardStyleChange;
+import launcher.base.utils.EasyLog;
 import launcher.base.utils.view.LayoutParamUtil;
 
 
@@ -97,9 +98,12 @@ public class NaviCardView extends ConstraintLayout implements ICardStyleChange {
     }
 
     public void refreshState(int state) {
+        EasyLog.d(TAG, "refreshState , current state:"+state);
         if (state == NaviController.STATE_IN_NAVIGATION) {
+            EasyLog.i(TAG, "refreshState Start navigation");
             refreshNavigation();
         } else {
+            EasyLog.i(TAG, "refreshState Start cruise");
             refreshFreeMode();
         }
     }
@@ -152,11 +156,17 @@ public class NaviCardView extends ConstraintLayout implements ICardStyleChange {
     }
 
     public void refreshGuideInfo(GuideInfo guideInfo) {
-        NavigationUtil.logI(TAG + "refreshGuideInfo");
-        NavigationUtil.logD(TAG + guideInfo.getType());
+        NavigationUtil.logI(TAG + "refreshGuideInfo "+Thread.currentThread().getName() +" "+System.currentTimeMillis());
+        NavigationUtil.logD(TAG + " type:"+ guideInfo.getType());
         NavigationUtil.logD(TAG + guideInfo.getCurRoadName());
+        NavigationUtil.logD(TAG + " 转向图标: "+guideInfo.getIcon());
+        NavigationUtil.logD(TAG + guideInfo.getNextRoadName());
         NavigationUtil.logD(TAG + guideInfo.getEndPOIName());
         NavigationUtil.logD(TAG + guideInfo.getEndPOIAddr());
-
+        if (mExpand) {
+            mBigCardHolder.refreshNaviGuideInfo(guideInfo);
+        } else {
+            mSmallCardHolder.refreshNaviGuideInfo(guideInfo);
+        }
     }
 }

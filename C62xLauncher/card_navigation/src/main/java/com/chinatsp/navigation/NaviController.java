@@ -12,6 +12,7 @@ import com.autonavi.autoaidlwidget.AutoAidlWidgetManager;
 import com.chinatsp.navigation.gaode.bean.Address;
 import com.chinatsp.navigation.gaode.bean.GaoDeResponse;
 import com.chinatsp.navigation.gaode.bean.GuideInfo;
+import com.chinatsp.navigation.gaode.bean.MapStatus;
 import com.chinatsp.navigation.gaode.bean.NavigationStatus;
 import com.chinatsp.navigation.gaode.bean.RoadInfo;
 import com.chinatsp.navigation.repository.INaviCallback;
@@ -28,12 +29,13 @@ import launcher.base.network.NetworkUtils;
 public class NaviController implements INaviCallback {
     private NaviCardView mView;
     private String TAG = "NaviController ";
-    public static final int STATUS_CRUISE = NavigationStatus.STATUS_CRUISE;
+    public static final int STATE_CRUISE = NavigationStatus.STATUS_CRUISE;
     public static final int STATE_IN_NAVIGATION = NavigationStatus.STATUS_IN_NAVIGATION;
     public static final int STATE_IN_NAVIGATION_MOCK = NavigationStatus.STATUS_IN_NAVIGATION_MOCK; // 模拟导航
-    private int mState = STATUS_CRUISE;
+    private int mState = STATE_CRUISE;
     private NaviRepository mNaviRepository = NaviRepository.getInstance();
     private Handler mHandler = new android.os.Handler(Looper.getMainLooper());
+    private GaoDeResponse<GuideInfo> tempGuideInfoGaoDeResponse;
 
     public NaviController(NaviCardView view) {
         mView = view;
@@ -65,7 +67,7 @@ public class NaviController implements INaviCallback {
     }
 
     public void refreshInitView() {
-        mState = STATUS_CRUISE;
+        mState = STATE_CRUISE;
         mView.refreshState(mState);
         checkNetwork();
     }
@@ -155,9 +157,32 @@ public class NaviController implements INaviCallback {
     @Override
     public void receiveNaviGuideInfo(GaoDeResponse<GuideInfo> gaoDeResponse) {
         GuideInfo guideInfo = gaoDeResponse.getData();
+        tempGuideInfoGaoDeResponse = gaoDeResponse;
         NavigationUtil.logD(TAG + "receiveNaviGuideInfo");
         if (guideInfo != null) {
+            // 根据观察,  在导航时, 这个type==0, 所以视为切换到导航模式
+            if (guideInfo.getType() == 0) {
+                mState = STATE_IN_NAVIGATION;
+                mView.refreshState(mState);
+            }
             mView.refreshGuideInfo(guideInfo);
+        }
+    }
+
+    @Override
+    public void receiveMapStatus(GaoDeResponse<MapStatus> gaoDeResponse) {
+        MapStatus mapStatus = gaoDeResponse.getData();
+        NavigationUtil.logD(TAG + "receiveMapStatus mapStatus:" + mapStatus);
+        if (mapStatus == null) {
+            return;
+        }
+        int autoStatus = mapStatus.getAutoStatus();
+        if (autoStatus == MapStatus.START_NAVIGATION) {
+            mState = STATE_IN_NAVIGATION;
+            mView.refreshState(mState);
+        } else if (autoStatus == MapStatus.STOP_NAVIGATION){
+            mState = STATE_CRUISE;
+            mView.refreshState(mState);
         }
     }
 
@@ -178,6 +203,9 @@ public class NaviController implements INaviCallback {
 
     public void refreshPageState() {
         mView.refreshState(mState);
+        if (tempGuideInfoGaoDeResponse != null) {
+            mView.refreshGuideInfo(tempGuideInfoGaoDeResponse.getData());
+        }
         checkNetwork();
     }
 

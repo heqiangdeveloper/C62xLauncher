@@ -658,7 +658,7 @@ public class GuideInfo {
         roadInfo.icon = jsonObject.optInt("icon");
         roadInfo.type = jsonObject.optInt("type");
         roadInfo.curRoadName = jsonObject.optString("curRoadName");
-        roadInfo.nextNextRoadName = jsonObject.optString("nextNextRoadName");
+        roadInfo.nextRoadName = jsonObject.optString("nextRoadName");
         roadInfo.endPOIName = jsonObject.optString("endPOIName");
         roadInfo.endPOIAddr = jsonObject.optString("endPOIAddr");
         roadInfo.endPOICityName = jsonObject.optString("endPOICityName");
@@ -666,6 +666,7 @@ public class GuideInfo {
         roadInfo.routeRemainDistanceAuto = jsonObject.optString("routeRemainDistanceAuto");
         roadInfo.routeRemainTimeAuto = jsonObject.optString("routeRemainTimeAuto");
         roadInfo.segRemainDisAuto = jsonObject.optString("segRemainDisAuto");
+        roadInfo.segRemainDis = jsonObject.optInt("segRemainDis");
         return roadInfo;
     }
 }

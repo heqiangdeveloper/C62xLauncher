@@ -8,6 +8,8 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Map;
+
 public class ResponseConvert<T> {
     public GaoDeResponse<T> convertFromJson(String json) {
         GaoDeResponse<T> gaoDeResponse = new GaoDeResponse();
@@ -44,6 +46,8 @@ public class ResponseConvert<T> {
                 return RoadInfo.parseFrom(jsonObject);
             case ProtocolIds.NAVI_GUIDE_INFO:
                 return GuideInfo.parseFrom(jsonObject);
+            case ProtocolIds.MAP_STATUS:
+                return MapStatus.parseFrom(jsonObject);
         }
         return null;
     }
