@@ -33,17 +33,21 @@ public class CardWrapperLayout extends ConstraintLayout {
     }
 
 
+    float lastX = 0f;
+    float lastY = 0f;
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         int mask = ev.getActionMasked();
         boolean handle = super.dispatchTouchEvent(ev);
         if (mask == MotionEvent.ACTION_DOWN) {
             mLongPressTriggered = false;
+            lastX = ev.getX();
+            lastY = ev.getY();
         }
         if (mask == MotionEvent.ACTION_DOWN && isLongClickable()) {
             scheduleLongPress();
         }
-        if (mask == MotionEvent.ACTION_MOVE) {
+        if (mask == MotionEvent.ACTION_MOVE && (Math.abs(ev.getX() - lastX) > 5 || Math.abs(ev.getY() - lastY) > 5)) {
             removeLongPress();
         }
         if (ev.getActionMasked() == MotionEvent.ACTION_UP
@@ -56,7 +60,7 @@ public class CardWrapperLayout extends ConstraintLayout {
     private void scheduleLongPress() {
         EasyLog.d(TAG, "scheduleLongPress");
 //        postDelayed(longClickRunnable, ViewConfiguration.getLongPressTimeout());
-        postDelayed(longClickRunnable, 1500);
+        postDelayed(longClickRunnable, 600);
     }
 
     @Override

@@ -241,38 +241,38 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
 //                locationBean.setPriority(0);
 //                locationBean.setInstalled(1);
 //                locationBean.setCanuninstalled(1);
-//                int num = db.isExistPackage(lb.getPackageName());
-//                Log.d("hqtest","dir package is: " + lb.getPackageName() + ",count = " + num + ",parent = " + position + ",child = " + i);
-//                if(num == 0){
-//                    db.insertLocation(lb);
-//                }else {
-//                    db.updateTitle(lb);
-//                }
+                int num = db.isExistPackage(lb.getPackageName());
+                Log.d("hqtest","dir package is: " + lb.getPackageName() + ",count = " + num + ",parent = " + position + ",child = " + i);
+                if(num == 0){
+                    db.insertLocation(lb);
+                }else {
+                    db.updateTitle(lb);
+                }
             }
         } else if(infos.size() == 1){
-            holder.deleteIv.setTag(mData.get(position).get(0).getCanuninstalled());
+            locationBean = mData.get(position).get(0);
+            holder.deleteIv.setTag(locationBean.getCanuninstalled());
             //是否显示删除按钮
             showDelete = preferences.getBoolean(MyConfigs.MAINSHOWDELETE,false);
             //修复： 防止上下滑动时，删除错乱
             //if(parentIndex != -1 && parentIndex == position){
             if(showDelete){
-                holder.deleteIv.setVisibility(mData.get(position).get(0).getCanuninstalled() == 1 ? View.VISIBLE : View.GONE);
+                holder.deleteIv.setVisibility(locationBean.getCanuninstalled() == 1 ? View.VISIBLE : View.GONE);
             }else {
                 holder.deleteIv.setVisibility(View.GONE);
             }
 
             //设置下载状态
             List<String> installedPackages = new ArrayList<>();
-            installedPackages.add(mData.get(position).get(0).getPackageName());
-            setDownloadStatus(false,holder,mData.get(position).get(0).getInstalled(),mData.get(position).get(0).getStatus(), installedPackages);
+            installedPackages.add(locationBean.getPackageName());
+            setDownloadStatus(false,holder,locationBean.getInstalled(),locationBean.getStatus(), installedPackages);
             //设置应用名称
-            holder.tvName.setText(getName(mData.get(position).get(0).getInstalled(),mData.get(position).get(0).getName()));
+            holder.tvName.setText(getName(locationBean.getInstalled(),locationBean.getName()));
 
-//            locationBean = mData.get(position).get(0);
             //这个地方position不可靠，在MyAppFragment getOriginalData保存index
 //            locationBean.setParentIndex(position);
 //            locationBean.setChildIndex(-1);
-//            locationBean.setTitle("");
+            locationBean.setTitle("");
 //            locationBean.setPackageName(mData.get(position).get(0).getPackageName());
 //            ByteArrayOutputStream baos = new ByteArrayOutputStream();
 //            Drawable drawable;
@@ -294,13 +294,14 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
 //            locationBean.setPriority(0);
 //            locationBean.setInstalled(1);
 //            locationBean.setCanuninstalled(1);
-//            int num = db.isExistPackage(locationBean.getPackageName());
-//            Log.d("hqtest","package package is: " + mData.get(position).get(0).getPackageName() + ",count = " + num + ",parent = " + position + ",child = " + -1);
-//            if(num == 0){
-//                db.insertLocation(locationBean);
-//            }else {
-//                db.updateTitle(locationBean);
-//            }
+            //更新标题
+            int num = db.isExistPackage(locationBean.getPackageName());
+            Log.d("hqtest","package package is: " + locationBean.getPackageName() + ",count = " + num + ",parent = " + position + ",child = " + -1);
+            if(num == 0){
+                db.insertLocation(locationBean);
+            }else {
+                db.updateTitle(locationBean);
+            }
 
 //            showDelete = preferences.getBoolean(MyConfigs.SHOWDELETE ,  false);
 //            if(showDelete){
