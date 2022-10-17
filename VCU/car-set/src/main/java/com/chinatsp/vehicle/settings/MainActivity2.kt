@@ -3,6 +3,7 @@ package com.chinatsp.vehicle.settings
 import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -75,6 +76,7 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
     private fun checkOutRoute(intent: Intent?) {
         intent?.let {
             val action = intent.action
+            Log.i("ttttttt","action: "+action)
             val routeValue: Int
             val popupSerial: String
             if (Constant.VCU_AUDIO_VOLUME == action) {
@@ -106,6 +108,7 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
         if (general) {
             val list = route.split("_")
             Timber.d("==================route:%s, size:%s", route, list.size)
+            binding.homeBack.visibility = View.VISIBLE
             if (list.size == 3) {
                 val locations = list.map { it.toInt() }
                 val node1 = Node(uid = locations[0] - 1000)
@@ -122,6 +125,7 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
             }
             return
         }
+        binding.homeBack.visibility = View.GONE
         if (Constant.INVALID != routeValue) {
             val level1 = RouterSerial.getLevel(routeValue, 1)
             val level2 = RouterSerial.getLevel(routeValue, 2)
@@ -263,6 +267,10 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
             }
             node.valid = false
         }
+    }
+
+     fun homeBack(view: View){
+        finish()
     }
 
 }
