@@ -44,10 +44,11 @@ public class AppCarService implements ICarService {
 
     @Override
     public String getCarType() {
-        EasyLog.d(TAG,"getCarType , is connect: "+mConnected);
-        EasyLog.d(TAG,"getCarType , carbin : "+mCarCabinManager);
+        EasyLog.d(TAG, "getCarType , is connect: " + mConnected);
+        EasyLog.d(TAG, "getCarType , carbin : " + mCarCabinManager);
         return CarPropertyUtil.getCarModel(mCarCabinManager);
     }
+
     @Override
     public String getVinCode() {
         return CarPropertyUtil.getVinCode(mContext);
@@ -55,9 +56,17 @@ public class AppCarService implements ICarService {
 
     @Override
     public boolean isHasDVR() {
-        int getDVR = PropertyUtils.getInt(mContext,DVR,0);
-        EasyLog.d(TAG,"getDVR: " + getDVR);
+        int getDVR = PropertyUtils.getInt(mContext, DVR, 0);
+        EasyLog.d(TAG, "getDVR: " + getDVR);
         return getDVR == 1 ? true : false;
+    }
+
+    @Override
+    public boolean doSwitchWindow(boolean isOpenCmd) {
+        EasyLog.i(TAG, "doSwitchWindow  open: "+isOpenCmd);
+        int value = isOpenCmd ? 0x01 : 0x02;
+        CarPropertyUtil.writeWindowSwitch(mCarCabinManager, value);
+        return true;
     }
 
     private void fetchCarCabinOnConnected(Car car) {

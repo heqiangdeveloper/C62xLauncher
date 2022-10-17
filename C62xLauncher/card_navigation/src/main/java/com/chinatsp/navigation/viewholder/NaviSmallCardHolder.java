@@ -3,17 +3,13 @@ package com.chinatsp.navigation.viewholder;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.autonavi.autoaidlwidget.AutoAidlWidgetView;
 import com.chinatsp.navigation.NaviController;
 import com.chinatsp.navigation.NavigationUtil;
 import com.chinatsp.navigation.R;
 import com.chinatsp.navigation.gaode.bean.GuideInfo;
-
-import launcher.base.utils.EasyLog;
 
 public class NaviSmallCardHolder extends NaviCardHolder {
     private ImageView ivCardNaviSearch;
@@ -135,7 +131,7 @@ public class NaviSmallCardHolder extends NaviCardHolder {
         if (guideInfo == null) {
             return;
         }
-        ivCardNaviInstruction.setImageResource(R.drawable.card_navi_icon_turn_right);
+        ivCardNaviInstruction.setImageResource(R.drawable.card_navi_tbt_direct_right);
         tvCardNaviInstruction.setText("前方直行");
         tvCardNaviRoadTip.setText("进入"+guideInfo.getNextRoadName());
     }
