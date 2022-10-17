@@ -40,7 +40,7 @@
             android:id="@+id/ivCardNaviTurnOrientation"
             android:layout_width="120px"
             android:layout_height="120px"
-            android:src="@drawable/card_navi_icon_turn_right"
+            android:src="@drawable/card_navi_tbt_direct_right"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="55px"

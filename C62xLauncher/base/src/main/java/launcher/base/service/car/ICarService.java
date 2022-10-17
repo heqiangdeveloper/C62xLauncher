@@ -9,4 +9,6 @@ public interface ICarService {
     String getVinCode();
 
     boolean isHasDVR();
+
+    boolean doSwitchWindow(boolean isOpenCmd);
 }

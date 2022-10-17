@@ -74,7 +74,7 @@
             android:layout_height="120px"
             android:layout_marginStart="184px"
             android:layout_marginTop="132px"
-            android:src="@drawable/card_navi_icon_turn_right"
+            android:src="@drawable/card_navi_tbt_direct_right"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

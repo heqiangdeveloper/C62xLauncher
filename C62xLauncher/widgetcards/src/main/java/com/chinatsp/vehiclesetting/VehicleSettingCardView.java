@@ -11,6 +11,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.chinatsp.widgetcards.R;
 
+import launcher.base.service.AppServiceManager;
+import launcher.base.service.car.ICarService;
 import launcher.base.utils.recent.RecentAppHelper;
 
 
@@ -62,10 +64,12 @@ public class VehicleSettingCardView extends ConstraintLayout {
     };
 
     private void closeWindow() {
-        // todo:关窗
+        ICarService carService = (ICarService)AppServiceManager.getService(AppServiceManager.SERVICE_CAR);
+        carService.doSwitchWindow(true);
     }
 
     private void openWindow() {
-        // todo: 开窗
+        ICarService carService = (ICarService)AppServiceManager.getService(AppServiceManager.SERVICE_CAR);
+        carService.doSwitchWindow(false);
     }
 }

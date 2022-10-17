@@ -1,16 +1,12 @@
 package com.chinatsp.navigation.viewholder;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.content.res.AppCompatResources;
 
-import com.autonavi.autoaidlwidget.AutoAidlWidgetManager;
 import com.chinatsp.navigation.NaviController;
 import com.chinatsp.navigation.R;
 import com.chinatsp.navigation.gaode.bean.GuideInfo;
@@ -125,6 +121,6 @@ public class NaviBigCardHolder extends NaviCardHolder {
     public void refreshNaviGuideInfo(GuideInfo guideInfo) {
         tvCardNaviTurnRoadName.setText(guideInfo.getNextRoadName());
         tvCardNaviDistanceTurn.setText(String.valueOf(guideInfo.getSegRemainDis()));
-        ivCardNaviTurnOrientation.setImageResource(R.drawable.card_navi_icon_turn_right);
+        ivCardNaviTurnOrientation.setImageResource(R.drawable.card_navi_tbt_direct_right);
     }
 }
