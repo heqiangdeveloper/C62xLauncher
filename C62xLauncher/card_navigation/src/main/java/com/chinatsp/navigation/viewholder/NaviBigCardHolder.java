@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
@@ -12,6 +13,7 @@ import androidx.appcompat.content.res.AppCompatResources;
 import com.autonavi.autoaidlwidget.AutoAidlWidgetManager;
 import com.chinatsp.navigation.NaviController;
 import com.chinatsp.navigation.R;
+import com.chinatsp.navigation.gaode.bean.GuideInfo;
 
 public class NaviBigCardHolder extends NaviCardHolder {
     private ImageView ivCardNaviSearch;
@@ -22,6 +24,9 @@ public class NaviBigCardHolder extends NaviCardHolder {
     private View layoutCardNaviStatus;
     private View layoutCardNaviCruise;
     private View surfaceViewNavi;
+    private TextView tvCardNaviTurnRoadName;
+    private ImageView ivCardNaviTurnOrientation;
+    private TextView tvCardNaviDistanceTurn;
 
     public NaviBigCardHolder(@NonNull View rootView, NaviController controller) {
         this(rootView);
@@ -45,6 +50,10 @@ public class NaviBigCardHolder extends NaviCardHolder {
         layoutCardNetworkError = rootView.findViewById(R.id.layoutCardNetworkError);
         layoutCardNaviStatus = rootView.findViewById(R.id.layoutCardNaviStatus);
         layoutCardNaviCruise = rootView.findViewById(R.id.layoutCardNaviCruise);
+
+        tvCardNaviTurnRoadName = rootView.findViewById(R.id.tvCardNaviTurnRoadName);
+        ivCardNaviTurnOrientation = rootView.findViewById(R.id.ivCardNaviTurnOrientation);
+        tvCardNaviDistanceTurn = rootView.findViewById(R.id.tvCardNaviDistanceTurn);
 
         ivCardNaviSearch.setOnClickListener(mOnClickListener);
         ivCardNaviHome.setOnClickListener(mOnClickListener);
@@ -110,5 +119,12 @@ public class NaviBigCardHolder extends NaviCardHolder {
 
     private void naviToHome() {
         mController.naviToHome();
+    }
+
+    @Override
+    public void refreshNaviGuideInfo(GuideInfo guideInfo) {
+        tvCardNaviTurnRoadName.setText(guideInfo.getNextRoadName());
+        tvCardNaviDistanceTurn.setText(String.valueOf(guideInfo.getSegRemainDis()));
+        ivCardNaviTurnOrientation.setImageResource(R.drawable.card_navi_icon_turn_right);
     }
 }

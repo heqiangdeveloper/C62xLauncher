@@ -5,6 +5,8 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import com.chinatsp.navigation.gaode.bean.GuideInfo;
+
 public abstract class NaviCardHolder {
     protected View mRootView;
     protected Context mContext;
@@ -22,4 +24,6 @@ public abstract class NaviCardHolder {
     public abstract void showNetworkError();
 
     public abstract void hideNetworkError();
+
+    public abstract void refreshNaviGuideInfo(GuideInfo guideInfo);
 }

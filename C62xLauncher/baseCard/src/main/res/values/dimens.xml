@@ -16,6 +16,8 @@
     <dimen name="card_icon_size_lv4">40px</dimen>
     <dimen name="card_icon_size_lv5">36px</dimen>
 
+    <dimen name="card_icon_size_navi_tip">56px</dimen>
+
     <dimen name="card_text_size_lv0">36px</dimen>
     <dimen name="card_text_size_lv1">32px</dimen>
     <dimen name="card_text_size_lv2">30px</dimen>

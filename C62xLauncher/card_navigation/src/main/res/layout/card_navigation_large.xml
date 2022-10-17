@@ -27,14 +27,13 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutCardNaviStatus"
-        android:layout_width="500px"
-        android:layout_height="187px"
+        android:layout_width="496px"
+        android:layout_height="255px"
         android:background="@drawable/card_navi_top_message"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="12px"
-        android:visibility="gone"
         >
 
         <ImageView
@@ -49,15 +48,14 @@
             />
 
         <TextView
-            android:id="@+id/ivCardNaviDistanceTurn"
+            android:id="@+id/tvCardNaviDistanceTurn"
             android:layout_width="84px"
             android:layout_height="58px"
-            android:text="256"
             style="@style/CardLv3TextView"
             android:textSize="50px"
             app:layout_constraintStart_toEndOf="@id/ivCardNaviTurnOrientation"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="35px"
+            android:layout_marginTop="40px"
             android:layout_marginLeft="29px"
             />
         <TextView
@@ -66,21 +64,61 @@
             android:text="米 进入"
             style="@style/CardLv3TextView"
             android:textColor="@color/card_grey_default"
-            app:layout_constraintStart_toEndOf="@id/ivCardNaviDistanceTurn"
-            app:layout_constraintBottom_toBottomOf="@id/ivCardNaviDistanceTurn"
+            app:layout_constraintStart_toEndOf="@id/tvCardNaviDistanceTurn"
+            app:layout_constraintBottom_toBottomOf="@id/tvCardNaviDistanceTurn"
             android:layout_marginLeft="6px"
             />
         <TextView
-            android:id="@+id/ivCardNaviTurnRoadName"
+            android:id="@+id/tvCardNaviTurnRoadName"
             android:layout_width="wrap_content"
             android:layout_height="48px"
-            android:text="滨海大道"
             style="@style/CardLv1TextView"
-            app:layout_constraintStart_toStartOf="@id/ivCardNaviDistanceTurn"
-            app:layout_constraintTop_toBottomOf="@id/ivCardNaviDistanceTurn"
+            app:layout_constraintStart_toStartOf="@id/tvCardNaviDistanceTurn"
+            app:layout_constraintTop_toBottomOf="@id/tvCardNaviDistanceTurn"
             android:layout_marginLeft="2px"
             />
 
+        <ImageView
+            android:id="@+id/ivCardNaviInstructionIconTurnLeft"
+            android:src="@drawable/card_navi_icon_instruction_turn_left_disable"
+            android:layout_width="@dimen/card_icon_size_navi_tip"
+            android:layout_height="@dimen/card_icon_size_navi_tip"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="48px"
+            android:layout_marginBottom="26px"
+            />
+
+        <ImageView
+            android:id="@+id/ivCardNaviInstructionIconStraight1"
+            android:src="@drawable/card_navi_icon_instruction_straight_disable"
+            android:layout_width="@dimen/card_icon_size_navi_tip"
+            android:layout_height="@dimen/card_icon_size_navi_tip"
+            app:layout_constraintStart_toEndOf="@id/ivCardNaviInstructionIconTurnLeft"
+            app:layout_constraintTop_toTopOf="@id/ivCardNaviInstructionIconTurnLeft"
+            android:layout_marginStart="59px"
+            />
+
+        <ImageView
+            android:id="@+id/ivCardNaviInstructionIconStraight2"
+            android:src="@drawable/card_navi_icon_instruction_straight_disable"
+            android:layout_width="@dimen/card_icon_size_navi_tip"
+            android:layout_height="@dimen/card_icon_size_navi_tip"
+            app:layout_constraintEnd_toStartOf="@id/ivCardNaviInstructionIconTurnRight"
+            app:layout_constraintTop_toTopOf="@id/ivCardNaviInstructionIconTurnRight"
+            android:layout_marginEnd="59px"
+            />
+        <ImageView
+            android:id="@+id/ivCardNaviInstructionIconTurnRight"
+            android:src="@drawable/card_navi_icon_instruction_turn_right_enable"
+            android:layout_width="@dimen/card_icon_size_navi_tip"
+            android:layout_height="@dimen/card_icon_size_navi_tip"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="48px"
+            android:layout_marginBottom="26px"
+
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

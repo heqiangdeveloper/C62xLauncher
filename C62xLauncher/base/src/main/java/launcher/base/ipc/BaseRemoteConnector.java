@@ -78,7 +78,7 @@ public class BaseRemoteConnector {
         AsyncSchedule.execute(new Runnable() {
             @Override
             public void run() {
-                EasyLog.i(TAG, "notifyDataCallback , listeners:" + mRemoteDataCallbacks);
+//                EasyLog.i(TAG, "notifyDataCallback , listeners:" + mRemoteDataCallbacks);
                 for (IRemoteDataCallback remoteDataCallback : mRemoteDataCallbacks) {
                     remoteDataCallback.notifyData(t);
                 }
