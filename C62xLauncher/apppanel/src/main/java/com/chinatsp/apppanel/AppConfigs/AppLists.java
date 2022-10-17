@@ -42,6 +42,7 @@ public class AppLists {
     public static final String amap = "com.autonavi.amapauto";//高德地图
     public static final String easyconn = "net.easyconn";//亿连手机互联
     public static final String weather = "com.iflytek.autofly.weather";//天气
+    public static final String applet = "com.iflytek.autofly.applet";//讯飞语音中转服务
 
     public static final String APPMANAGEMENT = "com.chinatsp.appmanagement";//应用管理，自定义的包名，实际不存在此应用
     //不显示在桌面的应用名单
@@ -55,7 +56,8 @@ public class AppLists {
             subscriber,
             avmDemo,
             carcorderdemo,
-            b561Radio
+            b561Radio,
+            applet
     );
 
     //不可删除的应用名单，其他的应用根据是否是系统应用来判断

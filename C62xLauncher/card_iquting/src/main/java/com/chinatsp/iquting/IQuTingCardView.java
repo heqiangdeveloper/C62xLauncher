@@ -380,7 +380,9 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                         mTvIQuTingArtistBig.setText("刘德华");
                         mCircleProgressView.setCurrent(0);
                     }else {
-                        GlideHelper.loadLocalAlbumCoverRadius(getContext(), mIvCover, R.drawable.test_cover2, RADIUS);
+                        if(!isDestroy((Activity) getContext())){
+                            GlideHelper.loadLocalAlbumCoverRadius(getContext(), mIvCover, R.drawable.test_cover2, RADIUS);
+                        }
                         mTvIQuTingMediaName.setText("暗里着迷—刘德华");
                         mProgressHorizontalIQuTing.updateProgress(0);
                     }
@@ -648,7 +650,9 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                         if(!TextUtils.isEmpty(iconUrl)){
                             GlideHelper.loadUrlAlbumCoverRadius(context,mIvCover,iconUrl,RADIUS);
                         }else {
-                            GlideHelper.loadLocalAlbumCoverRadius(context,mIvCover,R.drawable.test_cover2,10);
+                            if(!isDestroy((Activity) context)){
+                                GlideHelper.loadLocalAlbumCoverRadius(context,mIvCover,R.drawable.test_cover2,10);
+                            }
                         }
                         showFavor(mIvIQuTingLike,mediaInfo.getMediaType().trim(),mediaInfo.isFavored());
                     }
@@ -663,7 +667,9 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                         mTvIQuTingArtistBig.setText("刘德华");
                         mCircleProgressView.setCurrent(0);
                     }else {
-                        GlideHelper.loadLocalAlbumCoverRadius(getContext(), mIvCover, R.drawable.test_cover2, RADIUS);
+                        if(!isDestroy((Activity) getContext())){
+                            GlideHelper.loadLocalAlbumCoverRadius(getContext(), mIvCover, R.drawable.test_cover2, RADIUS);
+                        }
                         mTvIQuTingMediaName.setText("暗里着迷—刘德华");
                         mProgressHorizontalIQuTing.updateProgress(0);
                     }
@@ -863,7 +869,9 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
         if(!TextUtils.isEmpty(iconUrl)){
             GlideHelper.loadUrlAlbumCoverRadius(getContext(),mIvCover,iconUrl,RADIUS);
         }else {
-            GlideHelper.loadLocalAlbumCoverRadius(getContext(),mIvCover,R.drawable.test_cover2,RADIUS);
+            if(!isDestroy((Activity) getContext())){
+                GlideHelper.loadLocalAlbumCoverRadius(getContext(),mIvCover,R.drawable.test_cover2,RADIUS);
+            }
         }
         mTvIQuTingMediaName.setText(name + "-" + artist);
         if(isPlaying){

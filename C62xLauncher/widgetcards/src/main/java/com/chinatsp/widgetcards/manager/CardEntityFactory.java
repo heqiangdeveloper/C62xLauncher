@@ -80,7 +80,7 @@ public class CardEntityFactory {
 
     private static LauncherCard createAppStore() {
         LauncherCard cardEntity = new LauncherCard();
-        cardEntity.setName("应用商店");
+        cardEntity.setName("应用商城");
         cardEntity.setType(CardManager.CardType.APP_STORE);
         cardEntity.setSelectBgRes(R.drawable.card_edit_select_app_store);
         cardEntity.setUnselectBgRes(R.drawable.card_edit_unselect_app_store);

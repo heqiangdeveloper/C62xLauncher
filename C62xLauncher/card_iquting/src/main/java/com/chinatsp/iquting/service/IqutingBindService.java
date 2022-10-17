@@ -60,7 +60,9 @@ public class IqutingBindService {
     }
 
     public void setTabClickEvent(int type){
-        iTabClickCallback.onTabChanged(type);
+        if(iTabClickCallback != null){
+            iTabClickCallback.onTabChanged(type);
+        }
     }
 
     //注册播放服务

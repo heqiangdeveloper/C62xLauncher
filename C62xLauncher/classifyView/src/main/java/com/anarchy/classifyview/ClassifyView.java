@@ -521,7 +521,10 @@ public class ClassifyView extends FrameLayout {
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
                 View pressedView = findChildView(mMainRecyclerView, e);
-                if (pressedView == null) return false;
+                if (pressedView == null) {
+                    Log.d("MyAppInfoAdapter","pressedView is null");
+                    return false;
+                }
                 position = mMainRecyclerView.getChildAdapterPosition(pressedView);
                 List list = mMainCallBack.explodeItem(position, pressedView);
                 editor.putBoolean(MyConfigs.SHOWDELETE,false);
@@ -533,6 +536,7 @@ public class ClassifyView extends FrameLayout {
                     isCountTimer = false;
                 }
                 if (list == null || list.size() < 2) {
+                    Log.d("MyAppInfoAdapter","click app position: " + position);
                     mMainCallBack.onItemClick(position, pressedView);
                     return true;
                 } else {
