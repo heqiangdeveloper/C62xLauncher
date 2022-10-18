@@ -7,4 +7,5 @@ public class ProtocolIds {
     public static final int CURRENT_ROAD_NAME = 80057;
     public static final int NAVI_GUIDE_INFO = 30407;
     public static final int MAP_STATUS = 30200;
+    public static final int TRAFFIC_LANE_INFO = 30424;
 }

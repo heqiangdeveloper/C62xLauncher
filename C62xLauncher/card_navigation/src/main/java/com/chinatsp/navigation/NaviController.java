@@ -15,6 +15,7 @@ import com.chinatsp.navigation.gaode.bean.GuideInfo;
 import com.chinatsp.navigation.gaode.bean.MapStatus;
 import com.chinatsp.navigation.gaode.bean.NavigationStatus;
 import com.chinatsp.navigation.gaode.bean.RoadInfo;
+import com.chinatsp.navigation.gaode.bean.TrafficLaneModel;
 import com.chinatsp.navigation.repository.INaviCallback;
 import com.chinatsp.navigation.repository.NaviRepository;
 import com.chinatsp.navigation.repository.ResponseParser;
@@ -183,6 +184,15 @@ public class NaviController implements INaviCallback {
         } else if (autoStatus == MapStatus.STOP_NAVIGATION){
             mState = STATE_CRUISE;
             mView.refreshState(mState);
+        }
+    }
+
+    @Override
+    public void receiveTrafficLane(GaoDeResponse<TrafficLaneModel> gaoDeResponse) {
+        NavigationUtil.logD(TAG + "receiveTrafficLane");
+        TrafficLaneModel trafficLaneModel = gaoDeResponse.getData();
+        if (trafficLaneModel == null) {
+            return;
         }
     }
 

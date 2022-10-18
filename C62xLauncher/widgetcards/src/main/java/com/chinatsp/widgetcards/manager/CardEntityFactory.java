@@ -96,7 +96,7 @@ public class CardEntityFactory {
         cardEntity.setSelectBgRes(R.drawable.card_edit_select_user_center);
         cardEntity.setUnselectBgRes(R.drawable.card_edit_unselect_user_center);
         cardEntity.setCanExpand(false);
-        cardEntity.setCardViewCreator(CardViewCreatorFactory.create(CardManager.CardType.VEHICLE_SETTING));
+        cardEntity.setCardViewCreator(CardViewCreatorFactory.create(CardManager.CardType.USER_CENTER));
         return cardEntity;
     }
 

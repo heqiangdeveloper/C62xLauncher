@@ -664,6 +664,8 @@ public class GuideInfo {
         roadInfo.endPOICityName = jsonObject.optString("endPOICityName");
         roadInfo.etaText = jsonObject.optString("etaText");
         roadInfo.routeRemainDistanceAuto = jsonObject.optString("routeRemainDistanceAuto");
+        roadInfo.routeRemainDis = jsonObject.optInt("routeRemainDis");
+        roadInfo.routeRemainTime = jsonObject.optInt("routeRemainTime");
         roadInfo.routeRemainTimeAuto = jsonObject.optString("routeRemainTimeAuto");
         roadInfo.segRemainDisAuto = jsonObject.optString("segRemainDisAuto");
         roadInfo.segRemainDis = jsonObject.optInt("segRemainDis");

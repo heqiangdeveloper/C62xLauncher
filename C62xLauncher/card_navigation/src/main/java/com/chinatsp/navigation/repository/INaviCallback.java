@@ -6,6 +6,7 @@ import com.chinatsp.navigation.gaode.bean.GuideInfo;
 import com.chinatsp.navigation.gaode.bean.MapStatus;
 import com.chinatsp.navigation.gaode.bean.NavigationStatus;
 import com.chinatsp.navigation.gaode.bean.RoadInfo;
+import com.chinatsp.navigation.gaode.bean.TrafficLaneModel;
 
 public interface INaviCallback {
     void receiveMyLocation(GaoDeResponse<Address> gaoDeResponse);
@@ -14,4 +15,6 @@ public interface INaviCallback {
     void receiveNaviGuideInfo(GaoDeResponse<GuideInfo> gaoDeResponse);
 
     void receiveMapStatus(GaoDeResponse<MapStatus> gaoDeResponse);
+
+    void receiveTrafficLane(GaoDeResponse<TrafficLaneModel> gaoDeResponse);
 }

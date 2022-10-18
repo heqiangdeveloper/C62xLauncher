@@ -48,6 +48,8 @@ public class ResponseConvert<T> {
                 return GuideInfo.parseFrom(jsonObject);
             case ProtocolIds.MAP_STATUS:
                 return MapStatus.parseFrom(jsonObject);
+            case ProtocolIds.TRAFFIC_LANE_INFO:
+                return TrafficLaneModel.parseFrom(jsonObject);
         }
         return null;
     }

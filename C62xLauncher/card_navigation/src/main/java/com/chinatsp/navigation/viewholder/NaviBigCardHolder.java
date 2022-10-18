@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.chinatsp.navigation.NaviController;
+import com.chinatsp.navigation.NavigationUtil;
 import com.chinatsp.navigation.R;
 import com.chinatsp.navigation.gaode.bean.GuideInfo;
 
@@ -23,6 +24,9 @@ public class NaviBigCardHolder extends NaviCardHolder {
     private TextView tvCardNaviTurnRoadName;
     private ImageView ivCardNaviTurnOrientation;
     private TextView tvCardNaviDistanceTurn;
+    private TextView tvCardNaviTBTRemainDistance;
+    private TextView tvCardNaviTBTRemainTime;
+    private TextView tvCardNaviTBTArriveTime;
 
     public NaviBigCardHolder(@NonNull View rootView, NaviController controller) {
         this(rootView);
@@ -50,6 +54,10 @@ public class NaviBigCardHolder extends NaviCardHolder {
         tvCardNaviTurnRoadName = rootView.findViewById(R.id.tvCardNaviTurnRoadName);
         ivCardNaviTurnOrientation = rootView.findViewById(R.id.ivCardNaviTurnOrientation);
         tvCardNaviDistanceTurn = rootView.findViewById(R.id.tvCardNaviDistanceTurn);
+
+        tvCardNaviTBTRemainDistance = rootView.findViewById(R.id.tvCardNaviTBTRemainDistance);
+        tvCardNaviTBTRemainTime = rootView.findViewById(R.id.tvCardNaviTBTRemainTime);
+        tvCardNaviTBTArriveTime = rootView.findViewById(R.id.tvCardNaviTBTArriveTime);
 
         ivCardNaviSearch.setOnClickListener(mOnClickListener);
         ivCardNaviHome.setOnClickListener(mOnClickListener);
@@ -122,5 +130,8 @@ public class NaviBigCardHolder extends NaviCardHolder {
         tvCardNaviTurnRoadName.setText(guideInfo.getNextRoadName());
         tvCardNaviDistanceTurn.setText(String.valueOf(guideInfo.getSegRemainDis()));
         ivCardNaviTurnOrientation.setImageResource(R.drawable.card_navi_tbt_direct_right);
+        tvCardNaviTBTRemainDistance.setText(NavigationUtil.getReadableDistanceKM(guideInfo.getRouteRemainDis()));
+        tvCardNaviTBTRemainTime.setText(NavigationUtil.getReadableRemainTime(guideInfo.getRouteRemainTime()));
+        tvCardNaviTBTArriveTime.setText(guideInfo.getEtaText());
     }
 }
