@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.CompoundButton
 import androidx.core.content.ContextCompat
 import com.chinatsp.settinglib.VcuUtils
+import com.chinatsp.settinglib.constants.OffLine
 import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.ISwitchManager
@@ -161,7 +162,10 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
     private fun addRadioLiveDataListener() {
         viewModel.showAreaValue.observe(this) {
             doUpdateRadio(RadioNode.ADAS_SIDE_BACK_SHOW_AREA, it, false)
+            val value = if (it.data==1) "L" else "R"
+            setSwitchConfigParameters(OffLine.AREA,value)
         }
+
     }
 
     private fun setRadioListener() {
@@ -201,6 +205,8 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
             updateSwitchEnable(SwitchNode.ADAS_BSC)
             updateSwitchEnable(SwitchNode.ADAS_GUIDES)
             updateRadioEnable(RadioNode.ADAS_SIDE_BACK_SHOW_AREA)
+            val value = if (binding.adasSideBscSwitch.isChecked) "ON" else "OFF"
+            setSwitchConfigParameters(OffLine.BSC,value)
         }
         viewModel.bsdValue.observe(this) {
             doUpdateSwitch(SwitchNode.ADAS_BSD, it)
@@ -213,6 +219,8 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
         viewModel.guidesValue.observe(this) {
             doUpdateSwitch(SwitchNode.ADAS_GUIDES, it)
             updateSwitchEnable(SwitchNode.ADAS_GUIDES)
+            val value = if (binding.adasSideGuidesSwitch.isChecked) "ON" else "OFF"
+            setSwitchConfigParameters(OffLine.GUIDES,value)
         }
     }
 

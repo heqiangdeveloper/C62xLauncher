@@ -63,6 +63,8 @@ public class SmoothLineChartView extends View {
     //是否显示高亮标签
     private boolean mEnableShowTag;
     private boolean mCustomBorder;
+    //是否可以点击及拖动
+    private boolean mEnableView;
     private int mDrawAreaColor;
     //坐标点集合
     private List<PointF> mPoints = new ArrayList<PointF>();
@@ -82,6 +84,7 @@ public class SmoothLineChartView extends View {
     private Paint mShadowPaint;//渐变背景画笔
     boolean isMoveChange = false; // 是否需要根据移动改变
     private float vLength;// 竖线长度
+    private boolean action = false;//action 是否按下、抬起
 
     @IntDef({NODE_STYLE_CIRCLE, NODE_STYLE_RING})
     @Retention(RetentionPolicy.SOURCE)
@@ -299,7 +302,7 @@ public class SmoothLineChartView extends View {
         }
 
         //绘制选中节点高亮
-        if (mSelectedNode != -1 && mSelectedNode < size) {
+        if (mSelectedNode != -1 && mSelectedNode < size && mEnableView && action) {
             //mPaint.setColor((mCircleColor & 0xFFFFFF) | 0x30000000);
             mPaint.setColor(mContext.getResources().getColor(R.color.smooth_chick_color));
             mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -326,7 +329,7 @@ public class SmoothLineChartView extends View {
             mPaint.setStyle(Paint.Style.FILL);
             for (int i = 0; i < mPoints.size(); i++) {
                 if (mSelectedNode != -1) {
-                    if (mPoints.get(mSelectedNode).equals(mPoints.get(i))) {
+                    if (mPoints.get(mSelectedNode).equals(mPoints.get(i)) && mEnableView && action) {
                         mPaint.setColor(mInnerCircleColor);
                     } else {
                         mPaint.setColor(mContext.getResources().getColor(R.color.smooth_bg_color_node));
@@ -394,6 +397,7 @@ public class SmoothLineChartView extends View {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN://按下
                 int size = mValues.size();
+                action = true;
                 if (mSelectedNode != -1 && mSelectedNode < size) {
                     isMoveChange = true;
                     mSelectedNode = checkClicked(event.getX(), event.getY());
@@ -401,7 +405,7 @@ public class SmoothLineChartView extends View {
                 return true;
             case MotionEvent.ACTION_MOVE://滑动
                 float y_new = coordinateConversionY(touchY);
-                if (isMoveChange && mSelectedNode != -1 && y_new > mMinY && y_new < mMaxY) {
+                if (isMoveChange && mSelectedNode != -1 && y_new > mMinY && y_new < mMaxY && mEnableView) {
                     mValues.set(mSelectedNode, y_new);
                     if (mChartClickListener != null) {
                         mChartClickListener.onClick(mSelectedNode, Math.round(mValues.get(mSelectedNode) + mMaxY));
@@ -412,6 +416,7 @@ public class SmoothLineChartView extends View {
                 return super.onTouchEvent(event);
             case MotionEvent.ACTION_UP://抬起
                 mSelectedNode = checkClicked(event.getX(), event.getY());
+                action = false;
                 if (mSelectedNode != -1) {
                     if (mChartClickListener != null) {
                         mChartClickListener.onClick(mSelectedNode, Math.round(mValues.get(mSelectedNode) + mMaxY));
@@ -486,6 +491,11 @@ public class SmoothLineChartView extends View {
 
     public void enableDrawArea(boolean mEnableDrawArea) {
         this.mEnableDrawArea = mEnableDrawArea;
+        invalidate();
+    }
+
+    public void setEnableView(boolean mEnableView) {
+        this.mEnableView = mEnableView;
         invalidate();
     }
 
