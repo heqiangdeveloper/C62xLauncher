@@ -74,11 +74,12 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
             val liveData = router.obtainLevelLiveData()
             liveData.observe(this) {
                 it.takeIf { it.valid && it.uid == pid }?.let { level1 ->
-                    level1.cnode?.takeIf { child -> child.valid && child.uid == uid }.let { level2 ->
-                        level2?.cnode?.let { lv3Node ->
-                            map[lv3Node.uid]?.run { onViewClick(this, lv3Node.uid, true) }
+                    level1.cnode?.takeIf { child -> child.valid && child.uid == uid }
+                        .let { level2 ->
+                            level2?.cnode?.let { lv3Node ->
+                                map[lv3Node.uid]?.run { onViewClick(this, lv3Node.uid, true) }
+                            }
                         }
-                    }
                 }
             }
         }
@@ -144,9 +145,12 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
     private fun addSwitchLiveDataListener() {
         viewModel.mirrorFoldFunction.observe(this) {
             doUpdateSwitch(SwitchNode.BACK_MIRROR_FOLD, it!!)
+            updateOptionActive()
         }
         viewModel.mirrorDownFunction.observe(this) {
             doUpdateSwitch(SwitchNode.BACK_MIRROR_DOWN, it!!)
+            updateSwitchEnable(SwitchNode.BACK_MIRROR_DOWN)
+            updateEnable(binding.backMirrorDownAngle, true, isAngle)
         }
     }
 
@@ -174,7 +178,8 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
     override fun obtainDependByNode(node: SwitchNode): Boolean {
         return when (node) {
             SwitchNode.BACK_MIRROR_FOLD -> true
-            SwitchNode.BACK_MIRROR_DOWN -> binding.backMirrorFoldSwitch.isChecked
+            SwitchNode.BACK_MIRROR_DOWN -> binding.backMirrorFoldSwitch.isChecked && (viewModel.mirrorFoldFunction.value?.enable()
+                ?: false)
             else -> super.obtainDependByNode(node)
         }
     }
@@ -261,6 +266,7 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
     }
 
     private val isAngle: Boolean
-        get() = binding.backMirrorFoldSwitch.isChecked && binding.backMirrorDownSwitch.isChecked
+        get() = binding.backMirrorFoldSwitch.isChecked && binding.backMirrorDownSwitch.isChecked && (viewModel.mirrorFoldFunction.value?.enable()
+            ?: false)
 
 }

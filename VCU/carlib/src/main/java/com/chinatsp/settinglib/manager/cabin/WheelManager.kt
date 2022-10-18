@@ -18,6 +18,10 @@ import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
+import com.chinatsp.vehicle.controller.ICmdCallback
+import com.chinatsp.vehicle.controller.annotation.Action
+import com.chinatsp.vehicle.controller.annotation.ICar
+import com.chinatsp.vehicle.controller.bean.CarCmd
 import timber.log.Timber
 
 /**
@@ -71,12 +75,11 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
     private fun initVolume(type: Progress): Volume {
         val pos = 0x05
         val result = VcuUtils.getInt(key = Constant.STEERING_HEAT_TEMP, value = pos)
-        val volume = Volume(type, type.min, type.max, result)
-//        AppExecutors.get()?.singleIO()?.execute {
+        //        AppExecutors.get()?.singleIO()?.execute {
 //            val result = VcuUtils.getInt(key = Constant.STEERING_HEAT_TEMP, value = pos)
 //            doUpdateProgress(volume, result, true, instance::doProgressChanged)
 //        }
-        return volume
+        return Volume(type, type.min, type.max, result)
     }
 
 
@@ -121,6 +124,7 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
                 if (result) {
                     val value = node.value(status, isGet = true)
                     VcuUtils.putInt(key = Constant.STEERING_HEAT_SWITCH, value = value)
+                    doUpdateSwitchValue(node, swhFunction, status, this::doSwitchChanged)
                 }
                 return result
             }
@@ -143,6 +147,7 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
                 val result = writeProperty(steeringSillTemp, position)
                 if (result) {
                     VcuUtils.putInt(key = Constant.STEERING_HEAT_TEMP, value = position)
+                    steeringSillTemp.pos = position
                 }
                 return result
             }
@@ -219,19 +224,22 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
         return success
     }
 
-    private fun doRangeChanged(vararg array: Volume) {
-        val readLock = readWriteLock.readLock()
-        try {
-            readLock.lock()
-            listenerStore.forEach { (_, ref) ->
-                val listener = ref.get()
-                if (null != listener && listener is ISoundListener) {
-                    listener.onSoundVolumeChanged(*array)
-                }
+    override fun doCarControlCommand(cmd: CarCmd, callback: ICmdCallback?) {
+        if (ICar.WHEEL_HOT == cmd.car) {
+            var status = false
+            if (Action.TURN_ON == cmd.action) {
+                status = true
             }
-        } finally {
-            readLock.unlock()
+            if (Action.TURN_OFF == cmd.action) {
+                status = false
+            }
+            val result = doSetSwitchOption(SwitchNode.DRIVE_WHEEL_AUTO_HEAT, status)
+            if (result) {
+                cmd.message = "方向盘加热已${if (status) "打开" else "关闭"}"
+            } else {
+                cmd.message = "方向盘加热${if (status) "打开" else "关闭"}失败了"
+            }
+            callback?.onCmdHandleResult(cmd)
         }
     }
-
 }

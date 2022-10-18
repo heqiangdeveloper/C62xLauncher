@@ -196,7 +196,7 @@ enum class SwitchNode(
     DRIVE_BATTERY_OPTIMIZE(
         get = Norm(on = 0x0, off = 0x4, signal = CarCabinManager.ID_LOU_PWR_MNGT_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_LOU_PWR_MNG_SWT),
-        inactive = intArrayOf(0x1, 0x2, 0x3, 0x5),
+        inactive = intArrayOf(0x1, 0x3),
         default = true
     ),
 
@@ -246,12 +246,8 @@ enum class SwitchNode(
     ),
 
     SPEED_VOLUME_OFFSET_INSERT(
-        get = Norm(
-            on = 0x01,
-            off = 0x02,
-            origin = Origin.MCU,
-            signal = CarMcuManager.ID_MCU_RET_AUDIO_INFO
-        ),
+        get = Norm(on = 0x01, off = 0x02, origin = Origin.MCU,
+            signal = CarMcuManager.ID_MCU_RET_AUDIO_INFO),
         set = Norm(on = 0x01, off = 0x02, signal = CarCabinManager.ID_SETVOLUMESPEED),
         default = false
     ),
@@ -314,6 +310,9 @@ enum class SwitchNode(
      * set -> 0x1: Enabled; 0x2: Disabled
      * get -> 0x0: No anthentication or failure; 0x1: Anthentication success
      */
+
+
+
     DOOR_SMART_ENTER(
         get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_SMART_ENTRY_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_AVN_SMART_ENTRY_EN),
@@ -326,11 +325,8 @@ enum class SwitchNode(
      * set -> 遥控升降窗软开关 0x0: Inactive; 0x1: Enabled; 0x2: Disabled; 0x3: Reserved
      */
     WIN_REMOTE_CONTROL(
-        get = Norm(
-            on = 0x1,
-            off = 0x2,
-            signal = CarCabinManager.ID_REMOTE_WINDOW_RISE_FALL_STATES
-        ),
+        get = Norm(on = 0x1, off = 0x2,
+            signal = CarCabinManager.ID_REMOTE_WINDOW_RISE_FALL_STATES),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_REMOTE_WINDOW_RISE_FALL_SW),
         inactive = intArrayOf(0x0, 0x3),
         default = false
@@ -362,17 +358,14 @@ enum class SwitchNode(
     /**
      * 车门车窗--车窗--雨刮维修
      * get -> 前雨刮维修模式状态; 0x0:Initializing; 0x1 maitenance mode; 0x2:normal mode; 0x3:Invalid
-     * set -> 前雨刮维修模式开关 0x0:Initializing; 0x1:maitenance mode; 0x2:normal mode; 0x3:Invalid
+     * set -> 前雨刮维修模式开关 0x0: Invalid; 0x1: Initializing; 0x2: maitenance mode; 0x3: normal mode; 0x4: Invalid
      *
      */
     RAIN_WIPER_REPAIR(
-        get = Norm(
-            on = 0x01,
-            off = 0x02,
-            signal = CarCabinManager.ID_FRONT_WIPER_MAINTENNANCE_STATES
-        ),
-        set = Norm(on = 0x01, off = 0x02, signal = CarCabinManager.ID_FRONT_WIPER_MAINTENNANCE_SW),
-        inactive = intArrayOf(0x0, 0x3),
+        get = Norm(on = 0x1, off = 0x2,
+            signal = CarCabinManager.ID_FRONT_WIPER_MAINTENNANCE_STATES),
+        set = Norm(on = 0x2, off = 0x3, signal = CarCabinManager.ID_FRONT_WIPER_MAINTENNANCE_SW),
+        inactive = intArrayOf(0x1, 0x4),
         default = false
     ),
 
@@ -490,7 +483,6 @@ enum class SwitchNode(
     ADAS_FCW(
         get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_FCW_STATUS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_FCW_SWT),
-        inactive = intArrayOf(0x0),
         default = true
     ),
 
@@ -534,9 +526,9 @@ enum class SwitchNode(
      *        0x0: Inacitve；0x1: UI warning；0x2: UI and SPEAKER warning(default)；0x3: OFF
      * get -> Operation status of traffic sign functions.
      *        0x0:Off
-     *        0x1:Operating Fusion mode(reserved)
-     *        0x2:Operating Vision only mode
-     *        0x3:Operating Navigation onlymode(reserved)
+     *        0x1:Operating Fusion mode(reserved) ON
+     *        0x2:Operating Vision only mode ON
+     *        0x3:Operating Navigation onlymode(reserved) ON
      *        0x4:Temporary failure
      *        0x5:Camera blocked
      *        0x6:Permanent failure
@@ -545,7 +537,7 @@ enum class SwitchNode(
     ADAS_TSR(
         get = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_TSR_OPERATING_STATUS),
         set = Norm(on = 0x2, off = 0x3, signal = CarCabinManager.ID_TSR_SWT),
-        inactive = intArrayOf(0x1, 0x3, 0x4, 0x5, 0x6, 0x7),
+        inactive = intArrayOf(0x4, 0x5, 0x6, 0x7),
         default = true,
         careOn = false
     ),
@@ -562,7 +554,8 @@ enum class SwitchNode(
     ADAS_HMA(//向产品确认值
         get = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_HMA_STATUS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HMA_ON_OFF_SWT),
-        inactive = intArrayOf(0x1, 0x3, 0x4, 0x5, 0x6, 0x7),
+        //0x3, 0x4, 0x5 为置灰且进界面需要弹窗提示（未实现）
+        inactive = intArrayOf(0x3, 0x4, 0x5, 0x6, 0x7),
         default = false,
         careOn = false
     ),
@@ -588,20 +581,16 @@ enum class SwitchNode(
      * 驾驶辅助--侧后辅助--盲区监测 BSD
      * set -> BSD Switch. BsdSwt
      *        0x0: Inactive; 0x1: On; 0x2: Off; 0x3: Invalid
-     * get -> Indicate the BSD running status of AVM, used for international car. AvmBsdSts
-     *        0x0:  Initial
-     *        0x1: BSD off
-     *        0x2: BSD standby
-     *        0x3: BSD on
-     *        0x4: BSD failed
-     *        0x5: Camera blocked
-     *        0x6: Reserved
-     *        0x7: Reserved
+     * get -> Set the BSD switch of AVM,used for international car.
+     *        0x0: Inactive
+     *        0x1: On
+     *        0x2: Off
+     *        0x3: Invalid
      */
     ADAS_BSD(
-        get = Norm(on = 0x3, off = 0x1, signal = CarCabinManager.ID_AVM_BSD_STS),
+        get = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_AVM_BSD_SWT_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_APA_BSD_SWT),
-        inactive = intArrayOf(0x0, 0x2, 0x4, 0x5, 0x6, 0x7),
+        inactive = intArrayOf(0x0),
         default = true
     ),
 
@@ -667,14 +656,10 @@ enum class SwitchNode(
      *        0x0:Disabled; 0x1:low Varient(reserved); 0x2:Middle Varient(reserved); 0x3:Hign Varient
      */
     LIGHT_CEREMONY_SENSE(
-        get = Norm(
-            on = 0x3, off = 0x0,
-            signal = CarCabinManager.ID_BCM_EL_CERE_SENSE_STATUS
-        ),
-        set = Norm(
-            on = 0x4, off = 0x1,
-            signal = CarCabinManager.ID_HMI_EL_CERE_SENSE_TYPE_SET
-        ),
+        get = Norm(on = 0x3, off = 0x0,
+            signal = CarCabinManager.ID_BCM_EL_CERE_SENSE_STATUS),
+        set = Norm(on = 0x4, off = 0x1,
+            signal = CarCabinManager.ID_HMI_EL_CERE_SENSE_TYPE_SET),
         inactive = intArrayOf(0x1, 0x2),
         default = false
     ),
@@ -842,8 +827,7 @@ enum class SwitchNode(
 
     fun isActive(value: Int) = (get.on == value) or (get.off == value)
 
-    fun isInactive(value: Int) =
-        inactive?.contains(value) ?: false
+    fun isInactive(value: Int) = inactive?.contains(value) ?: false
 
     fun isOn(value: Int) = if (careOn) get.on == value else get.off != value
 }

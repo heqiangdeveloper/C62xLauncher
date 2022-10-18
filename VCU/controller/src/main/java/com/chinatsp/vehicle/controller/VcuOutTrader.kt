@@ -16,6 +16,8 @@ import com.chinatsp.vehicle.controller.logic.conditioner.ConditionerConstants
 import com.chinatsp.vehicle.controller.semantic.CmdVoiceModel
 import com.chinatsp.vehicle.controller.semantic.GsonUtil
 import com.chinatsp.vehicle.controller.semantic.NlpVoiceModel
+import com.chinatsp.vehicle.controller.semantic.VoiceJson
+import com.iflytek.autofly.voicecore.tts.TtsUtil
 import org.json.JSONObject
 import kotlin.random.Random
 
@@ -100,17 +102,15 @@ class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback, 
      * 小欧不做处理 播报，防止小欧发呆
      */
     private fun defaultHandleSpeech() {
-        audioHintActionResult("mainC14", "")
+        audioHintActionResult("mainC14", "", "我暂不会这个操作")
     }
 
-    private fun audioHintActionResult(audioSerial: String, description: String) {
+    private fun audioHintActionResult(audioSerial: String, desc: String, msg: String = "") {
         val voiceName = Settings.System.getString(context.contentResolver, "aware") ?: ""
         val map: MutableMap<String, String> = HashMap()
         map["#VOICENAME#"] = voiceName
-        LogManager.d(
-            TAG, "audioHintActionResult invoke voiceName:$voiceName, " +
-                    "audioSerial:$audioSerial, description:$description"
-        )
+        LogManager.d(TAG, "audioResult  desc:$desc, msg:$msg")
+        TtsUtil.ttsPlayAsynchronous(context, msg)
 //        speechService.ttsSpeakListener(
 //            shownIfly = false,
 //            secondsr = false,
@@ -141,7 +141,9 @@ class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback, 
     inner class CmdHandleCallback : ICmdCallback.Stub() {
         override fun onCmdHandleResult(cmd: BaseCmd) {
             LogManager.d(TAG, "onCmdHandleResult $cmd")
-            audioHintActionResult("yydsC10", cmd.slots?.area ?: "")
+            audioHintActionResult("audio",
+                desc = (cmd.slots?.area ?: "desc is null") + ", text=" + cmd.slots?.text,
+                msg = cmd.message)
         }
     }
 
@@ -178,17 +180,17 @@ class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback, 
         val carSpeed = 120//获取系统车速
         if (!result) {
             LogManager.d(TAG, "发动机没有开启，请打开发动机！")
-            audioHintActionResult("", "发动机没有开启，请打开发动机！")
+            audioHintActionResult("", "", "发动机没有开启，请打开发动机！")
             return
         }
         if (carSpeed > 120) {//车速大于120，不许开窗
             LogManager.d(TAG, "车速过快，建议不要开启天窗！")
-            audioHintActionResult("", "车速过快，建议不要开启天窗！")
+            audioHintActionResult("", "", "车速过快，建议不要开启天窗！")
             return
         }
         result = CommandParser().doDispatchSrAction(obj, controller!!, CmdHandleCallback())
-        val array = ConditionerConstants.KT_USED
-        audioHintActionResult("", array[Random.nextInt(array.size)])//车机反馈应答，随机抽取
+//        val array = ConditionerConstants.KT_USED
+//        audioHintActionResult("", "",  array[Random.nextInt(array.size)])//车机反馈应答，随机抽取
         if (!result) {
             defaultHandleSpeech()
         }
@@ -201,18 +203,27 @@ class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback, 
     override fun doResolverData(data: String) {
 //            val web = GsonUtil.stringToObject(data!!, Web::class.java)
 //            LogManager.d("luohong", web?.toString() ?: "web is null")
-        if (true) {
+//        if (true) {
+        try {
             val jsonObject = JSONObject(data)
-            val intent = jsonObject.getString("intent")
-            LogManager.d("aa", "intent: $intent")
-            val entity = GsonUtil.stringToObject(
-                intent, com.chinatsp.vehicle.controller.semantic.Intent::class.java)
-            onSrAction(entity.convert2NlpVoiceModel())
-        } else {
-            val entity = GsonUtil.stringToObject(
-                data, com.chinatsp.vehicle.controller.semantic.Intent::class.java)
-            onSrAction(entity.convert2NlpVoiceModel())
+            val jsonData = jsonObject.getString("intent")
+            LogManager.d("ReceiveVoice", "jsonData: $jsonData")
+            val voiceJson = GsonUtil.stringToObject(jsonData, VoiceJson::class.java)
+            voiceJson?.answer?.let {
+                LogManager.d("ReceiveVoice", "voiceJson-answer: $it")
+            }
+            voiceJson?.semantic?.slots?.let {
+                LogManager.d("ReceiveVoice", "voiceJson-semantic-slots: $it")
+            }
+            onSrAction(voiceJson.convert())
+        } catch (e: Exception) {
+            e.printStackTrace()
+            LogManager.e("ReceiveVoice", "parse error:${e.message}")
         }
+//        } else {
+//            val entity = GsonUtil.stringToObject(data, VoiceJson::class.java)
+//            onSrAction(entity.convert())
+//        }
     }
 
 }

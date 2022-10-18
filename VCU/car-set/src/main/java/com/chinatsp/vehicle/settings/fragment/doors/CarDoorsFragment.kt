@@ -79,9 +79,11 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
     private fun addRadioLiveDataListener() {
         viewModel.automaticDoorLock.observe(this) {
             doUpdateRadio(RadioNode.DOOR_DRIVE_LOCK, it, false)
+            updateOptionActive()
         }
         viewModel.automaticDoorUnlock.observe(this) {
             doUpdateRadio(RadioNode.DOOR_FLAMEOUT_UNLOCK, it, false)
+            updateOptionActive()
         }
     }
 
@@ -121,6 +123,7 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
     private fun addSwitchLiveDataListener() {
         viewModel.smartDoorAccess.observe(this) {
             doUpdateSwitch(SwitchNode.DOOR_SMART_ENTER, it)
+            updateOptionActive()
         }
     }
 

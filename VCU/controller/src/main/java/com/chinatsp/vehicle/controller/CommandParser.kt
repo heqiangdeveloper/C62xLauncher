@@ -21,16 +21,18 @@ class CommandParser {
     ): Boolean {
         var result = false
         try {
-            if ("airControl" == nlpVoiceModel.service) {
-                AirController.doVoiceController(controller, callback, nlpVoiceModel)
-            } else if ("carControl" == nlpVoiceModel.service) {
-                result = CarController.doVoiceController(controller, callback, nlpVoiceModel)
+            when (nlpVoiceModel.service) {
+                "airControl" -> {
+                    AirController.doVoiceController(controller, callback, nlpVoiceModel)
+                }
+                "carControl" -> {
+                    result = CarController.doVoiceController(controller, callback, nlpVoiceModel)
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
             LogManager.e(tag, " 语音解析异常 error:${e.message}")
         }
-
         return result
     }
 

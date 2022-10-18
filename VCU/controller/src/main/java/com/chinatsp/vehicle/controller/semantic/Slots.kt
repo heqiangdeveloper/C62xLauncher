@@ -10,7 +10,7 @@ data class Slots(val serial: String) : Parcelable {
     var moreArtist: String = ""
     var band: String = ""
     var gender: String = ""
-    var source: String = ""
+//    var source: Any? = null
     var sourceType: String = ""
     var genre: String = ""
     var area: String = ""
@@ -32,11 +32,17 @@ data class Slots(val serial: String) : Parcelable {
     var category: String = ""
     var channel: String = ""
     var airflowDirection: String = ""
-    var temperature: String = ""
+    var temperature: Any? = ""
     var temperatureGear: String = ""
-    var fanSpeed: String = ""
+    var fanSpeed: Any? = ""
     var direction: String = ""
     var mode: String = ""
+
+    var nameValue: Any? = ""
+    var color: String = ""
+
+    var text: String = ""
+    var operation: String = ""
 
     constructor(parcel: Parcel): this("") {
         artist = parcel.readString().toString()
@@ -45,7 +51,7 @@ data class Slots(val serial: String) : Parcelable {
         moreArtist = parcel.readString().toString()
         band = parcel.readString().toString()
         gender = parcel.readString().toString()
-        source = parcel.readString().toString()
+//        source = parcel.readString().toString()
         sourceType = parcel.readString().toString()
         genre = parcel.readString().toString()
         area = parcel.readString().toString()
@@ -72,6 +78,10 @@ data class Slots(val serial: String) : Parcelable {
         fanSpeed = parcel.readString().toString()
         direction = parcel.readString().toString()
         mode = parcel.readString().toString()
+        nameValue = parcel.readString().toString()
+        color = parcel.readString().toString()
+        text = parcel.readString().toString()
+        operation = parcel.readString().toString()
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -81,7 +91,7 @@ data class Slots(val serial: String) : Parcelable {
         parcel.writeString(moreArtist)
         parcel.writeString(band)
         parcel.writeString(gender)
-        parcel.writeString(source)
+//        parcel.writeString(source)
         parcel.writeString(sourceType)
         parcel.writeString(genre)
         parcel.writeString(area)
@@ -103,11 +113,15 @@ data class Slots(val serial: String) : Parcelable {
         parcel.writeString(category)
         parcel.writeString(channel)
         parcel.writeString(airflowDirection)
-        parcel.writeString(temperature)
+        parcel.writeString(temperature?.toString() ?: "")
         parcel.writeString(temperatureGear)
-        parcel.writeString(fanSpeed)
+        parcel.writeString(fanSpeed?.toString() ?: "")
         parcel.writeString(direction)
         parcel.writeString(mode)
+        parcel.writeString(nameValue?.toString() ?: "")
+        parcel.writeString(color)
+        parcel.writeString(text)
+        parcel.writeString(operation)
     }
 
     override fun describeContents(): Int {

@@ -15,12 +15,13 @@
         android:background="@drawable/bg"
         android:orientation="vertical">
 
+
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/title_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/main_tab_height"
-            android:orientation="horizontal"
             android:gravity="center"
+            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -39,15 +40,15 @@
 
             <com.common.xui.widget.alpha.XUIAlphaTextView
                 android:id="@+id/device_upgrade"
+                style="@style/TabText"
                 android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
                 android:paddingStart="30px"
+                android:paddingTop="@dimen/x10"
                 android:paddingEnd="30px"
                 android:text="@string/table6"
-                android:gravity="center"
-                style="@style/TabText"
-                android:paddingTop="@dimen/x10"
-                android:textColor="@color/tab_text_color_selector"
-                android:layout_height="match_parent" />
+                android:textColor="@color/tab_text_color_selector" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -70,6 +71,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+
         <FrameLayout
             android:id="@+id/vcu_content_container"
             android:layout_width="match_parent"
@@ -77,6 +79,15 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/vcu_main_split_line" />
 
-
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/home_back"
+            android:layout_width="@dimen/x45"
+            android:layout_height="@dimen/x45"
+            android:layout_marginTop="@dimen/x15"
+            android:onClick="homeBack"
+            android:src="@drawable/home_back_selector"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

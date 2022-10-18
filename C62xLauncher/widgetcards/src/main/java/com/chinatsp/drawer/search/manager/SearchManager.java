@@ -30,6 +30,7 @@ public class SearchManager {
     private static final String avmDemo = "com.mediatek.avm";//AVMDemo
     private static final String carcorderdemo = "com.mediatek.carcorderdemo";//Carcorder Demo
     private static final String b561Radio = "com.oushang.radio";//b561 Radio
+    private static final String applet = "com.iflytek.autofly.applet";//语助业务app
 
     private static class Holder {
         public static SearchManager manager = new SearchManager();
@@ -93,7 +94,8 @@ public class SearchManager {
             subscriber,
             avmDemo,
             carcorderdemo,
-            b561Radio
+            b561Radio,
+            applet
     );
 
     /**

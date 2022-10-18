@@ -471,10 +471,10 @@ class SettingManager private constructor() {
         readProperty(id, origin, area.id, block)
     }
 
-    fun readProperty(id: Int, origin: Origin, areaValue: Int, block: ((Int) -> Unit)) {
+    private fun readProperty(id: Int, origin: Origin, areaValue: Int, block: ((Int) -> Unit)) {
         if (!status) {
             Timber.d("readIntProperty propertyId:$id, origin:$origin, connectService: false!")
-            block(Constant.DEFAULT)
+//            block(Constant.DEFAULT)
             return
         }
         AppExecutors.get()?.networkIO()?.execute {

@@ -7,5 +7,5 @@ package com.chinatsp.vehicle.controller.semantic
  *
  */
 data class SrEntity(
-    val intent: Intent,
+    val intent: VoiceJson,
 )

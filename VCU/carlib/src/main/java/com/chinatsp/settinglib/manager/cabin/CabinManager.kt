@@ -5,6 +5,9 @@ import com.chinatsp.settinglib.ITabStore
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.sign.Origin
+import com.chinatsp.vehicle.controller.ICmdCallback
+import com.chinatsp.vehicle.controller.annotation.Model
+import com.chinatsp.vehicle.controller.bean.CarCmd
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
@@ -78,6 +81,12 @@ class CabinManager private constructor() : BaseManager(), ITabStore {
                 }
                 put(key, hashSet)
             }
+        }
+    }
+
+    override fun doCarControlCommand(cmd: CarCmd, callback: ICmdCallback?) {
+        if (Model.CABIN_WHEEL == cmd.model) {
+            WheelManager.instance.doCarControlCommand(cmd, callback)
         }
     }
 

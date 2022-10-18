@@ -22,6 +22,7 @@ import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.popupwindow.PopWindow
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), IOptionAction {
@@ -159,6 +160,8 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
             doUpdateSwitch(SwitchNode.TOUCH_PROMPT_TONE, it)
         }
         viewModel.speedVolumeOffset.observe(this) {
+            val speedSwitch = manager.volumeSpeedSwitch
+            Timber.e("==================speedSwitch===$speedSwitch, it:  $id")
             doUpdateSwitch(manager.volumeSpeedSwitch, it)
         }
     }
@@ -169,7 +172,7 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
             SwitchNode.AUDIO_SOUND_LOUDNESS -> binding.soundLoudnessSwitch
             SwitchNode.AUDIO_SOUND_HUAWEI -> binding.soundHuaweiSwitch
             SwitchNode.TOUCH_PROMPT_TONE -> binding.soundTouchPromptSwitch
-            manager.volumeSpeedSwitch -> binding.soundSpeedOffsetSwitch
+            SwitchNode.SPEED_VOLUME_OFFSET_INSERT, SwitchNode.SPEED_VOLUME_OFFSET -> binding.soundSpeedOffsetSwitch
             else -> null
         }
     }

@@ -81,12 +81,11 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
     private fun initVolume(type: Progress): Volume {
         val pos = 0x05
         val result = VcuUtils.getInt(key = Constant.SEAT_HEAT_TEMP, value = pos)
-        val volume = Volume(type, type.min, type.max, result)
-//        AppExecutors.get()?.singleIO()?.execute {
+        //        AppExecutors.get()?.singleIO()?.execute {
 //            val result = VcuUtils.getInt(key = Constant.SEAT_HEAT_TEMP, value = pos)
 //            doUpdateProgress(volume, result, true, instance::doProgressChanged)
 //        }
-        return volume
+        return Volume(type, type.min, type.max, result)
     }
 
     override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
@@ -136,6 +135,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
                 if (result) {
                     val value = node.value(status, isGet = true)
                     VcuUtils.putInt(key = Constant.SEAT_HEAT_SWITCH, value = value)
+                    doUpdateSwitchValue(node, seatHeatFunction, status, this::doSwitchChanged)
                 }
                 return result
             }
@@ -158,6 +158,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
                 val result = writeProperty(seatHeatStartTemp, position)
                 if (result) {
                     VcuUtils.putInt(key = Constant.SEAT_HEAT_TEMP, value = position)
+                    seatHeatStartTemp.pos = position
                 }
                 return true
             }

@@ -1,6 +1,7 @@
 package com.chinatsp.settinglib.manager
 
 import android.car.hardware.CarPropertyValue
+import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.listener.IManager
 import com.chinatsp.settinglib.optios.RadioNode
@@ -58,14 +59,14 @@ interface IRadioManager : IManager {
                 atomic.set(value)
             }
             if (!atomic.enable()) {
-                atomic.enable = 0x1
+                atomic.enable = Constant.VIEW_ENABLE
             }
             block?.let { it(node, atomic) }
             return atomic
         }
         val inactive = node.isInactive(value)
         if (inactive xor atomic.enable()) {
-            atomic.enable = if (inactive) 0x2 else 0x1
+            atomic.enable = if (inactive) 0x2 else Constant.VIEW_ENABLE
             block?.let { it(node, atomic) }
             return atomic
         }

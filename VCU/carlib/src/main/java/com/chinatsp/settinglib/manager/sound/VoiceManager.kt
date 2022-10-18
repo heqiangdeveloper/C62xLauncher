@@ -387,7 +387,7 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
             SwitchNode.AUDIO_SOUND_HUAWEI -> huaweiAtomic.copy()
             SwitchNode.AUDIO_SOUND_LOUDNESS -> loudnessAtomic.copy()
             SwitchNode.TOUCH_PROMPT_TONE -> touchTone.copy()
-            volumeSpeedSwitch -> offsetAtomic.copy()
+            SwitchNode.SPEED_VOLUME_OFFSET_INSERT, SwitchNode.SPEED_VOLUME_OFFSET -> offsetAtomic.copy()
             else -> null
         }
     }

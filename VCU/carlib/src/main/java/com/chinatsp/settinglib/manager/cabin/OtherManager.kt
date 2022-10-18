@@ -215,7 +215,10 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
                 onSwitchChanged(SwitchNode.DRIVE_TRAILER_REMIND, trailerRemind, property)
             }
             SwitchNode.DRIVE_BATTERY_OPTIMIZE.get.signal -> {
-                onSwitchChanged(SwitchNode.DRIVE_BATTERY_OPTIMIZE, batteryOptimize, property)
+                val node = SwitchNode.DRIVE_BATTERY_OPTIMIZE
+                var convert = convert(property, node.get.off, 0x2, 0x3)
+                if (null == convert) convert = property
+                onSwitchChanged(node, batteryOptimize, convert)
             }
             SwitchNode.DRIVE_WIRELESS_CHARGING.get.signal -> {
                 onSwitchChanged(SwitchNode.DRIVE_WIRELESS_CHARGING, wirelessCharging, property)
