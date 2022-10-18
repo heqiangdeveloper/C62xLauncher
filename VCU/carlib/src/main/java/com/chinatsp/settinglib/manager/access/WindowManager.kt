@@ -139,31 +139,31 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
      *
      * @param switchNode 开关选项
      */
-    fun doGetSwitchStatus(switchNode: SwitchNode): Boolean {
-        return when (switchNode) {
-            SwitchNode.WIN_CLOSE_WHILE_RAIN -> {
-                val signal = CarCabinManager.ID_BCM_RAIN_WIN_CLOSE_FUN_STS
-                val value = readIntProperty(signal, Origin.CABIN, switchNode.area)
-                switchNode.isOn(value)
-            }
-            SwitchNode.WIN_CLOSE_FOLLOW_LOCK -> {
-                val signal = CarCabinManager.ID_BCM_WIN_CLOSE_FUN_STS
-                val value = readIntProperty(signal, Origin.CABIN, switchNode.area)
-                switchNode.isOn(value)
-            }
-            SwitchNode.WIN_REMOTE_CONTROL -> {
-                val signal = CarCabinManager.ID_BCM_RAIN_WIN_CLOSE_FUN_STS
-                val value = readIntProperty(signal, Origin.CABIN, switchNode.area)
-                switchNode.isOn(value)
-            }
-            SwitchNode.RAIN_WIPER_REPAIR -> {
-                val signal = CarCabinManager.ID_BCM_RAIN_WIN_CLOSE_FUN_STS
-                val value = readIntProperty(signal, Origin.CABIN, switchNode.area)
-                switchNode.isOn(value)
-            }
-            else -> false
-        }
-    }
+//    fun doGetSwitchStatus(switchNode: SwitchNode): Boolean {
+//        return when (switchNode) {
+//            SwitchNode.WIN_CLOSE_WHILE_RAIN -> {
+//                val signal = CarCabinManager.ID_BCM_RAIN_WIN_CLOSE_FUN_STS
+//                val value = readIntProperty(signal, Origin.CABIN, switchNode.area)
+//                switchNode.isOn(value)
+//            }
+//            SwitchNode.WIN_CLOSE_FOLLOW_LOCK -> {
+//                val signal = CarCabinManager.ID_BCM_WIN_CLOSE_FUN_STS
+//                val value = readIntProperty(signal, Origin.CABIN, switchNode.area)
+//                switchNode.isOn(value)
+//            }
+//            SwitchNode.WIN_REMOTE_CONTROL -> {
+//                val signal = CarCabinManager.ID_BCM_RAIN_WIN_CLOSE_FUN_STS
+//                val value = readIntProperty(signal, Origin.CABIN, switchNode.area)
+//                switchNode.isOn(value)
+//            }
+//            SwitchNode.RAIN_WIPER_REPAIR -> {
+//                val signal = CarCabinManager.ID_BCM_RAIN_WIN_CLOSE_FUN_STS
+//                val value = readIntProperty(signal, Origin.CABIN, switchNode.area)
+//                switchNode.isOn(value)
+//            }
+//            else -> false
+//        }
+//    }
 
     override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         /**雨天自动关窗*/

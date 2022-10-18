@@ -241,6 +241,7 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
     override fun obtainDependByNode(node: SwitchNode): Boolean {
         return when (node) {
             SwitchNode.ADAS_GUIDES -> binding.adasSideBscSwitch.isChecked
+                    && obtainActiveByNode(SwitchNode.ADAS_BSC)
                     && (viewModel.guidesValue.value?.enable() ?: false)
             else -> super.obtainActiveByNode(node)
         }
@@ -256,6 +257,7 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
     override fun obtainDependByNode(node: RadioNode): Boolean {
         return when (node) {
             RadioNode.ADAS_SIDE_BACK_SHOW_AREA -> binding.adasSideBscSwitch.isChecked
+                    && obtainActiveByNode(SwitchNode.ADAS_BSC)
                     && (viewModel.showAreaValue.value?.enable() ?: false)
             else -> super.obtainActiveByNode(node)
         }

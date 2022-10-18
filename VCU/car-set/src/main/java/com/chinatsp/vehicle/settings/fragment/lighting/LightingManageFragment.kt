@@ -15,7 +15,7 @@ import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.chinatsp.vehicle.settings.databinding.LightingManageFragmentBinding
 import com.common.library.frame.base.BaseFragment
-import com.common.library.frame.base.BaseTabFragment
+import com.chinatsp.vehicle.settings.fragment.BaseTabFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

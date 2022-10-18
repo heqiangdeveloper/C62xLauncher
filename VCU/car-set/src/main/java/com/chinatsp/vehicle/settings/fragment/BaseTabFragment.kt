@@ -1,10 +1,12 @@
-package com.common.library.frame.base
+package com.chinatsp.vehicle.settings.fragment
 
 import android.view.View
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.vehicle.settings.Node
+import com.common.library.frame.base.BaseFragment
+import com.common.library.frame.base.BaseViewModel
 
 /**
  * 框架基于 Google 官方的 JetPack 构建，在使用  时，需遵循一些规范：

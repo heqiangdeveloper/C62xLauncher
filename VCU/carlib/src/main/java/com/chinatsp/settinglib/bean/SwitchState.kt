@@ -1,5 +1,7 @@
 package com.chinatsp.settinglib.bean
 
+import com.chinatsp.settinglib.Constant
+
 /**
  * @author : luohong
  * @e-mail : luohong1@bdstar.com
@@ -9,7 +11,7 @@ package com.chinatsp.settinglib.bean
  */
 data class SwitchState(var data: Boolean) {
 
-    var enable: Int = 0x1
+    var enableStatus: Int = Constant.VIEW_ENABLE
 
     fun get() = data
 
@@ -17,5 +19,8 @@ data class SwitchState(var data: Boolean) {
         data = status
     }
 
-    fun enable() = enable == 0x1
+    fun enable() = enableStatus == Constant.VIEW_ENABLE
+
+    fun enable(value: Int) = value == Constant.VIEW_ENABLE
+
 }

@@ -1,12 +1,15 @@
-package com.chinatsp.vehicle.controller
+package com.chinatsp.vehicle.controller.producer
 
 import android.text.TextUtils
-import com.chinatsp.vehicle.controller.annotation.*
+import com.chinatsp.vehicle.controller.CarController
+import com.chinatsp.vehicle.controller.ICmdCallback
+import com.chinatsp.vehicle.controller.IOuterController
+import com.chinatsp.vehicle.controller.LogManager
+import com.chinatsp.vehicle.controller.annotation.Action
+import com.chinatsp.vehicle.controller.annotation.ICar
+import com.chinatsp.vehicle.controller.annotation.IPart
+import com.chinatsp.vehicle.controller.annotation.Model
 import com.chinatsp.vehicle.controller.bean.CarCmd
-import com.chinatsp.vehicle.controller.producer.AccessCommandProducer
-import com.chinatsp.vehicle.controller.producer.AmbientCommandProducer
-import com.chinatsp.vehicle.controller.producer.PanoramaCommandProducer
-import com.chinatsp.vehicle.controller.semantic.NlpVoiceModel
 import com.chinatsp.vehicle.controller.semantic.Slots
 import com.chinatsp.vehicle.controller.utils.Keywords
 import org.json.JSONObject
@@ -14,115 +17,30 @@ import org.json.JSONObject
 /**
  * @author : luohong
  * @e-mail : luohong1@bdstar.com
- * @date   : 2022/10/9 16:23
+ * @date   : 2022/10/17 15:54
  * @desc   :
  * @version: 1.0
  */
-object CarController : IController {
+class AmbientCommandProducer {
 
-    private val accessProducer: AccessCommandProducer by lazy { AccessCommandProducer() }
-
-    private val ambientProducer: AmbientCommandProducer by lazy { AmbientCommandProducer() }
-
-    private val panoramaProducer: PanoramaCommandProducer by lazy { PanoramaCommandProducer() }
-
-
-    override fun doVoiceController(
-        controller: IOuterController,
-        callback: ICmdCallback,
-        model: NlpVoiceModel,
-    ): Boolean {
-        var result = false
-        val slots: Slots = model.slots
-        //true表示是开启操作,false表示未知操作
-        val open = isMatch(Keywords.OPT_OPENS, model.operation)
-        //true表示关闭操作，false表示未知操作
-        val close = !open && isMatch(Keywords.OPT_CLOSES, model.operation)
-        val name: String = slots.name
-        LogManager.d(tag, "doVoiceController open:$open, close:$close, $slots")
-
+    fun attemptAmbientCommand(slots: Slots): CarCmd? {
         var command: CarCmd? = null
-        if (null == command) {
-            command = accessProducer.attemptAccessCommand(slots)
-        }
-        if (null == command) {
-            command = ambientProducer.attemptAmbientCommand(slots)
-        }
-        if (null == command) {
-            command = panoramaProducer.attemptPanoramaCommand(slots)
-        }
-        if (null != command) {
-            controller.doCarControlCommand(command, callback)
-        }
-        return null != command
-
-        if (isMatch(Keywords.DRIVER_WINDOW_COMMS, name)
-            || isMatch(Keywords.PASSENGER_WINDOW_COMMS, name)
-        ) {
-            result = open || close
-        } else if (isMatch(Keywords.OIL_SHROUDS, name)) {
-            result = open || close
-        } else if (isMatch(Keywords.SKYLIGHTS, name)) {
-            //天窗 操作
-            result = open || close
-            var action = Action.VOID
-            if (open) action = Action.OPEN
-            if (close) action = Action.CLOSE
-            val cmd = CarCmd(action = action, model = Model.ACCESS_WINDOW, status = IStatus.INIT)
-            cmd.slots = slots
-            controller.doCarControlCommand(cmd, callback)
-            LogManager.d(tag, "execute open window!!!cmd：$cmd")
-        } else if (isMatch(Keywords.HOODS, name)) {
-            //引擎盖 操作
-            result = open || close
-        } else if (isMatch(Keywords.TRUNKS, name)) {
-            //后备厢 操作
-            result = open || close
-        } else if (isMatch(Keywords.WIPERS, name)) {
-            //前雨刮 操作
-            result = open || close
-        } else if (isMatch(Keywords.REAR_WIPERS, name)) {
-            //后雨刮 操作
-            result = open || close
-        }
-//
-//        else if (isMatch(Keywords.TIRE_PRESSURE_MONITORS, name)) {
-//            result = open || close
-//        } else if (isMatch(Keywords.SMOKES, slots.mode)) {
-//            result = open || close
-//        } else if (TextUtils.equals(Keywords.WIRELESS_CHARGING, name)) {
-//            result = open || close
-//        } else if (isMatch(Keywords.IDLE_START_AND_STOP, name)) {
-//            result = open || close
-//        }
-
-        else if (isMatch(Keywords.AUTO_HEAD_LIGHTS, name)) {
-            result = open || close
-        } else if (isMatch(Keywords.LIGHTS, name)) {
-            result = open || close
-        } else if (isMatch(Keywords.FOG_LIGHTS, name)) {
-            result = open || close
-        } else if (TextUtils.equals(Keywords.MODE_DRIVE, slots.mode)) {
-            result = open || close
-        } else if (isMatch(Keywords.WHEELS, slots.name)) {
-            var action = Action.VOID
-            if (open) action = Action.TURN_ON
-            if (close) action = Action.TURN_OFF
-            val command = CarCmd(action = action, model = Model.CABIN_WHEEL)
-            command.slots = slots
-            if ("方向盘加热" == slots.mode) {
-                command.car = ICar.WHEEL_HOT
+        if (CarController.isMatch(Keywords.AMBIENTS, slots.name)) {
+            if (null == command) {
+                command = attemptCreateAmbientRhythmCommand(slots)
             }
-            controller.doCarControlCommand(command, callback)
-            return true
-        } else if (isMatch(Keywords.AMBIENTS, slots.name)) {
-            doAmbientCommand(slots, controller, callback)
-            return true
+            if (null == command) {
+                command = attemptCreateAmbientBrightnessCommand(slots)
+            }
+            if (null == command) {
+                command = attemptCreateAmbientColorCommand(slots)
+            }
+            if (null == command) {
+                command = attemptCreateAmbientSwitchCommand(slots)
+            }
         }
-
-        return result
+        return command
     }
-
 
     private fun doAmbientCommand(
         slots: Slots,
@@ -160,9 +78,9 @@ object CarController : IController {
             return null
         }
         var action = Action.VOID
-        if (isMatch(Keywords.OPT_OPENS, slots.operation)) {
+        if (CarController.isMatch(Keywords.OPT_OPENS, slots.operation)) {
             action = Action.TURN_ON
-        } else if (isMatch(Keywords.OPT_CLOSES, slots.operation)) {
+        } else if (CarController.isMatch(Keywords.OPT_CLOSES, slots.operation)) {
             action = Action.TURN_OFF
         }
         if (Action.VOID == action) {
@@ -193,7 +111,7 @@ object CarController : IController {
         }
         var action = Action.VOID
         var command: CarCmd? = null
-        if (!isLikeJson(value)) {
+        if (!CarController.isLikeJson(value)) {
             var step = 1
             if ((Keywords.PLUS == value) || (Keywords.PLUS_MORE == value) || (Keywords.PLUS_LITTLE == value)) {
                 action = Action.PLUS
@@ -209,7 +127,7 @@ object CarController : IController {
                 command.slots = slots
                 command.step = step
                 command.car = ICar.BRIGHTNESS
-                LogManager.d(tag, "attemptCreateAmbientBrightnessCommand value:$value")
+                LogManager.d(CarController.tag, "attemptCreateAmbientBrightnessCommand value:$value")
             }
         } else {
             val jsonObject = JSONObject(value)
@@ -226,7 +144,7 @@ object CarController : IController {
                     command = CarCmd(action = action, model = Model.LIGHT_AMBIENT)
                     command.slots = slots
                     command.car = ICar.BRIGHTNESS
-                    LogManager.d(tag, "attemptCreateAmbientBrightnessCommand consult:$consult, rule:$rule")
+                    LogManager.d(CarController.tag, "attemptCreateAmbientBrightnessCommand consult:$consult, rule:$rule")
                 }
             } else if (Keywords.REF_ZERO == consult) {
                 val offset = jsonObject.getInt("offset")
@@ -235,7 +153,7 @@ object CarController : IController {
                 command.slots = slots
                 command.value = offset
                 command.car = ICar.BRIGHTNESS
-                LogManager.d(tag, "attemptCreateAmbientBrightnessCommand consult:$consult, offset:$offset")
+                LogManager.d(CarController.tag, "attemptCreateAmbientBrightnessCommand consult:$consult, offset:$offset")
             }
         }
         return command

@@ -3,6 +3,7 @@ package com.chinatsp.settinglib
 import android.car.VehicleAreaType
 import android.car.hardware.cabin.CarCabinManager
 import android.content.Context
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.database.ContentObserver
 import android.os.SystemProperties
@@ -24,6 +25,13 @@ import timber.log.Timber
 object VcuUtils {
 
     val TAG: String get() = VcuUtils::class.java.simpleName
+
+    val V_N: String by lazy {
+        val context = BaseApp.instance.applicationContext
+        val manager = context.packageManager
+        val info = manager.getPackageInfo(context.packageName, 0) //P
+        info.versionName
+    }
 
     fun isParking(manager: BaseManager = GlobalManager.instance): Boolean {
         /**
@@ -57,7 +65,7 @@ object VcuUtils {
         val actual = levels.contains(value)
         val result = !(actual xor expect)
         Timber.d("isCareLevel value: $value, actual:$actual, result:$result")
-        return result
+        return false
     }
 
     fun getLevelValue(): Int {

@@ -63,21 +63,26 @@ open class BaseViewModel @Inject constructor(application: Application, model: Ba
         }
     }
 
-    fun doUpdate(liveData: MutableLiveData<SwitchState>, status: SwitchState) {
+    fun doUpdate(liveData: MutableLiveData<SwitchState>, value: SwitchState) {
         do {
             if (null == liveData.value) {
-                liveData.postValue(status)
+                liveData.postValue(value)
                 break
             }
             val state = liveData.value!!
-            val statusChanged = state.get() xor status.get()
-            val enableChanged = state.enable != status.enable
+            val modelSerial = System.identityHashCode(state)
+            val dataSerial = System.identityHashCode(value)
+            val sameObj = modelSerial == dataSerial
+            val statusChanged = state.get() xor value.get()
+            val enableChanged = state.enable() xor state.enable(value.enableStatus)
             if (statusChanged) {
-                state.set(status.get())
+                state.set(value.get())
             }
             if (enableChanged) {
-                state.enable = status.enable
+                state.enableStatus = value.enableStatus
             }
+            Timber.d("doUpdate switch modelSerial:$modelSerial, dataSerial:$dataSerial, " +
+                    "sameObj:$sameObj statusChanged：$statusChanged, enableChanged:$enableChanged")
             if (statusChanged || enableChanged) {
                 liveData.postValue(state)
             }
@@ -94,6 +99,10 @@ open class BaseViewModel @Inject constructor(application: Application, model: Ba
         }
 
         val state = liveData.value!!
+        val modelSerial = System.identityHashCode(state)
+        val dataSerial = System.identityHashCode(value)
+        val sameObj = modelSerial == dataSerial
+        Timber.d("doUpdate radio modelSerial:$modelSerial, dataSerial:$dataSerial, sameObj:$sameObj")
         val statusChanged = state.get() != value.get()
         val enableChanged = state.enable != value.enable
         if (statusChanged) {

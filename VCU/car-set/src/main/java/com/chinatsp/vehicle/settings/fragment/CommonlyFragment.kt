@@ -6,7 +6,6 @@ import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.chinatsp.vehicle.settings.databinding.AccessFragmentBinding
-import com.common.library.frame.base.BaseTabFragment
 import com.rightware.kanzi.androiddatasource.AndroidDataSourceManager
 import com.rightware.kanzi.androiddatasource.AndroidNotifyListener
 import com.rightware.kanzi.androiddatasource.AssetCopyer

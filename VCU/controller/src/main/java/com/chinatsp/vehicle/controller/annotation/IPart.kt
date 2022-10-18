@@ -1,8 +1,6 @@
 package com.chinatsp.vehicle.controller.annotation
 
 import androidx.annotation.IntDef
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
 
 /**
  * @author : luohong
@@ -12,17 +10,20 @@ import java.lang.annotation.RetentionPolicy
  * @version: 1.0
  */
 @IntDef(
-    IAccess.HEAD,
-    IAccess.LEFT_FRONT,
-    IAccess.LEFT_BACK,
-    IAccess.RIGHT_FRONT,
-    IAccess.RIGHT_BACK,
-    IAccess.TAIL,
-    IAccess.SKYLIGHT
+    IPart.DEFAULT,
+    IPart.HEAD,
+    IPart.LEFT_FRONT,
+    IPart.LEFT_BACK,
+    IPart.RIGHT_FRONT,
+    IPart.RIGHT_BACK,
+    IPart.TAIL,
+    IPart.SKYLIGHT,
+    IPart.SKYLIGHT2
 )
-@Retention(RetentionPolicy.SOURCE)
-annotation class IAccess {
+@kotlin.annotation.Retention(AnnotationRetention.SOURCE)
+annotation class IPart {
     companion object {
+        const val DEFAULT = 0X0
         const val HEAD = 0x1 shl 0
         const val LEFT_FRONT = 0x1 shl 1
         const val LEFT_BACK = 0x1 shl 2
@@ -30,6 +31,7 @@ annotation class IAccess {
         const val RIGHT_BACK = 0x1 shl 4
         const val TAIL = 0x1 shl 5
         const val SKYLIGHT = 0x1 shl 6
+        const val SKYLIGHT2 = 0x1 shl 7
     }
 
 }

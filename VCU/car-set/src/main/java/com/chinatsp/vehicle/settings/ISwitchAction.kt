@@ -6,6 +6,7 @@ import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.common.xui.widget.button.switchbutton.SwitchButton
+import timber.log.Timber
 
 /**
  * @author : luohong
@@ -84,6 +85,9 @@ interface ISwitchAction : IAction {
 
     fun updateSwitchEnable(node: SwitchNode) {
         findSwitchByNode(node)?.let {
+            val selfActive = obtainActiveByNode(node)
+            val dependActive = obtainDependByNode(node)
+            Timber.d("updateSwitchEnable $node, selfActive:$selfActive, dependActive:$dependActive")
             updateEnable(it, obtainActiveByNode(node), obtainDependByNode(node))
         }
     }

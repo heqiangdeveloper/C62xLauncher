@@ -1,6 +1,6 @@
 package com.chinatsp.vehicle.controller.semantic
 
-data class Intent(
+data class VoiceJson(
     val answer: Answer?,
     val category: String?,
     val cid: String?,
@@ -10,7 +10,7 @@ data class Intent(
     val normal_text: String?,
     val operation: String?,
     val rc: Int?,
-    val score: Int?,
+    val score: Any?,
     val searchSemantic: SearchSemantic?,
     val search_semantic: SearchSemantic?,
     val semantic: Semantic?,
@@ -21,12 +21,14 @@ data class Intent(
     val uuid: String?,
     val version: String?,
 ) {
-    fun convert2NlpVoiceModel(): NlpVoiceModel? {
+    fun convert(): NlpVoiceModel? {
         if (semantic?.slots != null) {
             val nlpVoiceModel = NlpVoiceModel()
             nlpVoiceModel.service = service
             nlpVoiceModel.operation = operation
             nlpVoiceModel.slots = semantic.slots
+            nlpVoiceModel.slots.text = text ?: ""
+            nlpVoiceModel.slots.operation = operation ?: ""
             nlpVoiceModel.text = text
             nlpVoiceModel.response = this.toString()
             return nlpVoiceModel

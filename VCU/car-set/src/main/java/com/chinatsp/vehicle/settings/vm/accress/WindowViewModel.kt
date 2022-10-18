@@ -62,9 +62,9 @@ class WindowViewModel @Inject constructor(app: Application, model: BaseModel) :
     }
 
 
-    private fun doGetSwitchStatus(switchNode: SwitchNode): Boolean {
-        return manager.doGetSwitchStatus(switchNode)
-    }
+//    private fun doGetSwitchStatus(switchNode: SwitchNode): Boolean {
+//        return manager.doGetSwitchStatus(switchNode)
+//    }
 
     override fun onSwitchOptionChanged(status: SwitchState, node: SwitchNode) {
         when (node) {

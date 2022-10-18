@@ -24,12 +24,13 @@ import java.lang.annotation.RetentionPolicy
 @Retention(RetentionPolicy.SOURCE)
 annotation class Model {
     companion object {
-        private const val MASK = 0x0F shl 28
-        const val ACCESS = 0x02 shl 28
-        const val LIGHT = 0x03 shl 28
-        const val AUDIO = 0x04 shl 28
-        const val CABIN = 0x05 shl 28
-        const val ADAS = 0x06 shl 28
+        private const val MASK = 0xF shl 28
+        const val ACCESS = 0x2 shl 28
+        const val LIGHT = 0x3 shl 28
+        const val AUDIO = 0x4 shl 28
+        const val CABIN = 0x5 shl 28
+        const val ADAS = 0x6 shl 28
+        const val PANORAMA = 0x7 shl 28
 
         const val INVALID = -1
 
@@ -49,6 +50,7 @@ annotation class Model {
         const val CABIN_SEAT = 0x02 or CABIN
         const val CABIN_SAFE = 0x03 or CABIN
         const val CABIN_OTHER = 0x04 or CABIN
+        const val CABIN_WHEEL = 0x05 or CABIN
 
         const val ADAS_SMART = 0x01 or ADAS //智能巡航
         const val ADAS_AHEAD = 0x02 or ADAS //前向辅助

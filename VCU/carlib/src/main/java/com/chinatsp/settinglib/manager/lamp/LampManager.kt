@@ -4,7 +4,13 @@ import android.car.hardware.CarPropertyValue
 import com.chinatsp.settinglib.ITabStore
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
+import com.chinatsp.settinglib.manager.access.DoorManager
+import com.chinatsp.settinglib.manager.access.SternDoorManager
+import com.chinatsp.settinglib.manager.access.WindowManager
 import com.chinatsp.settinglib.sign.Origin
+import com.chinatsp.vehicle.controller.ICmdCallback
+import com.chinatsp.vehicle.controller.annotation.Model
+import com.chinatsp.vehicle.controller.bean.CarCmd
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
@@ -71,6 +77,13 @@ class LampManager private constructor() : BaseManager(), ITabStore {
                 put(key, hashSet)
             }
         }
+    }
+
+    override fun doCarControlCommand(cmd: CarCmd, callback: ICmdCallback?) {
+        if (Model.LIGHT_AMBIENT == cmd.model) {
+            AmbientLightingManager.instance.doCarControlCommand(cmd, callback)
+        }
+
     }
 
 

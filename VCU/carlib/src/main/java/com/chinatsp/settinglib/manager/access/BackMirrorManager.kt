@@ -142,11 +142,11 @@ class BackMirrorManager private constructor() : BaseManager(), ISwitchManager {
         when (action) {
             Constant.ANGLE_ADJUST -> {
                 val signal = CarCabinManager.ID_HUM_MIRROR_SEE_G_SET
-                writeProperty(signal, 0x02, Origin.CABIN, Area.GLOBAL)
+                writeProperty(signal, 0x2, Origin.CABIN, Area.GLOBAL)
             }
             Constant.ANGLE_SAVE -> {
                 val signal = CarCabinManager.ID_HUM_MIRROR_MEMORY_CONFIRM
-                writeProperty(signal, 0x02, Origin.CABIN, Area.GLOBAL)
+                writeProperty(signal, 0x2, Origin.CABIN, Area.GLOBAL)
             }
             Constant.DEFAULT -> {
 

@@ -1,11 +1,6 @@
 package com.chinatsp.settinglib.manager.cabin
 
 import android.car.hardware.CarPropertyValue
-import android.car.hardware.hvac.CarHvacManager
-import android.os.Handler
-import android.os.HandlerThread
-import android.os.Message
-import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.bean.AirCmdParcel
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
@@ -18,10 +13,8 @@ import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.annotation.Action
-import com.chinatsp.vehicle.controller.annotation.IAirFun
 import com.chinatsp.vehicle.controller.bean.AirCmd
 import java.lang.ref.WeakReference
-import java.util.concurrent.Delayed
 
 /**
  * @author : luohong
@@ -96,12 +89,8 @@ class ACManager private constructor() : BaseManager(), IOptionManager {
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
         return when (node) {
             RadioNode.AC_COMFORT -> {
-                node.isValid(value, false) && writeProperty(
-                    node.set.signal,
-                    value,
-                    node.set.origin,
-                    node.area
-                )
+                node.isValid(value, false)
+                        && writeProperty(node.set.signal, value, node.set.origin, node.area)
             }
             else -> false
         }
@@ -175,6 +164,10 @@ class ACManager private constructor() : BaseManager(), IOptionManager {
 
     override fun doAirControlCommand(cmd: AirCmd, callback: ICmdCallback?) {
         val airCmdParcel = AirCmdParcel(cmd, callback)
+        val mask = Action.OPEN
+        if ((mask != cmd.action) && mask == (mask and cmd.action)) {
+            airCmdParcel.retryCount = 2
+        }
         airSupplier.doAirControlCommand(airCmdParcel)
     }
 

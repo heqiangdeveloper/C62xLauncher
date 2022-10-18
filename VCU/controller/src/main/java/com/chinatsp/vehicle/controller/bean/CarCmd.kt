@@ -2,10 +2,7 @@ package com.chinatsp.vehicle.controller.bean
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.chinatsp.vehicle.controller.annotation.Action
-import com.chinatsp.vehicle.controller.annotation.IStatus
-import com.chinatsp.vehicle.controller.annotation.IWindDire
-import com.chinatsp.vehicle.controller.annotation.Model
+import com.chinatsp.vehicle.controller.annotation.*
 
 /**
  * @author : luohong
@@ -20,42 +17,46 @@ class CarCmd(
     @IStatus status: Int,
 ) : BaseCmd(model, action, status), Parcelable {
 
-    var temp: Boolean = false
+    var car: Int = ICar.VOID
 
-    var wind: Boolean = false
+    var part: Int = IPart.DEFAULT
+
+    /**
+     * 空调 吹风方向
+     */
+    var orien: Int = IOrien.DEFAULT
 
     var graded: Boolean = false
 
-    var direct: Boolean = false
+    var color: String = ""
 
-    var windDire: Int = IWindDire.FOOT
+    constructor(@Action action: Int, @Model model: Int) : this(
+        status = IStatus.INIT,
+        model = model,
+        action = action)
 
     constructor(parcel: Parcel) : this(
         status = parcel.readInt(),
         action = parcel.readInt(),
         model = parcel.readInt()) {
-        temp = parcel.readByte() != 0.toByte()
-        wind = parcel.readByte() != 0.toByte()
+        car = parcel.readInt()
+        part = parcel.readInt()
+        orien = parcel.readInt()
         graded = parcel.readByte() != 0.toByte()
-        direct = parcel.readByte() != 0.toByte()
-        windDire = parcel.readInt()
+        color = parcel.readString().toString()
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         super.writeToParcel(parcel, flags)
-        parcel.writeByte(if (temp) 1 else 0)
-        parcel.writeByte(if (wind) 1 else 0)
+        parcel.writeInt(car)
+        parcel.writeInt(part)
+        parcel.writeInt(orien)
         parcel.writeByte(if (graded) 1 else 0)
-        parcel.writeByte(if (direct) 1 else 0)
-        parcel.writeInt(windDire)
+        parcel.writeString(color)
     }
 
     override fun describeContents(): Int {
         return 0
-    }
-
-    override fun toString(): String {
-        return "CarCmd(temp=$temp, wind=$wind, graded=$graded, direct=$direct, windDire=$windDire)----${super.toString()}"
     }
 
     companion object CREATOR : Parcelable.Creator<CarCmd> {
@@ -67,8 +68,5 @@ class CarCmd(
             return arrayOfNulls(size)
         }
     }
-
-
-
 
 }

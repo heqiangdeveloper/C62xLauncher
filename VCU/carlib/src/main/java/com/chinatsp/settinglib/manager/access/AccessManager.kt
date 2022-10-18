@@ -4,6 +4,7 @@ import android.car.hardware.CarPropertyValue
 import com.chinatsp.settinglib.ITabStore
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
+import com.chinatsp.settinglib.manager.cabin.WheelManager
 import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.annotation.Model

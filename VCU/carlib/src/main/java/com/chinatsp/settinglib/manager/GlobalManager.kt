@@ -7,6 +7,7 @@ import com.chinatsp.settinglib.manager.access.AccessManager
 import com.chinatsp.settinglib.manager.adas.AdasManager
 import com.chinatsp.settinglib.manager.cabin.ACManager
 import com.chinatsp.settinglib.manager.cabin.CabinManager
+import com.chinatsp.settinglib.manager.consumer.PanoramaCommandConsumer
 import com.chinatsp.settinglib.manager.lamp.LampManager
 import com.chinatsp.settinglib.manager.sound.AudioManager
 import com.chinatsp.settinglib.sign.Origin
@@ -38,7 +39,7 @@ class GlobalManager private constructor() : BaseManager() {
 
     private val tabSerial: AtomicInteger by lazy {
         val isLevel3 = VcuUtils.isCareLevel(Level.LEVEL3, expect = true)
-        AtomicInteger(if (isLevel3) 1 else 0)
+        AtomicInteger(0)
     }
 
     fun getTabSerial() = tabSerial.get()
@@ -97,6 +98,8 @@ class GlobalManager private constructor() : BaseManager() {
             CabinManager.instance.doCarControlCommand(cmd, callback)
         } else if (Model.ADAS == modelSerial) {
             AdasManager.instance.doCarControlCommand(cmd, callback)
+        } else if (Model.PANORAMA == modelSerial) {
+            PanoramaCommandConsumer(this).consumerCommand(cmd, callback)
         }
     }
 

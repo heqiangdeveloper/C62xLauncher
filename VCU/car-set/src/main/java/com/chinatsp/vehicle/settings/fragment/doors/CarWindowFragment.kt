@@ -139,15 +139,19 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
     private fun addSwitchLiveDataListener() {
         viewModel.winRemoteControl.observe(this) {
             doUpdateSwitch(SwitchNode.WIN_REMOTE_CONTROL, it)
+            updateSwitchEnable(SwitchNode.WIN_REMOTE_CONTROL)
         }
         viewModel.closeWinFollowLock.observe(this) {
             doUpdateSwitch(SwitchNode.WIN_CLOSE_FOLLOW_LOCK, it)
+            updateSwitchEnable(SwitchNode.WIN_CLOSE_FOLLOW_LOCK)
         }
         viewModel.closeWinWhileRain.observe(this) {
             doUpdateSwitch(SwitchNode.WIN_CLOSE_WHILE_RAIN, it)
+            updateSwitchEnable(SwitchNode.WIN_CLOSE_WHILE_RAIN)
         }
         viewModel.rainWiperRepair.observe(this) {
             doUpdateSwitch(SwitchNode.RAIN_WIPER_REPAIR, it)
+            updateSwitchEnable(SwitchNode.RAIN_WIPER_REPAIR)
         }
     }
 

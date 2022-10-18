@@ -264,6 +264,8 @@ public class ArcSeekBar extends View {
     private OnChangeListener mOnChangeListener;
     private Shader shader;//渐变
 
+    private int lastValue = 0;
+
     public ArcSeekBar(Context context) {
         this(context, null);
     }
@@ -954,7 +956,11 @@ public class ArcSeekBar extends View {
         invalidate();
 
         if (mOnChangeListener != null) {
-            mOnChangeListener.onProgressChanged(mProgress + mMax, mMax, fromUser);
+            int currValue = mProgress + mMax;
+            if (lastValue != currValue) {
+                mOnChangeListener.onProgressChanged(currValue, mMax, fromUser);
+                lastValue = currValue;
+            }
         }
     }
 
