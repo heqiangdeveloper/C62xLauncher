@@ -854,6 +854,11 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
 
         LayoutParamUtil.setWidth(mLargeWidth, this);
         runExpandAnim();
+        //更新列表中歌曲的选中状态
+        if(mNormalBigCardViewHolder != null){
+            mNormalBigCardViewHolder.updatePlayStatusInList(getCurrentItemPosition(itemUUID,
+                    mContentId == TYPE_DAILYSONGS ? dailySongLists : rankSongLists));
+        }
     }
 
 
@@ -974,7 +979,7 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
         public void updatePlayStatusInList(int position){
             //mIQuTingSongsAdapter.updatePlayStatus(position,isPlaying);
             Log.d(TAG,"updatePlayStatusInList position = " + position);
-            if(dailySongLists == null || dailySongLists.size() == 0){
+            if(dailySongLists == null || dailySongLists.size() == 0 || position == -1){
                 return;
             }
             if(position == 0){
