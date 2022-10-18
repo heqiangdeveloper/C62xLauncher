@@ -101,7 +101,7 @@ public class RequestParamCreator {
     public String createJumpMainMapPage() {
         JSONObject jsonObject = createCommonParamJson();
         try {
-            putProtocolId(jsonObject, 80044);
+            putProtocolId(jsonObject, 80132);
             JSONObject dataObj = new JSONObject();
             dataObj.put("sourceApp", "Launcher");
             jsonObject.put("data", dataObj);

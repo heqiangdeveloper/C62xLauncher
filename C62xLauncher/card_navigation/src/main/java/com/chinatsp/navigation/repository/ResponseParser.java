@@ -83,6 +83,9 @@ public class ResponseParser {
             case ProtocolIds.MAP_STATUS:
                 mCallback.receiveMapStatus(gaoDeResponse);
                 break;
+            case ProtocolIds.TRAFFIC_LANE_INFO:
+                mCallback.receiveTrafficLane(gaoDeResponse);
+                break;
         }
     }
 
