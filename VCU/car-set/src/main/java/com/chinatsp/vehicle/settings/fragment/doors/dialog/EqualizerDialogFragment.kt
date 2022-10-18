@@ -63,6 +63,11 @@ class EqualizerDialogFragment :
     private fun addRadioLiveDataListener() {
         viewModel.currentEffect.observe(this) {
             doUpdateRadio(RadioNode.SYSTEM_SOUND_EFFECT, it, false)
+            if (it.data == 6) {
+                binding.smoothChartView.setEnableView(true)
+            } else {
+                binding.smoothChartView.setEnableView(false)
+            }
         }
     }
 

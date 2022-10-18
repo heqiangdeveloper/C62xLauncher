@@ -86,7 +86,7 @@
     <string name="cabin_other_battery_optimization">智能电源管家</string>
     <string name="cabin_other_battery_optimization_content">监控车辆电能消耗情况，低\n电量状态下，对整车舒适性\n功能（空调、大屏等）进行\n管理。</string>
     <string name="cabin_other_wireless_charging">无线充电</string>
-    <string name="cabin_other_wireless_charging_lamp">无线充电灯</string>
+    <string name="cabin_other_wireless_charging_lamp">储物盒灯</string>
     <string name="cabin_other_sensor_sensitivity">传感器灵敏度</string>
     <string name="cabin_other_trailer_remind_distance">拖车提醒距离</string>
     <string name="cabin_other_toast_content">车辆被拖时无法收到相关提醒</string>

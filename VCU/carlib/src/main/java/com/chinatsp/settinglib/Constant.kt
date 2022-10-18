@@ -41,7 +41,7 @@ object Constant {
     const val CUSTOM_KEYPAD = "CUSTOM_KEYPAD"
 
     val DIALOG_SERIAL: String
-        get() = "DIALOG_SERIAL"
+        get() = "type"
 
     val ROUTE_SERIAL: String
         get() = "ROUTE_SERIAL"

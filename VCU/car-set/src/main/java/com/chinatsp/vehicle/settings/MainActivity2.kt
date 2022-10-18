@@ -3,7 +3,6 @@ package com.chinatsp.vehicle.settings
 import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -76,7 +75,6 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
     private fun checkOutRoute(intent: Intent?) {
         intent?.let {
             val action = intent.action
-            Log.i("ttttttt","action: "+action)
             val routeValue: Int
             val popupSerial: String
             if (Constant.VCU_AUDIO_VOLUME == action) {

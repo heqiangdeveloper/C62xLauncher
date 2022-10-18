@@ -99,7 +99,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/x95"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/line2">
+                        app:layout_constraintTop_toBottomOf="@id/line2"
+                        android:visibility="gone">
 
                         <TextView
                             android:id="@+id/sound_navigation_mixing_title"
@@ -127,14 +128,15 @@
                         android:id="@+id/line3"
                         style="@style/line"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/sound_navigation_mixing" />
+                        app:layout_constraintTop_toBottomOf="@id/sound_navigation_mixing"
+                        android:visibility="gone"/>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/sound_volume_compensation"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/switch_item_option_height"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/line3">
+                        app:layout_constraintTop_toBottomOf="@id/line2">
 
                         <TextView
                             android:id="@+id/sound_volume_compensation_title"
