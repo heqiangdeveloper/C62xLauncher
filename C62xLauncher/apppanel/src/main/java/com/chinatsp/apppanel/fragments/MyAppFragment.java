@@ -1,5 +1,6 @@
 package com.chinatsp.apppanel.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,6 +27,7 @@ import com.anarchy.classifyview.event.AppInstallStatusEvent;
 import com.anarchy.classifyview.event.ChangeTitleEvent;
 import com.anarchy.classifyview.event.Event;
 import com.anarchy.classifyview.event.HideSubContainerEvent;
+import com.anarchy.classifyview.event.JumpToCardEvent;
 import com.anarchy.classifyview.event.ReStoreDataEvent;
 import com.anarchy.classifyview.listener.SoftKeyBoardListener;
 import com.anarchy.classifyview.util.MyConfigs;
@@ -790,6 +792,10 @@ public class MyAppFragment extends Fragment {
                     }
                 }
             }
+        }else if(event instanceof JumpToCardEvent){
+            Intent intent = new Intent();
+            intent.setClassName("com.chinatsp.launcher","com.chinatsp.launcher.CarLauncher");
+            getContext().startActivity(intent);
         }
     }
 
