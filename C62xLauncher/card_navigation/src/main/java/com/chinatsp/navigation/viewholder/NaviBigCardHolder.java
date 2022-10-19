@@ -11,6 +11,13 @@ import com.chinatsp.navigation.NaviController;
 import com.chinatsp.navigation.NavigationUtil;
 import com.chinatsp.navigation.R;
 import com.chinatsp.navigation.gaode.bean.GuideInfo;
+import com.chinatsp.navigation.gaode.bean.TrafficLaneModel;
+import com.chinatsp.navigation.repository.DriveDirection;
+import com.chinatsp.navigation.repository.RoundIslandUtil;
+
+import java.util.List;
+
+import launcher.base.utils.EasyLog;
 
 public class NaviBigCardHolder extends NaviCardHolder {
     private ImageView ivCardNaviSearch;
@@ -22,8 +29,8 @@ public class NaviBigCardHolder extends NaviCardHolder {
     private View layoutCardNaviCruise;
     private View surfaceViewNavi;
     private TextView tvCardNaviTurnRoadName;
-    private ImageView ivCardNaviTurnOrientation;
-    private TextView tvCardNaviDistanceTurn;
+    private ImageView ivCardNaviTBTDirectIcon;
+    private TextView tvCardNaviTBTDirectDistance;
     private TextView tvCardNaviTBTRemainDistance;
     private TextView tvCardNaviTBTRemainTime;
     private TextView tvCardNaviTBTArriveTime;
@@ -52,8 +59,8 @@ public class NaviBigCardHolder extends NaviCardHolder {
         layoutCardNaviCruise = rootView.findViewById(R.id.layoutCardNaviCruise);
 
         tvCardNaviTurnRoadName = rootView.findViewById(R.id.tvCardNaviTurnRoadName);
-        ivCardNaviTurnOrientation = rootView.findViewById(R.id.ivCardNaviTurnOrientation);
-        tvCardNaviDistanceTurn = rootView.findViewById(R.id.tvCardNaviDistanceTurn);
+        ivCardNaviTBTDirectIcon = rootView.findViewById(R.id.ivCardNaviTBTDirectIcon);
+        tvCardNaviTBTDirectDistance = rootView.findViewById(R.id.tvCardNaviTBTDirectDistance);
 
         tvCardNaviTBTRemainDistance = rootView.findViewById(R.id.tvCardNaviTBTRemainDistance);
         tvCardNaviTBTRemainTime = rootView.findViewById(R.id.tvCardNaviTBTRemainTime);
@@ -126,12 +133,53 @@ public class NaviBigCardHolder extends NaviCardHolder {
     }
 
     @Override
-    public void refreshNaviGuideInfo(GuideInfo guideInfo) {
-        tvCardNaviTurnRoadName.setText(guideInfo.getNextRoadName());
-        tvCardNaviDistanceTurn.setText(String.valueOf(guideInfo.getSegRemainDis()));
-        ivCardNaviTurnOrientation.setImageResource(R.drawable.card_navi_tbt_direct_right);
+    public void refreshNaviGuideInfo(GuideInfo guideInfo, DriveDirection driveDirection) {
+        if (guideInfo == null) {
+            return;
+        }
+        updateOverallRouteInfo(guideInfo);
+        updateTBTDirect(guideInfo,driveDirection);
+    }
+
+    /**
+     * 更新导航整体信息: 总里程, 总耗时, 达到时间
+     */
+    private void updateOverallRouteInfo(GuideInfo guideInfo) {
         tvCardNaviTBTRemainDistance.setText(NavigationUtil.getReadableDistanceKM(guideInfo.getRouteRemainDis()));
         tvCardNaviTBTRemainTime.setText(NavigationUtil.getReadableRemainTime(guideInfo.getRouteRemainTime()));
         tvCardNaviTBTArriveTime.setText(guideInfo.getEtaText());
+    }
+
+    /**
+     * 更新当前道路/转向/达到点信息
+     */
+    private void updateTBTDirect(GuideInfo guideInfo,DriveDirection driveDirection) {
+        EasyLog.i("refreshTBTDirect ", "driveDirection "+driveDirection);
+
+        tvCardNaviTurnRoadName.setText(guideInfo.getNextRoadName());
+        tvCardNaviTBTDirectDistance.setText(String.valueOf(guideInfo.getSegRemainDis()));
+        if (RoundIslandUtil.isRoundIsland(guideInfo.getIcon())) {
+            int islandIcon = RoundIslandUtil.getIsland(guideInfo.getRoundAboutNum(), RoundIslandUtil.isRoundByClockWise(guideInfo.getIcon()));
+            ivCardNaviTBTDirectIcon.setImageResource(islandIcon);
+        } else {
+            if (driveDirection != null) {
+                ivCardNaviTBTDirectIcon.setImageResource(driveDirection.getIconRes());
+            }
+        }
+    }
+
+    public void refreshNaviLaneInfo(TrafficLaneModel trafficLaneModel) {
+        List<TrafficLaneModel.LaneInfo> laneInfoList = trafficLaneModel.getTrafficLaneInfos();
+        if (laneInfoList == null) {
+            return;
+        }
+        EasyLog.i("refreshNaviLaneInfo ", "BEGIN");
+        int n = laneInfoList.size();
+
+        for (TrafficLaneModel.LaneInfo laneInfo : laneInfoList) {
+            EasyLog.d("refreshNaviLaneInfo ", laneInfo.getTrafficLaneNo()+" , "+laneInfo.getTrafficLaneNo()+" , "+laneInfo.getTrafficLaneIcon());
+            int id = laneInfo.getTrafficLaneNo();
+
+        }
     }
 }

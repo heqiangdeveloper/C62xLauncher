@@ -41,7 +41,7 @@
             android:layout_marginTop="12px"
             >
             <ImageView
-                android:id="@+id/ivCardNaviTurnOrientation"
+                android:id="@+id/ivCardNaviTBTDirectIcon"
                 android:layout_width="120px"
                 android:layout_height="120px"
                 android:src="@drawable/card_navi_tbt_direct_right"
@@ -52,12 +52,12 @@
                 />
 
             <TextView
-                android:id="@+id/tvCardNaviDistanceTurn"
+                android:id="@+id/tvCardNaviTBTDirectDistance"
                 android:layout_width="84px"
                 android:layout_height="58px"
                 style="@style/CardLv3TextView"
                 android:textSize="50px"
-                app:layout_constraintStart_toEndOf="@id/ivCardNaviTurnOrientation"
+                app:layout_constraintStart_toEndOf="@id/ivCardNaviTBTDirectIcon"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginTop="40px"
                 android:layout_marginLeft="29px"
@@ -68,8 +68,8 @@
                 android:text="米 进入"
                 style="@style/CardLv3TextView"
                 android:textColor="@color/card_grey_default"
-                app:layout_constraintStart_toEndOf="@id/tvCardNaviDistanceTurn"
-                app:layout_constraintBottom_toBottomOf="@id/tvCardNaviDistanceTurn"
+                app:layout_constraintStart_toEndOf="@id/tvCardNaviTBTDirectDistance"
+                app:layout_constraintBottom_toBottomOf="@id/tvCardNaviTBTDirectDistance"
                 android:layout_marginLeft="6px"
                 />
             <TextView
@@ -77,14 +77,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="48px"
                 style="@style/CardLv1TextView"
-                app:layout_constraintStart_toStartOf="@id/tvCardNaviDistanceTurn"
-                app:layout_constraintTop_toBottomOf="@id/tvCardNaviDistanceTurn"
+                app:layout_constraintStart_toStartOf="@id/tvCardNaviTBTDirectDistance"
+                app:layout_constraintTop_toBottomOf="@id/tvCardNaviTBTDirectDistance"
                 android:layout_marginLeft="2px"
                 />
 
             <ImageView
                 android:id="@+id/ivCardNaviInstructionIconTurnLeft"
-                android:src="@drawable/card_navi_icon_instruction_turn_left_disable"
+                android:src="@drawable/tbt_lane_1"
                 android:layout_width="@dimen/card_icon_size_navi_tip"
                 android:layout_height="@dimen/card_icon_size_navi_tip"
                 app:layout_constraintStart_toStartOf="parent"
@@ -95,7 +95,7 @@
 
             <ImageView
                 android:id="@+id/ivCardNaviInstructionIconStraight1"
-                android:src="@drawable/card_navi_icon_instruction_straight_disable"
+                android:src="@drawable/tbt_lane_0"
                 android:layout_width="@dimen/card_icon_size_navi_tip"
                 android:layout_height="@dimen/card_icon_size_navi_tip"
                 app:layout_constraintStart_toEndOf="@id/ivCardNaviInstructionIconTurnLeft"
@@ -105,7 +105,7 @@
 
             <ImageView
                 android:id="@+id/ivCardNaviInstructionIconStraight2"
-                android:src="@drawable/card_navi_icon_instruction_straight_disable"
+                android:src="@drawable/tbt_lane_0"
                 android:layout_width="@dimen/card_icon_size_navi_tip"
                 android:layout_height="@dimen/card_icon_size_navi_tip"
                 app:layout_constraintEnd_toStartOf="@id/ivCardNaviInstructionIconTurnRight"
@@ -114,7 +114,7 @@
                 />
             <ImageView
                 android:id="@+id/ivCardNaviInstructionIconTurnRight"
-                android:src="@drawable/card_navi_icon_instruction_turn_right_enable"
+                android:src="@drawable/tbt_lane_3"
                 android:layout_width="@dimen/card_icon_size_navi_tip"
                 android:layout_height="@dimen/card_icon_size_navi_tip"
                 app:layout_constraintEnd_toEndOf="parent"

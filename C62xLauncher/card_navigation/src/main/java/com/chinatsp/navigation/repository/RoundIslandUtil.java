@@ -1,11 +1,30 @@
-package com.chinatsp.navigation.viewholder;
+package com.chinatsp.navigation.repository;
+
+import android.util.Log;
 
 import com.chinatsp.navigation.R;
+import com.chinatsp.navigation.repository.DriveDirection;
 
-public class TBTResUtil {
-    public static int getCurrentDirection(int direction) {
-        return R.drawable.card_navi_tbt_direct_right;
+public class RoundIslandUtil {
+
+    /**
+     *
+     * @param value 转向图标的值. 对应高德转向图标信息.
+     * @return 是否环岛信息
+     */
+    public static boolean isRoundIsland(int value) {
+        // 常量值请参阅文档: 高德-转向图标信息
+        return value == 11 || value == 12 || value == 17 || value == 18;
     }
+
+    /**
+     * @param value 转向图标的值. 对应高德转向图标信息.
+     * @return 环岛是否左侧通行, 即是否顺时针通行
+     */
+    public static boolean isRoundByClockWise(int value) {
+        return value == 17 || value == 18;
+    }
+
     public static int getIsland(int exitNumber, boolean clockWise) {
         if (clockWise) {
             return getIslandClockWise(exitNumber);
@@ -31,7 +50,7 @@ public class TBTResUtil {
         if (index < 0 || index > drawables.length - 1) {
             return drawables[0];
         }
-        return drawables[exitNumber];
+        return drawables[index];
     }
 
     private static int getIslandClockWise(int exitNumber) {
@@ -51,7 +70,7 @@ public class TBTResUtil {
         if (index < 0 || index > drawables.length - 1) {
             return drawables[0];
         }
-        return drawables[exitNumber];
+        return drawables[index];
     }
 
 }

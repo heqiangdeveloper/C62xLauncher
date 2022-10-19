@@ -16,6 +16,7 @@ import com.chinatsp.navigation.gaode.bean.MapStatus;
 import com.chinatsp.navigation.gaode.bean.NavigationStatus;
 import com.chinatsp.navigation.gaode.bean.RoadInfo;
 import com.chinatsp.navigation.gaode.bean.TrafficLaneModel;
+import com.chinatsp.navigation.repository.DriveDirection;
 import com.chinatsp.navigation.repository.INaviCallback;
 import com.chinatsp.navigation.repository.NaviRepository;
 import com.chinatsp.navigation.repository.ResponseParser;
@@ -166,7 +167,7 @@ public class NaviController implements INaviCallback {
                 mState = STATE_IN_NAVIGATION;
                 mView.refreshState(mState);
             }
-            mView.refreshGuideInfo(guideInfo);
+            mView.refreshGuideInfo(guideInfo, DriveDirection.parseFromType(guideInfo.getIcon()));
         }
     }
 
@@ -194,6 +195,7 @@ public class NaviController implements INaviCallback {
         if (trafficLaneModel == null) {
             return;
         }
+        mView.refreshLaneInfo(trafficLaneModel);
     }
 
     public void startSearch() {
@@ -214,7 +216,10 @@ public class NaviController implements INaviCallback {
     public void refreshPageState() {
         mView.refreshState(mState);
         if (tempGuideInfoGaoDeResponse != null) {
-            mView.refreshGuideInfo(tempGuideInfoGaoDeResponse.getData());
+            GuideInfo guideInfo = tempGuideInfoGaoDeResponse.getData();
+            if (guideInfo != null) {
+                mView.refreshGuideInfo(tempGuideInfoGaoDeResponse.getData(),DriveDirection.parseFromType(guideInfo.getIcon()));
+            }
         }
         checkNetwork();
     }

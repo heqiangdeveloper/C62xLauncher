@@ -65,8 +65,10 @@ public class TrafficLaneModel {
                     laneInfo.trafficLaneExtended = laneJsonObj.optInt("trafficLaneExtended");
                     laneInfo.trafficLaneIcon = laneJsonObj.optInt("trafficLaneIcon");
                     laneInfo.trafficLaneNo = laneJsonObj.optInt("trafficLaneNo");
+                    laneInfoList.add(laneInfo);
                 }
             }
+            trafficLaneModel.trafficLaneInfos = laneInfoList;
         }
         return trafficLaneModel;
     }
