@@ -10,6 +10,8 @@ import com.chinatsp.navigation.NaviController;
 import com.chinatsp.navigation.NavigationUtil;
 import com.chinatsp.navigation.R;
 import com.chinatsp.navigation.gaode.bean.GuideInfo;
+import com.chinatsp.navigation.gaode.bean.TrafficLaneModel;
+import com.chinatsp.navigation.repository.DriveDirection;
 
 public class NaviSmallCardHolder extends NaviCardHolder {
     private ImageView ivCardNaviSearch;
@@ -127,12 +129,16 @@ public class NaviSmallCardHolder extends NaviCardHolder {
         mController.naviToHome();
     }
 
-    public void refreshNaviGuideInfo(GuideInfo guideInfo) {
+    public void refreshNaviGuideInfo(GuideInfo guideInfo, DriveDirection driveDirection) {
         if (guideInfo == null) {
             return;
         }
-        ivCardNaviInstruction.setImageResource(R.drawable.card_navi_tbt_direct_right);
-        tvCardNaviInstruction.setText("前方直行");
+        ivCardNaviInstruction.setImageResource(driveDirection.getIconRes());
+        tvCardNaviInstruction.setText(driveDirection.getNameRes());
         tvCardNaviRoadTip.setText("进入"+guideInfo.getNextRoadName());
+    }
+
+    public void refreshNaviLaneInfo(TrafficLaneModel trafficLaneModel) {
+
     }
 }

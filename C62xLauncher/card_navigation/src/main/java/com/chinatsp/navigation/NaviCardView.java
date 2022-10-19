@@ -12,6 +12,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.autonavi.autoaidlwidget.AutoAidlWidgetManager;
 import com.chinatsp.navigation.gaode.bean.GuideInfo;
+import com.chinatsp.navigation.gaode.bean.TrafficLaneModel;
+import com.chinatsp.navigation.repository.DriveDirection;
 import com.chinatsp.navigation.viewholder.NaviBigCardHolder;
 import com.chinatsp.navigation.viewholder.NaviSmallCardHolder;
 
@@ -155,7 +157,7 @@ public class NaviCardView extends ConstraintLayout implements ICardStyleChange {
         }
     }
 
-    public void refreshGuideInfo(GuideInfo guideInfo) {
+    public void refreshGuideInfo(GuideInfo guideInfo, DriveDirection driveDirection) {
         NavigationUtil.logI(TAG + "refreshGuideInfo "+Thread.currentThread().getName() +" "+System.currentTimeMillis());
         NavigationUtil.logD(TAG + " type:"+ guideInfo.getType());
         NavigationUtil.logD(TAG + guideInfo.getCurRoadName());
@@ -164,9 +166,17 @@ public class NaviCardView extends ConstraintLayout implements ICardStyleChange {
         NavigationUtil.logD(TAG + guideInfo.getEndPOIName());
         NavigationUtil.logD(TAG + guideInfo.getEndPOIAddr());
         if (mExpand) {
-            mBigCardHolder.refreshNaviGuideInfo(guideInfo);
+            mBigCardHolder.refreshNaviGuideInfo(guideInfo, driveDirection);
         } else {
-            mSmallCardHolder.refreshNaviGuideInfo(guideInfo);
+            mSmallCardHolder.refreshNaviGuideInfo(guideInfo,driveDirection);
+        }
+    }
+
+    public void refreshLaneInfo(TrafficLaneModel trafficLaneModel) {
+        if (mExpand) {
+            mBigCardHolder.refreshNaviLaneInfo(trafficLaneModel);
+        } else {
+            mSmallCardHolder.refreshNaviLaneInfo(trafficLaneModel);
         }
     }
 }

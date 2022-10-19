@@ -669,6 +669,9 @@ public class GuideInfo {
         roadInfo.routeRemainTimeAuto = jsonObject.optString("routeRemainTimeAuto");
         roadInfo.segRemainDisAuto = jsonObject.optString("segRemainDisAuto");
         roadInfo.segRemainDis = jsonObject.optInt("segRemainDis");
+        roadInfo.roundAboutNum = jsonObject.optInt("roundAboutNum");
+        roadInfo.roundaboutOutAngle = jsonObject.optInt("roundaboutOutAngle");
+        roadInfo.roundAllNum = jsonObject.optInt("roundAllNum");
         return roadInfo;
     }
 }

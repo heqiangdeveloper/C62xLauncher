@@ -6,6 +6,8 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 import com.chinatsp.navigation.gaode.bean.GuideInfo;
+import com.chinatsp.navigation.gaode.bean.TrafficLaneModel;
+import com.chinatsp.navigation.repository.DriveDirection;
 
 public abstract class NaviCardHolder {
     protected View mRootView;
@@ -25,5 +27,7 @@ public abstract class NaviCardHolder {
 
     public abstract void hideNetworkError();
 
-    public abstract void refreshNaviGuideInfo(GuideInfo guideInfo);
+    public abstract void refreshNaviGuideInfo(GuideInfo guideInfo, DriveDirection driveDirection);
+
+    public abstract void refreshNaviLaneInfo(TrafficLaneModel trafficLaneModel);
 }
