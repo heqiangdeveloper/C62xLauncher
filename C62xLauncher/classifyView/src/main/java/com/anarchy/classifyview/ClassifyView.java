@@ -53,6 +53,7 @@ import com.anarchy.classifyview.adapter.MainRecyclerViewCallBack;
 import com.anarchy.classifyview.adapter.SubAdapterReference;
 import com.anarchy.classifyview.adapter.SubRecyclerViewCallBack;
 import com.anarchy.classifyview.event.ChangeTitleEvent;
+import com.anarchy.classifyview.event.JumpToCardEvent;
 import com.anarchy.classifyview.event.ReStoreDataEvent;
 import com.anarchy.classifyview.simple.BaseSimpleAdapter;
 import com.anarchy.classifyview.simple.widget.InsertAbleGridView;
@@ -173,6 +174,7 @@ public class ClassifyView extends FrameLayout {
     private List<String> canUninstallNameLists = new ArrayList<>();
     private boolean isHasDeletedItems = false;//sub中是否有可删除的item
     private CountTimer countTimerView;
+    private static final int EDGEWIDTH = 160;//左右边缘间距
     public ClassifyView(Context context) {
         super(context);
         init(context, null, 0);
@@ -222,11 +224,12 @@ public class ClassifyView extends FrameLayout {
         mEdgeWidth = a.getDimensionPixelSize(R.styleable.ClassifyView_EdgeWidth, 15);
         a.recycle();
         mMainRecyclerView = getMain(context, attrs);
-        mMainRecyclerView.setPadding(160,0,160,0);
+        mMainRecyclerView.setPadding(EDGEWIDTH,0,EDGEWIDTH,0);
         mMainRecyclerView.setOverScrollMode(OVER_SCROLL_NEVER);//去掉滑动到顶/底部时的阴影
         mSubRecyclerView = getSub(context, attrs);
         mSubRecyclerView.setOverScrollMode(OVER_SCROLL_NEVER);
         mMainContainer.addView(mMainRecyclerView);
+
         mMainShadowView = new View(context);
         mMainShadowView.setBackgroundColor(mShadowColor);
         mMainShadowView.setVisibility(View.GONE);
@@ -631,7 +634,15 @@ public class ClassifyView extends FrameLayout {
 
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                //L.d("onScroll");
+                /*
+                *  热区：mMainRecyclerView左右两边160的区域
+                *  mMainRecyclerView滑动至顶部后，空白区域下滑超过200px，跳转至卡片页
+                 */
+                if(mMainRecyclerView!= null && !mMainRecyclerView.canScrollVertically(-1)){//mMainRecyclerView已经到达顶部
+                    if(isNeedJumpCard(e1,e2)){
+                        EventBus.getDefault().post(new JumpToCardEvent());
+                    }
+                }
                 return super.onScroll(e1, e2, distanceX, distanceY);
             }
 
@@ -837,6 +848,29 @@ public class ClassifyView extends FrameLayout {
 
             }
         };
+    }
+
+    /*
+     *  热区：mMainRecyclerView左右两边宽度160的区域
+     */
+    private boolean isNeedJumpCard(MotionEvent e1, MotionEvent e2) {
+        float moveY = e2.getY() - e1.getY();
+        if(e1.getX() > EDGEWIDTH && e1.getX() < (SCREENWIDTH - EDGEWIDTH)){
+            return false;
+        }
+        if(e2.getX() > EDGEWIDTH && e2.getX() < (SCREENWIDTH - EDGEWIDTH)){
+            return false;
+        }
+        if(moveY < 0){
+            return false;
+        }
+        //向下移动350时
+        if(moveY >= 350){
+            Log.d("onscroll", "isNeedJumpCard true");
+            return true;
+        }else {
+            return false;
+        }
     }
 
     private void resetSubContainerPlace() {
