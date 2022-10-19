@@ -82,6 +82,7 @@ public class ColorPickerView extends View {
      * 颜色分区
      */
     private int colorIndex = 64;
+    public int pickerIndex = 0;
 
     // 不直接绘制在 View 提供的画布上的原因是：选取颜色时需要提取 Bitmap 上的颜色，View 的 Bitmap 无法获取，
     // 而且有指示点时指示点会覆盖主颜色条(重绘颜色条的颜色)
@@ -646,6 +647,7 @@ public class ColorPickerView extends View {
         } else {
             curX = x + 30;
         }
+        this.pickerIndex = index;
         this.mIndicatorColor = Color.rgb(colorInfoList.get(index - 1).getR(), colorInfoList.get(index - 1).getG(), colorInfoList.get(index - 1).getB());
         needReDrawIndicator = true;
         invalidate();
@@ -660,6 +662,7 @@ public class ColorPickerView extends View {
     public void setIndicatorColorIndex(int index) {
         this.mIndicatorColor = Color.rgb(colorInfoList.get(index - 1).getR(), colorInfoList.get(index - 1).getG(), colorInfoList.get(index - 1).getB());
         needReDrawIndicator = true;
+        this.pickerIndex = index;
         invalidate();
     }
 

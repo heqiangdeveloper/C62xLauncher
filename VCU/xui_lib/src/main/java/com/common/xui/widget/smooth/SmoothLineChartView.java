@@ -32,7 +32,7 @@ public class SmoothLineChartView extends View {
     public static final int NODE_STYLE_CIRCLE = 0;
     public static final int NODE_STYLE_RING = 1;
 
-    public static final int TOUCH_MIN_DISTANCE = 40;
+    public static final int TOUCH_MIN_DISTANCE = 60;
     private static final int CHART_COLOR = 0xFF0099CC;//默认线条颜色
     private static final int CIRCLE_SIZE = 28;//默认节点圆直径
     private static final int SELECTED_CIRCLE_SIZE = 35;//默认选中的节点圆直径
@@ -397,6 +397,7 @@ public class SmoothLineChartView extends View {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN://按下
                 int size = mValues.size();
+                mSelectedNode = checkClicked(event.getX(), event.getY());
                 action = true;
                 if (mSelectedNode != -1 && mSelectedNode < size) {
                     isMoveChange = true;

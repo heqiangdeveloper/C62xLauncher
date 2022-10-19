@@ -1,5 +1,6 @@
 package com.chinatsp.vehicle.settings.fragment.doors.dialog
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -16,6 +17,7 @@ import com.common.xui.widget.smooth.SmoothLineChartView
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
+import kotlin.properties.Delegates
 
 @AndroidEntryPoint
 class EqualizerDialogFragment :
@@ -30,6 +32,8 @@ class EqualizerDialogFragment :
     private val offset: Float by lazy {
         if (VcuUtils.isAmplifier) 5f else 9f
     }
+    private lateinit var vList:List<Float>
+    private var value by Delegates.notNull<Int>()
 
     override fun getLayoutId(): Int {
         return R.layout.equalizer_dialog_fragmet
@@ -105,8 +109,12 @@ class EqualizerDialogFragment :
             value
         }.toList()
         Timber.d("onPostSelected 22222222222222 tabView:$tabView, value:$value, toList:%s", toList)
+        this.vList = toList
+        this.value = value
         binding.smoothChartView.setData(toList, xValue)
-        //动态设置计算区间
+       if(value ==6){
+           intentService(toList)
+       }
     }
 
     private fun doSendCustomEqValue() {
@@ -155,7 +163,35 @@ class EqualizerDialogFragment :
 //        onPostSelected(RadioNode.SYSTEM_SOUND_EFFECT, viewModel.currentEffect.value!!)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+       if(value == 6){
+           val value = binding.smoothChartView.obtainProgress()
+           val intent = Intent("com.chinatsp.vehiclenetwork.usercenter")
+           val json = "{\"high\":\""+value[0]+"\",\"alt\":\""+
+                   value[1]+"\",\"alto\":\""+
+                   value[2]+"\",\"mid\":\""+
+                   value[3]+"\",\"bass\":\""+
+                   value[4]+"\"}"
+           intent.putExtra("app", "com.chinatsp.vehicle.settings")
+           intent.putExtra("soundEffects",json)
+           intent.setPackage("com.chinatsp.usercenter");
+           activity?.startService(intent);
+       }
+    }
 
+    private fun intentService(value:List<Float>){
+        val intent = Intent("com.chinatsp.vehiclenetwork.usercenter")
+        val json = "{\"high\":\""+value[0]+"\",\"alt\":\""+
+                value[1]+"\",\"alto\":\""+
+                value[2]+"\",\"mid\":\""+
+                value[3]+"\",\"bass\":\""+
+                value[4]+"\"}"
+        intent.putExtra("app", "com.chinatsp.vehicle.settings")
+        intent.putExtra("soundEffects",json)
+        intent.setPackage("com.chinatsp.usercenter")
+        activity?.startService(intent)
+    }
 }
 
 

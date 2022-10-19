@@ -79,7 +79,7 @@ public class VSeekBar extends View {
     private final Set<Integer> mTouchingMaxTarget = new HashSet<>();
     private boolean mIsTouching = false;
     private boolean mLastTouchedMin;
-    private int mSelectedNumber = -1;
+    public int mSelectedNumber = -1;
     private boolean mIsFirstInit = true;
     private float mConvertFactor;
     private OnSeekBarListener mOnSeekBarListener;

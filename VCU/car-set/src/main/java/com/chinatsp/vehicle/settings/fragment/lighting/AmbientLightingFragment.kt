@@ -1,5 +1,6 @@
 package com.chinatsp.vehicle.settings.fragment.lighting
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.DialogFragment
@@ -427,6 +428,15 @@ class AmbientLightingFragment :
 //    }
 
 
+    override fun onDestroy() {
+        super.onDestroy()
+        val intent = Intent("com.chinatsp.vehiclenetwork.usercenter")
+        val json = "{\"color\":\""+binding.picker.pickerIndex+"\",\"lighting\":\""+binding.ambientLightingBrightness.mSelectedNumber+"\"}"
+        intent.putExtra("app", "com.chinatsp.vehicle.settings")
+        intent.putExtra("atmosphereLamp",json)
+        intent.setPackage("com.chinatsp.usercenter")
+        activity?.startService(intent)
+    }
 }
 
 

@@ -1,5 +1,6 @@
 package com.chinatsp.vehicle.settings.fragment.sound
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -254,5 +255,18 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
         val text: TextView = popWindow.findViewById(R.id.content) as TextView
         text.text = resources.getString(id)
         popWindow.showDownLift(view, 30, -160)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        val intent = Intent("com.chinatsp.vehiclenetwork.usercenter")
+        val json = "{\"systemHint\":\""+binding.soundWarnToneSwitch.isChecked+"\",\"speedVolumeCompensation\":\""+
+                binding.soundSpeedOffsetSwitch.isChecked+"\",\"LoudnessControl\":\""+
+                binding.soundLoudnessSwitch.isChecked+"\",\"navigationMixing\":\""+
+                binding.soundNaviMixingRadio.checked+"\"}"
+        intent.putExtra("app", "com.chinatsp.vehicle.settings")
+        intent.putExtra("soundEffects",json)
+        intent.setPackage("com.chinatsp.usercenter")
+        activity?.startService(intent)
     }
 }

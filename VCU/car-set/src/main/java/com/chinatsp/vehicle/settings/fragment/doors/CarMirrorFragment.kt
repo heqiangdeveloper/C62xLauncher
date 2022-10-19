@@ -1,5 +1,6 @@
 package com.chinatsp.vehicle.settings.fragment.doors
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.LiveData
@@ -268,5 +269,16 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
     private val isAngle: Boolean
         get() = binding.backMirrorFoldSwitch.isChecked && binding.backMirrorDownSwitch.isChecked && (viewModel.mirrorFoldFunction.value?.enable()
             ?: false)
+
+    override fun onDestroy() {
+        super.onDestroy()
+        //外后视镜位置
+        val intent = Intent("com.chinatsp.vehiclenetwork.usercenter")
+        val json = "{\"externalMirrorPosition\":\""+1024+"\"}"
+        intent.putExtra("app", "com.chinatsp.vehicle.settings")
+        intent.putExtra("rearviewMirror",json)
+        intent.setPackage("com.chinatsp.usercenter")
+        activity?.startService(intent)
+    }
 
 }
