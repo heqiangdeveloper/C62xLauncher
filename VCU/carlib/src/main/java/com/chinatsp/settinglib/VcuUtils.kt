@@ -136,6 +136,17 @@ object VcuUtils {
         return false
     }
 
+    fun setConfigParameters(keySerial: String, value: String): Boolean {
+        try {
+            SystemProperties.set(keySerial, value)
+            Timber.d("setConfigParameters keySerial:%s, value:%s", keySerial, value)
+            return true
+        } catch (e: Exception) {
+            Timber.e(e)
+        }
+        return false
+    }
+
     val versionName: String by lazy {
         try {
             return@lazy BaseApp.instance.packageManager.getPackageInfo(

@@ -1,5 +1,6 @@
 package com.chinatsp.vehicle.settings.fragment.cabin
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -145,4 +146,14 @@ class CabinSeatFragment : BaseFragment<SeatViewModel, CabinSeatFragmentBinding>(
         binding.cabinSeatCopilotGuests.setOnClickListener(this::onViewClick)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        //主副驾座椅位置
+        val intent = Intent("com.chinatsp.vehiclenetwork.usercenter")
+        val json = "{\"mainPassengerSeatPosition\":\""+132.125+"\"}"
+        intent.putExtra("app", "com.chinatsp.vehicle.settings")
+        intent.putExtra("seat",json)
+        intent.setPackage("com.chinatsp.usercenter")
+        activity?.startService(intent)
+    }
 }

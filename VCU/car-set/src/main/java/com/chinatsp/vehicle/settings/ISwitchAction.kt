@@ -2,6 +2,7 @@ package com.chinatsp.vehicle.settings
 
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -90,6 +91,10 @@ interface ISwitchAction : IAction {
             Timber.d("updateSwitchEnable $node, selfActive:$selfActive, dependActive:$dependActive")
             updateEnable(it, obtainActiveByNode(node), obtainDependByNode(node))
         }
+    }
+
+    fun setSwitchConfigParameters( keySerial: String, value: String){
+        VcuUtils.setConfigParameters(keySerial,value)
     }
 
 }

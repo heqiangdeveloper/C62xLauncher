@@ -1,5 +1,6 @@
 package com.chinatsp.vehicle.settings.fragment.doors.dialog
 
+import android.content.Intent
 import android.os.Bundle
 import com.chinatsp.settinglib.SettingManager
 import com.chinatsp.vehicle.settings.R
@@ -91,5 +92,15 @@ class VolumeDialogFragment :
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        val intent = Intent("com.chinatsp.vehiclenetwork.usercenter")
+        val json = "{\"fadeValue\":\""+binding.soundField.fadeValue+"\"}"
+        intent.putExtra("app", "com.chinatsp.vehicle.settings")
+        intent.putExtra("soundEffects",json)
+        intent.setPackage("com.chinatsp.usercenter")
+        activity?.startService(intent)
     }
 }

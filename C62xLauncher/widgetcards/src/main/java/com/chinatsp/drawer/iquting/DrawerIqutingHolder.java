@@ -56,6 +56,7 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
     private static final int TYPE_NO_NETWORK = 1;
     private static final int TYPE_NO_LOGIN = 2;
     private static final int TYPE_NORMAL = 3;
+    private static final int TYPE_DATA_ERROR = 4;
     public static String itemUUIDInDrawer = "";
     public static boolean isPlaying = false;
     private SharedPreferences sp;
@@ -261,23 +262,25 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
         IqutingBindService.getInstance().getMusicList(contentId, new IQueryMusicLists() {
             @Override
             public void onSuccess(AreaContentResponseBean areaContentResponseBean) {
-                Log.d(TAG,"getAreaContentData success");
+                Log.d(TAG,"getMusicList success");
+                if(contentId == TYPE_DAILYSONGS){
+                    mAreaContentResponseBeanDaily = areaContentResponseBean;
+                }else if(contentId == TYPE_RANKSONGS){
+                    mAreaContentResponseBeanRank = areaContentResponseBean;
+                }
                 List<BaseSongItemBean> songLists = areaContentResponseBean.getSonglist();
-                if(songLists != null){
-                    if(contentId == TYPE_DAILYSONGS){
-                        mAreaContentResponseBeanDaily = areaContentResponseBean;
-                    }else if(contentId == TYPE_RANKSONGS){
-                        mAreaContentResponseBeanRank = areaContentResponseBean;
-                    }
+                if(songLists != null && songLists.size() != 0){
                     mSongsAdapter.setData(songLists);
                 }else {
-                    Log.d(TAG,"getAreaContentData songLists is null");
+                    Log.d(TAG,"getMusicList songLists is null");
+                    showUI(TYPE_DATA_ERROR);
                 }
             }
 
             @Override
             public void onFail(int failCode) {
-
+                Log.d(TAG,"getMusicList fail: " + failCode);
+                showUI(TYPE_DATA_ERROR);
             }
         });
     }
@@ -294,7 +297,11 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
                     rcvDrawerIqutingLogin.setVisibility(View.GONE);
                     tvDrawerIqutingLogin.setVisibility(View.VISIBLE);
                     tvDrawerIqutingLogin.setText(com.chinatsp.iquting.R.string.iquting_unlogin_slogan);
-                }else {//正常登陆了
+                }else if(type == TYPE_DATA_ERROR){
+                    rcvDrawerIqutingLogin.setVisibility(View.GONE);
+                    tvDrawerIqutingLogin.setVisibility(View.VISIBLE);
+                    tvDrawerIqutingLogin.setText(com.chinatsp.iquting.R.string.iquting_get_data_error);
+                }else{//正常登陆了
                     rcvDrawerIqutingLogin.setVisibility(View.VISIBLE);
                     tvDrawerIqutingLogin.setVisibility(View.GONE);
                 }

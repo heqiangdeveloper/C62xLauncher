@@ -103,24 +103,25 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
             val liveData = router.obtainLevelLiveData()
             liveData.observe(this) {
                 it.takeIf { it.valid && it.uid == pid }?.let { level1 ->
-                    level1.cnode?.takeIf { child -> child.valid && child.uid == uid }.let { level2 ->
-                        level2?.cnode?.let { lv3Node ->
-                            map[lv3Node.uid]?.run { onViewClick(this, lv3Node.uid, true) }
+                    level1.cnode?.takeIf { child -> child.valid && child.uid == uid }
+                        .let { level2 ->
+                            level2?.cnode?.let { lv3Node ->
+                                map[lv3Node.uid]?.run { onViewClick(this, lv3Node.uid, true) }
+                            }
                         }
-                    }
                 }
             }
         }
     }
 
-    private fun obtainRouter(): IRoute?{
+    private fun obtainRouter(): IRoute? {
         return if (activity is IRoute) activity as IRoute else null
     }
 
     private fun setProgressLiveDataListener() {
         viewModel.trunkStopPosition.observe(this) {
-            initLocation(it.pos)
-            binding.ivCarTrunk.setImageResource(trunkAnimationResource[location])
+            //initLocation(it.pos)
+            //binding.ivCarTrunk.setImageResource(trunkAnimationResource[location])
         }
     }
 
@@ -152,6 +153,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
 
     private fun initDetailsClickListener() {
         binding.electricTailDetails.setOnClickListener(this::onViewClick)
+        binding.carTrunkDoorHeight.setOnClickListener(this::onViewClick)
     }
 
     private fun onViewClick(view: View, clickUid: Int, frank: Boolean) {
@@ -162,10 +164,9 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     private fun onViewClick(view: View) {
         if (view == binding.electricTailDetails) {
             showPopWindow(R.string.car_trunk_content, view)
-        }
-        binding.carTrunkDoorHeight.setOnClickListener{
-            if(binding.carTrunkDoorHeight.text.equals(activity?.getString(R.string.car_trunk_door_height))) {
-                showPopWindow(R.string.car_trunk_height_content, it)
+        } else if (view == binding.carTrunkDoorHeight) {
+            if (binding.carTrunkDoorHeight.text.equals(activity?.getString(R.string.car_trunk_door_height))) {
+                showPopWindow(R.string.car_trunk_height_content, view)
             }
         }
     }
@@ -317,7 +318,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         binding.carTrunkDoorHeight.visibility = if (status) View.VISIBLE else View.INVISIBLE
         binding.intelligenceInto.visibility = if (isShowKey()) View.VISIBLE else View.INVISIBLE
         binding.arcSeekBar.visibility = if (isShowSeek()) View.VISIBLE else View.INVISIBLE
-        onTrunkPositionChanged(viewModel.trunkStopPosition.value!!.pos)
+        onTrunkPositionChanged()
     }
 
 
@@ -330,10 +331,62 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         viewModel.lightAlarmFunction.observe(this) {
             doUpdateSwitch(SwitchNode.STERN_LIGHT_ALARM, it)
             updateOptionActive()
+            if(it.data){
+                animFlashAlarm.start(false, duration, object : AnimationDrawable.AnimationLisenter {
+                    override fun startAnimation() {
+                        if (isShowSeek()) {
+                            binding.arcSeekBar.visibility = View.INVISIBLE
+                        }
+                        if (isShowKey()) {
+                            binding.intelligenceInto.visibility = View.INVISIBLE
+                        }
+                        binding.ivBuzzerAlarms.visibility = View.INVISIBLE
+                        binding.ivFlashAlarm.visibility = View.VISIBLE
+                        binding.carTrunkDoorHeight.visibility = View.VISIBLE
+                    }
+
+                    override fun endAnimation() {
+                        binding.ivFlashAlarm.visibility = View.INVISIBLE
+                        if (isShowSeek()) {
+                            binding.arcSeekBar.visibility = View.VISIBLE
+                        }
+                        if (isShowKey()) {
+                            binding.intelligenceInto.visibility = View.VISIBLE
+                        }
+                    }
+                })
+            }
         }
         viewModel.audioAlarmFunction.observe(this) {
             doUpdateSwitch(SwitchNode.STERN_AUDIO_ALARM, it)
             updateOptionActive()
+            if(it.data){
+                animBuzzerAlarms.start(
+                    false, duration,
+                    object : AnimationDrawable.AnimationLisenter {
+                        override fun startAnimation() {
+                            if (isShowSeek()) {
+                                binding.arcSeekBar.visibility = View.INVISIBLE
+                            }
+                            if (isShowKey()) {
+                                binding.intelligenceInto.visibility = View.INVISIBLE
+                            }
+                            binding.ivFlashAlarm.visibility = View.INVISIBLE
+                            binding.ivBuzzerAlarms.visibility = View.VISIBLE
+                            binding.carTrunkDoorHeight.visibility = View.VISIBLE
+                        }
+
+                        override fun endAnimation() {
+                            binding.ivBuzzerAlarms.visibility = View.INVISIBLE
+                            if (isShowSeek()) {
+                                binding.arcSeekBar.visibility = View.VISIBLE
+                            }
+                            if (isShowKey()) {
+                                binding.intelligenceInto.visibility = View.VISIBLE
+                            }
+                        }
+                    })
+            }
         }
     }
 
@@ -411,18 +464,24 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     override fun onProgressChanged(progress: Float, max: Float, fromUser: Boolean) {
 //        this.progress = progress.toInt()
         if (fromUser) {
-            manager.doSetVolume(Progress.TRUNK_STOP_POSITION, progress.toInt())
-            viewModel.onProgressChanged(Progress.TRUNK_STOP_POSITION, progress.toInt())
+            //manager.doSetVolume(Progress.TRUNK_STOP_POSITION, progress.toInt())
+           //viewModel.onProgressChanged(Progress.TRUNK_STOP_POSITION, progress.toInt())
+            initLocation(progress.toInt())
+            binding.ivCarTrunk.setImageResource(trunkAnimationResource[location])
         }
 //        animOpenDoor.progressStart(progress.toInt())
     }
 
-    override fun onStopTrackingTouch(isCanDrag: Boolean) {
-
+    override fun onStopTrackingTouch(isCanDrag: Boolean,lastValue:Float) {
+        if(isCanDrag){
+            manager.doSetVolume(Progress.TRUNK_STOP_POSITION, lastValue.toInt())
+            viewModel.onProgressChanged(Progress.TRUNK_STOP_POSITION, lastValue.toInt())
+        }
     }
 
     override fun onSingleTapUp() {
-
+        manager.doSetVolume(Progress.TRUNK_STOP_POSITION, binding.arcSeekBar.lastValue)
+        viewModel.onProgressChanged(Progress.TRUNK_STOP_POSITION, binding.arcSeekBar.lastValue)
     }
 
     private fun showPopWindow(id: Int, view: View) {
@@ -431,16 +490,20 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
             popWindow = PopWindow(activity,
                 R.layout.pop_window,
                 activity?.let {
-                    AppCompatResources.getDrawable(it,
-                        R.drawable.popup_bg_qipao172)
+                    AppCompatResources.getDrawable(
+                        it,
+                        R.drawable.popup_bg_qipao172
+                    )
                 })
             popWindow.showDownLift(view, 30, -130)
         } else if (view.id == binding.carTrunkDoorHeight.id) {
             popWindow = PopWindow(activity,
                 R.layout.pop_window,
                 activity?.let {
-                    AppCompatResources.getDrawable(it,
-                        R.drawable.popup_bg_qipao776_298)
+                    AppCompatResources.getDrawable(
+                        it,
+                        R.drawable.popup_bg_qipao776_298
+                    )
                 })
             popWindow.showDownLift(view, -270, -15)
         }
@@ -448,7 +511,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         text.text = resources.getString(id)
     }
 
-    private fun onTrunkPositionChanged(progress: Int) {
+    private fun onTrunkPositionChanged() {
         val status = binding.sternElectricSwitch.isChecked
         var resArray = trunkAnimationResource.slice(0..location)
         if (!status) {
@@ -476,17 +539,28 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         return binding.sternElectricSwitch.isChecked && (binding.sternSmartEnterRadio.checked != "1")
     }
 
-    private fun isDrawableView(){
-        if(binding.carTrunkDoorHeight.text.equals(activity?.getString(R.string.car_trunk_door_height))){
+    private fun isDrawableView() {
+        if (binding.carTrunkDoorHeight.text.equals(activity?.getString(R.string.car_trunk_door_height))) {
             val drawable = activity?.let {
                 AppCompatResources.getDrawable(
-                    it,R.drawable.information_selector)
+                    it, R.drawable.information_selector
+                )
             }
             binding.carTrunkDoorHeight.compoundDrawablePadding = 4
             //binding.carTrunkDoorHeight.setCompoundDrawables(null,null,drawable,null)
-            binding.carTrunkDoorHeight.setCompoundDrawablesWithIntrinsicBounds(null,null,drawable,null)
-        }else{
-            binding.carTrunkDoorHeight.setCompoundDrawablesWithIntrinsicBounds(null,null,null,null)
+            binding.carTrunkDoorHeight.setCompoundDrawablesWithIntrinsicBounds(
+                null,
+                null,
+                drawable,
+                null
+            )
+        } else {
+            binding.carTrunkDoorHeight.setCompoundDrawablesWithIntrinsicBounds(
+                null,
+                null,
+                null,
+                null
+            )
         }
     }
 
