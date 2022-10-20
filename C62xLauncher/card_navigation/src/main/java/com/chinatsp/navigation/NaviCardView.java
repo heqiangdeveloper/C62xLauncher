@@ -101,7 +101,7 @@ public class NaviCardView extends ConstraintLayout implements ICardStyleChange {
 
     public void refreshState(int state) {
         EasyLog.d(TAG, "refreshState , current state:"+state);
-        if (state == NaviController.STATE_IN_NAVIGATION) {
+        if (state == NaviController.STATE_IN_NAVIGATION || state == NaviController.STATE_IN_NAVIGATION_MOCK) {
             EasyLog.i(TAG, "refreshState Start navigation");
             refreshNavigation();
         } else {

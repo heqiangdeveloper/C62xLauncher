@@ -133,9 +133,12 @@ public class NaviSmallCardHolder extends NaviCardHolder {
         if (guideInfo == null) {
             return;
         }
-        ivCardNaviInstruction.setImageResource(driveDirection.getIconRes());
-        tvCardNaviInstruction.setText(driveDirection.getNameRes());
+
         tvCardNaviRoadTip.setText("进入"+guideInfo.getNextRoadName());
+        if (driveDirection != null) {
+            ivCardNaviInstruction.setImageResource(driveDirection.getIconRes());
+            tvCardNaviInstruction.setText(driveDirection.getNameRes());
+        }
     }
 
     public void refreshNaviLaneInfo(TrafficLaneModel trafficLaneModel) {
