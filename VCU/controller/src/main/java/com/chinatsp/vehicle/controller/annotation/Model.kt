@@ -31,6 +31,7 @@ annotation class Model {
         const val CABIN = 0x5 shl 28
         const val ADAS = 0x6 shl 28
         const val PANORAMA = 0x7 shl 28
+        const val AUTO_PARK = 0x8 shl 28
 
         const val INVALID = -1
 

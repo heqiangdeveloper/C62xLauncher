@@ -4,6 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class Slots(val serial: String) : Parcelable {
+    var device: String = ""
     var artist: String = ""
     var song: String = ""
     var album: String = ""
@@ -43,8 +44,10 @@ data class Slots(val serial: String) : Parcelable {
 
     var text: String = ""
     var operation: String = ""
+    var json: String = ""
 
     constructor(parcel: Parcel): this("") {
+        device = parcel.readString().toString()
         artist = parcel.readString().toString()
         song = parcel.readString().toString()
         album = parcel.readString().toString()
@@ -82,9 +85,11 @@ data class Slots(val serial: String) : Parcelable {
         color = parcel.readString().toString()
         text = parcel.readString().toString()
         operation = parcel.readString().toString()
+        json = parcel.readString().toString()
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(device)
         parcel.writeString(artist)
         parcel.writeString(song)
         parcel.writeString(album)
@@ -122,6 +127,7 @@ data class Slots(val serial: String) : Parcelable {
         parcel.writeString(color)
         parcel.writeString(text)
         parcel.writeString(operation)
+        parcel.writeString(json)
     }
 
     override fun describeContents(): Int {

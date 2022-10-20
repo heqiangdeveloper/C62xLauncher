@@ -17,9 +17,9 @@ class AirCmd(
     @IStatus status: Int,
 ) : BaseCmd(model, action, status), Parcelable {
 
-    var air: Int = IAir.DEFAULT
+    var air: Int = IAir.VOID
 
-    var part: Int = IPart.DEFAULT
+    var part: Int = IPart.VOID
 
     /**
      * 空调 吹风方向
@@ -27,6 +27,8 @@ class AirCmd(
     var orien: Int = IOrien.DEFAULT
 
     var graded: Boolean = false
+
+    var expect: Int = -1
 
     constructor(@Action action: Int) : this(
         model = Model.CABIN_AIR,
@@ -40,6 +42,7 @@ class AirCmd(
         air = parcel.readInt()
         part = parcel.readInt()
         orien = parcel.readInt()
+        expect = parcel.readInt()
         graded = parcel.readByte() != 0.toByte()
     }
 
@@ -48,6 +51,7 @@ class AirCmd(
         parcel.writeInt(air)
         parcel.writeInt(part)
         parcel.writeInt(orien)
+        parcel.writeInt(expect)
         parcel.writeByte(if (graded) 1 else 0)
     }
 

@@ -1,9 +1,11 @@
 package com.chinatsp.vehicle.controller
 
 import android.text.TextUtils
-import com.chinatsp.vehicle.controller.annotation.*
+import com.chinatsp.vehicle.controller.annotation.Action
+import com.chinatsp.vehicle.controller.annotation.IAir
+import com.chinatsp.vehicle.controller.annotation.IOrien
+import com.chinatsp.vehicle.controller.annotation.IPart
 import com.chinatsp.vehicle.controller.bean.AirCmd
-import com.chinatsp.vehicle.controller.bean.BaseCmd
 import com.chinatsp.vehicle.controller.semantic.NlpVoiceModel
 import com.chinatsp.vehicle.controller.semantic.Slots
 import com.chinatsp.vehicle.controller.utils.Keywords
@@ -17,10 +19,8 @@ import org.json.JSONObject
  * @version: 1.0
  */
 object AirController : IController {
-
     private const val DRIVER = "主驾"
     private const val COPILOT = "副驾"
-
 
     //内循环
     private const val MODE_RECYCLE_IN = "内循环"
@@ -34,13 +34,7 @@ object AirController : IController {
 
     private val COLD_MODES = arrayOf("制冷", "压缩机")
 
-    //制冷模式
-    private const val MODE_COLD = "制冷"
-
-    //制热模式
-    private const val MODE_HOT = "制热"
-
-    private const val COMPRESSOR = "压缩机"
+    private val HEAT_MODES = arrayOf("制热", "加热")
 
     //太热了
     private const val MINUS_MORE = "MINUS_MORE"
@@ -99,52 +93,72 @@ object AirController : IController {
         callback: ICmdCallback,
         model: NlpVoiceModel,
     ): Boolean {
-        var result = false
         val slots: Slots = model.slots
-        //true表示是开启操作,false表示未知操作
-        val open = isMatch(Keywords.OPT_OPENS, model.operation, slots.insType)
-        //true表示关闭操作，false表示未知操作
-        val close = !open && isMatch(Keywords.OPT_CLOSES, model.operation, slots.insType)
-        LogManager.d(tag,
-            "doVoiceController operation:${slots.operation}, insType:${slots.insType}, ${slots.text}")
-        LogManager.d(tag, "doVoiceController name:${slots.name}, mode:${slots.mode}, ${slots.text}")
-        var cmd: BaseCmd? = attemptCreateSwitchCmd(slots)
-        if (null == cmd) {
-            cmd = attemptCreateCompressorCmd(slots)
+        var command: AirCmd? = null
+        if (null == command) {
+            command = attemptCreateSwitchCmd(slots)
         }
-        if (null == cmd) {
-            cmd = attemptCreateWindCmd(slots)
+        if (null == command) {
+            command = attemptCreateWindCmd(slots)
         }
-        if (null == cmd) {
-            cmd = attemptCreateTempCmd(slots)
+        if (null == command) {
+            command = attemptCreateTempCmd(slots)
         }
-        if (null == cmd) {
-            cmd = attemptCreateLoopModeCmd(slots)
+        if (null == command) {
+            command = attemptCreateLoopModeCmd(slots)
         }
-        if (null == cmd) {
-            cmd = createColdOrHot(slots)
+        if (null == command) {
+            command = attemptCreateColdHeatCmd(slots)
         }
-        if (null == cmd) {
-            cmd = attemptCreatePurifierCmd(slots)
+        if (null == command) {
+            command = attemptCreatePurifierCmd(slots)
         }
-        if (null == cmd) {
-            cmd = attemptCreateFlowCmd(slots)
+        if (null == command) {
+            command = attemptCreateFlowCmd(slots)
         }
-        if (null == cmd) {
-            cmd = attemptCreateGlassDefrostCmd(slots)
+        if (null == command) {
+            command = attemptCreateGlassDefrostCmd(slots)
         }
-//        if (null == cmd) {
-//            cmd = createSwitchCmd(slots, open, close)
-//        }
-        cmd?.let {
-            controller.doAirControlCommand(cmd as AirCmd, callback)
-        } ?: doHandleUnknownHint(callback)
-        return true
+        if (null == command) {
+            command = attemptCreateAutoModeCmd(slots)
+        }
+        if (null != command) {
+            controller.doAirControlCommand(command as AirCmd, callback)
+        }
+        return null != command
     }
 
-    private fun attemptCreateGlassDefrostCmd(slots: Slots): BaseCmd? {
-        var air = IAir.DEFAULT
-        var part = IPart.DEFAULT
+    private fun attemptCreateAutoModeCmd(slots: Slots): AirCmd? {
+        if ("空调" == slots.device) {
+            var action = Action.VOID
+            if ("自动" == slots.mode) {
+                if (isMatch(Keywords.OPT_OPENS, slots.operation, slots.insType)) {
+                    action = Action.TURN_ON
+                }
+                if (isMatch(Keywords.OPT_CLOSES, slots.operation, slots.insType)) {
+                    action = Action.TURN_OFF
+                }
+            }
+            if ("手动" == slots.mode) {
+                if (isMatch(Keywords.OPT_OPENS, slots.operation, slots.insType)) {
+                    action = Action.TURN_OFF
+                }
+                if (isMatch(Keywords.OPT_CLOSES, slots.operation, slots.insType)) {
+                    action = Action.TURN_ON
+                }
+            }
+            if (Action.VOID != action) {
+                val command = AirCmd(action)
+                command.air = IAir.AUTO_MODE
+                return command
+            }
+        }
+        return null
+    }
+
+    private fun attemptCreateGlassDefrostCmd(slots: Slots): AirCmd? {
+        var air = IAir.VOID
+        var part = IPart.VOID
         if (isMatch(DOUBLE_DEFROST, slots.mode)) {
             air = IAir.AIR_DEFROST
             part = IPart.HEAD or IPart.TAIL
@@ -157,19 +171,17 @@ object AirController : IController {
             air = IAir.AIR_DEFROST
             part = IPart.TAIL
         }
-        if (IAir.DEFAULT == air) {
+        if (IAir.VOID == air) {
             return null
         }
 
-        val open = isMatch(Keywords.OPT_OPENS, slots.operation, slots.insType)
-        if (open) {
+        if (isMatch(Keywords.OPT_OPENS, slots.operation, slots.insType)) {
             val command = AirCmd(Action.TURN_ON)
             command.air = air
             command.part = part
             return command
         }
-        val close = isMatch(Keywords.OPT_CLOSES, slots.operation, slots.insType)
-        if (close) {
+        if (isMatch(Keywords.OPT_CLOSES, slots.operation, slots.insType)) {
             val command = AirCmd(Action.TURN_OFF)
             command.air = air
             command.part = part
@@ -178,7 +190,7 @@ object AirController : IController {
         return null
     }
 
-    private fun attemptCreateFlowCmd(slots: Slots): BaseCmd? {
+    private fun attemptCreateFlowCmd(slots: Slots): AirCmd? {
         if (TextUtils.isEmpty(slots.airflowDirection)) {
             return null
         }
@@ -209,7 +221,7 @@ object AirController : IController {
         return command
     }
 
-    private fun attemptCreatePurifierCmd(slots: Slots): BaseCmd? {
+    private fun attemptCreatePurifierCmd(slots: Slots): AirCmd? {
         if (PURIFIER != slots.mode) {
             return null
         }
@@ -223,25 +235,6 @@ object AirController : IController {
             val command = AirCmd(Action.TURN_OFF)
             command.air = air
             return command
-        }
-        return null
-    }
-
-    private fun attemptCreateCompressorCmd(slots: Slots): BaseCmd? {
-        if (isMatch(COLD_MODES, slots.mode)) {
-            val air = IAir.MODE_COLD
-            var action = Action.VOID
-            if (Keywords.SET == slots.operation) {
-                action = Action.TURN_ON
-            }
-            if (Keywords.CLOSE == slots.operation) {
-                action = Action.TURN_OFF
-            }
-            if (Action.VOID != action) {
-                val command = AirCmd(action)
-                command.air = air
-                return command
-            }
         }
         return null
     }
@@ -270,17 +263,19 @@ object AirController : IController {
         return null
     }
 
-    private fun createColdOrHot(slots: Slots): BaseCmd? {
-        LogManager.d("try check air mode:${slots.mode}")
-        var air = IAir.DEFAULT
+    private fun attemptCreateColdHeatCmd(slots: Slots): AirCmd? {
+        var air = IAir.VOID
+        var value = IAir.VOID
         var action = Action.VOID
         if (isMatch(COLD_MODES, slots.mode)) {
-            air = air xor IAir.MODE_COLD
+            air = IAir.MODE_COLD_HEAT
+            value = (IAir.MODE_COLD_HEAT shl 1)
         }
-        if (MODE_HOT == slots.mode) {
-            air = air xor IAir.MODE_HOT
+        if (isMatch(HEAT_MODES, slots.mode)) {
+            air = IAir.MODE_COLD_HEAT
+            value = (IAir.MODE_COLD_HEAT shl 2)
         }
-        if (IAir.DEFAULT == air) {
+        if (IAir.VOID == air) {
             return null
         }
         if (isMatch(Keywords.OPT_OPENS, slots.operation, slots.insType)) {
@@ -293,67 +288,55 @@ object AirController : IController {
             return null
         }
         val command = AirCmd(action)
-        command.slots = slots
         command.air = air
+        command.value = value
+        command.slots = slots
         return command
     }
 
-    private fun createSwitchCmd(slots: Slots, open: Boolean, close: Boolean): BaseCmd? {
-        if (open) {
-            val cmd = AirCmd(action = Action.OPEN, model = Model.CABIN_AIR, status = IStatus.INIT)
-            cmd.slots = slots
-            return cmd
-        }
-        if (close) {
-            val cmd = AirCmd(action = Action.CLOSE, model = Model.CABIN_AIR, status = IStatus.INIT)
-            cmd.slots = slots
-            return cmd
-        }
-        return null
-    }
-
-    private fun attemptCreateLoopModeCmd(slots: Slots): BaseCmd? {
-        var air = IAir.DEFAULT
+    private fun attemptCreateLoopModeCmd(slots: Slots): AirCmd? {
+        var air = IAir.VOID
+        var value = IAir.VOID
         val modeValue = slots.mode
         if (MODE_RECYCLE_AUTO == modeValue) {
-            air = IAir.LOOP_AUTO
+            air = IAir.LOOP_MODE
+            value = IAir.LOOP_MODE shl 3
         } else if (MODE_RECYCLE_IN == modeValue) {
-            air = IAir.LOOP_INNER
+            air = IAir.LOOP_MODE
+            value = IAir.LOOP_MODE shl 1
         } else if (MODE_RECYCLE_OUT == modeValue) {
-            air = IAir.LOOP_OUTER
+            air = IAir.LOOP_MODE
+            value = IAir.LOOP_MODE shl 2
         }
-        if (IAir.DEFAULT == air) {
+        if (IAir.VOID == air) {
             return null
         }
-        val open = isMatch(Keywords.OPT_OPENS, slots.operation, slots.insType)
-        if (open) {
+        if (isMatch(Keywords.OPT_OPENS, slots.operation, slots.insType)) {
             val command = AirCmd(Action.TURN_ON)
             command.air = air
+            command.value = value
             return command
         }
-        val close = isMatch(Keywords.OPT_CLOSES, slots.operation, slots.insType)
-        if (close) {
+        if (isMatch(Keywords.OPT_CLOSES, slots.operation, slots.insType)) {
             val command = AirCmd(Action.TURN_OFF)
             command.air = air
+            command.value = value
             return command
         }
         return null
     }
 
-    private fun attemptCreateTempCmd(slots: Slots): BaseCmd? {
+    private fun attemptCreateTempCmd(slots: Slots): AirCmd? {
         val value = slots.temperature?.toString() ?: ""
         if (TextUtils.isEmpty(value)) {
             return null
         }
         var action = Action.VOID
-        var cmd: AirCmd? = null
+        var command: AirCmd? = null
         if (!isLikeJson(value)) {
-            var step = 1
             if ((PLUS == value) || (PLUS_MORE == value) || (PLUS_LITTLE == value)) {
-                step = checkoutStep(value)
                 action = Action.PLUS
             } else if ((MINUS == value) || (MINUS_MORE == value) || (MINUS_LITTLE == value)) {
-                step = checkoutStep(value)
                 action = Action.MINUS
             } else if (MIN == value) {
                 action = Action.MIN
@@ -361,63 +344,51 @@ object AirController : IController {
                 action = Action.MAX
             }
             if (Action.VOID != action) {
-                cmd = AirCmd(action = action)
-                cmd.slots = slots
-                cmd.step = step
-                cmd.air = IAir.AIR_TEMP
-                cmd.part = obtainDirection(cmd.slots?.direction)
+                command = AirCmd(action = action)
+                command.slots = slots
+                command.step = checkoutStep(value)
+                command.air = IAir.AIR_TEMP
+                command.part = obtainDirection(slots.direction)
             }
         } else {
             LogManager.e("temperature", "temperature----$value")
-            val jsonObject = JSONObject(value)
-            val consult = jsonObject.getString("ref")
-            if (REF_CUR == consult) {
-                val rule = jsonObject.getString("direct")
+            val json = JSONObject(value)
+            val consult = json.getString("ref")
+            val offset = json.getInt("offset")
+            if (REF_ZERO == consult) {
+                action = Action.FIXED
+            } else if (REF_CUR == consult) {
+                val rule = json.getString("direct")
                 if ("+" == rule) {
                     action = Action.PLUS
                 }
                 if ("-" == rule) {
                     action = Action.MINUS
                 }
-                if (Action.VOID != action) {
-                    val offset = jsonObject.getInt("offset")
-                    cmd = AirCmd(action = action)
-                    cmd.slots = slots
-                    cmd.step = offset
-                    cmd.air = IAir.AIR_TEMP
-                    cmd.part = obtainDirection(cmd.slots?.direction)
-                    LogManager.d("",
-                        "attemptCreateTempCmd consult:$consult, rule:$rule, offset:$offset")
-                }
-            } else if (REF_ZERO == consult) {
-                val offset = jsonObject.getInt("offset")
-                action = Action.FIXED
-                cmd = AirCmd(action = action)
-                cmd.slots = slots
-                cmd.value = offset
-                cmd.air = IAir.AIR_TEMP
-                cmd.part = obtainDirection(cmd.slots?.direction)
-                LogManager.d("", "attemptCreateTempCmd consult:$consult, offset:$offset")
+            }
+            if (Action.VOID != action) {
+                command = AirCmd(action = action)
+                command.slots = slots
+                command.value = offset
+                command.step = checkoutStep(value)
+                command.air = IAir.AIR_TEMP
+                command.part = obtainDirection(slots.direction)
             }
         }
-        return cmd
+        return command
     }
 
-
-    private fun attemptCreateWindCmd(slots: Slots): BaseCmd? {
+    private fun attemptCreateWindCmd(slots: Slots): AirCmd? {
         val value = slots.fanSpeed?.toString() ?: ""
         if (TextUtils.isEmpty(value)) {
             return null
         }
         var action = Action.VOID
-        var cmd: AirCmd? = null
+        var command: AirCmd? = null
         if (!isLikeJson(value)) {
-            var step = 1
             if ((PLUS == value) || (PLUS_MORE == value) || (PLUS_LITTLE == value)) {
-                step = checkoutStep(value)
                 action = Action.PLUS
             } else if ((MINUS == value) || (MINUS_MORE == value) || (MINUS_LITTLE == value)) {
-                step = checkoutStep(value)
                 action = Action.MINUS
             } else if (MIN == value) {
                 action = Action.MIN
@@ -425,50 +396,44 @@ object AirController : IController {
                 action = Action.MAX
             }
             if (Action.VOID != action) {
-                cmd = AirCmd(action = action)
-                cmd.slots = slots
-                cmd.step = step
-                cmd.air = IAir.AIR_WIND
-                cmd.part = obtainDirection(slots.direction)
-                LogManager.d(tag, "attemptCreateWindCmd value:$value")
+                command = AirCmd(action = action)
+                command.slots = slots
+                command.step = checkoutStep(value)
+                command.air = IAir.AIR_WIND
+                command.part = obtainDirection(slots.direction)
             }
         } else {
-            val jsonObject = JSONObject(value)
-            val consult = jsonObject.getString("ref")
-            if (REF_CUR == consult) {
-                val rule = jsonObject.getString("direct")
+            val json = JSONObject(value)
+            val consult = json.getString("ref")
+            val offset = json.getInt("offset")
+            if (REF_ZERO == consult) {
+                action = Action.FIXED
+            } else if (REF_CUR == consult) {
+                val rule = json.getString("direct")
                 if ("+" == rule) {
                     action = Action.PLUS
                 }
                 if ("-" == rule) {
                     action = Action.MINUS
                 }
-                if (Action.VOID != action) {
-                    cmd = AirCmd(action = action)
-                    cmd.slots = slots
-                    cmd.air = IAir.AIR_WIND
-                    cmd.part = obtainDirection(slots.direction)
-                    LogManager.d(tag, "attemptCreateWindCmd consult:$consult, rule:$rule")
-                }
-            } else if (REF_ZERO == consult) {
-                val offset = jsonObject.getInt("offset")
-                action = Action.FIXED
-                cmd = AirCmd(action = action)
-                cmd.slots = slots
-                cmd.value = offset
-                cmd.air = IAir.AIR_WIND
-                cmd.part = obtainDirection(slots.direction)
-                LogManager.d(tag, "attemptCreateWindCmd consult:$consult, offset:$offset")
+            }
+            if (Action.VOID != action) {
+                command = AirCmd(action = action)
+                command.slots = slots
+                command.value = offset
+                command.step = checkoutStep(value)
+                command.air = IAir.AIR_WIND
+                command.part = obtainDirection(slots.direction)
             }
         }
-        return cmd
+        return command
     }
 
     private fun checkoutStep(value: String): Int {
         return when (value) {
-            PLUS, MINUS -> 4
-            PLUS_MORE, MINUS_MORE -> 6
-            PLUS_LITTLE, MINUS_LITTLE -> 2
+            PLUS, MINUS -> 2
+            PLUS_MORE, MINUS_MORE -> 3
+            PLUS_LITTLE, MINUS_LITTLE -> 1
             else -> 1
         }
     }

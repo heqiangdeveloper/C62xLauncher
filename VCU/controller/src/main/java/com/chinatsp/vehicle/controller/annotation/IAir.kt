@@ -9,14 +9,14 @@ import androidx.annotation.IntDef
  * @desc :
  * @version: 1.0
  */
-@IntDef(IAir.DEFAULT,
+@IntDef(IAir.VOID,
     IAir.AIR_TEMP,
     IAir.AIR_WIND,
-    IAir.LOOP_AUTO,
-    IAir.LOOP_INNER,
-    IAir.LOOP_OUTER,
-    IAir.MODE_HOT,
-    IAir.MODE_COLD,
+//    IAir.LOOP_AUTO,
+    IAir.LOOP_MODE,
+//    IAir.LOOP_OUTER,
+//    IAir.MODE_HOT,
+    IAir.MODE_COLD_HEAT,
     IAir.AIR_PURGE,
     IAir.AIR_FLOW,
     IAir.AIR_DEFROST,
@@ -25,7 +25,8 @@ import androidx.annotation.IntDef
 @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
 annotation class IAir {
     companion object {
-        const val DEFAULT = 0x0
+
+        const val VOID = 0x0
         /**
          * 空调温度
          */
@@ -37,46 +38,38 @@ annotation class IAir {
 
         //-------------空调循环模式--------------
         /**
-         * 自动循环
-         */
-        const val LOOP_AUTO = 0x1 shl 2
-        /**
          * 内循环
          */
-        const val LOOP_INNER = 0x1 shl 3
-        /**
-         * 外循环
-         */
-        const val LOOP_OUTER = 0x1 shl 4
+        const val LOOP_MODE = 0x1 shl 2
         //-------------空调循环模式--------------
-
         /**
-         * 制热模式
+         * 制冷/制热 模式
          */
-        const val MODE_HOT = 0x1 shl 5
-        /**
-         * 制冷模式
-         */
-        const val MODE_COLD = 0x1 shl 6
+        const val MODE_COLD_HEAT = 0x1 shl 3
 
         /**
          * 空气净化模式
          */
-        const val AIR_PURGE = 0x1 shl 7
+        const val AIR_PURGE = 0x1 shl 4
 
         /**
          * 空气流向
          */
-        const val AIR_FLOW = 0x1 shl 8
+        const val AIR_FLOW = 0x1 shl 5
 
         /**
          * 除霜模式
          */
-        const val AIR_DEFROST = 0x1 shl 9
+        const val AIR_DEFROST = 0x1 shl 6
 
         /**
          * 双区模式
          */
-        const val AIR_DOUBLE = 0x1 shl 10
+        const val AIR_DOUBLE = 0x1 shl 7
+
+        /**
+         * 双区模式
+         */
+        const val AUTO_MODE = 0x1 shl 8
     }
 }

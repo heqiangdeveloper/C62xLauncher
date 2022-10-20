@@ -1,5 +1,6 @@
 package com.chinatsp.settinglib.manager.cabin
 
+import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.hvac.CarHvacManager
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.sign.Origin
@@ -7,6 +8,7 @@ import com.chinatsp.vehicle.controller.LogManager
 import com.chinatsp.vehicle.controller.annotation.IOrien
 import com.chinatsp.vehicle.controller.annotation.IPart
 import com.chinatsp.vehicle.controller.utils.Utils
+import timber.log.Timber
 
 /**
  * @author : luohong
@@ -21,20 +23,24 @@ class AirSetter(val manager: ACManager, private val getter: AirGetter) {
         manager.writeProperty(signal, value, Origin.HVAC)
     }
 
+    private fun cabinSignal(signal: Int, value: Int) {
+        manager.writeProperty(signal, value, Origin.CABIN)
+    }
+
     /**
      * 开关空调
      * @param expect 期望状态 true:表示开; false:表示关
      */
     fun doSwitchConditioner(expect: Boolean): Boolean {
-        val actual = getter.isConditioner()
-        val result = actual xor expect
-        if (result) {
+//        val actual = getter.isConditioner()
+//        val result = actual xor expect
+//        if (result) {
 //            空调系统状态按钮if not set ,the value of signal is 0x0(inactive)
 //            0x0: Inactive; 0x1: ON(not used); 0x2: OFF; 0x3: Not used
             val value = if (expect) 0x1 else 0x2
             hvacSignal(CarHvacManager.ID_HVAC_AVN_KEY_ON_OFF, value)
-        }
-        return result
+//        }
+        return true
     }
 
     /**
@@ -85,24 +91,52 @@ class AirSetter(val manager: ACManager, private val getter: AirGetter) {
         return result
     }
 
-    fun doUpdateTemperature(value: Int, @IPart part: Int) {
-        if (IPart.LEFT_FRONT == part) {
-            hvacSignal(CarHvacManager.ID_HVAC_AVN_KEY_TEMP_LEFT, value)
+    fun doUpdateTemperature(left: Int, right: Int, isLeft: Boolean, isRight: Boolean): Boolean {
+        LogManager.d("", "doUpdateTemperature left:$left, right:$right, isLeft:$isLeft, isRight:$isRight")
+        if (isLeft && isRight) {
+            val result = left != getter.getDriverTemperature() //|| left != getter.getCopilotTemperature()
+            if (result) {
+                hvacSignal(CarHvacManager.ID_HVAC_AVN_KEY_TEMP_LEFT, left)
+            }
+            if (!getter.isDoubleMode()) {
+                hvacSignal(CarHvacManager.ID_HVAC_AVN_KEY_TEMP_RIGHT, left)
+            }
+            return result
         }
-        if (IPart.RIGHT_FRONT == part) {
-            hvacSignal(CarHvacManager.ID_HVAC_AVN_KEY_TEMP_RIGHT, value)
+        if (getter.isDoubleMode()) {
+            val result = left != getter.getDriverTemperature() //|| left != getter.getCopilotTemperature()
+            if (result) {
+                hvacSignal(CarHvacManager.ID_HVAC_AVN_KEY_TEMP_LEFT, left)
+            }
+            return result
         }
+        if (isLeft) {
+            val result = left != getter.getDriverTemperature()
+            if (result) {
+                hvacSignal(CarHvacManager.ID_HVAC_AVN_KEY_TEMP_LEFT, left)
+            }
+            return result
+        }
+        if (isRight) {
+            val result = right != getter.getCopilotTemperature()
+            if (result) {
+                hvacSignal(CarHvacManager.ID_HVAC_AVN_KEY_TEMP_RIGHT, right)
+            }
+            return result
+        }
+        return false
     }
 
-    fun doUpdateBlowerRate(expect: Int, @IPart part: Int): Boolean {
+    fun doUpdateBlowerLevel(expect: Int, @IPart part: Int): Boolean {
 //        风量 if not set ,the value of signal is 0x0(inactive)
 //        0x0: Inactive
 //        0x1: Level 0 …… 0x9: Level 8
 //        0xA: Reserved …… 0xE: Reserved
 //        0xF: Error
-        if (expect !in getter.blowerRange) return false
-        val actual = getter.getBlowerRateLevel()
-        val result = actual != expect
+//        if (expect !in getter.blowerRange) return false
+        val actual = getter.getBlowerLevel()
+        val result = actual != (expect - 1)
+        Timber.e("doUpdateBlowerLevel actual:$actual, expect:$expect, result:$result")
         if (result) {
             hvacSignal(CarHvacManager.ID_HVAC_AVN_KEY_BLOWER, expect)
         }
@@ -112,6 +146,7 @@ class AirSetter(val manager: ACManager, private val getter: AirGetter) {
     fun doSwitchInnerLooper(expect: Boolean): Boolean {
         val actual = getter.isInnerLooper()
         val result = actual xor expect
+        LogManager.d("", "doSwitchInnerLooper actual:$actual, expect:$expect")
         if (result) {
 //            内循环if not set ,the value of signal is 0x0(inactive)
 //            0x0: Inactive; 0x1: ON; 0x2: OFF; 0x3: Not used
@@ -124,6 +159,7 @@ class AirSetter(val manager: ACManager, private val getter: AirGetter) {
     fun doSwitchOuterLooper(expect: Boolean): Boolean {
         val actual = getter.isOuterLooper()
         val result = actual xor expect
+        LogManager.d("", "doSwitchOuterLooper actual:$actual, expect:$expect")
         if (result) {
 //            外循环if not set ,the value of signal is 0x0(inactive)
 //            0x0: Inactive; 0x1: ON; 0x2: OFF; 0x3: Not used
@@ -164,7 +200,7 @@ class AirSetter(val manager: ACManager, private val getter: AirGetter) {
 //            前除霜if not set ,the value of signal is 0x0(inactive)
 //            0x0: Inactive; 0x1: ON; 0x2: OFF;0x3: Not used
             val value = if (expect) 0x1 else 0x2
-            hvacSignal(-1, value)
+            cabinSignal(CarCabinManager.ID_AVN_KEY_REARDEF_SET, value)
         }
         return result
     }
@@ -176,8 +212,20 @@ class AirSetter(val manager: ACManager, private val getter: AirGetter) {
         if (result) {
 //            切换单双区，C40、C53预留。if not set ,the value of signal is 0x0(inactive)
 //            0x0: Inactive;0x1: ON; 0x2: OFF; 0x3: Not used
-            val value = if (expect) 0x1 else 0x2
+            val value = if (expect) 0x2 else 0x1//打开双区（表示得关单区）
             hvacSignal(CarHvacManager.ID_HVAC_AVN_KEY_DUAL, value)
+        }
+        return result
+    }
+
+    fun doSwitchAutoMode(expect: Boolean): Boolean {
+        val actual = getter.isAuto()
+        val result = actual xor expect
+        if (result) {
+//            自动按钮,40、53有此功能if not set ,the value of signal is 0x0(inactive)
+//            0x0: Inactive; 0x1: ON; 0x2: OFF; 0x3: Not used
+            val value = if (expect) 0x1 else 0x2
+            hvacSignal(CarHvacManager.ID_HVAC_AVN_KEY_AUTO, value)
         }
         return result
     }
@@ -199,7 +247,6 @@ class AirSetter(val manager: ACManager, private val getter: AirGetter) {
         val isFoot = mask == (mask and orien)
         mask =  IOrien.MIDDLE //吹中间表示除霜
         val isMiddle = mask == (mask and orien)
-        LogManager.d("luohong", "-------${Utils.toFullBinary(orien)}")
         var value = Constant.INVALID
         var result = "小北还不会这个操作"
         do {

@@ -12,8 +12,6 @@ import com.chinatsp.vehicle.controller.bean.AirCmd
  * @version: 1.0
  */
 interface IAirMaster {
-
-
     /**
      * 打开空调
      * @param hint 当空调已经打开时 是否给出相应的提示

@@ -2,6 +2,9 @@ package com.chinatsp.settinglib.manager
 
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
+import android.content.ComponentName
+import android.content.Intent
+import com.chinatsp.settinglib.BaseApp
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.access.AccessManager
 import com.chinatsp.settinglib.manager.adas.AdasManager
@@ -78,8 +81,8 @@ class GlobalManager private constructor() : BaseManager() {
     }
 
     override fun doAirControlCommand(cmd: AirCmd, callback: ICmdCallback?) {
-        val modelSerial = Model.obtainEchelon(cmd.model)
-        Timber.d("doAirControlCommand modelSerial:${Utils.toFullBinary(modelSerial)}")
+//        val modelSerial = Model.obtainEchelon(cmd.model)
+//        Timber.d("doAirControlCommand modelSerial:${Utils.toFullBinary(modelSerial)}")
         if (Model.CABIN_AIR == cmd.model) {
             ACManager.instance.doAirControlCommand(cmd, callback)
         }
@@ -100,7 +103,19 @@ class GlobalManager private constructor() : BaseManager() {
             AdasManager.instance.doCarControlCommand(cmd, callback)
         } else if (Model.PANORAMA == modelSerial) {
             PanoramaCommandConsumer(this).consumerCommand(cmd, callback)
+        } else if (Model.AUTO_PARK == modelSerial) {
+            sendAutoParkCommand(cmd)
         }
+    }
+
+    private fun sendAutoParkCommand(cmd: CarCmd) {
+        val intent = Intent()
+        val packageName = "com.haibing.apaparking"
+        val serviceName = "com.haibing.apaparking.service.ApaParkingService"
+        intent.component = ComponentName(packageName, serviceName)
+        intent.putExtra("data", cmd.slots?.json)
+        BaseApp.instance.startService(intent)
+        Timber.e("sendAutoParkCommand data: ${cmd.slots?.json}")
     }
 
 //    fun onTrailerRemindChanged(onOff: Int, level: Int, dist: Int) {

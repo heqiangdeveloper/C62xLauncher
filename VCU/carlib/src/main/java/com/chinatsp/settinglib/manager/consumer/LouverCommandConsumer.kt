@@ -17,7 +17,9 @@ import com.chinatsp.vehicle.controller.bean.CarCmd
  * @desc   :
  * @version: 1.0
  */
-class PanoramaCommandConsumer(val manager: GlobalManager) {
+class LouverCommandConsumer(val manager: GlobalManager) {
+
+
 
     private fun sendCabinValue(signal: Int, value: Int): Boolean {
         return manager.writeProperty(signal, value, Origin.CABIN)

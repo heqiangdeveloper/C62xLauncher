@@ -1,6 +1,7 @@
 package com.chinatsp.vehicle.controller
 
 import com.chinatsp.vehicle.controller.bean.BaseCmd
+import com.chinatsp.vehicle.controller.producer.ICommandProducer
 import com.chinatsp.vehicle.controller.semantic.NlpVoiceModel
 import com.chinatsp.vehicle.controller.utils.Keywords
 
@@ -11,22 +12,22 @@ import com.chinatsp.vehicle.controller.utils.Keywords
  * @desc   :
  * @version: 1.0
  */
-interface IController: Keywords {
+interface IController: ICommandProducer, Keywords {
 
     val tag: String
         get() = this::class.java.simpleName
 
-    fun isMatch(arrays: Array<String>, serial: String?): Boolean {
-        return null != serial && arrays.contains(serial)
-    }
-
-    fun isMatch(arrays: Array<String>, serial1: String?, serial2: String?): Boolean {
-        return isMatch(arrays, serial1) || isMatch(arrays, serial2)
-    }
-
-    fun isLikeJson(value: String): Boolean {
-        return value.startsWith("{") && value.endsWith("}")
-    }
+//    fun isMatch(arrays: Array<String>, serial: String?): Boolean {
+//        return null != serial && arrays.contains(serial)
+//    }
+//
+//    fun isMatch(arrays: Array<String>, serial1: String?, serial2: String?): Boolean {
+//        return isMatch(arrays, serial1) || isMatch(arrays, serial2)
+//    }
+//
+//    fun isLikeJson(value: String): Boolean {
+//        return value.startsWith("{") && value.endsWith("}")
+//    }
 
     fun doHandleUnknownHint(callback: ICmdCallback?) {
         callback?.run {

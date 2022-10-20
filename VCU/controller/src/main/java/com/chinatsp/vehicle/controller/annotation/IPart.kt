@@ -10,7 +10,7 @@ import androidx.annotation.IntDef
  * @version: 1.0
  */
 @IntDef(
-    IPart.DEFAULT,
+    IPart.VOID,
     IPart.HEAD,
     IPart.LEFT_FRONT,
     IPart.LEFT_BACK,
@@ -23,7 +23,7 @@ import androidx.annotation.IntDef
 @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
 annotation class IPart {
     companion object {
-        const val DEFAULT = 0X0
+        const val VOID = 0x0
         const val HEAD = 0x1 shl 0
         const val LEFT_FRONT = 0x1 shl 1
         const val LEFT_BACK = 0x1 shl 2
@@ -32,6 +32,8 @@ annotation class IPart {
         const val TAIL = 0x1 shl 5
         const val SKYLIGHT = 0x1 shl 6
         const val SKYLIGHT2 = 0x1 shl 7
+        const val LEFT = 0x1 shl 8
+        const val RIGHT = 0x1 shl 9
     }
 
 }
