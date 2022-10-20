@@ -63,14 +63,25 @@
                 android:layout_marginLeft="29px"
                 />
             <TextView
+                android:id="@+id/tvCardNaviTBTDirectDistanceUnit"
                 android:layout_width="wrap_content"
                 android:layout_height="42px"
-                android:text="米 进入"
+                android:text="米"
                 style="@style/CardLv3TextView"
                 android:textColor="@color/card_grey_default"
                 app:layout_constraintStart_toEndOf="@id/tvCardNaviTBTDirectDistance"
                 app:layout_constraintBottom_toBottomOf="@id/tvCardNaviTBTDirectDistance"
                 android:layout_marginLeft="6px"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="42px"
+                android:text="进入"
+                style="@style/CardLv3TextView"
+                android:textColor="@color/card_grey_default"
+                app:layout_constraintStart_toEndOf="@id/tvCardNaviTBTDirectDistanceUnit"
+                app:layout_constraintBottom_toBottomOf="@id/tvCardNaviTBTDirectDistanceUnit"
+                android:layout_marginLeft="5px"
                 />
             <TextView
                 android:id="@+id/tvCardNaviTurnRoadName"
@@ -91,6 +102,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginStart="48px"
                 android:layout_marginBottom="26px"
+                android:visibility="invisible"
                 />
 
             <ImageView
@@ -101,6 +113,7 @@
                 app:layout_constraintStart_toEndOf="@id/ivCardNaviInstructionIconTurnLeft"
                 app:layout_constraintTop_toTopOf="@id/ivCardNaviInstructionIconTurnLeft"
                 android:layout_marginStart="59px"
+                android:visibility="invisible"
                 />
 
             <ImageView
@@ -111,6 +124,7 @@
                 app:layout_constraintEnd_toStartOf="@id/ivCardNaviInstructionIconTurnRight"
                 app:layout_constraintTop_toTopOf="@id/ivCardNaviInstructionIconTurnRight"
                 android:layout_marginEnd="59px"
+                android:visibility="invisible"
                 />
             <ImageView
                 android:id="@+id/ivCardNaviInstructionIconTurnRight"
@@ -121,7 +135,16 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginEnd="48px"
                 android:layout_marginBottom="26px"
-
+                android:visibility="invisible"
+                />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rcvLaneInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="58px"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="25px"
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

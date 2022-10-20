@@ -2,8 +2,8 @@ package com.chinatsp.navigation.repository;
 
 import com.chinatsp.navigation.R;
 
-public class LaneInfoFinder {
-    public static int findIconResById(int laneId) {
+public class LaneInfoIconFinder {
+    public static int findIconResById(int laneId, boolean advise) {
         int resId = -1;
         switch (laneId) {
             case 0:
@@ -258,21 +258,17 @@ public class LaneInfoFinder {
             case 83:
                 resId = R.drawable.tbt_lane_83;
                 break;
-//                case 84:
-//                    resId = R.drawable.tbt_lane_84;
-//                    break;
-//                case 85:
-//                    resId = R.drawable.tbt_lane_85;
-//                    break;
-//                case 86:
-//                    resId = R.drawable.tbt_lane_86;
-//                    break;
-//                case 87:
-//                    resId = R.drawable.tbt_lane_87;
-//                    break;
-//                case 88:
-//                    resId = R.drawable.tbt_lane_88;
-//                    break;
+            case 84:
+                break;
+            case 85:
+                break;
+            case 86:
+                break;
+            case 87:
+                break;
+            case 88:
+                resId = advise ? R.drawable.tbt_lane_88_advise : R.drawable.tbt_lane_88;
+                break;
         }
         return resId;
     }

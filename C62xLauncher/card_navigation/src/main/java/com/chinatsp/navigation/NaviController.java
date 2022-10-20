@@ -163,8 +163,12 @@ public class NaviController implements INaviCallback {
         NavigationUtil.logD(TAG + "receiveNaviGuideInfo");
         if (guideInfo != null) {
             // 根据观察,  在导航时, 这个type==0, 所以视为切换到导航模式
-            if (guideInfo.getType() == 0) {
+            if (guideInfo.getType() == 0 ) {
                 mState = STATE_IN_NAVIGATION;
+                mView.refreshState(mState);
+            }else if (guideInfo.getType() == 1){
+                // 模拟导航
+                mState = STATE_IN_NAVIGATION_MOCK;
                 mView.refreshState(mState);
             }
             mView.refreshGuideInfo(guideInfo, DriveDirection.parseFromType(guideInfo.getIcon()));

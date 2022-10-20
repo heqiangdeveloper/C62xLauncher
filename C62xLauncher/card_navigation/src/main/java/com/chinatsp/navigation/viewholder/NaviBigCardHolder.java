@@ -1,11 +1,16 @@
 package com.chinatsp.navigation.viewholder;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.chinatsp.navigation.NaviController;
 import com.chinatsp.navigation.NavigationUtil;
@@ -14,9 +19,12 @@ import com.chinatsp.navigation.gaode.bean.GuideInfo;
 import com.chinatsp.navigation.gaode.bean.TrafficLaneModel;
 import com.chinatsp.navigation.repository.DriveDirection;
 import com.chinatsp.navigation.repository.RoundIslandUtil;
+import com.chinatsp.navigation.viewholder.lane.LaneListAdapter;
 
 import java.util.List;
+import java.util.Locale;
 
+import launcher.base.recyclerview.SimpleRcvDecoration;
 import launcher.base.utils.EasyLog;
 
 public class NaviBigCardHolder extends NaviCardHolder {
@@ -31,9 +39,13 @@ public class NaviBigCardHolder extends NaviCardHolder {
     private TextView tvCardNaviTurnRoadName;
     private ImageView ivCardNaviTBTDirectIcon;
     private TextView tvCardNaviTBTDirectDistance;
+    private TextView tvCardNaviTBTDirectDistanceUnit;
     private TextView tvCardNaviTBTRemainDistance;
     private TextView tvCardNaviTBTRemainTime;
     private TextView tvCardNaviTBTArriveTime;
+    private RecyclerView rcvLaneInfo;
+    private LaneListAdapter mLaneListAdapter;
+    private boolean enableTotalLaneShow = false;
 
     public NaviBigCardHolder(@NonNull View rootView, NaviController controller) {
         this(rootView);
@@ -61,14 +73,39 @@ public class NaviBigCardHolder extends NaviCardHolder {
         tvCardNaviTurnRoadName = rootView.findViewById(R.id.tvCardNaviTurnRoadName);
         ivCardNaviTBTDirectIcon = rootView.findViewById(R.id.ivCardNaviTBTDirectIcon);
         tvCardNaviTBTDirectDistance = rootView.findViewById(R.id.tvCardNaviTBTDirectDistance);
+        tvCardNaviTBTDirectDistanceUnit = rootView.findViewById(R.id.tvCardNaviTBTDirectDistanceUnit);
 
         tvCardNaviTBTRemainDistance = rootView.findViewById(R.id.tvCardNaviTBTRemainDistance);
         tvCardNaviTBTRemainTime = rootView.findViewById(R.id.tvCardNaviTBTRemainTime);
         tvCardNaviTBTArriveTime = rootView.findViewById(R.id.tvCardNaviTBTArriveTime);
 
+        rcvLaneInfo = rootView.findViewById(R.id.rcvLaneInfo);
+        initLaneRcv();
+
         ivCardNaviSearch.setOnClickListener(mOnClickListener);
         ivCardNaviHome.setOnClickListener(mOnClickListener);
         ivCardNaviCompany.setOnClickListener(mOnClickListener);
+    }
+
+    private void initLaneRcv() {
+        mLaneListAdapter = new LaneListAdapter(mContext);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext) {
+            @Override
+            public boolean canScrollHorizontally() {
+                return false;
+            }
+        };
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        rcvLaneInfo.setLayoutManager(layoutManager);
+        rcvLaneInfo.setAdapter(mLaneListAdapter);
+        if (!enableTotalLaneShow) {
+            SimpleRcvDecoration spaceDivider = new SimpleRcvDecoration(60, layoutManager);
+            Drawable divideDrawable = AppCompatResources.getDrawable(mContext, R.drawable.tbt_lane_divide_line);
+            if (divideDrawable != null) {
+                spaceDivider.setDrawable(divideDrawable);
+            }
+            rcvLaneInfo.addItemDecoration(spaceDivider);
+        }
     }
 
     @Override
@@ -138,7 +175,7 @@ public class NaviBigCardHolder extends NaviCardHolder {
             return;
         }
         updateOverallRouteInfo(guideInfo);
-        updateTBTDirect(guideInfo,driveDirection);
+        updateTBTDirect(guideInfo, driveDirection);
     }
 
     /**
@@ -153,11 +190,12 @@ public class NaviBigCardHolder extends NaviCardHolder {
     /**
      * 更新当前道路/转向/达到点信息
      */
-    private void updateTBTDirect(GuideInfo guideInfo,DriveDirection driveDirection) {
-        EasyLog.i("refreshTBTDirect ", "driveDirection "+driveDirection);
+    private void updateTBTDirect(GuideInfo guideInfo, DriveDirection driveDirection) {
+        EasyLog.i("refreshTBTDirect ", "driveDirection " + driveDirection);
+        EasyLog.i("refreshTBTDirect ", guideInfo.getNextRoadName() + "  " + guideInfo.getSegRemainDis() + "米");
 
         tvCardNaviTurnRoadName.setText(guideInfo.getNextRoadName());
-        tvCardNaviTBTDirectDistance.setText(String.valueOf(guideInfo.getSegRemainDis()));
+        updateTBTDirectDistance(guideInfo.getSegRemainDis());
         if (RoundIslandUtil.isRoundIsland(guideInfo.getIcon())) {
             int islandIcon = RoundIslandUtil.getIsland(guideInfo.getRoundAboutNum(), RoundIslandUtil.isRoundByClockWise(guideInfo.getIcon()));
             ivCardNaviTBTDirectIcon.setImageResource(islandIcon);
@@ -168,18 +206,65 @@ public class NaviBigCardHolder extends NaviCardHolder {
         }
     }
 
+    /**
+     * 显示规则: 1000米内, 使用单位米. 超过则用千米.
+     * 1-10km内, 精确到小数点后1位. 例如: 9.2公里.
+     * 超过10km, 精确到个位数. 例如: 22公里.
+     *
+     * @param segRemainDis
+     */
+    private void updateTBTDirectDistance(int segRemainDis) {
+        int distance = Math.max(segRemainDis, 0);
+        if (distance < 1000) {
+            tvCardNaviTBTDirectDistance.setText(String.valueOf(distance));
+            tvCardNaviTBTDirectDistanceUnit.setText("米");
+        } else {
+            tvCardNaviTBTDirectDistanceUnit.setText("公里");
+            float km = (float) distance / 1000f;
+            if (distance > 10000) {
+                // 10 公里
+                int kmInt = (int) km;
+                tvCardNaviTBTDirectDistance.setText(String.valueOf(kmInt));
+            } else {
+                // 9.9公里
+                String kmStr = String.format(Locale.getDefault(), "%.1f", km);
+                tvCardNaviTBTDirectDistance.setText(kmStr);
+            }
+        }
+    }
+
     public void refreshNaviLaneInfo(TrafficLaneModel trafficLaneModel) {
         List<TrafficLaneModel.LaneInfo> laneInfoList = trafficLaneModel.getTrafficLaneInfos();
-        if (laneInfoList == null) {
+        if (laneInfoList == null || laneInfoList.isEmpty()) {
             return;
         }
-        EasyLog.i("refreshNaviLaneInfo ", "BEGIN");
         int n = laneInfoList.size();
+        EasyLog.i("refreshNaviLaneInfo ", "BEGIN , lane size:"+n);
 
         for (TrafficLaneModel.LaneInfo laneInfo : laneInfoList) {
-            EasyLog.d("refreshNaviLaneInfo ", laneInfo.getTrafficLaneNo()+" , "+laneInfo.getTrafficLaneNo()+" , "+laneInfo.getTrafficLaneIcon());
+            EasyLog.d("refreshNaviLaneInfo ", laneInfo.getTrafficLaneNo() + " , " + laneInfo.getTrafficLaneExtended() + " , " + laneInfo.getTrafficLaneIcon());
             int id = laneInfo.getTrafficLaneNo();
+        }
+        filter(laneInfoList);
+        mLaneListAdapter.setData(laneInfoList);
+    }
 
+    private void filter(List<TrafficLaneModel.LaneInfo> laneInfoList) {
+        if (laneInfoList == null || laneInfoList.isEmpty()) {
+            return;
+        }
+        if (enableTotalLaneShow) {
+            return;
+        }
+        // 最多只能有4个
+        int max = 4, size = laneInfoList.size();
+        if (size > max) {
+            List<TrafficLaneModel.LaneInfo> more4Lanes = laneInfoList.subList(max, laneInfoList.size());
+            EasyLog.d("XXXTTTT", "filter " + laneInfoList.size() + ", " + more4Lanes.size());
+            for (int i = size - 1; i >= max; i--) {
+                laneInfoList.remove(i);
+            }
+            EasyLog.d("XXXTTTT", "filter " + laneInfoList.size());
         }
     }
 }
