@@ -65,7 +65,7 @@ object VcuUtils {
         val actual = levels.contains(value)
         val result = !(actual xor expect)
         Timber.d("isCareLevel value: $value, actual:$actual, result:$result")
-        return false
+        return result
     }
 
     fun getLevelValue(): Int {
@@ -145,6 +145,17 @@ object VcuUtils {
             Timber.e(e)
         }
         return false
+    }
+
+    fun getConfigParameters(keySerial: String, default: String): String {
+        val result = try {
+            SystemProperties.get(keySerial, default)
+        } catch (e: Exception) {
+            Timber.d("getConfigParam key:%s, def:%s, e:%s", keySerial, default, e.message)
+            default
+        }
+        Timber.d("getConfigParam key:%s, def:%s, result:%s", keySerial, default, result)
+        return result
     }
 
     val versionName: String by lazy {

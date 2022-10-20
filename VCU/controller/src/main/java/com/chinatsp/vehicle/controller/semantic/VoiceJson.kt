@@ -1,5 +1,9 @@
 package com.chinatsp.vehicle.controller.semantic
 
+import android.text.TextUtils
+import com.chinatsp.vehicle.controller.LogManager
+import java.util.*
+
 data class VoiceJson(
     val answer: Answer?,
     val category: String?,
@@ -21,18 +25,19 @@ data class VoiceJson(
     val uuid: String?,
     val version: String?,
 ) {
-    fun convert(): NlpVoiceModel? {
+    fun convert(): NlpVoiceModel {
+        val nlpVoiceModel = NlpVoiceModel()
+        nlpVoiceModel.service = service ?: "default"
+        nlpVoiceModel.operation = operation
+        nlpVoiceModel.text = text
         if (semantic?.slots != null) {
-            val nlpVoiceModel = NlpVoiceModel()
-            nlpVoiceModel.service = service
-            nlpVoiceModel.operation = operation
             nlpVoiceModel.slots = semantic.slots
-            nlpVoiceModel.slots.text = text ?: ""
-            nlpVoiceModel.slots.operation = operation ?: ""
-            nlpVoiceModel.text = text
-            nlpVoiceModel.response = this.toString()
-            return nlpVoiceModel
+        } else {
+            nlpVoiceModel.slots = Slots(UUID.randomUUID().toString())
         }
-        return null
+        nlpVoiceModel.slots.text = text ?: ""
+        nlpVoiceModel.slots.operation = operation ?: ""
+        nlpVoiceModel.response = this.toString()
+        return nlpVoiceModel
     }
 }

@@ -42,37 +42,37 @@ annotation class Action {
         /**
          * 增加（如：风速增大、温度调高，车窗开大）
          */
-        const val PLUS = (0x1 shl 3) xor OPEN
+        const val PLUS = (0x1 shl 3) //xor OPEN
 
         /**
          * 减少（如：风速减小、温度调低，车窗开小）
          */
-        const val MINUS = (0x1 shl 4) xor OPEN
+        const val MINUS = (0x1 shl 4) //xor OPEN
 
         /**
          * 最小值（如：风速最小等）
          */
-        const val MIN = (0x1 shl 5) xor OPEN
+        const val MIN = (0x1 shl 5) //xor OPEN
 
         /**
          * 最大值（如：风速最大等）
          */
-        const val MAX = (0x1 shl 6) xor OPEN
+        const val MAX = (0x1 shl 6) //xor OPEN
 
         /**
          * 固定值（如：温度调到20等）
          */
-        const val FIXED = (0x1 shl 7) xor OPEN
+        const val FIXED = (0x1 shl 7) //xor OPEN
 
         /**
          * 选项值（如：空调吹头，空调吹脚 等）
          */
-        const val OPTION = (0x1 shl 8) xor OPEN
+        const val OPTION = (0x1 shl 8) //xor OPEN
 
         /**
          * 打开 压缩机 （空调）
          */
-        const val TURN_ON = (0x1 shl 9) xor OPEN
+        const val TURN_ON = (0x1 shl 9) //xor OPEN
         /**
          * 关闭 压缩机 （空调）
          */

@@ -55,6 +55,7 @@ class VehicleService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.let {
             val action = it.action
+            val data = intent.getStringExtra("data")
             Timber.d("receive action:$action")
             if ("com.chinatsp.vcu.actions.USER_SETTING_RECOVE" == action) {
                 val intentSeat = it.getStringExtra(seat)
@@ -73,8 +74,10 @@ class VehicleService : Service() {
                     val jsonObject = JSONObject(intentAtmosphereLamp)
                     val color = jsonObject.getString("color")
                     val lighting = jsonObject.getString("lighting")
-                    ambientLightingManager.doSetProgress(Progress.AMBIENT_LIGHT_BRIGHTNESS, Integer.valueOf(lighting))//亮度
-                    ambientLightingManager.doSetProgress(Progress.AMBIENT_LIGHT_COLOR, Integer.valueOf(color))//颜色
+                    ambientLightingManager.doSetProgress(Progress.AMBIENT_LIGHT_BRIGHTNESS,
+                        Integer.valueOf(lighting))//亮度
+                    ambientLightingManager.doSetProgress(Progress.AMBIENT_LIGHT_COLOR,
+                        Integer.valueOf(color))//颜色
                 } else if (!TextUtils.isEmpty(intentSoundEffects)) {
                     //均衡器
                     val jsonObject = JSONObject(intentSoundEffects)
@@ -83,12 +86,18 @@ class VehicleService : Service() {
                     val alto = jsonObject.getString("alto")//中音
                     val mid = jsonObject.getString("mid")//中低音
                     val bass = jsonObject.getString("bass")//低音
-                    effectManager.doSetEQ(6, Integer.valueOf(high), Integer.valueOf(alt), Integer.valueOf(alto), Integer.valueOf(mid), Integer.valueOf(bass))
+                    effectManager.doSetEQ(6,
+                        Integer.valueOf(high),
+                        Integer.valueOf(alt),
+                        Integer.valueOf(alto),
+                        Integer.valueOf(mid),
+                        Integer.valueOf(bass))
 
                     //音量平衡
                     val fadeValue = jsonObject.getString("fadeValue")
                     val balanceValue = jsonObject.getString("balanceValue")
-                    effectManager.setAudioBalance(Integer.valueOf(balanceValue)+OFFSET, Integer.valueOf(fadeValue)+OFFSET)
+                    effectManager.setAudioBalance(Integer.valueOf(balanceValue) + OFFSET,
+                        Integer.valueOf(fadeValue) + OFFSET)
 
                     //系统提示
                     val systemHint = jsonObject.getString("systemHint");
@@ -96,22 +105,25 @@ class VehicleService : Service() {
 
                     //速度音量补偿
                     val speedVolumeCompensation = jsonObject.getString("speedVolumeCompensation")
-                    effectManager.doSetSwitchOption(voiceManager.volumeSpeedSwitch,speedVolumeCompensation == "true")
+                    effectManager.doSetSwitchOption(voiceManager.volumeSpeedSwitch,
+                        speedVolumeCompensation == "true")
 
                     //响度控制
                     val loudnessControl = jsonObject.getString("loudnessControl")
-                    effectManager.doSetSwitchOption(SwitchNode.AUDIO_SOUND_LOUDNESS,loudnessControl == "true")
+                    effectManager.doSetSwitchOption(SwitchNode.AUDIO_SOUND_LOUDNESS,
+                        loudnessControl == "true")
 
                     //导航混音
                     val navigationMixing = jsonObject.getString("navigationMixing")
-                    effectManager.doSetRadioOption(RadioNode.NAVI_AUDIO_MIXING,Integer.valueOf(navigationMixing))
-                }else{
+                    effectManager.doSetRadioOption(RadioNode.NAVI_AUDIO_MIXING,
+                        Integer.valueOf(navigationMixing))
+                } else {
                     Timber.d("解析失败")
                 }
 
             } else if ("com.chinatsp.vcu.actions.ACOUSTIC_CONTROLER" == action) {
-                //controller.doParseSourceData(data)
-            }else{
+                controller.doParseSourceData(data)
+            } else {
                 Timber.d("解析失败")
             }
         }
@@ -139,6 +151,7 @@ class VehicleService : Service() {
         }
 
         fun doParseSourceData(data: String?) {
+            Timber.d("doParseSourceData $data")
             if (!TextUtils.isEmpty(data)) {
                 resolver?.doResolverData(data)
             }

@@ -1,10 +1,11 @@
 ### Android template
 # Built application files
 *.apk
-*.aar
+#*.aar
 *.ap_
 *.aab
-!kanziruntime.aar
+#!kanziruntime.aar
+#!VoiceCoreClient.jar
 # Files for the ART/Dalvik VM
 *.dex
 

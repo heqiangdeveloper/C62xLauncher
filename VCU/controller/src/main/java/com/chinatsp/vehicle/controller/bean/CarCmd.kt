@@ -19,7 +19,7 @@ class CarCmd(
 
     var car: Int = ICar.VOID
 
-    var part: Int = IPart.DEFAULT
+    var part: Int = IPart.VOID
 
     /**
      * 空调 吹风方向
