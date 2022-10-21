@@ -3,6 +3,7 @@ package com.chinatsp.vehicle.controller.producer
 import com.chinatsp.vehicle.controller.LogManager
 import com.chinatsp.vehicle.controller.annotation.Action
 import com.chinatsp.vehicle.controller.annotation.ICar
+import com.chinatsp.vehicle.controller.annotation.IPart
 import com.chinatsp.vehicle.controller.annotation.Model
 import com.chinatsp.vehicle.controller.bean.CarCmd
 import com.chinatsp.vehicle.controller.semantic.Slots
@@ -15,19 +16,21 @@ import com.chinatsp.vehicle.controller.utils.Keywords
  * @desc   :
  * @version: 1.0
  */
-class PanoramaCommandProducer {
+class PanoramaCommandProducer: ICommandProducer {
 
     fun attemptPanoramaCommand(slots: Slots): CarCmd? {
         var command: CarCmd? = null
         LogManager.e("", "attemptPanoramaCommand text:${slots.text}")
-        if (null == command) {
-            command = attemptSwitchCommand(slots)
-        }
-        if (null == command) {
-            command = attemptModeCommand(slots)
-        }
-        if (null == command) {
-//            command = attemptDoorCommand(slots)
+        if (!slots.text.contains("倒车")) {
+            if (null == command) {
+                command = attemptSwitchCommand(slots)
+            }
+            if (null == command) {
+                command = attemptModeCommand(slots)
+            }
+            if (null == command) {
+                command = attemptCameraCommand(slots)
+            }
         }
         return command
     }
@@ -56,11 +59,40 @@ class PanoramaCommandProducer {
 //    0x14: Top View
 //    0x15~0x1F: Reserved
     private fun attemptCameraCommand(slots: Slots): CarCmd? {
-        if ("OPEN_PHOTO" == slots.insType) {
-            if (slots.text.contains("前摄像头")) {
-
+        LogManager.e("", "${slots.insType}, ${slots.text}")
+//        if ("OPEN_PHOTO" == slots.insType) {
+            var action = Action.VOID
+            var part = IPart.VOID
+            var car = ICar.VOID
+            if (contains(slots.text, "前摄像头", "前视角")) {
+                part = part or IPart.HEAD
+                car = ICar.CAMERA_CHANGE
             }
-        }
+            if (contains(slots.text, "后摄像头", "后视角")) {
+                part = part or IPart.TAIL
+                car = ICar.CAMERA_CHANGE
+            }
+            if (contains(slots.text, "左摄像头", "左视角")) {
+                part = part or IPart.LEFT
+                car = ICar.CAMERA_CHANGE
+            }
+            if (contains(slots.text, "右摄像头", "右视角")) {
+                part = part or IPart.RIGHT
+                car = ICar.CAMERA_CHANGE
+            }
+            if (contains(slots.text, "打开", "切换")) {
+                action = Action.TURN_ON
+            }
+            if (contains(slots.text, "关闭", "退出")) {
+                action = Action.TURN_OFF
+            }
+            if (Action.VOID != action && ICar.VOID != car && IPart.VOID != part) {
+                val command = CarCmd(action = action, model = Model.PANORAMA)
+                command.car = car
+                command.part = part
+                return command
+            }
+//        }
         return null
     }
 
@@ -98,6 +130,10 @@ class PanoramaCommandProducer {
             return command
         }
         return null
+    }
+
+    private fun contains(source: String, target: String, target2: String = ""): Boolean {
+        return source.contains(target) || source.contains(target2)
     }
 
 

@@ -15,7 +15,8 @@ import androidx.annotation.IntDef
     ICar.BRIGHTNESS,
     ICar.COLOR,
     ICar.RHYTHM_MODE,
-    ICar.MODE_3D_2D
+    ICar.MODE_3D_2D,
+    ICar.CAMERA_CHANGE
 )
 @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
 annotation class ICar {
@@ -46,5 +47,7 @@ annotation class ICar {
         const val RHYTHM_MODE = 0x05
 
         const val MODE_3D_2D = 0x06
+
+        const val CAMERA_CHANGE = 0x07
     }
 }

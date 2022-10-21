@@ -21,11 +21,11 @@ import org.json.JSONObject
  * @desc   :
  * @version: 1.0
  */
-class AmbientCommandProducer {
+class AmbientCommandProducer: ICommandProducer {
 
     fun attemptAmbientCommand(slots: Slots): CarCmd? {
         var command: CarCmd? = null
-        if (CarController.isMatch(Keywords.AMBIENTS, slots.name)) {
+        if (isMatch(Keywords.AMBIENTS, slots.name)) {
             if (null == command) {
                 command = attemptCreateAmbientRhythmCommand(slots)
             }

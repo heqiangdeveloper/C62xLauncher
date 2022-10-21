@@ -431,7 +431,7 @@ class SettingManager private constructor() {
         var result = Constant.DEFAULT
         try {
             result = mCarCabinManager?.getIntProperty(id, areaValue) ?: Constant.INVALID
-            Timber.d("readCabinIntValue propertyId:$id, result:$result, manager:$mCarCabinManager")
+            Timber.d("readCabinIntValue propertyId:$id, result:$result")
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -442,7 +442,7 @@ class SettingManager private constructor() {
         var result = Constant.DEFAULT
         try {
             result = hvacManager?.getIntProperty(id, areaValue) ?: Constant.INVALID
-            Timber.d("readHvacIntValue propertyId:$id, result:$result, manager:$hvacManager")
+            Timber.d("readHvacIntValue propertyId:$id, result:$result")
         } catch (e: Exception) {
             e.printStackTrace()
         }

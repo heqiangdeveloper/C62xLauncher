@@ -97,7 +97,8 @@ class VolumeDialogFragment :
     override fun onDestroy() {
         super.onDestroy()
         val intent = Intent("com.chinatsp.vehiclenetwork.usercenter")
-        val json = "{\"fadeValue\":\""+binding.soundField.fadeValue+"\"}"
+        val json = "{\"fadeValue\":\""+binding.soundField.fadeValue+"\",\"balanceValue\":\""+
+                binding.soundField.balanceValue+"\"}"
         intent.putExtra("app", "com.chinatsp.vehicle.settings")
         intent.putExtra("soundEffects",json)
         intent.setPackage("com.chinatsp.usercenter")

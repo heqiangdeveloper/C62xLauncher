@@ -1,7 +1,9 @@
 package com.chinatsp.settinglib.manager.cabin
 
+import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.hvac.CarHvacManager
 import com.chinatsp.settinglib.sign.Origin
+import timber.log.Timber
 import kotlin.math.roundToInt
 
 /**
@@ -13,7 +15,7 @@ import kotlin.math.roundToInt
  */
 class AirGetter(val manager: ACManager) {
 
-    val blowerRange: IntRange = 0x1..0x9
+    val blowerRange: IntRange = 0x1..0x8
 
     val tempRange: IntRange = 0x10..0x20
 
@@ -25,19 +27,31 @@ class AirGetter(val manager: ACManager) {
         return manager.readIntProperty(signal, Origin.CABIN)
     }
 
-
-
     /**
      * 获取空调风量显示
-     * MPU向MCU发送设置按键音信息
-     * 0x0到0x1E（0-30）， 音量等级：0到30
+     * 风量显示
+    0x0: Level 0
+    0x1: Level 1
+    0x2: Level 2
+    0x3: Level 3
+    0x4: Level 4
+    0x5: Level 5
+    0x6: Level 6
+    0x7: Level 7
+    0x8: Level 8
+    0x9: Reserved
+    0xA: Reserved
+    0xB: Reserved
+    0xC: Reserved
+    0xD: Reserved
+    0xE: Reserved
+    0xF: Error
      */
-    fun getBlowerRateLevel(): Int {
-        val value = hvacValue(CarHvacManager.ID_HAVC_AC_DIS_BLOWER_LEVEL)
-        var result = ((value * blowerRange.last).toFloat() / 0x1E).roundToInt()
-        if (result > blowerRange.last) result = blowerRange.last
-        if (result < blowerRange.first) result = blowerRange.first
-        return result
+    fun getBlowerLevel(): Int {
+        var value = hvacValue(CarHvacManager.ID_HAVC_AC_DIS_BLOWER_LEVEL)
+        if (value > blowerRange.last) value = blowerRange.last
+        if (value < blowerRange.first) value = blowerRange.first
+        return value
     }
 
     /**
@@ -70,8 +84,8 @@ class AirGetter(val manager: ACManager) {
      */
     fun isConditioner(): Boolean {
         val value = hvacValue(CarHvacManager.ID_HAVC_AC_SYS_ON_OFF_STATE)
-//        return 0x1 == value
-        return true
+        return 0x1 == value
+//        return true
     }
 
     /**
@@ -99,9 +113,8 @@ class AirGetter(val manager: ACManager) {
      * 0x0: Reserved    0x1: On   0x2: Off   0x3: Invalid
      */
     fun isRestModeStatus(): Boolean {
-//        val value = cabinValue(CarHvacManager.ID_HAVC_AC_REST_MOD_STS)
-//        return 0x1 == value
-        return false
+        val value = cabinValue(CarCabinManager.ID_HAVC_AC_REST_MOD_STS)
+        return 0x1 == value
     }
 
     /**
@@ -123,12 +136,17 @@ class AirGetter(val manager: ACManager) {
     }
 
     fun isInnerLooper(): Boolean {
-        val value = hvacValue(CarHvacManager.ID_HAVC_AC_TELLTALE_RECIRC_AIR)
-        return 0x1 == value
+//        内外循环显示
+//        0x0: Not display
+//        0x1: Display Fresh Air
+//        0x2: Display Recirculation
+//        0x3: Error
+        val value = hvacValue(CarHvacManager.ID_HAVC_AC_DIS_FRESH_RECIR)
+        return 0x2 == value
     }
 
     fun isOuterLooper(): Boolean {
-        val value = hvacValue(CarHvacManager.ID_HAVC_AC_TELLTALE_FRESH)
+        val value = hvacValue(CarHvacManager.ID_HAVC_AC_DIS_FRESH_RECIR)
         return 0x1 == value
     }
 
@@ -152,9 +170,10 @@ class AirGetter(val manager: ACManager) {
     }
     /**
      * 后除霜状态
+     * 0x0:Off; 0x1:On
      */
     fun isTailDefrost(): Boolean {
-        val value = hvacValue(CarHvacManager.ID_HAVC_AC_TELLTALE_REAR_DEFROST)
+        val value = cabinValue(CarCabinManager.ID_REAR_DEMIST_ON)
         return 0x1 == value
     }
 
@@ -168,6 +187,15 @@ class AirGetter(val manager: ACManager) {
 //        0x2: Reserved
 //        0x3: Error
         val value = hvacValue(CarHvacManager.ID_HAVC_AC_TELLTALE_DUAL)
+        return 0x0 == value
+    }
+
+    fun isAuto(): Boolean {
+//        Auto 显示图标
+//        0x0: Not display
+//        0x1: Display
+//        0x2: Reserved
+        val value = hvacValue(CarHvacManager.ID_HAVC_AC_DIS_AUTO)
         return 0x1 == value
     }
 

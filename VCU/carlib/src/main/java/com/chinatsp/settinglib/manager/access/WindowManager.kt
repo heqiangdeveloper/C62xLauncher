@@ -2,6 +2,8 @@ package com.chinatsp.settinglib.manager.access
 
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
+import android.car.hardware.hvac.CarHvacManager
+import android.car.hardware.mcu.CarMcuManager
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.ISwitchListener
@@ -32,6 +34,8 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
 //    此功能仅针对天窗的打开信号进行判断，关闭指令不受影响
 
     private var speed: Int = 0
+
+    val positions = arrayOf(0x1, 0x5, 0x6, 0x7, 0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF)
 
     private val autoCloseWinInRain: SwitchState by lazy {
         val node = SwitchNode.WIN_CLOSE_WHILE_RAIN
@@ -126,7 +130,7 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
             try {
                 writeLock.lock()
                 unRegisterVcuListener(serial, identity)
-                listenerStore.put(serial, WeakReference(listener))
+                listenerStore[serial] = WeakReference(listener)
             } finally {
                 writeLock.unlock()
             }
@@ -134,36 +138,6 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
         }
         return -1
     }
-
-    /**
-     *
-     * @param switchNode 开关选项
-     */
-//    fun doGetSwitchStatus(switchNode: SwitchNode): Boolean {
-//        return when (switchNode) {
-//            SwitchNode.WIN_CLOSE_WHILE_RAIN -> {
-//                val signal = CarCabinManager.ID_BCM_RAIN_WIN_CLOSE_FUN_STS
-//                val value = readIntProperty(signal, Origin.CABIN, switchNode.area)
-//                switchNode.isOn(value)
-//            }
-//            SwitchNode.WIN_CLOSE_FOLLOW_LOCK -> {
-//                val signal = CarCabinManager.ID_BCM_WIN_CLOSE_FUN_STS
-//                val value = readIntProperty(signal, Origin.CABIN, switchNode.area)
-//                switchNode.isOn(value)
-//            }
-//            SwitchNode.WIN_REMOTE_CONTROL -> {
-//                val signal = CarCabinManager.ID_BCM_RAIN_WIN_CLOSE_FUN_STS
-//                val value = readIntProperty(signal, Origin.CABIN, switchNode.area)
-//                switchNode.isOn(value)
-//            }
-//            SwitchNode.RAIN_WIPER_REPAIR -> {
-//                val signal = CarCabinManager.ID_BCM_RAIN_WIN_CLOSE_FUN_STS
-//                val value = readIntProperty(signal, Origin.CABIN, switchNode.area)
-//                switchNode.isOn(value)
-//            }
-//            else -> false
-//        }
-//    }
 
     override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         /**雨天自动关窗*/
@@ -200,12 +174,17 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
         if (Action.OPEN == cmd.action || Action.MAX == cmd.action) {
 
         }
-
-        if (Action.CLOSE == cmd.action) {
+        if (Action.FIXED == cmd.action) {
+            val value = cmd.value * (positions.size - 2).toFloat() / 100f
+            val expect = value.toInt() + 2
+            Timber.d("doControlLouver------cmd.value-${cmd.value}, value:$value, expect:$expect")
+            updateLouverPosition(expect)
             cmd.status = IStatus.SUCCESS
-            cmd.message = "天窗已打开"
+            cmd.message = "天窗调整到$expect"
             callback?.onCmdHandleResult(cmd)
+            return
         }
+
         if (Action.OPEN == cmd.action) {
             if (speed >= 120) {
                 cmd.status = IStatus.FAILED
@@ -214,15 +193,83 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
             } else {
                 cmd.status = IStatus.SUCCESS
                 cmd.message = "天窗已打开"
+                updateLouverPosition(positions.last())
                 callback?.onCmdHandleResult(cmd)
             }
         } else if (Action.CLOSE == cmd.action) {
             cmd.status = IStatus.SUCCESS
-            cmd.message = "天窗已打开"
+            cmd.message = "天窗已关闭"
+            updateLouverPosition(positions.first())
             callback?.onCmdHandleResult(cmd)
         }
 
         Timber.d("doControlLouver $cmd")
+    }
+
+    fun obtainLouverState(): Int {
+//        Glass Operation state,天窗运行状态，天窗采集到的Glass 开关状态OHC开关状态
+//        0x0: Idle  Not pressed  0x1: Manual  open  0x2: Manual  close
+//        0x3: Auto  open  0x4: Auto  close/Tilt down  0x5: Auto tilt open
+//        0x6: Auto tilt close（Reserved ） 0x7: Full close（Reserved ）
+//        0x8: Tilte（Reserved ） 0x9: Open position 1（Reserved ）
+//        0xA: Open position 2（Reserved ） 0xB: Open position 3（Reserved ）
+//        0xC: Open position 4（Reserved ）0xD: Open manual（Reserved ）
+//        0xE~0xF: Not used
+        val value = readIntProperty(CarCabinManager.ID_BCM_SUNROOF_BTN_STS, Origin.CABIN)
+        return value
+    }
+
+    fun obtainLouverPosition(): Int {
+//        Actual Sunroof position,实际天窗位置
+//        0x0: Position unknwon/invalid  0x1: Completely closed
+//        0x2~0x4: Reserved 0x5: Tilted 100%
+//        0x6: Open 10%  0x7: Open 20%  0x8: Open 30%  0x9: Open 40%
+//        0xA: Open 50%  0xB: Open 60%  0xC: Open 70%
+//        0xD: Open 80%  0xE: Open 90%  0xF: Open 100%
+        val value = readIntProperty(CarCabinManager.ID_BCM_SUNROOF_POS, Origin.CABIN)
+        return value
+    }
+
+    fun obtainLoveLucyState(): Int {
+//        Rollo Operation state,遮阳帘运行状态
+//        0x0: Idle / Not pressed  0x1: Manual open  0x2: Auto open
+//        0x3: Manual close  0x4: Auto close  0x5~0x7: Reserved
+        val value = readIntProperty(CarCabinManager.ID_BCM_ROLLO_BTN_STS, Origin.CABIN)
+        return value
+    }
+
+    fun obtainLoveLucyPosition(): Int {
+//        Actual Rollo Position,遮阳帘实际位置，
+//        0x0: Position unknown  0x1: Full close  0x2: Open 10%  0x3: Open 20%
+//        0x4: Open 30%  0x5: Open 40%  0x6: Open 50% 0x7: Open 60%
+//        0x8: Open 70%  0x9: Open 80%  0xA: Open 90%  0xB: Open 100%
+//        0xC~0xF: Reserved
+        val value = readIntProperty(CarCabinManager.ID_BCM_ROLLO_POS, Origin.CABIN)
+        return value
+    }
+
+    fun updateLouverPosition(value: Int): Boolean {
+//        【设置】HUM_BCM_SUNROOF[0x1,0,0x0,0xF]
+//        0x0: Inactive
+//        0x1: Completely closed
+//        0x2~0x4: reserved
+//        0x5: Tilted 100%
+//        0x6: Open 10%
+//        0x7: Open 20%
+//        0x8: Open 30%
+//        0x9: Open 40%
+//        0xA: Open 50%
+//        0xB: Open 60%
+//        0xC: Open 70%
+//        0xD: Open 80%
+//        0xE: Open 90%
+//        0xF: Open 100%
+        val position = obtainLouverPosition()
+        if (value != position) {
+//            writeProperty(CarMcuManager.ID_HUM_BCM_SUNROOF)
+            return writeProperty(-1, value, Origin.CABIN)
+        }
+        return false
     }
 
 }

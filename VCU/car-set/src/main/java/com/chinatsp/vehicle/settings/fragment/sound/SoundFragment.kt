@@ -261,7 +261,7 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
         super.onDestroy()
         val intent = Intent("com.chinatsp.vehiclenetwork.usercenter")
         val json = "{\"systemHint\":\""+binding.soundWarnToneSwitch.isChecked+"\",\"speedVolumeCompensation\":\""+
-                binding.soundSpeedOffsetSwitch.isChecked+"\",\"LoudnessControl\":\""+
+                binding.soundSpeedOffsetSwitch.isChecked+"\",\"loudnessControl\":\""+
                 binding.soundLoudnessSwitch.isChecked+"\",\"navigationMixing\":\""+
                 binding.soundNaviMixingRadio.checked+"\"}"
         intent.putExtra("app", "com.chinatsp.vehicle.settings")

@@ -87,8 +87,8 @@ interface Keywords {
         const val MODE_COMFORT = "舒适"
         const val MODE_TRACK = "赛道"
         val MODE_NAMES = arrayOf(MODE_SPORT, MODE_COMFORT, MODE_ECO, MODE_TRACK)
-        val DRIVER_WINDOW_COMMS = arrayOf("左前车窗", "前左车窗", "主驾车窗")
-        val PASSENGER_WINDOW_COMMS = arrayOf("右前车窗", "副驾车窗", "前右车窗")
+        val DRIVER_WINDOW = arrayOf("左前车窗", "前左车窗", "主驾车窗")
+        val PASSENGER_WINDOW = arrayOf("右前车窗", "副驾车窗", "前右车窗")
         val VOICE_VENT = arrayOf("车外声浪")
         val WHEELS = arrayOf("方向盘", "方向")
 
@@ -150,5 +150,7 @@ interface Keywords {
         // 升高两度参数
         const val REF_CUR = "CUR"
         const val REF_ZERO = "ZERO"
+
+        const val COMMAND_FAILED = "操作没有成功，等一下再试吧"
     }
 }

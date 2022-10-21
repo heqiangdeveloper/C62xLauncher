@@ -1,10 +1,10 @@
 package com.chinatsp.settinglib.manager.adas
 
 import android.car.hardware.CarPropertyValue
-import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
+import com.chinatsp.settinglib.constants.OffLine
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.manager.BaseManager
@@ -49,10 +49,8 @@ class SideBackManager : BaseManager(), IOptionManager {
     private val showAreaValue: RadioState by lazy {
         val node = RadioNode.ADAS_SIDE_BACK_SHOW_AREA
         RadioState(node.def).apply {
-            val value = VcuUtils.getInt(
-                key = Constant.SHOW_AREA,
-                value = node.get.values[0]
-            )
+            val paramValue = VcuUtils.getConfigParameters(OffLine.AREA, "L")
+            val value = if ("L" == paramValue) node.get.values[0] else node.get.values[1]
             doUpdateRadioValue(node, this, value)
         }
     }
@@ -100,10 +98,9 @@ class SideBackManager : BaseManager(), IOptionManager {
     private val guidesValue: SwitchState by lazy {
         val node = SwitchNode.ADAS_GUIDES
         SwitchState(node.default).apply {
-            val result = VcuUtils.getInt(
-                key = Constant.AUXILIARY_LINE,
-                value = node.get.on
-            )
+            val default = if (node.default) "ON" else "OFF"
+            val value = VcuUtils.getConfigParameters(OffLine.GUIDES, default)
+            val result = if ("ON" == value) node.value(true) else node.value(false)
             doUpdateSwitchValue(node, this, result)
         }
     }
@@ -145,8 +142,17 @@ class SideBackManager : BaseManager(), IOptionManager {
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
         return when (node) {
             RadioNode.ADAS_SIDE_BACK_SHOW_AREA -> {
-                node.isValid(value, false)
-                        && VcuUtils.putInt(key = Constant.SHOW_AREA, value = value)
+                var result = false
+                if (value == node.get.values[0]) {
+                    result = VcuUtils.setConfigParameters(OffLine.AREA, "L")
+                }
+                if (value == node.get.values[1]) {
+                    result = VcuUtils.setConfigParameters(OffLine.AREA, "R")
+                }
+                if (result) {
+                    doUpdateRadioValue(node, showAreaValue, value, this::doOptionChanged)
+                }
+                return result
             }
             else -> false
         }
@@ -196,7 +202,13 @@ class SideBackManager : BaseManager(), IOptionManager {
                 doSetSwitchOption(node, status, mebValue)
             }
             SwitchNode.ADAS_GUIDES -> {
-                VcuUtils.putInt(key = Constant.AUXILIARY_LINE, value = node.value(status))
+//                VcuUtils.putInt(key = Constant.AUXILIARY_LINE, value = node.value(status))
+                val value = if (status) "ON" else "OFF"
+                val result = VcuUtils.setConfigParameters(OffLine.GUIDES, value)
+                if (result) {
+                    doUpdateSwitchValue(node, guidesValue, status, this::doSwitchChanged)
+                }
+                result
             }
             else -> false
         }
