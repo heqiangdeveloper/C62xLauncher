@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toast_content"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/x6"
+    android:background="@drawable/bg_charging_label"
+    android:drawablePadding="@dimen/x5"
+    android:gravity="center"
+    android:paddingLeft="@dimen/x12"
+    android:paddingRight="@dimen/x12"
+    android:paddingTop="@dimen/x4"
+    android:paddingBottom="@dimen/x4"
+    android:text="@string/cabin_other_wireless_charging_working_properly"
+    android:textColor="@color/tab_option_title_text_color"
+    android:textSize="@dimen/x12"
+    app:drawableLeftCompat="@drawable/icon_wireless_charge_48" />
+
+

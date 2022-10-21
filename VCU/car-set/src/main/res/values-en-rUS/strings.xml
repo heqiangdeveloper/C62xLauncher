@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">车辆设置</string>
+    <string name="app_name">Vehicle setting</string>
     <string name="switch_turn_on">已开启</string>
     <string name="switch_turn_off">已关闭</string>
 
@@ -12,7 +12,7 @@
 
     <string name="tips_search_content">输入的内容不能为空</string>
 
-    <string name="btn_close">关闭</string>
+    <string name="btn_close">Close</string>
 
     <string name="oil_92h_">92号：</string>
     <string name="oil_95h_">95号：</string>
@@ -21,58 +21,58 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="table0">常用</string>
-    <string name="table1">车门与车窗</string>
-    <string name="table2">灯光设置</string>
-    <string name="table3">车辆音效</string>
-    <string name="table4">驾驶辅助</string>
+    <string name="table0">Common</string>
+    <string name="table1">Door and Window</string>
+    <string name="table2">Light setting</string>
+    <string name="table3">Sound effect</string>
+    <string name="table4">Driver assistance</string>
     <string name="table5">行车</string>
     <string name="table6">BEIJING OS</string>
     <string name="back_navigation">返回</string>
-    <string name="car_door">车门</string>
-    <string name="car_window">车窗</string>
-    <string name="car_trunk">电动尾门</string>
+    <string name="car_door">Door</string>
+    <string name="car_window">Window</string>
+    <string name="car_trunk">Power tailgate</string>
     <string name="car_mirror">外后视镜</string>
-    <string name="car_door_smart">车门智能进入</string>
-    <string name="acc_off_auto_unlock">熄火自动解锁</string>
-    <string name="drive_auto_lock">行车自动落锁</string>
-    <string name="unlock_fron">仅解锁左前门</string>
-    <string name="four_door_unlock">四门解锁</string>
+    <string name="car_door_smart">Intelligent entry</string>
+    <string name="acc_off_auto_unlock">Fame-out automatic locked</string>
+    <string name="drive_auto_lock">Driving automatic locked</string>
+    <string name="unlock_fron">Unlock front door only</string>
+    <string name="four_door_unlock">Four door unlock</string>
     <string name="vcu_cabin_wheel">方向盘</string>
-    <string name="vcu_cabin_seat">座椅</string>
-    <string name="vcu_cabin_air_conditioner">空调</string>
-    <string name="vcu_cabin_safety">安全</string>
-    <string name="vcu_cabin_instrument">仪表</string>
-    <string name="vcu_cabin_other">其他</string>
+    <string name="vcu_cabin_seat">Seat</string>
+    <string name="vcu_cabin_air_conditioner">AC</string>
+    <string name="vcu_cabin_safety">Safety</string>
+    <string name="vcu_cabin_instrument">Instrument</string>
+    <string name="vcu_cabin_other">Other</string>
     <string name="vcu_cabin_instrument_title">仪表主题随驾驶模式联动</string>
 
-    <string name="cabin_ac_auto_arid">空调自干燥</string>
+    <string name="cabin_ac_auto_arid">Air conditioning self-drying</string>
     <string name="cabin_ac_auto_demist">自动除雾</string>
-    <string name="cabin_ac_auto_wind_advance">预通风功能</string>
-    <string name="cabin_ac_auto_comfort">自动空调舒适性</string>
+    <string name="cabin_ac_auto_wind_advance">Pre-ventilation function</string>
+    <string name="cabin_ac_auto_comfort">Automatic AC Comfort</string>
 
-    <string name="cabin_safe_fortify_tone">设防提示音</string>
+    <string name="cabin_safe_fortify_tone">Set defense prompt</string>
     <string name="cabin_safe_lock_car">锁车提示声</string>
     <string name="cabin_safe_fortify_success_tone">设防成功提示音</string>
     <string name="cabin_safe_fortify_failure_tone">设防失败提示音</string>
-    <string name="cabin_safe_video_safe_mode">视频安全模式</string>
+    <string name="cabin_safe_video_safe_mode">Video safe mode</string>
     <string name="cabin_safe_video_safe_mode_content">视频安全模式开启后，⻋\n速⼤于15km/h时，本地\n视频将⾃动关闭。</string>
 
-    <string name="cabin_wheel_electronic_mode">电子助力转向模式</string>
-    <string name="cabin_wheel_press_key">方向盘自定义按键</string>
+    <string name="cabin_wheel_electronic_mode">Electronic power steering mode</string>
+    <string name="cabin_wheel_press_key">Steering wheel custom buttons</string>
     <string name="cabin_wheel_custom_button">方向盘自定义按钮</string>
-    <string name="cabin_wheel_press_key_tv">隐私模式</string>
-    <string name="cabin_wheel_automatic_heating">方向盘自动加热</string>
+    <string name="cabin_wheel_press_key_tv">Privacy mode</string>
+    <string name="cabin_wheel_automatic_heating">Steering wheel self heating</string>
     <string name="cabin_wheel_automatic_heating_tv">已关闭</string>
-    <string name="cabin_wheel_turn_screen">熄屏</string>
-    <string name="cabin_wheel_navigation">导航</string>
+    <string name="cabin_wheel_turn_screen">Sleep</string>
+    <string name="cabin_wheel_navigation">Navigation</string>
     <string name="cabin_wheel_starting_temperature">自动加热起始温度</string>
 
-    <string name="cabin_seat_welcomes_guests">主驾迎宾</string>
+    <string name="cabin_seat_welcomes_guests">Driver welcome</string>
     <string name="cabin_seat_close">已关闭</string>
-    <string name="cabin_seat_copilot_guests">副驾迎宾</string>
+    <string name="cabin_seat_copilot_guests">Passenger welcome</string>
     <string name="cabin_seat_copilot_guests_position">副驾迎宾位置</string>
-    <string name="cabin_seat_automatic_heating">座椅自动加热</string>
+    <string name="cabin_seat_automatic_heating">Seat self heating</string>
     <string name="cabin_seat_set_up">请先设置副驾常用位置和迎宾位置</string>
     <string name="cabin_seat_passenger_safety">开启后，副驾座椅移动时，请注意后排乘客安全</string>
     <string name="cabin_seat_common_location">常用位置</string>
@@ -82,12 +82,12 @@
     <string name="cabin_seat_copilot_lower">副驾下车</string>
     <string name="cabin_seat_copilot_top">副驾上车</string>
 
-    <string name="cabin_other_trailer_remind">拖车提醒</string>
+    <string name="cabin_other_trailer_remind">Trailer remind</string>
     <string name="cabin_other_trailer_remind_content">车辆被摇曳、牵引超过设定\n的提醒距离时，将通过APP\n或短信提醒车主。</string>
     <string name="cabin_other_close">已关闭</string>
     <string name="cabin_other_battery_optimization">智能电源管家</string>
     <string name="cabin_other_battery_optimization_content">监控车辆电能消耗情况，低\n电量状态下，对整车舒适性\n功能（空调、大屏等）进行\n管理。</string>
-    <string name="cabin_other_wireless_charging">无线充电</string>
+    <string name="cabin_other_wireless_charging">Wireless charging</string>
     <string name="cabin_other_wireless_charging_abnormal_work">无线充电工作异常</string>
     <string name="cabin_other_maintenance">请尽快前往官方指定维修点进行检测</string>
     <string name="cabin_other_wireless_charging_lamp">储物盒灯</string>
@@ -108,10 +108,10 @@
     <string name="note_users_cancel">取消</string>
 
 
-    <string name="car_window_remote_control">遥控升窗/降窗</string>
+    <string name="car_window_remote_control">Remote control window up/down</string>
     <string name="car_window_lock_car">锁车自动关窗</string>
-    <string name="car_window_rainy_day">雨天自动关窗</string>
-    <string name="car_window_wiper">雨刮维修</string>
+    <string name="car_window_rainy_day">The window closes automatically on rainy</string>
+    <string name="car_window_wiper">Wiper maintenance</string>
     <string name="car_window_lock_content">功能开启后，可通过钥匙遥\n
         控关闭/开启四门车窗</string>
     <string name="car_window_lock_car_content">功能开启后，锁门时，四门车\n
@@ -125,11 +125,11 @@
         闭，此时向后拨动天窗开关\n
         可再次开启天窗。</string>
 
-    <string name="car_trunk_electric_function">电动尾门电动功能</string>
-    <string name="car_trunk_intelligence_into">电动尾门智能进入</string>
+    <string name="car_trunk_electric_function">Power tailgate electric function</string>
+    <string name="car_trunk_intelligence_into">Electric tail door intelligent entry</string>
     <string name="car_trunk_height_adjustment">尾门高度调节</string>
-    <string name="car_trunk_light_flashing">灯光闪烁报警</string>
-    <string name="car_trunk_buzzer_alarms">蜂鸣器报警开关</string>
+    <string name="car_trunk_light_flashing">Light flashing alarm</string>
+    <string name="car_trunk_buzzer_alarms">Buzzer alarm switch</string>
     <string name="car_trunk_door_height">尾门高度调节</string>
     <string name="car_trunk_keep_unlock">携带钥匙在解锁区域保持解锁</string>
     <string name="car_trunk_action_unlock">携带钥匙完成退出进入动作解锁</string>
@@ -151,7 +151,7 @@
        身⾼1.6-1.7⽶的⽤户使⽤，建议开启⾼度为90%；\n
        身⾼1.7⽶以上的⽤户使⽤，建议开启⾼度为100%。\n
        相关⾼度调节建议，仅供参考</string>
-    <string name="car_mirror_automatic_folding">外后视镜自动折叠</string>
+    <string name="car_mirror_automatic_folding">Rear view mirror folds automatically</string>
     <string name="car_mirror_automatic_folding_close">后视镜自动折叠已关闭</string>
     <string name="car_mirror_automatic_folding_open">后视镜自动折叠已开启</string>
     <string name="car_mirror_automatic_under_double">倒车后视镜下翻</string>
@@ -168,44 +168,44 @@
         在2分钟之内完成设置，2分钟倒计时结\n
         束后⾃动保存当前位置</string>
 
-    <string name="ac_open_window">一键开窗</string>
-    <string name="ac_close_window">一键关窗</string>
+    <string name="ac_open_window">One key open window</string>
+    <string name="ac_close_window">One key close window</string>
     <string name="ac_refresh_window">一键重置</string>
 
-    <string name="drive_tab_intelligent_cruise">智能巡航</string>
+    <string name="drive_tab_intelligent_cruise">Intelligent cruise</string>
     <string name="drive_tab_forward_assist">前向辅助</string>
-    <string name="drive_tab_lane_assist">车道辅助</string>
-    <string name="drive_tab_rear_assist">侧后辅助</string>
-    <string name="drive_tab_lighting_assist">灯光辅助</string>
+    <string name="drive_tab_lane_assist">Lane assist</string>
+    <string name="drive_tab_rear_assist">Side-rear Assist</string>
+    <string name="drive_tab_lighting_assist">Light Assist</string>
     <string name="drive_tab_traffic">交通标志</string>
-    <string name="drive_intelligent_cruise_assistant">智能巡航辅助ACC</string>
-    <string name="drive_full_speed_range">全速范围内为驾驶员提供车辆的横纵向辅助</string>
+    <string name="drive_intelligent_cruise_assistant">Intelligent cruise assist ACC</string>
+    <string name="drive_full_speed_range">Full speed range to provide the driver with vehicle control assistance</string>
     <string name="drive_open">已开启</string>
     <string name="drive_close">已关闭</string>
-    <string name="drive_warning_fcw">前碰撞预警FCW</string>
-    <string name="drive_fcw_txt_content">检测到前向预警碰撞风险时预警驾驶员</string>
-    <string name="drive_sensitivity_setting">灵敏度设置</string>
-    <string name="drive_sensitivity">灵敏度</string>
-    <string name="drive_aeb_title">自动紧急制动AEB</string>
-    <string name="drive_aeb_content">检测到危险情况时产生一个短促制动</string>
-    <string name="drive_Lane_assist_system">车道辅助系统</string>
+    <string name="drive_warning_fcw">Forward collision warning FCW</string>
+    <string name="drive_fcw_txt_content">Warn the driver when a forward warning collision risk is detected</string>
+    <string name="drive_sensitivity_setting">Sensitivity setting</string>
+    <string name="drive_sensitivity">Sensitivity</string>
+    <string name="drive_aeb_title">Automatic emergency braking AEB</string>
+    <string name="drive_aeb_content">A short brake occurs when a dangerous condition is detected</string>
+    <string name="drive_Lane_assist_system">Lane assist system</string>
     <string name="drive_Lane_assist_system_content">车道赋值功能请到空调屏进行开启或关闭</string>
-    <string name="drive_bsd_title">盲区监测BSD</string>
-    <string name="drive_bsd_content">提醒驾驶者后方来车情况</string>
-    <string name="drive_dow_title">开门预警DOW</string>
-    <string name="drive_dow_content">开启车门时识别靠近目标并预警</string>
-    <string name="drive_bsd_camera_title">盲区摄像头</string>
-    <string name="drive_bsd_camera_content">提供驾驶者右侧视觉盲区图像信息</string>
+    <string name="drive_bsd_title">Blind spot monitoring BSD</string>
+    <string name="drive_bsd_content">Alert drivers to traffic coming behind</string>
+    <string name="drive_dow_title">Open the door early warning DOW</string>
+    <string name="drive_dow_content">Recognize approaching target and give warning when door is opened</string>
+    <string name="drive_bsd_camera_title">Blind spot camera</string>
+    <string name="drive_bsd_camera_content">Provide the driver\'s right visual blind area image information</string>
     <string name="drive_voice_prompt">语音提示</string>
-    <string name="drive_hma_title">智能远光灯辅助HMA</string>
-    <string name="drive_hma_content">远近光灯自动切换的辅助</string>
+    <string name="drive_hma_title">Intelligent high beam auxiliary HMA</string>
+    <string name="drive_hma_content">Automatic switch of near and far light</string>
     <string name="drive_sla_title">限速标志识别TSR</string>
-    <string name="drive_sla_content">探测行驶道路上或道路旁的限速标志</string>
-    <string name="drive_target_tone">目标提示音</string>
-    <string name="drive_vehicle_departure">前车驶离提示</string>
-    <string name="drive_alarm_way">报警方式</string>
-    <string name="drive_auxiliary_line">辅助线</string>
-    <string name="drive_display_area">显示区域</string>
+    <string name="drive_sla_content">Detect speed limit signs above or beside the road</string>
+    <string name="drive_target_tone">Target Prompt</string>
+    <string name="drive_vehicle_departure">Vehicle ahead to leave prompt</string>
+    <string name="drive_alarm_way">Alarm mode</string>
+    <string name="drive_auxiliary_line">Auxiliary line</string>
+    <string name="drive_display_area">Display area</string>
     <string name="drive_colour_breathing">色彩呼吸</string>
     <string name="drive_music_rhythm">音乐律动</string>
     <string name="drive_car_rhythm">车速律动</string>
@@ -221,25 +221,25 @@
     <string name="adas_meb_description">在低速倒⻋时探测障碍物并在必要时采取制动措施</string>
 
 
-    <string name="lighting_title">灯光</string>
-    <string name="lighting_atmosphere_lamp">氛围灯</string>
+    <string name="lighting_title">light</string>
+    <string name="lighting_atmosphere_lamp">Ambient light</string>
     <string name="lighting_screen">屏幕亮度</string>
-    <string name="lighting_go_home_title">伴我回家</string>
-    <string name="lighting_go_home_content">在锁车后,近光灯会点亮一段时间再熄灭,为你照亮回家的路</string>
-    <string name="lighting_turn_signal_title">转向灯变道闪烁次数</string>
-    <string name="lighting_turn_external_lighting">外部灯光仪式感</string>
-    <string name="lighting_physical_switch_title">物理开关背光亮度</string>
-    <string name="lighting_car_screen_title">车机屏幕亮度</string>
-    <string name="lighting_instrument_screen_title">仪表屏幕亮度</string>
-    <string name="lighting_conditioner_screen_title">空调屏幕亮度</string>
+    <string name="lighting_go_home_title">Follow me home</string>
+    <string name="lighting_go_home_content">After locked your car, the dipped headlight will be on for a while and then off to Light up the way home for you</string>
+    <string name="lighting_turn_signal_title">Number of turn signal flashing when lane change</string>
+    <string name="lighting_turn_external_lighting">External lighting ritual sense</string>
+    <string name="lighting_physical_switch_title">Turn on or off backlight brightness</string>
+    <string name="lighting_car_screen_title">Car machine screen brightness</string>
+    <string name="lighting_instrument_screen_title">Instrument screen brightness </string>
+    <string name="lighting_conditioner_screen_title">Air-condition screen brightness </string>
     <string name="lighting_car_outside_title">车外迎宾灯</string>
-    <string name="lighting_car_inside_title">车内迎宾灯</string>
+    <string name="lighting_car_inside_title">In-car welcome light</string>
     <string name="lighting_front_atmosphere">流线式氛围灯</string>
     <string name="lighting_rear_atmosphere">环抱式氛围灯</string>
-    <string name="lighting_brightness">亮度</string>
-    <string name="lighting_color">颜色</string>
-    <string name="lighting_intelligent_model">智能模式</string>
-    <string name="lighting_install">其他设置</string>
+    <string name="lighting_brightness">Brightness</string>
+    <string name="lighting_color">Color</string>
+    <string name="lighting_intelligent_model">Smart mode</string>
+    <string name="lighting_install">Other Settings</string>
     <string name="lighting_closing_reminder">开关门提醒</string>
     <string name="lighting_shut_reminder">开关锁提醒</string>
     <string name="lighting_brightness_breathing">亮度呼吸</string>
@@ -247,25 +247,25 @@
     <string name="lighting_related_topics">关联主题</string>
     <string name="drive_related_topics_content">将设置项保存于当前主题中，在主题切换时同步设置结果</string>
 
-    <string name="sound_title">声音</string>
-    <string name="sound_effect">音效</string>
-    <string name="sound_volume_adjustment">音量调节</string>
-    <string name="sound_alarm_volume">仪表报警音量</string>
-    <string name="sound_navigation_mixing">导航混音</string>
-    <string name="sound_volume_compensation">速度音量补偿</string>
-    <string name="sound_system_prompt">系统提示音</string>
-    <string name="sound_touch_prompt">触屏提示音</string>
-    <string name="sound_loudness_control">响度控制</string>
+    <string name="sound_title">Sound</string>
+    <string name="sound_effect">sound effect</string>
+    <string name="sound_volume_adjustment">Volume</string>
+    <string name="sound_alarm_volume">Meter alarm volume</string>
+    <string name="sound_navigation_mixing">Navigation mixing</string>
+    <string name="sound_volume_compensation">Velocity and volume compensation</string>
+    <string name="sound_system_prompt">System prompt tone</string>
+    <string name="sound_touch_prompt">Touch screen prompt tone</string>
+    <string name="sound_loudness_control">Loudness control</string>
     <string name="sound_huawei_sound">华为音效</string>
-    <string name="sound_navigation">导航</string>
-    <string name="sound_call">通话</string>
-    <string name="sound_voice">语音</string>
-    <string name="sound_media">媒体</string>
-    <string name="sound_system">系统</string>
-    <string name="sound_equalizer">均衡器</string>
-    <string name="sound_volume_balance">音量平衡</string>
-    <string name="sound_environmental">环境音效</string>
-    <string name="sound_standard">标准</string>
+    <string name="sound_navigation">Navigation</string>
+    <string name="sound_call">Calls</string>
+    <string name="sound_voice">language</string>
+    <string name="sound_media">Media</string>
+    <string name="sound_system">System</string>
+    <string name="sound_equalizer">Equalizer</string>
+    <string name="sound_volume_balance">Volume balance</string>
+    <string name="sound_environmental">Environmental sound</string>
+    <string name="sound_standard">Standard</string>
     <string name="sound_loudness_control_content">在小音量时，加强低音和高\n音；反之，大音量时，降低低\n音和高音，以让响度均衡</string>
 
     <string name="vcu_action_switch_failed">切换失败</string>
@@ -318,41 +318,41 @@ IACC会优先通过识别⻋道两侧清晰的⻋道线进⾏横向辅助控制�
 员提供⻋辆左后⽅（或右后⽅）的盲区影像，辅助驾驶员进⾏安全驾驶。</string>
     <string name="meb_details">一种帮助驾驶员发现车辆后方障碍物，并在判断有碰撞危险时进行自动刹车制动的功能。</string>
 
-    <string name="mixed">混响</string>
-    <string name="resonant">共鸣</string>
-    <string name="solo">独奏</string>
-    <string name="navigation_priority">导航优先</string>
-    <string name="directly_mixed_sound">直接混音</string>
-    <string name="nature">自然</string>
-    <string name="club">俱乐部</string>
-    <string name="live">现场</string>
-    <string name="leisure">休闲</string>
-    <string name="treble">高音</string>
-    <string name="medium_treble">中高音</string>
-    <string name="medium">中音</string>
-    <string name="medium_bass">中低音</string>
-    <string name="bass">低音</string>
-    <string name="default＿">默认</string>
-    <string name="classical">古典</string>
-    <string name="pop">流行</string>
-    <string name="jazz">爵士</string>
-    <string name="drum">打击</string>
-    <string name="rock">摇滚</string>
-    <string name="custom">自定义</string>
-    <string name="soft">轻柔</string>
-    <string name="standard">标准</string>
-    <string name="movement">运动</string>
-    <string name="strong">强劲</string>
-    <string name="metric">公制</string>
-    <string name="imperial">英制</string>
-    <string name="recognize_prompt">识别提示</string>
-    <string name="disappear_prompt">消失提示</string>
-    <string name="recognize_disappear_prompt_both">识别消失均提示</string>
-    <string name="icon">图示</string>
-    <string name="icon_sound">图示+声音</string>
-    <string name="high">高</string>
-    <string name="centre">中</string>
-    <string name="low">低</string>
-    <string name="left">左</string>
-    <string name="right">右</string>
+    <string name="mixed">Mixed</string>
+    <string name="resonant">resonant</string>
+    <string name="solo">solo</string>
+    <string name="navigation_priority">Navigation Priority</string>
+    <string name="directly_mixed_sound">Directly mixed sound</string>
+    <string name="nature">Nature</string>
+    <string name="club">Club</string>
+    <string name="live">Live</string>
+    <string name="leisure">Leisure</string>
+    <string name="treble">Treble</string>
+    <string name="medium_treble">medium treble</string>
+    <string name="medium">medium</string>
+    <string name="medium_bass">medium bass</string>
+    <string name="bass">bass</string>
+    <string name="default＿">Default</string>
+    <string name="classical">Classical</string>
+    <string name="pop">Pop</string>
+    <string name="jazz">Jazz</string>
+    <string name="drum">Drum</string>
+    <string name="rock">Rock</string>
+    <string name="custom">Custom</string>
+    <string name="soft">Soft</string>
+    <string name="standard">standard</string>
+    <string name="movement">Movement</string>
+    <string name="strong">strong</string>
+    <string name="metric">Metric</string>
+    <string name="imperial">Imperial</string>
+    <string name="recognize_prompt">Recognize prompt</string>
+    <string name="disappear_prompt">Disappear prompt</string>
+    <string name="recognize_disappear_prompt_both">recognize and disappear prompt both</string>
+    <string name="icon">Icon</string>
+    <string name="icon_sound">Icon+sound</string>
+    <string name="high">High</string>
+    <string name="centre">centre</string>
+    <string name="low">low</string>
+    <string name="left">left</string>
+    <string name="right">right</string>
 </resources>

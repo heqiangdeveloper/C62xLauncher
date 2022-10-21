@@ -13,7 +13,10 @@ import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.ISwitchAction
 import com.chinatsp.vehicle.settings.R
+import com.chinatsp.vehicle.settings.app.RechargeToast.showToast
 import com.chinatsp.vehicle.settings.databinding.CabinOtherFragmentBinding
+import com.chinatsp.vehicle.settings.fragment.cabin.dialog.AbnormalChargeDialogFragment
+import com.chinatsp.vehicle.settings.fragment.cabin.dialog.ForeignMatterDialogFragment
 import com.chinatsp.vehicle.settings.fragment.cabin.dialog.NoteUsersDialogFragment
 import com.chinatsp.vehicle.settings.fragment.cabin.dialog.TrailerRemindDialogFragment
 import com.chinatsp.vehicle.settings.vm.cabin.OtherViewModel
@@ -142,6 +145,7 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
         }
         binding.otherWirelessChargingSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.DRIVE_WIRELESS_CHARGING, buttonView, isChecked)
+            if (isChecked){ abnormalCharge()}
         }
         binding.otherWirelessChargingLampSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP, buttonView, isChecked)
@@ -169,29 +173,65 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
             popWindow = PopWindow(activity,
                 R.layout.pop_window,
                 activity?.let {
-                    AppCompatResources.getDrawable(it,
-                        R.drawable.popup_bg_qipao172_7)
+                    AppCompatResources.getDrawable(
+                        it,
+                        R.drawable.popup_bg_qipao172_7
+                    )
                 })
             popWindow.showDownLift(view, 30, -80)
         } else if (view.id == binding.cabinOtherBatteryOptimizationDetails.id) {
             popWindow = PopWindow(activity,
                 R.layout.pop_window,
                 activity?.let {
-                    AppCompatResources.getDrawable(it,
-                        R.drawable.popup_bg_qipao172_8)
+                    AppCompatResources.getDrawable(
+                        it,
+                        R.drawable.popup_bg_qipao172_8
+                    )
                 })
             popWindow.showDownLift(view, 30, -80)
         } else {
             popWindow = PopWindow(activity,
                 R.layout.pop_window,
                 activity?.let {
-                    AppCompatResources.getDrawable(it,
-                        R.drawable.popup_bg_qipao172_1)
+                    AppCompatResources.getDrawable(
+                        it,
+                        R.drawable.popup_bg_qipao172_1
+                    )
                 })
             popWindow.showDown(view)
         }
         val text: TextView = popWindow.findViewById(R.id.content) as TextView
         text.text = resources.getString(id)
+
+    }
+
+    private fun abnormalCharge() {
+        //模拟数据
+        val wcm = true//检测到异物
+        val triggerElectrical = true//触发电上电
+        val wcmSwitch = true;//WCM开关处于打开状态，
+        val peps = true//PEPS不在寻钥匙状态
+        val wcmStr = true//WCM无故障信息
+        val receiving = true;//检测到接收端(移动端)
+
+        if (triggerElectrical && wcmSwitch && peps && wcmStr && receiving) {
+            //充电成功
+            showToast(context, context?.resources?.getString(R.string.cabin_other_wireless_charging_working_properly), true)
+            return
+        } else if (triggerElectrical && wcmSwitch && peps && wcm) {
+            //检测到异物
+            val fragment = ForeignMatterDialogFragment()
+            activity?.supportFragmentManager?.let {
+                fragment.show(it, fragment.javaClass.simpleName)
+            }
+        } else {
+            //无线充电异常
+            val fragment = AbnormalChargeDialogFragment()
+            activity?.supportFragmentManager?.let {
+                fragment.show(it, fragment.javaClass.simpleName)
+            }
+        }
+
 
     }
 }

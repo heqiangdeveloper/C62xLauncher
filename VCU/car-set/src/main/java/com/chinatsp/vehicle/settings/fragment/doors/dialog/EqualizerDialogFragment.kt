@@ -27,10 +27,14 @@ class EqualizerDialogFragment :
         get() = EffectManager.instance
 
     private val xValue: List<String>
-        get() = listOf("高音", "中高音", "中音", "中低音", "低音")
+        get() = listOf(activity?.resources?.getString(R.string.treble),
+            activity?.resources?.getString(R.string.medium_treble),
+            activity?.resources?.getString(R.string.medium),
+            activity?.resources?.getString(R.string.medium_bass),
+            activity?.resources?.getString(R.string.bass)) as List<String>
 
     private val offset: Float by lazy {
-        if (VcuUtils.isAmplifier) 5f else 9f
+        if (VcuUtils.isAmplifier) 9f else 5f
     }
     private lateinit var vList:List<Float>
     private var value by Delegates.notNull<Int>()
@@ -175,8 +179,8 @@ class EqualizerDialogFragment :
                    value[4]+"\"}"
            intent.putExtra("app", "com.chinatsp.vehicle.settings")
            intent.putExtra("soundEffects",json)
-           intent.setPackage("com.chinatsp.usercenter");
-           activity?.startService(intent);
+           intent.setPackage("com.chinatsp.usercenter")
+           activity?.startService(intent)
        }
     }
 

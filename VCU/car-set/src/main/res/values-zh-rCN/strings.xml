@@ -341,8 +341,8 @@ IACC会优先通过识别⻋道两侧清晰的⻋道线进⾏横向辅助控制�
     <string name="custom">自定义</string>
     <string name="soft">轻柔</string>
     <string name="standard">标准</string>
-    <string name="movement">运动</string>
     <string name="strong">强劲</string>
+    <string name="movement">运动</string>
     <string name="metric">公制</string>
     <string name="imperial">英制</string>
     <string name="recognize_prompt">识别提示</string>
