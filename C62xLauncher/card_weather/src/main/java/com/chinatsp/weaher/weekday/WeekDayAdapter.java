@@ -14,7 +14,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chinatsp.weaher.R;
+import com.chinatsp.weaher.WeatherTypeRes;
 import com.chinatsp.weaher.WeatherUtil;
+import com.chinatsp.weaher.type.C62WeatherType;
+import com.chinatsp.weaher.type.C62WeatherTypeAdapter;
+import com.chinatsp.weaher.type.MoJiWeatherType;
+import com.chinatsp.weaher.type.WeatherTypeAdapter;
 import com.iflytek.autofly.weather.entity.WeatherInfo;
 
 import java.time.DayOfWeek;
@@ -33,6 +38,7 @@ public class WeekDayAdapter extends RecyclerView.Adapter<WeekDayAdapter.ViewHold
     private List<WeatherInfo> mDayWeatherList = new LinkedList<>();
     private LayoutInflater mLayoutInflater;
     private Context mContext;
+    private WeatherTypeAdapter mWeatherTypeAdapter = new C62WeatherTypeAdapter();
 
     public WeekDayAdapter(Context context) {
         mContext = context;
@@ -75,10 +81,15 @@ public class WeekDayAdapter extends RecyclerView.Adapter<WeekDayAdapter.ViewHold
             }
             WeatherUtil.logD("bind WeatherInfo: "+dayWeatherBean);
             tvItemWeatherWeekDay.setText(getWeekDayRes(dayWeatherBean));
-            tvItemWeatherWord.setText(dayWeatherBean.getWeather());
+            String weather = dayWeatherBean.getWeather();
+            tvItemWeatherWord.setText(weather);
             tvItemWeatherTemperatureDesc.setText(WeatherUtil.getTemperatureRange(dayWeatherBean, mContext.getResources()));
+            WeatherTypeRes weatherTypeRes = WeatherUtil.parseType(weather);
+            ivItemWeatherType.setImageResource(weatherTypeRes.getIcon());
         }
     }
+
+
 
     private String getWeekDayRes(WeatherInfo dayWeatherBean) {
         String dateStr = dayWeatherBean.getDate();

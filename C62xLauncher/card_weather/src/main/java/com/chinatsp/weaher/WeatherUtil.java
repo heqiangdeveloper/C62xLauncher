@@ -4,6 +4,10 @@ import android.content.res.Resources;
 import android.text.TextUtils;
 
 import com.chinatsp.weaher.repository.WeatherBean;
+import com.chinatsp.weaher.type.C62WeatherType;
+import com.chinatsp.weaher.type.C62WeatherTypeAdapter;
+import com.chinatsp.weaher.type.MoJiWeatherType;
+import com.chinatsp.weaher.type.WeatherTypeAdapter;
 import com.iflytek.autofly.weather.entity.WeatherInfo;
 
 import java.lang.reflect.Constructor;
@@ -101,5 +105,14 @@ public class WeatherUtil {
             e.printStackTrace();
         }
         return WeatherBean.TYPE_UNKNOWN;
+    }
+
+    public static WeatherTypeRes parseType(String weather) {
+        WeatherTypeAdapter weatherTypeAdapter = new C62WeatherTypeAdapter();
+        MoJiWeatherType moJiWeatherType = new MoJiWeatherType(weather);
+        C62WeatherType c62WeatherType = weatherTypeAdapter.adapter(moJiWeatherType);
+        int c62WeatherTypeValue = c62WeatherType.getValue();
+        WeatherTypeRes weatherTypeRes = new WeatherTypeRes(c62WeatherTypeValue);
+        return weatherTypeRes;
     }
 }

@@ -9,6 +9,10 @@ import com.chinatsp.weaher.R;
 import com.chinatsp.weaher.WeatherTypeRes;
 import com.chinatsp.weaher.WeatherUtil;
 import com.chinatsp.weaher.repository.WeatherBean;
+import com.chinatsp.weaher.type.C62WeatherType;
+import com.chinatsp.weaher.type.C62WeatherTypeAdapter;
+import com.chinatsp.weaher.type.MoJiWeatherType;
+import com.chinatsp.weaher.type.WeatherTypeAdapter;
 import com.iflytek.autofly.weather.entity.WeatherInfo;
 
 public class WeatherSmallCardHolder extends WeatherCardHolder{
@@ -39,24 +43,18 @@ public class WeatherSmallCardHolder extends WeatherCardHolder{
 
     @Override
     public void updateWeather(WeatherInfo weatherInfo) {
-        WeatherUtil.logD("updateWeather weatherInfo");
+        WeatherUtil.logD("updateWeather weatherInfo : "+weatherInfo);
+        if (weatherInfo == null) {
+            return;
+        }
         Resources resources = mRootView.getResources();
         tvCardWeatherCity.setText(weatherInfo.getCity());
         tvCardWeatherTemperature.setText(WeatherUtil.getTemperatureRange(weatherInfo, resources));
         tvCardWeatherDate.setText(WeatherUtil.getToday());
 
-        WeatherTypeRes weatherTypeRes = new WeatherTypeRes(getWeatherType(weatherInfo.getWeatherType()));
+        WeatherTypeRes weatherTypeRes = WeatherUtil.parseType(weatherInfo.getWeather());
         ivCardWeatherIcon.setImageResource(weatherTypeRes.getIcon());
         ivWeatherBg.setVisibility(View.VISIBLE);
         ivWeatherBg.setImageResource(weatherTypeRes.getSmallCardBg());
-    }
-
-    private int getWeatherType(String type) {
-        try {
-            return Integer.parseInt(type);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return WeatherBean.TYPE_UNKNOWN;
     }
 }
