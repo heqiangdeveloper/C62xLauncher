@@ -2,8 +2,10 @@ package com.chinatsp.weaher.repository;
 
 import android.content.Context;
 import android.os.IBinder;
+import android.os.RemoteException;
 
 import com.chinatsp.weaher.WeatherUtil;
+import com.iflytek.autofly.weather.IRefreshCallback;
 import com.iflytek.autofly.weather.IRequestCallback;
 import com.iflytek.autofly.weather.entity.WeatherInfo;
 import com.iflytek.weathercontrol.IRemoteCallback;
@@ -57,7 +59,7 @@ public class WeatherConnectProxy implements RemoteProxy {
     @Override
     public void requestData(IOnRequestListener onRequestListener) {
         WeatherUtil.logD("WeatherConnectProxy requestData");
-        mWeatherRemoteControl.getWeatherInfoList(new IRequestCallback() {
+        mWeatherRemoteControl.getWeatherInfoList(new IRequestCallback.Stub() {
             @Override
             public void onSuccess(List<WeatherInfo> list) {
                 WeatherUtil.logD("WeatherConnectProxy getWeatherInfoList onSuccess : "+list.size());
@@ -72,11 +74,6 @@ public class WeatherConnectProxy implements RemoteProxy {
                 if (onRequestListener != null) {
                     onRequestListener.onFail(s);
                 }
-            }
-
-            @Override
-            public IBinder asBinder() {
-                return null;
             }
         });
     }

@@ -50,7 +50,6 @@ public class NaviBigCardHolder extends NaviCardHolder {
     public NaviBigCardHolder(@NonNull View rootView, NaviController controller) {
         this(rootView);
         mController = controller;
-        Context context = rootView.getContext();
     }
 
     private NaviController mController;

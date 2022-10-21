@@ -95,7 +95,7 @@ public class WeatherBigCardHolder extends WeatherCardHolder{
         tvCardWeatherTemperature.setText(weatherInfo.getTemp());
         tvCardWeatherTemperatureRange.setText(WeatherUtil.getTemperatureRange(weatherInfo, mResources));
 
-        WeatherTypeRes weatherTypeRes = new WeatherTypeRes(WeatherUtil.getWeatherType(weatherInfo.getWeatherType()));
+        WeatherTypeRes weatherTypeRes = WeatherUtil.parseType(weatherInfo.getWeather());
         ivCardWeatherIcon.setImageResource(weatherTypeRes.getIcon());
     }
     public void updateWeatherList(List<WeatherInfo> weatherInfoList) {
