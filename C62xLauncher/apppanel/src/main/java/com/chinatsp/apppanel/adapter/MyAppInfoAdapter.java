@@ -981,12 +981,13 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
     private static final long MIN_CLICK_INTERVAL = 1000;
     //dialog防抖
     protected boolean isTimeEnabled() {
-        long currentTimeMillis = System.currentTimeMillis();
-        if (Math.abs(currentTimeMillis - lastTimeMillis) > MIN_CLICK_INTERVAL) {
-            lastTimeMillis = currentTimeMillis;
-            return true;
-        }
-        return false;
+//        long currentTimeMillis = System.currentTimeMillis();
+//        if (Math.abs(currentTimeMillis - lastTimeMillis) > MIN_CLICK_INTERVAL) {
+//            lastTimeMillis = currentTimeMillis;
+//            return true;
+//        }
+//        return false;
+        return true;
     }
 
     private List<LocationBean> getAddAppLists(int parentIndex,TextView tv){

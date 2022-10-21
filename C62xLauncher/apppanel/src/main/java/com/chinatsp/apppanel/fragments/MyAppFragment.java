@@ -595,7 +595,7 @@ public class MyAppFragment extends Fragment {
                 if(k < data.size()){
                     mMyAppInfoAdapter.notifyItemChanged(k);
                     boolean isSubShow = appInfoClassifyView.isSubContainerShow();
-                    if(isSubShow && lists != null){
+                    if(isSubShow && lists != null && lists.size() >= 3){
                         mMyAppInfoAdapter.getSubAdapter().initData(k,lists);
                     }
 
@@ -666,7 +666,7 @@ public class MyAppFragment extends Fragment {
                 if(k < data.size()){
                     mMyAppInfoAdapter.notifyItemChanged(k);
                     boolean isSubShow = appInfoClassifyView.isSubContainerShow();
-                    if(isSubShow && lists != null){
+                    if(isSubShow && lists != null && lists.size() >= 3){
                         mMyAppInfoAdapter.getSubAdapter().initData(k,lists);
                     }
 
@@ -706,7 +706,7 @@ public class MyAppFragment extends Fragment {
                 if(k < data.size()){
                     mMyAppInfoAdapter.notifyItemChanged(k);
                     boolean isSubShow = appInfoClassifyView.isSubContainerShow();
-                    if(isSubShow && lists != null){
+                    if(isSubShow && lists != null && lists.size() >= 3){
                         mMyAppInfoAdapter.getSubAdapter().initData(k,lists);
                     }
 
@@ -745,7 +745,7 @@ public class MyAppFragment extends Fragment {
                 if(k < data.size()){
                     mMyAppInfoAdapter.notifyItemChanged(k);
                     boolean isSubShow = appInfoClassifyView.isSubContainerShow();
-                    if(isSubShow && lists != null){
+                    if(isSubShow && lists != null && lists.size() >= 3){
                         mMyAppInfoAdapter.getSubAdapter().initData(k,lists);
                     }
 
@@ -780,7 +780,7 @@ public class MyAppFragment extends Fragment {
 
                                 mMyAppInfoAdapter.notifyItemChanged(k);
                                 isSubShow = appInfoClassifyView.isSubContainerShow();
-                                if(isSubShow && lists != null){
+                                if(isSubShow && lists != null && lists.size() >= 3){
                                     mMyAppInfoAdapter.getSubAdapter().initData(k,lists);
                                 }
                                 num = db.isExistPackage(mLocationBean.getPackageName());
@@ -1062,7 +1062,22 @@ public class MyAppFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-
+        List<String> installedPackages = new ArrayList<>();
+        List<LocationBean> lists = null;
+        LocationBean mLocationBean = null;
+        A:for(int k = 0; k < data.size(); k++) {
+            lists = data.get(k);
+            if (lists == null) continue;//如果是 添加按钮，跳过
+            for (int i = 0; i < lists.size(); i++) {
+                mLocationBean = lists.get(i);
+                if(mLocationBean != null && mLocationBean.getInstalled() == AppState.INSTALLED){
+                    installedPackages.add(mLocationBean.getPackageName());
+                }
+            }
+        }
+        if(installedPackages.size() != 0){
+            EventBus.getDefault().post(new InstalledAnimEndEvent(installedPackages));
+        }
     }
 
     @Override
