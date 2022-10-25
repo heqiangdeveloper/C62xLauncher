@@ -89,11 +89,11 @@ class CabinMeterFragment : BaseFragment<MeterViewModel, CabinMeterFragmentBindin
         }
         if (selectIndex == 1) {
             binding.ivMeasurement.setImageDrawable(activity?.let {
-                ContextCompat.getDrawable(it, R.drawable.company_mph)
+                ContextCompat.getDrawable(it, R.drawable.company_km)
             })
         } else {
             binding.ivMeasurement.setImageDrawable(activity?.let {
-                ContextCompat.getDrawable(it, R.drawable.company_km)
+                ContextCompat.getDrawable(it, R.drawable.company_mph)
             })
         }
     }

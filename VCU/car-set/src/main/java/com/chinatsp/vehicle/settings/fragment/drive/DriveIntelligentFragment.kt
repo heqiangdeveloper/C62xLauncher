@@ -245,5 +245,18 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
             })
         }
     }
+
+    override fun onPause() {
+        super.onPause()
+        binding.intelligentCruise.visibility = View.VISIBLE
+        binding.intelligentCruise.setImageDrawable(activity?.let {
+            ContextCompat.getDrawable(
+                it,
+                R.drawable.intelligent_cruise
+            )
+        })
+        binding.video.pause()
+    }
+
 }
 

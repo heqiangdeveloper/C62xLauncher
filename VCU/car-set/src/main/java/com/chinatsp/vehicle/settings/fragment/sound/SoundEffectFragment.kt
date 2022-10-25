@@ -103,6 +103,11 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
             binding.soundLoudnessControlCompensation.visibility = View.VISIBLE
             binding.line3.visibility = View.VISIBLE
         }
+        //LV3-LV4无环境音效功能
+        if (VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4, expect = true)) {
+            binding.soundEnvironmentalCompensation.visibility = View.GONE
+            binding.line1.visibility = View.GONE
+        }
     }
 
     private fun initDetailsClickListener() {

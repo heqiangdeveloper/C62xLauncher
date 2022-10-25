@@ -64,9 +64,6 @@ class SoundManageFragment : BaseTabFragment<BaseViewModel, SoundManageFragmentBi
             val child = tab.getChildAt(it)
             child.apply { setOnClickListener { onClick(this) } }
         }.toList()
-        if (VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4)) {
-            binding.soundManagerLeftTab[1].visibility = View.GONE
-        }
         initRouteListener()
     }
 
