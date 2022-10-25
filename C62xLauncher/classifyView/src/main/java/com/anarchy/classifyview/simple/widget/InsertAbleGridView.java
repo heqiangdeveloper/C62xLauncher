@@ -35,7 +35,7 @@ public class InsertAbleGridView extends ViewGroup implements CanMergeView{
     private int mColumnGap;
     private int mOutLinePadding;
     private int mInnerPadding;
-    private BagDrawable mBagDrawable;
+    public BagDrawable mBagDrawable;
     private SimpleAdapter mSimpleAdapter;
     private int parentIndex;
     private ChangeInfo mReturnInfo = new ChangeInfo();
@@ -179,7 +179,12 @@ public class InsertAbleGridView extends ViewGroup implements CanMergeView{
     @Override
     public void onMerged() {
         Log.d("heqq","onMerged");
-        mBagDrawable.setKeepShow(true);
+//        mBagDrawable.setKeepShow(true);
+        if(getChildCount() == 1){
+            mBagDrawable.setKeepShow(false);
+        }else {
+            mBagDrawable.setKeepShow(true);
+        }
         mBagDrawable.cancelMergeAnimation();
         if(getChildCount() >= mRowCount*mColumnCount){
             mScroller.startScroll(0,getHeight(),0,-getHeight(),500);

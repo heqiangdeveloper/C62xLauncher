@@ -1004,6 +1004,7 @@ public class ClassifyView extends FrameLayout {
     RecyclerView recyclerView;
     RelativeLayout relativeLayout;
     InsertAbleGridView insertAbleGridView;
+    boolean isDialogShow = false;//文件夹编辑框是否显示
     boolean isCountTimer = false;
     class MainDragListener implements View.OnDragListener {
         @Override
@@ -1175,7 +1176,6 @@ public class ClassifyView extends FrameLayout {
                     L.d("ACTION_DRAG_ENDED");
                     //因为sub中长按后，最后也会走到这里，所以需要判断是否是在sub中操作的
                     boolean isSubShow = isSubContainerShow();
-                    boolean isDialogShow = false;//文件夹编辑框是否显示
                     if(dialog == null){
                         isDialogShow = false;
                     }else {
@@ -1204,6 +1204,11 @@ public class ClassifyView extends FrameLayout {
                         doRecoverAnimation();
                     }
                     releaseVelocityTracker();
+                    if(inMainRegion){
+                        //更新桌面的所有图标，防止有的应用图标显示了文件夹边框
+                        Log.d("onNotifyAll","onNotifyAll..");
+                        mMainCallBack.onNotifyAll();
+                    }
                     break;
                 case DragEvent.ACTION_DRAG_EXITED:
                     L.d("ACTION_DRAG_EXITED");
@@ -1215,10 +1220,16 @@ public class ClassifyView extends FrameLayout {
                     }else {
                         isInDeleteMode = true;
                     }
+                    if(dialog == null){
+                        isDialogShow = false;
+                    }else {
+                        isDialogShow = dialog.isShowing();
+                    }
+                    Log.d("CountTimer","isInDeleteMode: " + isInDeleteMode + ",isDialogShow: " + isDialogShow);
                     //存储在SP中，在MyAppInfoAdapter中刷新时再判断是否显示删除按钮
                     SharedPreferences sp = getContext().getSharedPreferences(MyConfigs.APPPANELSP,Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sp.edit();
-                    editor.putBoolean(MyConfigs.MAINSHOWDELETE,isInDeleteMode ? true : false);
+                    editor.putBoolean(MyConfigs.MAINSHOWDELETE,isInDeleteMode && !isDialogShow ? true : false);
                     editor.commit();
                     L.d("ACTION_DROP");
                     if (inMergeState) {
@@ -1242,6 +1253,7 @@ public class ClassifyView extends FrameLayout {
                         mDragView.animate().x(targetX).y(targetY).scaleX(1f).scaleY(1f).setListener(mMergeAnimListener).setDuration(mAnimationDuration).start();
                         mergeSuccess = true;
                     }else {
+                        mMainCallBack.onMergeCancel(mMainRecyclerView, mSelectedPosition, mLastMergeStartPosition);
                         Log.d("MyAppFragment","main drag ACTION_DROP ReStoreDataEvent");
                         EventBus.getDefault().post(new ReStoreDataEvent());//通知存储数据
                     }

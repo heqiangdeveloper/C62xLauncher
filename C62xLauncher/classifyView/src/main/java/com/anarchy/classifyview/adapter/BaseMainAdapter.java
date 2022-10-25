@@ -73,6 +73,8 @@ public abstract class BaseMainAdapter<VH extends RecyclerView.ViewHolder, Sub ex
 
     public abstract void onMergeCancel(VH selectedViewHolder, VH targetViewHolder, int selectedPosition, int targetPosition);
 
+    public abstract void onNotifyAll();//更新所有的item状态
+
     public abstract void onMerged(VH selectedViewHolder, VH targetViewHolder, int selectedPosition, int targetPosition);
 
     public abstract ChangeInfo onPrePareMerge(VH selectedViewHolder, VH targetViewHolder, int selectedPosition, int targetPosition);

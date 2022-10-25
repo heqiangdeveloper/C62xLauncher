@@ -28,6 +28,7 @@ public interface MainRecyclerViewCallBack<Sub extends SubRecyclerViewCallBack> {
     ChangeInfo onPrepareMerge(RecyclerView parent, int selectedPosition, int targetPosition);
     void onStartMergeAnimation(RecyclerView parent,int selectedPosition,int targetPosition,int duration);
     void onMergeCancel(RecyclerView parent,int selectedPosition,int targetPosition);
+    void onNotifyAll();
     boolean onMove(int selectedPosition,int targetPosition);
     void moved(int selectedPosition,int targetPosition);
     boolean canMergeItem(int selectedPosition, int targetPosition);
