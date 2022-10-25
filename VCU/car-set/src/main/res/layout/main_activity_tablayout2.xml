@@ -36,7 +36,8 @@
                 app:tabIndicatorFullWidth="true"
                 app:tabIndicatorGravity="center"
                 app:tabMaxWidth="@dimen/main_tab_width"
-                app:tabMinWidth="@dimen/main_tab_width" />
+                app:tabMinWidth="@dimen/main_tab_width"
+                app:tabRippleColor="@color/transparent"/>
 
             <com.common.xui.widget.alpha.XUIAlphaTextView
                 android:id="@+id/device_upgrade"

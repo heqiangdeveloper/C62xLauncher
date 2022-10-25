@@ -1,6 +1,7 @@
 package com.chinatsp.vehicle.settings.fragment.cabin
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.DialogFragment
 import com.chinatsp.settinglib.Applet
@@ -38,7 +39,9 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBinding>(),
     IOptionAction {
-
+    val PRIVACY_MODE = 0x11
+    val TURN_OFF_SCREEN = 0x21
+    val NAVIGATION = 0x31
     private val manager: WheelManager
         get() = WheelManager.instance
 
@@ -100,7 +103,7 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
 
     private fun onViewClick(it: View) {
         when (it) {
-            binding.wheelCustomKeys ->  showDialogFragment(Constant.STEERING_CUSTOM_KEYPAD)
+            binding.wheelCustomKeys -> showDialogFragment(Constant.STEERING_CUSTOM_KEYPAD)
             binding.wheelAutomaticHeating -> showDialogFragment(Constant.STEERING_HEATING_SETTING)
         }
     }
@@ -125,12 +128,14 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
         val hintId =
             if (viewModel.swhFunction.value?.get() == true) R.string.switch_turn_on else R.string.switch_turn_off
         binding.wheelAutomaticHeatingTv.text = ResUtils.getString(hintId)
+        heelCustomKeys()
     }
 
     private fun addSwitchLiveDataListener() {
         viewModel.swhFunction.observe(this) {
             val hintId = if (it.get()) R.string.switch_turn_on else R.string.switch_turn_off
             binding.wheelAutomaticHeatingTv.text = ResUtils.getString(hintId)
+            heelCustomKeys()
         }
     }
 
@@ -230,4 +235,14 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
 //            }
 //        }
 //    }
+
+    private fun heelCustomKeys(){
+        val viewId = when (VcuUtils.getInt(key = Constant.CUSTOM_KEYPAD, value = PRIVACY_MODE)) {
+            NAVIGATION -> R.string.cabin_wheel_navigation
+            PRIVACY_MODE -> R.string.cabin_wheel_press_key_tv
+            TURN_OFF_SCREEN -> R.string.cabin_wheel_turn_screen
+            else -> null
+        }
+        binding.wheelCustomKeysTv.text = viewId?.let { ResUtils.getString(it) }
+    }
 }

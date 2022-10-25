@@ -318,6 +318,10 @@ IACC会优先通过识别⻋道两侧清晰的⻋道线进⾏横向辅助控制�
 员提供⻋辆左后⽅（或右后⽅）的盲区影像，辅助驾驶员进⾏安全驾驶。</string>
     <string name="meb_details">一种帮助驾驶员发现车辆后方障碍物，并在判断有碰撞危险时进行自动刹车制动的功能。</string>
 
+    <string name="global_txt_close">5分钟后您的爱车将自动关闭</string>
+    <string name="global_txt_engine">请启动发动机，避免蓄电池亏电</string>
+    <string name="global_txt_agree">确认</string>
+
     <string name="mixed">混响</string>
     <string name="resonant">共鸣</string>
     <string name="solo">独奏</string>
