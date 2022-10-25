@@ -173,6 +173,7 @@ public class InsertAbleGridView extends ViewGroup implements CanMergeView{
         mBagDrawable.cancelMergeAnimation();
         if(getChildCount() >= mRowCount*mColumnCount){
             mScroller.startScroll(0,getHeight(),0,-getHeight(),500);
+            invalidate();
         }
     }
 
@@ -188,6 +189,7 @@ public class InsertAbleGridView extends ViewGroup implements CanMergeView{
         mBagDrawable.cancelMergeAnimation();
         if(getChildCount() >= mRowCount*mColumnCount){
             mScroller.startScroll(0,getHeight(),0,-getHeight(),500);
+            invalidate();
         }
     }
 

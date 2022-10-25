@@ -24,6 +24,7 @@ import com.anarchy.classifyview.Bean.LocationBean;
 import com.anarchy.classifyview.ClassifyView;
 import com.anarchy.classifyview.adapter.MainRecyclerViewCallBack;
 import com.anarchy.classifyview.event.AppInstallStatusEvent;
+import com.anarchy.classifyview.event.ChangeSubTitleEvent;
 import com.anarchy.classifyview.event.ChangeTitleEvent;
 import com.anarchy.classifyview.event.Event;
 import com.anarchy.classifyview.event.HideSubContainerEvent;
@@ -796,6 +797,12 @@ public class MyAppFragment extends Fragment {
             Intent intent = new Intent();
             intent.setClassName("com.chinatsp.launcher","com.chinatsp.launcher.CarLauncher");
             getContext().startActivity(intent);
+        }else if(event instanceof ChangeSubTitleEvent){
+            String title = ((ChangeSubTitleEvent)event).getTitle();
+            boolean isSubShow = appInfoClassifyView.isSubContainerShow();
+            if(isSubShow){
+                if(appInfoClassifyView.titleTv != null) appInfoClassifyView.titleTv.setText(title);
+            }
         }
     }
 
