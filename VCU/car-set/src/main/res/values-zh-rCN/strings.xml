@@ -52,7 +52,7 @@
     <string name="cabin_ac_auto_comfort">自动空调舒适性</string>
 
     <string name="cabin_safe_fortify_tone">设防提示音</string>
-    <string name="cabin_safe_lock_car">锁车提示声</string>
+    <string name="cabin_safe_lock_car">锁车提示音</string>
     <string name="cabin_safe_fortify_success_tone">设防成功提示音</string>
     <string name="cabin_safe_fortify_failure_tone">设防失败提示音</string>
     <string name="cabin_safe_video_safe_mode">视频安全模式</string>

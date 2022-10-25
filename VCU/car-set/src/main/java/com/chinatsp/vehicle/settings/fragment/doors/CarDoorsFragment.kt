@@ -57,7 +57,7 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
     }
 
     private fun initViewsDisplay() {
-        if (VcuUtils.isCareLevel(Level.LEVEL4)) {
+        if (VcuUtils.isCareLevel(Level.LEVEL4,Level.LEVEL5_2)) {//lv4跟lv5智能钥匙版本有车门智能进入功能
             binding.wheelAutomaticHeating.visibility = View.VISIBLE
             binding.line3.visibility = View.VISIBLE
         }

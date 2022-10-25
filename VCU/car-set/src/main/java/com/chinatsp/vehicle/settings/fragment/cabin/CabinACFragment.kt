@@ -1,11 +1,14 @@
 package com.chinatsp.vehicle.settings.fragment.cabin
 
 import android.os.Bundle
+import android.view.View
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.cabin.ACManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
+import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.IOptionAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CabinAcFragmentBinding
@@ -34,12 +37,20 @@ class CabinACFragment : BaseFragment<CabinACViewModel, CabinAcFragmentBinding>()
 
     override fun initData(savedInstanceState: Bundle?) {
         initSwitchOption()
+        initViewsDisplay()
         addSwitchLiveDataListener()
         setSwitchListener()
 
         initRadioOption()
         addRadioLiveDataListener()
         setRadioListener()
+    }
+
+    private fun initViewsDisplay() {
+        if (VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL5)) {//lv4跟lv5没有预通风功能
+            binding.cabinAcAutoWindLayout.visibility = View.GONE
+            binding.line3.visibility = View.GONE
+        }
     }
 
     override fun findRadioByNode(node: RadioNode): TabControlView? {

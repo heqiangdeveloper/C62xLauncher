@@ -2,12 +2,15 @@ package com.chinatsp.vehicle.settings.fragment.sound
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.get
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.sound.AudioManager
+import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
@@ -61,6 +64,9 @@ class SoundManageFragment : BaseTabFragment<BaseViewModel, SoundManageFragmentBi
             val child = tab.getChildAt(it)
             child.apply { setOnClickListener { onClick(this) } }
         }.toList()
+        if (VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4)) {
+            binding.soundManagerLeftTab[1].visibility = View.GONE
+        }
         initRouteListener()
     }
 

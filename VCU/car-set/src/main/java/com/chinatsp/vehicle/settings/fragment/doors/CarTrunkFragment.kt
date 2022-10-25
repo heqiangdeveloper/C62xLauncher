@@ -138,7 +138,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     }
 
     private fun initViewDisplay() {
-        if (VcuUtils.isCareLevel(Level.LEVEL5, Level.LEVEL5_2, expect = true)) {
+        if (VcuUtils.isCareLevel(Level.LEVEL5, expect = true)) {
             binding.linearLayout.visibility = View.GONE
             binding.line2.visibility = View.GONE
         }
@@ -331,7 +331,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         viewModel.lightAlarmFunction.observe(this) {
             doUpdateSwitch(SwitchNode.STERN_LIGHT_ALARM, it)
             updateOptionActive()
-            if(it.data){
+            if (it.data) {
                 animFlashAlarm.start(false, duration, object : AnimationDrawable.AnimationLisenter {
                     override fun startAnimation() {
                         if (isShowSeek()) {
@@ -360,7 +360,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         viewModel.audioAlarmFunction.observe(this) {
             doUpdateSwitch(SwitchNode.STERN_AUDIO_ALARM, it)
             updateOptionActive()
-            if(it.data){
+            if (it.data) {
                 animBuzzerAlarms.start(
                     false, duration,
                     object : AnimationDrawable.AnimationLisenter {
@@ -465,15 +465,15 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
 //        this.progress = progress.toInt()
         if (fromUser) {
             //manager.doSetVolume(Progress.TRUNK_STOP_POSITION, progress.toInt())
-           //viewModel.onProgressChanged(Progress.TRUNK_STOP_POSITION, progress.toInt())
+            //viewModel.onProgressChanged(Progress.TRUNK_STOP_POSITION, progress.toInt())
             initLocation(progress.toInt())
             binding.ivCarTrunk.setImageResource(trunkAnimationResource[location])
         }
 //        animOpenDoor.progressStart(progress.toInt())
     }
 
-    override fun onStopTrackingTouch(isCanDrag: Boolean,lastValue:Float) {
-        if(isCanDrag){
+    override fun onStopTrackingTouch(isCanDrag: Boolean, lastValue: Float) {
+        if (isCanDrag) {
             manager.doSetVolume(Progress.TRUNK_STOP_POSITION, lastValue.toInt())
             viewModel.onProgressChanged(Progress.TRUNK_STOP_POSITION, lastValue.toInt())
         }

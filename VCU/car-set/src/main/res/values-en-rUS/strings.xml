@@ -38,7 +38,7 @@
     <string name="drive_auto_lock">Driving automatic locked</string>
     <string name="unlock_fron">Unlock front door only</string>
     <string name="four_door_unlock">Four door unlock</string>
-    <string name="vcu_cabin_wheel">方向盘</string>
+    <string name="vcu_cabin_wheel">Steering wheel</string>
     <string name="vcu_cabin_seat">Seat</string>
     <string name="vcu_cabin_air_conditioner">AC</string>
     <string name="vcu_cabin_safety">Safety</string>
@@ -52,7 +52,7 @@
     <string name="cabin_ac_auto_comfort">Automatic AC Comfort</string>
 
     <string name="cabin_safe_fortify_tone">Set defense prompt</string>
-    <string name="cabin_safe_lock_car">锁车提示声</string>
+    <string name="cabin_safe_lock_car">锁车提示音</string>
     <string name="cabin_safe_fortify_success_tone">设防成功提示音</string>
     <string name="cabin_safe_fortify_failure_tone">设防失败提示音</string>
     <string name="cabin_safe_video_safe_mode">Video safe mode</string>
@@ -71,7 +71,7 @@
     <string name="cabin_seat_welcomes_guests">Driver welcome</string>
     <string name="cabin_seat_close">已关闭</string>
     <string name="cabin_seat_copilot_guests">Passenger welcome</string>
-    <string name="cabin_seat_copilot_guests_position">副驾迎宾位置</string>
+    <string name="cabin_seat_copilot_guests_position">Passenger welcome position</string>
     <string name="cabin_seat_automatic_heating">Seat self heating</string>
     <string name="cabin_seat_set_up">请先设置副驾常用位置和迎宾位置</string>
     <string name="cabin_seat_passenger_safety">开启后，副驾座椅移动时，请注意后排乘客安全</string>
@@ -88,14 +88,14 @@
     <string name="cabin_other_battery_optimization">智能电源管家</string>
     <string name="cabin_other_battery_optimization_content">监控车辆电能消耗情况，低\n电量状态下，对整车舒适性\n功能（空调、大屏等）进行\n管理。</string>
     <string name="cabin_other_wireless_charging">Wireless charging</string>
-    <string name="cabin_other_wireless_charging_abnormal_work">无线充电工作异常</string>
-    <string name="cabin_other_maintenance">请尽快前往官方指定维修点进行检测</string>
+    <string name="cabin_other_wireless_charging_abnormal_work">Wireless charging works abnormally</string>
+    <string name="cabin_other_maintenance">Please go to the official designated maintenance as soon as possible</string>
     <string name="cabin_other_wireless_charging_lamp">储物盒灯</string>
     <string name="cabin_other_sensor_sensitivity">传感器灵敏度</string>
-    <string name="cabin_other_trailer_remind_distance">拖车提醒距离</string>
+    <string name="cabin_other_trailer_remind_distance">Trailer remind distance</string>
     <string name="cabin_other_toast_content">车辆被拖时无法收到相关提醒</string>
     <string name="cabin_other_wireless_charging_working_properly">无线充电工作正常</string>
-    <string name="cabin_other_foreign_matter">检测到金属异物，请移开异物</string>
+    <string name="cabin_other_foreign_matter">Foreign metal object detected, please remove</string>
     <string name="cabin_other_determine">确定</string>
 
     <string name="note_users_title">用户须知</string>
@@ -223,7 +223,7 @@
 
     <string name="lighting_title">light</string>
     <string name="lighting_atmosphere_lamp">Ambient light</string>
-    <string name="lighting_screen">屏幕亮度</string>
+    <string name="lighting_screen">Screen brightness</string>
     <string name="lighting_go_home_title">Follow me home</string>
     <string name="lighting_go_home_content">After locked your car, the dipped headlight will be on for a while and then off to Light up the way home for you</string>
     <string name="lighting_turn_signal_title">Number of turn signal flashing when lane change</string>
@@ -269,8 +269,10 @@
     <string name="sound_loudness_control_content">在小音量时，加强低音和高\n音；反之，大音量时，降低低\n音和高音，以让响度均衡</string>
 
     <string name="vcu_action_switch_failed">切换失败</string>
-    <string name="vcu_eps_action_switch_check">请确认是否满⾜以下条件：\n1.发动机已启动\n2.处于安全⻋速下\n3.其他条件请阅读整⻋说明书</string>
-    <string name="vcu_eps_action_switching">转向模式切换中</string>
+    <string name="vcu_eps_action_switch_check">The switching condition is not met. Please check whether the following conditions are met：
+        \n1.Engine is started\n2.At a safe speed
+        \n3.Please read the vehicle manual for other conditions</string>
+    <string name="vcu_eps_action_switching">Steering mode switching</string>
 
     <string name="iacc_details">智能巡航辅助系统IACC在全速范围内（0 ~ 150km/h）为驾驶员提供⻋辆的纵向和横向辅助。
 其中纵向辅助由⾃适应巡航控制系统ACC实现，控制⻋辆在⻋速0 ~ 150km/h范围内，与前⽅⻋辆进⾏跟⻋巡航，或在30
