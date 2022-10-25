@@ -1,7 +1,6 @@
 package com.chinatsp.vehicle.settings.fragment.cabin
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.DialogFragment
 import com.chinatsp.settinglib.Applet
@@ -28,6 +27,7 @@ import com.common.xui.utils.ResUtils
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.collections.HashMap
 
 /**
  * @author : luohong
@@ -38,7 +38,7 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 @AndroidEntryPoint
 class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBinding>(),
-    IOptionAction {
+    IOptionAction,SteeringKeysDialogFragment.SetOnClickDialogListener {
     val PRIVACY_MODE = 0x11
     val TURN_OFF_SCREEN = 0x21
     val NAVIGATION = 0x31
@@ -135,7 +135,6 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
         viewModel.swhFunction.observe(this) {
             val hintId = if (it.get()) R.string.switch_turn_on else R.string.switch_turn_off
             binding.wheelAutomaticHeatingTv.text = ResUtils.getString(hintId)
-            heelCustomKeys()
         }
     }
 
@@ -205,6 +204,7 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
         if (Constant.STEERING_CUSTOM_KEYPAD == serial) {
             cleanPopupSerial(serial)
             fragment = SteeringKeysDialogFragment()
+            fragment.onSetClickDialogListener(this)
         } else if (Constant.STEERING_HEATING_SETTING == serial) {
             cleanPopupSerial(serial)
             fragment = SteeringHeatDialogFragment()
@@ -244,5 +244,9 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
             else -> null
         }
         binding.wheelCustomKeysTv.text = viewId?.let { ResUtils.getString(it) }
+    }
+
+    override fun onClickDialogListener(content: String?) {
+        heelCustomKeys()
     }
 }
