@@ -119,7 +119,7 @@ public class ClassifyView extends FrameLayout {
     private RecyclerView mMainRecyclerView;
     private RecyclerView mSubRecyclerView;
     private EditText titleEt;
-    private TextView titleTv;
+    public TextView titleTv;
     private RelativeLayout editRl;
 
     private int mMainSpanCount;
