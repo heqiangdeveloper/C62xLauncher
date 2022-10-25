@@ -105,7 +105,13 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         db = new MyAppDB(context);
         for(int i = 0; i < mData.size(); i++){
             infos = mData.get(i);
-            titleLists.add(infos.get(0).getTitle());
+            infos.removeAll(Collections.singleton(null));
+            if(infos.size() == 0){
+                mData.remove(i);
+                i--;
+            }else {
+                titleLists.add(infos.get(0).getTitle());
+            }
         }
     }
 
