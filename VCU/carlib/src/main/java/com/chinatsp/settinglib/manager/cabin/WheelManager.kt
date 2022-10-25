@@ -73,8 +73,7 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
     }
 
     private fun initVolume(type: Progress): Volume {
-        val pos = 0x05
-        val result = VcuUtils.getInt(key = Constant.STEERING_HEAT_TEMP, value = pos)
+        val result = VcuUtils.getInt(key = Constant.STEERING_HEAT_TEMP, value = type.def)
         //        AppExecutors.get()?.singleIO()?.execute {
 //            val result = VcuUtils.getInt(key = Constant.STEERING_HEAT_TEMP, value = pos)
 //            doUpdateProgress(volume, result, true, instance::doProgressChanged)
@@ -172,24 +171,17 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
 
     private fun doHandleCustomKeyboard(property: CarPropertyValue<*>) {
         val value = property.value
-        if (value is Int) {
-            if (0x02 == value) {
-                doSendAction(Constant.VCU_CUSTOM_KEYPAD)
-            } else if (0x01 == value) {
-
-            }
+        Timber.d("doHandleCustomKeyboard ---------------value:$value")
+        if (value !is Int) {
+            return
         }
-    }
-
-    private fun doSendAction(action: String) {
-        var location =
-            RouterSerial.makeRouteSerial(4, 0, 1)
-        val intent = Intent(action)
-        Timber.e("doSendAction====================action:$action")
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        intent.putExtra("ROUTE_SERIAL", location)
-        intent.putExtra("DIALOG_SERIAL", "")
-        BaseApp.instance.startActivity(intent)
+        if (0x2 == value) {
+            val intent = Intent(Constant.VCU_CUSTOM_KEYPAD)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            BaseApp.instance.startActivity(intent)
+        } else if (0x1 == value) {
+            Timber.d("execute custom keypad!!")
+        }
     }
 
     private fun writeProperty(volume: Volume, value: Int): Boolean {

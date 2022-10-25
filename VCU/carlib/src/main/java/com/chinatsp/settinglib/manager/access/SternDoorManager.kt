@@ -20,7 +20,11 @@ import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.annotation.Action
+import com.chinatsp.vehicle.controller.annotation.ICar
+import com.chinatsp.vehicle.controller.annotation.IPart
+import com.chinatsp.vehicle.controller.annotation.Model
 import com.chinatsp.vehicle.controller.bean.CarCmd
+import timber.log.Timber
 import java.lang.ref.WeakReference
 
 /**
@@ -196,27 +200,52 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
         }
     }
 
-    override fun doCarControlCommand(cmd: CarCmd, callback: ICmdCallback?) {
-        if (Action.OPEN == cmd.action) {
-            doControlTrunk(cmd, callback, true)
-            callback?.onCmdHandleResult(cmd)
-        } else if (Action.CLOSE == cmd.action) {
-            doControlTrunk(cmd, callback, false)
-            callback?.onCmdHandleResult(cmd)
+    override fun doCarControlCommand(command: CarCmd, callback: ICmdCallback?) {
+        if (Model.ACCESS_STERN != command.model) {
+            return
+        }
+        Timber.d("doOuterControlCommand $command")
+        if (ICar.DOORS == command.car) {
+            if (IPart.HEAD == command.part) {
+                doControlHood(command, callback)
+                return
+            }
+            if (IPart.TAIL == command.part) {
+                doControlTrunk(command, callback)
+                return
+            }
         }
     }
 
-    private fun doControlTrunk(cmd: CarCmd, callback: ICmdCallback?, open: Boolean) {
+    private fun doControlHood(command: CarCmd, callback: ICmdCallback?) {
         if (!VcuUtils.isSupportFunction(OffLine.ETRUNK)) {
-            cmd.message = "您的爱车不支持此功能！"
+            command.message = "您的爱车不支持此功能！"
             return
         }
-        if (open) {
+        if (Action.OPEN == command.action) {
             doTrunkAction(isTrunkOpened(), isTrunkOpening(), 1)
-            cmd.message = "电动尾门已打开"
-        } else {
+            command.message = "${command.slots?.name}已打开"
+            callback?.onCmdHandleResult(command)
+        } else if (Action.CLOSE == command.action) {
             doTrunkAction(isTrunkClosed(), isTrunkClosing(), 0)
-            cmd.message = "电动尾门已关闭"
+            command.message = "${command.slots?.name}已关闭"
+            callback?.onCmdHandleResult(command)
+        }
+    }
+
+    private fun doControlTrunk(command: CarCmd, callback: ICmdCallback?) {
+        if (!VcuUtils.isSupportFunction(OffLine.ETRUNK)) {
+            command.message = "您的爱车不支持此功能！"
+            return
+        }
+        if (Action.OPEN == command.action) {
+            doTrunkAction(isTrunkOpened(), isTrunkOpening(), 1)
+            command.message = "${command.slots?.name}已打开"
+            callback?.onCmdHandleResult(command)
+        } else if (Action.CLOSE == command.action) {
+            doTrunkAction(isTrunkClosed(), isTrunkClosing(), 0)
+            command.message = "${command.slots?.name}已关闭"
+            callback?.onCmdHandleResult(command)
         }
     }
 
@@ -261,7 +290,7 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
      * 尾门是否已经打开
      * @return true 表示已经打开
      */
-    fun isTrunkOpened(): Boolean {
+    private fun isTrunkOpened(): Boolean {
         val value = getTrunkStatusValue()
         return isValidValue(value, 0x00, 0x06, 0x07) && 0x01 == value
     }
@@ -270,7 +299,7 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
      * 尾门是否正在打开中
      * @return true 表示打开中
      */
-    fun isTrunkOpening(): Boolean {
+    private fun isTrunkOpening(): Boolean {
         val value = getTrunkStatusValue()
         return isValidValue(value, 0x00, 0x06, 0x07) && 0x03 == value
     }
@@ -279,7 +308,7 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
      * 尾门是否已经关闭
      * @return true 表示已经关闭
      */
-    fun isTrunkClosed(): Boolean {
+    private fun isTrunkClosed(): Boolean {
         val value = getTrunkStatusValue()
         return isValidValue(value, 0x00, 0x06, 0x07) && 0x02 == value
     }
@@ -288,7 +317,7 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
      * 尾门是否正在关闭中
      * @return true 表示关闭中
      */
-    fun isTrunkClosing(): Boolean {
+    private fun isTrunkClosing(): Boolean {
         val value = getTrunkStatusValue()
         return isValidValue(value, 0x00, 0x06, 0x07) && 0x04 == value
     }

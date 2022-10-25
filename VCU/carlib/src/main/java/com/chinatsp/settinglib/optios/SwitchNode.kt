@@ -197,7 +197,7 @@ enum class SwitchNode(
         get = Norm(on = 0x0, off = 0x4, signal = CarCabinManager.ID_LOU_PWR_MNGT_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_LOU_PWR_MNG_SWT),
         inactive = intArrayOf(0x1, 0x3),
-        default = true
+        default = false
     ),
 
     /**
@@ -550,6 +550,7 @@ enum class SwitchNode(
      * set -> not used in C40D/C53F HMA funtion switch signal,if not set 'HMAOnOffReq' ,
      *        the value of signal is 0x0(inactive)[0x1,0,0x0,0x3]
      *        0x0: Inactive; 0x1: On; 0x2: Off; 0x3: Reserved
+     * 一个是HMA_ON_OFF_REQ，一个是AVN_HMA_ON_OFF_STS，
      */
     ADAS_HMA(//向产品确认值
         get = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_HMA_STATUS),

@@ -33,7 +33,7 @@ interface Keywords {
         const val LAMPLIGHTMINUS = "MINUS"
         const val LAMPLIGHTPLUS_1 = "高"
         const val LAMPLIGHTPLUS_2 = "低"
-        val WINDOW_ALL = arrayOf("所有窗户", "所有车窗")
+        val WINDOW_ALL = arrayOf("所有窗户", "所有车窗", "窗户", "车窗")
         const val WINDOW_LEFT_FRONT = "左前车窗"
         const val WINDOW_RIGHT_FRONT = "右前车窗"
         const val WINDOW_LEFT_FRONT2 = "主驾车窗"
@@ -41,7 +41,7 @@ interface Keywords {
         const val WINDOW_LEFT_BACK = "左后车窗"
         const val WINDOW_RIGHT_BACK = "右后车窗"
         const val WINDOW_BACK = "后车窗"
-        const val WINDOW = "窗户"
+        const val WINDOW = "车窗"
         const val WINDOW_VENTILATE = "车窗透气"
         const val WINDOW_FRONT = "前车窗"
         const val WINDOW_FRONT2 = "前排"
@@ -61,17 +61,8 @@ interface Keywords {
         const val OIL_SHROUD_TEXT = "油箱"
         val OIL_SHROUDS = arrayOf("油箱盖", "油箱")
         val HOODS = arrayOf("前罩", "前罩盖", "前舱盖", "引擎盖", "电动前罩")
-        val TRUNKS = arrayOf("电动后备厢",
-            "后背门",
-            "电动后背门",
-            "电动尾门",
-            "尾门",
-            "后备箱",
-            "电动后备箱",
-            "尾箱",
-            "电动尾箱",
-            "背门",
-            "电动背门")
+        val TRUNKS = arrayOf("电动后备厢", "后背门", "电动后背门", "电动尾门", "尾门",
+            "后备箱", "电动后备箱", "尾箱", "电动尾箱", "背门", "电动背门")
         val WIPERS = arrayOf("雨刮", "雨刷", "前雨刮", "前雨刮器", "雨刮器", "前雨刷", "前雨刷器", "雨刷器")
         val REAR_WIPERS = arrayOf("后雨刮", "后雨刮器", "后雨刷器", "后雨刷")
         val TIRE_PRESSURE_MONITORS = arrayOf("胎压监测", "胎压")
@@ -87,8 +78,15 @@ interface Keywords {
         const val MODE_COMFORT = "舒适"
         const val MODE_TRACK = "赛道"
         val MODE_NAMES = arrayOf(MODE_SPORT, MODE_COMFORT, MODE_ECO, MODE_TRACK)
-        val DRIVER_WINDOW = arrayOf("左前车窗", "前左车窗", "主驾车窗")
-        val PASSENGER_WINDOW = arrayOf("右前车窗", "副驾车窗", "前右车窗")
+        val L_F_WINDOW = arrayOf("左前车窗", "前左车窗", "主驾车窗", "左前窗户", "前左窗户", "主驾窗户")
+        val R_F_WINDOW = arrayOf("右前车窗", "前右车窗", "副驾车窗", "右前窗户", "副驾窗户", "前右窗户")
+
+        val L_R_WINDOW = arrayOf("左后车窗", "后左车窗", "左后窗户", "后左窗户")
+        val R_R_WINDOW = arrayOf("右后车窗", "后右车窗", "右后窗户", "后右窗户")
+
+        val L_WINDOW = arrayOf("左车窗", "左窗户")
+        val R_WINDOW = arrayOf("右车窗", "右窗户")
+
         val VOICE_VENT = arrayOf("车外声浪")
         val WHEELS = arrayOf("方向盘", "方向")
 

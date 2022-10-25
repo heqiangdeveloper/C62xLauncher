@@ -88,7 +88,9 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
                 popupSerial = it.getStringExtra(Constant.DIALOG_SERIAL) ?: ""
             } else if (Constant.VCU_CUSTOM_KEYPAD == action) {
                 routeValue = RouterSerial.makeRouteSerial(4, 0, 0)
-                popupSerial = it.getStringExtra(Constant.DIALOG_SERIAL) ?: ""
+                popupSerial = "1004_2000_3001"
+                doNavigation(routeValue, popupSerial, general = true)
+                return
             } else if (Constant.VCU_GENERAL_ROUTER == action) {
                 routeValue = it.getIntExtra(Constant.ROUTE_SERIAL, Constant.INVALID)
                 popupSerial = it.getStringExtra(Constant.DIALOG_SERIAL) ?: ""
@@ -118,7 +120,11 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
                 node2.pnode = node1
                 level1.postValue(node1)
                 if (node1.valid && node1.uid in obtainTabs().map { tab -> tab.uid }.toSet()) {
-                    tabLocation.postValue(node1.uid)
+                    if (VcuUtils.isCareLevel(Level.LEVEL3, expect = true)) {
+                        tabLocation.postValue(node1.uid - 1)
+                    }else {
+                        tabLocation.postValue(node1.uid)
+                    }
                 }
             }
             return

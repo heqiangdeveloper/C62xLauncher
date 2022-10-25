@@ -18,7 +18,7 @@ import androidx.annotation.IntDef
     IPart.RIGHT_BACK,
     IPart.TAIL,
     IPart.SKYLIGHT,
-    IPart.SKYLIGHT2
+    IPart.LOVE_LUCY
 )
 @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
 annotation class IPart {
@@ -31,7 +31,7 @@ annotation class IPart {
         const val RIGHT_BACK = 0x1 shl 4
         const val TAIL = 0x1 shl 5
         const val SKYLIGHT = 0x1 shl 6
-        const val SKYLIGHT2 = 0x1 shl 7
+        const val LOVE_LUCY = 0x1 shl 7
         const val LEFT = 0x1 shl 8
         const val RIGHT = 0x1 shl 9
     }

@@ -134,12 +134,20 @@ abstract class BaseManager : IManager {
         return true
     }
 
+    fun writeProperty(id: Int, value: IntArray, origin: Origin, area: Area = Area.GLOBAL): Boolean {
+        return signalService.doSetProperty(id, value, origin, area)
+    }
+
     fun writeProperty(id: Int, value: Int, origin: Origin, area: Area = Area.GLOBAL): Boolean {
         return signalService.doSetProperty(id, value, origin, area)
     }
 
     fun writeProperty(id: Int, value: Int, origin: Origin, areaValue: Int): Boolean {
         return signalService.doSetProperty(id, value, origin, areaValue)
+    }
+
+    fun readIntArrayProperty(id: Int, origin: Origin, area: Area = Area.GLOBAL): IntArray {
+        return signalService.readIntArray(id, origin, area)
     }
 
     fun readIntProperty(id: Int, origin: Origin, area: Area = Area.GLOBAL): Int {

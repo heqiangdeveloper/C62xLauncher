@@ -22,3 +22,4 @@
 <HeadLamps type="int" >0</HeadLamps>                          			<!-- 前大灯状态 0：关闭 1：近光 2：远光-->
 <BrakeLights type="int" >0</BrakeLights>                                <!-- 刹车灯状态 1：开启 0：关闭 -->
 <PositionLight type="int" >0</PositionLight>                            <!-- 位置灯状态 1：开启 0：关闭 -->
+<RearFogLamp type="int" >0</RearFogLamp>                                <!-- 后雾灯状态 1：开启 0：关闭 -->

@@ -20,7 +20,7 @@ import androidx.core.content.ContextCompat;
 import com.common.xui.R;
 
 public class VerticalSeekBar extends View {
-    private  int min = 0;
+    private int min = 0;
     private int max = 100;
     private int steep = 10;
     private int cornerRadius = 10;
@@ -271,6 +271,7 @@ public class VerticalSeekBar extends View {
             throw new IllegalArgumentException("Max should not be less than zero");
         this.max = mMax;
     }
+
     public void setMin(int mMin) {
         if (mMin < min)
             throw new IllegalArgumentException("Max should not be less than zero");

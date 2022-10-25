@@ -2,6 +2,7 @@ package com.chinatsp.settinglib.optios
 
 import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.hvac.CarHvacManager
+import android.car.hardware.mcu.CarMcuManager
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.RNorm
 import com.chinatsp.settinglib.sign.Origin
@@ -307,13 +308,21 @@ enum class RadioNode(
      * get -> 【反馈】仪表报警音量等级反馈信号 0x0: High; 0x1: medium; 0x2: Low; 0x3: Reserved
      * set -> 仪表报警音量等级开关触发[0x1,0,0x0,0x3] 0x0: Inactive; 0x1: High; 0x2: medium; 0x3: Low
      */
+//    ICM_VOLUME_LEVEL(
+//        get = RNorm(values = intArrayOf(0x0, 0x1, 0x2),
+//            signal = CarCabinManager.ID_ICM_HUM_VOLUME_STS),
+//        set = RNorm(values = intArrayOf(0x1, 0x2, 0x3),
+//            signal = CarCabinManager.ID_HUM_ICM_VOLUME_LEVEL),
+//        inactive = intArrayOf(0x3),
+//        def = 0x0
+//    ),
+
     ICM_VOLUME_LEVEL(
-        get = RNorm(values = intArrayOf(0x0, 0x1, 0x2),
-            signal = CarCabinManager.ID_ICM_HUM_VOLUME_STS),
-        set = RNorm(values = intArrayOf(0x1, 0x2, 0x3),
-            signal = CarCabinManager.ID_HUM_ICM_VOLUME_LEVEL),
-        inactive = intArrayOf(0x3),
-        def = 0x0
+        get = RNorm(values = intArrayOf(0x3, 0x2, 0x1), origin = Origin.MCU,
+            signal = CarMcuManager.ID_AUDIO_VOL_INFO),
+        set = RNorm(values = intArrayOf(0x3, 0x2, 0x1), origin = Origin.MCU,
+            signal = CarMcuManager.ID_AUDIO_VOL_INFO),
+        def = 0x3
     ),
 
     /**
