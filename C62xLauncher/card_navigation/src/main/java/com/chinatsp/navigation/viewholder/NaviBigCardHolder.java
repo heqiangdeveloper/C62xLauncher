@@ -1,6 +1,5 @@
 package com.chinatsp.navigation.viewholder;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
@@ -8,7 +7,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,6 +41,7 @@ public class NaviBigCardHolder extends NaviCardHolder {
     private TextView tvCardNaviTBTRemainDistance;
     private TextView tvCardNaviTBTRemainTime;
     private TextView tvCardNaviTBTArriveTime;
+    private ImageView ivCardNaviExit;
     private RecyclerView rcvLaneInfo;
     private LaneListAdapter mLaneListAdapter;
     private boolean enableTotalLaneShow = false;
@@ -67,7 +66,7 @@ public class NaviBigCardHolder extends NaviCardHolder {
         ivCardNaviCompany = rootView.findViewById(R.id.ivCardNaviCompany);
         layoutCardNetworkError = rootView.findViewById(R.id.layoutCardNetworkError);
         layoutCardNaviStatus = rootView.findViewById(R.id.layoutCardNaviStatus);
-        layoutCardNaviCruise = rootView.findViewById(R.id.layoutCardNaviCruise);
+        layoutCardNaviCruise = rootView.findViewById(R.id.layoutCardNaviCruiseStatus);
 
         tvCardNaviTurnRoadName = rootView.findViewById(R.id.tvCardNaviTurnRoadName);
         ivCardNaviTBTDirectIcon = rootView.findViewById(R.id.ivCardNaviTBTDirectIcon);
@@ -77,6 +76,7 @@ public class NaviBigCardHolder extends NaviCardHolder {
         tvCardNaviTBTRemainDistance = rootView.findViewById(R.id.tvCardNaviTBTRemainDistance);
         tvCardNaviTBTRemainTime = rootView.findViewById(R.id.tvCardNaviTBTRemainTime);
         tvCardNaviTBTArriveTime = rootView.findViewById(R.id.tvCardNaviTBTArriveTime);
+        ivCardNaviExit = rootView.findViewById(R.id.ivCardNaviExit);
 
         rcvLaneInfo = rootView.findViewById(R.id.rcvLaneInfo);
         initLaneRcv();
@@ -84,6 +84,7 @@ public class NaviBigCardHolder extends NaviCardHolder {
         ivCardNaviSearch.setOnClickListener(mOnClickListener);
         ivCardNaviHome.setOnClickListener(mOnClickListener);
         ivCardNaviCompany.setOnClickListener(mOnClickListener);
+        ivCardNaviExit.setOnClickListener(mOnClickListener);
     }
 
     private void initLaneRcv() {
@@ -152,9 +153,15 @@ public class NaviBigCardHolder extends NaviCardHolder {
                 toSearch();
             } else if (v == ivCardNaviHome) {
                 naviToHome();
+            } else if (v == ivCardNaviExit) {
+                exitNaviStatus();
             }
         }
     };
+
+    private void exitNaviStatus() {
+        mController.exitNaviStatus();
+    }
 
     private void toSearch() {
         mController.startSearch();

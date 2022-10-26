@@ -220,4 +220,12 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
             mSmallCardViewHolder.hideNetworkError();
         }
     }
+
+    public void showDataError() {
+        if (mExpand) {
+            mBigCardViewHolder.showDataError();
+        } else {
+            mSmallCardViewHolder.showDataError();
+        }
+    }
 }

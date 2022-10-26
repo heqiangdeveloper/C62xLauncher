@@ -63,21 +63,6 @@ public class VolcanoRepository {
         Map<String, String> queryParams = params.getQueryParams();
         Map<String, String> header = params.getHeader();
 
-//        EasyLog.d(TAG, "queryParams:");
-//        queryParams.forEach(new BiConsumer<String, String>() {
-//            @Override
-//            public void accept(String s, String s2) {
-//                EasyLog.i(TAG, s + " --- "+ s2);
-//            }
-//        });
-//
-//        EasyLog.d(TAG, "headers:");
-//        header.forEach(new BiConsumer<String, String>() {
-//            @Override
-//            public void accept(String s, String s2) {
-//                EasyLog.i(TAG, s + " --- "+ s2);
-//            }
-//        });
         volcanoApi.ApiSubscribe(iHomeCardApi.getHomeCards(queryParams, header), new BaseObserver<VolcanoResponse>() {
             @Override
             public void onNext(VolcanoResponse volcanoResponse) {

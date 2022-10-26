@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import launcher.base.recyclerview.SimpleRcvDecoration;
+import launcher.base.utils.EasyLog;
 
 public class HomeDrawerCardViewHolder extends RecyclerView.ViewHolder {
 
@@ -20,6 +21,7 @@ public class HomeDrawerCardViewHolder extends RecyclerView.ViewHolder {
 
     public HomeDrawerCardViewHolder(@NonNull View itemView) {
         super(itemView);
+        EasyLog.i("HomeDrawerCardViewHolder", "init "+hashCode());
         rcvDrawerContent = itemView.findViewById(R.id.rcvDrawerContent);
         initDrawerRcv();
     }
@@ -46,6 +48,7 @@ public class HomeDrawerCardViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(int position) {
+        EasyLog.i("HomeDrawerCardViewHolder", "bind "+hashCode());
         if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }

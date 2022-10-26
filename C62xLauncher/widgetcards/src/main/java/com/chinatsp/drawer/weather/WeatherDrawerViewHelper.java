@@ -53,7 +53,7 @@ public class WeatherDrawerViewHelper {
         mUiHandler.post(new Runnable() {
             @Override
             public void run() {
-                WeatherTypeRes weatherTypeRes = new WeatherTypeRes(WeatherUtil.getWeatherType(weatherInfo.getWeatherType()));
+                WeatherTypeRes weatherTypeRes = WeatherUtil.parseType(weatherInfo.getWeather());
                 mRootView.setBackgroundResource(weatherTypeRes.getDrawerBg());
                 mTvDrawerWeatherWord.setText(weatherInfo.getWeather());
                 mIvDrawerWeatherType.setImageResource(weatherTypeRes.getIcon());

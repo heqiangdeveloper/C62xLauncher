@@ -171,7 +171,7 @@ public class CardEditorFragment extends BaseFragment implements EditorContract{
         CustomDialog editDialog = dialogMaster.getDialog();
         editDialog.setBtnOkText(R.string.card_edit_btn_save);
         editDialog.setBtnCancelText(R.string.card_edit_btn_cancel);
-        editDialog.setTitleIcon(R.drawable.card_icon_wifi_warning);
+        editDialog.setTitleIcon(R.drawable.card_icon_sdcard_warning);
         editDialog.show();
     }
 

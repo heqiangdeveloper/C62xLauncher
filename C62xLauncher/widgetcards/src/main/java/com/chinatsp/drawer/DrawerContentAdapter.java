@@ -12,6 +12,7 @@ import com.chinatsp.drawer.volcano.DrawerVolcanoHolder;
 
 import launcher.base.recyclerview.BaseViewHolder;
 import launcher.base.recyclerview.MultiStyleRcvAdapter;
+import launcher.base.utils.EasyLog;
 
 public class DrawerContentAdapter extends MultiStyleRcvAdapter<DrawerEntity> {
 
@@ -21,6 +22,7 @@ public class DrawerContentAdapter extends MultiStyleRcvAdapter<DrawerEntity> {
 
     @Override
     protected BaseViewHolder<DrawerEntity> createViewHolder(View view, int viewType) {
+        EasyLog.d("DrawerContentAdapter", "createViewHolder "+viewType);
         BaseViewHolder<DrawerEntity> viewHolder = null;
         switch (viewType) {
             case DrawerEntity.TYPE_SEARCH:

@@ -54,6 +54,7 @@ public class VolcanoController {
 
         @Override
         public void onFail(String msg) {
+            mView.showDataError();
             if (mView != null) {
                 mView.hideLoading();
             }

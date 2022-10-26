@@ -11,7 +11,9 @@ public class MapStatus {
     private int statusDetails;
 
     public static final int START_NAVIGATION = 16;
+    public static final int START_MOCK_NAVIGATION = 33;
     public static final int STOP_NAVIGATION = 17;
+    public static final int STOP_MOCK_NAVIGATION = 35; //结束模拟导航
     public static final int ARRIVED_NAVIGATION = 18; // 在STOP_NAVIGATION之前就会透出
 
 

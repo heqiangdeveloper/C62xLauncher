@@ -13,6 +13,8 @@ import com.chinatsp.navigation.gaode.bean.GuideInfo;
 import com.chinatsp.navigation.gaode.bean.TrafficLaneModel;
 import com.chinatsp.navigation.repository.DriveDirection;
 
+import launcher.base.utils.recent.RecentAppHelper;
+
 public class NaviSmallCardHolder extends NaviCardHolder {
     private ImageView ivCardNaviSearch;
     private ImageView ivCardNaviHome;
@@ -22,9 +24,12 @@ public class NaviSmallCardHolder extends NaviCardHolder {
     private ImageView ivCardNaviInstruction;
     private TextView tvCardNaviInstruction;
     private TextView tvCardNaviRoadTip;
+    private ImageView ivCardNaviExit;
+
     private ImageView ivCardNetworkErr;
     private TextView tvCardNetworkErr;
-    private View layoutCardNaviInstruction;
+    private View layoutCardNaviTBTStatus;
+    private View layoutCardNaviCruiseStatus;
 
     public NaviSmallCardHolder(@NonNull View rootView, NaviController controller) {
         this(rootView);
@@ -46,12 +51,15 @@ public class NaviSmallCardHolder extends NaviCardHolder {
         tvCardNaviRoadTip = rootView.findViewById(R.id.tvCardNaviRoadTip);
         ivCardNetworkErr = rootView.findViewById(R.id.ivCardNetworkErr);
         tvCardNetworkErr = rootView.findViewById(R.id.tvCardNetworkErr);
+        ivCardNaviExit = rootView.findViewById(R.id.ivCardNaviExit);
 
-        layoutCardNaviInstruction = rootView.findViewById(R.id.layoutCardNaviInstruction);
+        layoutCardNaviTBTStatus = rootView.findViewById(R.id.layoutCardNaviTBTStatus);
+        layoutCardNaviCruiseStatus = rootView.findViewById(R.id.layoutCardNaviCruiseStatus);
 
         ivCardNaviSearch.setOnClickListener(mOnClickListener);
         ivCardNaviHome.setOnClickListener(mOnClickListener);
         ivCardNaviCompany.setOnClickListener(mOnClickListener);
+        ivCardNaviExit.setOnClickListener(mOnClickListener);
 
 
         rootView.setOnClickListener(mOnClickListener);
@@ -59,23 +67,15 @@ public class NaviSmallCardHolder extends NaviCardHolder {
 
     @Override
     public void refreshNavigation() {
-        ivCardNaviArrow.setVisibility(View.GONE);
-        tvCardNaviMyLocation.setVisibility(View.GONE);
-
-        layoutCardNaviInstruction.setVisibility(View.VISIBLE);
-
+        layoutCardNaviCruiseStatus.setVisibility(View.INVISIBLE);
+        layoutCardNaviTBTStatus.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void refreshFreeMode() {
         NavigationUtil.logD(TAG + "refreshFreeMode");
-
-        layoutCardNaviInstruction.setVisibility(View.GONE);
-
-
-        ivCardNaviArrow.setVisibility(View.VISIBLE);
-        tvCardNaviMyLocation.setVisibility(View.VISIBLE);
-
+        layoutCardNaviTBTStatus.setVisibility(View.INVISIBLE);
+        layoutCardNaviCruiseStatus.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -85,11 +85,10 @@ public class NaviSmallCardHolder extends NaviCardHolder {
 
     @Override
     public void showNetworkError() {
-        ivCardNaviArrow.setVisibility(View.GONE);
-        tvCardNaviMyLocation.setVisibility(View.GONE);
         ivCardNetworkErr.setVisibility(View.VISIBLE);
         tvCardNetworkErr.setVisibility(View.VISIBLE);
-        layoutCardNaviInstruction.setVisibility(View.GONE);
+        layoutCardNaviCruiseStatus.setVisibility(View.GONE);
+        layoutCardNaviTBTStatus.setVisibility(View.GONE);
     }
 
     @Override
@@ -107,6 +106,8 @@ public class NaviSmallCardHolder extends NaviCardHolder {
                 toSearch();
             } else if (v == ivCardNaviHome) {
                 naviToHome();
+            } else if (v == ivCardNaviExit) {
+
             } else {
                 toApp();
             }
@@ -114,7 +115,7 @@ public class NaviSmallCardHolder extends NaviCardHolder {
     };
 
     private void toApp() {
-        mController.toMainMap();
+        RecentAppHelper.launchApp(mContext, "com.autonavi.amapauto");
     }
 
     private void toSearch() {

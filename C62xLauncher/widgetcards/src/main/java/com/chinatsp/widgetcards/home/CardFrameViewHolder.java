@@ -41,7 +41,7 @@ import launcher.base.utils.view.RecyclerViewUtil;
 
 public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     private static final String TAG = "CardFrameViewHolder";
-    private static final int MIN_CLICK_INTERVAL = 1000; // ms
+    private static final int MIN_CLICK_INTERVAL = 700; // ms
     private final int EXPAND_ANIM_DURATION = 200;
     private RecyclerView mRecyclerView;
     private TextView mTvCardName;
@@ -76,6 +76,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
             mOnClickListener = createListener(cardEntity);
         }
         mIvCardZoom.setOnClickListener(mOnClickListener);
+        mTvCardName.setOnClickListener(mOnClickListener);
         EasyLog.d(TAG, "bind position:" + position + ", " + cardEntity.getName());
         itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -218,7 +219,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void accept(View view) {
                 EasyLog.d(TAG, "click expand or collapse view :" + cardEntity.getName());
-                if (view == mIvCardZoom) {
+                if (view == mIvCardZoom || view == mTvCardName) {
                     changeExpandState(false);
                 }
                 ExpandStateManager.getInstance().setExpand(mExpandState);

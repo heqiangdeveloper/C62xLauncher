@@ -28,6 +28,7 @@ public class DrawerDriveCounselorHolder extends BaseViewHolder<DrawerEntity> {
 
     public DrawerDriveCounselorHolder(@NonNull View itemView) {
         super(itemView);
+        EasyLog.d("DrawerDriveCounselorHolder", "init "+hashCode());
         mController = new DriveInfoDrawerController(this);
         tvDrawerDriveHealthy = itemView.findViewById(R.id.tvDrawerDriveHealthy);
         tvDrawerDriveDistance = itemView.findViewById(R.id.tvDrawerDriveDistance);
@@ -80,5 +81,11 @@ public class DrawerDriveCounselorHolder extends BaseViewHolder<DrawerEntity> {
 
     public Context getContext() {
         return itemView.getContext();
+    }
+
+    @Override
+    public void bind(int position, DrawerEntity drawerEntity) {
+        super.bind(position, drawerEntity);
+        EasyLog.d("DrawerDriveCounselorHolder", "bind "+hashCode());
     }
 }

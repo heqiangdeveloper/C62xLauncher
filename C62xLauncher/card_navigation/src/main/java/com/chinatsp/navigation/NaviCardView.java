@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.autonavi.autoaidlwidget.AutoAidlWidgetManager;
 import com.chinatsp.navigation.gaode.bean.GuideInfo;
 import com.chinatsp.navigation.gaode.bean.TrafficLaneModel;
 import com.chinatsp.navigation.repository.DriveDirection;
