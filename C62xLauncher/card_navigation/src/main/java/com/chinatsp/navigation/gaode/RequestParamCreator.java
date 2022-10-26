@@ -103,6 +103,18 @@ public class RequestParamCreator {
         try {
             putProtocolId(jsonObject, 80132);
             JSONObject dataObj = new JSONObject();
+            jsonObject.put("data", dataObj);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject.toString();
+    }
+
+    public String createExitNaviStatus() {
+        JSONObject jsonObject = createCommonParamJson();
+        try {
+            putProtocolId(jsonObject, 80078);
+            JSONObject dataObj = new JSONObject();
             dataObj.put("sourceApp", "Launcher");
             jsonObject.put("data", dataObj);
         } catch (JSONException e) {

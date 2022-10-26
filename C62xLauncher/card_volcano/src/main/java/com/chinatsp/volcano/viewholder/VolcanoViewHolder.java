@@ -30,4 +30,6 @@ public abstract class VolcanoViewHolder {
     public abstract void showNetworkError();
 
     public abstract void hideNetworkError();
+
+    public abstract void showDataError();
 }

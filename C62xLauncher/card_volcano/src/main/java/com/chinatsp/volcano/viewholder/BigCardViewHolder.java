@@ -141,7 +141,9 @@ public class BigCardViewHolder extends VolcanoViewHolder{
         rcvCardVolcanoVideoList.setVisibility(View.INVISIBLE);
         setSourceTabsVisible(false);
         viewLoading.setVisibility(View.INVISIBLE);
+        ivCardVolcanoNetworkErr.setImageResource(R.drawable.card_icon_wifi_disconnect);
         ivCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
+        tvCardVolcanoNetworkErr.setText(R.string.card_network_err);
         tvCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
     }
 
@@ -150,6 +152,17 @@ public class BigCardViewHolder extends VolcanoViewHolder{
         setSourceTabsVisible(true);
         ivCardVolcanoNetworkErr.setVisibility(View.INVISIBLE);
         tvCardVolcanoNetworkErr.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void showDataError() {
+        rcvCardVolcanoVideoList.setVisibility(View.INVISIBLE);
+        setSourceTabsVisible(false);
+        viewLoading.setVisibility(View.INVISIBLE);
+        ivCardVolcanoNetworkErr.setImageResource(R.drawable.card_icon_date_error);
+        ivCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
+        tvCardVolcanoNetworkErr.setText(R.string.card_data_err);
+        tvCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
     }
 
     private void setSourceTabsVisible(boolean show) {

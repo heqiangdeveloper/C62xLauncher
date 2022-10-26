@@ -73,6 +73,7 @@ public class HomeCardsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private RecyclerView.ViewHolder createDrawerHolder(@NonNull ViewGroup parent) {
+        EasyLog.d(TAG, "createDrawerHolder");
         ViewGroup drawerLayout = (ViewGroup) mLayoutInflater.inflate(R.layout.item_card_home_drawer, parent, false);
         return new HomeDrawerCardViewHolder(drawerLayout);
     }

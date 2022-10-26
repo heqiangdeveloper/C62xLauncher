@@ -2,6 +2,7 @@
 <resources>
     <string name="btn_finish">完成</string>
     <string name="card_network_err">网络未连接</string>
+    <string name="card_data_err">获取数据失败</string>
     <string name="card_edit_msg_ok">修改成功</string>
     <string name="card_edit_btn_save">保存修改</string>
     <string name="card_edit_btn_cancel">放弃修改</string>

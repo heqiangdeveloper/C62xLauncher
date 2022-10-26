@@ -146,6 +146,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginBottom="25px"
                 />
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -236,6 +238,16 @@
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <ImageView
+            android:id="@+id/ivCardNaviExit"
+            android:src="@drawable/card_icon_close"
+            android:layout_width="@dimen/card_icon_size_lv1"
+            android:layout_height="@dimen/card_icon_size_lv1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="56px"
+            android:layout_marginBottom="35px"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -262,7 +274,7 @@
         android:visibility="invisible"
         />
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layoutCardNaviCruise"
+        android:id="@+id/layoutCardNaviCruiseStatus"
         android:layout_width="456px"
         android:layout_height="112px"
         android:orientation="horizontal"

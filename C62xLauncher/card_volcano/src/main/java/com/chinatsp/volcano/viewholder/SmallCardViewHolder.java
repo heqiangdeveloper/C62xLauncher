@@ -108,7 +108,9 @@ public class SmallCardViewHolder extends VolcanoViewHolder{
 
     @Override
     public void showNetworkError() {
+        ivCardVolcanoNetworkErr.setImageResource(R.drawable.card_icon_wifi_disconnect);
         ivCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
+        tvCardVolcanoNetworkErr.setText(R.string.card_network_err);
         tvCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
         ivCardVolcanoSourceLogo.setVisibility(View.INVISIBLE);
         tvCardVolcanoSource.setVisibility(View.INVISIBLE);
@@ -124,5 +126,17 @@ public class SmallCardViewHolder extends VolcanoViewHolder{
         tvCardVolcanoSource.setVisibility(View.VISIBLE);
         ivCardVolcanoVideoCover.setVisibility(View.VISIBLE);
         tvCardVolcanoVideoName.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showDataError() {
+        ivCardVolcanoNetworkErr.setImageResource(R.drawable.card_icon_date_error);
+        ivCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
+        tvCardVolcanoNetworkErr.setText(R.string.card_data_err);
+        tvCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
+        ivCardVolcanoSourceLogo.setVisibility(View.INVISIBLE);
+        tvCardVolcanoSource.setVisibility(View.INVISIBLE);
+        ivCardVolcanoVideoCover.setVisibility(View.INVISIBLE);
+        tvCardVolcanoVideoName.setVisibility(View.INVISIBLE);
     }
 }

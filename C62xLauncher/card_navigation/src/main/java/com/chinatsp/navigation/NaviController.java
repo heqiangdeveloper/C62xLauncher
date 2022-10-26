@@ -27,6 +27,7 @@ import launcher.base.ipc.IRemoteDataCallback;
 import launcher.base.network.NetworkObserver;
 import launcher.base.network.NetworkStateReceiver;
 import launcher.base.network.NetworkUtils;
+import launcher.base.utils.EasyLog;
 
 public class NaviController implements INaviCallback {
     private NaviCardView mView;
@@ -162,11 +163,12 @@ public class NaviController implements INaviCallback {
         tempGuideInfoGaoDeResponse = gaoDeResponse;
         NavigationUtil.logD(TAG + "receiveNaviGuideInfo");
         if (guideInfo != null) {
-            // 根据观察,  在导航时, 这个type==0, 所以视为切换到导航模式
-            if (guideInfo.getType() == 0 ) {
+            // GuideInfo包含导航状态, 0: 导航, 1: 模拟导航, 2: 巡航
+            if (guideInfo.getType() == 0 && mState != STATE_IN_NAVIGATION) {
+                // 导航
                 mState = STATE_IN_NAVIGATION;
                 mView.refreshState(mState);
-            }else if (guideInfo.getType() == 1){
+            }else if (guideInfo.getType() == 1 && mState != STATE_IN_NAVIGATION_MOCK){
                 // 模拟导航
                 mState = STATE_IN_NAVIGATION_MOCK;
                 mView.refreshState(mState);
@@ -178,16 +180,24 @@ public class NaviController implements INaviCallback {
     @Override
     public void receiveMapStatus(GaoDeResponse<MapStatus> gaoDeResponse) {
         MapStatus mapStatus = gaoDeResponse.getData();
-        NavigationUtil.logD(TAG + "receiveMapStatus mapStatus:" + mapStatus);
         if (mapStatus == null) {
             return;
         }
         int autoStatus = mapStatus.getAutoStatus();
+        NavigationUtil.logD(TAG + "receiveMapStatus autoStatus:" + autoStatus);
+        boolean needRefreshState = true;
         if (autoStatus == MapStatus.START_NAVIGATION) {
             mState = STATE_IN_NAVIGATION;
-            mView.refreshState(mState);
+        } else if (autoStatus == MapStatus.START_MOCK_NAVIGATION){
+            mState = STATE_IN_NAVIGATION_MOCK;
         } else if (autoStatus == MapStatus.STOP_NAVIGATION){
             mState = STATE_CRUISE;
+        } else if (autoStatus == MapStatus.STOP_MOCK_NAVIGATION) {
+            mState = STATE_CRUISE;
+        } else {
+            needRefreshState = false;
+        }
+        if (needRefreshState) {
             mView.refreshState(mState);
         }
     }
@@ -227,9 +237,17 @@ public class NaviController implements INaviCallback {
         }
         checkNetwork();
     }
-
+    /**
+     * 10.23版本后不可用了
+     */
+    @Deprecated
     public void toMainMap() {
         NavigationUtil.logD(TAG + "toMainMap");
         mNaviRepository.startMainMapPage();
+    }
+
+    public void exitNaviStatus() {
+        NavigationUtil.logD(TAG + "exitNaviStats");
+        mNaviRepository.exitNaiveStatus();
     }
 }

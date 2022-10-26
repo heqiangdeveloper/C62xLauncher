@@ -30,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/CardTitleTextView"
-        android:layout_marginStart="8px"
+        android:paddingStart="8px"
         app:layout_constraintStart_toEndOf="@id/ivCardZoom"
         android:layout_marginTop="42px"
         app:layout_constraintTop_toTopOf="parent"

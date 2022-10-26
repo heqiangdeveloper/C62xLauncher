@@ -121,7 +121,7 @@
 
     <TextView
         android:id="@+id/tvCardDriveOilValue"
-        android:text="0.0"
+        android:text="---"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/CardLv3TextView"
@@ -144,7 +144,7 @@
 
     <TextView
         android:id="@+id/tvCardDriveTimeValue"
-        android:text="0.0"
+        android:text="---"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/CardLv3TextView"
@@ -168,7 +168,7 @@
 
     <TextView
         android:id="@+id/tvCardDriveDistanceValue"
-        android:text="0.0"
+        android:text="---"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/CardLv3TextView"

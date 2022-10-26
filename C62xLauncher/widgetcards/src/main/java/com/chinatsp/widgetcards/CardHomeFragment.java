@@ -40,6 +40,7 @@ public class CardHomeFragment extends BaseFragment {
     private PagerSnapHelper mSnapHelper;
     private Handler mUiHandler = new Handler();
     private int mCardDividerWidth;
+    private boolean mInitialed = false;
 
     @Override
     protected void initViews(View rootView) {
@@ -68,7 +69,6 @@ public class CardHomeFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-//        drawerCreator.initDrawerRcv();
         mCardsAdapter.notifyItemChanged(0);
     }
 
@@ -99,7 +99,7 @@ public class CardHomeFragment extends BaseFragment {
         EasyLog.d(TAG, "onChangeExpandState: " + expand + ", smallCardPosition:" + smallCardPosition);
         int firstCardIndex = mCardsAdapter.isIncludeDrawer() ? 1 : 0;
         if (smallCardPosition >= firstCardIndex && smallCardPosition < mCardsAdapter.getItemCount()) {
-            EasyLog.d(TAG, "onChangeExpandState: notifyItemChanged , smallCardPosition: "+smallCardPosition );
+            EasyLog.d(TAG, "onChangeExpandState: notifyItemChanged , smallCardPosition: " + smallCardPosition);
             mCardsAdapter.notifyItemChanged(smallCardPosition);
         }
         if (!expand) {
@@ -172,12 +172,19 @@ public class CardHomeFragment extends BaseFragment {
         layoutManager.setOrientation(RecyclerView.HORIZONTAL);
         mRcvCards.setLayoutManager(layoutManager);
 //        setItemAnimator();
+        mRcvCards.setItemAnimator(new DefaultItemAnimator(){
+            @Override
+            public boolean canReuseUpdatedViewHolder(@NonNull RecyclerView.ViewHolder viewHolder) {
+                return true;
+            }
+        });
         if (mRcvCards.getItemDecorationCount() == 0) {
             SimpleRcvDecoration decoration = new SimpleRcvDecoration(mCardDividerWidth, layoutManager);
             mRcvCards.addItemDecoration(decoration);
         }
         mCardsAdapter = new HomeCardsAdapter(getActivity(), mRcvCards);
 //        mCardsAdapter.setCardEntityList(cardManager.getHomeList());
+
         mRcvCards.setAdapter(mCardsAdapter);
         mRcvCards.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
