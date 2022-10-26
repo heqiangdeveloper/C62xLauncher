@@ -9,6 +9,7 @@ import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.SteeringDialogFragmentBinding
 import com.chinatsp.vehicle.settings.vm.cabin.SteeringViewModel
 import com.common.library.frame.base.BaseDialogFragment
+import com.common.xui.utils.ResUtils
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,6 +25,13 @@ class SteeringKeysDialogFragment :
     val manager: WheelManager by lazy {
         WheelManager.instance
     }
+
+    private lateinit var mSetOnClickListener: SetOnClickDialogListener
+
+     fun onSetClickDialogListener(listener: SetOnClickDialogListener) {
+        this.mSetOnClickListener = listener;
+    }
+
 
     override fun getLayoutId(): Int {
         return R.layout.steering_dialog_fragment
@@ -68,6 +76,20 @@ class SteeringKeysDialogFragment :
         return 880f / 1920f
     }
 
+    interface SetOnClickDialogListener {
+        fun onClickDialogListener(content: String?)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        val viewId = when (VcuUtils.getInt(key = Constant.CUSTOM_KEYPAD, value = PRIVACY_MODE)) {
+            NAVIGATION -> R.string.cabin_wheel_navigation
+            PRIVACY_MODE -> R.string.cabin_wheel_press_key_tv
+            TURN_OFF_SCREEN -> R.string.cabin_wheel_turn_screen
+            else -> null
+        }
+        mSetOnClickListener.onClickDialogListener(viewId?.let { ResUtils.getString(it) })
+    }
 
 }
 

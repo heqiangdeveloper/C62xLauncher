@@ -36,4 +36,6 @@
     <color name="line_start_color">#266A6A6A</color>
 
     <color name="volume_txt_color">#1C2437</color>
+
+    <color name="dialog_txt_hint">#7B7B82</color>
 </resources>

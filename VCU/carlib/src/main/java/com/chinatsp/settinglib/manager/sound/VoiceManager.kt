@@ -143,8 +143,11 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
     private val icmVolumeLevel: RadioState by lazy {
         val node = RadioNode.ICM_VOLUME_LEVEL
         RadioState(node.def).apply {
-            val value = readIntValue(node)
-            doUpdateRadioValue(node, this, value)
+            val array = readIntArray(node)
+            if (array.size >= 2 && 0x1F == array[0]) {
+                val value = array[1]
+                doUpdateRadioValue(node, this, value)
+            }
         }
     }
 
@@ -252,6 +255,10 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         return readIntProperty(node.get.signal, node.get.origin, node.area)
     }
 
+    private fun readIntArray(node: RadioNode): IntArray {
+        return readIntArrayProperty(node.get.signal, node.get.origin, node.area)
+    }
+
     override fun onHandleSignal(property: CarPropertyValue<*>, origin: Origin): Boolean {
         when (origin) {
             Origin.CABIN -> {
@@ -293,8 +300,10 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
     }
 
     private fun initVolume(type: Progress): Volume {
-        val pos = getVolumePosition(type)
+        var pos = getVolumePosition(type)
         val max = getVolumeMaximum(type)
+        if (pos < type.min) pos = type.min
+        if (pos > max) pos = max
         return Volume(type, type.min, max, pos)
     }
 
@@ -369,7 +378,8 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
         return when (node) {
             RadioNode.ICM_VOLUME_LEVEL -> {
-                writeProperty(node, value, icmVolumeLevel)
+                val intArray = intArrayOf(0x1F, value)
+                writeProperty(node, intArray, icmVolumeLevel)
             }
             RadioNode.NAVI_AUDIO_MIXING -> {
                 writeNaviMixing(node, value, naviAudioMixing)
@@ -443,7 +453,9 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
                 onRadioChanged(RadioNode.NAVI_AUDIO_MIXING, naviAudioMixing, property)
             }
             RadioNode.ICM_VOLUME_LEVEL.get.signal -> {
-                onRadioChanged(RadioNode.ICM_VOLUME_LEVEL, icmVolumeLevel, property)
+                val aa = property.value
+                Timber.e("-----------aa-${aa.javaClass.name}")
+                onRadioChanged(RadioNode.ICM_VOLUME_LEVEL, icmVolumeLevel, property.value as IntArray)
             }
             else -> {}
         }
@@ -491,8 +503,9 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
             val value = manager?.let {
                 it.getGroupVolume(it.getVolumeGroupIdForUsage(type.get.signal))
             } ?: 12
-            Timber.d("getVolumePosition type:$type, value:$value")
-            return value
+            val result = if (value < type.min) type.min else value
+            Timber.d("getVolumePosition type:$type, value:$value, result:$result")
+            return result
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -560,6 +573,10 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
             }
         }
         return success
+    }
+
+    private fun writeProperty(node: RadioNode, value: IntArray, atomic: RadioState): Boolean {
+        return writeProperty(node.set.signal, value, node.set.origin)
     }
 
     private fun writeNaviMixing(node: RadioNode, value: Int, atomic: RadioState): Boolean {

@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
@@ -13,6 +14,8 @@ import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.util.Property;
 
+import com.anarchy.classifyview.util.L;
+
 
 /**
  * <p/>
@@ -20,7 +23,7 @@ import android.util.Property;
  * Author: zhendong.wu@shoufuyou.com
  * <p/>
  */
-class BagDrawable extends Drawable {
+public class BagDrawable extends Drawable {
     private RectF mRectF;
     private Paint mPaint;
     private Paint mOutlinePaint;
@@ -55,6 +58,7 @@ class BagDrawable extends Drawable {
 
     public void setKeepShow(boolean keepShow) {
         this.keepShow = keepShow;
+        invalidateSelf();
     }
 
     public void setOutlineStyle(int color, int width) {

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_sound_popup_20"
+        android:paddingTop="@dimen/x20"
+        android:paddingBottom="@dimen/x20">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/warning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_jinshu_warning_140"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/foreign_matter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cabin_other_foreign_matter"
+            android:textColor="@color/tab_option_title_text_color"
+            android:textSize="@dimen/x15"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/warning"
+            android:layout_marginTop="@dimen/x16"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/note_users_agree"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/lighting_dialog_txt_bg"
+            android:gravity="center"
+            android:text="@string/cabin_other_determine"
+            android:textColor="@color/xui_config_color_white"
+            android:textSize="@dimen/text_14"
+            android:layout_marginTop="@dimen/x24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/foreign_matter" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

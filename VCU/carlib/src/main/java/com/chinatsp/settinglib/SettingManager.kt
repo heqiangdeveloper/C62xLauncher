@@ -363,6 +363,15 @@ class SettingManager private constructor() {
 //        }
     }
 
+    fun doSetProperty(id: Int, value: IntArray, origin: Origin?, area: Area): Boolean {
+        return if (!status) {
+            false
+        } else when (origin) {
+            Origin.MCU -> doSetMcuProperty(id, value, area.id)
+            else -> false
+        }
+    }
+
     fun doSetProperty(id: Int, value: Int, origin: Origin?, area: Area): Boolean {
         return if (!status) {
             false
@@ -391,6 +400,23 @@ class SettingManager private constructor() {
                     Timber.tag(Constant.VehicleSignal)
                         .d("doActionSignal-cabin send-cabin hex-id:${Integer.toHexString(id)}, dec-id:$id, value:$value, has:$hasManager, versionName:${VcuUtils.versionName}")
                     mCarCabinManager?.setIntProperty(id, areaValue, value)
+                } catch (e: Exception) {
+                    Timber.e(e)
+                }
+            }
+            return true
+        }
+        return false
+    }
+
+    private fun doSetMcuProperty(id: Int, value: IntArray, areaValue: Int): Boolean {
+        if (null != mCarMcuManager) {
+            AppExecutors.get()?.networkIO()?.execute {
+                try {
+                    val hasManager = null != mCarMcuManager
+                    Timber.tag(Constant.VehicleSignal)
+                        .d("doActionSignal-mcu send-mcu hex-id:${Integer.toHexString(id)}, dec-id:$id, value:$value, has:$hasManager, versionName:${VcuUtils.versionName}")
+                    mCarMcuManager?.setIntArrayProperty(id, areaValue, value)
                 } catch (e: Exception) {
                     Timber.e(e)
                 }
@@ -449,8 +475,23 @@ class SettingManager private constructor() {
         return result
     }
 
+    private fun readMcuIntArray(id: Int, areaValue: Int): IntArray {
+        var result = IntArray(0)
+        try {
+            result = mCarMcuManager?.getIntArrayProperty(id, areaValue) ?: result
+            Timber.d("readMcuIntArray propertyId:$id, result:$result")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return result
+    }
+
     fun readIntProperty(id: Int, origin: Origin, area: Area): Int {
         return readIntProperty(id, origin, area.id)
+    }
+
+    fun readIntArray(id: Int, origin: Origin, area: Area): IntArray {
+        return readIntArray(id, origin, area.id)
     }
 
     fun readIntProperty(id: Int, origin: Origin, areaValue: Int): Int {
@@ -463,6 +504,18 @@ class SettingManager private constructor() {
             result = readCabinIntValue(id, areaValue)
         } else if (Origin.HVAC === origin) {
             result = readHvacIntValue(id, areaValue)
+        }
+        return result
+    }
+
+    fun readIntArray(id: Int, origin: Origin, areaValue: Int): IntArray {
+        var result: IntArray = IntArray(0)
+        if (!status) {
+            Timber.d("readIntProperty propertyId:$id, origin:$origin, connectService: false!")
+            return result
+        }
+        if (Origin.MCU === origin) {
+            result = readMcuIntArray(id, areaValue)
         }
         return result
     }

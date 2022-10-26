@@ -16,7 +16,10 @@ import androidx.annotation.IntDef
     ICar.COLOR,
     ICar.RHYTHM_MODE,
     ICar.MODE_3D_2D,
-    ICar.CAMERA_CHANGE
+    ICar.CAMERA_CHANGE,
+    ICar.WINDOWS,
+    ICar.LOUVER,
+    ICar.DOORS
 )
 @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
 annotation class ICar {
@@ -46,8 +49,30 @@ annotation class ICar {
          */
         const val RHYTHM_MODE = 0x05
 
+        /**
+         * 全景 2D 3D 模式
+         */
         const val MODE_3D_2D = 0x06
 
+        /**
+         * 视角切换
+         */
         const val CAMERA_CHANGE = 0x07
+
+        /**
+         * 车窗
+         */
+        const val WINDOWS = 0x08
+
+        /**
+         * 天窗（包括遮阳帘）
+         */
+        const val LOUVER = 0x09
+
+        /**
+         * 车门
+         */
+        const val DOORS = 0x0A
+
     }
 }

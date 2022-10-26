@@ -149,7 +149,7 @@ enum class Progress(
         get = CanLocate(origin = Origin.ATTR, signal = AudioAttributes.USAGE_MEDIA)
     ),
     PHONE(
-        min = 0x00,
+        min = 0x05,
         max = 0x1E,
         def = 0x0C,
         get = CanLocate(origin = Origin.ATTR, signal = AudioAttributes.USAGE_VOICE_COMMUNICATION)

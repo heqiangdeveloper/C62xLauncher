@@ -9,6 +9,7 @@ import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.annotation.Model
 import com.chinatsp.vehicle.controller.bean.CarCmd
+import timber.log.Timber
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
@@ -78,6 +79,7 @@ class AccessManager private constructor() : BaseManager(), ITabStore {
     }
 
     override fun doCarControlCommand(cmd: CarCmd, callback: ICmdCallback?) {
+        Timber.e("doCarControlCommand ")
         if (Model.ACCESS_WINDOW == cmd.model) {
             WindowManager.instance.doCarControlCommand(cmd, callback)
         } else if (Model.ACCESS_DOOR == cmd.model) {

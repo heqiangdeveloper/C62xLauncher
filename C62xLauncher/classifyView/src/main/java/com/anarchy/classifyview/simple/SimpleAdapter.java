@@ -159,10 +159,26 @@ public abstract class SimpleAdapter<T, VH extends SimpleAdapter.ViewHolder> impl
         public void onMergeCancel(VH selectedViewHolder, VH targetViewHolder,
                                   int selectedPosition, int targetPosition) {
             L.d("on mergeCancel:(%1$s,%2$s)",selectedPosition,targetPosition);
-            CanMergeView canMergeView = targetViewHolder.getCanMergeView();
-            if (canMergeView != null) {
-                canMergeView.onMergeCancel();
+            if(targetViewHolder == null){
+                L.d("targetViewHolder == null");
+                refreshAll();
+            }else {
+                CanMergeView canMergeView = targetViewHolder.getCanMergeView();
+                if (canMergeView != null) {
+                    canMergeView.onMergeCancel();
+                }else {
+                    refreshAll();
+                }
             }
+        }
+
+        @Override
+        public void onNotifyAll() {
+            refreshAll();
+        }
+
+        private void refreshAll(){
+            notifyDataSetChanged();
         }
 
         @Override
@@ -173,7 +189,7 @@ public abstract class SimpleAdapter<T, VH extends SimpleAdapter.ViewHolder> impl
             L.d("targetPosition = " + targetPosition);
             if(selectedPosition == targetPosition){
                 //如果是拖动到另一个上，又拖回去了，则认为拖动取消，并刷新，防止被覆盖的图标有轮廓
-                notifyDataSetChanged();
+                refreshAll();
                 return;
             }
             CanMergeView canMergeView = null;
@@ -188,11 +204,13 @@ public abstract class SimpleAdapter<T, VH extends SimpleAdapter.ViewHolder> impl
             mData.get(targetPosition).add(mData.get(selectedPosition).get(0));
             mData.remove(selectedPosition);
             notifyItemRemoved(selectedPosition);
-            if(selectedPosition < targetPosition) {
-                notifyItemChanged(targetPosition-1);
-            }else {
-                notifyItemChanged(targetPosition);
-            }
+//            if(selectedPosition < targetPosition) {
+//                notifyItemChanged(targetPosition-1);
+//            }else {
+//                notifyItemChanged(targetPosition);
+//            }
+            //全部刷新下，防止部分APP有文件夹边框
+            refreshAll();
             Log.d("MyAppFragment","onMerged ReStoreDataEvent");
             EventBus.getDefault().post(new ReStoreDataEvent());//通知存储数据
         }

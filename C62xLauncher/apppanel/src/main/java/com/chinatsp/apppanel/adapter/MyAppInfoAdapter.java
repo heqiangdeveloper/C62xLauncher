@@ -35,6 +35,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anarchy.classifyview.Bean.LocationBean;
+import com.anarchy.classifyview.event.ChangeSubTitleEvent;
 import com.anarchy.classifyview.event.ChangeTitleEvent;
 import com.anarchy.classifyview.event.Event;
 import com.anarchy.classifyview.event.HideSubContainerEvent;
@@ -105,7 +106,13 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         db = new MyAppDB(context);
         for(int i = 0; i < mData.size(); i++){
             infos = mData.get(i);
-            titleLists.add(infos.get(0).getTitle());
+            infos.removeAll(Collections.singleton(null));
+            if(infos.size() == 0){
+                mData.remove(i);
+                i--;
+            }else {
+                titleLists.add(infos.get(0).getTitle());
+            }
         }
     }
 
@@ -205,6 +212,8 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
                 setDownloadStatus(true,holder,AppState.INSTALLED_COMPLETELY,0,null);
                 holder.tvName.setText(getName(AppState.INSTALLED_COMPLETELY,titleStr));
             }
+            //如果sub显示了，需要更新其标题内容
+            EventBus.getDefault().post(new ChangeSubTitleEvent(holder.tvName.getText().toString()));
 
 //            holder.tvName.setText(titleStr);
             holder.deleteIv.setVisibility(View.GONE);

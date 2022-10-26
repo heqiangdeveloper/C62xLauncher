@@ -36,6 +36,8 @@
     <string name="car_door_smart">车门智能进入</string>
     <string name="acc_off_auto_unlock">熄火自动解锁</string>
     <string name="drive_auto_lock">行车自动落锁</string>
+    <string name="unlock_fron">仅解锁左前门</string>
+    <string name="four_door_unlock">四门解锁</string>
     <string name="vcu_cabin_wheel">方向盘</string>
     <string name="vcu_cabin_seat">座椅</string>
     <string name="vcu_cabin_air_conditioner">空调</string>
@@ -50,7 +52,7 @@
     <string name="cabin_ac_auto_comfort">自动空调舒适性</string>
 
     <string name="cabin_safe_fortify_tone">设防提示音</string>
-    <string name="cabin_safe_lock_car">锁车提示声</string>
+    <string name="cabin_safe_lock_car">锁车提示音</string>
     <string name="cabin_safe_fortify_success_tone">设防成功提示音</string>
     <string name="cabin_safe_fortify_failure_tone">设防失败提示音</string>
     <string name="cabin_safe_video_safe_mode">视频安全模式</string>
@@ -86,10 +88,15 @@
     <string name="cabin_other_battery_optimization">智能电源管家</string>
     <string name="cabin_other_battery_optimization_content">监控车辆电能消耗情况，低\n电量状态下，对整车舒适性\n功能（空调、大屏等）进行\n管理。</string>
     <string name="cabin_other_wireless_charging">无线充电</string>
+    <string name="cabin_other_wireless_charging_abnormal_work">无线充电工作异常</string>
+    <string name="cabin_other_maintenance">请尽快前往官方指定维修点进行检测</string>
     <string name="cabin_other_wireless_charging_lamp">储物盒灯</string>
     <string name="cabin_other_sensor_sensitivity">传感器灵敏度</string>
     <string name="cabin_other_trailer_remind_distance">拖车提醒距离</string>
     <string name="cabin_other_toast_content">车辆被拖时无法收到相关提醒</string>
+    <string name="cabin_other_wireless_charging_working_properly">无线充电工作正常</string>
+    <string name="cabin_other_foreign_matter">检测到金属异物，请移开异物</string>
+    <string name="cabin_other_determine">确定</string>
 
     <string name="note_users_title">用户须知</string>
     <string name="note_users_content">为了确保安全使⽤⼿机⽆线充电功能，请您务必阅读并完全理解以下注意事项并仅可按照提示使⽤该功能：\n
@@ -310,4 +317,46 @@ IACC会优先通过识别⻋道两侧清晰的⻋道线进⾏横向辅助控制�
     <string name="bsc_details">在⻋辆⾏驶过程中，当驾驶员进⾏左（或右）变道或超⻋时，视野被B柱、C柱遮挡存在视野盲区，盲区影像功能可为驾驶
 员提供⻋辆左后⽅（或右后⽅）的盲区影像，辅助驾驶员进⾏安全驾驶。</string>
     <string name="meb_details">一种帮助驾驶员发现车辆后方障碍物，并在判断有碰撞危险时进行自动刹车制动的功能。</string>
+
+    <string name="global_txt_close">5分钟后您的爱车将自动关闭</string>
+    <string name="global_txt_engine">请启动发动机，避免蓄电池亏电</string>
+    <string name="global_txt_agree">确认</string>
+
+    <string name="mixed">混响</string>
+    <string name="resonant">共鸣</string>
+    <string name="solo">独奏</string>
+    <string name="navigation_priority">导航优先</string>
+    <string name="directly_mixed_sound">直接混音</string>
+    <string name="nature">自然</string>
+    <string name="club">俱乐部</string>
+    <string name="live">现场</string>
+    <string name="leisure">休闲</string>
+    <string name="treble">高音</string>
+    <string name="medium_treble">中高音</string>
+    <string name="medium">中音</string>
+    <string name="medium_bass">中低音</string>
+    <string name="bass">低音</string>
+    <string name="default＿">默认</string>
+    <string name="classical">古典</string>
+    <string name="pop">流行</string>
+    <string name="jazz">爵士</string>
+    <string name="drum">打击</string>
+    <string name="rock">摇滚</string>
+    <string name="custom">自定义</string>
+    <string name="soft">轻柔</string>
+    <string name="standard">标准</string>
+    <string name="movement">运动</string>
+    <string name="strong">强劲</string>
+    <string name="metric">公制</string>
+    <string name="imperial">英制</string>
+    <string name="recognize_prompt">识别提示</string>
+    <string name="disappear_prompt">消失提示</string>
+    <string name="recognize_disappear_prompt_both">识别消失均提示</string>
+    <string name="icon">图示</string>
+    <string name="icon_sound">图示+声音</string>
+    <string name="high">高</string>
+    <string name="centre">中</string>
+    <string name="low">低</string>
+    <string name="left">左</string>
+    <string name="right">右</string>
 </resources>

@@ -57,7 +57,8 @@ object VcuUtils {
         //0 无 1有
         val value = getConfigParameters(keySerial, Constant.INVALID)
         Timber.d("isSupportFunction keySerial: $keySerial, value: $value")
-        return value == 1
+//        return value == 1
+        return true
     }
 
     fun isCareLevel(@Level vararg levels: Int, expect: Boolean = true): Boolean {

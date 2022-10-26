@@ -63,6 +63,7 @@ class VolumeDialogFragment : BaseDialogFragment<VolumeViewModel, AudioSoundVolum
                 }
             }
             seekBar?.max = it.max
+            seekBar?.setMin(it.min)
             seekBar?.progress = it.pos
             textView?.text = it.pos.toString()
         }
