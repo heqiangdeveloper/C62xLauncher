@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.BaseApp
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.GlobalManager
@@ -36,6 +37,7 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
         MutableLiveData(manager.getTabSerial())
     }
 
+
     //    private val level1: MutableLiveData<Node> by lazy { MutableLiveData(Node()) }
     private val level1: MutableLiveData<Node> by lazy { MutableLiveData(Node()) }
 //    private val level3: MutableLiveData<Node> by lazy { MutableLiveData(Node()) }
@@ -51,6 +53,7 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
 
     override fun initData(savedInstanceState: Bundle?) {
         initTabLayout()
+        Timber.e("initData-------")
         checkOutRoute(intent)
         observeLocation()
         binding.deviceUpgrade.setOnClickListener {
@@ -61,6 +64,7 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
     private fun observeLocation() {
         tabLocation.observe(this) { position ->
             manager.setTabSerial(position)
+            Timber.e("-------------------------observeLocation--position:$position")
             binding.tabLayout.takeIf { position != it.selectedTabPosition }?.let { tabLayout ->
                 tabLayout.selectTab(tabLayout.getTabAt(position), true)
             }
@@ -69,6 +73,7 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
+        Timber.e("onNewIntent-------")
         checkOutRoute(intent)
     }
 
@@ -107,7 +112,7 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
     private fun doNavigation(routeValue: Int, route: String, general: Boolean = false) {
         if (general) {
             val list = route.split("_")
-            Timber.d("==================route:%s, size:%s", route, list.size)
+            Timber.e("==================route:%s, size:%s", route, list.size)
             binding.homeBack.visibility = View.VISIBLE
             if (list.size == 3) {
                 val locations = list.map { it.toInt() }
@@ -118,29 +123,34 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
                 node2.cnode = node3
                 node3.pnode = node2
                 node2.pnode = node1
-                level1.postValue(node1)
                 if (node1.valid && node1.uid in obtainTabs().map { tab -> tab.uid }.toSet()) {
-                    if (VcuUtils.isCareLevel(Level.LEVEL3, expect = true)) {
-                        tabLocation.postValue(node1.uid - 1)
-                    }else {
-                        tabLocation.postValue(node1.uid)
-                    }
+                    val position = if (VcuUtils.isCareLevel(Level.LEVEL3, expect = true)) node1.uid - 1 else node1.uid
+                    Timber.e("doNavigation-------position:$position")
+                    manager.setTabSerial(position)
+                    updatePosition(position)
+                    level1.postValue(node1)
                 }
             }
             return
         }
-        binding.homeBack.visibility = View.GONE
-        if (Constant.INVALID != routeValue) {
-            val level1 = RouterSerial.getLevel(routeValue, 1)
-            val level2 = RouterSerial.getLevel(routeValue, 2)
-            val level3 = RouterSerial.getLevel(routeValue, 3)
-            val node2 = this.level1.value
-            node2?.uid = level2
-            node2?.pid = level1
-//            node2?.valid = true
-            tabLocation.value = level1
-            this.level1.value = node2
-            popupLiveData.value = route
+//        binding.homeBack.visibility = View.GONE
+//        if (Constant.INVALID != routeValue) {
+//            val level1 = RouterSerial.getLevel(routeValue, 1)
+//            val level2 = RouterSerial.getLevel(routeValue, 2)
+//            val level3 = RouterSerial.getLevel(routeValue, 3)
+//            val node2 = this.level1.value
+//            node2?.uid = level2
+//            node2?.pid = level1
+////            node2?.valid = true
+//            tabLocation.value = level1
+//            this.level1.value = node2
+//            popupLiveData.value = route
+//        }
+    }
+
+    private fun updatePosition(position: Int) {
+        if (position != tabLocation.value) {
+            tabLocation.postValue(position)
         }
     }
 
@@ -232,11 +242,12 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
             firstCreate = false
             return
         }
-        tabLocation.postValue(binding.tabLayout.selectedTabPosition)
+        updatePosition(binding.tabLayout.selectedTabPosition)
+        manager.setTabSerial(tabLocation.value!!)
     }
 
     override fun onDestroy() {
-        manager.setTabSerial(tabLocation.value!!)
+//        manager.setTabSerial(tabLocation.value!!)
         super.onDestroy()
     }
 
@@ -273,7 +284,7 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
         }
     }
 
-     fun homeBack(view: View){
+    fun homeBack(view: View) {
         finish()
     }
 

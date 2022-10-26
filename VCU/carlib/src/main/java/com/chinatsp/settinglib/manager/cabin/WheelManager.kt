@@ -2,6 +2,7 @@ package com.chinatsp.settinglib.manager.cabin
 
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
+import android.content.ComponentName
 import android.content.Intent
 import com.chinatsp.settinglib.BaseApp
 import com.chinatsp.settinglib.Constant
@@ -9,11 +10,9 @@ import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
-import com.chinatsp.settinglib.listener.sound.ISoundListener
 import com.chinatsp.settinglib.listener.sound.ISoundManager
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
-import com.chinatsp.settinglib.navigation.RouterSerial
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -171,7 +170,6 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
 
     private fun doHandleCustomKeyboard(property: CarPropertyValue<*>) {
         val value = property.value
-        Timber.d("doHandleCustomKeyboard ---------------value:$value")
         if (value !is Int) {
             return
         }
@@ -180,7 +178,49 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             BaseApp.instance.startActivity(intent)
         } else if (0x1 == value) {
-            Timber.d("execute custom keypad!!")
+            val mode = VcuUtils.getInt(key = Constant.CUSTOM_KEYPAD, value = Constant.PRIVACY_MODE)
+            Timber.d("execute custom keypad!!mode:$mode")
+            when (mode) {
+                Constant.NAVIGATION -> launchNavigation()
+                Constant.PRIVACY_MODE -> switchPrivacyMode()
+                Constant.TURN_OFF_SCREEN -> switchScreen()
+            }
+        }
+    }
+
+    private fun switchScreen() {
+        val intent = Intent("com.chinatsp.START_STANDBY")
+        intent.putExtra("OP_SCREEN", "OFF")
+        intent.setPackage("com.chinatsp.settings")
+        BaseApp.instance.startService(intent)
+    }
+
+
+    private fun switchPrivacyMode() {
+        /**
+         * Settings.System.getInt(mContext.getContentResolver(), KEY_INT_PRIVACY_MODE, OFF)
+         * 1、打开  2、关闭
+         */
+        val key = "com.chinatsp.systemui.KEY_PRIVACY_MODE"
+        val on = 0x1
+        val off = 0x2
+        val actual = VcuUtils.getInt(key = key, value = off, system = true)
+        val expect = if (actual == on) off else on
+        Timber.d("switchPrivacyMode actual:$actual, expect:$expect")
+        VcuUtils.putInt(key = key, value = expect, system = true)
+    }
+
+    private fun launchNavigation() {
+        try {
+            val component = ComponentName("com.autonavi.amapauto",
+                "com.autonavi.amapauto.MainMapActivity")
+            val intent = Intent()
+            intent.component = component
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            BaseApp.instance.startActivity(intent)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Timber.e("launchNavigation exception:${e.message}")
         }
     }
 

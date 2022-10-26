@@ -328,7 +328,7 @@ enum class SwitchNode(
         get = Norm(on = 0x1, off = 0x2,
             signal = CarCabinManager.ID_REMOTE_WINDOW_RISE_FALL_STATES),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_REMOTE_WINDOW_RISE_FALL_SW),
-        inactive = intArrayOf(0x0, 0x3),
+        inactive = intArrayOf(0x3),
         default = false
     ),
 

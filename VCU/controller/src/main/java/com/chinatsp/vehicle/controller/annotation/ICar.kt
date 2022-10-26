@@ -19,7 +19,8 @@ import androidx.annotation.IntDef
     ICar.CAMERA_CHANGE,
     ICar.WINDOWS,
     ICar.LOUVER,
-    ICar.DOORS
+    ICar.DOORS,
+    ICar.CHAIR
 )
 @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
 annotation class ICar {
@@ -73,6 +74,8 @@ annotation class ICar {
          * 车门
          */
         const val DOORS = 0x0A
+
+        const val CHAIR = 0x0B
 
     }
 }

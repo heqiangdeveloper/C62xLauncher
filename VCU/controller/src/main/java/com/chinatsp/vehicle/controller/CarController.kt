@@ -20,6 +20,8 @@ object CarController : IController {
 
     private val accessProducer: AccessCommandProducer by lazy { AccessCommandProducer() }
 
+    private val seatProducer: SeatCommandProducer by lazy { SeatCommandProducer() }
+
     private val ambientProducer: AmbientCommandProducer by lazy { AmbientCommandProducer() }
 
     private val panoramaProducer: PanoramaCommandProducer by lazy { PanoramaCommandProducer() }
@@ -35,6 +37,9 @@ object CarController : IController {
         var command: CarCmd? = null
         if (null == command) {
             command = accessProducer.attemptAccessCommand(slots)
+        }
+        if (null == command) {
+            command = seatProducer.attemptChairCommand(slots)
         }
         if (null == command) {
             command = ambientProducer.attemptAmbientCommand(slots)

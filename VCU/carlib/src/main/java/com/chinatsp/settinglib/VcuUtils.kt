@@ -81,10 +81,14 @@ object VcuUtils {
         0 == value
     }
 
-    fun putInt(context: Context = BaseApp.instance, key: String, value: Int): Boolean {
+    fun putInt(context: Context = BaseApp.instance, key: String, value: Int, system: Boolean = false): Boolean {
         try {
-            Timber.d("=======putInt key:%s, value:%s", key, value)
-            return Settings.Global.putInt(context.contentResolver, key, value)
+            Timber.d("putInt key:%s, value:%s, system:%s", key, value, system)
+            return if (system) {
+                Settings.System.putInt(context.contentResolver, key, value)
+            } else {
+                Settings.Global.putInt(context.contentResolver, key, value)
+            }
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
             Timber.e("putInt key:%s, value:%s, throw exception:%s", key, value, e.message)
@@ -92,9 +96,13 @@ object VcuUtils {
         return false
     }
 
-    fun getInt(context: Context = BaseApp.instance, key: String, value: Int): Int {
+    fun getInt(context: Context = BaseApp.instance, key: String, value: Int, system: Boolean = false): Int {
         try {
-            return Settings.Global.getInt(context.contentResolver, key, value)
+            return if (system) {
+                Settings.System.getInt(context.contentResolver, key, value)
+            } else {
+                Settings.Global.getInt(context.contentResolver, key, value)
+            }
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
             Timber.e("getInt key:%s, value:%s, throw exception:%s", key, value, e.message)
