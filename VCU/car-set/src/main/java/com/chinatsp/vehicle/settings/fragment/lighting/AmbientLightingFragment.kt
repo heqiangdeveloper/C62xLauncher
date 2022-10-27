@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.DialogFragment
+import com.chinatsp.settinglib.Applet
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.ISwitchManager
@@ -40,6 +41,8 @@ class AmbientLightingFragment :
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+
+        binding.picker.setSupportColors(Applet.getLampSupportColor())
 
         initClickView()
 

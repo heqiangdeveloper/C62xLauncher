@@ -25,7 +25,7 @@ class AmbientCommandProducer: ICommandProducer {
 
     fun attemptAmbientCommand(slots: Slots): CarCmd? {
         var command: CarCmd? = null
-        if (isMatch(Keywords.AMBIENTS, slots.name)) {
+        if (slots.name.contains(Keywords.LAMP)) {
             if (null == command) {
                 command = attemptCreateAmbientRhythmCommand(slots)
             }
@@ -40,27 +40,6 @@ class AmbientCommandProducer: ICommandProducer {
             }
         }
         return command
-    }
-
-    private fun doAmbientCommand(
-        slots: Slots,
-        controller: IOuterController,
-        callback: ICmdCallback,
-    ): Boolean {
-        var command: CarCmd? = attemptCreateAmbientRhythmCommand(slots)
-        if (null == command) {
-            command = attemptCreateAmbientBrightnessCommand(slots)
-        }
-        if (null == command) {
-            command = attemptCreateAmbientColorCommand(slots)
-        }
-        if (null == command) {
-            command = attemptCreateAmbientSwitchCommand(slots)
-        }
-        if (null != command) {
-            controller.doCarControlCommand(command, callback)
-        }
-        return null != command
     }
 
     private fun attemptCreateAmbientRhythmCommand(slots: Slots): CarCmd? {
@@ -95,10 +74,12 @@ class AmbientCommandProducer: ICommandProducer {
 
     private fun attemptCreateAmbientColorCommand(slots: Slots): CarCmd? {
         val colors = arrayOf("红色", "紫色", "冰蓝色", "橙色", "绿色", "玫红色", "果绿色", "黄色", "蓝色", "白色")
-        if (colors.contains(slots.color)) {
+//        if (colors.contains(slots.color)) {
+        if (!TextUtils.isEmpty(slots.color)) {
             val command = CarCmd(action = Action.FIXED, model = Model.LIGHT_AMBIENT)
             command.car = ICar.COLOR
             command.color = slots.color
+            command.slots = slots
             return command
         }
         return null
@@ -171,18 +152,34 @@ class AmbientCommandProducer: ICommandProducer {
             return null
         }
         val command = CarCmd(action = action, model = Model.LIGHT_AMBIENT)
-        if (Keywords.AMBIENTS[0] == slots.name) {
-            command.part = IPart.HEAD or IPart.TAIL
-        }
-        if (Keywords.AMBIENTS[1] == slots.name) {
-            command.part = IPart.HEAD
-        }
-        if (Keywords.AMBIENTS[2] == slots.name) {
-            command.part = IPart.TAIL
-        }
+        command.part = checkoutPart(slots)
         command.slots = slots
         command.car = ICar.AMBIENT
         return command
+    }
+
+    private fun checkoutPart(slots: Slots): Int {
+        val part = if (Keywords.LAMP == slots.name) {
+            IPart.HEAD or IPart.TAIL
+        } else {
+            if (isContains(slots.name, Keywords.F_R)) {
+                IPart.HEAD
+            } else if (isContains(slots.name, Keywords.B_R)) {
+                IPart.TAIL
+            } else {
+                IPart.HEAD or IPart.TAIL
+            }
+        }
+        return part
+    }
+
+    private fun isContains(value: String, array: Array<String>): Boolean {
+        for (item in array) {
+            if (value.contains(item)) {
+                return true
+            }
+        }
+        return false
     }
 
 

@@ -62,6 +62,23 @@ class GlobalManager private constructor() : BaseManager() {
         get() = EnumMap(Origin::class.java)
 
     override fun onDispatchSignal(property: CarPropertyValue<*>, origin: Origin): Boolean {
+        if (Origin.CABIN == origin && CarCabinManager.ID_BDC_VEHICLE_MODE == property.propertyId) {
+            val value = property.value
+            if (value !is Int) {
+                return true
+            }
+//            BDC Vehicle mode,used for 62 F06
+//            0x0: Normal Mode（default） 0x1: Transport Mode  0x2: Exhibition Mode
+//            0x3: Factory Mode（reserved）  0x4: Crash Mode（reserved）
+//            0x5: Test Mode（reserved）  0x6: Reserved  0x7: Rerserved
+            if (0x0 == value) {
+            } else if (0x1 == value) {
+
+            } else if (0x2 == value) {
+
+            }
+            return true
+        }
         managers.forEach {
             it.onDispatchSignal(property, origin)
         }

@@ -1,5 +1,8 @@
 package com.chinatsp.settinglib
 
+import android.graphics.Color
+
+
 /**
  * @author : luohong
  * @e-mail : luohong1@bdstar.com
@@ -13,5 +16,74 @@ object Applet {
 
     fun isCanSwitchEps(consult: Float): Boolean {
         return speed < consult
+    }
+
+    fun getLampSupportColor(): List<Color> {
+        val colors = ArrayList<Color>(64)
+        colors.add(Color.valueOf(255f, 1f, 1f))
+        colors.add(Color.valueOf(255f, 14f, 1f))
+        colors.add(Color.valueOf(255f, 26f, 1f))
+        colors.add(Color.valueOf(255f, 38f, 1f))
+        colors.add(Color.valueOf(255f, 51f, 1f))
+        colors.add(Color.valueOf(255f, 63f, 1f))
+        colors.add(Color.valueOf(255f, 74f, 1f))
+        colors.add(Color.valueOf(255f, 87f, 1f))
+        colors.add(Color.valueOf(255f, 100f, 1f))
+        colors.add(Color.valueOf(255f, 118f, 1f))
+        colors.add(Color.valueOf(255f, 138f, 1f))
+        colors.add(Color.valueOf(255f, 157f, 1f))
+        colors.add(Color.valueOf(255f, 177f, 1f))
+        colors.add(Color.valueOf(255f, 197f, 1f))
+        colors.add(Color.valueOf(255f, 217f, 1f))
+        colors.add(Color.valueOf(255f, 236f, 5f))
+        colors.add(Color.valueOf(255f, 239f, 45f))
+        colors.add(Color.valueOf(255f, 243f, 83f))
+        colors.add(Color.valueOf(255f, 245f, 122f))
+        colors.add(Color.valueOf(255f, 247f, 161f))
+        colors.add(Color.valueOf(255f, 241f, 200f))
+        colors.add(Color.valueOf(255f, 254f, 240f))
+        colors.add(Color.valueOf(235f, 249f, 246f))
+        colors.add(Color.valueOf(201f, 240f, 232f))
+        colors.add(Color.valueOf(200f, 240f, 231f))
+        colors.add(Color.valueOf(134f, 222f, 203f))
+        colors.add(Color.valueOf(100f, 213f, 190f))
+        colors.add(Color.valueOf(66f, 204f, 175f))
+        colors.add(Color.valueOf(33f, 195f, 161f))
+        colors.add(Color.valueOf(0f, 186f, 147f))
+        colors.add(Color.valueOf(5f, 189f, 142f))
+        colors.add(Color.valueOf(8f, 192f, 136f))
+        colors.add(Color.valueOf(13f, 195f, 131f))
+        colors.add(Color.valueOf(17f, 198f, 126f))
+        colors.add(Color.valueOf(21f, 201f, 120f))
+        colors.add(Color.valueOf(26f, 205f, 117f))
+        colors.add(Color.valueOf(28f, 209f, 138f))
+        colors.add(Color.valueOf(30f, 215f, 159f))
+        colors.add(Color.valueOf(32f, 219f, 180f))
+        colors.add(Color.valueOf(34f, 224f, 201f))
+        colors.add(Color.valueOf(36f, 229f, 222f))
+        colors.add(Color.valueOf(39f, 234f, 243f))
+        colors.add(Color.valueOf(38f, 227f, 254f))
+        colors.add(Color.valueOf(33f, 205f, 253f))
+        colors.add(Color.valueOf(28f, 183f, 253f))
+        colors.add(Color.valueOf(23f, 161f, 251f))
+        colors.add(Color.valueOf(18f, 139f, 250f))
+        colors.add(Color.valueOf(13f, 116f, 248f))
+        colors.add(Color.valueOf(8f, 94f, 247f))
+        colors.add(Color.valueOf(21f, 89f, 248f))
+        colors.add(Color.valueOf(37f, 87f, 249f))
+        colors.add(Color.valueOf(55f, 86f, 250f))
+        colors.add(Color.valueOf(72f, 84f, 252f))
+        colors.add(Color.valueOf(88f, 83f, 253f))
+        colors.add(Color.valueOf(105f, 81f, 254f))
+        colors.add(Color.valueOf(122f, 79f, 254f))
+        colors.add(Color.valueOf(138f, 72f, 249f))
+        colors.add(Color.valueOf(155f, 66f, 244f))
+        colors.add(Color.valueOf(172f, 60f, 239f))
+        colors.add(Color.valueOf(189f, 53f, 234f))
+        colors.add(Color.valueOf(206f, 47f, 229f))
+        colors.add(Color.valueOf(222f, 40f, 223f))
+        colors.add(Color.valueOf(238f, 33f, 218f))
+        colors.add(Color.valueOf(255f, 27f, 213f))
+        return colors
     }
 }

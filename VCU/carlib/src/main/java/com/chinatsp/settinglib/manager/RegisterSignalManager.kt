@@ -28,6 +28,7 @@ class RegisterSignalManager private constructor() {
         val cabinSignal: Set<Int>
             get() {
                 return HashSet<Int>().apply {
+                    add(CarCabinManager.ID_BDC_VEHICLE_MODE)
                     SwitchNode.values()
                         .filter { it.get.origin == Origin.CABIN && it.get.signal != Constant.INVALID }
                         .forEach {

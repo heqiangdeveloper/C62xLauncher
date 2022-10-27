@@ -1,6 +1,7 @@
 package com.chinatsp.settinglib.manager.lamp
 
 import android.car.hardware.CarPropertyValue
+import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IBaseListener
@@ -16,7 +17,6 @@ import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.annotation.Action
 import com.chinatsp.vehicle.controller.annotation.ICar
 import com.chinatsp.vehicle.controller.annotation.IPart
-import com.chinatsp.vehicle.controller.bean.AirCmd
 import com.chinatsp.vehicle.controller.bean.CarCmd
 import timber.log.Timber
 import java.lang.ref.WeakReference
@@ -29,7 +29,6 @@ import java.util.concurrent.atomic.AtomicInteger
  * @desc   :
  * @version: 1.0
  */
-
 
 class AmbientLightingManager private constructor() : BaseManager(), IOptionManager,
     IProgressManager {
@@ -186,19 +185,13 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
             Progress.AMBIENT_LIGHT_BRIGHTNESS -> {
                 val set = node.set
                 val result = writeProperty(set.signal, value, set.origin)
-                Timber.d("setBrightness signal:%s, newValue:%s, result:%s",
-                    set.signal,
-                    value,
-                    result)
+                Timber.d("setBrightness signal:${set.signal}, value:$value, result:$result")
                 result
             }
             Progress.AMBIENT_LIGHT_COLOR -> {
                 val set = node.set
                 val result = writeProperty(set.signal, value, set.origin)
-                Timber.d("setBrightness signal:%s, newValue:%s, result:%s",
-                    set.signal,
-                    value,
-                    result)
+                Timber.d("setLightColor signal:${set.signal}, value:$value, result:$result")
                 result
             }
             else -> false
@@ -386,7 +379,7 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
             val expect = Action.TURN_ON == command.action
             val option = if (expect) "开启" else "关闭"
             var modeName = ""
-            var result = ""
+            val result: String
             var node: SwitchNode = SwitchNode.INVALID
             if (command.value == 1) {
                 modeName = "音乐律动"
@@ -411,38 +404,38 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
 
     private fun doAdjustAmbientColor(command: CarCmd, callback: ICmdCallback?) {
         when (command.action) {
-            Action.PLUS,
-            Action.MINUS,
-            Action.MIN,
-            Action.MAX,
-            Action.FIXED -> {
+            Action.PLUS, Action.MINUS, Action.MIN, Action.MAX, Action.FIXED -> {
                 attemptUpdateAmbientColor(command, callback)
             }
+            else ->{}
         }
     }
 
     private fun doAdjustAmbientBrightness(command: CarCmd, callback: ICmdCallback?) {
         when (command.action) {
-            Action.PLUS,
-            Action.MINUS,
-            Action.MIN,
-            Action.MAX,
-            Action.FIXED -> {
+            Action.PLUS, Action.MINUS, Action.MIN, Action.MAX, Action.FIXED -> {
                 attemptUpdateAmbientBrightness(command, callback)
             }
+            else -> {}
         }
     }
 
     private fun attemptUpdateAmbientBrightness(command: CarCmd, callback: ICmdCallback?) {
         frontLighting.set(true)
+        val modelName = command.slots?.name ?: "氛围灯"
         if (!isAmbient()) {
-            command.message = "氛围灯已关闭，无法调节其亮度"
+            command.message = "${modelName}已关闭，无法调节其亮度"
         } else {
             val node = Progress.AMBIENT_LIGHT_BRIGHTNESS
-            val expect = computeExpectBrightness(command, node.min, node.max, IPart.HEAD)
+            val expect = computeLampBrightness(command, node.min, node.max)
             val result = writeProperty(node.set.signal, expect, node.set.origin)
             if (result) {
-                command.message = "氛围灯亮度已设置为$expect"
+                val message = when (expect) {
+                    node.min -> "${modelName}亮度已设置为最暗了"
+                    node.max -> "${modelName}亮度已设置为最亮了"
+                    else -> "${modelName}亮度已设置为${expect}档了"
+                }
+                command.message = message
             } else {
                 command.message = "氛围灯亮度设置失败"
             }
@@ -451,36 +444,44 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
     }
 
     private fun attemptUpdateAmbientColor(command: CarCmd, callback: ICmdCallback?) {
+        Timber.e("attemptUpdateAmbientColor mode:${command.slots?.mode}," +
+                " name:${command.slots?.name}, color:${command.slots?.color}")
         frontLighting.set(true)
+        val modelName = command.slots?.name ?: "氛围灯"
         if (!isAmbient()) {
-            command.message = "氛围灯已关闭，无法调节其颜色"
+            command.message = "${modelName}已关闭，无法调节其颜色"
         } else {
             val node = Progress.AMBIENT_LIGHT_COLOR
-            val expect = computeExpectBrightness(command, node.min, node.max, IPart.HEAD)
-            val result = writeProperty(node.set.signal, expect, node.set.origin)
-            if (result) {
-                command.message = "氛围灯颜色已设置为${command.color}"
+            val colors = arrayOf("红色", "紫色", "冰蓝色", "橙色", "绿色", "玫红色", "果绿色", "黄色", "蓝色", "白色")
+            val expect = computeLampColor(command, node.min, node.max)
+            val index = colors.indexOfFirst { it == command.slots?.color }
+            if (Constant.INVALID == index) {
+                command.message = "${modelName}不支持该颜色"
             } else {
-                command.message = "氛围灯颜色设置失败"
+                val result = writeProperty(node.set.signal, index + 1, node.set.origin)
+                if (result) {
+                    command.message = "${modelName}颜色已设置为${command.color}了"
+                } else {
+                    command.message = "${modelName}颜色设置失败"
+                }
             }
         }
         callback?.onCmdHandleResult(command)
     }
 
-
-    private fun computeExpectBrightness(cmd: CarCmd, min: Int, max: Int, @IPart part: Int): Int {
+    private fun computeLampColor(command: CarCmd, min: Int, max: Int): Int {
         var expect = 0
-        if (Action.PLUS == cmd.action) {
-            val current = ambientBrightness.get()
-            expect = current + cmd.step
-        } else if (Action.MINUS == cmd.action) {
-            val current = ambientBrightness.get()
-            expect = current - cmd.step
-        } else if (Action.FIXED == cmd.action) {
-            expect = cmd.value
-        } else if (Action.MIN == cmd.action) {
+        if (Action.PLUS == command.action) {
+            val current = ambientColor.get()
+            expect = current + command.step
+        } else if (Action.MINUS == command.action) {
+            val current = ambientColor.get()
+            expect = current - command.step
+        } else if (Action.FIXED == command.action) {
+            expect = command.value
+        } else if (Action.MIN == command.action) {
             expect = min
-        } else if (Action.MAX == cmd.action) {
+        } else if (Action.MAX == command.action) {
             expect = max
         }
         if (expect > max) expect = max
@@ -488,34 +489,49 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
         return expect
     }
 
-    private fun doSwitchAmbient(cmd: CarCmd, callback: ICmdCallback?) {
-        var name = "氛围灯"
+
+    private fun computeLampBrightness(command: CarCmd, min: Int, max: Int): Int {
+        var expect = 0
+        if (Action.PLUS == command.action) {
+            val current = ambientBrightness.get()
+            expect = current + command.step
+        } else if (Action.MINUS == command.action) {
+            val current = ambientBrightness.get()
+            expect = current - command.step
+        } else if (Action.FIXED == command.action) {
+            expect = command.value
+        } else if (Action.MIN == command.action) {
+            expect = min
+        } else if (Action.MAX == command.action) {
+            expect = max
+        }
+        if (expect > max) expect = max
+        if (expect < min) expect = min
+        return expect
+    }
+
+    private fun doSwitchAmbient(command: CarCmd, callback: ICmdCallback?) {
+        val name = command.slots?.name ?: "氛围灯"
         var status = false
-        if (Action.TURN_ON == cmd.action) {
+        if (Action.TURN_ON == command.action) {
             status = true
         }
-        if (Action.TURN_OFF == cmd.action) {
+        if (Action.TURN_OFF == command.action) {
             status = false
         }
         var mask = IPart.HEAD
-        var fSuccess = mask != (mask and cmd.part)
+        var fSuccess = mask != (mask and command.part)
         mask = IPart.TAIL
-        var bSuccess = mask != (mask and cmd.part)
-        if ((IPart.HEAD or IPart.TAIL) == cmd.part) {
+        var bSuccess = mask != (mask and command.part)
+        if (!fSuccess) {
             fSuccess = doSetSwitchOption(SwitchNode.FRONT_AMBIENT_LIGHTING, status)
-            bSuccess = doSetSwitchOption(SwitchNode.BACK_AMBIENT_LIGHTING, status)
         }
-        if (IPart.HEAD == cmd.part) {
-            fSuccess = doSetSwitchOption(SwitchNode.FRONT_AMBIENT_LIGHTING, status)
-            name = "前排氛围灯"
-        }
-        if (IPart.TAIL == cmd.part) {
+        if (!bSuccess) {
             bSuccess = doSetSwitchOption(SwitchNode.BACK_AMBIENT_LIGHTING, status)
-            name = "后排氛围灯"
         }
         val intent = if (status) "打开" else "关闭"
-        var result = if (fSuccess && bSuccess) "成功" else "失败"
-        cmd.message = "$name$intent$result"
-        callback?.onCmdHandleResult(cmd)
+        val result = if (fSuccess && bSuccess) "成功了" else "失败了"
+        command.message = "$name$intent$result"
+        callback?.onCmdHandleResult(command)
     }
 }

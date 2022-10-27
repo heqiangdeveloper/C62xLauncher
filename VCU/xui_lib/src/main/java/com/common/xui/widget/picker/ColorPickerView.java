@@ -21,8 +21,6 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import com.chinatsp.vehicle.controller.bean.ColorData;
-import com.common.xui.ColorInfo;
 import com.common.xui.R;
 
 import java.util.ArrayList;
@@ -104,7 +102,7 @@ public class ColorPickerView extends View {
     private int[] colors = null;
 
     private int currentColor;
-    private List<ColorData.ColorBean> colorInfoList;
+    private List<Color> colorInfoList;
     private Context context;
 
     /**
@@ -154,7 +152,6 @@ public class ColorPickerView extends View {
         orientation = or == 0 ? Orientation.HORIZONTAL : Orientation.VERTICAL;
         mIndicatorEnable = array.getBoolean(R.styleable.ColorPickerView_indicatorEnable, true);
         array.recycle();
-        addColorList();
     }
 
     @Override
@@ -330,10 +327,12 @@ public class ColorPickerView extends View {
     }
 
     public int[] createDefaultColorTable() {
-        int[] cs = new int[colorInfoList.size()];
-        for(int i =0;i<colorInfoList.size();i++){
-            cs[i] =  Color.rgb(colorInfoList.get(i).getR(), colorInfoList.get(i).getG(), colorInfoList.get(i).getB());
-        }
+        return colorInfoList.stream().mapToInt(Color::toArgb).toArray();
+//        int[] cs = new int[colorInfoList.size()];
+//
+//        for(int i =0;i< colorInfoList.size();i++){
+//            cs[i] =  Color.rgb(colorInfoList.get(i).getR(), colorInfoList.get(i).getG(), colorInfoList.get(i).getB());
+//        }
        /* int[] cs = {
                 Color.rgb(255, 0, 0),
                 Color.rgb(255, 255, 0),
@@ -343,7 +342,7 @@ public class ColorPickerView extends View {
                 Color.rgb(255, 0, 255),
                 Color.rgb(255, 0, 0)
         };*/
-        return cs;
+//        return cs;
     }
 
     @SuppressLint("DrawAllocation")
@@ -652,7 +651,7 @@ public class ColorPickerView extends View {
             curX = x + 30;
         }
         this.pickerIndex = index;
-        this.mIndicatorColor = Color.rgb(colorInfoList.get(index - 1).getR(), colorInfoList.get(index - 1).getG(), colorInfoList.get(index - 1).getB());
+        this.mIndicatorColor = colorInfoList.get(index - 1).toArgb();
         needReDrawIndicator = true;
         invalidate();
     }
@@ -664,7 +663,7 @@ public class ColorPickerView extends View {
     }
 
     public void setIndicatorColorIndex(int index) {
-        this.mIndicatorColor = Color.rgb(colorInfoList.get(index - 1).getR(), colorInfoList.get(index - 1).getG(), colorInfoList.get(index - 1).getB());
+        this.mIndicatorColor = colorInfoList.get(index - 1).toArgb();
         needReDrawIndicator = true;
         this.pickerIndex = index;
         invalidate();
@@ -677,20 +676,24 @@ public class ColorPickerView extends View {
         requestLayout();
     }
 
-    private void addColorList() {
-        colorInfoList = new ArrayList<>();
-        ColorData data = new ColorData();
-        colorInfoList = data.ColorList();
-        /*int[] rItems = context.getResources().getIntArray(R.array.r);
-        int[] gItems = context.getResources().getIntArray(R.array.g);
-        int[] bItems = context.getResources().getIntArray(R.array.b);
-        for (int i = 0; i < rItems.length; i++) {
-            ColorInfo info = new ColorInfo();
-            info.setR(rItems[i]);
-            info.setG(gItems[i]);
-            info.setB(bItems[i]);
-            colorInfoList.add(info);
-        }*/
+    public void setSupportColors(List<Color> colors) {
+        this.colorInfoList = colors;
     }
+
+//    private void addColorList() {
+//        colorInfoList = new ArrayList<>();
+//        ColorData data = new ColorData();
+//        colorInfoList = data.ColorList();
+//        /*int[] rItems = context.getResources().getIntArray(R.array.r);
+//        int[] gItems = context.getResources().getIntArray(R.array.g);
+//        int[] bItems = context.getResources().getIntArray(R.array.b);
+//        for (int i = 0; i < rItems.length; i++) {
+//            ColorInfo info = new ColorInfo();
+//            info.setR(rItems[i]);
+//            info.setG(gItems[i]);
+//            info.setB(bItems[i]);
+//            colorInfoList.add(info);
+//        }*/
+//    }
 
 }

@@ -123,6 +123,16 @@ class VehicleService : Service() {
 
             } else if ("com.chinatsp.vcu.actions.ACOUSTIC_CONTROLER" == action) {
                 controller.doParseSourceData(data)
+                try {
+                    val intent = Intent("com.chinatsp.systemui.interface")
+                    intent.setPackage("com.android.systemui")
+                    intent.putExtra("operation", "voice")
+                    intent.putExtra("semantics", data)
+                    startService(intent)
+//                    Log.i("operation", )
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             } else {
                 Timber.d("解析失败")
             }
