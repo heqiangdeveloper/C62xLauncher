@@ -81,7 +81,6 @@
             android:name="com.chinatsp.vehicle.settings.app.oil.OilPriceActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
-
     </application>
 
 </manifest>

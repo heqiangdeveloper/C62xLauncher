@@ -978,6 +978,7 @@ class SettingManager private constructor() {
                 it.eqMode = eqMode
                 val isCustom = RadioNode.SYSTEM_SOUND_EFFECT.get.values.last() == optionId
                 if (isCustom) {
+                    Timber.d("isCustom =" + isCustom)
                     setAudioVoice(VOICE_LEVEL1, lev1)
                     setAudioVoice(VOICE_LEVEL2, lev2)
                     setAudioVoice(VOICE_LEVEL3, lev3)

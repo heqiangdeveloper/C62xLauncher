@@ -21,6 +21,7 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import com.chinatsp.vehicle.controller.bean.ColorData;
 import com.common.xui.ColorInfo;
 import com.common.xui.R;
 
@@ -103,7 +104,7 @@ public class ColorPickerView extends View {
     private int[] colors = null;
 
     private int currentColor;
-    private List<ColorInfo> colorInfoList;
+    private List<ColorData.ColorBean> colorInfoList;
     private Context context;
 
     /**
@@ -329,8 +330,11 @@ public class ColorPickerView extends View {
     }
 
     public int[] createDefaultColorTable() {
-
-        int[] cs = {
+        int[] cs = new int[colorInfoList.size()];
+        for(int i =0;i<colorInfoList.size();i++){
+            cs[i] =  Color.rgb(colorInfoList.get(i).getR(), colorInfoList.get(i).getG(), colorInfoList.get(i).getB());
+        }
+       /* int[] cs = {
                 Color.rgb(255, 0, 0),
                 Color.rgb(255, 255, 0),
                 Color.rgb(0, 255, 0),
@@ -338,7 +342,7 @@ public class ColorPickerView extends View {
                 Color.rgb(0, 0, 255),
                 Color.rgb(255, 0, 255),
                 Color.rgb(255, 0, 0)
-        };
+        };*/
         return cs;
     }
 
@@ -675,7 +679,9 @@ public class ColorPickerView extends View {
 
     private void addColorList() {
         colorInfoList = new ArrayList<>();
-        int[] rItems = context.getResources().getIntArray(R.array.r);
+        ColorData data = new ColorData();
+        colorInfoList = data.ColorList();
+        /*int[] rItems = context.getResources().getIntArray(R.array.r);
         int[] gItems = context.getResources().getIntArray(R.array.g);
         int[] bItems = context.getResources().getIntArray(R.array.b);
         for (int i = 0; i < rItems.length; i++) {
@@ -684,6 +690,7 @@ public class ColorPickerView extends View {
             info.setG(gItems[i]);
             info.setB(bItems[i]);
             colorInfoList.add(info);
-        }
+        }*/
     }
+
 }
