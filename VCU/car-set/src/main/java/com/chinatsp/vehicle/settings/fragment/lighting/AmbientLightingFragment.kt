@@ -117,13 +117,10 @@ class AmbientLightingFragment :
     }
 
     private fun initViewsDisplay() {
-        if(VcuUtils.isCareLevel(Level.LEVEL3, expect = true)){
-            binding.lightingFrontLayout.visibility = View.GONE
-            binding.lightingBackLayout.visibility = View.GONE
-        }else if(VcuUtils.isCareLevel( Level.LEVEL4, expect = true)){
+        if (VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4, expect = true)) {
             binding.lightingFrontLayout.visibility = View.VISIBLE
             binding.lightingBackLayout.visibility = View.GONE
-        }else{
+        } else {
             binding.lightingFrontLayout.visibility = View.VISIBLE
             binding.lightingBackLayout.visibility = View.VISIBLE
         }
