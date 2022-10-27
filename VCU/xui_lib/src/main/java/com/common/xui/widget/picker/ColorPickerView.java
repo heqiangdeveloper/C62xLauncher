@@ -23,7 +23,6 @@ import androidx.annotation.Nullable;
 
 import com.common.xui.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ColorPickerView extends View {
@@ -656,16 +655,17 @@ public class ColorPickerView extends View {
         invalidate();
     }
 
-    public void setIndicatorColor(int color) {
-        this.mIndicatorColor = color;
+    public void setIndicatorColorIndex(int index) {
+        Color color = colorInfoList.get(index - 1);
+        this.mIndicatorColor = Color.rgb((int)color.red(),(int)color.green(),(int)color.blue());
         needReDrawIndicator = true;
+        this.pickerIndex = index;
         invalidate();
     }
 
-    public void setIndicatorColorIndex(int index) {
-        this.mIndicatorColor = colorInfoList.get(index - 1).toArgb();
+    public void setIndicatorColor(int color) {
+        this.mIndicatorColor = color;
         needReDrawIndicator = true;
-        this.pickerIndex = index;
         invalidate();
     }
 

@@ -2,38 +2,45 @@ package com.chinatsp.vehicle.settings.service
 
 import android.app.Service
 import android.content.Intent
+import android.os.Build
 import android.os.IBinder
-import com.chinatsp.settinglib.BaseApp
-import com.chinatsp.vehicle.settings.HintHold
+import android.view.WindowManager
 import com.chinatsp.vehicle.settings.R
-import com.chinatsp.vehicle.settings.fragment.GlobalDialogFragment
-import com.chinatsp.vehicle.settings.fragment.drive.dialog.DetailsDialogFragment
+import com.chinatsp.vehicle.settings.fragment.dialog.DialogMaster
+import com.chinatsp.vehicle.settings.fragment.dialog.SystemAlertDialog
 import com.common.xui.utils.SystemDialogHelper
 
-class SystemService : Service(),SystemDialogHelper.OnCountDownListener{
-    private val waitTime:Long = 5000//等待启动dialog时间
+class SystemService : Service(), SystemDialogHelper.OnCountDownListener {
+    private val waitTime: Long = 1000 * 60 * 5//等待启动dialog时间
     override fun onBind(p0: Intent?): IBinder? {
-      return null
+        return null
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val helper:SystemDialogHelper
-        /*helper.timeSchedule(waitTime,this)
-        //supportFragmentManager
-        helper.*/
+        val helper = SystemDialogHelper()
+        helper?.timeSchedule(waitTime, this)
         return super.onStartCommand(intent, flags, startId)
     }
 
     override fun onFinished() {
-      updateHintMessage(R.string.global_txt_close)
+        updateHintMessage()
     }
 
-    private fun updateHintMessage( content: Int) {
-        HintHold.setContent(content)
-        val fragment = GlobalDialogFragment()
+    private fun updateHintMessage() {
+        val dialogMaster: DialogMaster = DialogMaster.create(
+            applicationContext,
+            { },
+            { }, 740, 488
+        )
 
-
-
+        val editDialog: SystemAlertDialog = dialogMaster.getDialog()
+        editDialog.setDetailsContent(R.string.global_txt_close)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {//6.0 TYPE_APPLICATION_OVERLAY
+            editDialog.window?.setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
+        } else {
+            editDialog.window?.setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+        }
+        editDialog.show()
 
     }
 }

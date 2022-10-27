@@ -2,6 +2,7 @@ package com.chinatsp.settinglib.manager
 
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
+import android.car.hardware.mcu.CarMcuManager
 import android.content.ComponentName
 import android.content.Intent
 import com.chinatsp.settinglib.BaseApp
@@ -76,6 +77,16 @@ class GlobalManager private constructor() : BaseManager() {
 
             } else if (0x2 == value) {
 
+            }
+            return true
+        }else if (CarMcuManager.ID_VENDOR_MCU_POWER_MODE == property.propertyId) {//557903874
+            val propertyValue = property.value
+            val on = 5
+            if (propertyValue != on) {
+                //系统OFF ON弹窗
+                val intent = Intent("com.chinatsp.vehicle.settings.service.SystemService")
+                intent.setPackage("com.chinatsp.vehicle.settings")
+                BaseApp.instance.startService(intent)
             }
             return true
         }
