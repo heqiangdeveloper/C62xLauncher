@@ -57,6 +57,8 @@ import com.chinatsp.apppanel.event.NotRemindEvent;
 import com.chinatsp.apppanel.event.SelectedCallback;
 import com.chinatsp.apppanel.event.UninstallCommandEvent;
 import com.chinatsp.apppanel.service.AppStoreService;
+import com.chinatsp.apppanel.time.CalcuTimer;
+import com.chinatsp.apppanel.time.CalcuTimerCallback;
 import com.chinatsp.apppanel.utils.Utils;
 import com.chinatsp.apppanel.window.AppManagementWindow;
 import com.huawei.appmarket.launcheragent.CommandType;
@@ -97,6 +99,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
     private static boolean isClickDelete = false;
     private static final String TAG = MyAppInfoAdapter.class.getName();
     private int subParentIndex = -1;//sub所在的主位置
+    private CalcuTimer timer;
 
     public MyAppInfoAdapter(Context context, List<List<LocationBean>> mData) {
         super(mData);
@@ -1089,9 +1092,13 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         ImageView selectIv = (ImageView) dialog.getWindow().findViewById(R.id.update_dialog_select_iv);
         TextView titleTv = (TextView) dialog.getWindow().findViewById(R.id.update_dialog_title);
         titleTv.setText(context.getString(R.string.update_dialog_title,name));
+        openTv.setText(context.getString(R.string.update_dialog_open,"5"));
         openTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(timer != null){
+                    timer.cancel();
+                }
                 dialog.dismiss();
                 if(selectIv.isSelected()){
                     EventBus.getDefault().post(new NotRemindEvent(packageName,reverse3));
@@ -1102,6 +1109,9 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         updateTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(timer != null){
+                    timer.cancel();
+                }
                 dialog.dismiss();
                 if(selectIv.isSelected()){
                     EventBus.getDefault().post(new NotRemindEvent(packageName,reverse3));
@@ -1121,7 +1131,21 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             }
         });
         dialog.setCancelable(false);
+
+        //倒计时5s开始,由于显示dialog花了1s，因此倒计时加到6s
+        timer = new CalcuTimer(6000L, 1000L, new CalcuTimerCallback() {
+            @Override
+            public void onCount(int seconds) {
+                openTv.setText(context.getString(R.string.update_dialog_open,seconds + ""));
+            }
+
+            @Override
+            public void onFinish() {
+                openTv.callOnClick();
+            }
+        });
         dialog.show();
+        timer.start();
     }
 
     // 卸载APK
