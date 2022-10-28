@@ -6,13 +6,11 @@
     </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/bg_sound_popup_20"
+        android:layout_width="@dimen/x370"
+        android:layout_height="@dimen/x244"
+        android:background="@drawable/bg_large"
         android:gravity="center"
-        android:orientation="vertical"
-        android:paddingTop="@dimen/x30"
-        android:paddingBottom="@dimen/x20">
+        android:orientation="vertical">
 
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -25,12 +23,10 @@
         <ScrollView
             android:id="@+id/hint_content_scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="@dimen/x30"
-            android:layout_marginBottom="@dimen/x10"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/x10"
-            android:layout_marginRight="@dimen/x10"
-            android:layout_weight="1">
+            android:layout_marginTop="@dimen/x15"
+            android:layout_marginRight="@dimen/x10">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/details_content"
@@ -38,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:gravity="center"
                 android:lineSpacingExtra="@dimen/x2"
-                android:padding="@dimen/x10"
+                android:padding="@dimen/x20"
                 android:text="@string/global_txt_close"
                 android:textSize="@dimen/text_15" />
         </ScrollView>
@@ -48,7 +44,7 @@
             android:id="@+id/hint_conform"
             android:layout_width="@dimen/x114"
             android:layout_height="@dimen/x37"
-            android:layout_marginTop="@dimen/x35"
+            android:layout_marginTop="@dimen/x45"
             android:background="@drawable/lighting_dialog_txt_bg"
             android:gravity="center"
             android:text="@string/global_txt_agree"

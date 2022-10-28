@@ -3,6 +3,9 @@ package com.chinatsp.vehicle.settings.fragment.cabin.dialog
 import android.os.Bundle
 import android.view.View
 import com.chinatsp.settinglib.Constant
+import com.chinatsp.settinglib.Constant.NAVIGATION
+import com.chinatsp.settinglib.Constant.PRIVACY_MODE
+import com.chinatsp.settinglib.Constant.TURN_OFF_SCREEN
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.cabin.WheelManager
 import com.chinatsp.vehicle.settings.R
@@ -15,10 +18,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SteeringKeysDialogFragment :
     BaseDialogFragment<SteeringViewModel, SteeringDialogFragmentBinding>() {
-
-    val PRIVACY_MODE = 0x11
-    val TURN_OFF_SCREEN = 0x21
-    val NAVIGATION = 0x31
 
     var keypad: View? = null
 

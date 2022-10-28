@@ -28,8 +28,12 @@ class CommandParser {
                 "carControl" -> {
                     CarController.doVoiceController(controller, callback, nlpVoiceModel)
                 }
+                "app", "radio", "video", "musicX" -> {
+                    true
+                }
                 else -> {
                     CarController.doVoiceController(controller, callback, nlpVoiceModel)
+                    true
                 }
             }
         } catch (e: Exception) {

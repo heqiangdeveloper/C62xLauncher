@@ -1,12 +1,13 @@
 package com.chinatsp.settinglib.manager.cabin
 
+import android.car.VehicleAreaSeat
 import android.car.hardware.CarPropertyValue
+import android.car.hardware.cabin.CarCabinManager
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
-import com.chinatsp.settinglib.listener.sound.ISoundListener
 import com.chinatsp.settinglib.listener.sound.ISoundManager
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
@@ -14,6 +15,12 @@ import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
+import com.chinatsp.vehicle.controller.ICmdCallback
+import com.chinatsp.vehicle.controller.annotation.Action
+import com.chinatsp.vehicle.controller.annotation.IAct
+import com.chinatsp.vehicle.controller.annotation.ICar
+import com.chinatsp.vehicle.controller.annotation.IPart
+import com.chinatsp.vehicle.controller.bean.CarCmd
 
 /**
  * @author : luohong
@@ -185,31 +192,253 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
         }
         return success
     }
+//
+//    private fun writeProperty(node: RadioNode, value: Int, atomic: RadioState): Boolean {
+//        val success = node.isValid(value, false)
+//                && writeProperty(node.set.signal, value, node.set.origin)
+//        if (success && develop) {
+//            doUpdateRadioValue(node, atomic, value) { _node, _value ->
+//                doOptionChanged(_node, _value)
+//            }
+//        }
+//        return success
+//    }
+//
+//    private fun doRangeChanged(vararg array: Volume) {
+//        val readLock = readWriteLock.readLock()
+//        try {
+//            readLock.lock()
+//            listenerStore.forEach { (_, ref) ->
+//                val listener = ref.get()
+//                if (null != listener && listener is ISoundListener) {
+//                    listener.onSoundVolumeChanged(*array)
+//                }
+//            }
+//        } finally {
+//            readLock.unlock()
+//        }
+//    }
 
-    private fun writeProperty(node: RadioNode, value: Int, atomic: RadioState): Boolean {
-        val success = node.isValid(value, false)
-                && writeProperty(node.set.signal, value, node.set.origin)
-        if (success && develop) {
-            doUpdateRadioValue(node, atomic, value) { _node, _value ->
-                doOptionChanged(_node, _value)
-            }
-        }
-        return success
+    private fun obtainHeatLevel(@IPart part: Int, defArea: Int = Constant.INVALID): Int {
+//        int类型数据
+//        0x0:Inactive
+//        0x1:OFF(default)
+//        0x2:Level 1
+//        0x3:Level 2
+//        0x4:Level 3
+//        0x5 ………… 0x7:reserved
+        val areaValue = if (Constant.INVALID == defArea) obtainChairArea(part) else defArea
+        return readIntProperty(CarCabinManager.ID_HUM_SEAT_HEAT_POS, Origin.CABIN, areaValue)
     }
 
-    private fun doRangeChanged(vararg array: Volume) {
-        val readLock = readWriteLock.readLock()
-        try {
-            readLock.lock()
-            listenerStore.forEach { (_, ref) ->
-                val listener = ref.get()
-                if (null != listener && listener is ISoundListener) {
-                    listener.onSoundVolumeChanged(*array)
+    private fun updateHeatLevel(@IPart part: Int, level: Int): Boolean {
+//        int类型数据
+//        0x0:Inactive
+//        0x1:OFF(default)
+//        0x2:Level 1
+//        0x3:Level 2
+//        0x4:Level 3
+//        0x5 ………… 0x7:reserved
+        val areaValue = obtainChairArea(part)
+        val actual = -1//obtainHeatLevel(part, areaValue)
+        val result = level != actual
+        if (result) {
+            writeProperty(CarCabinManager.ID_HUM_SEAT_HEAT_POS, level, Origin.CABIN, areaValue)
+        }
+        return result
+    }
+
+    private fun obtainVentilateLevel(@IPart part: Int, defArea: Int = Constant.INVALID): Int {
+//        int类型数据
+//        0x0:Inactive
+//        0x1:OFF(default)
+//        0x2:Level 1
+//        0x3:Level 2
+//        0x4:Level 3
+//        0x5 ………… 0x7:reserved
+        val areaValue = if (Constant.INVALID == defArea) obtainChairArea(part) else defArea
+        return readIntProperty(CarCabinManager.ID_HUM_SEAT_HEAT_POS, Origin.CABIN, areaValue)
+    }
+
+    private fun updateVentilateLevel(@IPart part: Int, level: Int): Boolean {
+//        int类型数据
+//        0x0:Inactive
+//        0x1:OFF(default)
+//        0x2:Level 1
+//        0x3:Level 2
+//        0x4:Level 3
+//        0x5 ………… 0x7:reserved
+        val areaValue = obtainChairArea(part)
+        val actual = -1//obtainVentilateLevel(part, areaValue)
+        val result = level != actual
+        if (result) {
+            writeProperty(CarCabinManager.ID_HUM_SEAT_VENT_POS, level, Origin.CABIN, areaValue)
+        }
+        return result
+    }
+
+    private fun obtainChairArea(@IPart part: Int): Int {
+        return when (part) {
+            IPart.LEFT_FRONT -> VehicleAreaSeat.SEAT_ROW_1_LEFT
+            IPart.LEFT_BACK -> VehicleAreaSeat.SEAT_ROW_2_LEFT
+            IPart.RIGHT_FRONT -> VehicleAreaSeat.SEAT_ROW_1_RIGHT
+            IPart.RIGHT_BACK -> VehicleAreaSeat.SEAT_ROW_2_RIGHT
+            else -> VehicleAreaSeat.SEAT_ROW_1_LEFT
+        }
+    }
+
+    private fun updateKneadLevel(@IPart part: Int, level: Int): Boolean {
+        val signal = when (part) {
+            IPart.LEFT_FRONT -> CarCabinManager.ID_HUM_SEATMASSLVL_FL
+            IPart.RIGHT_FRONT -> CarCabinManager.ID_HUM_SEATMASSLVL_FR
+            else -> Constant.INVALID
+        }
+        if (Constant.INVALID != signal) {
+            writeProperty(signal, level, Origin.CABIN)
+            return true
+        }
+        return false
+    }
+
+    override fun doCarControlCommand(command: CarCmd, callback: ICmdCallback?) {
+        if (ICar.CHAIR == command.car) {
+            if (IAct.HEAT == command.act) {
+                doControlChairHeat(command, callback)
+                return
+            }
+            if (IAct.COLD == command.act) {
+                doControlChairVentilate(command, callback)
+                return
+            }
+            if (IAct.KNEAD == command.act) {
+                doControlChairKnead(command, callback)
+            }
+        }
+    }
+
+    private fun doControlChairKnead(command: CarCmd, callback: ICmdCallback?) {
+
+        var level = Constant.INVALID
+        val min = 0x2
+        val max = 0x5
+        var append = ""
+        if (Action.TURN_ON == command.action) {
+            level = min
+            append = "打开"
+        }
+        if (Action.TURN_OFF == command.action) {
+            level = max
+            append = "关闭"
+        }
+        if (Action.FIXED == command.action) {
+            level = command.value
+            if (level <= 0) {
+                level = max
+            } else {
+                level += 0x1
+                if (level > 0x4) {
+                    level = 0x4
                 }
             }
-        } finally {
-            readLock.unlock()
+            append = when (level) {
+                max -> "关闭"
+                0x4 -> "调整到最高"
+                else -> "调整到${level - 0x1}级"
+            }
         }
+        var mask = IPart.LEFT_FRONT
+        val isLF = if (mask == (mask and command.part)) updateKneadLevel(mask, level) else false
+        mask = IPart.LEFT_BACK
+        val isLB = if (mask == (mask and command.part)) updateKneadLevel(mask, level) else false
+        mask = IPart.RIGHT_FRONT
+        val isRF = if (mask == (mask and command.part)) updateKneadLevel(mask, level) else false
+        mask = IPart.RIGHT_BACK
+        val isRB = if (mask == (mask and command.part)) updateKneadLevel(mask, level) else false
+        if (isLF || isLB || isRF || isRB) {
+            command.message = "好的，${command.slots?.mode}${append}了"
+        } else {
+            command.message = "好的，${command.slots?.mode}已经${append}了"
+        }
+        callback?.onCmdHandleResult(command)
     }
+
+    private fun doControlChairVentilate(command: CarCmd, callback: ICmdCallback?) {
+        var level = Constant.INVALID
+        val min = 0x1
+        val max = 0x4
+        var append = ""
+        if (Action.TURN_ON == command.action) {
+            level = max
+            append = "打开"
+        }
+        if (Action.TURN_OFF == command.action) {
+            level = min
+            append = "关闭"
+        }
+        if (Action.FIXED == command.action) {
+            level = command.value + min
+            if (level < min) level = min
+            if (level > max) level = max
+            append = when (level) {
+                min -> "关闭"
+                max -> "调整到最高"
+                else -> "调整到${level - 1}级"
+            }
+        }
+        var mask = IPart.LEFT_FRONT
+        val isLF = if (mask == (mask and command.part)) updateVentilateLevel(mask, level) else false
+        mask = IPart.LEFT_BACK
+        val isLB = if (mask == (mask and command.part)) updateVentilateLevel(mask, level) else false
+        mask = IPart.RIGHT_FRONT
+        val isRF = if (mask == (mask and command.part)) updateVentilateLevel(mask, level) else false
+        mask = IPart.RIGHT_BACK
+        val isRB = if (mask == (mask and command.part)) updateVentilateLevel(mask, level) else false
+        if (isLF || isLB || isRF || isRB) {
+            command.message = "好的，${command.slots?.name}通风${append}了"
+        } else {
+            command.message = "好的，${command.slots?.name}通风已经${append}了"
+        }
+        callback?.onCmdHandleResult(command)
+    }
+
+    private fun doControlChairHeat(command: CarCmd, callback: ICmdCallback?) {
+        var level = Constant.INVALID
+        val min = 0x1
+        val max = 0x4
+        var append = ""
+        if (Action.TURN_ON == command.action) {
+            level = 0x3
+            append = "打开"
+        }
+        if (Action.TURN_OFF == command.action) {
+            level = 0x1
+            append = "关闭"
+        }
+        if (Action.FIXED == command.action) {
+            level = command.value + min
+            if (level < min) level = min
+            if (level > max) level = max
+            append = when (level) {
+                min -> "关闭"
+                max -> "调整到最高"
+                else -> "调整到${level - 1}级"
+            }
+        }
+        var mask = IPart.LEFT_FRONT
+        val isLF = if (mask == (mask and command.part)) updateHeatLevel(mask, level) else false
+        mask = IPart.LEFT_BACK
+        val isLB = if (mask == (mask and command.part)) updateHeatLevel(mask, level) else false
+        mask = IPart.RIGHT_FRONT
+        val isRF = if (mask == (mask and command.part)) updateHeatLevel(mask, level) else false
+        mask = IPart.RIGHT_BACK
+        val isRB = if (mask == (mask and command.part)) updateHeatLevel(mask, level) else false
+        if (isLF || isLB || isRF || isRB) {
+            command.message = "好的，${command.slots?.name}加热${append}了"
+        } else {
+            command.message = "好的，${command.slots?.name}加热已经${append}了"
+        }
+        callback?.onCmdHandleResult(command)
+    }
+
 
 }

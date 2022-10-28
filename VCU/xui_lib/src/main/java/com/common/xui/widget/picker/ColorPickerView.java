@@ -21,10 +21,8 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import com.common.xui.ColorInfo;
 import com.common.xui.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ColorPickerView extends View {
@@ -103,8 +101,8 @@ public class ColorPickerView extends View {
     private int[] colors = null;
 
     private int currentColor;
-    private List<ColorInfo> colorInfoList;
-    private Context context;
+    private int topIndex = 0;//记录上一次颜色段
+    private List<Color> colorInfoList;
 
     /**
      * 控件方向
@@ -146,14 +144,12 @@ public class ColorPickerView extends View {
 
     public ColorPickerView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.context = context;
         final TypedArray array = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ColorPickerView, defStyleAttr, 0);
         mIndicatorColor = array.getColor(R.styleable.ColorPickerView_indicatorColor, Color.WHITE);
         int or = array.getInteger(R.styleable.ColorPickerView_orientation, 0);
         orientation = or == 0 ? Orientation.HORIZONTAL : Orientation.VERTICAL;
         mIndicatorEnable = array.getBoolean(R.styleable.ColorPickerView_indicatorEnable, true);
         array.recycle();
-        addColorList();
     }
 
     @Override
@@ -329,8 +325,12 @@ public class ColorPickerView extends View {
     }
 
     public int[] createDefaultColorTable() {
-
-        int[] cs = {
+        //return colorInfoList.stream().mapToInt(Color::toArgb).toArray();
+        int[] cs = new int[colorInfoList.size()];
+        for (int i = 0; i < colorInfoList.size(); i++) {
+            cs[i] = Color.rgb((int) colorInfoList.get(i).red(), (int) colorInfoList.get(i).green(), (int) colorInfoList.get(i).blue());
+        }
+       /* int[] cs = {
                 Color.rgb(255, 0, 0),
                 Color.rgb(255, 255, 0),
                 Color.rgb(0, 255, 0),
@@ -338,7 +338,7 @@ public class ColorPickerView extends View {
                 Color.rgb(0, 0, 255),
                 Color.rgb(255, 0, 255),
                 Color.rgb(255, 0, 0)
-        };
+        };*/
         return cs;
     }
 
@@ -438,21 +438,27 @@ public class ColorPickerView extends View {
             if (colorPickerChangeListener != null) {
                 colorPickerChangeListener.onStartTrackingTouch(this);
                 calcuColor();
+                if (topIndex != index) {
+                    colorPickerChangeListener.onColorChanged(this, currentColor, index);
+                }
 
-                colorPickerChangeListener.onColorChanged(this, currentColor, index);
             }
 
         } else if (event.getActionMasked() == MotionEvent.ACTION_UP) { //手抬起
             if (colorPickerChangeListener != null) {
                 colorPickerChangeListener.onStopTrackingTouch(this);
                 calcuColor();
-                colorPickerChangeListener.onColorChanged(this, currentColor, index);
+                if (topIndex != index) {
+                    colorPickerChangeListener.onColorChanged(this, currentColor, index);
+                }
             }
 
         } else { //按着+拖拽
             if (colorPickerChangeListener != null) {
                 calcuColor();
-                colorPickerChangeListener.onColorChanged(this, currentColor, index);
+                if (topIndex != index) {
+                    colorPickerChangeListener.onColorChanged(this, currentColor, index);
+                }
             }
         }
 
@@ -648,21 +654,24 @@ public class ColorPickerView extends View {
             curX = x + 30;
         }
         this.pickerIndex = index;
-        this.mIndicatorColor = Color.rgb(colorInfoList.get(index - 1).getR(), colorInfoList.get(index - 1).getG(), colorInfoList.get(index - 1).getB());
+        Color color = colorInfoList.get(index - 1);
+        this.mIndicatorColor = Color.rgb((int) color.red(), (int) color.green(), (int) color.blue());
         needReDrawIndicator = true;
+        invalidate();
+    }
+
+    public void setIndicatorColorIndex(int index) {
+        Color color = colorInfoList.get(index - 1);
+        this.mIndicatorColor = Color.rgb((int) color.red(), (int) color.green(), (int) color.blue());
+        needReDrawIndicator = true;
+        this.pickerIndex = index;
+        this.topIndex = index;
         invalidate();
     }
 
     public void setIndicatorColor(int color) {
         this.mIndicatorColor = color;
         needReDrawIndicator = true;
-        invalidate();
-    }
-
-    public void setIndicatorColorIndex(int index) {
-        this.mIndicatorColor = Color.rgb(colorInfoList.get(index - 1).getR(), colorInfoList.get(index - 1).getG(), colorInfoList.get(index - 1).getB());
-        needReDrawIndicator = true;
-        this.pickerIndex = index;
         invalidate();
     }
 
@@ -673,17 +682,8 @@ public class ColorPickerView extends View {
         requestLayout();
     }
 
-    private void addColorList() {
-        colorInfoList = new ArrayList<>();
-        int[] rItems = context.getResources().getIntArray(R.array.r);
-        int[] gItems = context.getResources().getIntArray(R.array.g);
-        int[] bItems = context.getResources().getIntArray(R.array.b);
-        for (int i = 0; i < rItems.length; i++) {
-            ColorInfo info = new ColorInfo();
-            info.setR(rItems[i]);
-            info.setG(gItems[i]);
-            info.setB(bItems[i]);
-            colorInfoList.add(info);
-        }
+    public void setSupportColors(List<Color> colors) {
+        this.colorInfoList = colors;
     }
+
 }

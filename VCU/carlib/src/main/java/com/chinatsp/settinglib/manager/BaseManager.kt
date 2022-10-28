@@ -76,7 +76,7 @@ abstract class BaseManager : IManager {
         property: CarPropertyValue<*>,
         origin: Origin = Origin.CABIN,
     ): Boolean {
-        if (isCareSignal(property.propertyId, origin)) {
+      if (isCareSignal(property.propertyId, origin)) {
             return onHandleSignal(property, origin)
         }
         return false
@@ -125,8 +125,10 @@ abstract class BaseManager : IManager {
             writeLock.lock()
             listenerStore.takeIf { it.containsKey(serial) }?.let {
                 val obj = it.remove(serial)
-                Timber.d("unRegisterVcuListener serial:$serial, callSerial:$callSerial，" +
-                        " name:${this::class.java.simpleName}, listener:${obj?.javaClass?.simpleName}")
+                Timber.d(
+                    "unRegisterVcuListener serial:$serial, callSerial:$callSerial，" +
+                            " name:${this::class.java.simpleName}, listener:${obj?.javaClass?.simpleName}"
+                )
             }
         } finally {
             writeLock.unlock()

@@ -99,6 +99,7 @@ public class MyAppFragment extends Fragment {
     private String versionCode = "";
     private PackageManager pm;
     private PackageInfo pi;
+    private int subParentIndex = -1;//sub所在的主位置
     public MyAppFragment() {
         // Required empty public constructor
     }
@@ -596,7 +597,9 @@ public class MyAppFragment extends Fragment {
                 if(k < data.size()){
                     mMyAppInfoAdapter.notifyItemChanged(k);
                     boolean isSubShow = appInfoClassifyView.isSubContainerShow();
-                    if(isSubShow && lists != null && lists.size() >= 3){
+                    subParentIndex = preferences.getInt(MyConfigs.PARENTINDEX,-1);
+                    //确认是否是当前正在下载的那个sub
+                    if((subParentIndex == k) && isSubShow && lists != null && lists.size() >= 3){
                         mMyAppInfoAdapter.getSubAdapter().initData(k,lists);
                     }
 
@@ -667,7 +670,8 @@ public class MyAppFragment extends Fragment {
                 if(k < data.size()){
                     mMyAppInfoAdapter.notifyItemChanged(k);
                     boolean isSubShow = appInfoClassifyView.isSubContainerShow();
-                    if(isSubShow && lists != null && lists.size() >= 3){
+                    subParentIndex = preferences.getInt(MyConfigs.PARENTINDEX,-1);
+                    if((subParentIndex == k) && isSubShow && lists != null && lists.size() >= 3){
                         mMyAppInfoAdapter.getSubAdapter().initData(k,lists);
                     }
 
@@ -707,7 +711,8 @@ public class MyAppFragment extends Fragment {
                 if(k < data.size()){
                     mMyAppInfoAdapter.notifyItemChanged(k);
                     boolean isSubShow = appInfoClassifyView.isSubContainerShow();
-                    if(isSubShow && lists != null && lists.size() >= 3){
+                    subParentIndex = preferences.getInt(MyConfigs.PARENTINDEX,-1);
+                    if((subParentIndex == k) && isSubShow && lists != null && lists.size() >= 3){
                         mMyAppInfoAdapter.getSubAdapter().initData(k,lists);
                     }
 
@@ -746,7 +751,8 @@ public class MyAppFragment extends Fragment {
                 if(k < data.size()){
                     mMyAppInfoAdapter.notifyItemChanged(k);
                     boolean isSubShow = appInfoClassifyView.isSubContainerShow();
-                    if(isSubShow && lists != null && lists.size() >= 3){
+                    subParentIndex = preferences.getInt(MyConfigs.PARENTINDEX,-1);
+                    if((subParentIndex == k) && isSubShow && lists != null && lists.size() >= 3){
                         mMyAppInfoAdapter.getSubAdapter().initData(k,lists);
                     }
 
@@ -781,7 +787,8 @@ public class MyAppFragment extends Fragment {
 
                                 mMyAppInfoAdapter.notifyItemChanged(k);
                                 isSubShow = appInfoClassifyView.isSubContainerShow();
-                                if(isSubShow && lists != null && lists.size() >= 3){
+                                subParentIndex = preferences.getInt(MyConfigs.PARENTINDEX,-1);
+                                if((k == subParentIndex) && isSubShow && lists != null && lists.size() >= 3){
                                     mMyAppInfoAdapter.getSubAdapter().initData(k,lists);
                                 }
                                 num = db.isExistPackage(mLocationBean.getPackageName());
@@ -798,8 +805,10 @@ public class MyAppFragment extends Fragment {
             intent.setClassName("com.chinatsp.launcher","com.chinatsp.launcher.CarLauncher");
             getContext().startActivity(intent);
         }else if(event instanceof ChangeSubTitleEvent){
-            String title = ((ChangeSubTitleEvent)event).getTitle();
             boolean isSubShow = appInfoClassifyView.isSubContainerShow();
+            String title = ((ChangeSubTitleEvent)event).getTitle();
+            int position = ((ChangeSubTitleEvent)event).getPosition();
+            Log.d(TAG,"position = " + position + ",title = " + title);
             if(isSubShow){
                 if(appInfoClassifyView.titleTv != null) appInfoClassifyView.titleTv.setText(title);
             }

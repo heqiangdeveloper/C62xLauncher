@@ -6,6 +6,12 @@ interface Keywords {
         const val OPEN = "OPEN"
         const val LAUNCH = "LAUNCH"
         const val CLOSE = "CLOSE"
+        const val CHAIR = "座椅"
+        const val HEAT = "加热"
+        const val KNEAD = "按摩"
+        const val VENTILATE = "通风"
+        const val CHAIR_HEAT = "座椅加热"
+        const val CHAIR_VENTILATE = "座椅通风"
 
         /**
          * 操作指令，表示为打开的操作数组
@@ -34,6 +40,17 @@ interface Keywords {
         const val LAMPLIGHTPLUS_1 = "高"
         const val LAMPLIGHTPLUS_2 = "低"
         val WINDOW_ALL = arrayOf("所有窗户", "所有车窗", "窗户", "车窗")
+        val L_F = arrayOf("主驾", "左前", "前左")
+        val L_R = arrayOf("左后", "后左")
+        val R_F = arrayOf("副驾", "右前", "前右")
+        val R_R = arrayOf("右后", "后右")
+
+        val L_C = arrayOf("左边", "左排")
+        val R_C = arrayOf("右边", "右排")
+
+        val F_R = arrayOf("前边", "前排")
+        val B_R = arrayOf("后边", "后排", "乘客")
+
         const val WINDOW_LEFT_FRONT = "左前车窗"
         const val WINDOW_RIGHT_FRONT = "右前车窗"
         const val WINDOW_LEFT_FRONT2 = "主驾车窗"
@@ -105,7 +122,7 @@ interface Keywords {
         const val NAME_VALUE_HALF = "二分之一"
         const val NAME_VALUE_ONE_THIRD = "三分之一"
         const val NAME_VALUE_QUARTER = "四分之一"
-        const val VENTILATE = "透气"
+//        const val VENTILATE = "透气"
 
         //------------ 可见即可说热词 start ------------
         //设置左侧导航菜单

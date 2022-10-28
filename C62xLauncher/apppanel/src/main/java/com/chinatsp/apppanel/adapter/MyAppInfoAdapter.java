@@ -57,6 +57,8 @@ import com.chinatsp.apppanel.event.NotRemindEvent;
 import com.chinatsp.apppanel.event.SelectedCallback;
 import com.chinatsp.apppanel.event.UninstallCommandEvent;
 import com.chinatsp.apppanel.service.AppStoreService;
+import com.chinatsp.apppanel.time.CalcuTimer;
+import com.chinatsp.apppanel.time.CalcuTimerCallback;
 import com.chinatsp.apppanel.utils.Utils;
 import com.chinatsp.apppanel.window.AppManagementWindow;
 import com.huawei.appmarket.launcheragent.CommandType;
@@ -95,6 +97,9 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
     private List<HashMap<String,Object>> appInfos = new ArrayList<HashMap<String,Object>>();
     private final int MAX_RECENT_APPS = 20;
     private static boolean isClickDelete = false;
+    private static final String TAG = MyAppInfoAdapter.class.getName();
+    private int subParentIndex = -1;//sub所在的主位置
+    private CalcuTimer timer;
 
     public MyAppInfoAdapter(Context context, List<List<LocationBean>> mData) {
         super(mData);
@@ -159,6 +164,10 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             if(installedLists.contains(AppState.DOWNLOAD_FAIL)){//下载失败
                 setDownloadStatus(true,holder,AppState.DOWNLOAD_FAIL,0,null);
                 holder.tvName.setText(getName(AppState.DOWNLOAD_FAIL,titleStr));
+                subParentIndex = preferences.getInt(MyConfigs.PARENTINDEX,-1);
+                if(position == subParentIndex){
+                    EventBus.getDefault().post(new ChangeSubTitleEvent(holder.tvName.getText().toString(),position));
+                }
             }else if(installedLists.contains(AppState.DOWNLOADING)){//下载中
                 //计算总的下载进度
                 int total = 0;
@@ -175,6 +184,10 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
                 if(num != 0) total = total / num;
                 setDownloadStatus(true,holder,AppState.DOWNLOADING,total,null);
                 holder.tvName.setText(getName(AppState.DOWNLOADING,titleStr));
+                subParentIndex = preferences.getInt(MyConfigs.PARENTINDEX,-1);
+                if(position == subParentIndex){
+                    EventBus.getDefault().post(new ChangeSubTitleEvent(holder.tvName.getText().toString(),position));
+                }
             }else if(installedLists.contains(AppState.DOWNLOAD_PAUSED)){//暂停中
                 //计算总的下载进度
                 int total = 0;
@@ -191,9 +204,17 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
                 if(num != 0) total = total / num;
                 setDownloadStatus(true,holder,AppState.DOWNLOAD_PAUSED,total,null);
                 holder.tvName.setText(getName(AppState.DOWNLOAD_PAUSED,titleStr));
+                subParentIndex = preferences.getInt(MyConfigs.PARENTINDEX,-1);
+                if(position == subParentIndex){
+                    EventBus.getDefault().post(new ChangeSubTitleEvent(holder.tvName.getText().toString(),position));
+                }
             }else if(installedLists.contains(AppState.INSTALLING)){//安装中
                 setDownloadStatus(true,holder,AppState.INSTALLING,0,null);
                 holder.tvName.setText(getName(AppState.INSTALLING,titleStr));
+                subParentIndex = preferences.getInt(MyConfigs.PARENTINDEX,-1);
+                if(position == subParentIndex){
+                    EventBus.getDefault().post(new ChangeSubTitleEvent(holder.tvName.getText().toString(),position));
+                }
             }else if(installedLists.contains(AppState.INSTALLED)){//安装完成
                 List<String> installedPackages = new ArrayList<>();
                 int mInstalled;
@@ -208,12 +229,15 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
 
                 setDownloadStatus(true,holder,AppState.INSTALLED,0,installedPackages);
                 holder.tvName.setText(getName(AppState.INSTALLED,titleStr));
+                subParentIndex = preferences.getInt(MyConfigs.PARENTINDEX,-1);
+                if(position == subParentIndex){
+                    //如果sub显示了，需要更新其标题内容
+                    EventBus.getDefault().post(new ChangeSubTitleEvent(holder.tvName.getText().toString(),position));
+                }
             }else {//默认正常状态
                 setDownloadStatus(true,holder,AppState.INSTALLED_COMPLETELY,0,null);
                 holder.tvName.setText(getName(AppState.INSTALLED_COMPLETELY,titleStr));
             }
-            //如果sub显示了，需要更新其标题内容
-            EventBus.getDefault().post(new ChangeSubTitleEvent(holder.tvName.getText().toString()));
 
 //            holder.tvName.setText(titleStr);
             holder.deleteIv.setVisibility(View.GONE);
@@ -1068,9 +1092,13 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         ImageView selectIv = (ImageView) dialog.getWindow().findViewById(R.id.update_dialog_select_iv);
         TextView titleTv = (TextView) dialog.getWindow().findViewById(R.id.update_dialog_title);
         titleTv.setText(context.getString(R.string.update_dialog_title,name));
+        openTv.setText(context.getString(R.string.update_dialog_open,"5"));
         openTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(timer != null){
+                    timer.cancel();
+                }
                 dialog.dismiss();
                 if(selectIv.isSelected()){
                     EventBus.getDefault().post(new NotRemindEvent(packageName,reverse3));
@@ -1081,6 +1109,9 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         updateTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(timer != null){
+                    timer.cancel();
+                }
                 dialog.dismiss();
                 if(selectIv.isSelected()){
                     EventBus.getDefault().post(new NotRemindEvent(packageName,reverse3));
@@ -1100,7 +1131,21 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             }
         });
         dialog.setCancelable(false);
+
+        //倒计时5s开始,由于显示dialog花了1s，因此倒计时加到6s
+        timer = new CalcuTimer(6000L, 1000L, new CalcuTimerCallback() {
+            @Override
+            public void onCount(int seconds) {
+                openTv.setText(context.getString(R.string.update_dialog_open,seconds + ""));
+            }
+
+            @Override
+            public void onFinish() {
+                openTv.callOnClick();
+            }
+        });
         dialog.show();
+        timer.start();
     }
 
     // 卸载APK

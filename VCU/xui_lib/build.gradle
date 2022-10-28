@@ -22,6 +22,7 @@ android {
 
 dependencies {
     implementation deps.appcompat
+    implementation project(path: ':controller')
     compileOnly deps.recyclerview
     compileOnly deps.material
 

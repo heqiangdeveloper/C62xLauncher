@@ -152,7 +152,11 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
                 onSwitchChanged(SwitchNode.WIN_CLOSE_FOLLOW_LOCK, autoCloseWinAtLock, property)
             }
             SwitchNode.WIN_REMOTE_CONTROL.get.signal -> {
-                onSwitchChanged(SwitchNode.WIN_REMOTE_CONTROL, winRemoteControl, property)
+                val node = SwitchNode.WIN_REMOTE_CONTROL
+                var convert = convert(property, node.get.on, 0x0)
+                if (null == convert) convert = property
+                onSwitchChanged(node, winRemoteControl, convert)
+//                onSwitchChanged(SwitchNode.WIN_REMOTE_CONTROL, winRemoteControl, property)
             }
             SwitchNode.RAIN_WIPER_REPAIR.get.signal -> {
                 onSwitchChanged(SwitchNode.RAIN_WIPER_REPAIR, rainWiperRepair, property)

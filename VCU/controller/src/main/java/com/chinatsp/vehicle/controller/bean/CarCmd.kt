@@ -11,15 +11,14 @@ import com.chinatsp.vehicle.controller.annotation.*
  * @desc   :
  * @version: 1.0
  */
-class CarCmd(
-    @Model model: Int,
-    @Action action: Int,
-    @IStatus status: Int,
-) : BaseCmd(model, action, status), Parcelable {
+class CarCmd(@Model model: Int, @Action action: Int, @IStatus status: Int) :
+    BaseCmd(model, action, status), Parcelable {
 
     var car: Int = ICar.VOID
 
     var part: Int = IPart.VOID
+
+    var act: Int = IAct.VOID
 
     /**
      * 空调 吹风方向
@@ -41,6 +40,7 @@ class CarCmd(
         model = parcel.readInt()) {
         car = parcel.readInt()
         part = parcel.readInt()
+        act = parcel.readInt()
         orien = parcel.readInt()
         graded = parcel.readByte() != 0.toByte()
         color = parcel.readString().toString()
@@ -50,6 +50,7 @@ class CarCmd(
         super.writeToParcel(parcel, flags)
         parcel.writeInt(car)
         parcel.writeInt(part)
+        parcel.writeInt(act)
         parcel.writeInt(orien)
         parcel.writeByte(if (graded) 1 else 0)
         parcel.writeString(color)

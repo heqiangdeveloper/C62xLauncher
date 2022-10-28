@@ -309,10 +309,10 @@ public class ClassifyView extends FrameLayout {
                     mMainCallBack = (MainRecyclerViewCallBack) mMainRecyclerView.getAdapter();
                     List list = mMainCallBack.explodeItem(position, null);
                     if(null != list){
-                        for(int i = list.size() - 1; i >= 0; i--){
+                        A:for(int i = list.size() - 1; i >= 0; i--){
                             if(list.get(i) == null){
                                 list.remove(i);
-                                break;
+                                break A;
                             }
                         }
                         mSubCallBack.initData(position,list);
@@ -555,10 +555,10 @@ public class ClassifyView extends FrameLayout {
 
                     //如果没有添加按钮，则新增一个添加按钮,防止添加按钮不是在最末尾，先清除，再新增
                     isExistAdd = false;
-                    for(int i = 0; i < list.size(); i++){
+                    A:for(int i = 0; i < list.size(); i++){
                         if(list.get(i) == null){
                             list.remove(i);
-                            break;
+                            break A;
                         }
                     }
                     list.add(null);
@@ -577,7 +577,7 @@ public class ClassifyView extends FrameLayout {
                         }
                         //确保次级窗口在屏幕外
                         resetSubContainerPlace();
-                        showSubContainer();
+                        showSubContainer(position);
                     } else {
                         removeView(mSubContainer);//如果有已存在的mSubContainer，先移除
                         final int height = (int) (getHeight() * mSubRatio);
@@ -589,7 +589,7 @@ public class ClassifyView extends FrameLayout {
                             @Override
                             public void run() {
                                 mSubContainer.setTranslationY(height);
-                                showSubContainer();
+                                showSubContainer(position);
                             }
                         });
                     }
@@ -884,7 +884,7 @@ public class ClassifyView extends FrameLayout {
     /**
      * 显示次级窗口
      */
-    public void showSubContainer() {
+    public void showSubContainer(int subParentIndex) {
         if (mShowSubAnim != null && mShowSubAnim.isRunning()) return;
         mSubContainer.setVisibility(VISIBLE);
         mShowSubAnim = new AnimatorSet();
@@ -892,7 +892,7 @@ public class ClassifyView extends FrameLayout {
         ObjectAnimator shadowAnim = ObjectAnimator.ofFloat(mMainShadowView, "alpha", 0f, 1f);
         mShowSubAnim.setDuration(mAnimationDuration);
         mShowSubAnim.setInterpolator(new AccelerateDecelerateInterpolator());
-        editor.putInt(MyConfigs.PARENTINDEX,-1);
+        editor.putInt(MyConfigs.PARENTINDEX,subParentIndex);
         editor.commit();
         mShowSubAnim.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -1090,10 +1090,10 @@ public class ClassifyView extends FrameLayout {
                                     editor.putBoolean(MyConfigs.SHOWDELETE,false);
                                     editor.commit();
                                     //如果没有添加按钮，则新增一个添加按钮
-                                    for(int i = 0; i < list.size(); i++){
+                                    A:for(int i = 0; i < list.size(); i++){
                                         if(list.get(i) == null){
                                             list.remove(i);
-                                            break;
+                                            break A;
                                         }
                                     }
                                     list.add(null);
@@ -1113,7 +1113,7 @@ public class ClassifyView extends FrameLayout {
                                         @Override
                                         public void run() {
                                             mSubContainer.setTranslationY(height);
-                                            showSubContainer();
+                                            showSubContainer(mSelectedPosition);
                                         }
                                     });
                                 }
@@ -1463,10 +1463,10 @@ public class ClassifyView extends FrameLayout {
                             position = newIndex;
                         }
                         List list = mMainCallBack.explodeItem(position, null);
-                        for(int i = list.size() - 1; i >= 0; i--){
+                        A:for(int i = list.size() - 1; i >= 0; i--){
                             if(list.get(i) == null){
                                 list.remove(i);
-                                break;
+                                break A;
                             }
                         }
                         mSubCallBack.initData(position,list);

@@ -35,6 +35,19 @@ object Constant {
      */
     const val DARK_TOPIC: Int = 0x02
 
+    /**
+     * 隐私模式
+     */
+    const val PRIVACY_MODE = 0x11
+    /**
+     * 熄屏
+     */
+    const val TURN_OFF_SCREEN = 0x21
+    /**
+     * 导航
+     */
+    const val NAVIGATION = 0x31
+
     val ANGLE_RETURN_SIGNAL: Int
         get() = CarCabinManager.ID_R_MIRROR_MEMORY_STS
 

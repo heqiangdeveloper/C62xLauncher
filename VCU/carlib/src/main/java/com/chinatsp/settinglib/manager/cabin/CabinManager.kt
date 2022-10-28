@@ -84,9 +84,12 @@ class CabinManager private constructor() : BaseManager(), ITabStore {
         }
     }
 
-    override fun doCarControlCommand(cmd: CarCmd, callback: ICmdCallback?) {
-        if (Model.CABIN_WHEEL == cmd.model) {
-            WheelManager.instance.doCarControlCommand(cmd, callback)
+    override fun doCarControlCommand(command: CarCmd, callback: ICmdCallback?) {
+        if (Model.CABIN_WHEEL == command.model) {
+            WheelManager.instance.doCarControlCommand(command, callback)
+        }
+        else if (Model.CABIN_SEAT == command.model) {
+            SeatManager.instance.doCarControlCommand(command, callback)
         }
     }
 

@@ -320,6 +320,7 @@ IACC会优先通过识别⻋道两侧清晰的⻋道线进⾏横向辅助控制�
 
     <string name="global_txt_close">5分钟后您的爱车将自动关闭</string>
     <string name="global_txt_engine">请启动发动机，避免蓄电池亏电</string>
+    <string name="global_txt_power_supply">蓄电池电量过低，将关闭部分\n舒适性功能和娱乐功能</string>
     <string name="global_txt_agree">确认</string>
 
     <string name="mixed">混响</string>
