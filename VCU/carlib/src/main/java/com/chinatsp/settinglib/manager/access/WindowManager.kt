@@ -169,13 +169,52 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
         if (Model.ACCESS_WINDOW != command.model) {
             return
         }
-        Timber.d("doOuterControlCommand $command")
         if (ICar.WINDOWS == command.car) {
-            doControlWindow(command, callback)
+            doControlWindow2(command, callback)
+            return
         }
         if (ICar.LOUVER == command.car) {
-            doControlLouver(command, callback)
+            doControlLouver2(command, callback)
+            return
         }
+        if (ICar.WIPER == command.car) {
+            doControlWiper(command, callback)
+            return
+        }
+    }
+
+    private fun doControlWiper(command: CarCmd, callback: ICmdCallback?) {
+//        AVN request front washer and wiper on or off[0x1,0,0x0,0x3]
+//        0x0: Inactive   0x1: On  0x2: Off(Not used)   0x3: Not used
+        var value = Constant.INVALID
+        var actionName = Keywords.COMMAND_FAILED
+        if (Action.TURN_ON == command.action) {
+            value = 0x1
+            actionName = "打开"
+        } else if (Action.TURN_OFF == command.action) {
+            value = 0x2
+            actionName = "关闭"
+        }
+        if (Constant.INVALID == value) {
+            command.message = actionName
+        } else {
+            var mask = IPart.HEAD
+            var fStatus = mask != (mask and command.part)
+            mask = IPart.TAIL
+            var bStatus = mask != (mask and command.part)
+            if (!fStatus) {
+                fStatus =
+                    writeProperty(CarCabinManager.ID_AVN_FRONT_WASHER_WIPER, value, Origin.CABIN)
+            }
+            if (!bStatus) {
+                bStatus =
+                    writeProperty(CarCabinManager.ID_AVN_REAR_WASHER_WIPER, value, Origin.CABIN)
+            }
+            val message = if (fStatus or bStatus) "好的, ${command.slots?.name}${actionName}了"
+            else "好的, ${command.slots?.name}已经${actionName}了"
+            command.message = message
+        }
+        callback?.onCmdHandleResult(command)
     }
 
 //    private fun doControlDoors(command: CarCmd, callback: ICmdCallback?) {
@@ -212,6 +251,49 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
 //        command.message = "好的，${command.slots?.name}${onOff}了"
 //        callback?.onCmdHandleResult(command)
 //    }
+
+    private fun doControlWindow2(command: CarCmd, callback: ICmdCallback?) {
+        var expect = Constant.INVALID
+        val minValue = 0x01
+        val maxValue = 0xC9
+        if (Action.FIXED == command.action) {
+            expect = (command.value.toFloat() * 2).roundToInt() + minValue
+        }
+        if (Action.OPEN == command.action || Action.MAX == command.action) {
+            expect = maxValue
+        }
+        if (Action.CLOSE == command.action || Action.MIN == command.action) {
+            expect = minValue
+        }
+        if (expect > maxValue) expect = maxValue
+        //当 expect < 0x6 时，即开度小于10%（为关），
+        if (expect < minValue) expect = minValue
+        if (minValue == expect) {
+            doControlWindow(command, callback, false)
+            return
+        }
+        if (maxValue == expect) {
+            doControlWindow(command, callback, true)
+            return
+        }
+        command.message = Keywords.COMMAND_FAILED
+        callback?.onCmdHandleResult(command)
+    }
+
+    private fun doControlWindow(command: CarCmd, callback: ICmdCallback?, status: Boolean) {
+        Timber.e("doControlWindow status:$status command:$command")
+        val result = updateWindowSwitch(status, command.part)
+        val name = command.slots?.name ?: Keywords.WINDOW
+        val append: String = if (status) "打开" else "关闭"
+        if (result) {
+            command.status = IStatus.RUNNING
+            command.message = "好的，${name}${append}了"
+        } else {
+            command.status = IStatus.SUCCESS
+            command.message = "${name}已经${append}了"
+        }
+        callback?.onCmdHandleResult(command)
+    }
 
     private fun doControlWindow(command: CarCmd, callback: ICmdCallback?) {
         var expect = Constant.INVALID
@@ -259,6 +341,85 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
         }
         callback?.onCmdHandleResult(command)
     }
+
+
+    private fun updateLouverSwitch(status: Boolean, @IPart part: Int) {
+//        Glass Operation state,天窗运行状态，天窗采集到的Glass 开关状态OHC开关状态
+//        0x0: Idle  Not pressed  0x1: Manual  open  0x2: Manual  close
+//        0x3: Auto  open  0x4: Auto  close/Tilt down  0x5: Auto tilt open
+//        0x6: Auto tilt close（Reserved ） 0x7: Full close（Reserved ）
+//        0x8: Tilte（Reserved ） 0x9: Open position 1（Reserved ）
+//        0xA: Open position 2（Reserved ） 0xB: Open position 3（Reserved ）
+//        0xC: Open position 4（Reserved ）0xD: Open manual（Reserved ）
+//        0xE~0xF: Not used
+        val louverValue = if (status) 0x3 else 0x4
+//        Rollo Operation state,遮阳帘运行状态
+//        0x0: Idle / Not pressed  0x1: Manual open  0x2: Auto open
+//        0x3: Manual close  0x4: Auto close  0x5~0x7: Reserved
+        val loveLucyValue = if (status) 0x2 else 0x4
+        if (IPart.SKYLIGHT == part) {
+            if (status) {
+//                writeProperty(CarCabinManager.ID_BCM_ROLLO_BTN_STS, loveLucyValue, Origin.CABIN)
+            }
+            writeProperty(CarCabinManager.ID_BCM_SUNROOF_BTN_STS, louverValue, Origin.CABIN)
+        } else if (IPart.LOVE_LUCY == part) {
+            if (!status) {
+//                writeProperty(CarCabinManager.ID_BCM_SUNROOF_BTN_STS, louverValue, Origin.CABIN)
+            }
+            writeProperty(CarCabinManager.ID_BCM_ROLLO_BTN_STS, loveLucyValue, Origin.CABIN)
+        }
+    }
+
+    /**
+     * 天窗控制
+     */
+    private fun doControlLouver2(command: CarCmd, callback: ICmdCallback?) {
+        var expect = Constant.INVALID
+        var mask = IPart.SKYLIGHT
+        val isLouver = mask == (mask and command.part)
+        mask = IPart.LOVE_LUCY
+        val isLoveLucy = mask == (mask and command.part)
+        if (Action.FIXED == command.action) {
+            val degree = (command.value.toFloat() / 10).roundToInt()
+            expect = if (degree == 0) 0x1 else (degree + 0x5)
+        }
+        if (Action.OPEN == command.action || Action.MAX == command.action) {
+            expect = positions.last()
+        }
+        if (Action.CLOSE == command.action || Action.MIN == command.action) {
+            expect = positions.first()
+        }
+        doControlLouver2(command, callback, expect)
+    }
+
+    /**
+     * 天窗控制
+     */
+    private fun doControlLouver2(command: CarCmd, callback: ICmdCallback?, value: Int) {
+        Timber.e("doControlWindow value:$value command:$command")
+        val mask = IPart.SKYLIGHT
+        val isLouver = mask == (mask and command.part)
+        var append = ""
+        if (value == positions.first()) {
+            append = "关闭"
+            updateLouverSwitch(false, command.part)
+        } else if (value == positions.last()) {
+            append = "打开"
+            updateLouverSwitch(true, command.part)
+        } else {
+            command.message = Keywords.COMMAND_FAILED
+        }
+        val name = command.slots?.name ?: (if (isLouver) Keywords.SKYLIGHT else Keywords.ABAT_VENT)
+        if (true) {
+            command.status = IStatus.RUNNING
+            command.message = "好的，${name}${append}了"
+        } else {
+            command.status = IStatus.SUCCESS
+            command.message = "${name}已经${append}了"
+        }
+        callback?.onCmdHandleResult(command)
+    }
+
 
     /**
      * 天窗控制
@@ -475,6 +636,44 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
         return result
     }
 
+    /**
+     * 设置车窗开度
+     */
+    private fun updateWindowSwitch(value: Boolean, @IPart part: Int): Boolean {
+        var result = false
+        var mask = IPart.LEFT_FRONT
+        var signal: Int
+        if (mask == (mask and part)) {
+            signal = obtainWindowSignal(mask)
+            if (Constant.INVALID != signal) {
+                result = result or updateWindow(signal, value, mask)
+            }
+        }
+        mask = IPart.RIGHT_FRONT
+        if (mask == (mask and part)) {
+            signal = obtainWindowSignal(mask)
+            if (Constant.INVALID != signal) {
+                result = result or updateWindow(signal, value, mask)
+            }
+            //            result = result or updateWindow(CarCabinManager.ID_AVN_BCM_WLM_PASSENGER, value, mask)
+        }
+        mask = IPart.LEFT_BACK
+        if (mask == (mask and part)) {
+            signal = obtainWindowSignal(mask)
+            if (Constant.INVALID != signal) {
+                result = result or updateWindow(signal, value, mask)
+            }
+        }
+        mask = IPart.RIGHT_BACK
+        if (mask == (mask and part)) {
+            signal = obtainWindowSignal(mask)
+            if (Constant.INVALID != signal) {
+                result = result or updateWindow(signal, value, mask)
+            }
+        }
+        return result
+    }
+
     private fun updateWindow(signal: Int, expect: Int, @IPart part: Int): Boolean {
         val actual = obtainWindowDegree(part)
         val result = expect != actual
@@ -482,6 +681,44 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
             writeProperty(signal, expect, Origin.CABIN)
         }
         return result
+    }
+
+    private fun updateWindow(signal: Int, status: Boolean, @IPart part: Int): Boolean {
+//        val actual = obtainWindowStatus(part)
+//        AVN request driver side window up/down.[0x1,0,0x0,0x7]
+//        0x0: Inactive  0x1: Manual Up(reserved)  0x2: Manual Down(reserved)
+//        0x3~0x4: reserved  0x5: Auto Up  0x6: Auto Down 0x7: reserved
+        val result = true
+        val expect = if (status) 0x6 else 0x5
+        if (result) {
+            writeProperty(signal, expect, Origin.CABIN)
+        }
+        return result
+    }
+
+    private fun obtainWindowStatus(@IPart part: Int): Int {
+        val signal = when (part) {
+            IPart.LEFT_FRONT -> CarCabinManager.ID_AVN_BCM_WLM_DRIVER
+            IPart.RIGHT_FRONT -> CarCabinManager.ID_AVN_BCM_WLM_PASSENGER
+            IPart.LEFT_BACK -> CarCabinManager.ID_AVN_BCM_WLM_REARLEFT
+            IPart.RIGHT_BACK -> CarCabinManager.ID_AVN_BCM_WLM_REARRIGHT
+            else -> CarCabinManager.ID_AVN_BCM_WLM_DRIVER
+        }
+        if (Constant.INVALID == signal) {
+            return signal
+        }
+        return getCabinSignalValue(signal)
+    }
+
+
+    private fun obtainWindowSignal(@IPart part: Int): Int {
+        return when (part) {
+            IPart.LEFT_FRONT -> CarCabinManager.ID_AVN_BCM_WLM_DRIVER
+            IPart.RIGHT_FRONT -> CarCabinManager.ID_AVN_BCM_WLM_PASSENGER
+            IPart.LEFT_BACK -> CarCabinManager.ID_AVN_BCM_WLM_REARLEFT
+            IPart.RIGHT_BACK -> CarCabinManager.ID_AVN_BCM_WLM_REARRIGHT
+            else -> Constant.INVALID
+        }
     }
 
     private fun obtainPowerMode(): Int {

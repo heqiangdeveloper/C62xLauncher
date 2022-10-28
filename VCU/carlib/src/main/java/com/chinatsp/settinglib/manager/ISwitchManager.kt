@@ -98,7 +98,7 @@ interface ISwitchManager : IManager {
         value: Int,
         block: ((SwitchNode, SwitchState) -> Unit)? = null,
     ): SwitchState {
-        val newValue = 2
+        val newValue = value
         val isEnableChanged = atomic.enable()
         if (isEnableChanged) {
             atomic.enableStatus = newValue

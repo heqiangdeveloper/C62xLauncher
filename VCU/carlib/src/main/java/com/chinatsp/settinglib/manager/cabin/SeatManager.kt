@@ -41,10 +41,6 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
 
     private val mainMeetFunction: SwitchState by lazy {
         val node = SwitchNode.SEAT_MAIN_DRIVE_MEET
-//        AtomicBoolean(node.default).apply {
-//            val result = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateSwitchValue(node, this, result)
-//        }
         return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
@@ -52,10 +48,6 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
 
     private val forkMeetFunction: SwitchState by lazy {
         val node = SwitchNode.SEAT_FORK_DRIVE_MEET
-//        AtomicBoolean(node.default).apply {
-//            val result = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateSwitchValue(node, this, result)
-//        }
         return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
@@ -88,7 +80,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
     private fun initVolume(type: Progress): Volume {
         val pos = 0x05
         val result = VcuUtils.getInt(key = Constant.SEAT_HEAT_TEMP, value = pos)
-        //        AppExecutors.get()?.singleIO()?.execute {
+//        AppExecutors.get()?.singleIO()?.execute {
 //            val result = VcuUtils.getInt(key = Constant.SEAT_HEAT_TEMP, value = pos)
 //            doUpdateProgress(volume, result, true, instance::doProgressChanged)
 //        }
@@ -192,32 +184,6 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
         }
         return success
     }
-//
-//    private fun writeProperty(node: RadioNode, value: Int, atomic: RadioState): Boolean {
-//        val success = node.isValid(value, false)
-//                && writeProperty(node.set.signal, value, node.set.origin)
-//        if (success && develop) {
-//            doUpdateRadioValue(node, atomic, value) { _node, _value ->
-//                doOptionChanged(_node, _value)
-//            }
-//        }
-//        return success
-//    }
-//
-//    private fun doRangeChanged(vararg array: Volume) {
-//        val readLock = readWriteLock.readLock()
-//        try {
-//            readLock.lock()
-//            listenerStore.forEach { (_, ref) ->
-//                val listener = ref.get()
-//                if (null != listener && listener is ISoundListener) {
-//                    listener.onSoundVolumeChanged(*array)
-//                }
-//            }
-//        } finally {
-//            readLock.unlock()
-//        }
-//    }
 
     private fun obtainHeatLevel(@IPart part: Int, defArea: Int = Constant.INVALID): Int {
 //        int类型数据
@@ -317,7 +283,6 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
     }
 
     private fun doControlChairKnead(command: CarCmd, callback: ICmdCallback?) {
-
         var level = Constant.INVALID
         val min = 0x2
         val max = 0x5
@@ -439,6 +404,46 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
         }
         callback?.onCmdHandleResult(command)
     }
+
+    private fun obtainBackrestPosition(@IPart part: Int): Int {
+        val signal = if (IPart.LEFT_FRONT == part) {
+            CarCabinManager.ID_BACKREST_POS_FB
+        } else if (IPart.RIGHT_FRONT == part) {
+            Constant.INVALID
+        } else {
+            CarCabinManager.ID_BACKREST_POS_FB
+        }
+//        驾驶员座椅靠背倾斜调节位置反馈
+//        0x0~0x7D0:0~100%; 0xFF:Invalid
+        return readIntProperty(signal, Origin.CABIN)
+    }
+
+    private fun obtainChairHeightPosition(@IPart part: Int): Int {
+        val signal = if (IPart.LEFT_FRONT == part) {
+            CarCabinManager.ID_SEAT_HEIGHT_POS_FB
+        } else if (IPart.RIGHT_FRONT == part) {
+            Constant.INVALID
+        } else {
+            CarCabinManager.ID_SEAT_HEIGHT_POS_FB
+        }
+//        驾驶员座椅高度调节位置反馈
+//        0x0~0x7D0:0~100%; 0xFF:Invalid
+        return readIntProperty(signal, Origin.CABIN)
+    }
+
+    private fun obtainChairSpacePosition(@IPart part: Int): Int {
+        val signal = if (IPart.LEFT_FRONT == part) {
+            CarCabinManager.ID_SEAT_LENGTH_POS_FB
+        } else if (IPart.RIGHT_FRONT == part) {
+            Constant.INVALID
+        } else {
+            CarCabinManager.ID_SEAT_LENGTH_POS_FB
+        }
+//        驾驶员座椅长度调节位置反馈
+//        0x0~0x7D0:0~100%; 0xFF:Invalid
+        return readIntProperty(signal, Origin.CABIN)
+    }
+
 
 
 }

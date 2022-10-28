@@ -28,7 +28,7 @@ class CommandParser {
                 "carControl" -> {
                     CarController.doVoiceController(controller, callback, nlpVoiceModel)
                 }
-                "app", "radio", "video", "musicX" -> {
+                "app", "cmd", "radio", "video", "musicX" -> {
                     true
                 }
                 else -> {

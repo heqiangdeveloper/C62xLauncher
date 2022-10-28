@@ -2,10 +2,14 @@ package com.chinatsp.vehicle.controller.producer
 
 import com.chinatsp.vehicle.controller.annotation.Action
 import com.chinatsp.vehicle.controller.annotation.ICar
+import com.chinatsp.vehicle.controller.annotation.IPart
 import com.chinatsp.vehicle.controller.annotation.Model
 import com.chinatsp.vehicle.controller.bean.CarCmd
 import com.chinatsp.vehicle.controller.semantic.Slots
 import com.chinatsp.vehicle.controller.utils.Keywords
+import com.chinatsp.vehicle.controller.utils.Keywords.Companion.HEAT
+import com.chinatsp.vehicle.controller.utils.Keywords.Companion.WHEELS
+import com.chinatsp.vehicle.controller.utils.Keywords.Companion.WIPERS
 
 /**
  * @author : luohong
@@ -29,28 +33,33 @@ class OtherCommandProducer: ICommandProducer {
 
 
     private fun attemptWiperCommand(slots: Slots): CarCmd? {
-        val isFront = isMatch(Keywords.WIPERS, slots.name)
-        if (isFront) {//前雨刮
-
-            return null
-        }
-        val isRear = isMatch(Keywords.REAR_WIPERS, slots.name)
-        if (isRear) {//后雨刮
-
-            return null
+        if (isContains(slots.name, WIPERS)) {
+            var part = IPart.VOID
+            if (slots.name.contains("前")) {
+                part = part or IPart.HEAD
+            }
+            if (slots.name.contains("后")) {
+                part = part or IPart.TAIL
+            }
+            if (IPart.VOID == part) {
+                part = IPart.HEAD or IPart.TAIL
+            }
+            val action = obtainSwitchAction(slots.operation)
+            if (Action.VOID != action) {
+                val command = CarCmd(action = action, model = Model.ACCESS_WINDOW)
+                command.part = part
+                command.car = ICar.WIPER
+                command.slots = slots
+                return command
+            }
         }
         return null
     }
 
     private fun attemptWheelCommand(slots: Slots): CarCmd? {
-        if (isMatch(Keywords.WHEELS, slots.name)) {
-            var action = Action.VOID
-            if (isMatch(Keywords.OPT_OPENS, slots.operation)) {
-                action = Action.TURN_ON
-            } else if (isMatch(Keywords.OPT_CLOSES, slots.operation)) {
-                action = Action.TURN_OFF
-            }
-            if ((Action.VOID != action) && ("方向盘加热" == slots.mode)) {
+        if (isMatch(WHEELS, slots.name)) {
+            val action = obtainSwitchAction(slots.operation)
+            if ((Action.VOID != action) && slots.mode.contains(HEAT)) {
                 val command = CarCmd(action = action, model = Model.CABIN_WHEEL)
                 command.slots = slots
                 command.car = ICar.WHEEL_HOT
@@ -58,6 +67,25 @@ class OtherCommandProducer: ICommandProducer {
             }
         }
         return null
+    }
+
+    private fun obtainSwitchAction(value: String): Int {
+        if (isMatch(Keywords.OPT_OPENS, value)) {
+            return Action.TURN_ON
+        }
+        if (isMatch(Keywords.OPT_CLOSES, value)) {
+            return Action.TURN_OFF
+        }
+        return Action.VOID
+    }
+
+    private fun isContains(value: String, array: Array<String>): Boolean {
+        for (item in array) {
+            if (value.contains(item)) {
+                return true
+            }
+        }
+        return false
     }
 
 

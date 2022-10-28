@@ -1,5 +1,6 @@
 package com.chinatsp.vehicle.controller.producer
 
+import android.text.TextUtils
 import com.chinatsp.vehicle.controller.LogManager
 import com.chinatsp.vehicle.controller.annotation.Action
 import com.chinatsp.vehicle.controller.annotation.ICar
@@ -19,58 +20,50 @@ import java.util.regex.Pattern
  */
 class AccessCommandProducer : ICommandProducer {
 
-    val gradeMap: HashMap<String, Int>
-        get() {
-            val map = HashMap<String, Int>()
-            map["一"] = 1
-            map["二"] = 2
-            map["三"] = 3
-            map["四"] = 4
-            map["五"] = 5
-            map["六"] = 6
-            map["七"] = 7
-            map["八"] = 8
-            map["九"] = 9
-            map["十"] = 10
-            return map
-        }
+//    private val gradeMap: HashMap<String, Int>
+//        get() {
+//            val map = HashMap<String, Int>()
+//            map["一"] = 1
+//            map["二"] = 2
+//            map["三"] = 3
+//            map["四"] = 4
+//            map["五"] = 5
+//            map["六"] = 6
+//            map["七"] = 7
+//            map["八"] = 8
+//            map["九"] = 9
+//            map["十"] = 10
+//            return map
+//        }
 
 
     fun attemptAccessCommand(slots: Slots): CarCmd? {
         var command: CarCmd? = null
         if (null == command) {
             command = attemptLouverCommand(slots)
-            LogManager.e("attemptAccessCommand", "attemptLouverCommand : $command")
         }
         if (null == command) {
             command = attemptWindowCommand(slots)
-            LogManager.e("attemptAccessCommand", "attemptWindowCommand : $command")
         }
         if (null == command) {
             command = attemptDoorCommand(slots)
-            LogManager.e("attemptAccessCommand", "attemptDoorCommand : $command")
         }
         return command
     }
 
     private fun attemptDoorCommand(slots: Slots): CarCmd? {
+        if (TextUtils.isEmpty(slots.name)) {
+            return null
+        }
         var action = Action.VOID
         var part = IPart.VOID
         if (isMatch(Keywords.HOODS, slots.name)) {//引擎盖
             part = part or IPart.HEAD
-            if (isMatch(Keywords.OPT_OPENS, slots.operation)) {
-                action = Action.OPEN
-            } else if (isMatch(Keywords.OPT_CLOSES, slots.operation)) {
-                action = Action.CLOSE
-            }
+            action = obtainSwitchAction(slots.operation)
         }
         if (isMatch(Keywords.TRUNKS, slots.name)) { //后备箱
             part = part or IPart.TAIL
-            if (isMatch(Keywords.OPT_OPENS, slots.operation)) {
-                action = Action.OPEN
-            } else if (isMatch(Keywords.OPT_CLOSES, slots.operation)) {
-                action = Action.CLOSE
-            }
+            action = obtainSwitchAction(slots.operation)
         }
         if (Action.VOID != action) {
             val command = CarCmd(action = action, model = Model.ACCESS_STERN)
@@ -83,29 +76,29 @@ class AccessCommandProducer : ICommandProducer {
     }
 
     private fun attemptWindowCommand(slots: Slots): CarCmd? {
+        if (TextUtils.isEmpty(slots.name)) {
+            return null
+        }
+        if (!isContains(slots.name, Keywords.WINDOWS)) {
+            return null
+        }
         var part = IPart.VOID
-        if (isMatch(Keywords.L_F_WINDOW, slots.name)) {
-            part = IPart.LEFT_FRONT
-        }
-        if (isMatch(Keywords.R_F_WINDOW, slots.name)) {
-            part = IPart.RIGHT_FRONT
-        }
-        if (isMatch(Keywords.L_R_WINDOW, slots.name)) {
-            part = IPart.LEFT_BACK
-        }
-        if (isMatch(Keywords.R_R_WINDOW, slots.name)) {
-            part = IPart.RIGHT_BACK
-        }
-
-        if (isMatch(Keywords.L_WINDOW, slots.name)) {
-            part = IPart.LEFT_FRONT or IPart.LEFT_BACK
-        }
-        if (isMatch(Keywords.R_WINDOW, slots.name)) {
-            part = IPart.RIGHT_FRONT or IPart.RIGHT_BACK
-        }
-
         if (isMatch(Keywords.WINDOW_ALL, slots.name)) {
             part = IPart.LEFT_FRONT or IPart.LEFT_BACK or IPart.RIGHT_FRONT or IPart.RIGHT_BACK
+        }
+        if (IPart.VOID == part) {
+            part = checkoutPart(slots.name)
+        }
+        if (IPart.VOID == part) {
+            if (isMatch(Keywords.L_WINDOW, slots.name)) {
+                part = IPart.LEFT_FRONT or IPart.LEFT_BACK
+            } else if (isMatch(Keywords.R_WINDOW, slots.name)) {
+                part = IPart.RIGHT_FRONT or IPart.RIGHT_BACK
+            } else if (isMatch(Keywords.F_WINDOW, slots.name)) {
+                part = IPart.LEFT_FRONT or IPart.RIGHT_FRONT
+            } else if (isMatch(Keywords.B_WINDOW, slots.name)) {
+                part = IPart.LEFT_BACK or IPart.RIGHT_BACK
+            }
         }
         if (Action.VOID == part) {
             return null
@@ -127,11 +120,7 @@ class AccessCommandProducer : ICommandProducer {
             }
         }
         if (Action.VOID == action) {
-            if (isMatch(Keywords.OPT_OPENS, slots.operation)) {
-                action = Action.OPEN
-            } else if (isMatch(Keywords.OPT_CLOSES, slots.operation)) {
-                action = Action.CLOSE
-            }
+            action = obtainSwitchAction(slots.operation)
         }
         if (Action.VOID != action) {
             val command = CarCmd(action = action, model = Model.ACCESS_WINDOW)
@@ -145,6 +134,9 @@ class AccessCommandProducer : ICommandProducer {
     }
 
     private fun attemptLouverCommand(slots: Slots): CarCmd? {
+        if (TextUtils.isEmpty(slots.name)) {
+            return null
+        }
         var part = IPart.VOID
         if (isMatch(Keywords.SKYLIGHTS, slots.name)) {
             part = IPart.SKYLIGHT
@@ -165,19 +157,14 @@ class AccessCommandProducer : ICommandProducer {
                 action = Action.PLUS
             } else if ("LITTLE" == nameValue) {
                 action = Action.MINUS
-            }
-            else {
+            } else {
                 val pair = obtainDegree(nameValue)
                 action = pair.first
                 value = pair.second
             }
         }
         if (Action.VOID == action) {
-            if (isMatch(Keywords.OPT_OPENS, slots.operation)) {
-                action = Action.OPEN
-            } else if (isMatch(Keywords.OPT_CLOSES, slots.operation)) {
-                action = Action.CLOSE
-            }
+            action = obtainSwitchAction(slots.operation)
         }
         if (Action.VOID != action) {
             val command = CarCmd(action = action, model = Model.ACCESS_WINDOW)
@@ -188,6 +175,16 @@ class AccessCommandProducer : ICommandProducer {
             return command
         }
         return null
+    }
+
+    private fun obtainSwitchAction(operation: String): Int {
+        if (isMatch(Keywords.OPT_OPENS, operation)) {
+            return Action.OPEN
+        }
+        if (isMatch(Keywords.OPT_CLOSES, operation)) {
+            return Action.CLOSE
+        }
+        return Action.VOID
     }
 
     private fun obtainDegree(nameValue: String): Pair<Int, Int> {
@@ -207,8 +204,8 @@ class AccessCommandProducer : ICommandProducer {
                 action = Action.FIXED
                 val dKey = matcher2.group(1)
                 val mKey = matcher2.group(2)
-                val molecule = gradeMap[mKey]!!
-                val denominator = gradeMap[dKey]!!
+                val molecule = convertToNumber(mKey)
+                val denominator = convertToNumber(dKey)
                 LogManager.d("", "parse molecule:$molecule, denominator:$denominator")
                 value = (molecule * 100) / denominator
                 break
@@ -224,5 +221,56 @@ class AccessCommandProducer : ICommandProducer {
             }
         } while (false)
         return Pair(action, value)
+    }
+
+
+    private fun checkoutPart(name: String): Int {
+        var part = IPart.VOID
+        if (isContains(name, Keywords.L_F)) {
+            part = part or IPart.LEFT_FRONT
+        } else if (isContains(name, Keywords.L_R)) {
+            part = part or IPart.LEFT_BACK
+        } else if (isContains(name, Keywords.R_F)) {
+            part = part or IPart.RIGHT_FRONT
+        } else if (isContains(name, Keywords.R_R)) {
+            part = part or IPart.RIGHT_BACK
+        } else if (isContains(name, Keywords.L_C)) {
+            part = part or IPart.LEFT_FRONT or IPart.LEFT_BACK
+        } else if (isContains(name, Keywords.R_C)) {
+            part = part or IPart.RIGHT_FRONT or IPart.RIGHT_BACK
+        } else if (isContains(name, Keywords.F_R)) {
+            part = part or IPart.LEFT_FRONT or IPart.RIGHT_FRONT
+        } else if (isContains(name, Keywords.B_R)) {
+            part = part or IPart.LEFT_BACK or IPart.RIGHT_BACK
+        }
+//        else {
+//            part = IPart.LEFT_FRONT or IPart.LEFT_BACK or IPart.RIGHT_FRONT or IPart.RIGHT_BACK
+//        }
+        return part
+    }
+
+    private fun isContains(value: String, array: Array<String>): Boolean {
+        for (item in array) {
+            if (value.contains(item)) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun convertToNumber(value: String): Int {
+        return when (value) {
+            "一" -> 1
+            "二" -> 2
+            "三" -> 3
+            "四" -> 4
+            "五" -> 5
+            "六" -> 6
+            "七" -> 7
+            "八" -> 8
+            "九" -> 9
+            "十" -> 10
+            else -> -1
+        }
     }
 }

@@ -20,7 +20,6 @@ class PanoramaCommandProducer: ICommandProducer {
 
     fun attemptPanoramaCommand(slots: Slots): CarCmd? {
         var command: CarCmd? = null
-        LogManager.e("", "attemptPanoramaCommand text:${slots.text}")
         if (!slots.text.contains("倒车")) {
             if (null == command) {
                 command = attemptSwitchCommand(slots)
@@ -126,8 +125,7 @@ class PanoramaCommandProducer: ICommandProducer {
             if (Keywords.CLOSE == slots.operation) {
                 action = Action.CLOSE
             }
-            val command = CarCmd(action = action, model = model)
-            return command
+            return CarCmd(action = action, model = model)
         }
         return null
     }
