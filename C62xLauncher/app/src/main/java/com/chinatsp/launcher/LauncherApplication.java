@@ -2,9 +2,12 @@ package com.chinatsp.launcher;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
+import com.chinatsp.apppanel.AppConfigs.Constant;
+import com.chinatsp.apppanel.receiver.AppManagementReceiver;
 import com.chinatsp.carservice.AppCarService;
 import com.chinatsp.drawer.search.manager.SearchManager;
 import com.chinatsp.iquting.service.IqutingBindService;
@@ -37,6 +40,7 @@ public class LauncherApplication extends Application {
         NetworkStateReceiver.getInstance().registerReceiver(this);//注册网络监听
         IqutingBindService.getInstance().bindPlayService(this);//注册爱趣听播放服务
         IqutingBindService.getInstance().bindContentService(this);//注册爱趣听内容服务
+        registChangeSourceBroadcast();//注册爱趣听接受切源的广播
     }
 
     private void initLog() {
@@ -65,5 +69,11 @@ public class LauncherApplication extends Application {
             e.printStackTrace();
         }
         return versionName;
+    }
+
+    private void registChangeSourceBroadcast(){
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ChangeSourceReceiver.AQT_PLAY_ACTION);
+        registerReceiver(new ChangeSourceReceiver(),intentFilter);
     }
 }
