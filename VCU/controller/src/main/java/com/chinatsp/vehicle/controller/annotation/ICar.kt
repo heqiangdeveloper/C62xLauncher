@@ -20,7 +20,8 @@ import androidx.annotation.IntDef
     ICar.WINDOWS,
     ICar.LOUVER,
     ICar.DOORS,
-    ICar.CHAIR
+    ICar.CHAIR,
+    ICar.WIPER
 )
 @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
 annotation class ICar {
@@ -75,7 +76,15 @@ annotation class ICar {
          */
         const val DOORS = 0x0A
 
+        /**
+         * 座椅
+         */
         const val CHAIR = 0x0B
+
+        /**
+         * 雨刮
+         */
+        const val WIPER = 0x0C
 
     }
 }

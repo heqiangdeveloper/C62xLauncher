@@ -39,6 +39,7 @@ interface Keywords {
         const val LAMPLIGHTMINUS = "MINUS"
         const val LAMPLIGHTPLUS_1 = "高"
         const val LAMPLIGHTPLUS_2 = "低"
+        val WINDOWS = arrayOf("车窗", "窗户")
         val WINDOW_ALL = arrayOf("所有窗户", "所有车窗", "窗户", "车窗")
         val L_F = arrayOf("主驾", "左前", "前左")
         val L_R = arrayOf("左后", "后左")
@@ -80,7 +81,8 @@ interface Keywords {
         val HOODS = arrayOf("前罩", "前罩盖", "前舱盖", "引擎盖", "电动前罩")
         val TRUNKS = arrayOf("电动后备厢", "后背门", "电动后背门", "电动尾门", "尾门",
             "后备箱", "电动后备箱", "尾箱", "电动尾箱", "背门", "电动背门")
-        val WIPERS = arrayOf("雨刮", "雨刷", "前雨刮", "前雨刮器", "雨刮器", "前雨刷", "前雨刷器", "雨刷器")
+//        val WIPERS = arrayOf("雨刮", "雨刷", "前雨刮", "前雨刮器", "雨刮器", "前雨刷", "前雨刷器", "雨刷器")
+        val WIPERS = arrayOf("雨刮", "雨刷", "雨刮器", "雨刷器")
         val REAR_WIPERS = arrayOf("后雨刮", "后雨刮器", "后雨刷器", "后雨刷")
         val TIRE_PRESSURE_MONITORS = arrayOf("胎压监测", "胎压")
         val SMOKES = arrayOf("抽烟", "抽烟模式", "小欧我要抽烟")
@@ -103,6 +105,10 @@ interface Keywords {
 
         val L_WINDOW = arrayOf("左车窗", "左窗户")
         val R_WINDOW = arrayOf("右车窗", "右窗户")
+
+        val F_WINDOW = arrayOf("前车窗", "前窗户")
+        val B_WINDOW = arrayOf("后车窗", "后窗户")
+
 
         val VOICE_VENT = arrayOf("车外声浪")
         val WHEELS = arrayOf("方向盘", "方向")

@@ -184,8 +184,9 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
         return when (node) {
             Progress.AMBIENT_LIGHT_BRIGHTNESS -> {
                 val set = node.set
-                val result = writeProperty(set.signal, value, set.origin)
-                Timber.d("setBrightness signal:${set.signal}, value:$value, result:$result")
+                val newValue = value + 1
+                val result = writeProperty(set.signal, newValue, set.origin)
+                Timber.d("setBrightness signal:${set.signal}, newValue:$newValue, result:$result")
                 result
             }
             Progress.AMBIENT_LIGHT_COLOR -> {
@@ -323,12 +324,8 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
         val value = property.value
         if (value is Int) {
             Timber.d("onAmbientBrightnessChanged value%s", value)
-            doUpdateProgress(
-                Progress.AMBIENT_LIGHT_BRIGHTNESS,
-                ambientBrightness,
-                value,
-                this::doProgressChanged
-            )
+            val progress = Progress.AMBIENT_LIGHT_BRIGHTNESS
+            doUpdateProgress(progress, ambientBrightness, value, this::doProgressChanged)
         }
     }
 
@@ -336,12 +333,8 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
         val value = property.value
         if (value is Int) {
             Timber.d("onAmbientBrightnessChanged value%s", value)
-            doUpdateProgress(
-                Progress.AMBIENT_LIGHT_COLOR,
-                ambientColor,
-                value,
-                this::doProgressChanged
-            )
+            val progress = Progress.AMBIENT_LIGHT_COLOR
+            doUpdateProgress(progress, ambientColor, value, this::doProgressChanged)
         }
     }
 
@@ -427,7 +420,7 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
             command.message = "${modelName}已关闭，无法调节其亮度"
         } else {
             val node = Progress.AMBIENT_LIGHT_BRIGHTNESS
-            val expect = computeLampBrightness(command, node.min, node.max)
+            val expect = computeLampBrightness(command, node.min, node.max) + 1
             val result = writeProperty(node.set.signal, expect, node.set.origin)
             if (result) {
                 val message = when (expect) {
@@ -452,13 +445,13 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
             command.message = "${modelName}已关闭，无法调节其颜色"
         } else {
             val node = Progress.AMBIENT_LIGHT_COLOR
-            val colors = arrayOf("红色", "紫色", "冰蓝色", "橙色", "绿色", "玫红色", "果绿色", "黄色", "蓝色", "白色")
-            val expect = computeLampColor(command, node.min, node.max)
-            val index = colors.indexOfFirst { it == command.slots?.color }
-            if (Constant.INVALID == index) {
+//            val colors = arrayOf("红色", "紫色", "冰蓝色", "橙色", "绿色", "玫红色", "果绿色", "黄色", "蓝色", "白色")
+//            val expect = computeLampColor(command, node.min, node.max)
+            val serialNumber = findColorSerialNumberByColorName(command.slots?.color ?: "")
+            if (Constant.INVALID == serialNumber) {
                 command.message = "${modelName}不支持该颜色"
             } else {
-                val result = writeProperty(node.set.signal, index + 1, node.set.origin)
+                val result = writeProperty(node.set.signal, serialNumber, node.set.origin)
                 if (result) {
                     command.message = "${modelName}颜色已设置为${command.color}了"
                 } else {
@@ -534,4 +527,21 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
         command.message = "$name$intent$result"
         callback?.onCmdHandleResult(command)
     }
+
+    private fun findColorSerialNumberByColorName(colorName: String): Int{
+        return when (colorName) {
+            "红色" -> 1
+            "紫色" -> 4
+            "冰蓝色" -> 9
+            "橙色" -> 12
+            "绿色" -> 20
+            "玫红色" -> 36
+            "果绿色" -> 42
+            "黄色" -> 50
+            "蓝色" -> 53
+            "白色" -> 60
+            else -> Constant.INVALID
+        }
+    }
+
 }

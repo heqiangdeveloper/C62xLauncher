@@ -22,7 +22,7 @@ enum class Progress(
     /**
      * 氛围灯亮度
      * get -> 0x00:OFF; 0x01:grade1,20%; 0x02:grade2,40%; 0x03:grade3,60%; 0x04:grade4,80%; 0x05:grade5,100%; 0x06~0xF：Reserved
-     * set -> 0x00:OFF; 0x01:grade1,20%; 0x02:grade2,40%; 0x03:grade3,60%; 0x04:grade4,80%; 0x05:grade5,100%; 0x06~0xF：Reserved
+     * set -> 0x0: Inactive; 0x1: Off; 0x2: Grade 1，20%; 0x3: Grade 2，40%; 0x4: Grade 3，60%; 0x5: Grade 4，80%; 0x6: Grade 5，100%; 0x7~0xF: Reserved
      */
     AMBIENT_LIGHT_BRIGHTNESS(
         min = 0x01,

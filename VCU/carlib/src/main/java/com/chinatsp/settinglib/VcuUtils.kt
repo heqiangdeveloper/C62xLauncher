@@ -66,7 +66,7 @@ object VcuUtils {
         val actual = levels.contains(value)
         val result = !(actual xor expect)
         Timber.d("isCareLevel value: $value, actual:$actual, result:$result")
-        return false
+        return result
     }
 
     fun getLevelValue(): Int {
@@ -179,5 +179,7 @@ object VcuUtils {
         return@lazy ""
     }
 
+//    ID_TCU_SELECTED_GEAR 挡位
+//    ID_POWER_MODE_BCM 电源
 
 }
