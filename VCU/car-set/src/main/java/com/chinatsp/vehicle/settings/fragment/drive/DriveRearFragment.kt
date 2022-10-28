@@ -31,7 +31,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(), IOptionAction {
 
-    var index: Int = 0;
+    var index: Int = 0
 
     private val map: HashMap<Int, View> = HashMap()
 
@@ -138,7 +138,7 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
     private fun initVideoListener() {
         val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_bsd
         binding.video.setAudioFocusRequest(AudioManager.AUDIOFOCUS_NONE)
-        binding.video.setVideoURI(Uri.parse(uri));
+        binding.video.setVideoURI(Uri.parse(uri))
         binding.video.setOnCompletionListener {
             binding.video.pause()
             binding.video.seekTo(0)
@@ -153,7 +153,7 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
         }
         binding.video.setOnPreparedListener {
             it.setOnInfoListener { _, _, _ ->
-                binding.video.setBackgroundColor(Color.TRANSPARENT);
+                binding.video.setBackgroundColor(Color.TRANSPARENT)
                 binding.videoImage.visibility = View.GONE
                 true
             }
@@ -290,14 +290,6 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
     }
 
     private fun setSwitchListener() {
-        binding.adasSideMebSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            //doUpdateSwitchOption(SwitchNode.ADAS_MEB, buttonView, isChecked)
-            if (isChecked) {
-                startVideo(R.raw.video_meb)
-            } else {
-                dynamicEffect()
-            }
-        }
         binding.adasSideDowSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.ADAS_DOW, buttonView, isChecked)
             if (isChecked) {
@@ -338,6 +330,11 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
 
         binding.adasSideMebSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.ADAS_MEB, buttonView, isChecked)
+            if (isChecked) {
+                startVideo(R.raw.video_meb)
+            } else {
+                dynamicEffect()
+            }
         }
 
     }
@@ -354,7 +351,7 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
     private fun startVideo(path: Int) {
         val url = "android.resource://" + activity?.packageName + "/" + path
         //binding.videoImage.visibility = View.GONE
-        binding.video.setVideoURI(Uri.parse(url));
+        binding.video.setVideoURI(Uri.parse(url))
         binding.video.seekTo(0)
         binding.video.start()
     }

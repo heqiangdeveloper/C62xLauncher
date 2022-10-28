@@ -74,12 +74,7 @@ class GlobalManager private constructor() : BaseManager() {
 //            0x0: Normal Mode（default） 0x1: Transport Mode  0x2: Exhibition Mode
 //            0x3: Factory Mode（reserved）  0x4: Crash Mode（reserved）
 //            0x5: Test Mode（reserved）  0x6: Reserved  0x7: Rerserved
-            if (0x0 == value) {
-            } else if (0x1 == value) {
 
-            } else if (0x2 == value) {
-
-            }
             return true
         }
         /**开关机状态*/
@@ -91,10 +86,10 @@ class GlobalManager private constructor() : BaseManager() {
             if (value <= 4) {
                 //ACC ON -> ACC OFF
                 startDialogService("ON")
-            } else if (tempPowerMode <= 4 && value > 4) {
+            }/* else if (tempPowerMode <= 4 && value > 4) {
                 //ACC OFF -> ACC ON
 
-            }
+            }*/
             return true
         }
         /**电源等级状态*/

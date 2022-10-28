@@ -57,7 +57,7 @@ class SystemService : Service(), SystemDialogHelper.OnCountDownListener {
         val editDialog: SystemAlertDialog = dialogMaster.dialog
         editDialog.setDetailsContent(contentStr)
         //6.0 TYPE_APPLICATION_OVERLAY
-        editDialog.window?.setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
+        editDialog.window?.setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY)
         editDialog.setOnDismissListener { isShowing = true }
         editDialog.show()
         editDialog.window?.setLayout(740, 488)
