@@ -1,6 +1,7 @@
 package com.chinatsp.settinglib.manager
 
 import android.car.hardware.cabin.CarCabinManager
+import android.car.hardware.cabin.CarCabinManager.ID_LOUPWRMNGTSTATLVL
 import android.car.hardware.mcu.CarMcuManager
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.optios.Progress
@@ -29,6 +30,8 @@ class RegisterSignalManager private constructor() {
             get() {
                 return HashSet<Int>().apply {
                     add(CarCabinManager.ID_BDC_VEHICLE_MODE)
+                    /**注册电源管理等级指令*/
+                    add(ID_LOUPWRMNGTSTATLVL)
                     SwitchNode.values()
                         .filter { it.get.origin == Origin.CABIN && it.get.signal != Constant.INVALID }
                         .forEach {

@@ -1,6 +1,5 @@
 package com.chinatsp.vehicle.settings.fragment.dialog;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.view.Gravity;
@@ -24,7 +23,6 @@ public class DialogMaster {
         dialogMaster.insertListener(onPressOk,onPressCancel);
         // 设置背景透明
         Window window = dialogMaster.dialog.getWindow();
-        //window.setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
         if (window != null) {
             window.setBackgroundDrawable(new ColorDrawable(0));
         }

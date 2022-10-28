@@ -5,6 +5,7 @@ import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.mcu.CarMcuManager
 import android.content.ComponentName
 import android.content.Intent
+import android.os.Bundle
 import com.chinatsp.settinglib.BaseApp
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.access.AccessManager
@@ -33,6 +34,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * @version: 1.0
  */
 class GlobalManager private constructor() : BaseManager() {
+    private var mPowerMode = 0
 
     companion object {
         val TAG: String = GlobalManager::class.java.simpleName
@@ -79,21 +81,63 @@ class GlobalManager private constructor() : BaseManager() {
 
             }
             return true
-        }else if (CarMcuManager.ID_VENDOR_MCU_POWER_MODE == property.propertyId) {//557903874
-            val propertyValue = property.value
-            val on = 5
-            if (propertyValue != on) {
-                //系统OFF ON弹窗
-                val intent = Intent("com.chinatsp.vehicle.settings.service.SystemService")
-                intent.setPackage("com.chinatsp.vehicle.settings")
-                BaseApp.instance.startService(intent)
+        }
+        /**开关机状态*/
+        if (CarMcuManager.ID_VENDOR_MCU_POWER_MODE == property.propertyId) {
+            val value = property.value as Int
+            val tempPowerMode: Int = mPowerMode
+            mPowerMode = value
+            Timber.d("ACC VALUE:$tempPowerMode $value")
+            if (value <= 4) {
+                //ACC ON -> ACC OFF
+                startDialogService("ON")
+            } else if (tempPowerMode <= 4 && value > 4) {
+                //ACC OFF -> ACC ON
+
             }
             return true
+        }
+        /**电源等级状态*/
+        if (origin == Origin.CABIN && CarCabinManager.ID_LOUPWRMNGTSTATLVL == property.propertyId) {
+            /**开关机状态*/
+            val powerValue = readIntProperty(CarMcuManager.ID_VENDOR_MCU_POWER_MODE, Origin.MCU)
+            val tempPowerMode: Int = mPowerMode
+            if (tempPowerMode <= 4 && powerValue > 4) {
+                //ACC OFF -> ACC ON
+                val value = property.value
+
+                /**电源管理是否有效  0x0*/
+                val loUPwrStatMngtVldValue =
+                    readIntProperty(CarCabinManager.ID_LOUPWRSTATMNGTVLD, Origin.CABIN)
+                /**LoUPwrStatMngtVld=0x0 且LoUPwrMngtStatLvl=0x1或0x2时*/
+                if (loUPwrStatMngtVldValue == 0x0 && value == 0x1 || value == 0x2) {
+                    /**弹出储电量过低*/
+                    startDialogService("powerSupply")
+                    if (value == 0x1) {
+                        //level1延迟15分钟弹出提示
+                        startDialogService("leve1")
+                    } else if (value == 0x2) {
+                        //leve2的时候立马弹出
+                        startDialogService("leve2")
+                    }
+                    return true
+                }
+            }
+
         }
         managers.forEach {
             it.onDispatchSignal(property, origin)
         }
         return true
+    }
+
+    private fun startDialogService(type: String) {
+        val intent = Intent("com.chinatsp.vehicle.settings.service.SystemService")
+        intent.setPackage("com.chinatsp.vehicle.settings")
+        val bundleSimple = Bundle()
+        bundleSimple.putString("type", type)
+        intent.putExtras(bundleSimple)
+        BaseApp.instance.startService(intent)
     }
 
     override fun getOriginSignal(origin: Origin): Set<Int> {
