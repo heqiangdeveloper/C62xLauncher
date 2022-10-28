@@ -2,6 +2,8 @@ package com.chinatsp.drawer.volcano;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,31 +11,33 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.chinatsp.drawer.DrawerEntity;
 import com.chinatsp.volcano.api.response.VideoListData;
-import com.chinatsp.volcano.repository.IVolcanoLoadListener;
-import com.chinatsp.volcano.repository.VolcanoRepository;
 import com.chinatsp.widgetcards.R;
 
-import kotlin.jvm.internal.PropertyReference0Impl;
 import launcher.base.recyclerview.BaseViewHolder;
-import launcher.base.utils.EasyLog;
 import launcher.base.utils.recent.RecentAppHelper;
 
 public class DrawerVolcanoHolder extends BaseViewHolder<DrawerEntity> {
     private RecyclerView rcvDrawerVolcanoVideos;
-    private View tvDrawerVolcanoLoginSlogan;
+    private View layoutDrawerVolcanoError;
+    private ImageView ivErrorIcon;
+    private TextView tvErrorTip;
     private VideoInfoAdapter adapter;
+    private VolcanoDrawerController mController;
     public DrawerVolcanoHolder(@NonNull View itemView) {
         super(itemView);
         rcvDrawerVolcanoVideos = itemView.findViewById(R.id.rcvDrawerVolcanoVideos);
-        tvDrawerVolcanoLoginSlogan = itemView.findViewById(R.id.tvDrawerVolcanoLoginSlogan);
+        layoutDrawerVolcanoError = itemView.findViewById(R.id.layoutDrawerVolcanoError);
+        ivErrorIcon = itemView.findViewById(R.id.ivErrorIcon);
+        tvErrorTip = itemView.findViewById(R.id.tvErrorTip);
         initVideoRcv();
-        loadVideoList();
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 RecentAppHelper.launchApp(itemView.getContext(), "com.bytedance.byteautoservice");
             }
         });
+        mController = new VolcanoDrawerController(this);
+        mController.loadVideoList();
     }
 
     private void initVideoRcv() {
@@ -48,39 +52,26 @@ public class DrawerVolcanoHolder extends BaseViewHolder<DrawerEntity> {
         rcvDrawerVolcanoVideos.setAdapter(adapter);
     }
 
-    private void loadVideoList() {
-        VolcanoRepository volcanoRepository = VolcanoRepository.getInstance();
-        String source = volcanoRepository.getCurrentSource();
-        VideoListData videoList = volcanoRepository.getVideoList(source);
-        if (videoList != null) {
-           refreshData(videoList);
-        } else {
-            volcanoRepository.loadFromServer(source, new IVolcanoLoadListener() {
-                @Override
-                public void onSuccess(VideoListData videoListData) {
-                    refreshData(videoListData);
-                }
-
-                @Override
-                public void onFail(String msg) {
-                    refreshFail(msg);
-                }
-            });
-        }
+    void refreshFail(String msg) {
+        layoutDrawerVolcanoError.setVisibility(View.VISIBLE);
+        ivErrorIcon.setImageResource(R.drawable.card_icon_wifi_disconnect);
+        tvErrorTip.setText(R.string.card_data_err);
+        rcvDrawerVolcanoVideos.setVisibility(View.INVISIBLE);
     }
 
-    private void refreshFail(String msg) {
-        // todo: 获取不到数据的情况
-
+    void showNetworkError() {
+        layoutDrawerVolcanoError.setVisibility(View.VISIBLE);
+        ivErrorIcon.setImageResource(com.chinatsp.volcano.R.drawable.card_icon_wifi_disconnect);
+        tvErrorTip.setText(R.string.card_network_err);
+        rcvDrawerVolcanoVideos.setVisibility(View.INVISIBLE);
     }
 
-    private void refreshData(VideoListData videoListData) {
+    void refreshData(VideoListData videoListData) {
         if (videoListData == null) {
             return;
         }
-        tvDrawerVolcanoLoginSlogan.setVisibility(View.INVISIBLE);
+        layoutDrawerVolcanoError.setVisibility(View.INVISIBLE);
         rcvDrawerVolcanoVideos.setVisibility(View.VISIBLE);
-        EasyLog.d("refreshData", "xxxxrefreshData :"+videoListData);
         adapter.setData(videoListData.getList());
     }
 }

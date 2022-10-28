@@ -1,5 +1,7 @@
 package com.chinatsp.navigation;
 
+import java.util.Locale;
+
 import launcher.base.utils.EasyLog;
 
 public class NavigationUtil {
@@ -24,8 +26,20 @@ public class NavigationUtil {
         EasyLog.w(TAG, message);
     }
 
+    /**
+     * 超过1km, 用公里, 否则用米
+     * @param distanceInMetres
+     * @return
+     */
     public static String getReadableDistanceKM(int distanceInMetres) {
-        return distanceInMetres / 1000 + "km";
+        int distance = Math.max(distanceInMetres, 0);
+        String result;
+        if (distance < 1000) {
+            result = distanceInMetres + "米";
+        } else {
+            result = distanceInMetres / 1000 + "km";
+        }
+        return result;
     }
     public static String getReadableRemainTime(int timeInSecond) {
         if (timeInSecond <= 60) {

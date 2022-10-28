@@ -61,8 +61,6 @@ public class NaviSmallCardHolder extends NaviCardHolder {
         ivCardNaviCompany.setOnClickListener(mOnClickListener);
         ivCardNaviExit.setOnClickListener(mOnClickListener);
 
-
-        rootView.setOnClickListener(mOnClickListener);
     }
 
     @Override
@@ -107,16 +105,12 @@ public class NaviSmallCardHolder extends NaviCardHolder {
             } else if (v == ivCardNaviHome) {
                 naviToHome();
             } else if (v == ivCardNaviExit) {
-
-            } else {
-                toApp();
+                mController.exitNaviStatus();
             }
         }
     };
 
-    private void toApp() {
-        RecentAppHelper.launchApp(mContext, "com.autonavi.amapauto");
-    }
+
 
     private void toSearch() {
         mController.startSearch();

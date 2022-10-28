@@ -99,7 +99,7 @@ public class WeatherBigCardHolder extends WeatherCardHolder{
         ivCardWeatherIcon.setImageResource(weatherTypeRes.getIcon());
     }
     public void updateWeatherList(List<WeatherInfo> weatherInfoList) {
-        WeatherUtil.logI("updateWeatherList : "+weatherInfoList);
+        WeatherUtil.logI("WeatherBigCardHolder updateWeatherList : "+weatherInfoList);
         mWeekDayAdapter.setDayWeatherList(weatherInfoList);
         if (weatherInfoList == null || weatherInfoList.isEmpty()) {
             return;

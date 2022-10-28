@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="322px"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <ImageView
         android:layout_width="@dimen/card_icon_size_lv3"
@@ -22,17 +22,46 @@
         android:layout_marginTop="3px"
         />
 
-    <TextView
-        android:id="@+id/tvDrawerVolcanoLoginSlogan"
+    <View
         android:layout_width="match_parent"
         android:layout_height="264px"
         android:layout_marginTop="16px"
         app:layout_constraintTop_toBottomOf="@id/tvTitle"
-        app:layout_constraintStart_toStartOf="parent"
-        android:text="@string/doutiao_unlogin_slogon"
-        style="@style/CardLv4TextView"
-        android:background="@drawable/drawer_item_bg_selector"
+        android:visibility="visible"
+        android:background="@drawable/drawer_volcano_bg_selector"
         />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutDrawerVolcanoError"
+        android:layout_width="match_parent"
+        android:layout_height="264px"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="56px"
+        android:visibility="invisible"
+        >
+        <ImageView
+            android:id="@+id/ivErrorIcon"
+            android:layout_width="@dimen/card_icon_size_lv0"
+            android:layout_height="@dimen/card_icon_size_lv0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="45px"
+            />
+
+        <TextView
+            android:id="@+id/tvErrorTip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40px"
+            app:layout_constraintTop_toBottomOf="@id/ivErrorIcon"
+            app:layout_constraintStart_toStartOf="@id/ivErrorIcon"
+            app:layout_constraintEnd_toEndOf="@id/ivErrorIcon"
+            android:text=""
+            style="@style/CardLv4TextView"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcvDrawerVolcanoVideos"
@@ -40,7 +69,6 @@
         android:layout_height="264px"
         android:orientation="horizontal"
         android:layout_marginTop="16px"
-        android:background="@drawable/drawer_item_bg_selector"
         app:layout_constraintTop_toBottomOf="@id/tvTitle"
         app:layout_constraintStart_toStartOf="parent"
         android:visibility="gone"

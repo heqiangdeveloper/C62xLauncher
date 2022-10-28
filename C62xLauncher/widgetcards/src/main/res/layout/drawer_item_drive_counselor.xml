@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="209px"
         android:layout_marginTop="16px"
-        android:background="@drawable/drawer_item_bg_selector"
+        android:background="@drawable/drawer_iquting_bg_selector"
         app:layout_constraintTop_toBottomOf="@id/tvTitle">
 
         <TextView
@@ -68,7 +68,7 @@
         android:layout_width="260px"
         android:layout_height="209px"
         android:layout_marginTop="22px"
-        android:background="@drawable/drawer_item_bg_selector"
+        android:background="@drawable/drawer_iquting_bg_selector"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/frame1">
 
@@ -126,7 +126,7 @@
         android:layout_width="260px"
         android:layout_height="209px"
         android:layout_marginTop="22px"
-        android:background="@drawable/drawer_item_bg_selector"
+        android:background="@drawable/drawer_iquting_bg_selector"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/frame1">
 

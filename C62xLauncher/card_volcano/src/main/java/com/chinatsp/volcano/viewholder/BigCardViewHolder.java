@@ -82,17 +82,6 @@ public class BigCardViewHolder extends VolcanoViewHolder{
     }
 
     @Override
-    public void showDisconnect() {
-
-    }
-
-    @Override
-    public void showLogin() {
-
-    }
-
-
-    @Override
     public void updateList(VideoListData videoListData) {
         EasyLog.d(TAG, "updateList "+videoListData);
         List<VolcanoVideo> list = videoListData.getList();
