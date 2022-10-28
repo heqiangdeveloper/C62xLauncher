@@ -55,16 +55,6 @@ public class SmallCardViewHolder extends VolcanoViewHolder{
     }
 
     @Override
-    public void showDisconnect() {
-
-    }
-
-    @Override
-    public void showLogin() {
-
-    }
-
-    @Override
     public void updateList(VideoListData videoListData) {
         List<VolcanoVideo> list = videoListData.getList();
         if (list.isEmpty()) {

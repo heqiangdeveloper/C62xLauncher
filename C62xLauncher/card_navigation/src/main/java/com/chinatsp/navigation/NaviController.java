@@ -28,6 +28,7 @@ import launcher.base.network.NetworkObserver;
 import launcher.base.network.NetworkStateReceiver;
 import launcher.base.network.NetworkUtils;
 import launcher.base.utils.EasyLog;
+import launcher.base.utils.recent.RecentAppHelper;
 
 public class NaviController implements INaviCallback {
     private NaviCardView mView;
@@ -249,5 +250,8 @@ public class NaviController implements INaviCallback {
     public void exitNaviStatus() {
         NavigationUtil.logD(TAG + "exitNaviStats");
         mNaviRepository.exitNaiveStatus();
+    }
+    void toApp(Context context) {
+        RecentAppHelper.launchApp(context, "com.autonavi.amapauto");
     }
 }

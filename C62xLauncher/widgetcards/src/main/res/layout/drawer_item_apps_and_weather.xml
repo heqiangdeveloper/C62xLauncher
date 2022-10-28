@@ -23,7 +23,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:text="暂无内容"
         style="@style/CardLv2TextView"
-        android:background="@drawable/drawer_bg_apps"
+        android:background="@drawable/drawer_app_weather_bg_selector"
         android:visibility="gone"
         />
 
@@ -34,7 +34,7 @@
         android:orientation="horizontal"
         android:layout_marginTop="16px"
         android:padding="20px"
-        android:background="@drawable/drawer_bg_apps"
+        android:background="@drawable/drawer_app_weather_bg_selector"
         app:layout_constraintTop_toBottomOf="@id/tvTitle"
         app:layout_constraintStart_toStartOf="parent"
 
@@ -48,8 +48,15 @@
         app:layout_constraintTop_toBottomOf="@id/tvTitle"
         app:layout_constraintEnd_toEndOf="parent"
         style="@style/CardLv2TextView"
-        android:background="@drawable/drawer_bg_apps"
+        android:background="@drawable/drawer_app_weather_bg_selector"
         >
+
+        <ImageView
+            android:id="@+id/ivDrawerWeatherTypeBG"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2px"
+            />
 
         <ImageView
             android:id="@+id/ivDrawerWeatherType"

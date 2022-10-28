@@ -41,6 +41,7 @@ public class WeatherRepository extends BaseRepository {
         }
     };
 
+
     @Override
     public void init(@NonNull Context context) {
         super.init(context);

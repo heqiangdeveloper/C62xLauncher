@@ -13,9 +13,6 @@ public abstract class VolcanoViewHolder {
 
     public abstract void showNormal();
 
-    public abstract void showDisconnect();
-
-    public abstract void showLogin();
 
     public abstract void updateList(VideoListData videoListData);
 

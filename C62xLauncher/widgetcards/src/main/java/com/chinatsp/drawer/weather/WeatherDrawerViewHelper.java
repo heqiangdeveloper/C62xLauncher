@@ -21,6 +21,7 @@ public class WeatherDrawerViewHelper {
     private View mRootView;
     private WeatherDrawerController mController;
     private ImageView mIvDrawerWeatherType;
+    private ImageView ivDrawerWeatherTypeBG;
     private TextView mTvDrawerWeatherWord;
     private TextView mTvDrawerWeatherTemperature;
     private TextView mTvDrawerWeatherCity;
@@ -35,6 +36,7 @@ public class WeatherDrawerViewHelper {
         mTvDrawerWeatherWord = mRootView.findViewById(R.id.tvDrawerWeatherWord);
         mTvDrawerWeatherTemperature = mRootView.findViewById(R.id.tvDrawerWeatherTemperature);
         mTvDrawerWeatherCity = mRootView.findViewById(R.id.tvDrawerWeatherCity);
+        ivDrawerWeatherTypeBG = mRootView.findViewById(R.id.ivDrawerWeatherTypeBG);
 
         mRootView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,7 +56,7 @@ public class WeatherDrawerViewHelper {
             @Override
             public void run() {
                 WeatherTypeRes weatherTypeRes = WeatherUtil.parseType(weatherInfo.getWeather());
-                mRootView.setBackgroundResource(weatherTypeRes.getDrawerBg());
+                ivDrawerWeatherTypeBG.setImageResource(weatherTypeRes.getDrawerBg());
                 mTvDrawerWeatherWord.setText(weatherInfo.getWeather());
                 mIvDrawerWeatherType.setImageResource(weatherTypeRes.getIcon());
                 mTvDrawerWeatherCity.setText(weatherInfo.getCity());

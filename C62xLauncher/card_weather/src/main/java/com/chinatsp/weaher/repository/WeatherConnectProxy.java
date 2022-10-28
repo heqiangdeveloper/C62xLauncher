@@ -17,6 +17,7 @@ import launcher.base.ipc.IConnectListener;
 import launcher.base.ipc.IOnRequestListener;
 import launcher.base.ipc.IRemoteDataCallback;
 import launcher.base.ipc.RemoteProxy;
+import launcher.base.utils.EasyLog;
 
 public class WeatherConnectProxy implements RemoteProxy {
 
@@ -33,7 +34,7 @@ public class WeatherConnectProxy implements RemoteProxy {
         mWeatherRemoteControl.registerRemoteCallback(new IRemoteCallback() {
             @Override
             public void onServiceBindStateChanged(int i) {
-                WeatherUtil.logD("WeatherConnectProxy onServiceBindStateChanged : "+i);
+                WeatherUtil.logD("WeatherConnectProxy onServiceBindStateChanged : "+i +"  connectListener:"+connectListener);
                 if (i == SERVICE_CONNECTED) {
                     connectListener.onServiceConnected();
                 } else {
@@ -63,6 +64,9 @@ public class WeatherConnectProxy implements RemoteProxy {
             @Override
             public void onSuccess(List<WeatherInfo> list) {
                 WeatherUtil.logD("WeatherConnectProxy getWeatherInfoList onSuccess : "+list.size());
+                for (WeatherInfo weatherInfo : list) {
+                    WeatherUtil.logD("---> "+weatherInfo.getCity() +" "+weatherInfo.getWeather());
+                }
                 if (onRequestListener != null) {
                     onRequestListener.onSuccess(list);
                 }
