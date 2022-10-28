@@ -1,6 +1,7 @@
 package launcher.base.utils.flowcontrol;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
@@ -22,10 +23,12 @@ public abstract class PollingTask {
         mInitDelay = initDelay;
         mIntervalMillieSeconds = intervalMillieSeconds;
         mName = name;
+        objCount.addAndGet(1);
     }
 
+    private static AtomicInteger objCount = new AtomicInteger(0);
     public void execute() {
-        EasyLog.d(mName, "PollingTask start execute name: "+mName);
+        EasyLog.d(mName, "PollingTask start execute name: "+mName +" , objCount:"+objCount);
         mDisposable = Observable.interval(mInitDelay, mIntervalMillieSeconds, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Consumer<Long>() {
@@ -33,7 +36,7 @@ public abstract class PollingTask {
                     public void accept(Long aLong) throws Exception {
                         boolean enableExit = enableExit();
                         EasyLog.d(mName, "PollingTask execute name: "+mName + " count:" + aLong
-                                + " , enableExit:" + enableExit +" , thread:"+Thread.currentThread().getName());
+                                + " , enableExit:" + enableExit +" , thread:"+Thread.currentThread().getName()+"  objCount:"+objCount);
                         if (enableExit) {
                             stopDispose();
                         } else {
