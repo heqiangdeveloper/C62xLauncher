@@ -63,13 +63,25 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
     private AreaContentResponseBean mAreaContentResponseBeanDaily;
     private AreaContentResponseBean mAreaContentResponseBeanRank;
     private int mContentId = TYPE_DAILYSONGS;
-    private PollingTask mServiceConnectTask;
+    private volatile boolean mExecuteTask = false;
+    private PollingTask mServiceConnectTask = new PollingTask(0, 2000, TAG) {
+        @Override
+        protected void executeTask() {
+            addPlayContentListener(70);
+        }
+
+        @Override
+        protected boolean enableExit() {
+            return isServiceConnected;
+        }
+    };
+    ;
     private boolean isServiceConnected = false;
 
     public DrawerIqutingHolder(@NonNull View itemView) {
         super(itemView);
         mContext = itemView.getContext();
-        sp = mContext.getSharedPreferences(IqutingConfigs.IQUTINGSP,Context.MODE_PRIVATE);
+        sp = mContext.getSharedPreferences(IqutingConfigs.IQUTINGSP, Context.MODE_PRIVATE);
         rcvDrawerIqutingLogin = itemView.findViewById(R.id.rcvDrawerIqutingLogin);
         initSongsRcv();
         tvDrawerIqutingLogin = itemView.findViewById(R.id.tvDrawerIqutingLogin);
@@ -117,15 +129,15 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
         mSongsAdapter = new SongsAdapter(mContext, new IPlayItemCallback() {
             @Override
             public void onItemClick(int position, long songId) {
-                Log.d(TAG,"onItemClick,position = " + position + ",songId = " + songId + ",itemUUIDInDrawer = " + itemUUIDInDrawer);
-                if(itemUUIDInDrawer.equals(String.valueOf(songId))){
-                    if(isPlaying){
+                Log.d(TAG, "onItemClick,position = " + position + ",songId = " + songId + ",itemUUIDInDrawer = " + itemUUIDInDrawer);
+                if (itemUUIDInDrawer.equals(String.valueOf(songId))) {
+                    if (isPlaying) {
                         FlowPlayControl.getInstance().doPause();
-                    }else {
+                    } else {
                         FlowPlayControl.getInstance().doPlay();
                     }
-                }else {
-                    if(isPlaying){
+                } else {
+                    if (isPlaying) {
                         FlowPlayControl.getInstance().doPause();
                     }
                     ContentManager.getInstance().playAreaContentData(position,
@@ -134,14 +146,14 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
                             new MediaPlayResult() {
                                 @Override
                                 public void success() {
-                                    Log.d(TAG,"MediaPlayResult success");
+                                    Log.d(TAG, "MediaPlayResult success");
                                 }
 
                                 @Override
                                 public void failed(int i) {
-                                    Log.d(TAG,"MediaPlayResult failed: " + i);
-                                    if(i == PLAY_ERROR_NO_AUTHORITY){
-                                        Toast.makeText(mContext,"当前是vip歌曲没有权限,已为你播放其他歌曲",Toast.LENGTH_LONG).show();
+                                    Log.d(TAG, "MediaPlayResult failed: " + i);
+                                    if (i == PLAY_ERROR_NO_AUTHORITY) {
+                                        Toast.makeText(mContext, "当前是vip歌曲没有权限,已为你播放其他歌曲", Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });
@@ -151,83 +163,72 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
         rcvDrawerIqutingLogin.setAdapter(mSongsAdapter);
     }
 
-    private void addPlayContentListener(int line){
+    private void addPlayContentListener(int line) {
         boolean isConnected = NetworkUtils.isNetworkAvailable(mContext);
-        Log.d(TAG,"addPlayContentListener network: " + isConnected + ",Line: " + line);
-        if(!isConnected){
+        Log.d(TAG, "addPlayContentListener network: " + isConnected + ",Line: " + line);
+        if (!isConnected) {
             showUI(TYPE_NO_NETWORK);
-        }else {
-            if(IqutingBindService.getInstance().isServiceConnect()){
+        } else {
+            if (IqutingBindService.getInstance().isServiceConnect()) {
                 isServiceConnected = true;
-                Log.d(TAG,"addPlayContentListener PlayContentService Connect");
+                Log.d(TAG, "addPlayContentListener PlayContentService Connect");
                 //查询用户登录状态
                 IqutingBindService.getInstance().checkLoginStatus(new IQueryIqutingLoginStatus() {
                     @Override
                     public void onSuccess(boolean mIsLogin) {
-                        Log.d(TAG,"addPlayContentListener checkLoginStatus: " + mIsLogin);
-                        if(mIsLogin){
+                        Log.d(TAG, "addPlayContentListener checkLoginStatus: " + mIsLogin);
+                        if (mIsLogin) {
                             addIqutingMediaChangeListener();//监听爱趣听媒体的变化
                             addIqutingPlayStateListener();//监听爱趣听播放状态变化
 
                             queryPlayStatus();//查看当前的歌曲信息
                             showUI(TYPE_NORMAL);
-                            int currentTab = sp.getInt(IqutingConfigs.CURRENTTAB,1);
-                            if(currentTab == TYPE_DAILYSONGS){
-                                if(mAreaContentResponseBeanDaily == null){
+                            int currentTab = sp.getInt(IqutingConfigs.CURRENTTAB, 1);
+                            if (currentTab == TYPE_DAILYSONGS) {
+                                if (mAreaContentResponseBeanDaily == null) {
                                     getMusicList(TYPE_DAILYSONGS);
                                 }
-                            }else {
-                                if(mAreaContentResponseBeanRank == null){
+                            } else {
+                                if (mAreaContentResponseBeanRank == null) {
                                     getMusicList(TYPE_RANKSONGS);
                                 }
                             }
-                        }else {
+                        } else {
                             removePlayStateListener();
                             removeMediaChangeListener();
                             showUI(TYPE_NO_LOGIN);
                         }
                     }
                 });
-            }else {
-                Log.d(TAG,"PlayContentService disConnected");
+            } else {
+                Log.d(TAG, "PlayContentService disConnected");
                 isServiceConnected = false;
                 removePlayStateListener();
                 removeMediaChangeListener();
-
                 showUI(TYPE_NO_LOGIN);
-                FlowPlayControl.getInstance().bindPlayService(mContext);//注册爱趣听播放服务
-
-                mServiceConnectTask = new PollingTask(0, 2000, TAG) {
-                    @Override
-                    protected void executeTask() {
-                        addPlayContentListener(194);
-                    }
-
-                    @Override
-                    protected boolean enableExit() {
-                        return isServiceConnected;
-                    }
-                };
-                mServiceConnectTask.execute();
+                if (mServiceConnectTask != null && !mExecuteTask) {
+                    mExecuteTask = true;
+                    mServiceConnectTask.execute();
+                }
             }
         }
     }
 
     //查询播放状态
-    private void queryPlayStatus(){
+    private void queryPlayStatus() {
         FlowPlayControl.getInstance().queryPlaying(new QueryCallback<Boolean>() {
             @Override
             public void onError(int i) {
-                Log.d(TAG,"queryPlayStatus onError: " + i);
+                Log.d(TAG, "queryPlayStatus onError: " + i);
             }
 
             @Override
             public void onSuccess(Boolean aBoolean) {
-                Log.d(TAG,"queryPlayStatus onSuccess: isPlaying=" + aBoolean);
-                if(!aBoolean){
+                Log.d(TAG, "queryPlayStatus onSuccess: isPlaying=" + aBoolean);
+                if (!aBoolean) {
                     //爱趣听没有播放，需要先调起爱趣听播放服务
-                    LaunchConfig launchConfig = new LaunchConfig(false,false);
-                    FlowPlayControl.getInstance().launchPlayService(mContext,launchConfig);
+                    LaunchConfig launchConfig = new LaunchConfig(false, false);
+                    FlowPlayControl.getInstance().launchPlayService(mContext, launchConfig);
                 }
                 isPlaying = aBoolean;
                 getCurrentMediaInfo();
@@ -236,72 +237,72 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
     }
 
     //获取当前的媒体信息
-    private void getCurrentMediaInfo(){
+    private void getCurrentMediaInfo() {
         FlowPlayControl.getInstance().queryCurrent(new QueryCallback<MediaInfo>() {
             @Override
             public void onError(int i) {
-                Log.d(TAG,"getCurrentMediaInfo onError i = " + i);
+                Log.d(TAG, "getCurrentMediaInfo onError i = " + i);
             }
 
             @Override
             public void onSuccess(MediaInfo mediaInfo) {
-                if(mediaInfo != null){
+                if (mediaInfo != null) {
                     itemUUIDInDrawer = mediaInfo.getItemUUID();
-                    Log.d(TAG,"getCurrentMediaInfo onSuccess " + itemUUIDInDrawer);
-                }else{
+                    Log.d(TAG, "getCurrentMediaInfo onSuccess " + itemUUIDInDrawer);
+                } else {
                     itemUUIDInDrawer = "";
-                    Log.d(TAG,"mediaInfo is null");
+                    Log.d(TAG, "mediaInfo is null");
                 }
             }
         });
     }
 
-    private void getMusicList(int contentId){
-        Log.d(TAG,"getMusicList,contentId = " + contentId);
+    private void getMusicList(int contentId) {
+        Log.d(TAG, "getMusicList,contentId = " + contentId);
         mContentId = contentId;
         IqutingBindService.getInstance().getMusicList(contentId, new IQueryMusicLists() {
             @Override
             public void onSuccess(AreaContentResponseBean areaContentResponseBean) {
-                Log.d(TAG,"getMusicList success");
-                if(contentId == TYPE_DAILYSONGS){
+                Log.d(TAG, "getMusicList success");
+                if (contentId == TYPE_DAILYSONGS) {
                     mAreaContentResponseBeanDaily = areaContentResponseBean;
-                }else if(contentId == TYPE_RANKSONGS){
+                } else if (contentId == TYPE_RANKSONGS) {
                     mAreaContentResponseBeanRank = areaContentResponseBean;
                 }
                 List<BaseSongItemBean> songLists = areaContentResponseBean.getSonglist();
-                if(songLists != null && songLists.size() != 0){
+                if (songLists != null && songLists.size() != 0) {
                     mSongsAdapter.setData(songLists);
-                }else {
-                    Log.d(TAG,"getMusicList songLists is null");
+                } else {
+                    Log.d(TAG, "getMusicList songLists is null");
                     showUI(TYPE_DATA_ERROR);
                 }
             }
 
             @Override
             public void onFail(int failCode) {
-                Log.d(TAG,"getMusicList fail: " + failCode);
+                Log.d(TAG, "getMusicList fail: " + failCode);
                 showUI(TYPE_DATA_ERROR);
             }
         });
     }
 
-    private void showUI(int type){
-        ((Activity)mContext).runOnUiThread(new Runnable() {
+    private void showUI(int type) {
+        ((Activity) mContext).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(type == TYPE_NO_NETWORK){
+                if (type == TYPE_NO_NETWORK) {
                     rcvDrawerIqutingLogin.setVisibility(View.GONE);
                     tvDrawerIqutingLogin.setVisibility(View.VISIBLE);
                     tvDrawerIqutingLogin.setText(com.chinatsp.iquting.R.string.iquting_disconnect_tip);
-                }else if(type == TYPE_NO_LOGIN){
+                } else if (type == TYPE_NO_LOGIN) {
                     rcvDrawerIqutingLogin.setVisibility(View.GONE);
                     tvDrawerIqutingLogin.setVisibility(View.VISIBLE);
                     tvDrawerIqutingLogin.setText(com.chinatsp.iquting.R.string.iquting_unlogin_slogan);
-                }else if(type == TYPE_DATA_ERROR){
+                } else if (type == TYPE_DATA_ERROR) {
                     rcvDrawerIqutingLogin.setVisibility(View.GONE);
                     tvDrawerIqutingLogin.setVisibility(View.VISIBLE);
                     tvDrawerIqutingLogin.setText(com.chinatsp.iquting.R.string.iquting_get_data_error);
-                }else{//正常登陆了
+                } else {//正常登陆了
                     rcvDrawerIqutingLogin.setVisibility(View.VISIBLE);
                     tvDrawerIqutingLogin.setVisibility(View.GONE);
                 }
@@ -310,48 +311,48 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
     }
 
     //监听爱趣听媒体的变化
-    private void addIqutingMediaChangeListener(){
+    private void addIqutingMediaChangeListener() {
         mediaChangeListener = new MediaChangeListener() {
             @Override
             public void onMediaChange(MediaInfo mediaInfo) {
-                if(mediaInfo != null){
+                if (mediaInfo != null) {
                     itemUUIDInDrawer = mediaInfo.getItemUUID();
-                    Log.d(TAG,"onMediaChange " + itemUUIDInDrawer);
-                }else {
+                    Log.d(TAG, "onMediaChange " + itemUUIDInDrawer);
+                } else {
                     itemUUIDInDrawer = "";
-                    Log.d(TAG,"onMediaChange, mediaInfo is null");
+                    Log.d(TAG, "onMediaChange, mediaInfo is null");
                 }
             }
 
             @Override
             public void onMediaChange(MediaInfo mediaInfo, NavigationInfo navigationInfo) {
-                Log.d(TAG,"onMediaChange ");
+                Log.d(TAG, "onMediaChange ");
             }
 
             @Override
             public void onFavorChange(boolean b, String s) {
-                Log.d(TAG,"onFavorChange");
+                Log.d(TAG, "onFavorChange");
             }
 
             @Override
             public void onModeChange(int i) {
-                Log.d(TAG,"onModeChange");
+                Log.d(TAG, "onModeChange");
             }
 
             @Override
             public void onPlayListChange() {
-                Log.d(TAG,"onPlayListChange");
+                Log.d(TAG, "onPlayListChange");
             }
         };
         FlowPlayControl.getInstance().addMediaChangeListener(mediaChangeListener);
     }
 
     //监听爱趣听播放状态变化
-    private void addIqutingPlayStateListener(){
+    private void addIqutingPlayStateListener() {
         playStateListener = new PlayStateListener() {
             @Override
             public void onStart() {
-                Log.d(TAG,"onStart");
+                Log.d(TAG, "onStart");
                 isPlaying = true;
                 //更新播放按钮状态
                 checkStatusInList();
@@ -359,7 +360,7 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
 
             @Override
             public void onPause() {
-                Log.d(TAG,"onPause");
+                Log.d(TAG, "onPause");
                 isPlaying = false;
                 //更新播放按钮状态
                 checkStatusInList();
@@ -367,7 +368,7 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
 
             @Override
             public void onStop() {
-                Log.d(TAG,"onStop");
+                Log.d(TAG, "onStop");
                 isPlaying = false;
                 //更新播放按钮状态
                 checkStatusInList();
@@ -380,38 +381,38 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
 
             @Override
             public void onBufferingStart() {
-                Log.d(TAG,"onBufferingStart");
+                Log.d(TAG, "onBufferingStart");
             }
 
             @Override
             public void onBufferingEnd() {
-                Log.d(TAG,"onBufferingEnd");
+                Log.d(TAG, "onBufferingEnd");
             }
 
             @Override
             public void onPlayError(int i, String s) {
-                Log.d(TAG,"onPlayError");
+                Log.d(TAG, "onPlayError");
             }
 
             @Override
             public void onAudioSessionId(int i) {
-                Log.d(TAG,"onAudioSessionId");
+                Log.d(TAG, "onAudioSessionId");
             }
         };
         FlowPlayControl.getInstance().addPlayStateListener(playStateListener);
     }
 
     //更新推荐列表中的播放选中状态
-    private void checkStatusInList(){
+    private void checkStatusInList() {
         updatePlayStatusInList();
     }
 
-    private int getCurrentItemPosition(String id,List<BaseSongItemBean> beans){
-        if(beans == null || beans.size() == 0){
+    private int getCurrentItemPosition(String id, List<BaseSongItemBean> beans) {
+        if (beans == null || beans.size() == 0) {
             return -1;
         }
-        for(int i = 0; i < beans.size(); i++){
-            if(id.equals(String.valueOf(beans.get(i).getSong_id()))){
+        for (int i = 0; i < beans.size(); i++) {
+            if (id.equals(String.valueOf(beans.get(i).getSong_id()))) {
                 return i;
             }
         }
@@ -419,27 +420,27 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
     }
 
     /*
-    *当页面可见时（onResume()）回调此方法
+     *当页面可见时（onResume()）回调此方法
      */
     @Override
     public void bind(int position, DrawerEntity drawerEntity) {
         super.bind(position, drawerEntity);
-        Log.d(TAG,"bind");
+        Log.d(TAG, "bind");
         //入口
         addPlayContentListener(380);
     }
 
-    public void updatePlayStatusInList(){
-        if(mSongsAdapter.getData() != null && mSongsAdapter.getData().size() != 0){
+    public void updatePlayStatusInList() {
+        if (mSongsAdapter.getData() != null && mSongsAdapter.getData().size() != 0) {
             mSongsAdapter.notifyDataSetChanged();
         }
     }
 
-    private void removeMediaChangeListener(){
+    private void removeMediaChangeListener() {
         FlowPlayControl.getInstance().removeMediaChangeListener(mediaChangeListener);
     }
 
-    private void removePlayStateListener(){
+    private void removePlayStateListener() {
         FlowPlayControl.getInstance().removePlayStateListener(playStateListener);
     }
 }
