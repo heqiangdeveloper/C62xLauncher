@@ -139,6 +139,7 @@ public class LauncherSearchActivity extends AppCompatActivity implements SearchA
             //打开某个应用某个模块
             Intent intent = new Intent(bean.getIntentAction());
             intent.putExtra("type", bean.getIntentInterface());
+            intent.putExtra("INTENT_PATH", "LAUNCHER_SEARCH");
             startActivity(intent);
         }
         mEdittextSearchWord.setText("");

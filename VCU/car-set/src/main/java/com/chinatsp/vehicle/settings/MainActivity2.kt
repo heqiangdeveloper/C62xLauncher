@@ -82,6 +82,7 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
             val action = intent.action
             val routeValue: Int
             val popupSerial: String
+            var intentPath = ""
             if (Constant.VCU_AUDIO_VOLUME == action) {
                 routeValue = RouterSerial.makeRouteSerial(3, 0, 0)
                 popupSerial = Constant.DEVICE_AUDIO_VOLUME
@@ -91,29 +92,38 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
             } else if (Constant.VCU_AMBIENT_LIGHTING == action) {
                 routeValue = RouterSerial.makeRouteSerial(2, 1, 0)
                 popupSerial = it.getStringExtra(Constant.DIALOG_SERIAL) ?: ""
+                intentPath = it.getStringExtra(Constant.INTENT_PATH) ?: ""
             } else if (Constant.VCU_CUSTOM_KEYPAD == action) {
                 routeValue = RouterSerial.makeRouteSerial(4, 0, 0)
                 popupSerial = "1004_2000_3001"
-                doNavigation(routeValue, popupSerial, general = true)
+                doNavigation(routeValue, popupSerial, intentPath, general = true)
                 return
             } else if (Constant.VCU_GENERAL_ROUTER == action) {
                 routeValue = it.getIntExtra(Constant.ROUTE_SERIAL, Constant.INVALID)
                 popupSerial = it.getStringExtra(Constant.DIALOG_SERIAL) ?: ""
-                doNavigation(routeValue, popupSerial, general = true)
+                intentPath = it.getStringExtra(Constant.INTENT_PATH) ?: ""
+                doNavigation(routeValue, popupSerial, intentPath, general = true)
                 return
             } else {
                 routeValue = Constant.INVALID
                 popupSerial = ""
             }
-            doNavigation(routeValue, popupSerial)
+            doNavigation(routeValue, popupSerial, intentPath)
         }
     }
 
-    private fun doNavigation(routeValue: Int, route: String, general: Boolean = false) {
+    private fun doNavigation(
+        routeValue: Int,
+        route: String,
+        intentPath: String,
+        general: Boolean = false
+    ) {
         if (general) {
             val list = route.split("_")
             Timber.e("==================route:%s, size:%s", route, list.size)
-            binding.homeBack.visibility = View.VISIBLE
+            if (intentPath == Constant.LAUNCHER_SEARCH) {
+                binding.homeBack.visibility = View.VISIBLE
+            }
             if (list.size == 3) {
                 val locations = list.map { it.toInt() }
                 val node1 = Node(uid = locations[0] - 1000)
@@ -124,7 +134,11 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
                 node3.pnode = node2
                 node2.pnode = node1
                 if (node1.valid && node1.uid in obtainTabs().map { tab -> tab.uid }.toSet()) {
-                    val position = if (VcuUtils.isCareLevel(Level.LEVEL3, expect = true)) node1.uid - 1 else node1.uid
+                    val position = if (VcuUtils.isCareLevel(
+                            Level.LEVEL3,
+                            expect = true
+                        )
+                    ) node1.uid - 1 else node1.uid
                     Timber.e("doNavigation-------position:$position")
                     manager.setTabSerial(position)
                     updatePosition(position)

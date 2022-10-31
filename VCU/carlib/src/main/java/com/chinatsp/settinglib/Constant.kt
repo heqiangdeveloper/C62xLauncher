@@ -53,6 +53,17 @@ object Constant {
 
     const val CUSTOM_KEYPAD = "CUSTOM_KEYPAD"
 
+    /**
+     * 桌面搜索
+     */
+    const val LAUNCHER_SEARCH = "LAUNCHER_SEARCH"
+
+    /**
+     * 跳转路径
+     */
+    val INTENT_PATH: String
+        get() = "INTENT_PATH"
+
     val DIALOG_SERIAL: String
         get() = "type"
 

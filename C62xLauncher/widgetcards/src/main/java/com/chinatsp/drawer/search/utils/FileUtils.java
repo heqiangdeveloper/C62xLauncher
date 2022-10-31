@@ -107,7 +107,8 @@ public class FileUtils {
             for(int i = 0;i<keyStr.length;i++){
                 CharacterStyle charaStyle = new ForegroundColorSpan(context.getResources().getColor(keyStrColor));
                // int start = wholeStr.indexOf(keyStr[i]);
-                int start = wholeStr.toLowerCase().indexOf(keyStr[i]);
+                String str = wholeStr.toLowerCase();
+                int start = str.indexOf(keyStr[i].toLowerCase());
                 int end = start + keyStr[i].length();
                 spBuilder.setSpan(charaStyle, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
