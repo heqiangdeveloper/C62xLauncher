@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -49,7 +50,10 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
     private ImageView ivDrawerIqutingDirect;
     private RecyclerView rcvDrawerIqutingLogin;
     private SongsAdapter mSongsAdapter;
+    private View layoutDrawerIqutingError;
     private TextView tvDrawerIqutingLogin;
+    private ImageView ivDrawerIqutingLogin;
+    private View viewBg;
     private Context mContext;
     private MediaChangeListener mediaChangeListener;
     private PlayStateListener playStateListener;
@@ -75,7 +79,7 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
             return isServiceConnected;
         }
     };
-    ;
+
     private boolean isServiceConnected = false;
 
     public DrawerIqutingHolder(@NonNull View itemView) {
@@ -84,8 +88,11 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
         sp = mContext.getSharedPreferences(IqutingConfigs.IQUTINGSP, Context.MODE_PRIVATE);
         rcvDrawerIqutingLogin = itemView.findViewById(R.id.rcvDrawerIqutingLogin);
         initSongsRcv();
+        layoutDrawerIqutingError = itemView.findViewById(R.id.layoutDrawerIqutingError);
         tvDrawerIqutingLogin = itemView.findViewById(R.id.tvDrawerIqutingLogin);
+        ivDrawerIqutingLogin = itemView.findViewById(R.id.ivDrawerIqutingLogin);
         ivDrawerIqutingDirect = itemView.findViewById(R.id.ivDrawerIqutingDirect);
+        viewBg  = itemView.findViewById(R.id.viewBg);
         ivDrawerIqutingDirect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -291,20 +298,29 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
             @Override
             public void run() {
                 if (type == TYPE_NO_NETWORK) {
+                    viewBg.setVisibility(View.VISIBLE);
+                    layoutDrawerIqutingError.setVisibility(View.VISIBLE);
                     rcvDrawerIqutingLogin.setVisibility(View.GONE);
-                    tvDrawerIqutingLogin.setVisibility(View.VISIBLE);
+                    ivDrawerIqutingLogin.setImageResource(R.drawable.card_icon_wifi_disconnect);
+                    ivDrawerIqutingLogin.setVisibility(View.VISIBLE);
                     tvDrawerIqutingLogin.setText(com.chinatsp.iquting.R.string.iquting_disconnect_tip);
                 } else if (type == TYPE_NO_LOGIN) {
+                    viewBg.setVisibility(View.VISIBLE);
+                    layoutDrawerIqutingError.setVisibility(View.VISIBLE);
                     rcvDrawerIqutingLogin.setVisibility(View.GONE);
-                    tvDrawerIqutingLogin.setVisibility(View.VISIBLE);
+                    ivDrawerIqutingLogin.setVisibility(View.GONE);
                     tvDrawerIqutingLogin.setText(com.chinatsp.iquting.R.string.iquting_unlogin_slogan);
                 } else if (type == TYPE_DATA_ERROR) {
+                    viewBg.setVisibility(View.VISIBLE);
+                    layoutDrawerIqutingError.setVisibility(View.VISIBLE);
                     rcvDrawerIqutingLogin.setVisibility(View.GONE);
-                    tvDrawerIqutingLogin.setVisibility(View.VISIBLE);
+                    ivDrawerIqutingLogin.setVisibility(View.VISIBLE);
+                    ivDrawerIqutingLogin.setImageResource(R.drawable.card_icon_wifi_disconnect);
                     tvDrawerIqutingLogin.setText(com.chinatsp.iquting.R.string.iquting_get_data_error);
                 } else {//正常登陆了
+                    layoutDrawerIqutingError.setVisibility(View.GONE);
                     rcvDrawerIqutingLogin.setVisibility(View.VISIBLE);
-                    tvDrawerIqutingLogin.setVisibility(View.GONE);
+                    viewBg.setVisibility(View.GONE);
                 }
             }
         });

@@ -25,18 +25,49 @@
         android:layout_marginTop="3px"
         />
 
-    <TextView
-        android:id="@+id/tvDrawerIqutingLogin"
+    <View
+        android:id="@+id/viewBg"
         android:layout_width="match_parent"
-        android:layout_height="329px"
+        android:layout_height="264px"
         android:layout_marginTop="16px"
         app:layout_constraintTop_toBottomOf="@id/tvTitle"
-        app:layout_constraintStart_toStartOf="parent"
-        android:text="@string/iquting_unlogin_slogan"
-        style="@style/CardLv4TextView"
-        android:background="@drawable/drawer_item_bg_selector"
-        android:visibility="gone"
+        android:visibility="visible"
+        android:background="@drawable/drawer_volcano_bg_selector"
         />
+
+    <LinearLayout
+        android:id="@+id/layoutDrawerIqutingError"
+        android:layout_width="match_parent"
+        android:layout_height="264px"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="56px"
+        android:visibility="invisible"
+        android:orientation="vertical"
+        android:gravity="center"
+        >
+        <ImageView
+            android:id="@+id/ivDrawerIqutingLogin"
+            android:layout_width="@dimen/card_icon_size_lv0"
+            android:layout_height="@dimen/card_icon_size_lv0"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="0px"
+            android:layout_marginBottom="40px"
+            />
+
+        <TextView
+            android:id="@+id/tvDrawerIqutingLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0px"
+            app:layout_constraintTop_toBottomOf="@id/ivDrawerIqutingLogin"
+            app:layout_constraintStart_toStartOf="@id/ivDrawerIqutingLogin"
+            app:layout_constraintEnd_toEndOf="@id/ivDrawerIqutingLogin"
+            android:text=""
+            style="@style/CardLv4TextView"
+            />
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcvDrawerIqutingLogin"
