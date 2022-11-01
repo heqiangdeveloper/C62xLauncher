@@ -76,7 +76,7 @@ class VehicleService : Service() {
                     val color = jsonObject.getString("color")
                     val lighting = jsonObject.getString("lighting")
                     ambientLightingManager.doSetProgress(Progress.AMBIENT_LIGHT_BRIGHTNESS,
-                        Integer.valueOf(lighting))//亮度
+                        Integer.valueOf(lighting) + 0x1)//亮度
                     ambientLightingManager.doSetProgress(Progress.AMBIENT_LIGHT_COLOR,
                         Integer.valueOf(color))//颜色
                     Timber.d("color:$color,lighting:$lighting")

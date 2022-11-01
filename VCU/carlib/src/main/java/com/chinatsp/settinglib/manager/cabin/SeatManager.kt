@@ -78,7 +78,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
     }
 
     private fun initVolume(type: Progress): Volume {
-        val pos = 0x05
+        val pos = type.def
         val result = VcuUtils.getInt(key = Constant.SEAT_HEAT_TEMP, value = pos)
 //        AppExecutors.get()?.singleIO()?.execute {
 //            val result = VcuUtils.getInt(key = Constant.SEAT_HEAT_TEMP, value = pos)
@@ -189,9 +189,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
 //        int类型数据
 //        0x0:Inactive
 //        0x1:OFF(default)
-//        0x2:Level 1
-//        0x3:Level 2
-//        0x4:Level 3
+//        0x2:Level 1; 0x3:Level 2; 0x4:Level 3
 //        0x5 ………… 0x7:reserved
         val areaValue = if (Constant.INVALID == defArea) obtainChairArea(part) else defArea
         return readIntProperty(CarCabinManager.ID_HUM_SEAT_HEAT_POS, Origin.CABIN, areaValue)
@@ -201,9 +199,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
 //        int类型数据
 //        0x0:Inactive
 //        0x1:OFF(default)
-//        0x2:Level 1
-//        0x3:Level 2
-//        0x4:Level 3
+//        0x2:Level 1; 0x3:Level 2; 0x4:Level 3
 //        0x5 ………… 0x7:reserved
         val areaValue = obtainChairArea(part)
         val actual = -1//obtainHeatLevel(part, areaValue)
@@ -218,9 +214,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
 //        int类型数据
 //        0x0:Inactive
 //        0x1:OFF(default)
-//        0x2:Level 1
-//        0x3:Level 2
-//        0x4:Level 3
+//        0x2:Level 1; 0x3:Level 2; 0x4:Level 3
 //        0x5 ………… 0x7:reserved
         val areaValue = if (Constant.INVALID == defArea) obtainChairArea(part) else defArea
         return readIntProperty(CarCabinManager.ID_HUM_SEAT_HEAT_POS, Origin.CABIN, areaValue)
@@ -230,9 +224,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
 //        int类型数据
 //        0x0:Inactive
 //        0x1:OFF(default)
-//        0x2:Level 1
-//        0x3:Level 2
-//        0x4:Level 3
+//        0x2:Level 1; 0x3:Level 2; 0x4:Level 3
 //        0x5 ………… 0x7:reserved
         val areaValue = obtainChairArea(part)
         val actual = -1//obtainVentilateLevel(part, areaValue)
@@ -254,17 +246,46 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
     }
 
     private fun updateKneadLevel(@IPart part: Int, level: Int): Boolean {
-        val signal = when (part) {
-            IPart.LEFT_FRONT -> CarCabinManager.ID_HUM_SEATMASSLVL_FL
-            IPart.RIGHT_FRONT -> CarCabinManager.ID_HUM_SEATMASSLVL_FR
-            else -> Constant.INVALID
-        }
-        if (Constant.INVALID != signal) {
-            writeProperty(signal, level, Origin.CABIN)
-            return true
+        val setSignal = obtainChairSetSignal(part)
+        if (Constant.INVALID != setSignal) {
+            val actual = obtainChairGetSignal(part)
+            val result = actual != level
+            if (result) {
+                writeProperty(setSignal, level, Origin.CABIN)
+            }
+            return result
         }
         return false
     }
+
+    private fun obtainChairSetSignal(@IPart part: Int): Int {
+        return when (part) {
+            IPart.LEFT_FRONT -> CarCabinManager.ID_HUM_SEATMASSLVL_FL
+            IPart.RIGHT_FRONT -> CarCabinManager.ID_HUM_SEATMASSLVL_FR
+            IPart.LEFT_BACK -> -1
+            IPart.RIGHT_BACK -> -1
+            else -> Constant.INVALID
+        }
+    }
+
+    private fun obtainChairGetSignal(@IPart part: Int): Int {
+        return when (part) {
+            IPart.LEFT_FRONT -> -1
+            IPart.RIGHT_FRONT -> -1
+            IPart.LEFT_BACK -> CarCabinManager.ID_RLSSM_SEAT_LVL_SET_STS
+            IPart.RIGHT_BACK -> CarCabinManager.ID_RRSSM_SEAT_LVL_SET_STS
+            else -> Constant.INVALID
+        }
+    }
+
+    private fun obtainChairKneadLevel(@IPart part: Int): Int {
+        val signal = obtainChairGetSignal(part)
+        if (Constant.INVALID != signal) {
+            return readIntProperty(signal, Origin.CABIN)
+        }
+        return Constant.INVALID
+    }
+
 
     override fun doCarControlCommand(command: CarCmd, callback: ICmdCallback?) {
         if (ICar.CHAIR == command.car) {
@@ -278,8 +299,18 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
             }
             if (IAct.KNEAD == command.act) {
                 doControlChairKnead(command, callback)
+                return
+            }
+            if (IAct.TILT == command.act) {
+                doControlChairTilt(command, callback)
+                return
             }
         }
+    }
+
+    private fun doControlChairTilt(command: CarCmd, callback: ICmdCallback?) {
+
+
     }
 
     private fun doControlChairKnead(command: CarCmd, callback: ICmdCallback?) {
@@ -288,7 +319,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
         val max = 0x5
         var append = ""
         if (Action.TURN_ON == command.action) {
-            level = min
+            level = 0x4
             append = "打开"
         }
         if (Action.TURN_OFF == command.action) {

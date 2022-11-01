@@ -46,6 +46,7 @@ class CommonlyFragment : BaseTabFragment<BaseViewModel, AccessFragmentBinding>()
     private fun setClickListener() {
         binding.closeWindow.setOnClickListener {
             GlobalManager.instance.doSwitchWindow(false)
+            val controller = mDataFeeder?.kanziController
         }
         binding.openWindow.setOnClickListener {
             GlobalManager.instance.doSwitchWindow(true)
@@ -59,13 +60,13 @@ class CommonlyFragment : BaseTabFragment<BaseViewModel, AccessFragmentBinding>()
         mDataFeeder = AndroidDataSourceManager("AndroidDataSourceManager")
         mSharedData = SharedData.get()
         mSharedData?.addManager(mDataFeeder)
-        val ApkFolderPath = context?.getExternalFilesDir(null)!!.absolutePath
-        mDataFeeder!!.xmlPath = "$ApkFolderPath/"
-        AssetCopyer.copyAssetsToDst(context, "DataSource.xml", "$ApkFolderPath/DataSource.xml")
-        mDataFeeder!!.addAndroidNotifyListener(mkanziNotifyListener) // kanzi
+        val apkFolderPath = context?.getExternalFilesDir(null)!!.absolutePath
+        mDataFeeder!!.xmlPath = "$apkFolderPath/"
+        AssetCopyer.copyAssetsToDst(context, "DataSource.xml", "$apkFolderPath/DataSource.xml")
+        mDataFeeder!!.addAndroidNotifyListener(kanziNotifyListener) // kanzi
     }
 
-    private val mkanziNotifyListener: AndroidNotifyListener = object : AndroidNotifyListener() {
+    private val kanziNotifyListener: AndroidNotifyListener = object : AndroidNotifyListener() {
         override fun notifyDataChanged(name: String, type: Int, value: String) {
             super.notifyDataChanged(name, type, value)
             Timber.d("notifyDataChanged() name:$name type:$type value:$value")

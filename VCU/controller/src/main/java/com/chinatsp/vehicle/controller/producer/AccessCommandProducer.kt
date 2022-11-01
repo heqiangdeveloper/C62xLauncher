@@ -153,14 +153,14 @@ class AccessCommandProducer : ICommandProducer {
         if (isLikeJson(nameValue)) {
 
         } else {
-            if ("MORE" == nameValue) {
-                action = Action.PLUS
-            } else if ("LITTLE" == nameValue) {
-                action = Action.MINUS
-            } else {
-                val pair = obtainDegree(nameValue)
-                action = pair.first
-                value = pair.second
+            when (nameValue) {
+                "MORE" -> action = Action.PLUS
+                "LITTLE" -> action = Action.MINUS
+                else -> {
+                    val pair = obtainDegree(nameValue)
+                    action = pair.first
+                    value = pair.second
+                }
             }
         }
         if (Action.VOID == action) {

@@ -12,7 +12,8 @@ import androidx.annotation.IntDef
 @IntDef(IAct.VOID,
     IAct.HEAT,
     IAct.COLD,
-    IAct.KNEAD
+    IAct.KNEAD,
+    IAct.TILT
 )
 @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
 annotation class IAct {
@@ -36,5 +37,10 @@ annotation class IAct {
          * 按摩
          */
         const val KNEAD = 0x03
+
+        /**
+         * 倾斜度
+         */
+        const val TILT = 0x04
     }
 }

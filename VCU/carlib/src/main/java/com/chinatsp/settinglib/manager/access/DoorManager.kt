@@ -71,7 +71,7 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
         try {
             writeLock.lock()
             unRegisterVcuListener(serial, identity)
-            listenerStore.put(serial, WeakReference(listener))
+            listenerStore[serial] = WeakReference(listener)
         } finally {
             writeLock.unlock()
         }
@@ -141,5 +141,40 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
         }
     }
 
+
+//    private fun doControlDoors(command: CarCmd, callback: ICmdCallback?) {
+//        if (IPart.HEAD == command.part) {
+//            if (Action.OPEN == command.action) {
+//                doSwitchHood(command, callback,true)
+//                return
+//            }
+//            if (Action.CLOSE == command.action) {
+//                doSwitchHood(command, callback,false)
+//                return
+//            }
+//        }
+//        if (IPart.TAIL == command.part) {
+//            if (Action.OPEN == command.action) {
+//                doSwitchTrunks(command, callback,true)
+//                return
+//            }
+//            if (Action.CLOSE == command.action) {
+//                doSwitchTrunks(command, callback,false)
+//                return
+//            }
+//        }
+//    }
+//
+//    private fun doSwitchHood(command: CarCmd, callback: ICmdCallback?, expect: Boolean) {
+//        val onOff = if (expect) "打开" else "关闭"
+//        command.message = "好的，${command.slots?.name}${onOff}了"
+//        callback?.onCmdHandleResult(command)
+//    }
+//
+//    private fun doSwitchTrunks(command: CarCmd, callback: ICmdCallback?, expect: Boolean) {
+//        val onOff = if (expect) "打开" else "关闭"
+//        command.message = "好的，${command.slots?.name}${onOff}了"
+//        callback?.onCmdHandleResult(command)
+//    }
 
 }
