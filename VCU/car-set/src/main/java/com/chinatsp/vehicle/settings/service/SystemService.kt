@@ -6,6 +6,7 @@ import android.os.IBinder
 import android.text.TextUtils
 import android.view.WindowManager
 import com.chinatsp.vehicle.settings.R
+import com.chinatsp.vehicle.settings.app.Toast
 import com.chinatsp.vehicle.settings.fragment.dialog.DialogMaster
 import com.chinatsp.vehicle.settings.fragment.dialog.SystemAlertDialog
 import com.common.xui.utils.SystemDialogHelper
@@ -24,23 +25,43 @@ class SystemService : Service(), SystemDialogHelper.OnCountDownListener {
         if (intent != null) {
             type = intent.getStringExtra("type").toString()
         }
+
         if (!TextUtils.isEmpty(type) && type == "ON") {
             contentStr = R.string.global_txt_close
             waitTime = 1000 * 60 * 5
+            setDialogTime()
         } else if (!TextUtils.isEmpty(type) && type == "powerSupply") {
             contentStr = R.string.global_txt_power_supply
             waitTime = 100
+            setDialogTime()
         }else if (!TextUtils.isEmpty(type) && type == "leve1") {
             contentStr = R.string.global_txt_close
             waitTime = 1000 * 60 * 15
+            setDialogTime()
         }else if (!TextUtils.isEmpty(type) && type == "leve2") {
             contentStr = R.string.global_txt_close
             waitTime = 200
+            setDialogTime()
+        }else if(!TextUtils.isEmpty(type) && type == "transportMode"){
+            /**运输模式*/
+            //Toast.showToast(applicationContext, getString(R.string.transport_mode), true)
+            contentStr = R.string.transport_mode
+            waitTime = 100
+            setDialogTime()
+        }else if(!TextUtils.isEmpty(type) && type == "exhibitionMode"){
+            /**展车模式*/
+            //Toast.showToast(applicationContext, getString(R.string.exhibition_mode), true)
+            contentStr = R.string.exhibition_mode
+            waitTime = 100
+            setDialogTime()
+        }else if(!TextUtils.isEmpty(type) && type == "exhibitionModeError"){
+            /**展车模式切换失败*/
+            //Toast.showToast(applicationContext, getString(R.string.exhibition_mode), true)
+            contentStr = R.string.exhibition_mode_error
+            waitTime = 100
+            setDialogTime()
         }
-        //if (isShowing) {//避免几个弹窗同时出现，已跟产品沟通，可以同时出现
-            val helper = SystemDialogHelper()
-            helper.timeSchedule(waitTime, this)
-       // }
+
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -63,5 +84,11 @@ class SystemService : Service(), SystemDialogHelper.OnCountDownListener {
         editDialog.window?.setLayout(740, 488)
         isShowing = false
 
+    }
+    private fun setDialogTime(){
+        //if (isShowing) {//避免几个弹窗同时出现，已跟产品沟通，可以同时出现
+        val helper = SystemDialogHelper()
+        helper.timeSchedule(waitTime, this)
+        // }
     }
 }

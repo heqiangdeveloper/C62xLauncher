@@ -431,8 +431,8 @@ class AmbientLightingFragment :
 //    }
 
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onPause() {
+        super.onPause()
         val intent = Intent("com.chinatsp.vehiclenetwork.usercenter")
         val json = "{\"color\":\""+binding.picker.pickerIndex+"\",\"lighting\":\""+binding.ambientLightingBrightness.mSelectedNumber+"\"}"
         intent.putExtra("app", "com.chinatsp.vehicle.settings")

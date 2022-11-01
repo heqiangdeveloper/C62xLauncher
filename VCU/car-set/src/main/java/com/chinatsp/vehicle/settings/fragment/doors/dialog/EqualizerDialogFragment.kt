@@ -1,6 +1,5 @@
 package com.chinatsp.vehicle.settings.fragment.doors.dialog
 
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -116,9 +115,6 @@ class EqualizerDialogFragment :
         this.vList = toList
         this.value = value
         binding.smoothChartView.setData(toList, xValue)
-       if(value ==6){
-           intentService(toList)
-       }
     }
 
     private fun doSendCustomEqValue() {
@@ -165,36 +161,6 @@ class EqualizerDialogFragment :
             doSendCustomEqValue()
         }
 //        onPostSelected(RadioNode.SYSTEM_SOUND_EFFECT, viewModel.currentEffect.value!!)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-       if(value == 6){
-           val value = binding.smoothChartView.obtainProgress()
-           val intent = Intent("com.chinatsp.vehiclenetwork.usercenter")
-           val json = "{\"high\":\""+value[0]+"\",\"alt\":\""+
-                   value[1]+"\",\"alto\":\""+
-                   value[2]+"\",\"mid\":\""+
-                   value[3]+"\",\"bass\":\""+
-                   value[4]+"\"}"
-           intent.putExtra("app", "com.chinatsp.vehicle.settings")
-           intent.putExtra("soundEffects",json)
-           intent.setPackage("com.chinatsp.usercenter")
-           activity?.startService(intent)
-       }
-    }
-
-    private fun intentService(value:List<Float>){
-        val intent = Intent("com.chinatsp.vehiclenetwork.usercenter")
-        val json = "{\"high\":\""+value[0]+"\",\"alt\":\""+
-                value[1]+"\",\"alto\":\""+
-                value[2]+"\",\"mid\":\""+
-                value[3]+"\",\"bass\":\""+
-                value[4]+"\"}"
-        intent.putExtra("app", "com.chinatsp.vehicle.settings")
-        intent.putExtra("soundEffects",json)
-        intent.setPackage("com.chinatsp.usercenter")
-        activity?.startService(intent)
     }
 }
 

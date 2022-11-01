@@ -10,103 +10,148 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            style="@style/constraintLayout"
+        <com.common.xui.widget.XUIWrapContentScrollView
+            android:id="@+id/lighting_manager_ScrollView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
-                android:id="@+id/linearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/x95"
-                android:orientation="vertical"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/textView"
-                    style="@style/switch_row_option_style"
-                    android:layout_marginTop="@dimen/x15"
-                    android:layout_marginBottom="@dimen/x10"
-                    android:text="@string/drive_auto_lock" />
-
-                <com.common.xui.widget.tabbar.TabControlView
-                    android:id="@+id/door_automatic_lock_radio"
-                    style="@style/tdv_common_style"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tcv_items="@array/drive_auto_lock_door_option_titles"
-                    app:tcv_values="@array/drive_auto_lock_door_option_values" />
-            </LinearLayout>
-
-            <View
-                android:id="@+id/line1"
-                style="@style/line"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/linearLayout" />
-
-            <LinearLayout
-                android:id="@+id/acc_off_unlock"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/x95"
-                android:orientation="vertical"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/line1">
-
-                <TextView
-                    style="@style/switch_row_option_style"
-                    android:layout_marginTop="@dimen/x15"
-                    android:layout_marginBottom="@dimen/x10"
-                    android:text="@string/acc_off_auto_unlock" />
-
-                <com.common.xui.widget.tabbar.TabControlView
-                    android:id="@+id/door_automatic_unlock_radio"
-                    style="@style/tdv_common_style"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tcv_defaultSelection="1"
-                    app:tcv_items="@array/auto_unlock_door_options"
-                    app:tcv_values="@array/auto_unlock_door_option_values" />
-            </LinearLayout>
-
-            <View
-                android:id="@+id/line2"
-                style="@style/line"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/acc_off_unlock" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/wheel_automatic_heating"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/switch_item_option_height"
-                android:orientation="horizontal"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/line2"
-                android:visibility="gone">
-
-                <TextView
-                    style="@style/switch_row_option_style"
-                    android:text="@string/car_door_smart"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    style="@style/constraintLayout"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:paddingBottom="@dimen/x20">
 
-                <com.common.xui.widget.button.switchbutton.SwitchButton
-                    android:id="@+id/door_smart_access_switch"
-                    style="@style/switch_button_style"
-                    android:checked="true"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    <LinearLayout
+                        android:id="@+id/linearLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/x95"
+                        android:orientation="vertical"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                        <TextView
+                            android:id="@+id/textView"
+                            style="@style/switch_row_option_style"
+                            android:layout_marginTop="@dimen/x15"
+                            android:layout_marginBottom="@dimen/x10"
+                            android:text="@string/drive_auto_lock" />
 
-            <View
-                android:id="@+id/line3"
-                style="@style/line"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/wheel_automatic_heating"
-                android:visibility="gone" />
+                        <com.common.xui.widget.tabbar.TabControlView
+                            android:id="@+id/door_automatic_lock_radio"
+                            style="@style/tdv_common_style"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tcv_items="@array/drive_auto_lock_door_option_titles"
+                            app:tcv_values="@array/drive_auto_lock_door_option_values" />
+                    </LinearLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                    <View
+                        android:id="@+id/line1"
+                        style="@style/line"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/linearLayout" />
+
+                    <LinearLayout
+                        android:id="@+id/acc_off_unlock"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/x95"
+                        android:orientation="vertical"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/line1">
+
+                        <TextView
+                            style="@style/switch_row_option_style"
+                            android:layout_marginTop="@dimen/x15"
+                            android:layout_marginBottom="@dimen/x10"
+                            android:text="@string/acc_off_auto_unlock" />
+
+                        <com.common.xui.widget.tabbar.TabControlView
+                            android:id="@+id/door_automatic_unlock_radio"
+                            style="@style/tdv_common_style"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tcv_defaultSelection="1"
+                            app:tcv_items="@array/auto_unlock_door_options"
+                            app:tcv_values="@array/auto_unlock_door_option_values" />
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/line2"
+                        style="@style/line"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/acc_off_unlock" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/wheel_automatic_heating"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/switch_item_option_height"
+                        android:orientation="horizontal"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/line2">
+
+                        <TextView
+                            style="@style/switch_row_option_style"
+                            android:text="@string/car_door_smart"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.common.xui.widget.button.switchbutton.SwitchButton
+                            android:id="@+id/door_smart_access_switch"
+                            style="@style/switch_button_style"
+                            android:checked="true"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/line3"
+                        style="@style/line"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/wheel_automatic_heating" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/car_nfc_disable"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/switch_item_option_height"
+                        android:orientation="horizontal"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/line3">
+
+                        <TextView
+                            style="@style/switch_row_option_style"
+                            android:text="@string/car_nfc_disable"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.common.xui.widget.button.switchbutton.SwitchButton
+                            style="@style/switch_button_style"
+                            android:checked="true"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/line4"
+                        style="@style/line"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/car_nfc_disable" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+        </com.common.xui.widget.XUIWrapContentScrollView>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="wrap_content"

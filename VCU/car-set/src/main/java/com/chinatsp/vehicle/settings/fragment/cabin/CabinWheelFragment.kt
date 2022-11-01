@@ -118,7 +118,7 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
     }
 
     private fun initViewsDisplay() {
-        if (VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4)) {
+        if (VcuUtils.isCareLevel(Level.LEVEL3)) {
             binding.wheelAutomaticHeating.visibility = View.GONE
             binding.line3.visibility = View.GONE
         }

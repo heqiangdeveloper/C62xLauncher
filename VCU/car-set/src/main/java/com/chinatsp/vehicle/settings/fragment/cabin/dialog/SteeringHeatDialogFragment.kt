@@ -7,6 +7,7 @@ import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.ISwitchAction
 import com.chinatsp.vehicle.settings.R
+import com.chinatsp.vehicle.settings.app.Toast
 import com.chinatsp.vehicle.settings.databinding.SteeringHeatingDialogFragmentBinding
 import com.chinatsp.vehicle.settings.vm.cabin.SteeringViewModel
 import com.common.library.frame.base.BaseDialogFragment
@@ -100,6 +101,9 @@ class SteeringHeatDialogFragment :
                 doUpdateSwitchOption(SwitchNode.DRIVE_WHEEL_AUTO_HEAT, buttonView, isChecked)
 //                checkDisableOtherDiv(it.isChecked, binding.container)
                 updateEnable(binding.steeringHeatingStartTemperatureSeekBar, true, it.isChecked)
+                if(!isChecked){
+                    Toast.showToast(context, getString(R.string.cabin_wheel_automatic_heating_close), true)
+                }
             }
         }
     }

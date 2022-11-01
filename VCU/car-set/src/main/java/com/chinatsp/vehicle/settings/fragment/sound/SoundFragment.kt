@@ -9,6 +9,7 @@ import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.ISwitchManager
+import com.chinatsp.settinglib.manager.sound.EffectManager
 import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -257,16 +258,47 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
         popWindow.showDownLift(view, 30, -160)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onPause() {
+        super.onPause()
         val intent = Intent("com.chinatsp.vehiclenetwork.usercenter")
-        val json = "{\"systemHint\":\""+binding.soundWarnToneSwitch.isChecked+"\",\"speedVolumeCompensation\":\""+
-                binding.soundSpeedOffsetSwitch.isChecked+"\",\"loudnessControl\":\""+
-                binding.soundLoudnessSwitch.isChecked+"\",\"navigationMixing\":\""+
-                binding.soundNaviMixingRadio.checked+"\"}"
+        val values = viewModel.getEffectValues(6).toList()
+        val toList = values.map {
+            var value = it.toFloat() - 1
+            if (value < 0f) {
+                value = 0f
+            } else if (value > 2 * offset) {
+                value = 2 * offset
+            }
+            value
+        }.toList()
+        val systemHint = getSwitchManager().doGetSwitchOption(SwitchNode.TOUCH_PROMPT_TONE)?.data//系统提示音
+        val speedVolumeCompensation = getSwitchManager().doGetSwitchOption(manager.volumeSpeedSwitch)?.data//速度音量补偿
+        val loudnessControl = getSwitchManager().doGetSwitchOption(SwitchNode.AUDIO_SOUND_LOUDNESS)?.data//响度控制
+        val navigationMixing = getRadioManager().doGetRadioOption(RadioNode.NAVI_AUDIO_MIXING)//导航混音
+        val fadeValue = EffectManager.instance.audioFade()//音量补偿-逐渐消失值
+        val balanceValue = EffectManager.instance.getAudioBalance()//音量补偿-平衡音量
+        val high = toList[0]//均衡器自定义-高音
+        val alt = toList[1]//均衡器自定义-中高音
+        val alto = toList[2]//均衡器自定义-中音
+        val mid = toList[3]//均衡器自定义-中低音
+        val bass = toList[4]//均衡器自定义-低音
+        val json = "{\"systemHint\":\""+systemHint+"\",\"speedVolumeCompensation\":\""+
+                speedVolumeCompensation+"\",\"loudnessControl\":\""+
+                loudnessControl+"\",\"navigationMixing\":\""+
+                navigationMixing+"\",\"fadeValue\":\""+
+                fadeValue+"\",\"balanceValue\":\""+
+                balanceValue+"\",\"high\":\""+
+                high+"\",\"alt\":\""+
+                alt+"\",\"alto\":\""+
+                alto+"\",\"mid\":\""+
+                mid+"\",\"bass\":\""+
+                bass+"\"}"
         intent.putExtra("app", "com.chinatsp.vehicle.settings")
         intent.putExtra("soundEffects",json)
         intent.setPackage("com.chinatsp.usercenter")
         activity?.startService(intent)
+    }
+    private val offset: Float by lazy {
+        if (VcuUtils.isAmplifier) 9f else 5f
     }
 }
