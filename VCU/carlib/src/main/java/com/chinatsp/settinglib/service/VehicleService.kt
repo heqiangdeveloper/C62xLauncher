@@ -57,11 +57,12 @@ class VehicleService : Service() {
             val action = it.action
             val data = intent.getStringExtra("data")
             Timber.d("receive action:$action")
-            if ("com.chinatsp.vcu.actions.USER_SETTING_RECOVE" == action) {
+            if ("com.chinatsp.vcu.actions.USER_SETTING_RECOVER" == action) {
                 val intentSeat = it.getStringExtra(seat)
                 val intentRearviewMirror = it.getStringExtra(rearviewMirror)
                 val intentAtmosphereLamp = it.getStringExtra(atmosphereLamp)
                 val intentSoundEffects = it.getStringExtra(soundEffects)
+                Timber.d(" intentSeat:$intentSeat, intentRearviewMirror:$intentRearviewMirror, intentSoundEffects:$intentSoundEffects, intentAtmosphereLamp:%s", intentAtmosphereLamp)
                 if (intentSeat != null) {
                     val jsonObject = JSONObject(intentSeat)
                     val consult = jsonObject.getString("mainPassengerSeatPosition")
@@ -78,6 +79,7 @@ class VehicleService : Service() {
                         Integer.valueOf(lighting))//亮度
                     ambientLightingManager.doSetProgress(Progress.AMBIENT_LIGHT_COLOR,
                         Integer.valueOf(color))//颜色
+                    Timber.d("color:$color,lighting:$lighting")
                 } else if (!TextUtils.isEmpty(intentSoundEffects)) {
                     //均衡器
                     val jsonObject = JSONObject(intentSoundEffects)

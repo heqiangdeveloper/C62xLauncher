@@ -439,6 +439,7 @@ class AmbientLightingFragment :
         intent.putExtra("atmosphereLamp",json)
         intent.setPackage("com.chinatsp.usercenter")
         activity?.startService(intent)
+        Timber.d("lighting intent json:$json")
     }
 }
 

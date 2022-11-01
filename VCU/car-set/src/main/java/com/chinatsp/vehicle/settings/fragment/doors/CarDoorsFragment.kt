@@ -57,7 +57,12 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
     }
 
     private fun initViewsDisplay() {
-        if (VcuUtils.isCareLevel(Level.LEVEL4,Level.LEVEL5_2)) {//lv4跟lv5智能钥匙版本有车门智能进入功能
+        if (VcuUtils.isCareLevel(
+                Level.LEVEL3,
+                Level.LEVEL4,
+                Level.LEVEL5_2
+            )
+        ) {//lv4跟lv5智能钥匙版本有车门智能进入功能
             binding.wheelAutomaticHeating.visibility = View.VISIBLE
             binding.line3.visibility = View.VISIBLE
         }
@@ -84,6 +89,7 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
         viewModel.automaticDoorUnlock.observe(this) {
             doUpdateRadio(RadioNode.DOOR_FLAMEOUT_UNLOCK, it, false)
             updateOptionActive()
+            setAnimation(it.data.toString())
         }
     }
 
@@ -96,22 +102,9 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
         binding.doorAutomaticUnlockRadio.let {
             it.setOnTabSelectionChangedListener { _, value ->
                 doUpdateRadio(
-                    RadioNode.DOOR_FLAMEOUT_UNLOCK, value, viewModel.automaticDoorUnlock, it)
-                if (value.equals("3")) {
-                    binding.rightCarDoorlock.visibility = View.GONE
-                    binding.rightFlameout.visibility = View.GONE
-                    animationCloseLock.start(false, 50, null)
-                } else if (value.equals("1")) {
-                    binding.rightCarDoorlock.visibility = View.GONE
-                    binding.rightFlameout.visibility = View.VISIBLE
-                    animationOpenLock.start(false, 50, null)
-                    animationFlameout.start(false, 50, null)
-                } else {
-                    binding.rightCarDoorlock.visibility = View.VISIBLE
-                    binding.rightFlameout.visibility = View.GONE
-                    animationOpenLock.start(false, 50, null)
-                    animationCarDoor.start(false, 50, null)
-                }
+                    RadioNode.DOOR_FLAMEOUT_UNLOCK, value, viewModel.automaticDoorUnlock, it
+                )
+                setAnimation(value)
             }
         }
     }
@@ -172,5 +165,21 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
         }
     }
 
-
+    private fun setAnimation(value: String) {
+        if (value.equals("3")) {
+            binding.rightCarDoorlock.visibility = View.GONE
+            binding.rightFlameout.visibility = View.GONE
+            animationCloseLock.start(false, 50, null)
+        } else if (value.equals("1")) {
+            binding.rightCarDoorlock.visibility = View.GONE
+            binding.rightFlameout.visibility = View.VISIBLE
+            animationOpenLock.start(false, 50, null)
+            animationFlameout.start(false, 50, null)
+        } else {
+            binding.rightCarDoorlock.visibility = View.VISIBLE
+            binding.rightFlameout.visibility = View.GONE
+            animationOpenLock.start(false, 50, null)
+            animationCarDoor.start(false, 50, null)
+        }
+    }
 }

@@ -297,6 +297,7 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
         intent.putExtra("soundEffects",json)
         intent.setPackage("com.chinatsp.usercenter")
         activity?.startService(intent)
+        Timber.d("soundEffects intent json:$json")
     }
     private val offset: Float by lazy {
         if (VcuUtils.isAmplifier) 9f else 5f

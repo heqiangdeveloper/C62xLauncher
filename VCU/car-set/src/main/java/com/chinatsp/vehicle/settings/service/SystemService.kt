@@ -17,6 +17,7 @@ class SystemService : Service(), SystemDialogHelper.OnCountDownListener {
     private var type: String = ""
     private var contentStr = R.string.global_txt_close
     private var isShowing = true
+    private var cancelable = true//是否可以点击外面消失
     override fun onBind(p0: Intent?): IBinder? {
         return null
     }
@@ -30,36 +31,43 @@ class SystemService : Service(), SystemDialogHelper.OnCountDownListener {
             contentStr = R.string.global_txt_close
             waitTime = 1000 * 60 * 5
             setDialogTime()
+            cancelable = true
         } else if (!TextUtils.isEmpty(type) && type == "powerSupply") {
             contentStr = R.string.global_txt_power_supply
             waitTime = 100
             setDialogTime()
+            cancelable = true
         }else if (!TextUtils.isEmpty(type) && type == "leve1") {
             contentStr = R.string.global_txt_close
             waitTime = 1000 * 60 * 15
             setDialogTime()
+            cancelable = true
         }else if (!TextUtils.isEmpty(type) && type == "leve2") {
             contentStr = R.string.global_txt_close
             waitTime = 200
             setDialogTime()
+            cancelable = true
         }else if(!TextUtils.isEmpty(type) && type == "transportMode"){
             /**运输模式*/
             //Toast.showToast(applicationContext, getString(R.string.transport_mode), true)
             contentStr = R.string.transport_mode
             waitTime = 100
             setDialogTime()
+            cancelable = false
         }else if(!TextUtils.isEmpty(type) && type == "exhibitionMode"){
             /**展车模式*/
             //Toast.showToast(applicationContext, getString(R.string.exhibition_mode), true)
             contentStr = R.string.exhibition_mode
             waitTime = 100
             setDialogTime()
+            cancelable = true
         }else if(!TextUtils.isEmpty(type) && type == "exhibitionModeError"){
             /**展车模式切换失败*/
             //Toast.showToast(applicationContext, getString(R.string.exhibition_mode), true)
             contentStr = R.string.exhibition_mode_error
             waitTime = 100
             setDialogTime()
+            cancelable = true
         }
 
         return super.onStartCommand(intent, flags, startId)
@@ -77,10 +85,12 @@ class SystemService : Service(), SystemDialogHelper.OnCountDownListener {
         )
         val editDialog: SystemAlertDialog = dialogMaster.dialog
         editDialog.setDetailsContent(contentStr)
+        editDialog.setCancelable(cancelable)
         //6.0 TYPE_APPLICATION_OVERLAY
         editDialog.window?.setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY)
         editDialog.setOnDismissListener { isShowing = true }
         editDialog.show()
+        editDialog.setIsConform(cancelable)
         editDialog.window?.setLayout(740, 488)
         isShowing = false
 

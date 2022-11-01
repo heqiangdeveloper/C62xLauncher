@@ -80,10 +80,10 @@ class GlobalManager private constructor() : BaseManager() {
             }else if(0x2 == value){
                 /**展车模式*/
                 startDialogService("exhibitionMode")
-            }else if(0x4 == value){
-                /**展车模式切换失败*/
+            }/*else if(0x4 == value){
+                *//**展车模式切换失败*//*
                 startDialogService("exhibitionModeError")
-            }
+            }*/
 
             return true
         }

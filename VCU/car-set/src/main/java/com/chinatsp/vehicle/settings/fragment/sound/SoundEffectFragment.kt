@@ -26,6 +26,7 @@ import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.popupwindow.PopWindow
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragmentBinding>(),
@@ -318,6 +319,7 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
         intent.putExtra("soundEffects",json)
         intent.setPackage("com.chinatsp.usercenter")
         activity?.startService(intent)
+        Timber.d("soundEffects intent json:$json")
     }
     private val offset: Float by lazy {
         if (VcuUtils.isAmplifier) 9f else 5f

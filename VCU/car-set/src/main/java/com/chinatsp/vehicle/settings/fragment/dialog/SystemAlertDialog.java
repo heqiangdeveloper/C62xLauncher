@@ -16,6 +16,7 @@ import com.chinatsp.vehicle.settings.R;
 public class SystemAlertDialog extends AlertDialog {
     private View mLayoutView;
     private TextView detailsContent, hintConform;
+    private boolean cancelable;
 
     protected SystemAlertDialog(@NonNull Context context) {
         super(context);
@@ -54,5 +55,14 @@ public class SystemAlertDialog extends AlertDialog {
         if (detailsContent != null) {
             detailsContent.setText(stringId);
         }
+    }
+    public void setIsConform(boolean cancelable) {
+        this.cancelable = cancelable;
+        if(cancelable){
+            hintConform.setVisibility(View.VISIBLE);
+        }else{
+            hintConform.setVisibility(View.INVISIBLE);
+        }
+
     }
 }
