@@ -185,6 +185,10 @@ public class SearchDB extends SQLiteOpenHelper {
     public List<SearchBean> getData1(String str) {
         String table;
         String language;
+        List<SearchBean> data = new ArrayList<>();
+        if (str.contains("%")){
+            return data;
+        }
         if(FileUtils.getLanguage() ==1){
             table = SEARCH_TABLE;
             language = CHINESEFUNCTION;
@@ -200,7 +204,6 @@ public class SearchDB extends SQLiteOpenHelper {
                 s += str.charAt(i) + "%";
             }
         }
-        List<SearchBean> data = new ArrayList<>();
         List<SearchBean> lists = new ArrayList<>();
         try {
             String sql = "select distinct * from " + table + " where " + language + "  like '%" + s + "%'";

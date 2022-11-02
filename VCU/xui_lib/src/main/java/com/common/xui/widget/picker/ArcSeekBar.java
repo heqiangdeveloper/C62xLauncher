@@ -431,7 +431,7 @@ public class ArcSeekBar extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        int defaultValue = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 220, getDisplayMetrics());
+        int defaultValue = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 230, getDisplayMetrics());
         int defaultWidthValue = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 505, getDisplayMetrics());
 
         int width = measureHandler(widthMeasureSpec, defaultWidthValue);

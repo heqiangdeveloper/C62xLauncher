@@ -71,7 +71,7 @@ public class LauncherSearchActivity extends AppCompatActivity implements SearchA
     public void SearchText(View view) {
         //mEdittextSearchWord.setText(mEdittextSearchWord.getText().toString().charAt(mEdittextSearchWord.getText().length()-1));
         String str = mEdittextSearchWord.getText().toString();
-        if (!str.equals("")) {//判断输入框不为空，执行删除
+        if (!str.equals("")) {//判断输入框不为空，执行搜索
             searchEdit(str);
         }
     }
@@ -141,6 +141,7 @@ public class LauncherSearchActivity extends AppCompatActivity implements SearchA
             intent.putExtra("type", bean.getIntentInterface());
             intent.putExtra("INTENT_PATH", "LAUNCHER_SEARCH");
             startActivity(intent);
+
         }
         mEdittextSearchWord.setText("");
     }
@@ -186,7 +187,7 @@ public class LauncherSearchActivity extends AppCompatActivity implements SearchA
     }
 
     private void searchEdit(String searchStr) {
-        if (searchStr.length() > 0) {
+        if (searchStr.length() > 0 && !searchStr.matches("^[ ]*$")) {
             findViewById(R.id.search_hint).setVisibility(View.GONE);
             //List<SearchBean> beans = FileUtils.fuzzySearch(s.toString(),db.getData());
             if (!db.isTableExist() || db.countLocation() == 0) {

@@ -86,8 +86,9 @@ class SystemService : Service(), SystemDialogHelper.OnCountDownListener {
         val editDialog: SystemAlertDialog = dialogMaster.dialog
         editDialog.setDetailsContent(contentStr)
         editDialog.setCancelable(cancelable)
-        //6.0 TYPE_APPLICATION_OVERLAY
-        editDialog.window?.setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY)
+        //6.0 TYPE_APPLICATION_OVERLAY    TYPE_STATUS_BAR_PANEL
+        //editDialog.window?.setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY)
+        editDialog.window?.setType(2014)
         editDialog.setOnDismissListener { isShowing = true }
         editDialog.show()
         editDialog.setIsConform(cancelable)

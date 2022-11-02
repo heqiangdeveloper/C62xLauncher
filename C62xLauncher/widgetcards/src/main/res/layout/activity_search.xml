@@ -12,7 +12,7 @@
         android:layout_width="172px"
         android:layout_height="90px"
         android:onClick="clickBackBtn"
-        android:src="@drawable/card_btn_back"
+        android:src="@drawable/search_back_selector"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
