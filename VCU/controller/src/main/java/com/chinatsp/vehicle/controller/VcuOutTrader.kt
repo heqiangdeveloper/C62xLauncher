@@ -12,14 +12,12 @@ import android.os.Message
 import android.provider.Settings
 import android.text.TextUtils
 import com.chinatsp.vehicle.controller.bean.BaseCmd
-import com.chinatsp.vehicle.controller.logic.conditioner.ConditionerConstants
 import com.chinatsp.vehicle.controller.semantic.CmdVoiceModel
 import com.chinatsp.vehicle.controller.semantic.GsonUtil
 import com.chinatsp.vehicle.controller.semantic.NlpVoiceModel
 import com.chinatsp.vehicle.controller.semantic.VoiceJson
 import com.iflytek.autofly.voicecore.tts.TtsUtil
 import org.json.JSONObject
-import kotlin.random.Random
 
 /**
  * @author : luohong

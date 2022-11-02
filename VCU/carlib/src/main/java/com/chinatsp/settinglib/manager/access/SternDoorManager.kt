@@ -218,10 +218,10 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
     }
 
     private fun doControlHood(command: CarCmd, callback: ICmdCallback?) {
-        if (!VcuUtils.isSupportFunction(OffLine.ETRUNK)) {
-            command.message = "您的爱车不支持此功能！"
-            return
-        }
+//        if (!VcuUtils.isSupportFunction(OffLine.ETRUNK)) {
+//            command.message = "您的爱车不支持此功能！"
+//            return
+//        }
         if (Action.OPEN == command.action) {
             doTrunkAction(isTrunkOpened(), isTrunkOpening(), 1)
             command.message = "${command.slots?.name}已打开"
@@ -234,16 +234,23 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
     }
 
     private fun doControlTrunk(command: CarCmd, callback: ICmdCallback?) {
-        if (!VcuUtils.isSupportFunction(OffLine.ETRUNK)) {
-            command.message = "您的爱车不支持此功能！"
-            return
-        }
+//        if (!VcuUtils.isSupportFunction(OffLine.ETRUNK)) {
+//            command.message = "您的爱车不支持此功能！"
+//            return
+//        }
+        val signal = CarCabinManager.ID_AVN_TRUNK_RELEASE
         if (Action.OPEN == command.action) {
-            doTrunkAction(isTrunkOpened(), isTrunkOpening(), 1)
+//            doTrunkAction(isTrunkOpened(), isTrunkOpening(), 1)
+//        AVN request trunk release.
+//        0x0: Inactive   0x1: Not released   0x2: Released   0x3: Not used
+            val value = 0x2
+            writeProperty(signal, value, Origin.CABIN)
             command.message = "${command.slots?.name}已打开"
             callback?.onCmdHandleResult(command)
         } else if (Action.CLOSE == command.action) {
-            doTrunkAction(isTrunkClosed(), isTrunkClosing(), 0)
+//            doTrunkAction(isTrunkClosed(), isTrunkClosing(), 0)
+            val value = 0x1
+            writeProperty(signal, value, Origin.CABIN)
             command.message = "${command.slots?.name}已关闭"
             callback?.onCmdHandleResult(command)
         }
@@ -254,8 +261,7 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
             //1表示press,发起打开请求
             writeProperty(
                 CarCabinManager.ID_HU_BACKDOORSWITCH,
-                value, Origin.CABIN, VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL
-            )
+                value, Origin.CABIN, VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL)
         }
     }
 

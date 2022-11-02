@@ -1,6 +1,7 @@
 package com.chinatsp.settinglib
 
 import android.car.hardware.cabin.CarCabinManager
+import android.car.media.CarAudioManager
 
 /**
  * @author : luohong
@@ -39,10 +40,12 @@ object Constant {
      * 隐私模式
      */
     const val PRIVACY_MODE = 0x11
+
     /**
      * 熄屏
      */
     const val TURN_OFF_SCREEN = 0x21
+
     /**
      * 导航
      */
@@ -139,5 +142,26 @@ object Constant {
 
     val VCU_CUSTOM_KEYPAD: String
         get() = "com.chinatsp.vcu.actions.VCU_CUSTOM_KEYPAD"
+
+    val EQ_SIZE: Int
+        get() {
+            return if (!VcuUtils.isAmplifier) 9 else 5
+        }
+
+    val EQ_LEVELS: IntArray
+        get() {
+            val eqIdArray = mutableListOf(CarAudioManager.EQ_AUDIO_VOICE_LEVEL1,
+                CarAudioManager.EQ_AUDIO_VOICE_LEVEL2,
+                CarAudioManager.EQ_AUDIO_VOICE_LEVEL3,
+                CarAudioManager.EQ_AUDIO_VOICE_LEVEL4,
+                CarAudioManager.EQ_AUDIO_VOICE_LEVEL5)
+            if (!VcuUtils.isAmplifier) {
+                eqIdArray.add(CarAudioManager.EQ_AUDIO_VOICE_LEVEL6)
+                eqIdArray.add(CarAudioManager.EQ_AUDIO_VOICE_LEVEL7)
+                eqIdArray.add(CarAudioManager.EQ_AUDIO_VOICE_LEVEL8)
+                eqIdArray.add(CarAudioManager.EQ_AUDIO_VOICE_LEVEL9)
+            }
+            return eqIdArray.toIntArray()
+        }
 
 }

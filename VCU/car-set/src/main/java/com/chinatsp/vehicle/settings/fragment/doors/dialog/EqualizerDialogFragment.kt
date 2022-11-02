@@ -3,6 +3,7 @@ package com.chinatsp.vehicle.settings.fragment.doors.dialog
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.sound.EffectManager
@@ -52,7 +53,7 @@ class EqualizerDialogFragment :
         }
     }
    private fun initData(){
-       if (VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4, expect = true)) {
+       if (VcuUtils.isAmplifier) {
            xValue = listOf(
                activity?.resources?.getString(R.string.bass),
                activity?.resources?.getString(R.string.medium_bass),
@@ -74,6 +75,7 @@ class EqualizerDialogFragment :
            ) as List<String>
        }
    }
+
     private fun initViewDisplay() {
         val eqRadio = binding.soundEffectRadio
         if (VcuUtils.isAmplifier) {
@@ -88,11 +90,7 @@ class EqualizerDialogFragment :
     private fun addRadioLiveDataListener() {
         viewModel.currentEffect.observe(this) {
             doUpdateRadio(RadioNode.SYSTEM_SOUND_EFFECT, it, false)
-            if (it.data == 6) {
-                binding.smoothChartView.setEnableView(true)
-            } else {
-                binding.smoothChartView.setEnableView(false)
-            }
+            binding.smoothChartView.setEnableView(it.data == 6)
         }
     }
 
@@ -141,19 +139,9 @@ class EqualizerDialogFragment :
         viewModel.currentEffect.let {
             if (it.value!!.data == values.last()) {
                 val progress = binding.smoothChartView.obtainProgress()
-                var lev1 = 0
-                var lev2 = 0
-                var lev3 = 0
-                var lev4 = 0
-                var lev5 = 0
-                if (null != progress && progress.size == 5) {
-                    lev1 = progress[0]
-                    lev2 = progress[1]
-                    lev3 = progress[2]
-                    lev4 = progress[3]
-                    lev5 = progress[4]
+                if (null != progress && progress.size == Constant.EQ_SIZE) {
+                    manager.doSetEQ(it.value!!.data, progress)
                 }
-                manager.doSetEQ(it.value!!.data, lev1, lev2, lev3, lev4, lev5)
             }
         }
     }

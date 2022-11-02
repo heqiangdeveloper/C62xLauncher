@@ -531,15 +531,15 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
     private fun findColorSerialNumberByColorName(colorName: String): Int{
         return when (colorName) {
             "红色" -> 1
-            "紫色" -> 4
-            "冰蓝色" -> 9
-            "橙色" -> 12
-            "绿色" -> 20
-            "玫红色" -> 36
-            "果绿色" -> 42
-            "黄色" -> 50
-            "蓝色" -> 53
-            "白色" -> 60
+            "橙色" -> 9
+            "黄色" -> 17
+            "白色" -> 22
+            "绿色" -> 30
+            "果绿色" -> 36
+            "冰蓝色" -> 42
+            "蓝色" -> 50
+            "紫色" -> 56
+            "玫红色" -> 64
             else -> Constant.INVALID
         }
     }

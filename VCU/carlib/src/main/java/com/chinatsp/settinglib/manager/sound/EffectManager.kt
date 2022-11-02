@@ -338,15 +338,11 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
     }
 
 
-    fun doSetEQ(
-        mode: Int, lev1: Int = 0,
-        lev2: Int = 0, lev3: Int = 0,
-        lev4: Int = 0, lev5: Int = 0,
-    ) {
+    fun doSetEQ(mode: Int, eqValues: IntArray) {
         val manager = SettingManager.instance
         val node = RadioNode.SYSTEM_SOUND_EFFECT
         val eqModeId = findEqIdSerial(node, mode)
-        manager.setAudioEQ(eqModeId, mode, lev1, lev2, lev3, lev4, lev5)
+        manager.setAudioEQ(eqModeId, mode, eqValues)
     }
 
     private fun doSetEQ(mode: Int) {

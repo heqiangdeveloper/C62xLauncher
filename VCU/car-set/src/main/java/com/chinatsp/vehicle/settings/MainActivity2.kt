@@ -61,6 +61,11 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
         }
     }
 
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        window.setBackgroundDrawableResource(R.color.transparent);
+//        super.onCreate(savedInstanceState)
+//    }
+
     private fun observeLocation() {
         tabLocation.observe(this) { position ->
             manager.setTabSerial(position)

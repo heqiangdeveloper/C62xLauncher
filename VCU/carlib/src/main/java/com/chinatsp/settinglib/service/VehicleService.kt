@@ -88,12 +88,12 @@ class VehicleService : Service() {
                     val alto = jsonObject.getString("alto")//中音
                     val mid = jsonObject.getString("mid")//中低音
                     val bass = jsonObject.getString("bass")//低音
-                    effectManager.doSetEQ(6,
-                        Integer.valueOf(high),
-                        Integer.valueOf(alt),
-                        Integer.valueOf(alto),
-                        Integer.valueOf(mid),
-                        Integer.valueOf(bass))
+//                    effectManager.doSetEQ(6,
+//                        Integer.valueOf(high),
+//                        Integer.valueOf(alt),
+//                        Integer.valueOf(alto),
+//                        Integer.valueOf(mid),
+//                        Integer.valueOf(bass))
 
                     //音量平衡
                     val fadeValue = jsonObject.getString("fadeValue")

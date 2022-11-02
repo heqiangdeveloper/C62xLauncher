@@ -15,7 +15,12 @@
         <item name="android:windowNoTitle">false</item>
         <item name="windowActionBar">true</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/transparent</item>
 
+    </style>
+
+    <style name="vcu_main"  parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/transparent</item>
     </style>
 
     <style name="ActivityTheme" parent="XUITheme.Tablet.Big">

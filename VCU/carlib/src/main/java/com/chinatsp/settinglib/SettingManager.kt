@@ -968,27 +968,18 @@ class SettingManager private constructor() {
 
     }
 
-    fun setAudioEQ(
-        eqMode: Int, optionId: Int, lev1: Int = 0,
-        lev2: Int = 0, lev3: Int = 0,
-        lev4: Int = 0, lev5: Int = 0,
-    ) {
+    fun setAudioEQ(eqMode: Int, optionId: Int, eqValues: IntArray) {
         try {
             mCarAudioManager?.let {
                 it.eqMode = eqMode
                 val isCustom = RadioNode.SYSTEM_SOUND_EFFECT.get.values.last() == optionId
-                if (isCustom) {
-                    Timber.d("isCustom =" + isCustom)
-                    setAudioVoice(VOICE_LEVEL1, lev1)
-                    setAudioVoice(VOICE_LEVEL2, lev2)
-                    setAudioVoice(VOICE_LEVEL3, lev3)
-                    setAudioVoice(VOICE_LEVEL4, lev4)
-                    setAudioVoice(VOICE_LEVEL5, lev5)
-                }
                 val builder = StringBuilder()
                 builder.append("setAudioEQ mode:$eqMode, isCustom:$isCustom")
-                if (isCustom) {
-                    builder.append(", lev1:$lev1, lev2:$lev2, lev3:$lev3, lev4:$lev4, lev5:$lev5")
+                if (isCustom && Constant.EQ_SIZE == eqValues.size) {
+                    Constant.EQ_LEVELS.forEachIndexed { index, eqId ->
+                        setAudioVoice(eqId, eqValues[index])
+                        builder.append(", lev${eqId}:${eqValues[index]}")
+                    }
                 }
                 Timber.d(builder.toString())
             }
@@ -1293,14 +1284,6 @@ class SettingManager private constructor() {
             }
             return "$name $code"
         }
-
-        //0XFF
-        const val VOICE_LEVEL1 = CarAudioManager.EQ_AUDIO_VOICE_LEVEL1
-        const val VOICE_LEVEL2 = CarAudioManager.EQ_AUDIO_VOICE_LEVEL2
-        const val VOICE_LEVEL3 = CarAudioManager.EQ_AUDIO_VOICE_LEVEL3
-        const val VOICE_LEVEL4 = CarAudioManager.EQ_AUDIO_VOICE_LEVEL4
-        const val VOICE_LEVEL5 = CarAudioManager.EQ_AUDIO_VOICE_LEVEL5
-
     }
 
     init {

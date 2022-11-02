@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.library'
+    id 'kotlin-android'
 }
 
 android {
@@ -31,5 +32,7 @@ dependencies {
 //    compileOnly deps.material
 //    compileOnly deps.appcompat
 //    compileOnly deps.constraintlayout
+    compileOnly deps.kotlin
+
 
 }

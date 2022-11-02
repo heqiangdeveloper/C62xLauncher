@@ -1,6 +1,7 @@
 package com.chinatsp.settinglib.manager.access
 
 import android.car.hardware.CarPropertyValue
+import android.car.hardware.cabin.CarCabinManager
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IBaseListener
@@ -10,6 +11,10 @@ import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
+import com.chinatsp.vehicle.controller.ICmdCallback
+import com.chinatsp.vehicle.controller.annotation.Action
+import com.chinatsp.vehicle.controller.annotation.IPart
+import com.chinatsp.vehicle.controller.bean.CarCmd
 import java.lang.ref.WeakReference
 
 /**
@@ -142,39 +147,43 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
     }
 
 
-//    private fun doControlDoors(command: CarCmd, callback: ICmdCallback?) {
-//        if (IPart.HEAD == command.part) {
-//            if (Action.OPEN == command.action) {
-//                doSwitchHood(command, callback,true)
-//                return
-//            }
-//            if (Action.CLOSE == command.action) {
-//                doSwitchHood(command, callback,false)
-//                return
-//            }
-//        }
-//        if (IPart.TAIL == command.part) {
-//            if (Action.OPEN == command.action) {
-//                doSwitchTrunks(command, callback,true)
-//                return
-//            }
-//            if (Action.CLOSE == command.action) {
-//                doSwitchTrunks(command, callback,false)
-//                return
-//            }
-//        }
-//    }
-//
-//    private fun doSwitchHood(command: CarCmd, callback: ICmdCallback?, expect: Boolean) {
-//        val onOff = if (expect) "打开" else "关闭"
-//        command.message = "好的，${command.slots?.name}${onOff}了"
-//        callback?.onCmdHandleResult(command)
-//    }
-//
-//    private fun doSwitchTrunks(command: CarCmd, callback: ICmdCallback?, expect: Boolean) {
-//        val onOff = if (expect) "打开" else "关闭"
-//        command.message = "好的，${command.slots?.name}${onOff}了"
-//        callback?.onCmdHandleResult(command)
-//    }
+    private fun doControlDoors(command: CarCmd, callback: ICmdCallback?) {
+        if (IPart.HEAD == command.part) {
+            if (Action.OPEN == command.action) {
+                doSwitchHood(command, callback,true)
+                return
+            }
+            if (Action.CLOSE == command.action) {
+                doSwitchHood(command, callback,false)
+                return
+            }
+        }
+        if (IPart.TAIL == command.part) {
+            if (Action.OPEN == command.action) {
+                doSwitchTrunks(command, callback,true)
+                return
+            }
+            if (Action.CLOSE == command.action) {
+                doSwitchTrunks(command, callback,false)
+                return
+            }
+        }
+    }
+
+    private fun doSwitchHood(command: CarCmd, callback: ICmdCallback?, expect: Boolean) {
+        val onOff = if (expect) "打开" else "关闭"
+        command.message = "好的，${command.slots?.name}${onOff}了"
+        callback?.onCmdHandleResult(command)
+    }
+
+    private fun doSwitchTrunks(command: CarCmd, callback: ICmdCallback?, expect: Boolean) {
+        val onOff = if (expect) "打开" else "关闭"
+        command.message = "好的，${command.slots?.name}${onOff}了"
+//        AVN request trunk release.
+//        0x0: Inactive   0x1: Not released   0x2: Released   0x3: Not used
+        val value = if (expect) 0x2 else 0x1
+        writeProperty(CarCabinManager.ID_AVN_TRUNK_RELEASE, value, Origin.CABIN)
+        callback?.onCmdHandleResult(command)
+    }
 
 }

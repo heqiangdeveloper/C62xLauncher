@@ -3,6 +3,7 @@ package com.chinatsp.vehicle.settings.vm.sound
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.SettingManager
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
@@ -140,14 +141,16 @@ class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
     }
 
     fun getEffectValues(eqId: Int): IntArray {
-        val lev1 = getAudioVoice(SettingManager.VOICE_LEVEL1)
-        val lev2 = getAudioVoice(SettingManager.VOICE_LEVEL2)
-        val lev3 = getAudioVoice(SettingManager.VOICE_LEVEL3)
-        val lev4 = getAudioVoice(SettingManager.VOICE_LEVEL4)
-        val lev5 = getAudioVoice(SettingManager.VOICE_LEVEL5)
-        val effect = SettingManager.instance.getEQ()
-        Timber.d("getEffectValues effect:$effect, eqId:$eqId, lev1:$lev1, lev2:$lev2, lev3:$lev3, lev4:$lev4, lev5:$lev5")
-        return intArrayOf(lev1, lev2, lev3, lev4, lev5)
+//        val lev1 = getAudioVoice(SettingManager.VOICE_LEVEL1)
+//        val lev2 = getAudioVoice(SettingManager.VOICE_LEVEL2)
+//        val lev3 = getAudioVoice(SettingManager.VOICE_LEVEL3)
+//        val lev4 = getAudioVoice(SettingManager.VOICE_LEVEL4)
+//        val lev5 = getAudioVoice(SettingManager.VOICE_LEVEL5)
+        val eqValues = Constant.EQ_LEVELS.map { getAudioVoice(it) }.toIntArray()
+
+//        val effect = SettingManager.instance.getEQ()
+//        Timber.d("getEffectValues effect:$effect, eqId:$eqId, lev1:$lev1, lev2:$lev2, lev3:$lev3, lev4:$lev4, lev5:$lev5")
+        return eqValues
     }
 
     private fun getAudioVoice(id: Int): Int {
