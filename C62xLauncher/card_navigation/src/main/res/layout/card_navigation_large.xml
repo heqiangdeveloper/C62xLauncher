@@ -28,7 +28,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/daohzhongk"
+        android:src="@drawable/card_navi_map_foreground"
         />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -245,7 +245,7 @@
 
         <ImageView
             android:id="@+id/ivCardNaviExit"
-            android:src="@drawable/card_icon_close"
+            android:src="@drawable/card_common_button_close"
             android:layout_width="@dimen/card_icon_size_lv1"
             android:layout_height="@dimen/card_icon_size_lv1"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -293,7 +293,7 @@
 
         <ImageView
             android:id="@+id/ivCardNaviSearch"
-            android:src="@drawable/card_navi_icon_search"
+            android:src="@drawable/card_navi_btn_search"
             android:layout_width="@dimen/card_icon_size_lv1"
             android:layout_height="@dimen/card_icon_size_lv1"
             app:layout_constraintEnd_toStartOf="@id/ivCardNaviHome"
@@ -304,7 +304,7 @@
 
         <ImageView
             android:id="@+id/ivCardNaviHome"
-            android:src="@drawable/card_navi_icon_home"
+            android:src="@drawable/card_navi_btn_home"
             android:layout_width="@dimen/card_icon_size_lv1"
             android:layout_height="@dimen/card_icon_size_lv1"
             app:layout_constraintStart_toStartOf="parent"
@@ -314,7 +314,7 @@
             />
         <ImageView
             android:id="@+id/ivCardNaviCompany"
-            android:src="@drawable/card_navi_icon_company"
+            android:src="@drawable/card_navi_btn_company"
             android:layout_width="@dimen/card_icon_size_lv1"
             android:layout_height="@dimen/card_icon_size_lv1"
             app:layout_constraintStart_toEndOf="@id/ivCardNaviHome"

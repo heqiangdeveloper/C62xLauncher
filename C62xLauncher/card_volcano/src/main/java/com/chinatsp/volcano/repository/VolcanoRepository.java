@@ -62,7 +62,7 @@ public class VolcanoRepository {
 
         Map<String, String> queryParams = params.getQueryParams();
         Map<String, String> header = params.getHeader();
-
+        EasyLog.i(TAG, "loadFromServer "+source);
         volcanoApi.ApiSubscribe(iHomeCardApi.getHomeCards(queryParams, header), new BaseObserver<VolcanoResponse>() {
             @Override
             public void onNext(VolcanoResponse volcanoResponse) {

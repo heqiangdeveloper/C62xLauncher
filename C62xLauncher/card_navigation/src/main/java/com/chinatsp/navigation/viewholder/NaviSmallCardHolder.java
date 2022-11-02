@@ -30,6 +30,7 @@ public class NaviSmallCardHolder extends NaviCardHolder {
     private TextView tvCardNetworkErr;
     private View layoutCardNaviTBTStatus;
     private View layoutCardNaviCruiseStatus;
+    private View layoutCardNaviButtons;
 
     public NaviSmallCardHolder(@NonNull View rootView, NaviController controller) {
         this(rootView);
@@ -55,6 +56,7 @@ public class NaviSmallCardHolder extends NaviCardHolder {
 
         layoutCardNaviTBTStatus = rootView.findViewById(R.id.layoutCardNaviTBTStatus);
         layoutCardNaviCruiseStatus = rootView.findViewById(R.id.layoutCardNaviCruiseStatus);
+        layoutCardNaviButtons = rootView.findViewById(R.id.layoutCardNaviButtons);
 
         ivCardNaviSearch.setOnClickListener(mOnClickListener);
         ivCardNaviHome.setOnClickListener(mOnClickListener);
@@ -66,6 +68,7 @@ public class NaviSmallCardHolder extends NaviCardHolder {
     @Override
     public void refreshNavigation() {
         layoutCardNaviCruiseStatus.setVisibility(View.INVISIBLE);
+        layoutCardNaviButtons.setVisibility(View.INVISIBLE);
         layoutCardNaviTBTStatus.setVisibility(View.VISIBLE);
     }
 
@@ -74,6 +77,7 @@ public class NaviSmallCardHolder extends NaviCardHolder {
         NavigationUtil.logD(TAG + "refreshFreeMode");
         layoutCardNaviTBTStatus.setVisibility(View.INVISIBLE);
         layoutCardNaviCruiseStatus.setVisibility(View.VISIBLE);
+        layoutCardNaviButtons.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -85,6 +89,7 @@ public class NaviSmallCardHolder extends NaviCardHolder {
     public void showNetworkError() {
         ivCardNetworkErr.setVisibility(View.VISIBLE);
         tvCardNetworkErr.setVisibility(View.VISIBLE);
+        layoutCardNaviButtons.setVisibility(View.VISIBLE);
         layoutCardNaviCruiseStatus.setVisibility(View.GONE);
         layoutCardNaviTBTStatus.setVisibility(View.GONE);
     }

@@ -2,7 +2,7 @@ package launcher.base.service.platform;
 
 public class PlatformService implements IPlatformService{
 
-    private boolean mUseAutoMachine = false;
+    private boolean mUseAutoMachine = true;
 
     @Override
     public boolean isAosp() {

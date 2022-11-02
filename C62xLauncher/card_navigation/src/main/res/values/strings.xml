@@ -21,7 +21,7 @@
     <string name="tbt_direct_right_u_turn">右转掉头</string>
     <string name="tbt_direct_long_straight">顺行</string>
     <string name="tbt_direct_turn_left_island_on_r">绕环岛左转</string>
-    <string name="tbt_direct_turn_right_island_on_r">绕环岛左转</string>
+    <string name="tbt_direct_turn_right_island_on_r">绕环岛右转</string>
     <string name="tbt_direct_straight_island_on_r">绕环岛直行</string>
     <string name="tbt_direct_u_turn_island_on_r">绕环岛掉头</string>
     <string name="tbt_direct_turn_left_island_on_l">绕环岛左转</string>

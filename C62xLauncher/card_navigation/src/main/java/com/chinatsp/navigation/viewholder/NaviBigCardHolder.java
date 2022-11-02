@@ -26,25 +26,25 @@ import launcher.base.recyclerview.SimpleRcvDecoration;
 import launcher.base.utils.EasyLog;
 
 public class NaviBigCardHolder extends NaviCardHolder {
-    private ImageView ivCardNaviSearch;
-    private ImageView ivCardNaviHome;
-    private ImageView ivCardNaviCompany;
-    private ImageView ivCardNaviBigDefaultMap;
-    private View layoutCardNetworkError;
-    private View layoutCardNaviStatus;
-    private View layoutCardNaviCruise;
-    private View surfaceViewNavi;
-    private TextView tvCardNaviTurnRoadName;
-    private ImageView ivCardNaviTBTDirectIcon;
-    private TextView tvCardNaviTBTDirectDistance;
-    private TextView tvCardNaviTBTDirectDistanceUnit;
-    private TextView tvCardNaviTBTRemainDistance;
-    private TextView tvCardNaviTBTRemainTime;
-    private TextView tvCardNaviTBTArriveTime;
-    private ImageView ivCardNaviExit;
-    private RecyclerView rcvLaneInfo;
+    private final ImageView ivCardNaviSearch;
+    private final ImageView ivCardNaviHome;
+    private final ImageView ivCardNaviCompany;
+    private final ImageView ivCardNaviBigDefaultMap;
+    private final View layoutCardNetworkError;
+    private final View layoutCardNaviStatus;
+    private final View layoutCardNaviCruise;
+    private final View surfaceViewNavi;
+    private final TextView tvCardNaviTurnRoadName;
+    private final ImageView ivCardNaviTBTDirectIcon;
+    private final TextView tvCardNaviTBTDirectDistance;
+    private final TextView tvCardNaviTBTDirectDistanceUnit;
+    private final TextView tvCardNaviTBTRemainDistance;
+    private final TextView tvCardNaviTBTRemainTime;
+    private final TextView tvCardNaviTBTArriveTime;
+    private final ImageView ivCardNaviExit;
+    private final RecyclerView rcvLaneInfo;
     private LaneListAdapter mLaneListAdapter;
-    private boolean enableTotalLaneShow = false;
+    private final boolean enableTotalLaneShow = false;
 
     public NaviBigCardHolder(@NonNull View rootView, NaviController controller) {
         this(rootView);

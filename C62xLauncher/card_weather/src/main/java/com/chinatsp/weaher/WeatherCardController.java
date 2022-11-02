@@ -24,6 +24,7 @@ public class WeatherCardController {
 
     void requestWeatherInfo() {
         WeatherUtil.logD("requestWeatherInfo");
+        mCardView.showLoading();
         mWeatherRepository.requestRefreshWeatherInfo(new IOnRequestListener<List<WeatherInfo>>() {
             @Override
             public void onSuccess(List<WeatherInfo> weatherInfoList) {
@@ -33,6 +34,7 @@ public class WeatherCardController {
                 } else {
                     mCardView.refreshData(weatherInfoList);
                 }
+                mCardView.hideLoading();
             }
 
             @Override
@@ -40,6 +42,7 @@ public class WeatherCardController {
                 WeatherUtil.logE("requestWeatherInfo onFail: " + msg);
                 if (mCardView != null) {
                     mCardView.refreshDefault();
+                    mCardView.hideLoading();
                 }
             }
         });

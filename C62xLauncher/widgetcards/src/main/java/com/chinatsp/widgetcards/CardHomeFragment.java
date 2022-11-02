@@ -42,6 +42,7 @@ public class CardHomeFragment extends BaseFragment {
     private int mCardDividerWidth;
     private boolean mInitialed = false;
 
+
     @Override
     protected void initViews(View rootView) {
         mCardDividerWidth = getResources().getDimensionPixelOffset(R.dimen.card_divider_width);
@@ -69,7 +70,46 @@ public class CardHomeFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        EasyLog.d(TAG, "onResume");
         mCardsAdapter.notifyItemChanged(0);
+        if (mInitialed) {
+            collapseControlViewsOnResume();
+        }
+        mInitialed = true;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EasyLog.d(TAG, "onStop");
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        EasyLog.d(TAG, "onPause");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        EasyLog.d(TAG, "onDetach");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EasyLog.d(TAG, "onStart");
+    }
+
+    private void collapseControlViewsOnResume() {
+        // 在已初始化的情况下, 检查是否显示了控件组, 如果显示了就收起
+        boolean showingControlViews = isShowingControlViews();
+        EasyLog.d(TAG, "collapseControlViewsOnResume , showingControlViews:"+showingControlViews);
+        if (showingControlViews) {
+            scrollToFirstCardSmooth();
+        }
     }
 
     private void initObservers() {
@@ -155,6 +195,17 @@ public class CardHomeFragment extends BaseFragment {
         CardScrollUtil.scroll(layoutManager, 1);
     }
 
+    /**
+     * 当控件组显示时, 如果触发了控件组之外的交互动作, 就平滑的收起控件组.
+     */
+    private void scrollToFirstCardSmooth() {
+        if (mRcvCards != null) {
+            // 600: recyclerView的第1项的x坐标.
+            // 当列表向左滑动600时, 此处实际上的作用是收起第一项
+            mRcvCards.smoothScrollBy(600,0);
+        }
+    }
+
     private void initCardsRcv(View rootView) {
         EasyLog.d(TAG, "initCardsRcv");
         mRcvCards = rootView.findViewById(R.id.rcvCards);
@@ -199,9 +250,9 @@ public class CardHomeFragment extends BaseFragment {
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    boolean canScrollHorizontallyLeft = recyclerView.canScrollHorizontally(-1);
-                    EasyLog.d(TAG, "onScrollStateChanged , in left side:" + canScrollHorizontallyLeft);
-                    onScrollLeftSide(!canScrollHorizontallyLeft);
+                    boolean showingControlViews = isShowingControlViews();
+                    EasyLog.d(TAG, "onScrollStateChanged , showingControlViews:" + showingControlViews);
+                    onScrollLeftSide(showingControlViews);
                 }
             }
         });
@@ -210,22 +261,24 @@ public class CardHomeFragment extends BaseFragment {
     /**
      * 是否已滑动到最左边
      *
-     * @param leftSide true: 已到最左边, 即显示了控件组
+     * @param showingControlViews true: 已到最左边, 即显示了控件组
      */
-    private void onScrollLeftSide(boolean leftSide) {
+    private void onScrollLeftSide(boolean showingControlViews) {
         View viewRightSpace = mRootView.findViewById(R.id.viewRight);
-        viewRightSpace.setVisibility(leftSide ? View.VISIBLE : View.GONE);
-        if (leftSide) {
+        viewRightSpace.setVisibility(showingControlViews ? View.VISIBLE : View.GONE);
+        if (showingControlViews) {
             viewRightSpace.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     EasyLog.d(TAG, "Click Another");
-                    // 600: recyclerView的第1项的x坐标.
-                    // 当列表向左滑动600时, 此处实际上的作用是收起第一项
-                    mRcvCards.smoothScrollBy(600,0);
+                    scrollToFirstCardSmooth();
                 }
             });
         }
+    }
+
+    private boolean isShowingControlViews() {
+        return !mRcvCards.canScrollHorizontally(-1);
     }
 
     @Override

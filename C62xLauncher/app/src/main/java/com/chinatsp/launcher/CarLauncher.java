@@ -155,6 +155,18 @@ public class CarLauncher extends AppCompatActivity implements OnGestureAction {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        EasyLog.d(TAG, "onPause");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        EasyLog.d(TAG, "onRestart");
+    }
+
+    @Override
     public void goAppPanel() {
         startActivity(new Intent(CarLauncher.this, ApppanelActivity.class));
     }
