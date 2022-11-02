@@ -7,6 +7,7 @@ import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.sound.EffectManager
 import com.chinatsp.settinglib.optios.RadioNode
+import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.IRadioAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.EqualizerDialogFragmetBinding
@@ -25,17 +26,12 @@ class EqualizerDialogFragment :
     private val manager: EffectManager
         get() = EffectManager.instance
 
-    private val xValue: List<String>
-        get() = listOf(activity?.resources?.getString(R.string.treble),
-            activity?.resources?.getString(R.string.medium_treble),
-            activity?.resources?.getString(R.string.medium),
-            activity?.resources?.getString(R.string.medium_bass),
-            activity?.resources?.getString(R.string.bass)) as List<String>
+    private lateinit var xValue: List<String>
 
     private val offset: Float by lazy {
         if (VcuUtils.isAmplifier) 9f else 5f
     }
-    private lateinit var vList:List<Float>
+    private lateinit var vList: List<Float>
     private var value by Delegates.notNull<Int>()
 
     override fun getLayoutId(): Int {
@@ -43,7 +39,7 @@ class EqualizerDialogFragment :
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-
+        initData()
         initRadioOption()
         addRadioLiveDataListener()
         setRadioListener()
@@ -55,7 +51,29 @@ class EqualizerDialogFragment :
             this.dismiss()
         }
     }
-
+   private fun initData(){
+       if (VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4, expect = true)) {
+           xValue = listOf(
+               activity?.resources?.getString(R.string.bass),
+               activity?.resources?.getString(R.string.medium_bass),
+               activity?.resources?.getString(R.string.medium),
+               activity?.resources?.getString(R.string.medium_treble),
+               activity?.resources?.getString(R.string.treble)
+           ) as List<String>
+       } else {
+           xValue = listOf(
+               activity?.resources?.getString(R.string.sixty_five),
+               activity?.resources?.getString(R.string.two_hundred_fifty),
+               activity?.resources?.getString(R.string.seven_hundred_fifty),
+               activity?.resources?.getString(R.string.one_thousand_three_hundred),
+               activity?.resources?.getString(R.string.two_thousand_three_hundred),
+               activity?.resources?.getString(R.string.three_thousand_five_hundred),
+               activity?.resources?.getString(R.string.six_thousand_five_hundred),
+               activity?.resources?.getString(R.string.eight_thousand_five_hundred),
+               activity?.resources?.getString(R.string.eighteen_thousand)
+           ) as List<String>
+       }
+   }
     private fun initViewDisplay() {
         val eqRadio = binding.soundEffectRadio
         if (VcuUtils.isAmplifier) {
@@ -161,6 +179,15 @@ class EqualizerDialogFragment :
             doSendCustomEqValue()
         }
 //        onPostSelected(RadioNode.SYSTEM_SOUND_EFFECT, viewModel.currentEffect.value!!)
+
+    }
+
+    override fun getWidthRatio(): Float {
+        return if (VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4, expect = true)) {
+            1000f / 1920f
+        }else{
+            1300f / 1920f
+        }
     }
 }
 

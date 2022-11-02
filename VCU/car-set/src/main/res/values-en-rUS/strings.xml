@@ -344,6 +344,15 @@ IACC会优先通过识别⻋道两侧清晰的⻋道线进⾏横向辅助控制�
     <string name="medium">medium</string>
     <string name="medium_bass">medium bass</string>
     <string name="bass">bass</string>
+    <string name="sixty_five">65</string>
+    <string name="two_hundred_fifty">250</string>
+    <string name="seven_hundred_fifty">750</string>
+    <string name="one_thousand_three_hundred">1300</string>
+    <string name="two_thousand_three_hundred">2300</string>
+    <string name="three_thousand_five_hundred">3500</string>
+    <string name="six_thousand_five_hundred">6500</string>
+    <string name="eight_thousand_five_hundred">8500</string>
+    <string name="eighteen_thousand">18000</string>
     <string name="default＿">Default</string>
     <string name="classical">Classical</string>
     <string name="pop">Pop</string>
