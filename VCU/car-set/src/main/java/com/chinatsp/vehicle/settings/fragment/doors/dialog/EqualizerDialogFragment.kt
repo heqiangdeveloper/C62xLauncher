@@ -8,7 +8,6 @@ import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.sound.EffectManager
 import com.chinatsp.settinglib.optios.RadioNode
-import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.IRadioAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.EqualizerDialogFragmetBinding
@@ -171,7 +170,7 @@ class EqualizerDialogFragment :
     }
 
     override fun getWidthRatio(): Float {
-        return if (VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4, expect = true)) {
+        return if (VcuUtils.isAmplifier) {
             1000f / 1920f
         }else{
             1300f / 1920f

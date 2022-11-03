@@ -283,7 +283,7 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
     override fun onPause() {
         super.onPause()
         val values = viewModel.getEffectValues(6).toList()
-        val toList = values.map {
+        val toList = values.map {//均衡器
             var value = it.toFloat() - 1
             if (value < 0f) {
                 value = 0f
@@ -296,25 +296,16 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
         val systemHint = getSwitchManager().doGetSwitchOption(SwitchNode.TOUCH_PROMPT_TONE)?.data//系统提示音
         val speedVolumeCompensation = getSwitchManager().doGetSwitchOption(VoiceManager.instance.volumeSpeedSwitch)?.data//速度音量补偿
         val loudnessControl = getSwitchManager().doGetSwitchOption(SwitchNode.AUDIO_SOUND_LOUDNESS)?.data//响度控制
-        val navigationMixing = getRadioManager().doGetRadioOption(RadioNode.NAVI_AUDIO_MIXING)//导航混音
+        val navigationMixing = getRadioManager().doGetRadioOption(RadioNode.NAVI_AUDIO_MIXING)?.data//导航混音
         val fadeValue = EffectManager.instance.audioFade()//音量补偿-逐渐消失值
         val balanceValue = EffectManager.instance.getAudioBalance()//音量补偿-平衡音量
-        val high = toList[0]//均衡器自定义-高音
-        val alt = toList[1]//均衡器自定义-中高音
-        val alto = toList[2]//均衡器自定义-中音
-        val mid = toList[3]//均衡器自定义-中低音
-        val bass = toList[4]//均衡器自定义-低音
         val json = "{\"systemHint\":\""+systemHint+"\",\"speedVolumeCompensation\":\""+
                 speedVolumeCompensation+"\",\"loudnessControl\":\""+
                 loudnessControl+"\",\"navigationMixing\":\""+
                 navigationMixing+"\",\"fadeValue\":\""+
                 fadeValue+"\",\"balanceValue\":\""+
-                balanceValue+"\",\"high\":\""+
-                high+"\",\"alt\":\""+
-                alt+"\",\"alto\":\""+
-                alto+"\",\"mid\":\""+
-                mid+"\",\"bass\":\""+
-                bass+"\"}"
+                balanceValue+"\",\"equalizerValue\":\""+
+                toList+"\"}"
         intent.putExtra("app", "com.chinatsp.vehicle.settings")
         intent.putExtra("soundEffects",json)
         intent.setPackage("com.chinatsp.usercenter")
