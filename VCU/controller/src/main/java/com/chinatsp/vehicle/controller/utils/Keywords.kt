@@ -6,12 +6,24 @@ interface Keywords {
         const val OPEN = "OPEN"
         const val LAUNCH = "LAUNCH"
         const val CLOSE = "CLOSE"
+        const val QUERY = "QUERY"
         const val CHAIR = "座椅"
         const val HEAT = "加热"
         const val KNEAD = "按摩"
         const val VENTILATE = "通风"
         const val CHAIR_HEAT = "座椅加热"
         const val CHAIR_VENTILATE = "座椅通风"
+
+        const val ENDURANCE_MILEAGE = "续航里程"
+
+        const val MAINTAIN_MILEAGE = "保养"
+
+        const val AVERAGE_FUEL_CONSUMPTION = "平均油耗"
+
+        const val FUEL_CONSUMPTION = "油耗"
+
+
+
 
         /**
          * 操作指令，表示为打开的操作数组

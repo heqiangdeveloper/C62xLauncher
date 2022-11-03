@@ -1,9 +1,7 @@
 package com.chinatsp.vehicle.controller.producer
 
-import com.chinatsp.vehicle.controller.annotation.Action
-import com.chinatsp.vehicle.controller.annotation.ICar
-import com.chinatsp.vehicle.controller.annotation.IPart
-import com.chinatsp.vehicle.controller.annotation.Model
+import android.text.TextUtils
+import com.chinatsp.vehicle.controller.annotation.*
 import com.chinatsp.vehicle.controller.bean.CarCmd
 import com.chinatsp.vehicle.controller.semantic.Slots
 import com.chinatsp.vehicle.controller.utils.Keywords
@@ -18,7 +16,7 @@ import com.chinatsp.vehicle.controller.utils.Keywords.Companion.WIPERS
  * @desc   : 方向盘、雨刮等相关命令处理
  * @version: 1.0
  */
-class OtherCommandProducer: ICommandProducer {
+class OtherCommandProducer : ICommandProducer {
 
     fun attemptCommand(slots: Slots): CarCmd? {
         var command: CarCmd? = null
@@ -31,6 +29,75 @@ class OtherCommandProducer: ICommandProducer {
         return command
     }
 
+    fun attemptVehicleInfoCommand(slots: Slots): CarCmd? {
+        var command: CarCmd? = null
+        if (TextUtils.isEmpty(slots.name)) {
+            return null
+        }
+        if (Keywords.QUERY != slots.operation) {
+            return null
+        }
+        if (null == command) {
+            command = attemptEnduranceCommand(slots)
+        }
+        if (null == command) {
+            command = attemptMaintainCommand(slots)
+        }
+        if (null == command) {
+            command = attemptFuelConsumptionCommand(slots)
+        }
+        return command
+    }
+
+    /**
+     * 油耗
+     */
+    private fun attemptFuelConsumptionCommand(slots: Slots): CarCmd? {
+        if (Keywords.AVERAGE_FUEL_CONSUMPTION == slots.name) {
+            val command = CarCmd(action = Action.QUERY_INFO, model = Model.GLOBAL)
+            command.car = ICar.WIPER
+            command.slots = slots
+            command.act = IAct.AVERAGE_FUEL_CONSUMPTION
+            return command
+        }
+        if (Keywords.FUEL_CONSUMPTION == slots.name) {
+            val command = CarCmd(action = Action.QUERY_INFO, model = Model.GLOBAL)
+            command.car = ICar.WIPER
+            command.slots = slots
+            command.act = IAct.INSTANTANEOUS_FUEL_CONSUMPTION
+            return command
+        }
+        return null
+    }
+
+    /**
+     * 保养里程
+     */
+    private fun attemptMaintainCommand(slots: Slots): CarCmd? {
+        if (Keywords.MAINTAIN_MILEAGE == slots.name) {
+            val command = CarCmd(action = Action.QUERY_INFO, model = Model.GLOBAL)
+            command.car = ICar.WIPER
+            command.slots = slots
+            command.act = IAct.MAINTAIN_MILEAGE
+            return command
+        }
+        return null
+    }
+
+    /**
+     * 续航里程
+     */
+    private fun attemptEnduranceCommand(slots: Slots): CarCmd? {
+        if (Keywords.ENDURANCE_MILEAGE == slots.name) {
+            val command = CarCmd(action = Action.QUERY_INFO, model = Model.GLOBAL)
+            command.car = ICar.WIPER
+            command.slots = slots
+            command.act = IAct.ENDURANCE_MILEAGE
+            return command
+
+        }
+        return null
+    }
 
     private fun attemptWiperCommand(slots: Slots): CarCmd? {
         if (isContains(slots.name, WIPERS)) {

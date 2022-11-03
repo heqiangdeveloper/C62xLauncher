@@ -17,6 +17,7 @@ import com.chinatsp.settinglib.manager.lamp.LampManager
 import com.chinatsp.settinglib.manager.sound.AudioManager
 import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.ICmdCallback
+import com.chinatsp.vehicle.controller.annotation.IAct
 import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.controller.annotation.Model
 import com.chinatsp.vehicle.controller.bean.AirCmd
@@ -182,6 +183,38 @@ class GlobalManager private constructor() : BaseManager() {
             PanoramaCommandConsumer(this).consumerCommand(cmd, callback)
         } else if (Model.AUTO_PARK == modelSerial) {
             sendAutoParkCommand(cmd)
+        } else if (Model.GLOBAL == modelSerial) {
+            doConsumerCommand(cmd, callback)
+        }
+    }
+
+    private fun doConsumerCommand(command: CarCmd, callback: ICmdCallback?) {
+        if (IAct.ENDURANCE_MILEAGE == command.act) {
+            val value = readIntProperty(CarCabinManager.ID_ENDURANCE_MILEAGE, Origin.CABIN)
+            command.message = "您的爱车${command.slots?.name}为${value}千米"
+            callback?.onCmdHandleResult(command)
+            return
+        }
+        if (IAct.MAINTAIN_MILEAGE == command.act) {
+            val value = readIntProperty(CarCabinManager.ID_REMAIN_MAINTAIN_MILEAGE, Origin.CABIN)
+            command.message = "您的爱车${command.slots?.name}为${value}千米"
+            callback?.onCmdHandleResult(command)
+            return
+        }
+        if (IAct.AVERAGE_FUEL_CONSUMPTION == command.act) {
+            //本次行程平均油耗
+            val value = readFloatProperty(CarCabinManager.ID_IP_AFE_AFTER_IGN_ON, Origin.CABIN)
+            //长期行程平均油耗
+            val value2 = readFloatProperty(CarCabinManager.ID_IP_ALLAVGFUELCONSUMPTION, Origin.CABIN)
+            command.message = "您的爱车本次行程平均油耗为每百公里${value}升，长期平均油耗为每百公里${value2}升"
+            callback?.onCmdHandleResult(command)
+            return
+        }
+        if (IAct.INSTANTANEOUS_FUEL_CONSUMPTION == command.act) {
+            val value = readFloatProperty(CarCabinManager.ID_IP_REALFUELCONSUMPTION, Origin.CABIN)
+            command.message = "您的爱车${command.slots?.name}为每百公里${value}升"
+            callback?.onCmdHandleResult(command)
+            return
         }
     }
 

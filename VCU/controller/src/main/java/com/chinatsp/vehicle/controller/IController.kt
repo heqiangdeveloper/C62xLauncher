@@ -17,18 +17,6 @@ interface IController: ICommandProducer, Keywords {
     val tag: String
         get() = this::class.java.simpleName
 
-//    fun isMatch(arrays: Array<String>, serial: String?): Boolean {
-//        return null != serial && arrays.contains(serial)
-//    }
-//
-//    fun isMatch(arrays: Array<String>, serial1: String?, serial2: String?): Boolean {
-//        return isMatch(arrays, serial1) || isMatch(arrays, serial2)
-//    }
-//
-//    fun isLikeJson(value: String): Boolean {
-//        return value.startsWith("{") && value.endsWith("}")
-//    }
-
     fun doHandleUnknownHint(callback: ICmdCallback?) {
         callback?.run {
             val command = BaseCmd()
@@ -38,4 +26,9 @@ interface IController: ICommandProducer, Keywords {
     }
 
     fun doVoiceController(controller: IOuterController, callback: ICmdCallback, model: NlpVoiceModel): Boolean
+
+    fun doVoiceVehicleQuery(controller: IOuterController, callback: ICmdCallback, model: NlpVoiceModel): Boolean {
+        return true
+    }
+
 }

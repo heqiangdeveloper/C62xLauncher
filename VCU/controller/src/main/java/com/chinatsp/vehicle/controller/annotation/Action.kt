@@ -19,7 +19,8 @@ import androidx.annotation.IntDef
     Action.FIXED,
     Action.OPTION,
     Action.TURN_ON,
-    Action.TURN_OFF
+    Action.TURN_OFF,
+    Action.QUERY_INFO
 )
 @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
 annotation class Action {
@@ -77,5 +78,10 @@ annotation class Action {
          * 关闭 压缩机 （空调）
          */
         const val TURN_OFF = 0x1 shl 10
+
+        /**
+         * 信息查询
+         */
+        const val QUERY_INFO = 0x1 shl 11
     }
 }

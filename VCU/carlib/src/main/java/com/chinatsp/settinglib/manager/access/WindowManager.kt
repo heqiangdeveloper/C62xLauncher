@@ -171,7 +171,8 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
             return
         }
         if (ICar.LOUVER == command.car) {
-            doControlLouverLevel(command, callback)
+//            doControlLouverLevel(command, callback)
+            doControlLouverSwitch(command, callback)
             return
         }
         if (ICar.WIPER == command.car) {
@@ -200,12 +201,10 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
             mask = IPart.TAIL
             var bStatus = mask != (mask and command.part)
             if (!fStatus) {
-                fStatus =
-                    writeProperty(CarCabinManager.ID_AVN_FRONT_WASHER_WIPER, value, Origin.CABIN)
+                fStatus = writeProperty(CarCabinManager.ID_AVN_FRONT_WASHER_WIPER, value, Origin.CABIN)
             }
             if (!bStatus) {
-                bStatus =
-                    writeProperty(CarCabinManager.ID_AVN_REAR_WASHER_WIPER, value, Origin.CABIN)
+                bStatus = writeProperty(CarCabinManager.ID_AVN_REAR_WASHER_WIPER, value, Origin.CABIN)
             }
             val message = if (fStatus or bStatus) "好的, ${command.slots?.name}${actionName}了"
             else "好的, ${command.slots?.name}已经${actionName}了"
@@ -304,29 +303,29 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
     }
 
     private fun updateLouverSwitch(status: Boolean, @IPart part: Int) {
-//        Glass Operation state,天窗运行状态，天窗采集到的Glass 开关状态OHC开关状态
-//        0x0: Idle  Not pressed  0x1: Manual  open  0x2: Manual  close
-//        0x3: Auto  open  0x4: Auto  close/Tilt down  0x5: Auto tilt open
-//        0x6: Auto tilt close（Reserved ） 0x7: Full close（Reserved ）
-//        0x8: Tilte（Reserved ） 0x9: Open position 1（Reserved ）
-//        0xA: Open position 2（Reserved ） 0xB: Open position 3（Reserved ）
-//        0xC: Open position 4（Reserved ）0xD: Open manual（Reserved ）
-//        0xE~0xF: Not used
-        val louverValue = if (status) 0x3 else 0x4
-//        Rollo Operation state,遮阳帘运行状态
-//        0x0: Idle / Not pressed  0x1: Manual open  0x2: Auto open
-//        0x3: Manual close  0x4: Auto close  0x5~0x7: Reserved
-        val loveLucyValue = if (status) 0x2 else 0x4
+//        控制天窗全部打开[0x1,-1,0x0,0xf]
+//        0x0: Inactive
+//        0x1: No command
+//        0x2: global close
+//        0x3: global open
+//        0x4: global tilt
+//        0x5: stop
+//        0x6: global close glass only
+//        0x7: global open Rollo only
+//        0x8~0xF: reserved
+        val signal = CarCabinManager.ID_AVN_BCM_COM_REQ_RCM
         if (IPart.SKYLIGHT == part) {
             if (status) {
-                writeProperty(CarCabinManager.ID_BCM_ROLLO_BTN_STS, loveLucyValue, Origin.CABIN)
+                writeProperty(signal, 0x3, Origin.CABIN)
+            } else {
+                writeProperty(signal, 0x6, Origin.CABIN)
             }
-            writeProperty(CarCabinManager.ID_BCM_SUNROOF_BTN_STS, louverValue, Origin.CABIN)
         } else if (IPart.LOVE_LUCY == part) {
-            if (!status) {
-                writeProperty(CarCabinManager.ID_BCM_SUNROOF_BTN_STS, louverValue, Origin.CABIN)
+            if (status) {
+                writeProperty(signal, 0x7, Origin.CABIN)
+            } else {
+                writeProperty(signal, 0x2, Origin.CABIN)
             }
-            writeProperty(CarCabinManager.ID_BCM_ROLLO_BTN_STS, loveLucyValue, Origin.CABIN)
         }
     }
 

@@ -13,7 +13,11 @@ import androidx.annotation.IntDef
     IAct.HEAT,
     IAct.COLD,
     IAct.KNEAD,
-    IAct.TILT
+    IAct.TILT,
+    IAct.ENDURANCE_MILEAGE,
+    IAct.MAINTAIN_MILEAGE,
+    IAct.AVERAGE_FUEL_CONSUMPTION,
+    IAct.INSTANTANEOUS_FUEL_CONSUMPTION
 )
 @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
 annotation class IAct {
@@ -42,5 +46,26 @@ annotation class IAct {
          * 倾斜度
          */
         const val TILT = 0x04
+
+        /**
+         * 续航里程
+         */
+        const val ENDURANCE_MILEAGE = 0x05
+
+        /**
+         * 保养里程
+         */
+        const val MAINTAIN_MILEAGE = 0x06
+
+        /**
+         * 平均油耗
+         */
+        const val AVERAGE_FUEL_CONSUMPTION = 0x07
+
+        /**
+         * 瞬时油耗
+         */
+        const val INSTANTANEOUS_FUEL_CONSUMPTION = 0x08
+
     }
 }

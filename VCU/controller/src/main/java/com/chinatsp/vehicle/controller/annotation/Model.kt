@@ -14,7 +14,7 @@ import java.lang.annotation.RetentionPolicy
  */
 @SuppressLint("UniqueConstants")
 @IntDef(
-    Model.INVALID,
+    Model.INVALID, Model.GLOBAL,
     Model.ACCESS_DOOR, Model.ACCESS_WINDOW, Model.ACCESS_STERN, Model.ACCESS_MIRROR,
     Model.LIGHT_COMMON, Model.LIGHT_AMBIENT, Model.LIGHT_SCREEN,
     Model.AUDIO_SOUND, Model.AUDIO_EFFECT,
@@ -25,6 +25,7 @@ import java.lang.annotation.RetentionPolicy
 annotation class Model {
     companion object {
         private const val MASK = 0xF shl 28
+        const val GLOBAL = 0x1 shl 28
         const val ACCESS = 0x2 shl 28
         const val LIGHT = 0x3 shl 28
         const val AUDIO = 0x4 shl 28

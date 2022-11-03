@@ -156,6 +156,10 @@ abstract class BaseManager : IManager {
         return signalService.readIntProperty(id, origin, area)
     }
 
+    fun readFloatProperty(id: Int, origin: Origin, area: Area = Area.GLOBAL): Float {
+        return signalService.readFloatProperty(id, origin, area)
+    }
+
     fun readIntProperty(id: Int, origin: Origin, areaValue: Int): Int {
         return signalService.readIntProperty(id, origin, areaValue)
     }

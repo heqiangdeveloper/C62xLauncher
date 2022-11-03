@@ -464,6 +464,17 @@ class SettingManager private constructor() {
         return result
     }
 
+    private fun readCabinFloatValue(id: Int, areaValue: Int): Float {
+        var result = Constant.DEFAULT.toFloat()
+        try {
+            result = mCarCabinManager?.getFloatProperty(id, areaValue) ?: result
+            Timber.d("readCabinFloatValue propertyId:$id, result:$result")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return result
+    }
+
     private fun readHvacIntValue(id: Int, areaValue: Int): Int {
         var result = Constant.DEFAULT
         try {
@@ -504,6 +515,22 @@ class SettingManager private constructor() {
             result = readCabinIntValue(id, areaValue)
         } else if (Origin.HVAC === origin) {
             result = readHvacIntValue(id, areaValue)
+        }
+        return result
+    }
+
+    fun readFloatProperty(id: Int, origin: Origin, area: Area): Float {
+        return readFloatProperty(id, origin, area.id)
+    }
+
+    private fun readFloatProperty(id: Int, origin: Origin, areaValue: Int): Float {
+        var result = Constant.DEFAULT.toFloat()
+        if (!status) {
+            Timber.d("readIntProperty propertyId:$id, origin:$origin, connectService: false!")
+            return result
+        }
+        if (Origin.CABIN === origin) {
+            result = readCabinFloatValue(id, areaValue)
         }
         return result
     }

@@ -2,6 +2,7 @@ package com.chinatsp.vehicle.settings.fragment
 
 import android.graphics.PixelFormat
 import android.os.Bundle
+import android.os.Handler
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.vcu.kanzi.KanZiKeys
@@ -49,12 +50,24 @@ class CommonlyFragment : BaseTabFragment<KanziViewModel, AccessFragmentBinding>(
     private fun setClickListener() {
         binding.closeWindow.setOnClickListener {
             GlobalManager.instance.doSwitchWindow(false)
-            val controller = mDataFeeder?.kanziController
-            val keyObject = kzDataTypeInt(KanZiKeys.Trunk)
-            controller?.setDataObjectValue(keyObject, 1)
+            mDataFeeder?.kanziController?.let {
+                val value = 0
+                sendDoubleValue(it, KanZiKeys.LFWindowUpDown, value)
+                sendDoubleValue(it, KanZiKeys.LRWindowUpDown, value)
+                sendDoubleValue(it, KanZiKeys.RFWindowUpDown, value)
+                sendDoubleValue(it, KanZiKeys.RRWindowUpDown, value)
+            }
+
         }
         binding.openWindow.setOnClickListener {
             GlobalManager.instance.doSwitchWindow(true)
+            mDataFeeder?.kanziController?.let {
+                val value = -40
+                sendDoubleValue(it, KanZiKeys.LFWindowUpDown, value)
+                sendDoubleValue(it, KanZiKeys.LRWindowUpDown, value)
+                sendDoubleValue(it, KanZiKeys.RFWindowUpDown, value)
+                sendDoubleValue(it, KanZiKeys.RRWindowUpDown, value)
+            }
         }
         binding.refreshWindow.setOnClickListener {
             GlobalManager.instance.resetSwitchWindow()
@@ -107,6 +120,27 @@ class CommonlyFragment : BaseTabFragment<KanziViewModel, AccessFragmentBinding>(
         controller.setDataObjectValue(keyObj, value)
     }
 
+    private fun sendIntValue(key: String, value: Int?) {
+        if (null == value) {
+            return
+        }
+        val controller = mDataFeeder?.kanziController
+        if (null != controller) {
+            val keyObj = kzDataTypeInt(key)
+            controller.setDataObjectValue(keyObj, value)
+        }
+    }
+    private fun sendDoubleValue(key: String, value: Int?) {
+        if (null == value) {
+            return
+        }
+        val controller = mDataFeeder?.kanziController
+        if (null != controller) {
+            val keyObj = kzDataTypeReal(key)
+            controller.setDataObjectValue(keyObj, value.toDouble())
+        }
+    }
+
     private fun sendDoubleValue(controller: DataSourceKanziController, key: String, value: Int?) {
         if (null == value) {
             return
@@ -122,8 +156,75 @@ class CommonlyFragment : BaseTabFragment<KanziViewModel, AccessFragmentBinding>(
             Timber.d("notifyDataChanged() name:$name type:$type value:$value")
             if (name == "KanziInitFinish") {
                 Timber.d("Set isKanziInitFinish = true")
-                binding.kanZiContent.post {
-                    initVehicleStatus()
+                observeAccessState()
+//                binding.kanZiContent.post {
+//                    initVehicleStatus()
+//                }
+            }
+        }
+    }
+
+    private fun observeAccessState() {
+        if (null != context) {
+            Handler(requireContext().mainLooper).post {
+                viewModel.headDoor.observe(this) {
+                    sendIntValue(KanZiKeys.Hood, it)
+                }
+                viewModel.tailDoor.observe(this) {
+                    sendIntValue(KanZiKeys.Trunk, it)
+                }
+
+                viewModel.lfDoor.observe(this) {
+                    sendIntValue(KanZiKeys.LFDoor, it)
+                }
+                viewModel.lrDoor.observe(this) {
+                    sendIntValue(KanZiKeys.LRDoor, it)
+                }
+                viewModel.rfDoor.observe(this) {
+                    sendIntValue(KanZiKeys.RFDoor, it)
+                }
+                viewModel.rrDoor.observe(this) {
+                    sendIntValue(KanZiKeys.RRDoor, it)
+                }
+
+                viewModel.lfWindow.observe(this) {
+                    sendDoubleValue(KanZiKeys.LFWindowUpDown, it)
+                }
+                viewModel.lrWindow.observe(this) {
+                    sendDoubleValue(KanZiKeys.LRWindowUpDown, it)
+                }
+                viewModel.rfWindow.observe(this) {
+                    sendDoubleValue(KanZiKeys.RFWindowUpDown, it)
+                }
+                viewModel.rrWindow.observe(this) {
+                    sendDoubleValue(KanZiKeys.RRWindowUpDown, it)
+                }
+
+                viewModel.fWiper.observe(this) {
+                    sendIntValue(KanZiKeys.FWiper, it)
+                }
+                viewModel.rWiper.observe(this) {
+                    sendIntValue(KanZiKeys.RWiper, it)
+                }
+
+                viewModel.lIndicator.observe(this) {
+                    sendIntValue(KanZiKeys.LeftIndicator, it)
+                }
+                viewModel.rIndicator.observe(this) {
+                    sendIntValue(KanZiKeys.RightIndicator, it)
+                }
+
+                viewModel.headLamps.observe(this) {
+                    sendIntValue(KanZiKeys.HeadLamps, it)
+                }
+                viewModel.brakeLamps.observe(this) {
+                    sendIntValue(KanZiKeys.BrakeLights, it)
+                }
+                viewModel.positionLamps.observe(this) {
+                    sendIntValue(KanZiKeys.PositionLight, it)
+                }
+                viewModel.rearFogLamps.observe(this) {
+                    sendIntValue(KanZiKeys.RearFogLamp, it)
                 }
             }
         }

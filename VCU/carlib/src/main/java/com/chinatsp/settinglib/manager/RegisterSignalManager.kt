@@ -29,6 +29,16 @@ class RegisterSignalManager private constructor() {
         val cabinSignal: Set<Int>
             get() {
                 return HashSet<Int>().apply {
+                    //***********车门信号 start***************
+                    add(CarCabinManager.ID_HOOD_LID_OPEN)
+                    add(CarCabinManager.ID_TRUNK_LID_OPEN)
+
+                    add(CarCabinManager.ID_DR_DOOR_OPEN)
+                    add(CarCabinManager.ID_PA_DOOR_OPEN)
+                    add(CarCabinManager.ID_REAR_LEFT_DOOR_OPEN)
+                    add(CarCabinManager.ID_REAR_RIGHT_DOOR_OPEN)
+                    //***********车门信号 end***************
+
                     add(CarCabinManager.ID_BDC_VEHICLE_MODE)
                     /**注册电源管理等级指令*/
                     add(ID_LOUPWRMNGTSTATLVL)

@@ -5,11 +5,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
+import com.chinatsp.settinglib.listener.IAccessListener
 import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.manager.access.DoorManager
+import com.chinatsp.settinglib.manager.access.SternDoorManager
 import com.chinatsp.settinglib.manager.access.WindowManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
+import com.chinatsp.settinglib.sign.Origin
+import com.chinatsp.vehicle.controller.annotation.IPart
+import com.chinatsp.vehicle.controller.annotation.Model
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.common.library.frame.base.BaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,11 +22,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class KanziViewModel @Inject constructor(app: Application, model: BaseModel) :
-    BaseViewModel(app, model) {
+    BaseViewModel(app, model), IAccessListener {
 
     private val doorManager: DoorManager get() = DoorManager.instance
 
     private val windowManager: WindowManager get() = WindowManager.instance
+
+    private val sternDoorManager: SternDoorManager get() = SternDoorManager.instance
 
     val lfDoor: LiveData<Int>
         get() = _lfDoor
@@ -108,8 +115,6 @@ class KanziViewModel @Inject constructor(app: Application, model: BaseModel) :
         MutableLiveData(1)
     }
 
-
-
     val lIndicator: LiveData<Int>
         get() = _lIndicator
 
@@ -155,11 +160,50 @@ class KanziViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     override fun onCreate() {
         super.onCreate()
+        keySerial = doorManager.onRegisterVcuListener(listener = this)
+        windowManager.onRegisterVcuListener(listener = this)
+        sternDoorManager.onRegisterVcuListener(listener = this)
     }
 
     override fun onDestroy() {
+        doorManager.unRegisterVcuListener(serial = keySerial)
+        windowManager.unRegisterVcuListener(serial = keySerial)
+        sternDoorManager.unRegisterVcuListener(serial = keySerial)
         super.onDestroy()
     }
+
+    override fun onAccessChanged(part: Int, model: Int, value: Int) {
+        if (Model.ACCESS_DOOR == model) {
+            when (part) {
+                IPart.LEFT_FRONT -> doUpdate(_lfDoor, value, true)
+                IPart.RIGHT_FRONT -> doUpdate(_rfDoor, value, true)
+                IPart.LEFT_BACK -> doUpdate(_lrDoor, value, true)
+                IPart.RIGHT_BACK -> doUpdate(_rrDoor, value, true)
+                else -> {}
+            }
+            return
+        }
+        if (Model.ACCESS_WINDOW == model) {
+            when (part) {
+                IPart.LEFT_FRONT -> doUpdate(_lfWindow, value, true)
+                IPart.RIGHT_FRONT -> doUpdate(_rfWindow, value, true)
+                IPart.LEFT_BACK -> doUpdate(_lrWindow, value, true)
+                IPart.RIGHT_BACK -> doUpdate(_rrWindow, value, true)
+                else -> {}
+            }
+            return
+        }
+
+        if (Model.ACCESS_STERN == model) {
+            when (part) {
+                IPart.HEAD -> doUpdate(_headDoor, value, true)
+                IPart.TAIL -> doUpdate(_tailDoor, value, true)
+                else -> {}
+            }
+            return
+        }
+    }
+
 
 
 }

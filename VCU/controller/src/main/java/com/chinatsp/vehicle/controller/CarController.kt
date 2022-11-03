@@ -1,13 +1,11 @@
 package com.chinatsp.vehicle.controller
 
-import android.text.TextUtils
-import com.chinatsp.vehicle.controller.annotation.*
+import com.chinatsp.vehicle.controller.annotation.Action
+import com.chinatsp.vehicle.controller.annotation.Model
 import com.chinatsp.vehicle.controller.bean.CarCmd
 import com.chinatsp.vehicle.controller.producer.*
 import com.chinatsp.vehicle.controller.semantic.NlpVoiceModel
 import com.chinatsp.vehicle.controller.semantic.Slots
-import com.chinatsp.vehicle.controller.utils.Keywords
-import org.json.JSONObject
 
 /**
  * @author : luohong
@@ -27,6 +25,19 @@ object CarController : IController {
     private val panoramaProducer: PanoramaCommandProducer by lazy { PanoramaCommandProducer() }
 
     private val otherProducer: OtherCommandProducer by lazy { OtherCommandProducer() }
+
+    override fun doVoiceVehicleQuery(
+        controller: IOuterController,
+        callback: ICmdCallback,
+        model: NlpVoiceModel
+    ): Boolean {
+        val slots: Slots = model.slots
+        val command: CarCmd? = otherProducer.attemptVehicleInfoCommand(slots)
+        if (null != command) {
+            controller.doCarControlCommand(command, callback)
+        }
+        return null != command
+    }
 
     override fun doVoiceController(
         controller: IOuterController,

@@ -4,8 +4,10 @@ import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
+import com.chinatsp.settinglib.listener.IAccessListener
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.manager.BaseManager
+import com.chinatsp.settinglib.manager.IAccessManager
 import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.optios.RadioNode
@@ -14,7 +16,9 @@ import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.annotation.Action
 import com.chinatsp.vehicle.controller.annotation.IPart
+import com.chinatsp.vehicle.controller.annotation.Model
 import com.chinatsp.vehicle.controller.bean.CarCmd
+import timber.log.Timber
 import java.lang.ref.WeakReference
 
 /**
@@ -26,7 +30,7 @@ import java.lang.ref.WeakReference
  */
 
 
-class DoorManager private constructor() : BaseManager(), IOptionManager {
+class DoorManager private constructor() : BaseManager(), IOptionManager, IAccessManager {
 
     private val smartAccess: SwitchState by lazy {
         val node = SwitchNode.DOOR_SMART_ENTER
@@ -59,12 +63,17 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
     override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int>().apply {
-                /**行车自动落锁*/
                 add(RadioNode.DOOR_DRIVE_LOCK.get.signal)
-                /**熄火自动解锁*/
+                /**行车自动落锁*/
                 add(RadioNode.DOOR_FLAMEOUT_UNLOCK.get.signal)
-                /**车门智能进入*/
+                /**熄火自动解锁*/
                 add(SwitchNode.DOOR_SMART_ENTER.get.signal)
+                /**车门智能进入*/
+
+                add(CarCabinManager.ID_DR_DOOR_OPEN)
+                add(CarCabinManager.ID_PA_DOOR_OPEN)
+                add(CarCabinManager.ID_REAR_LEFT_DOOR_OPEN)
+                add(CarCabinManager.ID_REAR_RIGHT_DOOR_OPEN)
             }
             put(Origin.CABIN, cabinSet)
         }
@@ -142,7 +151,37 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
             RadioNode.DOOR_FLAMEOUT_UNLOCK.get.signal -> {
                 onRadioChanged(RadioNode.DOOR_FLAMEOUT_UNLOCK, flameoutAutoUnlock, property)
             }
+            CarCabinManager.ID_DR_DOOR_OPEN -> {
+                onDoorStatusChanged(IPart.LEFT_FRONT, Model.ACCESS_DOOR, property.value)
+            }
+            CarCabinManager.ID_PA_DOOR_OPEN -> {
+                onDoorStatusChanged(IPart.RIGHT_FRONT, Model.ACCESS_DOOR, property.value)
+            }
+            CarCabinManager.ID_REAR_LEFT_DOOR_OPEN -> {
+                onDoorStatusChanged(IPart.LEFT_BACK, Model.ACCESS_DOOR, property.value)
+            }
+            CarCabinManager.ID_REAR_RIGHT_DOOR_OPEN -> {
+                onDoorStatusChanged(IPart.RIGHT_BACK, Model.ACCESS_DOOR, property.value)
+            }
             else -> {}
+        }
+    }
+
+    private fun onDoorStatusChanged(@IPart part: Int, @Model model: Int, value: Any?) {
+        if (value is Int) {
+            val readLock = readWriteLock.readLock()
+            try {
+                readLock.lock()
+                listenerStore.forEach { (_, ref) ->
+                    val listener = ref.get()
+                    if (null != listener && listener is IAccessListener) {
+                        listener.onAccessChanged(part, model, value)
+                        Timber.d("onDoorStatusChanged part:$part, model:$model, value:$value, listener:${listener::class.java.simpleName}")
+                    }
+                }
+            } finally {
+                readLock.unlock()
+            }
         }
     }
 
@@ -150,21 +189,21 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
     private fun doControlDoors(command: CarCmd, callback: ICmdCallback?) {
         if (IPart.HEAD == command.part) {
             if (Action.OPEN == command.action) {
-                doSwitchHood(command, callback,true)
+                doSwitchHood(command, callback, true)
                 return
             }
             if (Action.CLOSE == command.action) {
-                doSwitchHood(command, callback,false)
+                doSwitchHood(command, callback, false)
                 return
             }
         }
         if (IPart.TAIL == command.part) {
             if (Action.OPEN == command.action) {
-                doSwitchTrunks(command, callback,true)
+                doSwitchTrunks(command, callback, true)
                 return
             }
             if (Action.CLOSE == command.action) {
-                doSwitchTrunks(command, callback,false)
+                doSwitchTrunks(command, callback, false)
                 return
             }
         }
@@ -184,6 +223,20 @@ class DoorManager private constructor() : BaseManager(), IOptionManager {
         val value = if (expect) 0x2 else 0x1
         writeProperty(CarCabinManager.ID_AVN_TRUNK_RELEASE, value, Origin.CABIN)
         callback?.onCmdHandleResult(command)
+    }
+
+    override fun obtainAccessState(part: Int, model: Int): Int? {
+        if (Model.ACCESS_DOOR != model){
+            return null
+        }
+        return when (part) {
+            IPart.LEFT_FRONT -> readIntProperty(CarCabinManager.ID_DR_DOOR_OPEN, Origin.CABIN)
+            IPart.RIGHT_FRONT -> readIntProperty(CarCabinManager.ID_PA_DOOR_OPEN, Origin.CABIN)
+            IPart.LEFT_BACK -> readIntProperty(CarCabinManager.ID_REAR_LEFT_DOOR_OPEN, Origin.CABIN)
+            IPart.RIGHT_BACK -> readIntProperty(CarCabinManager.ID_REAR_RIGHT_DOOR_OPEN,
+                Origin.CABIN)
+            else -> null
+        }
     }
 
 }

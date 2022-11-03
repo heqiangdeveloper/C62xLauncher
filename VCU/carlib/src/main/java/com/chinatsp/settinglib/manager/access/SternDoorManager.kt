@@ -10,6 +10,7 @@ import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.constants.OffLine
+import com.chinatsp.settinglib.listener.IAccessListener
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.IOptionManager
@@ -91,6 +92,8 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
                 add(SwitchNode.STERN_AUDIO_ALARM.get.signal)
                 add(RadioNode.STERN_SMART_ENTER.get.signal)
                 add(Progress.TRUNK_STOP_POSITION.get.signal)
+                add(CarCabinManager.ID_HOOD_LID_OPEN)
+                add(CarCabinManager.ID_TRUNK_LID_OPEN)
             }
             put(Origin.CABIN, cabinSet)
         }
@@ -196,7 +199,32 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
             Progress.TRUNK_STOP_POSITION.get.signal -> {
                 doUpdateProgress(stopPosition, property.value as Int, true, this::doProgressChanged)
             }
+
+            CarCabinManager.ID_HOOD_LID_OPEN -> {
+                onDoorStatusChanged(IPart.HEAD, Model.ACCESS_STERN, property.value)
+            }
+            CarCabinManager.ID_TRUNK_LID_OPEN -> {
+                onDoorStatusChanged(IPart.TAIL, Model.ACCESS_STERN, property.value)
+            }
             else -> {}
+        }
+    }
+
+    private fun onDoorStatusChanged(@IPart part: Int, @Model model: Int, value: Any?) {
+        if (value is Int) {
+            val readLock = readWriteLock.readLock()
+            try {
+                readLock.lock()
+                listenerStore.forEach { (_, ref) ->
+                    val listener = ref.get()
+                    if (null != listener && listener is IAccessListener) {
+                        listener.onAccessChanged(part, model, value)
+                        Timber.d("onDoorStatusChanged part:$part, model:$model, value:$value, listener:${listener::class.java.simpleName}")
+                    }
+                }
+            } finally {
+                readLock.unlock()
+            }
         }
     }
 
