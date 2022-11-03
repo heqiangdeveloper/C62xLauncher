@@ -5,13 +5,13 @@ import android.content.Intent
 import android.os.IBinder
 import android.text.TextUtils
 import com.chinatsp.settinglib.Constant
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.cabin.SeatManager
 import com.chinatsp.settinglib.manager.lamp.AmbientLightingManager
 import com.chinatsp.settinglib.manager.sound.EffectManager
 import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.settinglib.optios.Progress
-import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.IDataResolver
@@ -56,50 +56,63 @@ class VehicleService : Service() {
         intent?.let {
             val action = it.action
             val data = intent.getStringExtra("data")
-            Timber.d("receive action:$action")
-            if ("com.chinatsp.vcu.actions.USER_SETTING_RECOVER" == action) {
+            Timber.d("receive action:$action,data:$data")
+            if ("com.chinatsp.vcu.actions.USER_SETTING_RECOVER" == action ) {
                 val intentSeat = it.getStringExtra(seat)
                 val intentRearviewMirror = it.getStringExtra(rearviewMirror)
                 val intentAtmosphereLamp = it.getStringExtra(atmosphereLamp)
                 val intentSoundEffects = it.getStringExtra(soundEffects)
-                Timber.d(" intentSeat:$intentSeat, intentRearviewMirror:$intentRearviewMirror, intentSoundEffects:$intentSoundEffects, intentAtmosphereLamp:%s", intentAtmosphereLamp)
+                Timber.d(
+                    " intentSeat:$intentSeat, intentRearviewMirror:$intentRearviewMirror, intentSoundEffects:$intentSoundEffects, intentAtmosphereLamp:%s",
+                    intentAtmosphereLamp
+                )
                 if (intentSeat != null) {
                     val jsonObject = JSONObject(intentSeat)
-                    val consult = jsonObject.getString("mainPassengerSeatPosition")
+                    //val consult = jsonObject.getString("mainPassengerSeatPosition")
                     //主副驾座椅位置，暂无此功能
                 } else if (!TextUtils.isEmpty(intentRearviewMirror)) {
                     val jsonObject = JSONObject(intentRearviewMirror)
-                    val consult = jsonObject.getString("rearviewMirror")
+                    //val consult = jsonObject.getString("rearviewMirror")
                     //外后视镜位置，暂无此功能
                 } else if (!TextUtils.isEmpty(intentAtmosphereLamp)) {
                     val jsonObject = JSONObject(intentAtmosphereLamp)
                     val color = jsonObject.getString("color")
                     val lighting = jsonObject.getString("lighting")
-                    ambientLightingManager.doSetProgress(Progress.AMBIENT_LIGHT_BRIGHTNESS,
-                        Integer.valueOf(lighting) + 0x1)//亮度
-                    ambientLightingManager.doSetProgress(Progress.AMBIENT_LIGHT_COLOR,
-                        Integer.valueOf(color))//颜色
+                    ambientLightingManager.doSetProgress(
+                        Progress.AMBIENT_LIGHT_BRIGHTNESS,
+                        Integer.valueOf(lighting) + 0x1
+                    )//亮度
+                    ambientLightingManager.doSetProgress(
+                        Progress.AMBIENT_LIGHT_COLOR,
+                        Integer.valueOf(color)
+                    )//颜色
                     Timber.d("color:$color,lighting:$lighting")
                 } else if (!TextUtils.isEmpty(intentSoundEffects)) {
                     //均衡器
                     val jsonObject = JSONObject(intentSoundEffects)
-                    val high = jsonObject.getString("high")//高音
-                    val alt = jsonObject.getString("alt")//中高音
-                    val alto = jsonObject.getString("alto")//中音
-                    val mid = jsonObject.getString("mid")//中低音
-                    val bass = jsonObject.getString("bass")//低音
-//                    effectManager.doSetEQ(6,
-//                        Integer.valueOf(high),
-//                        Integer.valueOf(alt),
-//                        Integer.valueOf(alto),
-//                        Integer.valueOf(mid),
-//                        Integer.valueOf(bass))
+                    val equalizerValue =
+                        jsonObject.getString("equalizerValue").toList().toMutableList()
+                    if (equalizerValue.isNotEmpty()) {
+                        if (!VcuUtils.isAmplifier && equalizerValue.size != 9 && equalizerValue.size == 5) {
+                            equalizerValue.add(0.toChar())
+                            equalizerValue.add(0.toChar())
+                            equalizerValue.add(0.toChar())
+                            equalizerValue.add(0.toChar())
+                        }
+                    }
+                    val map = equalizerValue.map { it.code }.toIntArray()
+                    effectManager.doSetEQ(
+                        6,
+                        map
+                    )
 
                     //音量平衡
                     val fadeValue = jsonObject.getString("fadeValue")
                     val balanceValue = jsonObject.getString("balanceValue")
-                    effectManager.setAudioBalance(Integer.valueOf(balanceValue) + OFFSET,
-                        Integer.valueOf(fadeValue) + OFFSET)
+                    effectManager.setAudioBalance(
+                        Integer.valueOf(balanceValue) + OFFSET,
+                        Integer.valueOf(fadeValue) + OFFSET
+                    )
 
                     //系统提示
                     val systemHint = jsonObject.getString("systemHint");
@@ -107,18 +120,24 @@ class VehicleService : Service() {
 
                     //速度音量补偿
                     val speedVolumeCompensation = jsonObject.getString("speedVolumeCompensation")
-                    effectManager.doSetSwitchOption(voiceManager.volumeSpeedSwitch,
-                        speedVolumeCompensation == "true")
+                    effectManager.doSetSwitchOption(
+                        voiceManager.volumeSpeedSwitch,
+                        speedVolumeCompensation == "true"
+                    )
 
                     //响度控制
                     val loudnessControl = jsonObject.getString("loudnessControl")
-                    effectManager.doSetSwitchOption(SwitchNode.AUDIO_SOUND_LOUDNESS,
-                        loudnessControl == "true")
+                    effectManager.doSetSwitchOption(
+                        SwitchNode.AUDIO_SOUND_LOUDNESS,
+                        loudnessControl == "true"
+                    )
 
-                    //导航混音
-                    val navigationMixing = jsonObject.getString("navigationMixing")
-                    effectManager.doSetRadioOption(RadioNode.NAVI_AUDIO_MIXING,
-                        Integer.valueOf(navigationMixing))
+                    //导航混音  功能删除
+                    /*val navigationMixing = jsonObject.getString("navigationMixing")
+                    effectManager.doSetRadioOption(
+                        RadioNode.NAVI_AUDIO_MIXING,
+                        Integer.valueOf(navigationMixing)
+                    )*/
                 } else {
                     Timber.d("解析失败")
                 }
@@ -172,3 +191,4 @@ class VehicleService : Service() {
     }
 
 }
+
