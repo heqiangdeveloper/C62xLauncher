@@ -7,6 +7,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.chinatsp.widgetcards.R;
+import com.chinatsp.widgetcards.manager.CardNameRes;
 
 import card.base.LauncherCard;
 import launcher.base.recyclerview.BaseViewHolder;
@@ -31,7 +32,7 @@ public class EditorHomeCardViewHolder extends BaseViewHolder<LauncherCard> {
     @Override
     public void bind(int position, LauncherCard baseCardEntity) {
         super.bind(position, baseCardEntity);
-        mName.setText(baseCardEntity.getName());
+        mName.setText(CardNameRes.getStringRes(baseCardEntity.getType()));
         mIvBg.setImageResource(baseCardEntity.getSelectBgRes());
         mIvBg.setVisibility(View.VISIBLE);
         mIvBgEmpty.setVisibility(View.GONE);

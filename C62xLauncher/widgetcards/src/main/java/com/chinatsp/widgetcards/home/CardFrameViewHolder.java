@@ -23,6 +23,7 @@ import com.chinatsp.widgetcards.editor.ui.CardEditorActivity;
 import com.chinatsp.widgetcards.home.smallcard.CardInnerListHelper;
 import com.chinatsp.widgetcards.home.smallcard.OnExpandCardInCard;
 import com.chinatsp.widgetcards.manager.CardManager;
+import com.chinatsp.widgetcards.manager.CardNameRes;
 import com.chinatsp.widgetcards.manager.Events;
 
 import org.greenrobot.eventbus.EventBus;
@@ -71,7 +72,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
         mHideTitle = checkNeedHideTitle();
 
         resetExpandIcon(cardEntity);
-        setTitle(cardEntity.getName());
+        setTitle(cardEntity.getType());
         if (mOnClickListener == null) {
             mOnClickListener = createListener(cardEntity);
         }
@@ -203,8 +204,8 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-    private void setTitle(String name) {
-        mTvCardName.setText(name);
+    private void setTitle(int type) {
+        mTvCardName.setText(CardNameRes.getStringRes(type));
         if (mHideTitle) {
             mTvCardName.setVisibility(View.GONE);
         } else {

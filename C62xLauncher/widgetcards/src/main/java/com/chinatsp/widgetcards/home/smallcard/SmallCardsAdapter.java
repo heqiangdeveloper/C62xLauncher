@@ -85,4 +85,8 @@ public class SmallCardsAdapter extends RecyclerView.Adapter<SmallCardViewHolder>
         return null;
     }
 
+    public void clear() {
+        mCardEntityList.clear();
+        notifyDataSetChanged();
+    }
 }

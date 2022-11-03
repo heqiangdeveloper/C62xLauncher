@@ -25,11 +25,16 @@
         android:layout_marginEnd="26px"
         />
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/daohzhongk"
+        />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutCardNaviStatus"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         >
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="496px"

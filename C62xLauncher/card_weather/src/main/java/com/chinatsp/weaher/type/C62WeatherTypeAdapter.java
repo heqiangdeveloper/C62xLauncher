@@ -26,7 +26,10 @@ public class C62WeatherTypeAdapter implements WeatherTypeAdapter {
             return new C62WeatherType(WeatherBean.TYPE_THUNDER_SHOWER);
         } else if (isWind(target)) {
             return new C62WeatherType(WeatherBean.TYPE_WINDY);
+        } else if (isOvercast(target)) {
+            return new C62WeatherType(WeatherBean.TYPE_WINDY);
         }
+
         return new C62WeatherType(WeatherBean.TYPE_UNKNOWN);
     }
 
@@ -42,7 +45,7 @@ public class C62WeatherTypeAdapter implements WeatherTypeAdapter {
 
     @Override
     public boolean isOvercast(MoJiWeatherType target) {
-        return equals(target, "阴") || contain(target,"转阴");
+        return equals(target, "阴") || contain(target, "转阴");
     }
 
     @Override
@@ -57,27 +60,27 @@ public class C62WeatherTypeAdapter implements WeatherTypeAdapter {
     @Override
     public boolean isSmoke(MoJiWeatherType target) {
         return equals(target, "沙尘暴", "沙尘", "浮尘", "扬沙", "霾", "雾霾")
-                || contain(target,"转霾", "转雾霾");
+                || contain(target, "转霾", "转雾霾");
     }
 
     @Override
     public boolean isSnow(MoJiWeatherType target) {
         return equals(target, "小雪", "中雪", "大雪", "暴雪", "雨夹雪")
                 || contain(target, "转小雪", "转中雪", "转大雪", "转暴雪", "转雨夹雪")
-                || contain(target, "-小雪", "-中雪", "-大雪", "-暴雪" ,"-雨夹雪")
-                || contain(target, "到小雪", "到中雪", "到大雪", "到暴雪" ,"到雨夹雪")
+                || contain(target, "-小雪", "-中雪", "-大雪", "-暴雪", "-雨夹雪")
+                || contain(target, "到小雪", "到中雪", "到大雪", "到暴雪", "到雨夹雪")
                 ;
     }
 
     @Override
     public boolean isSunny(MoJiWeatherType target) {
-        return equals(target, "晴") || contain(target,"转晴");
+        return equals(target, "晴") || contain(target, "转晴");
     }
 
     @Override
     public boolean isThunderShower(MoJiWeatherType target) {
         return equals(target, "雷阵雨", "阵雨", "雷阵雨伴有冰雹")
-                || contain(target,"转雷阵雨", "转阵雨");
+                || contain(target, "转雷阵雨", "转阵雨");
     }
 
     @Override

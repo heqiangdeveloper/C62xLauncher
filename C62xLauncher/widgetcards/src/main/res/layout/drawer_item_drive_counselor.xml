@@ -102,7 +102,7 @@
             android:layout_marginBottom="46px"
             android:gravity="center"
             android:includeFontPadding="false"
-            android:text="20000"
+            android:text="---"
             android:textSize="52px"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -146,7 +146,7 @@
 
             android:layout_width="wrap_content"
             android:layout_height="56px"
-            android:text="100"
+            android:text="---"
             android:textColor="#FFFFFFFF"
             android:textSize="48px"
             app:layout_constraintStart_toStartOf="parent"

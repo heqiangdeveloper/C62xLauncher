@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 
 import com.chinatsp.widgetcards.R;
 import com.chinatsp.widgetcards.manager.CardManager;
+import com.chinatsp.widgetcards.manager.CardNameRes;
 
 import card.base.LauncherCard;
 import launcher.base.recyclerview.BaseViewHolder;
@@ -33,7 +34,7 @@ public class EditorUnselectCardViewHolder extends BaseViewHolder<LauncherCard> {
     @Override
     public void bind(int position, LauncherCard baseCardEntity) {
         super.bind(position, baseCardEntity);
-        mName.setText(baseCardEntity.getName());
+        mName.setText(CardNameRes.getStringRes(baseCardEntity.getType()));
         mIvBg.setImageResource(baseCardEntity.getUnselectBgRes());
 
         if (baseCardEntity.getType() != CardManager.CardType.EMPTY) {

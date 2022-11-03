@@ -1,5 +1,6 @@
 package launcher.base.utils;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.List;
@@ -7,7 +8,14 @@ import java.util.List;
 public class EasyLog {
 
     public static boolean enableLog = true;
-    public static final String ORIGIN_TAG = "HBTechLauncher";
+    private static String ORIGIN_TAG = "HBTechLauncher";
+
+    public static void appendOriginTag(String tag) {
+        if (TextUtils.isEmpty(tag)) {
+            return;
+        }
+        ORIGIN_TAG = ORIGIN_TAG + tag;
+    }
     public static void d(String tag,String msg) {
         if (enableLog) {
             Log.d(ORIGIN_TAG, "["+tag+"] "+msg);

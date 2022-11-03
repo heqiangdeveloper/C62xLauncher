@@ -72,7 +72,6 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
         mSmallCardViewHolder.showNormal();
         mSmallWidth = (int) getResources().getDimension(R.dimen.card_width);
         mLargeWidth = (int) getResources().getDimension(R.dimen.card_width_large);
-        switchSource(mSource);
 
         if (mLargeCardView == null) {
             mLargeCardView = LayoutInflater.from(getContext()).inflate(R.layout.card_volcano_large, this, false);
@@ -152,12 +151,14 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         mLifecycleRegistry.setCurrentState(Lifecycle.State.CREATED);
+        mController.attach();
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mLifecycleRegistry.setCurrentState(Lifecycle.State.DESTROYED);
+        mController.detach();
     }
 
     @Override
@@ -179,6 +180,7 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
     }
 
     public void updateList(VideoListData videoListData) {
+        EasyLog.i(TAG, "updateList  mExpand:"+mExpand);
         post(() -> {
             if (mExpand) {
                 mBigCardViewHolder.updateList(videoListData);
@@ -190,6 +192,7 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
     }
 
     public void showLoading() {
+        EasyLog.i(TAG, "showLoading  mExpand:"+mExpand);
         if (mExpand) {
             mBigCardViewHolder.showLoadingView();
         } else {
@@ -198,6 +201,7 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
     }
 
     public void hideLoading() {
+        EasyLog.i(TAG, "hideLoading  mExpand:"+mExpand);
         if (mExpand) {
             mBigCardViewHolder.hideLoadingView();
         } else {
@@ -206,6 +210,7 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
     }
 
     public void showNetWorkError() {
+        EasyLog.i(TAG, "showNetWorkError  mExpand:"+mExpand);
         if (mExpand) {
             mBigCardViewHolder.showNetworkError();
         } else {
@@ -214,6 +219,7 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
     }
 
     public void hideNetWorkError() {
+        EasyLog.i(TAG, "hideNetWorkError  mExpand:"+mExpand);
         if (mExpand) {
             mBigCardViewHolder.hideNetworkError();
         } else {
@@ -222,10 +228,12 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
     }
 
     public void showDataError() {
+        EasyLog.i(TAG, "showDataError  mExpand:"+mExpand);
         if (mExpand) {
             mBigCardViewHolder.showDataError();
         } else {
             mSmallCardViewHolder.showDataError();
         }
     }
+
 }
