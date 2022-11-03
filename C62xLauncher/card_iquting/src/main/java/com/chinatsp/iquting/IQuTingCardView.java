@@ -464,10 +464,10 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                     if(mNormalBigCardViewHolder != null){
                         mNormalBigCardViewHolder.updateAllInStatus();
                     }
-                    mIvIQuTingPlayPauseBtnBig.setImageResource(R.drawable.card_iquting_icon_play_100);
+                    mIvIQuTingPlayPauseBtnBig.setImageResource(R.drawable.play_card_iquting_selector);
                     checkStatusInList();
                 }else {
-                    mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.card_iquting_icon_play_100);
+                    mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.play_card_iquting_selector);
                 }
             }
 
@@ -476,10 +476,10 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                 Log.d(TAG,"onPause");
                 isPlaying = false;
                 if(mExpand){
-                    mIvIQuTingPlayPauseBtnBig.setImageResource(R.drawable.card_iquting_icon_pause_100);
+                    mIvIQuTingPlayPauseBtnBig.setImageResource(R.drawable.pause_card_iquting_selector);
                     checkStatusInList();
                 }else {
-                    mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.card_iquting_icon_pause_100);
+                    mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.pause_card_iquting_selector);
                 }
             }
 
@@ -488,10 +488,10 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                 Log.d(TAG,"onStop");
                 isPlaying = false;
                 if(mExpand){
-                    mIvIQuTingPlayPauseBtnBig.setImageResource(R.drawable.card_iquting_icon_pause_100);
+                    mIvIQuTingPlayPauseBtnBig.setImageResource(R.drawable.pause_card_iquting_selector);
                     checkStatusInList();
                 }else {
-                    mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.card_iquting_icon_pause_100);
+                    mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.pause_card_iquting_selector);
                 }
             }
 
@@ -599,9 +599,9 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                 }
                 isPlaying = aBoolean;
                 if(isPlaying){
-                    mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.card_iquting_icon_play_100);
+                    mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.play_card_iquting_selector);
                 }else {
-                    mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.card_iquting_icon_pause_100);
+                    mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.pause_card_iquting_selector);
                 }
                 getCurrentMediaInfo();
             }
@@ -835,9 +835,9 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
         }
 
         if(isPlaying){
-            mIvIQuTingPlayPauseBtnBig.setImageResource(R.drawable.card_iquting_icon_play_100);
+            mIvIQuTingPlayPauseBtnBig.setImageResource(R.drawable.play_card_iquting_selector);
         }else {
-            mIvIQuTingPlayPauseBtnBig.setImageResource(R.drawable.card_iquting_icon_pause_100);
+            mIvIQuTingPlayPauseBtnBig.setImageResource(R.drawable.pause_card_iquting_selector);
         }
         if("like".equals(mIvIQuTingLike.getTag())){
             mIvIQuTingLikeBtnBig.setImageResource(R.drawable.card_iquting_icon_like);
@@ -880,9 +880,9 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
         }
         mTvIQuTingMediaName.setText(name + "-" + artist);
         if(isPlaying){
-            mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.card_iquting_icon_play_100);
+            mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.play_card_iquting_selector);
         }else {
-            mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.card_iquting_icon_pause_100);
+            mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.pause_card_iquting_selector);
         }
         if("like".equals(mIvIQuTingLikeBtnBig.getTag())){
             mIvIQuTingLike.setImageResource(R.drawable.card_iquting_icon_like);
