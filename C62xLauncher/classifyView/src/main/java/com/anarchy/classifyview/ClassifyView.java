@@ -65,6 +65,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -307,15 +308,11 @@ public class ClassifyView extends FrameLayout {
                     //刷新桌面中sub的显示,实际发现mSubRecyclerView.getChildCount()数目会变少，不采用mSubRecyclerView计算
                     //mSubCallBack.removeItem(mSubRecyclerView.getChildCount() - 1);
                     mMainCallBack = (MainRecyclerViewCallBack) mMainRecyclerView.getAdapter();
-                    List list = mMainCallBack.explodeItem(position, null);
-                    if(null != list){
-                        A:for(int i = list.size() - 1; i >= 0; i--){
-                            if(list.get(i) == null){
-                                list.remove(i);
-                                break A;
-                            }
+                    for(int i = 0; i < mMainCallBack.total(); i++){
+                        List list = mMainCallBack.explodeItem(i,  null);
+                        if(list != null){
+                            list.removeAll(Collections.singleton(null));//清除掉null对象
                         }
-                        mSubCallBack.initData(position,list);
                     }
                 }
             }

@@ -40,8 +40,8 @@ public class BagDrawable extends Drawable {
     //    private int[] mColors = new int[]{0xFF808080,0xFF808080,0xFFDDDDDD,0xFFFFFFFF,0xFFDDDDDD,0xFF808080,0xFF808080,
 //    0xFFDDDDDD,0xFFFFFFFF,0xFFDDDDDD,0xFF808080,0xFF808080};
 //    private float[] mPositions = new float[]{0f,0.11f,0.11f,0.125f,0.14f,0.14f,0.61f,0.61f,0.625f,0.64f,0.64f,1f};
-    private int mCenterColor = 0xFFFFFFFF;
-    private int mEdgeColor = 0xFF808080;
+    private int mCenterColor = Color.TRANSPARENT;
+    private int mEdgeColor = Color.TRANSPARENT;
 
     public BagDrawable(int outlinePadding) {
         mRectF = new RectF();
