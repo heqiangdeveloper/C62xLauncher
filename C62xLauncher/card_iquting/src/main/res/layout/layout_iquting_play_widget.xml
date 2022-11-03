@@ -69,7 +69,7 @@
 
     <ImageView
         android:id="@+id/ivIQuTingPreBtnBig"
-        android:src="@drawable/card_iquting_icon_pre"
+        android:src="@drawable/pre_card_iquting_selector"
         android:layout_width="@dimen/card_icon_size_lv1"
         android:layout_height="@dimen/card_icon_size_lv1"
         app:layout_constraintTop_toTopOf="@id/ivIQuTingPlayPauseBtnBig"
@@ -82,7 +82,7 @@
         android:id="@+id/ivIQuTingPlayPauseBtnBig"
         android:layout_width="@dimen/card_icon_size_lv1"
         android:layout_height="@dimen/card_icon_size_lv1"
-        android:src="@drawable/card_iquting_icon_play_80"
+        android:src="@drawable/play_card_iquting_selector"
         app:layout_constraintTop_toTopOf="@id/ivIQuTingNextBtnBig"
         app:layout_constraintBottom_toBottomOf="@id/ivIQuTingNextBtnBig"
         app:layout_constraintEnd_toStartOf="@id/ivIQuTingNextBtnBig"
@@ -91,7 +91,7 @@
 
     <ImageView
         android:id="@+id/ivIQuTingNextBtnBig"
-        android:src="@drawable/card_iquting_icon_next"
+        android:src="@drawable/next_card_iquting_selector"
         android:layout_width="@dimen/card_icon_size_lv1"
         android:layout_height="@dimen/card_icon_size_lv1"
         app:layout_constraintTop_toTopOf="@id/ivIQuTingLikeBtnBig"
