@@ -40,6 +40,8 @@ public class InsertAbleGridView extends ViewGroup implements CanMergeView{
     private int parentIndex;
     private ChangeInfo mReturnInfo = new ChangeInfo();
     private ScrollerCompat mScroller;
+    private static final String TAG = "InsertAbleGridView";
+    private int index = -1;
     public InsertAbleGridView(Context context) {
         this(context,null);
     }
@@ -234,9 +236,19 @@ public class InsertAbleGridView extends ViewGroup implements CanMergeView{
     public void initMain(int parentIndex, List list) {
         removeAllViewsInLayout();
         this.parentIndex = parentIndex;
+
+        //如果null不位于list的最后，需要移动至最后
+        index = list.indexOf(null);
+        if(index != -1 && index != list.size() - 1){
+            Log.d(TAG,"null index = " + index + ",list.size() = " + list.size());
+            Collections.swap(list,index,list.size() - 1);
+        }
+
         for(int i =0;i<list.size();i++){
             //当添加应用完成时，主桌面文件夹中不显示添加按钮；
-            if(list.get(i) == null) continue;
+            if(list.get(i) == null){
+                continue;
+            }
             if(mSimpleAdapter!=null){
                 View child = mSimpleAdapter.getView(this,parentIndex,i);
                 addViewInLayout(child,i,generateDefaultLayoutParams());

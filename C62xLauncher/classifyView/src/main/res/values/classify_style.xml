@@ -11,12 +11,12 @@
     <style name="InsertAbleGridViewDefaultStyle">
         <item name="RowCount">2</item>
         <item name="ColumnCount">2</item>
-        <item name="RowGap">5dp</item>
-        <item name="ColumnGap">5dp</item>
+        <item name="RowGap">10dp</item>
+        <item name="ColumnGap">10dp</item>
         <item name="OutlinePadding">8dp</item>
         <item name="OutlineWidth">1dp</item>
-        <item name="OutlineColor">#d6a25e</item>
-        <item name="InnerPadding">6dp</item>
+        <item name="OutlineColor">#465364</item>
+        <item name="InnerPadding">15dp</item>
     </style>
     <style name="mydialog" parent="android:style/Theme.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
