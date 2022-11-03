@@ -32,6 +32,7 @@ import launcher.base.utils.EasyLog;
 import launcher.base.utils.collection.IndexCheck;
 import launcher.base.utils.collection.ListKit;
 import launcher.base.utils.view.B561Toast;
+import launcher.base.utils.view.C62Toast;
 
 public class CardEditorFragment extends BaseFragment implements EditorContract{
 
@@ -139,7 +140,7 @@ public class CardEditorFragment extends BaseFragment implements EditorContract{
         if (mController.checkChanged()) {
             mController.commitEdit();
             Context applicationContext = getContext().getApplicationContext();
-            B561Toast.showShort(applicationContext,R.string.card_edit_msg_ok);
+            C62Toast.showShort(applicationContext,R.string.card_edit_msg_ok);
         }
         goBackHome();
     }

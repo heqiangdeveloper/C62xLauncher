@@ -17,6 +17,7 @@ import java.util.List;
 
 import launcher.base.routine.ActivityBus;
 import launcher.base.utils.glide.GlideHelper;
+import launcher.base.utils.recent.RecentAppHelper;
 
 public class SmallCardViewHolder extends VolcanoViewHolder{
     private ImageView ivCardVolcanoSourceLogo;
@@ -44,6 +45,8 @@ public class SmallCardViewHolder extends VolcanoViewHolder{
                 if (volcanoVideo != null) {
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(volcanoVideo.getSchema()));
                     rootView.getContext().startActivity(intent);
+                } else {
+                    RecentAppHelper.launchApp(rootView.getContext(), "com.bytedance.byteautoservice");
                 }
             }
         });

@@ -98,15 +98,6 @@ public class WeatherUtil {
         return low + "~" + high;
     }
 
-    public static int getWeatherType(String type) {
-        try {
-            return Integer.parseInt(type);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return WeatherBean.TYPE_UNKNOWN;
-    }
-
     public static WeatherTypeRes parseType(String weather) {
         WeatherTypeAdapter weatherTypeAdapter = new C62WeatherTypeAdapter();
         MoJiWeatherType moJiWeatherType = new MoJiWeatherType(weather);

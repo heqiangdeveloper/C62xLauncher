@@ -105,7 +105,6 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
         LayoutParamUtil.setWidth(mLargeWidth, this);
         runExpandAnim();
         mBigCardHolder.updateWeatherList(mController.getWeatherList());
-
     }
 
 

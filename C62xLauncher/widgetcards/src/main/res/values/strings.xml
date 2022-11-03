@@ -1,3 +1,15 @@
 <resources>
     <string name="btn_cancel">取消</string>
+    <string name="card_name_navigation">导航</string>
+    <string name="card_name_media">媒体</string>
+    <string name="card_name_iquting">爱趣听</string>
+    <string name="card_name_volcano">火山车娱</string>
+    <string name="card_name_weather">天气</string>
+    <string name="card_name_phone">电话</string>
+    <string name="card_name_vehicle_setting">车辆设置</string>
+    <string name="card_name_app_store">应用商城</string>
+    <string name="card_name_user_center">个人中心</string>
+    <string name="card_name_e_connection">亿连</string>
+    <string name="card_name_drive_consultant">行车顾问</string>
+    <string name="card_name_default">卡片</string>
 </resources>

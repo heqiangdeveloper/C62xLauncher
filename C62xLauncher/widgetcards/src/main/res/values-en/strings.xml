@@ -1,0 +1,15 @@
+<resources>
+    <string name="btn_cancel">Cancel</string>
+    <string name="card_name_navigation">Navigation</string>
+    <string name="card_name_media">Media</string>
+    <string name="card_name_iquting">Tencent interest</string>
+    <string name="card_name_volcano">Tiktok</string>
+    <string name="card_name_weather">Weather</string>
+    <string name="card_name_phone">Phone</string>
+    <string name="card_name_vehicle_setting">Vehicle setting</string>
+    <string name="card_name_app_store">App store</string>
+    <string name="card_name_user_center">Personal center</string>
+    <string name="card_name_e_connection">Easy connection</string>
+    <string name="card_name_drive_consultant">Driving consultant</string>
+    <string name="card_name_default">Card</string>
+</resources>

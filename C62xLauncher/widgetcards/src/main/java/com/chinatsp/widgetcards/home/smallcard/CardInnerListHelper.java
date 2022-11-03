@@ -16,6 +16,7 @@ import card.base.LauncherCard;
 import launcher.base.utils.EasyLog;
 
 public class CardInnerListHelper {
+    private LinearLayoutManager mLayoutManager;
     public RecyclerView mRecyclerView;
     private PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
     private SmallCardsAdapter smallCardsAdapter;
@@ -28,9 +29,9 @@ public class CardInnerListHelper {
         }
         mRecyclerView = recyclerView;
         smallCardsAdapter = new SmallCardsAdapter(mRecyclerView.getContext(), mRecyclerView, mOnExpandCardInCard);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mRecyclerView.getContext());
-        layoutManager.setOrientation(RecyclerView.HORIZONTAL);
-        mRecyclerView.setLayoutManager(layoutManager);
+        mLayoutManager = new LinearLayoutManager(mRecyclerView.getContext());
+        mLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
+        mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(smallCardsAdapter);
         pagerSnapHelper.attachToRecyclerView(mRecyclerView);
         mRecyclerView.addOnScrollListener(mOnScrollListener);
@@ -65,6 +66,8 @@ public class CardInnerListHelper {
         mRecyclerView.setVisibility(View.VISIBLE);
         List<LauncherCard> smallCardList = getSmallCardList(bigCardPosition);
         smallCardsAdapter.setCardEntityList(smallCardList);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(smallCardsAdapter);
         if (currentSmallCardPosition < bigCardPosition) {
             mRecyclerView.scrollToPosition(currentSmallCardPosition);
         } else {
@@ -78,6 +81,9 @@ public class CardInnerListHelper {
         if (mRecyclerView == null) {
             return;
         }
+        smallCardsAdapter.clear();
+        mRecyclerView.setLayoutManager(null);
+        mRecyclerView.setAdapter(null);
         mRecyclerView.setVisibility(View.GONE);
     }
 

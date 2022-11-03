@@ -18,6 +18,7 @@ import card.theme.ThemeService;
 import launcher.base.network.NetworkStateReceiver;
 import launcher.base.service.AppServiceManager;
 import launcher.base.service.platform.PlatformService;
+import launcher.base.utils.EasyLog;
 
 public class LauncherApplication extends Application {
     private static final String TAG = "Launcher_version";
@@ -47,6 +48,7 @@ public class LauncherApplication extends Application {
         int versionCode = getVersionCode(mContext);
         String versionName = getVersionName(mContext);
         Log.d(TAG, "APP_INFO:" + "VersionCode:" + versionCode + ",VersionName:" + versionName);
+        EasyLog.appendOriginTag(versionCode+"");
     }
 
     public int getVersionCode(Context context) {

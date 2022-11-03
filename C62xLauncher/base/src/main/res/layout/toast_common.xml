@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="90px"
+    android:layout_height="64px"
     android:background="@drawable/bg_txt_toast"
     >
 
     <TextView
         android:id="@+id/toast_message"
         android:textColor="#FFFFFF"
-        android:minWidth="398px"
-        android:textSize="30px"
+        android:minWidth="146px"
+        android:textSize="24px"
         android:layout_width="wrap_content"
-        android:layout_height="90px"
-        android:paddingLeft="34px"
-        android:paddingRight="34px"
-        android:gravity="center" />
+        android:layout_height="64px"
+        android:paddingLeft="22px"
+        android:paddingRight="22px"
+        android:paddingTop="18px"
+        android:paddingBottom="18px"
+        android:gravity="center"
+        />
 </RelativeLayout>
 

@@ -36,6 +36,7 @@ public class WeatherBigCardHolder extends WeatherCardHolder{
     private TextView tvCardWeatherTemperature;
     private TextView tvCardWeatherTemperatureRange;
     private ImageView ivCardWeatherIcon;
+    private ImageView ivWeatherBg;
 
     public WeatherBigCardHolder(View rootView) {
         super(rootView);
@@ -49,6 +50,7 @@ public class WeatherBigCardHolder extends WeatherCardHolder{
         tvCardWeatherTemperature = rootView.findViewById(R.id.tvCardWeatherTemperature);
         tvCardWeatherTemperatureRange = rootView.findViewById(R.id.tvCardWeatherTemperatureRange);
         ivCardWeatherIcon = rootView.findViewById(R.id.ivCardWeatherIcon);
+        ivWeatherBg = rootView.findViewById(R.id.ivWeatherBg);
         initWeeklyWeather();
     }
 
@@ -94,9 +96,10 @@ public class WeatherBigCardHolder extends WeatherCardHolder{
         tvCardWeatherAirDesc.setText("空气质量 "+weatherInfo.getAirQuality());
         tvCardWeatherTemperature.setText(weatherInfo.getTemp());
         tvCardWeatherTemperatureRange.setText(WeatherUtil.getTemperatureRange(weatherInfo, mResources));
-
         WeatherTypeRes weatherTypeRes = WeatherUtil.parseType(weatherInfo.getWeather());
         ivCardWeatherIcon.setImageResource(weatherTypeRes.getIcon());
+        ivWeatherBg.setImageResource(weatherTypeRes.getBigCardBg());
+
     }
     public void updateWeatherList(List<WeatherInfo> weatherInfoList) {
         WeatherUtil.logI("WeatherBigCardHolder updateWeatherList : "+weatherInfoList);

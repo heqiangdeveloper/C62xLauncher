@@ -171,8 +171,7 @@ public class CardHomeFragment extends BaseFragment {
         mSnapHelper.attachToRecyclerView(mRcvCards);
         layoutManager.setOrientation(RecyclerView.HORIZONTAL);
         mRcvCards.setLayoutManager(layoutManager);
-//        setItemAnimator();
-        mRcvCards.setItemAnimator(new DefaultItemAnimator(){
+        mRcvCards.setItemAnimator(new DefaultItemAnimator() {
             @Override
             public boolean canReuseUpdatedViewHolder(@NonNull RecyclerView.ViewHolder viewHolder) {
                 return true;
@@ -183,7 +182,6 @@ public class CardHomeFragment extends BaseFragment {
             mRcvCards.addItemDecoration(decoration);
         }
         mCardsAdapter = new HomeCardsAdapter(getActivity(), mRcvCards);
-//        mCardsAdapter.setCardEntityList(cardManager.getHomeList());
 
         mRcvCards.setAdapter(mCardsAdapter);
         mRcvCards.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -200,17 +198,34 @@ public class CardHomeFragment extends BaseFragment {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    boolean canScrollHorizontallyLeft = recyclerView.canScrollHorizontally(-1);
+                    EasyLog.d(TAG, "onScrollStateChanged , in left side:" + canScrollHorizontallyLeft);
+                    onScrollLeftSide(!canScrollHorizontallyLeft);
+                }
             }
         });
     }
 
-    private void setItemAnimator() {
-        DefaultItemAnimator defaultItemAnimator = new DefaultItemAnimator();
-        defaultItemAnimator.setAddDuration(200);
-        defaultItemAnimator.setChangeDuration(200);
-        defaultItemAnimator.setMoveDuration(200);
-        defaultItemAnimator.setRemoveDuration(200);
-        mRcvCards.setItemAnimator(defaultItemAnimator);
+    /**
+     * 是否已滑动到最左边
+     *
+     * @param leftSide true: 已到最左边, 即显示了控件组
+     */
+    private void onScrollLeftSide(boolean leftSide) {
+        View viewRightSpace = mRootView.findViewById(R.id.viewRight);
+        viewRightSpace.setVisibility(leftSide ? View.VISIBLE : View.GONE);
+        if (leftSide) {
+            viewRightSpace.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    EasyLog.d(TAG, "Click Another");
+                    // 600: recyclerView的第1项的x坐标.
+                    // 当列表向左滑动600时, 此处实际上的作用是收起第一项
+                    mRcvCards.smoothScrollBy(600,0);
+                }
+            });
+        }
     }
 
     @Override

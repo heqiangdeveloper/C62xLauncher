@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chinatsp.widgetcards.R;
+import com.chinatsp.widgetcards.manager.CardNameRes;
 
 import card.base.LauncherCard;
 import card.service.ICardStyleChange;
@@ -29,7 +30,7 @@ class SmallCardViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(int position, LauncherCard card) {
         mHideTitle = checkNeedHideTitle();
-        setTitle(card.getName());
+        setTitle(card.getType());
         mIvCardZoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,8 +53,8 @@ class SmallCardViewHolder extends RecyclerView.ViewHolder {
         return hideDefault;
     }
 
-    private void setTitle(String name) {
-        mTvCardName.setText(name);
+    private void setTitle(int type) {
+        mTvCardName.setText(CardNameRes.getStringRes(type));
         if (mHideTitle) {
             mTvCardName.setVisibility(View.GONE);
         } else {
