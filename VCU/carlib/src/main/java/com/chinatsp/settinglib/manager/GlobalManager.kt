@@ -88,20 +88,6 @@ class GlobalManager private constructor() : BaseManager() {
             return true
         }
         /**开关机状态*/
-        /*if (CarMcuManager.ID_VENDOR_MCU_POWER_MODE == property.propertyId) {
-            val value = property.value as Int
-            val tempPowerMode: Int = mPowerMode
-            mPowerMode = value
-            Timber.d("ACC VALUE:$tempPowerMode $value")
-            if (tempPowerMode > 4 && value <= 4) {
-                //ACC ON -> ACC OFF
-                startDialogService("ON")
-            }*//* else if (tempPowerMode <= 4 && value > 4) {
-                //ACC OFF -> ACC ON
-
-            }*//*
-            return true
-        }*/
         if (origin == Origin.CABIN && CarCabinManager.ID_POWER_MODE_BCM == property.propertyId) {
             val value = property.value as Int
             /**电源管理是否有效  0x0*/
@@ -120,14 +106,13 @@ class GlobalManager private constructor() : BaseManager() {
             Timber.d("CABIN loUPwrStatMngtVldValue:$loUPwrStatMngtVldValue")
             Timber.d("CABIN value:$value")
             Timber.d("CABIN loUPwrMngtStatlvl:$loUPwrMngtStatlvl")
-            loUPwrMngtStatlvl = 0
             if (value == 0x0) {
                 //0ff 电源等级LV0时，延迟五分钟弹《五分钟即将关闭》
-                if (loUPwrStatMngtVldValue == 0x0 && loUPwrMngtStatlvl == 0x0) {
-                    startDialogService("powerSupply")
+                if (loUPwrMngtStatlvl == 0x0) {
+                    startDialogService("ON")
                 }
             } else if (value == 0x2) {
-                //ON 未打火 电源等级LV1的时候延迟15分钟弹“5分钟即将关闭”弹框，
+                //ON 发动机未打火 电源等级LV1的时候延迟15分钟弹“5分钟即将关闭”弹框，
                 // 电源等级LV2的时候OFF——>ON马上弹
                 if(loUPwrStatMngtVldValue == 0x0 && !status){
                     if (loUPwrMngtStatlvl == 0x1) {
