@@ -42,6 +42,10 @@ class RegisterSignalManager private constructor() {
                     add(CarCabinManager.ID_BDC_VEHICLE_MODE)
                     /**注册电源管理等级指令*/
                     add(ID_LOUPWRMNGTSTATLVL)
+                    /**注册开关机状态指令*/
+                    add(CarCabinManager.ID_POWER_MODE_BCM)
+                    /**注册发动机状态指令*/
+                    add(CarCabinManager.ID_ENGINE_RUNNING)
                     SwitchNode.values()
                         .filter { it.get.origin == Origin.CABIN && it.get.signal != Constant.INVALID }
                         .forEach {

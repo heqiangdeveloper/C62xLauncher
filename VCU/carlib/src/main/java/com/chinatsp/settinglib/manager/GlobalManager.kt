@@ -2,7 +2,6 @@ package com.chinatsp.settinglib.manager
 
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
-import android.car.hardware.mcu.CarMcuManager
 import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
@@ -35,7 +34,6 @@ import java.util.concurrent.atomic.AtomicInteger
  * @version: 1.0
  */
 class GlobalManager private constructor() : BaseManager() {
-    private var mPowerMode = 0
 
     companion object {
         val TAG: String = GlobalManager::class.java.simpleName
@@ -78,54 +76,97 @@ class GlobalManager private constructor() : BaseManager() {
             if (0x1 == value) {
                 /**运输模式*/
                 startDialogService("transportMode")
-            }else if(0x2 == value){
+            } else if (0x2 == value) {
                 /**展车模式*/
                 startDialogService("exhibitionMode")
             }/*else if(0x4 == value){
-                *//**展车模式切换失败*//*
+                */
+            /**展车模式切换失败*//*
                 startDialogService("exhibitionModeError")
             }*/
 
             return true
         }
         /**开关机状态*/
-        if (CarMcuManager.ID_VENDOR_MCU_POWER_MODE == property.propertyId) {
+        /*if (CarMcuManager.ID_VENDOR_MCU_POWER_MODE == property.propertyId) {
             val value = property.value as Int
             val tempPowerMode: Int = mPowerMode
             mPowerMode = value
             Timber.d("ACC VALUE:$tempPowerMode $value")
-            if (value <= 4) {
+            if (tempPowerMode > 4 && value <= 4) {
                 //ACC ON -> ACC OFF
                 startDialogService("ON")
-            }/* else if (tempPowerMode <= 4 && value > 4) {
+            }*//* else if (tempPowerMode <= 4 && value > 4) {
                 //ACC OFF -> ACC ON
 
-            }*/
+            }*//*
+            return true
+        }*/
+        if (origin == Origin.CABIN && CarCabinManager.ID_POWER_MODE_BCM == property.propertyId) {
+            val value = property.value as Int
+            /**电源管理是否有效  0x0*/
+            val loUPwrStatMngtVldValue =
+                readIntProperty(CarCabinManager.ID_LOUPWRSTATMNGTVLD, Origin.CABIN)
+
+            /**电源等级*/
+            val loUPwrMngtStatlvl =
+                readIntProperty(CarCabinManager.ID_LOUPWRMNGTSTATLVL, Origin.CABIN)
+
+            /**发动机状态*/
+            //0x0:Engine NOT running 0x1:Cranking 0x2:Engine running 0x3:Fault
+            val engineRunning =
+                readIntProperty(CarCabinManager.ID_ENGINE_RUNNING, Origin.CABIN)
+            Timber.d("CABIN engineRunning:$engineRunning")
+            Timber.d("CABIN loUPwrStatMngtVldValue:$loUPwrStatMngtVldValue")
+            Timber.d("CABIN value:$value")
+            Timber.d("CABIN loUPwrMngtStatlvl:$loUPwrMngtStatlvl")
+            if (value == 0x0) {
+                //0ff 电源等级LV0时，延迟五分钟弹《五分钟即将关闭》
+                if (loUPwrStatMngtVldValue == 0x0 && loUPwrMngtStatlvl == 0x0) {
+                    startDialogService("ON")
+                }
+            } else if (value == 0x2) {
+                //ON 未打火 电源等级LV1的时候延迟15分钟弹“5分钟即将关闭”弹框，
+                // 电源等级LV2的时候OFF——>ON马上弹
+                if(loUPwrStatMngtVldValue == 0x0 && engineRunning == 0x0){
+                    if (loUPwrMngtStatlvl == 0x1) {
+                        //level1延迟15分钟弹出提示
+                        startDialogService("leve1")
+                    }else if(loUPwrMngtStatlvl == 0x2){
+                        //leve2的时候立马弹出
+                        startDialogService("leve2")
+                    }
+
+                }
+            }
+
             return true
         }
+
         /**电源等级状态*/
         if (origin == Origin.CABIN && CarCabinManager.ID_LOUPWRMNGTSTATLVL == property.propertyId) {
-            /**开关机状态*/
-            val powerValue = readIntProperty(CarMcuManager.ID_VENDOR_MCU_POWER_MODE, Origin.MCU)
-            val tempPowerMode: Int = mPowerMode
-            if (tempPowerMode <= 4 && powerValue > 4) {
-                //ACC OFF -> ACC ON
-                val value = property.value
+            /**电源管理是否有效  0x0*/
+            val loUPwrStatMngtVldValue =
+                readIntProperty(CarCabinManager.ID_LOUPWRSTATMNGTVLD, Origin.CABIN)
 
-                /**电源管理是否有效  0x0*/
-                val loUPwrStatMngtVldValue =
-                    readIntProperty(CarCabinManager.ID_LOUPWRSTATMNGTVLD, Origin.CABIN)
+            /**发动机状态*/
+            //0x0:Engine NOT running 0x1:Cranking 0x2:Engine running 0x3:Fault
+            val engineRunning =
+                readIntProperty(CarCabinManager.ID_ENGINE_RUNNING, Origin.CABIN)
+
+            /**开关机状态*/
+            val powerValue = readIntProperty(CarCabinManager.ID_POWER_MODE_BCM, Origin.CABIN)
+            val value = property.value
+            Timber.d("CABIN powerValue:$powerValue")
+            Timber.d("CABIN loUPwrStatMngtVldValue:$loUPwrStatMngtVldValue")
+            Timber.d("CABIN value:$value")
+            Timber.d("CABIN powerValue:$powerValue")
+            if(powerValue == 0x2 && engineRunning == 0x0){
+                //点火但没有启动发动机
                 /**LoUPwrStatMngtVld=0x0 且LoUPwrMngtStatLvl=0x1或0x2时*/
                 if (loUPwrStatMngtVldValue == 0x0 && value == 0x1 || value == 0x2) {
                     /**弹出储电量过低*/
                     startDialogService("powerSupply")
-                    if (value == 0x1) {
-                        //level1延迟15分钟弹出提示
-                        startDialogService("leve1")
-                    } else if (value == 0x2) {
-                        //leve2的时候立马弹出
-                        startDialogService("leve2")
-                    }
                     return true
                 }
             }
@@ -205,7 +246,8 @@ class GlobalManager private constructor() : BaseManager() {
             //本次行程平均油耗
             val value = readFloatProperty(CarCabinManager.ID_IP_AFE_AFTER_IGN_ON, Origin.CABIN)
             //长期行程平均油耗
-            val value2 = readFloatProperty(CarCabinManager.ID_IP_ALLAVGFUELCONSUMPTION, Origin.CABIN)
+            val value2 =
+                readFloatProperty(CarCabinManager.ID_IP_ALLAVGFUELCONSUMPTION, Origin.CABIN)
             command.message = "您的爱车本次行程平均油耗为每百公里${value}升，长期平均油耗为每百公里${value2}升"
             callback?.onCmdHandleResult(command)
             return

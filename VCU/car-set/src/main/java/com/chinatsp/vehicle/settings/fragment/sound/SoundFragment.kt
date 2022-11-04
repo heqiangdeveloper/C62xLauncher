@@ -24,7 +24,6 @@ import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.popupwindow.PopWindow
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
-import org.json.JSONObject
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -258,11 +257,6 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
         text.text = resources.getString(id)
         popWindow.showDownLift(view, 30, -160)
     }
-    private val seat = "seat" //座椅调节
-    private val rearviewMirror = "rearviewMirror" //电动外后视镜设置
-    private val atmosphereLamp = "atmosphereLamp" //氛围灯控制
-    private val soundEffects = "soundEffects" //音效设置
-
     override fun onPause() {
         super.onPause()
         val values = viewModel.getEffectValues(6).toList()

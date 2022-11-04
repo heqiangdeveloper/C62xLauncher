@@ -679,8 +679,7 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
 
     private fun obtainPowerMode(): Int {
         //0x0: OFF 0x1: ACC 0x2: IGN ON 0x3: CRANK
-        val value = readIntProperty(CarCabinManager.ID_POWER_MODE_BCM, Origin.CABIN)
-        return value
+        return readIntProperty(CarCabinManager.ID_POWER_MODE_BCM, Origin.CABIN)
     }
 
 }
