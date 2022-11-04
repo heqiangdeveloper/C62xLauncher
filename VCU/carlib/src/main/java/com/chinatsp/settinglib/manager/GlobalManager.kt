@@ -109,26 +109,27 @@ class GlobalManager private constructor() : BaseManager() {
                 readIntProperty(CarCabinManager.ID_LOUPWRSTATMNGTVLD, Origin.CABIN)
 
             /**电源等级*/
-            val loUPwrMngtStatlvl =
+            var loUPwrMngtStatlvl =
                 readIntProperty(CarCabinManager.ID_LOUPWRMNGTSTATLVL, Origin.CABIN)
 
             /**发动机状态*/
             //0x0:Engine NOT running 0x1:Cranking 0x2:Engine running 0x3:Fault
-            val engineRunning =
-                readIntProperty(CarCabinManager.ID_ENGINE_RUNNING, Origin.CABIN)
-            Timber.d("CABIN engineRunning:$engineRunning")
+            //val engineRunning = readIntProperty(CarCabinManager.ID_ENGINE_RUNNING, Origin.CABIN)
+            val status = VcuUtils.isEngineRunning()
+            Timber.d("CABIN status:$status")
             Timber.d("CABIN loUPwrStatMngtVldValue:$loUPwrStatMngtVldValue")
             Timber.d("CABIN value:$value")
             Timber.d("CABIN loUPwrMngtStatlvl:$loUPwrMngtStatlvl")
+            loUPwrMngtStatlvl = 0
             if (value == 0x0) {
                 //0ff 电源等级LV0时，延迟五分钟弹《五分钟即将关闭》
                 if (loUPwrStatMngtVldValue == 0x0 && loUPwrMngtStatlvl == 0x0) {
-                    startDialogService("ON")
+                    startDialogService("powerSupply")
                 }
             } else if (value == 0x2) {
                 //ON 未打火 电源等级LV1的时候延迟15分钟弹“5分钟即将关闭”弹框，
                 // 电源等级LV2的时候OFF——>ON马上弹
-                if(loUPwrStatMngtVldValue == 0x0 && engineRunning == 0x0){
+                if(loUPwrStatMngtVldValue == 0x0 && !status){
                     if (loUPwrMngtStatlvl == 0x1) {
                         //level1延迟15分钟弹出提示
                         startDialogService("leve1")
@@ -160,8 +161,11 @@ class GlobalManager private constructor() : BaseManager() {
             Timber.d("CABIN powerValue:$powerValue")
             Timber.d("CABIN loUPwrStatMngtVldValue:$loUPwrStatMngtVldValue")
             Timber.d("CABIN value:$value")
-            Timber.d("CABIN powerValue:$powerValue")
-            if(powerValue == 0x2 && engineRunning == 0x0){
+            val status = VcuUtils.isPower() && !VcuUtils.isEngineRunning()
+            Timber.d("CABIN powerValue:$powerValue. status:$status")
+
+//            if(powerValue == 0x2 && engineRunning == 0x0){
+            if (status) {
                 //点火但没有启动发动机
                 /**LoUPwrStatMngtVld=0x0 且LoUPwrMngtStatLvl=0x1或0x2时*/
                 if (loUPwrStatMngtVldValue == 0x0 && value == 0x1 || value == 0x2) {

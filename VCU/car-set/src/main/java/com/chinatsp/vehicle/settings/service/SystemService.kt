@@ -10,6 +10,7 @@ import com.chinatsp.vehicle.settings.app.Toast
 import com.chinatsp.vehicle.settings.fragment.dialog.DialogMaster
 import com.chinatsp.vehicle.settings.fragment.dialog.SystemAlertDialog
 import com.common.xui.utils.SystemDialogHelper
+import timber.log.Timber
 
 class SystemService : Service(), SystemDialogHelper.OnCountDownListener {
     //private val waitTime: Long = 1000 * 60 * 5//等待启动dialog时间
@@ -26,7 +27,7 @@ class SystemService : Service(), SystemDialogHelper.OnCountDownListener {
         if (intent != null) {
             type = intent.getStringExtra("type").toString()
         }
-
+        Timber.d("onStartCommand  type:=============$type")
         if (!TextUtils.isEmpty(type) && type == "ON") {
             contentStr = R.string.global_txt_close
             waitTime = 1000 * 60 * 5

@@ -2,7 +2,6 @@ package com.chinatsp.vehicle.settings.fragment
 
 import android.graphics.PixelFormat
 import android.os.Bundle
-import android.os.Handler
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.vcu.kanzi.KanZiKeys
@@ -71,6 +70,8 @@ class CommonlyFragment : BaseTabFragment<KanziViewModel, AccessFragmentBinding>(
         }
         binding.refreshWindow.setOnClickListener {
             GlobalManager.instance.resetSwitchWindow()
+            sendIntValue(KanZiKeys.Restoration, 1)
+            sendIntValue(KanZiKeys.Restoration, 0)
         }
     }
 
@@ -130,6 +131,7 @@ class CommonlyFragment : BaseTabFragment<KanziViewModel, AccessFragmentBinding>(
             controller.setDataObjectValue(keyObj, value)
         }
     }
+
     private fun sendDoubleValue(key: String, value: Int?) {
         if (null == value) {
             return
@@ -156,76 +158,74 @@ class CommonlyFragment : BaseTabFragment<KanziViewModel, AccessFragmentBinding>(
             Timber.d("notifyDataChanged() name:$name type:$type value:$value")
             if (name == "KanziInitFinish") {
                 Timber.d("Set isKanziInitFinish = true")
-                observeAccessState()
-//                binding.kanZiContent.post {
+                binding.kanZiContent.post {
+                    observeAccessState()
 //                    initVehicleStatus()
-//                }
+                }
             }
         }
     }
 
     private fun observeAccessState() {
         if (null != context) {
-            Handler(requireContext().mainLooper).post {
-                viewModel.headDoor.observe(this) {
-                    sendIntValue(KanZiKeys.Hood, it)
-                }
-                viewModel.tailDoor.observe(this) {
-                    sendIntValue(KanZiKeys.Trunk, it)
-                }
+            viewModel.headDoor.observe(this) {
+                sendIntValue(KanZiKeys.Hood, it)
+            }
+            viewModel.tailDoor.observe(this) {
+                sendIntValue(KanZiKeys.Trunk, it)
+            }
 
-                viewModel.lfDoor.observe(this) {
-                    sendIntValue(KanZiKeys.LFDoor, it)
-                }
-                viewModel.lrDoor.observe(this) {
-                    sendIntValue(KanZiKeys.LRDoor, it)
-                }
-                viewModel.rfDoor.observe(this) {
-                    sendIntValue(KanZiKeys.RFDoor, it)
-                }
-                viewModel.rrDoor.observe(this) {
-                    sendIntValue(KanZiKeys.RRDoor, it)
-                }
+            viewModel.lfDoor.observe(this) {
+                sendIntValue(KanZiKeys.LFDoor, it)
+            }
+            viewModel.lrDoor.observe(this) {
+                sendIntValue(KanZiKeys.LRDoor, it)
+            }
+            viewModel.rfDoor.observe(this) {
+                sendIntValue(KanZiKeys.RFDoor, it)
+            }
+            viewModel.rrDoor.observe(this) {
+                sendIntValue(KanZiKeys.RRDoor, it)
+            }
 
-                viewModel.lfWindow.observe(this) {
-                    sendDoubleValue(KanZiKeys.LFWindowUpDown, it)
-                }
-                viewModel.lrWindow.observe(this) {
-                    sendDoubleValue(KanZiKeys.LRWindowUpDown, it)
-                }
-                viewModel.rfWindow.observe(this) {
-                    sendDoubleValue(KanZiKeys.RFWindowUpDown, it)
-                }
-                viewModel.rrWindow.observe(this) {
-                    sendDoubleValue(KanZiKeys.RRWindowUpDown, it)
-                }
+            viewModel.lfWindow.observe(this) {
+                sendDoubleValue(KanZiKeys.LFWindowUpDown, it)
+            }
+            viewModel.lrWindow.observe(this) {
+                sendDoubleValue(KanZiKeys.LRWindowUpDown, it)
+            }
+            viewModel.rfWindow.observe(this) {
+                sendDoubleValue(KanZiKeys.RFWindowUpDown, it)
+            }
+            viewModel.rrWindow.observe(this) {
+                sendDoubleValue(KanZiKeys.RRWindowUpDown, it)
+            }
 
-                viewModel.fWiper.observe(this) {
-                    sendIntValue(KanZiKeys.FWiper, it)
-                }
-                viewModel.rWiper.observe(this) {
-                    sendIntValue(KanZiKeys.RWiper, it)
-                }
+            viewModel.fWiper.observe(this) {
+                sendIntValue(KanZiKeys.FWiper, it)
+            }
+            viewModel.rWiper.observe(this) {
+                sendIntValue(KanZiKeys.RWiper, it)
+            }
 
-                viewModel.lIndicator.observe(this) {
-                    sendIntValue(KanZiKeys.LeftIndicator, it)
-                }
-                viewModel.rIndicator.observe(this) {
-                    sendIntValue(KanZiKeys.RightIndicator, it)
-                }
+            viewModel.lIndicator.observe(this) {
+                sendIntValue(KanZiKeys.LeftIndicator, it)
+            }
+            viewModel.rIndicator.observe(this) {
+                sendIntValue(KanZiKeys.RightIndicator, it)
+            }
 
-                viewModel.headLamps.observe(this) {
-                    sendIntValue(KanZiKeys.HeadLamps, it)
-                }
-                viewModel.brakeLamps.observe(this) {
-                    sendIntValue(KanZiKeys.BrakeLights, it)
-                }
-                viewModel.positionLamps.observe(this) {
-                    sendIntValue(KanZiKeys.PositionLight, it)
-                }
-                viewModel.rearFogLamps.observe(this) {
-                    sendIntValue(KanZiKeys.RearFogLamp, it)
-                }
+            viewModel.headLamps.observe(this) {
+                sendIntValue(KanZiKeys.HeadLamps, it)
+            }
+            viewModel.brakeLamps.observe(this) {
+                sendIntValue(KanZiKeys.BrakeLights, it)
+            }
+            viewModel.positionLamps.observe(this) {
+                sendIntValue(KanZiKeys.PositionLight, it)
+            }
+            viewModel.rearFogLamps.observe(this) {
+                sendIntValue(KanZiKeys.RearFogLamp, it)
             }
         }
     }

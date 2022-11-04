@@ -45,7 +45,7 @@ abstract class BaseManager : IManager {
         block: ((SwitchState, Int) -> Unit),
     ): SwitchState {
         val result = SwitchState(node.default)
-        readProperty(node.get.signal, node.get.origin) {
+        readProperty(node.get.signal, node.get.origin, node.area) {
             block(result, it)
         }
         return result

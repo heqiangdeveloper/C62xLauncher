@@ -166,31 +166,19 @@ class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback, 
     private fun doHandleSrAction(obj: Any?) {
         if (obj !is NlpVoiceModel) {
             LogManager.e("", "obj is not NlpVoiceModel")
-            defaultHandleSpeech()
+//            defaultHandleSpeech()
             return
         }
         var result = null != controller && !TextUtils.isEmpty(obj.service);
         if (!result) {
             LogManager.e("", "controller or service is invalid")
-            defaultHandleSpeech()
-            return
-        }
-        result = controller!!.isEngineStatus(context.packageName)
-        val carSpeed = 120//获取系统车速
-        if (!result) {
-            LogManager.d(TAG, "发动机没有开启，请打开发动机！")
-            audioHintActionResult("", "", "发动机没有开启，请打开发动机！")
-            return
-        }
-        if (carSpeed > 120) {//车速大于120，不许开窗
-            LogManager.d(TAG, "车速过快，建议不要开启天窗！")
-            audioHintActionResult("", "", "车速过快，建议不要开启天窗！")
+//            defaultHandleSpeech()
             return
         }
         result = CommandParser().doDispatchSrAction(obj, controller!!, CmdHandleCallback())
 //        val array = ConditionerConstants.KT_USED
 //        audioHintActionResult("", "",  array[Random.nextInt(array.size)])//车机反馈应答，随机抽取
-        if (!result) {
+        if (!result && ("airControl" == obj.service || "carControl" == obj.service || "vehicleInfo" == obj.service)) {
             LogManager.e("", "execute default audio hint")
             defaultHandleSpeech()
         }
@@ -208,15 +196,15 @@ class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback, 
             val voiceJson = GsonUtil.stringToObject(jsonData, VoiceJson::class.java)
 //            if (null != voiceJson &&  ("airControl" == voiceJson.service || "carControl" == voiceJson.service)
 //                || "chat" == voiceJson.service || TextUtils.isEmpty(voiceJson.service)) {
-                voiceJson?.answer?.let {
-                    LogManager.d("ReceiveVoice", "voiceJson-answer: $it")
-                }
-                voiceJson?.semantic?.slots?.let {
-                    LogManager.d("ReceiveVoice", "voiceJson-semantic-slots: $it")
-                }
-                val convert = voiceJson.convert()
-                convert.slots.json = data
-                onSrAction(convert)
+            voiceJson?.answer?.let {
+                LogManager.d("ReceiveVoice", "voiceJson-answer: $it")
+            }
+            voiceJson?.semantic?.slots?.let {
+                LogManager.d("ReceiveVoice", "voiceJson-semantic-slots: $it")
+            }
+            val convert = voiceJson.convert()
+            convert.slots.json = data
+            onSrAction(convert)
 //            }
         } catch (e: Exception) {
             e.printStackTrace()

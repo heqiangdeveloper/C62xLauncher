@@ -2,6 +2,7 @@ package com.chinatsp.settinglib.manager.lamp
 
 import android.car.hardware.CarPropertyValue
 import com.chinatsp.settinglib.Constant
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IBaseListener
@@ -348,16 +349,41 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
         return success
     }
 
+    private fun interruptCommand(
+        command: CarCmd,
+        callback: ICmdCallback?,
+        coreEngine: Boolean = false,
+    ): Boolean {
+        val result = if (coreEngine) {
+            !VcuUtils.isPower() || !VcuUtils.isEngineRunning()
+        } else {
+            !VcuUtils.isPower()
+        }
+        if (result) {
+            command.message = "操作没有成功，请先启动发动机"
+            callback?.onCmdHandleResult(command)
+        }
+        return result
+    }
 
-    override fun doCarControlCommand(cmd: CarCmd, callback: ICmdCallback?) {
-        if (ICar.AMBIENT == cmd.car) {
-            doSwitchAmbient(cmd, callback)
-        } else if (ICar.BRIGHTNESS == cmd.car) {
-            doAdjustAmbientBrightness(cmd, callback)
-        } else if (ICar.COLOR == cmd.car) {
-            doAdjustAmbientColor(cmd, callback)
-        } else if (ICar.RHYTHM_MODE == cmd.car) {
-            doUpdateAmbientRhythmMode(cmd, callback)
+
+    override fun doCarControlCommand(command: CarCmd, callback: ICmdCallback?) {
+        if (ICar.AMBIENT == command.car) {
+            if (!interruptCommand(command, callback)) {
+                doSwitchAmbient(command, callback)
+            }
+        } else if (ICar.BRIGHTNESS == command.car) {
+            if (!interruptCommand(command, callback)) {
+                doAdjustAmbientBrightness(command, callback)
+            }
+        } else if (ICar.COLOR == command.car) {
+            if (!interruptCommand(command, callback)) {
+                doAdjustAmbientColor(command, callback)
+            }
+        } else if (ICar.RHYTHM_MODE == command.car) {
+            if (!interruptCommand(command, callback)) {
+                doUpdateAmbientRhythmMode(command, callback)
+            }
         }
     }
 

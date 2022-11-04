@@ -33,6 +33,41 @@ object VcuUtils {
         info.versionName
     }
 
+
+
+    fun isEngineRunning(manager: BaseManager = GlobalManager.instance): Boolean {
+//        0x0: Engine NOT running 0x1: Cranking 0x2: Engine running 0x3: Fault
+        val signal = CarCabinManager.ID_ENGINE_RUNNING
+        val value = manager.readIntProperty(signal, Origin.CABIN)
+        val result = value == 0x2
+        Timber.d("isEngineRunning invoke value:$value, result:$result")
+        return result
+    }
+
+    fun isPower(manager: BaseManager = GlobalManager.instance): Boolean {
+        val result = isPowerValid(manager) && isPowerLaunch(manager)
+        Timber.d("isPower invoke power status result:$result")
+        return result
+    }
+
+    private fun isPowerLaunch(manager: BaseManager = GlobalManager.instance): Boolean {
+//        0x0: OFF 0x1: ACC 0x2: IGN ON 0x3: CRANK
+        val signal = CarCabinManager.ID_POWER_MODE_BCM
+        val value = manager.readIntProperty(signal, Origin.CABIN)
+        val result = value == 0x2
+        Timber.d("isPowerLaunch invoke value:$value, result:$result")
+        return result
+    }
+
+    private fun isPowerValid(manager: BaseManager = GlobalManager.instance): Boolean {
+//        0x0:  reserved  0x1:  Invaild  0x2:  Vaild  0x3:  reserved
+        val signal = CarCabinManager.ID_POWER_MODE_VALID_BCM
+        val value = manager.readIntProperty(signal, Origin.CABIN)
+        val result = value == 0x2
+        Timber.d("isPowerValid invoke value:$value, result:$result")
+        return result
+    }
+
     fun isParking(manager: BaseManager = GlobalManager.instance): Boolean {
         /**
          * 挡位判断

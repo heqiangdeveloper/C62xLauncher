@@ -32,7 +32,7 @@ object KanZiKeys {
     const val PositionLight = "PositionLight"
     const val RearFogLamp = "RearFogLamp"
 
-
+    const val Restoration = "Restoration"
 
 
 }

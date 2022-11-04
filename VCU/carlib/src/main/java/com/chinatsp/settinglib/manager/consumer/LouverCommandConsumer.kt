@@ -19,8 +19,6 @@ import com.chinatsp.vehicle.controller.bean.CarCmd
  */
 class LouverCommandConsumer(val manager: GlobalManager) {
 
-
-
     private fun sendCabinValue(signal: Int, value: Int): Boolean {
         return manager.writeProperty(signal, value, Origin.CABIN)
     }

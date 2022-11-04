@@ -20,6 +20,7 @@ PropertyTypeLibrary/Car.LRWindowUpDown
 PropertyTypeLibrary/Car.PositionLight
 PropertyTypeLibrary/Car.RearFogLamp
 PropertyTypeLibrary/Car.RearviewMirror
+PropertyTypeLibrary/Car.Restoration
 PropertyTypeLibrary/Car.RFDoor
 PropertyTypeLibrary/Car.RFWindowUpDown
 PropertyTypeLibrary/Car.RightIndicator
@@ -167,15 +168,11 @@ Material Types/DirectionalGaussianBlur
 Materials/BlackTextured
 Materials/Chrome
 Materials/Chrome_black
-Materials/Chrome_hui
 Materials/Chrome_kuang
 Materials/Chrome_lightblack
 Materials/d glass
-Materials/DefaultBlitMaterial
-Materials/glass
 Materials/Glass_simple
 Materials/Glass_windows
-Materials/Int_body
 Materials/Int_icip
 Materials/Int_seat
 Materials/IntBody_door
@@ -726,60 +723,6 @@ Resource Files/Images/cubemaps/mipmaps/DefaultCubeMap.dds negZ_8x8.png
 Resource Files/Images/cubemaps/mipmaps/DefaultCubeMap.dds negZ_4x4.png
 Resource Files/Images/cubemaps/mipmaps/DefaultCubeMap.dds negZ_2x2.png
 Resource Files/Images/cubemaps/mipmaps/DefaultCubeMap.dds negZ_1x1.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds posX_256x256.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds posX_128x128.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds posX_64x64.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds posX_32x32.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds posX_16x16.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds posX_8x8.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds posX_4x4.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds posX_2x2.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds posX_1x1.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds negX_256x256.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds negX_128x128.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds negX_64x64.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds negX_32x32.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds negX_16x16.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds negX_8x8.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds negX_4x4.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds negX_2x2.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds negX_1x1.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds posY_256x256.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds posY_128x128.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds posY_64x64.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds posY_32x32.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds posY_16x16.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds posY_8x8.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds posY_4x4.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds posY_2x2.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds posY_1x1.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds negY_256x256.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds negY_128x128.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds negY_64x64.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds negY_32x32.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds negY_16x16.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds negY_8x8.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds negY_4x4.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds negY_2x2.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds negY_1x1.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds posZ_256x256.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds posZ_128x128.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds posZ_64x64.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds posZ_32x32.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds posZ_16x16.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds posZ_8x8.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds posZ_4x4.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds posZ_2x2.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds posZ_1x1.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds negZ_256x256.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds negZ_128x128.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds negZ_64x64.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds negZ_32x32.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds negZ_16x16.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds negZ_8x8.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds negZ_4x4.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds negZ_2x2.png
-Resource Files/Images/cubemaps/mipmaps/1SpecularHDR.dds negZ_1x1.png
 Resource Files/Images/cubemaps/mipmaps/5bSpecularHDR.dds posX_256x256.png
 Resource Files/Images/cubemaps/mipmaps/5bSpecularHDR.dds posX_128x128.png
 Resource Files/Images/cubemaps/mipmaps/5bSpecularHDR.dds posX_64x64.png
@@ -834,66 +777,6 @@ Resource Files/Images/cubemaps/mipmaps/5bSpecularHDR.dds negZ_8x8.png
 Resource Files/Images/cubemaps/mipmaps/5bSpecularHDR.dds negZ_4x4.png
 Resource Files/Images/cubemaps/mipmaps/5bSpecularHDR.dds negZ_2x2.png
 Resource Files/Images/cubemaps/mipmaps/5bSpecularHDR.dds negZ_1x1.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posX_512x512.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posX_256x256.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posX_128x128.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posX_64x64.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posX_32x32.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posX_16x16.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posX_8x8.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posX_4x4.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posX_2x2.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posX_1x1.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negX_512x512.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negX_256x256.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negX_128x128.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negX_64x64.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negX_32x32.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negX_16x16.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negX_8x8.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negX_4x4.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negX_2x2.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negX_1x1.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posY_512x512.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posY_256x256.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posY_128x128.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posY_64x64.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posY_32x32.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posY_16x16.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posY_8x8.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posY_4x4.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posY_2x2.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posY_1x1.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negY_512x512.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negY_256x256.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negY_128x128.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negY_64x64.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negY_32x32.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negY_16x16.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negY_8x8.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negY_4x4.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negY_2x2.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negY_1x1.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posZ_512x512.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posZ_256x256.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posZ_128x128.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posZ_64x64.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posZ_32x32.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posZ_16x16.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posZ_8x8.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posZ_4x4.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posZ_2x2.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds posZ_1x1.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negZ_512x512.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negZ_256x256.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negZ_128x128.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negZ_64x64.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negZ_32x32.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negZ_16x16.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negZ_8x8.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negZ_4x4.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negZ_2x2.png
-Resource Files/Images/cubemaps/mipmaps/Demo_3_SpecularHDR.dds negZ_1x1.png
 Resource Files/Images/cubemaps/mipmaps/fe6a3SpecularHDR.dds posX_128x128.png
 Resource Files/Images/cubemaps/mipmaps/fe6a3SpecularHDR.dds posX_64x64.png
 Resource Files/Images/cubemaps/mipmaps/fe6a3SpecularHDR.dds posX_32x32.png
@@ -996,276 +879,6 @@ Resource Files/Images/cubemaps/mipmaps/test01SpecularHDR.dds negZ_8x8.png
 Resource Files/Images/cubemaps/mipmaps/test01SpecularHDR.dds negZ_4x4.png
 Resource Files/Images/cubemaps/mipmaps/test01SpecularHDR.dds negZ_2x2.png
 Resource Files/Images/cubemaps/mipmaps/test01SpecularHDR.dds negZ_1x1.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds negX_128x128.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds negX_16x16.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds negX_1x1.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds negX_256x256.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds negX_2x2.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds negX_32x32.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds negX_4x4.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds negX_64x64.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds negX_8x8.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds negY_128x128.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds negY_16x16.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds negY_1x1.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds negY_256x256.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds negY_2x2.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds negY_32x32.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds negY_4x4.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds negY_64x64.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds negY_8x8.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds negZ_128x128.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds negZ_16x16.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds negZ_1x1.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds negZ_256x256.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds negZ_2x2.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds negZ_32x32.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds negZ_4x4.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds negZ_64x64.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds negZ_8x8.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds posX_128x128.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds posX_16x16.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds posX_1x1.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds posX_256x256.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds posX_2x2.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds posX_32x32.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds posX_4x4.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds posX_64x64.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds posX_8x8.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds posY_128x128.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds posY_16x16.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds posY_1x1.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds posY_256x256.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds posY_2x2.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds posY_32x32.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds posY_4x4.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds posY_64x64.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds posY_8x8.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds posZ_128x128.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds posZ_16x16.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds posZ_1x1.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds posZ_256x256.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds posZ_2x2.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds posZ_32x32.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds posZ_4x4.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds posZ_64x64.png
-Resource Files/Images/cubemaps/mipmaps/Around_ground_SpecularHDR.dds posZ_8x8.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds negX_128x128.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds negX_16x16.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds negX_1x1.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds negX_256x256.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds negX_2x2.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds negX_32x32.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds negX_4x4.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds negX_64x64.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds negX_8x8.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds negY_128x128.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds negY_16x16.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds negY_1x1.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds negY_256x256.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds negY_2x2.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds negY_32x32.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds negY_4x4.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds negY_64x64.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds negY_8x8.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds negZ_128x128.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds negZ_16x16.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds negZ_1x1.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds negZ_256x256.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds negZ_2x2.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds negZ_32x32.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds negZ_4x4.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds negZ_64x64.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds negZ_8x8.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds posX_128x128.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds posX_16x16.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds posX_1x1.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds posX_256x256.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds posX_2x2.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds posX_32x32.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds posX_4x4.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds posX_64x64.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds posX_8x8.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds posY_128x128.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds posY_16x16.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds posY_1x1.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds posY_256x256.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds posY_2x2.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds posY_32x32.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds posY_4x4.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds posY_64x64.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds posY_8x8.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds posZ_128x128.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds posZ_16x16.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds posZ_1x1.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds posZ_256x256.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds posZ_2x2.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds posZ_32x32.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds posZ_4x4.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds posZ_64x64.png
-Resource Files/Images/cubemaps/mipmaps/byd519SpecularHDR.dds posZ_8x8.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds negX_128x128.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds negX_16x16.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds negX_1x1.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds negX_256x256.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds negX_2x2.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds negX_32x32.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds negX_4x4.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds negX_64x64.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds negX_8x8.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds negY_128x128.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds negY_16x16.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds negY_1x1.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds negY_256x256.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds negY_2x2.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds negY_32x32.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds negY_4x4.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds negY_64x64.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds negY_8x8.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds negZ_128x128.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds negZ_16x16.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds negZ_1x1.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds negZ_256x256.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds negZ_2x2.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds negZ_32x32.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds negZ_4x4.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds negZ_64x64.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds negZ_8x8.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds posX_128x128.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds posX_16x16.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds posX_1x1.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds posX_256x256.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds posX_2x2.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds posX_32x32.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds posX_4x4.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds posX_64x64.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds posX_8x8.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds posY_128x128.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds posY_16x16.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds posY_1x1.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds posY_256x256.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds posY_2x2.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds posY_32x32.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds posY_4x4.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds posY_64x64.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds posY_8x8.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds posZ_128x128.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds posZ_16x16.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds posZ_1x1.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds posZ_256x256.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds posZ_2x2.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds posZ_32x32.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds posZ_4x4.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds posZ_64x64.png
-Resource Files/Images/cubemaps/mipmaps/byd525SpecularHDR.dds posZ_8x8.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds negX_128x128.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds negX_16x16.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds negX_1x1.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds negX_256x256.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds negX_2x2.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds negX_32x32.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds negX_4x4.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds negX_64x64.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds negX_8x8.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds negY_128x128.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds negY_16x16.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds negY_1x1.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds negY_256x256.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds negY_2x2.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds negY_32x32.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds negY_4x4.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds negY_64x64.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds negY_8x8.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds negZ_128x128.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds negZ_16x16.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds negZ_1x1.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds negZ_256x256.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds negZ_2x2.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds negZ_32x32.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds negZ_4x4.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds negZ_64x64.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds negZ_8x8.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds posX_128x128.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds posX_16x16.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds posX_1x1.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds posX_256x256.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds posX_2x2.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds posX_32x32.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds posX_4x4.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds posX_64x64.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds posX_8x8.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds posY_128x128.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds posY_16x16.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds posY_1x1.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds posY_256x256.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds posY_2x2.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds posY_32x32.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds posY_4x4.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds posY_64x64.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds posY_8x8.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds posZ_128x128.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds posZ_16x16.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds posZ_1x1.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds posZ_256x256.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds posZ_2x2.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds posZ_32x32.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds posZ_4x4.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds posZ_64x64.png
-Resource Files/Images/cubemaps/mipmaps/bydcarBrdfSpecularHDR.dds posZ_8x8.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds negX_128x128.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds negX_16x16.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds negX_1x1.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds negX_256x256.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds negX_2x2.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds negX_32x32.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds negX_4x4.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds negX_64x64.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds negX_8x8.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds negY_128x128.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds negY_16x16.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds negY_1x1.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds negY_256x256.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds negY_2x2.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds negY_32x32.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds negY_4x4.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds negY_64x64.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds negY_8x8.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds negZ_128x128.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds negZ_16x16.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds negZ_1x1.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds negZ_256x256.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds negZ_2x2.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds negZ_32x32.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds negZ_4x4.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds negZ_64x64.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds negZ_8x8.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds posX_128x128.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds posX_16x16.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds posX_1x1.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds posX_256x256.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds posX_2x2.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds posX_32x32.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds posX_4x4.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds posX_64x64.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds posX_8x8.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds posY_128x128.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds posY_16x16.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds posY_1x1.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds posY_256x256.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds posY_2x2.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds posY_32x32.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds posY_4x4.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds posY_64x64.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds posY_8x8.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds posZ_128x128.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds posZ_16x16.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds posZ_1x1.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds posZ_256x256.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds posZ_2x2.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds posZ_32x32.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds posZ_4x4.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds posZ_64x64.png
-Resource Files/Images/cubemaps/mipmaps/123SpecularHDR.dds posZ_8x8.png
 Resource Files/Images/cubemaps/DefaultCubeMap.dds posX.png
 Resource Files/Images/cubemaps/DefaultCubeMap.dds negX.png
 Resource Files/Images/cubemaps/DefaultCubeMap.dds posY.png
@@ -1278,36 +891,12 @@ Resource Files/Images/cubemaps/1DiffuseHDR.dds posY.png
 Resource Files/Images/cubemaps/1DiffuseHDR.dds negY.png
 Resource Files/Images/cubemaps/1DiffuseHDR.dds posZ.png
 Resource Files/Images/cubemaps/1DiffuseHDR.dds negZ.png
-Resource Files/Images/cubemaps/1SpecularHDR.dds posX.png
-Resource Files/Images/cubemaps/1SpecularHDR.dds negX.png
-Resource Files/Images/cubemaps/1SpecularHDR.dds posY.png
-Resource Files/Images/cubemaps/1SpecularHDR.dds negY.png
-Resource Files/Images/cubemaps/1SpecularHDR.dds posZ.png
-Resource Files/Images/cubemaps/1SpecularHDR.dds negZ.png
-Resource Files/Images/cubemaps/5bDiffuseHDR.dds posX.png
-Resource Files/Images/cubemaps/5bDiffuseHDR.dds negX.png
-Resource Files/Images/cubemaps/5bDiffuseHDR.dds posY.png
-Resource Files/Images/cubemaps/5bDiffuseHDR.dds negY.png
-Resource Files/Images/cubemaps/5bDiffuseHDR.dds posZ.png
-Resource Files/Images/cubemaps/5bDiffuseHDR.dds negZ.png
 Resource Files/Images/cubemaps/5bSpecularHDR.dds posX.png
 Resource Files/Images/cubemaps/5bSpecularHDR.dds negX.png
 Resource Files/Images/cubemaps/5bSpecularHDR.dds posY.png
 Resource Files/Images/cubemaps/5bSpecularHDR.dds negY.png
 Resource Files/Images/cubemaps/5bSpecularHDR.dds posZ.png
 Resource Files/Images/cubemaps/5bSpecularHDR.dds negZ.png
-Resource Files/Images/cubemaps/Demo_3_DiffuseHDR.dds posX.png
-Resource Files/Images/cubemaps/Demo_3_DiffuseHDR.dds negX.png
-Resource Files/Images/cubemaps/Demo_3_DiffuseHDR.dds posY.png
-Resource Files/Images/cubemaps/Demo_3_DiffuseHDR.dds negY.png
-Resource Files/Images/cubemaps/Demo_3_DiffuseHDR.dds posZ.png
-Resource Files/Images/cubemaps/Demo_3_DiffuseHDR.dds negZ.png
-Resource Files/Images/cubemaps/Demo_3_SpecularHDR.dds posX.png
-Resource Files/Images/cubemaps/Demo_3_SpecularHDR.dds negX.png
-Resource Files/Images/cubemaps/Demo_3_SpecularHDR.dds posY.png
-Resource Files/Images/cubemaps/Demo_3_SpecularHDR.dds negY.png
-Resource Files/Images/cubemaps/Demo_3_SpecularHDR.dds posZ.png
-Resource Files/Images/cubemaps/Demo_3_SpecularHDR.dds negZ.png
 Resource Files/Images/cubemaps/fe6a3DiffuseHDR.dds posX.png
 Resource Files/Images/cubemaps/fe6a3DiffuseHDR.dds negX.png
 Resource Files/Images/cubemaps/fe6a3DiffuseHDR.dds posY.png
@@ -1326,54 +915,6 @@ Resource Files/Images/cubemaps/test01SpecularHDR.dds posY.png
 Resource Files/Images/cubemaps/test01SpecularHDR.dds negY.png
 Resource Files/Images/cubemaps/test01SpecularHDR.dds posZ.png
 Resource Files/Images/cubemaps/test01SpecularHDR.dds negZ.png
-Resource Files/Images/cubemaps/Around_ground_SpecularHDR.dds negX.png
-Resource Files/Images/cubemaps/Around_ground_SpecularHDR.dds negY.png
-Resource Files/Images/cubemaps/Around_ground_SpecularHDR.dds negZ.png
-Resource Files/Images/cubemaps/Around_ground_SpecularHDR.dds posX.png
-Resource Files/Images/cubemaps/Around_ground_SpecularHDR.dds posY.png
-Resource Files/Images/cubemaps/Around_ground_SpecularHDR.dds posZ.png
-Resource Files/Images/cubemaps/byd519DiffuseHDR.dds negX.png
-Resource Files/Images/cubemaps/byd519DiffuseHDR.dds negY.png
-Resource Files/Images/cubemaps/byd519DiffuseHDR.dds negZ.png
-Resource Files/Images/cubemaps/byd519DiffuseHDR.dds posX.png
-Resource Files/Images/cubemaps/byd519DiffuseHDR.dds posY.png
-Resource Files/Images/cubemaps/byd519DiffuseHDR.dds posZ.png
-Resource Files/Images/cubemaps/byd519SpecularHDR.dds negX.png
-Resource Files/Images/cubemaps/byd519SpecularHDR.dds negY.png
-Resource Files/Images/cubemaps/byd519SpecularHDR.dds negZ.png
-Resource Files/Images/cubemaps/byd519SpecularHDR.dds posX.png
-Resource Files/Images/cubemaps/byd519SpecularHDR.dds posY.png
-Resource Files/Images/cubemaps/byd519SpecularHDR.dds posZ.png
-Resource Files/Images/cubemaps/byd525DiffuseHDR.dds negX.png
-Resource Files/Images/cubemaps/byd525DiffuseHDR.dds negY.png
-Resource Files/Images/cubemaps/byd525DiffuseHDR.dds negZ.png
-Resource Files/Images/cubemaps/byd525DiffuseHDR.dds posX.png
-Resource Files/Images/cubemaps/byd525DiffuseHDR.dds posY.png
-Resource Files/Images/cubemaps/byd525DiffuseHDR.dds posZ.png
-Resource Files/Images/cubemaps/byd525SpecularHDR.dds negX.png
-Resource Files/Images/cubemaps/byd525SpecularHDR.dds negY.png
-Resource Files/Images/cubemaps/byd525SpecularHDR.dds negZ.png
-Resource Files/Images/cubemaps/byd525SpecularHDR.dds posX.png
-Resource Files/Images/cubemaps/byd525SpecularHDR.dds posY.png
-Resource Files/Images/cubemaps/byd525SpecularHDR.dds posZ.png
-Resource Files/Images/cubemaps/bydcarBrdfSpecularHDR.dds negX.png
-Resource Files/Images/cubemaps/bydcarBrdfSpecularHDR.dds negY.png
-Resource Files/Images/cubemaps/bydcarBrdfSpecularHDR.dds negZ.png
-Resource Files/Images/cubemaps/bydcarBrdfSpecularHDR.dds posX.png
-Resource Files/Images/cubemaps/bydcarBrdfSpecularHDR.dds posY.png
-Resource Files/Images/cubemaps/bydcarBrdfSpecularHDR.dds posZ.png
-Resource Files/Images/cubemaps/123DiffuseHDR.dds negX.png
-Resource Files/Images/cubemaps/123DiffuseHDR.dds negY.png
-Resource Files/Images/cubemaps/123DiffuseHDR.dds negZ.png
-Resource Files/Images/cubemaps/123DiffuseHDR.dds posX.png
-Resource Files/Images/cubemaps/123DiffuseHDR.dds posY.png
-Resource Files/Images/cubemaps/123DiffuseHDR.dds posZ.png
-Resource Files/Images/cubemaps/123SpecularHDR.dds negX.png
-Resource Files/Images/cubemaps/123SpecularHDR.dds negY.png
-Resource Files/Images/cubemaps/123SpecularHDR.dds negZ.png
-Resource Files/Images/cubemaps/123SpecularHDR.dds posX.png
-Resource Files/Images/cubemaps/123SpecularHDR.dds posY.png
-Resource Files/Images/cubemaps/123SpecularHDR.dds posZ.png
 Resource Files/Images/mipmaps/DefaultTextureImage_512x512.png
 Resource Files/Images/mipmaps/DefaultTextureImage_256x256.png
 Resource Files/Images/mipmaps/DefaultTextureImage_128x128.png
@@ -1385,27 +926,21 @@ Resource Files/Images/mipmaps/DefaultTextureImage_4x4.png
 Resource Files/Images/mipmaps/DefaultTextureImage_2x2.png
 Resource Files/Images/mipmaps/DefaultTextureImage_1x1.png
 Resource Files/Images/mipmaps/blinn2_Base_Color2_1024x1024.png
-Resource Files/Images/mipmaps/blinn2_Base_Color2_128x128.png
-Resource Files/Images/mipmaps/blinn2_Base_Color2_16x16.png
-Resource Files/Images/mipmaps/blinn2_Base_Color2_1x1.png
-Resource Files/Images/mipmaps/blinn2_Base_Color2_256x256.png
-Resource Files/Images/mipmaps/blinn2_Base_Color2_2x2.png
-Resource Files/Images/mipmaps/blinn2_Base_Color2_32x32.png
-Resource Files/Images/mipmaps/blinn2_Base_Color2_4x4.png
 Resource Files/Images/mipmaps/blinn2_Base_Color2_512x512.png
+Resource Files/Images/mipmaps/blinn2_Base_Color2_256x256.png
+Resource Files/Images/mipmaps/blinn2_Base_Color2_128x128.png
 Resource Files/Images/mipmaps/blinn2_Base_Color2_64x64.png
+Resource Files/Images/mipmaps/blinn2_Base_Color2_32x32.png
+Resource Files/Images/mipmaps/blinn2_Base_Color2_16x16.png
 Resource Files/Images/mipmaps/blinn2_Base_Color2_8x8.png
+Resource Files/Images/mipmaps/blinn2_Base_Color2_4x4.png
+Resource Files/Images/mipmaps/blinn2_Base_Color2_2x2.png
+Resource Files/Images/mipmaps/blinn2_Base_Color2_1x1.png
 Resource Files/Images/DefaultBackground.png
 Resource Files/Images/DefaultTextureImage.png
 Resource Files/Images/1DiffuseHDR.dds
-Resource Files/Images/1SpecularHDR.dds
-Resource Files/Images/5bDiffuseHDR.dds
 Resource Files/Images/5bSpecularHDR.dds
 Resource Files/Images/black.png
-Resource Files/Images/body_ao.png
-Resource Files/Images/Demo_3_DiffuseHDR.dds
-Resource Files/Images/Demo_3_SpecularHDR.dds
-Resource Files/Images/ext_ao.png
 Resource Files/Images/fe6a3DiffuseHDR.dds
 Resource Files/Images/fe6a3SpecularHDR.dds
 Resource Files/Images/hall2_NegX.png
@@ -1414,7 +949,6 @@ Resource Files/Images/hall2_NegZ.png
 Resource Files/Images/hall2_PosX.png
 Resource Files/Images/hall2_PosY.png
 Resource Files/Images/hall2_PosZ.png
-Resource Files/Images/lc_body_Material _196_BaseColor.png
 Resource Files/Images/lc_door_Material _196_BaseColor.png
 Resource Files/Images/lc_ipic_Material _274_BaseColor.png
 Resource Files/Images/lc_seat_Material _196_BaseColor.png
@@ -1422,56 +956,28 @@ Resource Files/Images/test01SpecularHDR.dds
 Resource Files/Images/White.png
 Resource Files/Images/chenlun_N_normal.png
 Resource Files/Images/tread_normal_all.png
-Resource Files/Images/flakeAlbedo.png
 Resource Files/Images/CarShadowGroundA.png
 Resource Files/Images/blinn2_Base_Color2.png
-Resource Files/Images/Knob.png
-Resource Files/Images/Left Fill.png
-Resource Files/Images/Left Side.png
-Resource Files/Images/Right Fill.png
-Resource Files/Images/Right Side.png
 Resource Files/Images/LightBeam.png
-Resource Files/Images/ext_ao1.png
-Resource Files/Images/Around_ground_SpecularHDR.dds
-Resource Files/Images/byd519DiffuseHDR.dds
-Resource Files/Images/byd519SpecularHDR.dds
-Resource Files/Images/byd525DiffuseHDR.dds
-Resource Files/Images/byd525SpecularHDR.dds
-Resource Files/Images/bydcarBrdfSpecularHDR.dds
 Resource Files/Images/ext_ao2.png
-Resource Files/Images/123DiffuseHDR.dds
-Resource Files/Images/123SpecularHDR.dds
 Textures/DefaultBackground
 Textures/Default Texture
 Textures/Default Cube Map Texture
 Textures/1DiffuseHDR
-Textures/1SpecularHDR
-Textures/5bDiffuseHDR
 Textures/5bSpecularHDR
 Textures/black
-Textures/Demo_3_DiffuseHDR
-Textures/Demo_3_SpecularHDR
-Textures/ext_ao
 Textures/fe6a3DiffuseHDR
 Textures/fe6a3SpecularHDR
-Textures/lc_body_Material _196_BaseColor
 Textures/lc_door_Material _196_BaseColor
 Textures/lc_ipic_Material _274_BaseColor
 Textures/lc_seat_Material _196_BaseColor
-Textures/Render Target Texture
 Textures/test01SpecularHDR
 Textures/White
 Textures/chenlun_N_normal
 Textures/tread_normal_all
 Textures/CarShadowGroundA
-Textures/Knob
-Textures/Left Fill
-Textures/Left Side
-Textures/Right Fill
-Textures/Right Side
 Textures/LightBeam
 Textures/blinn2_Base_Color2
-Textures/ext_ao1
 Textures/ext_ao2
 Styles/Text Block 2D Style
 State Managers/Car State Manager

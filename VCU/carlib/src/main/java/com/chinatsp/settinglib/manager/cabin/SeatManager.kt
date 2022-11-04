@@ -246,9 +246,9 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
     }
 
     private fun updateKneadLevel(@IPart part: Int, level: Int): Boolean {
-        val setSignal = obtainChairSetSignal(part)
+        val setSignal = obtainChairKneadLevelSetSignal(part)
         if (Constant.INVALID != setSignal) {
-            val actual = obtainChairGetSignal(part)
+            val actual = obtainChairKneadLevelGetSignal(part)
             val result = actual != level
             if (result) {
                 writeProperty(setSignal, level, Origin.CABIN)
@@ -258,20 +258,20 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
         return false
     }
 
-    private fun obtainChairSetSignal(@IPart part: Int): Int {
+    private fun obtainChairKneadLevelSetSignal(@IPart part: Int): Int {
         return when (part) {
             IPart.LEFT_FRONT -> CarCabinManager.ID_HUM_SEATMASSLVL_FL
             IPart.RIGHT_FRONT -> CarCabinManager.ID_HUM_SEATMASSLVL_FR
-            IPart.LEFT_BACK -> -1
-            IPart.RIGHT_BACK -> -1
+            IPart.LEFT_BACK -> Constant.INVALID
+            IPart.RIGHT_BACK -> Constant.INVALID
             else -> Constant.INVALID
         }
     }
 
-    private fun obtainChairGetSignal(@IPart part: Int): Int {
+    private fun obtainChairKneadLevelGetSignal(@IPart part: Int): Int {
         return when (part) {
-            IPart.LEFT_FRONT -> -1
-            IPart.RIGHT_FRONT -> -1
+            IPart.LEFT_FRONT -> Constant.INVALID
+            IPart.RIGHT_FRONT -> Constant.INVALID
             IPart.LEFT_BACK -> CarCabinManager.ID_RLSSM_SEAT_LVL_SET_STS
             IPart.RIGHT_BACK -> CarCabinManager.ID_RRSSM_SEAT_LVL_SET_STS
             else -> Constant.INVALID
@@ -279,7 +279,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
     }
 
     private fun obtainChairKneadLevel(@IPart part: Int): Int {
-        val signal = obtainChairGetSignal(part)
+        val signal = obtainChairKneadLevelGetSignal(part)
         if (Constant.INVALID != signal) {
             return readIntProperty(signal, Origin.CABIN)
         }
@@ -290,19 +290,27 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
     override fun doCarControlCommand(command: CarCmd, callback: ICmdCallback?) {
         if (ICar.CHAIR == command.car) {
             if (IAct.HEAT == command.act) {
-                doControlChairHeat(command, callback)
+                if (!interruptCommand(command, callback, coreEngine = true)) {
+                    doControlChairHeat(command, callback)
+                }
                 return
             }
             if (IAct.COLD == command.act) {
-                doControlChairVentilate(command, callback)
+                if (!interruptCommand(command, callback, coreEngine = true)) {
+                    doControlChairVentilate(command, callback)
+                }
                 return
             }
             if (IAct.KNEAD == command.act) {
-                doControlChairKnead(command, callback)
+                if (!interruptCommand(command, callback)) {
+                    doControlChairKnead(command, callback)
+                }
                 return
             }
             if (IAct.TILT == command.act) {
-                doControlChairTilt(command, callback)
+                if (!interruptCommand(command, callback, coreEngine = true)) {
+                    doControlChairTilt(command, callback)
+                }
                 return
             }
         }
@@ -314,42 +322,113 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
     }
 
     private fun doControlChairKnead(command: CarCmd, callback: ICmdCallback?) {
-        var level = Constant.INVALID
-        val min = 0x2
-        val max = 0x5
+        val minLevel = 0x2
+        val maxLevel = 0x4
+        val offLevel = 0x5
         var append = ""
+        var level = Constant.INVALID
+        var mask = IPart.LEFT_FRONT
+        val isLFActive = mask == (mask and command.part)
+        mask = IPart.LEFT_BACK
+        val isLRActive = mask == (mask and command.part)
+        mask = IPart.RIGHT_FRONT
+        val isRFActive = mask == (mask and command.part)
+        mask = IPart.RIGHT_BACK
+        val isRRActive = mask == (mask and command.part)
+        var lfLevel = Constant.INVALID
+        var lrLevel = Constant.INVALID
+        var rfLevel = Constant.INVALID
+        var rrLevel = Constant.INVALID
         if (Action.TURN_ON == command.action) {
-            level = 0x4
-            append = "打开"
+            level = maxLevel
+            if (isLFActive) lfLevel = level
+            if (isLRActive) lrLevel = level
+            if (isRFActive) rfLevel = level
+            if (isRRActive) rrLevel = level
         }
         if (Action.TURN_OFF == command.action) {
-            level = max
-            append = "关闭"
+            level = offLevel
+            if (isLFActive) lfLevel = level
+            if (isLRActive) lrLevel = level
+            if (isRFActive) rfLevel = level
+            if (isRRActive) rrLevel = level
+        }
+        if (Action.PLUS == command.action) {
+            if (isLFActive) {
+                val value = obtainChairKneadLevel(IPart.LEFT_FRONT)
+                lfLevel = value + 1
+            }
+            if (isLRActive) {
+                val value = obtainChairKneadLevel(IPart.LEFT_BACK)
+                lrLevel = value + 1
+            }
+            if (isRFActive) {
+                val value = obtainChairKneadLevel(IPart.RIGHT_FRONT)
+                rfLevel = value + 1
+            }
+            if (isRRActive) {
+                val value = obtainChairKneadLevel(IPart.RIGHT_BACK)
+                rrLevel = value + 1
+            }
+        }
+        if (Action.MINUS == command.action) {
+            if (isLFActive) {
+                val value = obtainChairKneadLevel(IPart.LEFT_FRONT)
+                lfLevel = value - 1
+            }
+            if (isLRActive) {
+                val value = obtainChairKneadLevel(IPart.LEFT_BACK)
+                lrLevel = value - 1
+            }
+            if (isRFActive) {
+                val value = obtainChairKneadLevel(IPart.RIGHT_FRONT)
+                rfLevel = value - 1
+            }
+            if (isRRActive) {
+                val value = obtainChairKneadLevel(IPart.RIGHT_BACK)
+                rrLevel = value - 1
+            }
+        }
+        if (Action.MIN == command.action) {
+            level = minLevel
+            if (isLFActive) lfLevel = level
+            if (isLRActive) lrLevel = level
+            if (isRFActive) rfLevel = level
+            if (isRRActive) rrLevel = level
+        }
+        if (Action.MAX == command.action) {
+            level = maxLevel
+            if (isLFActive) lfLevel = level
+            if (isLRActive) lrLevel = level
+            if (isRFActive) rfLevel = level
+            if (isRRActive) rrLevel = level
         }
         if (Action.FIXED == command.action) {
             level = command.value
-            if (level <= 0) {
-                level = max
+            if (level < minLevel) {
+                level = minLevel
             } else {
-                level += 0x1
-                if (level > 0x4) {
-                    level = 0x4
-                }
+                level += 1
             }
-            append = when (level) {
-                max -> "关闭"
-                0x4 -> "调整到最高"
-                else -> "调整到${level - 0x1}级"
+            if (level > maxLevel) {
+                level = maxLevel
             }
+            if (isLFActive) lfLevel = level
+            if (isLRActive) lrLevel = level
+            if (isRFActive) rfLevel = level
+            if (isRRActive) rrLevel = level
         }
-        var mask = IPart.LEFT_FRONT
-        val isLF = if (mask == (mask and command.part)) updateKneadLevel(mask, level) else false
-        mask = IPart.LEFT_BACK
-        val isLB = if (mask == (mask and command.part)) updateKneadLevel(mask, level) else false
-        mask = IPart.RIGHT_FRONT
-        val isRF = if (mask == (mask and command.part)) updateKneadLevel(mask, level) else false
-        mask = IPart.RIGHT_BACK
-        val isRB = if (mask == (mask and command.part)) updateKneadLevel(mask, level) else false
+        append = when (level) {
+            offLevel -> "关闭"
+            minLevel -> "调整到最低"
+            maxLevel -> if (Action.TURN_ON == command.action) "打开" else "调整到最高"
+            else -> "调整到${level - 0x1}档"
+        }
+        val isLF = if (isLFActive) updateKneadLevel(mask, lfLevel) else false
+        val isLB = if (isLRActive) updateKneadLevel(mask, lrLevel) else false
+        val isRF = if (isRFActive) updateKneadLevel(mask, rfLevel) else false
+        val isRB = if (isRRActive) updateKneadLevel(mask, rrLevel) else false
+
         if (isLF || isLB || isRF || isRB) {
             command.message = "好的，${command.slots?.mode}${append}了"
         } else {
@@ -395,6 +474,23 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
             command.message = "好的，${command.slots?.name}通风已经${append}了"
         }
         callback?.onCmdHandleResult(command)
+    }
+
+    private fun interruptCommand(
+        command: CarCmd,
+        callback: ICmdCallback?,
+        coreEngine: Boolean = false,
+    ): Boolean {
+        val result = if (coreEngine) {
+            !VcuUtils.isPower() || !VcuUtils.isEngineRunning()
+        } else {
+            !VcuUtils.isPower()
+        }
+        if (result) {
+            command.message = "操作没有成功，请先启动发动机"
+            callback?.onCmdHandleResult(command)
+        }
+        return result
     }
 
     private fun doControlChairHeat(command: CarCmd, callback: ICmdCallback?) {
@@ -474,7 +570,6 @@ class SeatManager private constructor() : BaseManager(), ISoundManager {
 //        0x0~0x7D0:0~100%; 0xFF:Invalid
         return readIntProperty(signal, Origin.CABIN)
     }
-
 
 
 }

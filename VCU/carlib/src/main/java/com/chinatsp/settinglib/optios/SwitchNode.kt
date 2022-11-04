@@ -752,6 +752,7 @@ enum class SwitchNode(
         get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ALC_INTE_MODE_SW_RESPONSE),
         set = Norm(
             on = 0x1, off = 0x2, signal = CarCabinManager.ID_ALC_HUM_ALC_INTELLIGENT_MODE_SW),
+        area = Area.AREA_TYPE_GLOBAL,
         default = true
     ),
 

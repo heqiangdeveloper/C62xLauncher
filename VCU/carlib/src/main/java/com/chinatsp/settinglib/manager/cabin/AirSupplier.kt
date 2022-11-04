@@ -4,11 +4,14 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.Message
 import com.chinatsp.settinglib.Constant
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.AirCmdParcel
+import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.annotation.Action
 import com.chinatsp.vehicle.controller.annotation.IAir
 import com.chinatsp.vehicle.controller.annotation.IPart
 import com.chinatsp.vehicle.controller.bean.AirCmd
+import com.chinatsp.vehicle.controller.bean.CarCmd
 import com.chinatsp.vehicle.controller.utils.Keywords
 import kotlin.math.min
 
@@ -160,8 +163,28 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster {
         }
     }
 
+    private fun interruptCommand(
+        command: AirCmd,
+        callback: ICmdCallback?,
+        coreEngine: Boolean = false,
+    ): Boolean {
+        val result = if (coreEngine) {
+            !VcuUtils.isPower() || !VcuUtils.isEngineRunning()
+        } else {
+            !VcuUtils.isPower()
+        }
+        if (result) {
+            command.message = "操作没有成功，请先启动发动机"
+            callback?.onCmdHandleResult(command)
+        }
+        return result
+    }
+
+
     fun doAirControlCommand(parcel: AirCmdParcel) {
-//        Timber.d("doAirControlCommand ------------- action:${parcel.cmd.action}")
+        if (interruptCommand(parcel.cmd, parcel.callback)) {
+            return
+        }
         when (parcel.cmd.action) {
             Action.OPEN -> {
                 doLaunchConditioner(parcel)

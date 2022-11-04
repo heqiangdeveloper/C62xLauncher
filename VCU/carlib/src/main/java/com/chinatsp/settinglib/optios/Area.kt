@@ -1,5 +1,6 @@
 package com.chinatsp.settinglib.optios
 
+import android.car.VehicleAreaType
 import android.hardware.automotive.vehicle.V2_0.VehicleArea
 
 /**
@@ -11,6 +12,7 @@ import android.hardware.automotive.vehicle.V2_0.VehicleArea
  */
 enum class Area(val id: Int) {
     GLOBAL(VehicleArea.GLOBAL),
+    AREA_TYPE_GLOBAL(VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL),
     WINDOW(VehicleArea.WINDOW),
     MIRROR(VehicleArea.MIRROR),
     SEAT(VehicleArea.SEAT),

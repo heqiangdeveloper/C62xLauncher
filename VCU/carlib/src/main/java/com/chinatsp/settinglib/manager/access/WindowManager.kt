@@ -3,6 +3,7 @@ package com.chinatsp.settinglib.manager.access
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
 import com.chinatsp.settinglib.Constant
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.ISwitchListener
@@ -167,15 +168,30 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager {
             return
         }
         if (ICar.WINDOWS == command.car) {
+            if (!VcuUtils.isPower()) {
+                command.message = "操作没有成功，请先启动发动机"
+                callback?.onCmdHandleResult(command)
+                return
+            }
             doControlSwitchWindow(command, callback)
             return
         }
         if (ICar.LOUVER == command.car) {
+            if (!VcuUtils.isPower()) {
+                command.message = "操作没有成功，请先启动发动机"
+                callback?.onCmdHandleResult(command)
+                return
+            }
 //            doControlLouverLevel(command, callback)
             doControlLouverSwitch(command, callback)
             return
         }
         if (ICar.WIPER == command.car) {
+            if (!VcuUtils.isPower()) {
+                command.message = "操作没有成功，请先启动发动机"
+                callback?.onCmdHandleResult(command)
+                return
+            }
             doControlWiper(command, callback)
             return
         }
