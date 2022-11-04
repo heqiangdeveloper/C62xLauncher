@@ -5,6 +5,8 @@ import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import launcher.base.utils.EasyLog;
+
 public class RecyclerViewUtil {
     public static RecyclerView.ViewHolder findViewHold(RecyclerView recyclerView, int position) {
         if (recyclerView == null) {
@@ -21,6 +23,18 @@ public class RecyclerViewUtil {
         if (layoutManager == null) {
             return null;
         }
-        return recyclerView.findViewHolderForAdapterPosition(position);
+        RecyclerView.ViewHolder viewHolder =  recyclerView.findViewHolderForAdapterPosition(position);
+//        if (viewHolder == null) {
+//            RecyclerView.RecycledViewPool pool = recyclerView.getRecycledViewPool();
+//            int recycledViewCount = pool.getRecycledViewCount(type);
+//            EasyLog.d("RecyclerViewUtil", "findViewHold, recycledViewCount:"+recycledViewCount);
+//            viewHolder = pool.getRecycledView(type);
+//            try {
+//                pool.putRecycledView(viewHolder);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+        return viewHolder;
     }
 }

@@ -171,6 +171,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
         LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
         if (viewHolder == null) {
             // 说明此时viewHolder尚未创建, 需要先将recyclerView移动到后面
+            // 当延迟后, 就能找到ViewHolder
             CardScrollUtil.scroll(layoutManager, cardIndex);
             EasyLog.d(TAG, "tryExpandInnerCard 2: " + card.getName() + " , " + viewHolder);
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
@@ -244,7 +245,9 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
             if (cardsAdapter != null) {
                 ExpandStateManager.getInstance().setBigCardPosition(cardsAdapter.getPositionByCard(mLauncherCard));
             }
+
             chooseAnotherSmallCard();
+
         }
         mExpandState = !mExpandState;
         EasyLog.d(TAG, mLauncherCard.getName() + " expandCheck:" + mExpandState);
@@ -306,9 +309,21 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
         ExpandStateManager.getInstance().setSmallCardPosInExpandState(smallCardPosition);
         int firstCardIndex = adapter.isIncludeDrawer() ? 1 : 0;
         if (smallCardPosition >= firstCardIndex && smallCardPosition < adapter.getItemCount()) {
-            EasyLog.d(TAG, "onChangeExpandState: notifyItemChanged , smallCardPosition: " + smallCardPosition);
             CardFrameViewHolder viewHold = (CardFrameViewHolder) RecyclerViewUtil.findViewHold(mRecyclerView, smallCardPosition);
-            if (viewHold != null) {
+            EasyLog.d(TAG, "chooseAnotherSmallCard: notifyItemChanged , smallCardPosition: " + smallCardPosition+"  , viewHold: "+viewHold);
+            if (viewHold == null) {
+                // 当viewHold为空时, 延迟500ms, 保证能够找到viewHolder
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        CardFrameViewHolder viewHold = (CardFrameViewHolder) RecyclerViewUtil.findViewHold(mRecyclerView, smallCardPosition);
+                        EasyLog.w(TAG, "chooseAnotherSmallCard delay: notifyItemChanged , smallCardPosition: " + smallCardPosition+"  , viewHold: "+viewHold);
+                        if (viewHold != null) {
+                            viewHold.showSmallCardsInnerList();
+                        }
+                    }
+                },500);
+            } else {
                 viewHold.showSmallCardsInnerList();
             }
         }
