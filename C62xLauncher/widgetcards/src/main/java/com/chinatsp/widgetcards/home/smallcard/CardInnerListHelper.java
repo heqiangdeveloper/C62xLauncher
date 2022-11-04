@@ -46,7 +46,7 @@ public class CardInnerListHelper {
                 try {
                     int currentPosition = ((RecyclerView.LayoutParams) recyclerView.getChildAt(0).getLayoutParams()).getViewAdapterPosition();
                     LauncherCard card = smallCardsAdapter.getItem(currentPosition);
-                    EasyLog.d("CardInnerListHelper", "" + currentPosition + " , card:" + card.getName());
+                    EasyLog.d("CardInnerListHelper", "scroll to " + currentPosition + " , card:" + card.getName());
                     if (mOnSelectCardListener != null) {
                         mOnSelectCardListener.onSelectCard(card);
                     }

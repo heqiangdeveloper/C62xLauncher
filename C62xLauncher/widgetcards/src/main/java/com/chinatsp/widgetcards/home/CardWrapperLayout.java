@@ -4,16 +4,19 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.ViewConfiguration;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.chinatsp.drawer.search.LauncherSearchActivity;
+
+import launcher.base.routine.ActivityBus;
 import launcher.base.utils.EasyLog;
 
 public class CardWrapperLayout extends ConstraintLayout {
     private static final String TAG = "CommonCardLayout";
+    private static final float MOVE_Y_GO_SEARCH = 100;
     private boolean mLongPressTriggered = false;
 
     public CardWrapperLayout(@NonNull Context context) {
@@ -35,6 +38,7 @@ public class CardWrapperLayout extends ConstraintLayout {
 
     float lastX = 0f;
     float lastY = 0f;
+    float moveYOnceTouch;
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         int mask = ev.getActionMasked();
@@ -43,6 +47,10 @@ public class CardWrapperLayout extends ConstraintLayout {
             mLongPressTriggered = false;
             lastX = ev.getX();
             lastY = ev.getY();
+            moveYOnceTouch = 0;
+        }
+        if (mask == MotionEvent.ACTION_MOVE) {
+            moveYOnceTouch = ev.getY();
         }
         if (mask == MotionEvent.ACTION_DOWN && isLongClickable()) {
             scheduleLongPress();
@@ -53,8 +61,20 @@ public class CardWrapperLayout extends ConstraintLayout {
         if (ev.getActionMasked() == MotionEvent.ACTION_UP
                 || ev.getActionMasked() == MotionEvent.ACTION_CANCEL) {
             removeLongPress();
+            float v = moveYOnceTouch - lastY;
+            EasyLog.d(TAG, "check move Y:"+v);
+            // 向下移动超过MOVE_Y_GO_SEARCH, 即进入搜索页面
+            if (v > MOVE_Y_GO_SEARCH) {
+                goToSearchActivity();
+            }
         }
         return handle;
+    }
+
+    private void goToSearchActivity() {
+        ActivityBus.newInstance(getContext())
+                .withClass(LauncherSearchActivity.class)
+                .go();
     }
 
     private void scheduleLongPress() {
