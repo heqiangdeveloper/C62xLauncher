@@ -38,6 +38,7 @@ import launcher.base.async.AsyncSchedule;
 import launcher.base.service.AppServiceManager;
 import launcher.base.service.tencentsdk.ITencentSdkService;
 import launcher.base.utils.recent.RecentAppHelper;
+import launcher.base.utils.view.C62Toast;
 
 public class AppManagementWindow {
     private static final String TAG = "AppManagementWindow";
@@ -211,7 +212,8 @@ public class AppManagementWindow {
         ((Activity)mContext).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(mContext, "已释放 " + Utils.byte2Format(finalMemSize * 1024) + "内存", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, "已释放 " + Utils.byte2Format(finalMemSize * 1024) + "内存", Toast.LENGTH_SHORT).show();
+                C62Toast.show(mContext,"已释放" + Utils.byte2Format(finalMemSize * 1024) + "内存",3000);
             }
         });
 

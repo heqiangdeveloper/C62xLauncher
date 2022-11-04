@@ -46,7 +46,8 @@ public class Utils {
      */
     public static String byte2Format(long bytes) {
         //格式化小数
-        DecimalFormat format = new DecimalFormat("###.00");
+        //DecimalFormat format = new DecimalFormat("###.00");
+        DecimalFormat format = new DecimalFormat("###");
         if (bytes / GB > 1) {
             return format.format(bytes / GB) + "GB";
         } else if (bytes / MB > 1) {
@@ -54,7 +55,7 @@ public class Utils {
         } else if (bytes / KB > 1) {
             return format.format(bytes / KB) + "KB";
         } else {
-            return bytes + "B";
+            return format.format(bytes) + "B";
         }
 
     }
