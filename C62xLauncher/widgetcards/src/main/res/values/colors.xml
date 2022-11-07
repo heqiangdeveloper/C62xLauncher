@@ -6,4 +6,7 @@
     <color name="search_historical_start">#019CDD</color>
     <color name="search_historical_end">#147CCC</color>
     <color name="search_historical_color">#303E56 </color>
+    <color name="search_hint_color">#7B7B82 </color>
+    <color name="search_search_history">#FFFFFF </color>
+    <color name="search_search_history_list">#ABD3E1 </color>
 </resources>

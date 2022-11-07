@@ -12,4 +12,7 @@
     <string name="card_name_e_connection">Easy connection</string>
     <string name="card_name_drive_consultant">Driving consultant</string>
     <string name="card_name_default">Card</string>
+    <string name="search_content_number">The search content cannot exceed 29 characters</string>
+    <string name="search_content_not">No search result. Please re-enter the search term</string>
+    <string name="search_history">History search</string>
 </resources>
