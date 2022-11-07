@@ -18,13 +18,13 @@
     <TextView
         android:id="@+id/tvAppStoreTip"
         style="@style/CardLv2TextView"
-        android:layout_width="222px"
+        android:layout_width="wrap_content"
         android:layout_height="92px"
         android:layout_marginTop="35px"
         android:gravity="bottom|center"
         android:letterSpacing="0.01"
         android:lineSpacingMultiplier="1.5"
-        android:text="@string/iquting_unlogin_slogan"
+        android:text="@string/appstore_wifi_disconnect"
         app:layout_constraintEnd_toEndOf="@id/ivAppStoreLogo"
         app:layout_constraintStart_toStartOf="@id/ivAppStoreLogo"
         app:layout_constraintTop_toBottomOf="@id/ivAppStoreLogo" />

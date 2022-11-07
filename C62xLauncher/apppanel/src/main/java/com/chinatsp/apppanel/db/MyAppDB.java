@@ -682,6 +682,8 @@ public class MyAppDB extends SQLiteOpenHelper {
         String sql = "update " + LOCATION_TABLE + " set " +
                 PARENTINDEX + " = ?," +
                 CHILDINDEX + " = ?," +
+                NAME + " = ?," +
+                TITLE + " = ?," +
                 INSTALLED + " = ?," +
                 STATUS + " = ?," +
                 RESERVE1 + " = ?," +
@@ -689,9 +691,9 @@ public class MyAppDB extends SQLiteOpenHelper {
                 RESERVE3 + " = ?" +
                 " where " +
                 PACKAGENAMELOCATION + " = ?";
-        db.execSQL(sql,new Object[]{locationBean.getParentIndex(),locationBean.getChildIndex(),locationBean.getInstalled(),
-                locationBean.getStatus(),locationBean.getReserve1(),locationBean.getReserve2(),locationBean.getReserve3(),
-                locationBean.getPackageName()});
+        db.execSQL(sql,new Object[]{locationBean.getParentIndex(),locationBean.getChildIndex(),locationBean.getName(),
+                locationBean.getTitle(), locationBean.getInstalled(), locationBean.getStatus(),locationBean.getReserve1(),
+                locationBean.getReserve2(), locationBean.getReserve3(), locationBean.getPackageName()});
     }
 
     /*
