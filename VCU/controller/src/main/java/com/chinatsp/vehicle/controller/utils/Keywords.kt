@@ -22,6 +22,13 @@ interface Keywords {
 
         const val FUEL_CONSUMPTION = "油耗"
 
+        const val TIRE_PRESSURE = "胎压"
+
+        const val REMAINING = "油量"
+
+        const val KM = "公里"
+
+
 
 
 

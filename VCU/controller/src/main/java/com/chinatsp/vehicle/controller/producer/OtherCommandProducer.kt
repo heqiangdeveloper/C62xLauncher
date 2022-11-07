@@ -46,7 +46,41 @@ class OtherCommandProducer : ICommandProducer {
         if (null == command) {
             command = attemptFuelConsumptionCommand(slots)
         }
+        if(null == command){
+            command = attemptTirePressureCommand(slots)
+        }
+        if(null == command){
+            command =attemptRemainingCommand(slots)
+        }
         return command
+    }
+
+    /**
+     * 剩余油量
+     */
+    private fun attemptRemainingCommand(slots: Slots): CarCmd? {
+        if (Keywords.REMAINING == slots.name) {
+            val command = CarCmd(action = Action.QUERY_INFO, model = Model.GLOBAL)
+            command.car = ICar.WIPER
+            command.slots = slots
+            command.act = IAct.REMAINING
+            return command
+        }
+        return null
+    }
+
+    /**
+     * 胎压
+     */
+    private fun attemptTirePressureCommand(slots: Slots): CarCmd? {
+        if (Keywords.TIRE_PRESSURE == slots.name) {
+            val command = CarCmd(action = Action.QUERY_INFO, model = Model.GLOBAL)
+            command.car = ICar.WIPER
+            command.slots = slots
+            command.act = IAct.TIRE_PRESSURE
+            return command
+        }
+        return null
     }
 
     /**
@@ -92,9 +126,12 @@ class OtherCommandProducer : ICommandProducer {
             val command = CarCmd(action = Action.QUERY_INFO, model = Model.GLOBAL)
             command.car = ICar.WIPER
             command.slots = slots
-            command.act = IAct.ENDURANCE_MILEAGE
+            if(Keywords.KM == slots.text.substring(slots.text.length-2)){//公里
+                command.act = IAct.ENDURANCE_MILEAGE_KM
+            }else{
+                command.act = IAct.ENDURANCE_MILEAGE
+            }
             return command
-
         }
         return null
     }

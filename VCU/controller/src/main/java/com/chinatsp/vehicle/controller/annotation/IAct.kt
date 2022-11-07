@@ -21,7 +21,10 @@ import androidx.annotation.IntDef
     IAct.DIPPED_LIGHT,
     IAct.DISTANT_LIGHT,
     IAct.FOG_LIGHT,
-    IAct.SIDE_LIGHT
+    IAct.SIDE_LIGHT,
+    IAct.ENDURANCE_MILEAGE_KM,
+    IAct.REMAINING,
+    IAct.TIRE_PRESSURE
 )
 @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
 annotation class IAct {
@@ -56,6 +59,8 @@ annotation class IAct {
          */
         const val ENDURANCE_MILEAGE = 0x05
 
+
+
         /**
          * 保养里程
          */
@@ -75,6 +80,22 @@ annotation class IAct {
          * 近光灯/小灯
          */
         const val DIPPED_LIGHT = 0x09
+
+        /**
+         * 胎压
+         */
+        const val TIRE_PRESSURE = 0x10
+
+        /**
+         * 油量
+         */
+        const val REMAINING = 0x11
+
+        /**
+         * 续航里程-公里
+         */
+        const val ENDURANCE_MILEAGE_KM = 0x12
+
         /**
          * 远光灯/大灯
          */
