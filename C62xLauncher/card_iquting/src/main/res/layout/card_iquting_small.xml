@@ -18,7 +18,7 @@
     <TextView
         android:id="@+id/tvCardIQuTingLoginTip"
         style="@style/CardLv2TextView"
-        android:layout_width="222px"
+        android:layout_width="wrap_content"
         android:layout_height="92px"
         android:layout_marginTop="35px"
         android:gravity="bottom|center"
@@ -62,7 +62,7 @@
             android:id="@+id/tvIQuTingPlayStateValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="播放中"
+            android:text="@string/iquting_play_state_value"
             style="@style/CardLv3TextView"
             android:textColor="@color/card_blue_default"
             app:layout_constraintTop_toTopOf="@id/ivIQuTingPlayStateIcon"

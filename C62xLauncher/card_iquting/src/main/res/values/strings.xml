@@ -5,4 +5,5 @@
     <string name="iquting_tab_rank_music">音乐排行榜</string>
     <string name="iquting_tab_daily_music">每日推荐</string>
     <string name="iquting_get_data_error">获取数据失败</string>
+    <string name="iquting_play_state_value">播放中</string>
 </resources>

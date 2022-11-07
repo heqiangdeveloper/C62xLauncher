@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="appstore_wifi_disconnect">网络未连接</string>
+    <string name="appstore_wifi_disconnect">network disconnected</string>
     <string name="appstore_get_data_error">获取数据失败</string>
 </resources>

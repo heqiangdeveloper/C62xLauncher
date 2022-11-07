@@ -16,7 +16,7 @@ public class AppStoreErrorNetWorkState implements AppStoreState {
         ImageView ivCardIQuTingButton = view.findViewById(R.id.ivAppStoreButton);
 
         ivCardIQuTingLogo.setImageResource(R.drawable.card_icon_wifi_disconnect);
-        tvCardIQuTingTip.setText(R.string.iquting_disconnect_tip);
+        tvCardIQuTingTip.setText(R.string.appstore_wifi_disconnect);
         ivCardIQuTingButton.setImageResource(R.drawable.card_icon_left_in_normal);
 
         ivCardIQuTingLogo.setVisibility(View.VISIBLE);
@@ -30,7 +30,7 @@ public class AppStoreErrorNetWorkState implements AppStoreState {
         TextView tvCardIQuTingLoginTipBig = view.findViewById(R.id.tvAppStoreTipBig);
         if(tvCardIQuTingLoginTipBig != null){
             tvCardIQuTingLoginTipBig.setVisibility(View.VISIBLE);
-            tvCardIQuTingLoginTipBig.setText(R.string.iquting_disconnect_tip);
+            tvCardIQuTingLoginTipBig.setText(R.string.appstore_wifi_disconnect);
         }
 
         if(view.findViewById(R.id.rcvAppStoreAppsList) != null){

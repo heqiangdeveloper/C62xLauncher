@@ -55,7 +55,8 @@
         <TextView
             android:visibility="gone"
             android:id="@+id/clear_tv"
-            android:layout_width="228dp"
+            android:layout_width="wrap_content"
+            android:minWidth="300dp"
             android:layout_height="74dp"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/dialog_positive_selector"

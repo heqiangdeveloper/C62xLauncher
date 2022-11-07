@@ -213,7 +213,7 @@ public class AppManagementWindow {
             @Override
             public void run() {
                 //Toast.makeText(mContext, "已释放 " + Utils.byte2Format(finalMemSize * 1024) + "内存", Toast.LENGTH_SHORT).show();
-                C62Toast.show(mContext,"已释放" + Utils.byte2Format(finalMemSize * 1024) + "内存",3000);
+                C62Toast.show(mContext, mContext.getString(R.string.appmanagement_clear_toast,Utils.byte2Format(finalMemSize * 1024)),3000);
             }
         });
 
