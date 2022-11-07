@@ -11,37 +11,20 @@ import com.chinatsp.vehicle.controller.annotation.*
  * @desc   :
  * @version: 1.0
  */
-class CarCmd(@Model model: Int, @Action action: Int, @IStatus status: Int) :
-    BaseCmd(model, action, status), Parcelable {
+class CarCmd(@Model model: Int, @Action action: Int) : BaseCmd(model, action), Parcelable {
 
     var car: Int = ICar.VOID
 
-    var part: Int = IPart.VOID
-
     var act: Int = IAct.VOID
-
-    /**
-     * 空调 吹风方向
-     */
-    var orien: Int = IOrien.DEFAULT
 
     var graded: Boolean = false
 
     var color: String = ""
 
-    constructor(@Action action: Int, @Model model: Int) : this(
-        status = IStatus.INIT,
-        model = model,
-        action = action)
-
-    constructor(parcel: Parcel) : this(
-        status = parcel.readInt(),
-        action = parcel.readInt(),
-        model = parcel.readInt()) {
+    constructor(parcel: Parcel) : this(model = parcel.readInt(), action = parcel.readInt()) {
+        fromParcel(parcel)
         car = parcel.readInt()
-        part = parcel.readInt()
         act = parcel.readInt()
-        orien = parcel.readInt()
         graded = parcel.readByte() != 0.toByte()
         color = parcel.readString().toString()
     }
@@ -49,9 +32,7 @@ class CarCmd(@Model model: Int, @Action action: Int, @IStatus status: Int) :
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         super.writeToParcel(parcel, flags)
         parcel.writeInt(car)
-        parcel.writeInt(part)
         parcel.writeInt(act)
-        parcel.writeInt(orien)
         parcel.writeByte(if (graded) 1 else 0)
         parcel.writeString(color)
     }

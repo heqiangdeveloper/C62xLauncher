@@ -3,13 +3,11 @@ package com.chinatsp.settinglib.manager.lamp
 import android.car.hardware.CarPropertyValue
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
+import com.chinatsp.settinglib.bean.CommandParcel
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IBaseListener
-import com.chinatsp.settinglib.manager.BaseManager
-import com.chinatsp.settinglib.manager.IOptionManager
-import com.chinatsp.settinglib.manager.IProgressManager
-import com.chinatsp.settinglib.manager.ISignal
+import com.chinatsp.settinglib.manager.*
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -32,7 +30,7 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 
 class AmbientLightingManager private constructor() : BaseManager(), IOptionManager,
-    IProgressManager {
+    IProgressManager, ICmdExpress {
 
     companion object : ISignal {
         override val TAG: String = AmbientLightingManager::class.java.simpleName
@@ -367,24 +365,9 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
     }
 
 
-    override fun doCarControlCommand(command: CarCmd, callback: ICmdCallback?) {
-        if (ICar.AMBIENT == command.car) {
-            if (!interruptCommand(command, callback)) {
-                doSwitchAmbient(command, callback)
-            }
-        } else if (ICar.BRIGHTNESS == command.car) {
-            if (!interruptCommand(command, callback)) {
-                doAdjustAmbientBrightness(command, callback)
-            }
-        } else if (ICar.COLOR == command.car) {
-            if (!interruptCommand(command, callback)) {
-                doAdjustAmbientColor(command, callback)
-            }
-        } else if (ICar.RHYTHM_MODE == command.car) {
-            if (!interruptCommand(command, callback)) {
-                doUpdateAmbientRhythmMode(command, callback)
-            }
-        }
+    override fun doCarControlCommand(command: CarCmd, callback: ICmdCallback?, fromUser: Boolean) {
+        val parcel = CommandParcel(command, callback, receiver = this)
+        doCommandExpress(parcel)
     }
 
     private fun isAmbient(): Boolean {
@@ -567,6 +550,28 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
             "紫色" -> 56
             "玫红色" -> 64
             else -> Constant.INVALID
+        }
+    }
+
+    override fun doCommandExpress(parcel: CommandParcel, fromUser: Boolean) {
+        val command = parcel.command as CarCmd
+        val callback = parcel.callback
+        if (ICar.AMBIENT == command.car) {
+            if (!interruptCommand(command, callback)) {
+                doSwitchAmbient(command, callback)
+            }
+        } else if (ICar.BRIGHTNESS == command.car) {
+            if (!interruptCommand(command, callback)) {
+                doAdjustAmbientBrightness(command, callback)
+            }
+        } else if (ICar.COLOR == command.car) {
+            if (!interruptCommand(command, callback)) {
+                doAdjustAmbientColor(command, callback)
+            }
+        } else if (ICar.RHYTHM_MODE == command.car) {
+            if (!interruptCommand(command, callback)) {
+                doUpdateAmbientRhythmMode(command, callback)
+            }
         }
     }
 

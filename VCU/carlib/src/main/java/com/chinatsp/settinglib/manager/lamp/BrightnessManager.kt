@@ -36,7 +36,7 @@ class BrightnessManager : BaseManager(), IProgressManager {
         }
 
     private val isNewHardware: Boolean
-        get() = false
+        get() = true
 
     private var manager: CarPowerManager? = null
 
@@ -98,7 +98,7 @@ class BrightnessManager : BaseManager(), IProgressManager {
             result = getNearestPosition(thirdScreenBrightness, result)
         }
         val value = if (result in type.min..type.max) result else type.def
-        Timber.d("initVolume type:$type, result:$result,, value:$value")
+        Timber.d("initVolume isNewHardware:$isNewHardware, type:$type, result:$result,, value:$value")
         return Volume(type, type.min, type.max, value)
     }
 

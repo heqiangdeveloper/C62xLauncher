@@ -1,11 +1,11 @@
 package com.chinatsp.settinglib.manager.consumer
 
 import android.car.hardware.cabin.CarCabinManager
+import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.annotation.Action
-import com.chinatsp.vehicle.controller.annotation.ICar
 import com.chinatsp.vehicle.controller.annotation.IPart
 import com.chinatsp.vehicle.controller.annotation.IStatus
 import com.chinatsp.vehicle.controller.bean.CarCmd
@@ -23,7 +23,7 @@ class PanoramaCommandConsumer(val manager: GlobalManager) {
         return manager.writeProperty(signal, value, Origin.CABIN)
     }
 
-    fun consumerCommand(command: CarCmd, callback: ICmdCallback?) {
+    fun consumerCommand(command: CarCmd, callback: ICmdCallback?, fromUser: Boolean) {
         if (IStatus.INIT == command.status) {
             consumerSwitchCommand(command)
         }
@@ -36,7 +36,7 @@ class PanoramaCommandConsumer(val manager: GlobalManager) {
         callback?.onCmdHandleResult(command)
     }
 
-    //    AVM view set request signal 切换全景视图命令，Reserved
+//    AVM view set request signal 切换全景视图命令，Reserved
 //    0x0: Inactive
 //    0x1: Front view
 //    0x2: Rear view
@@ -60,63 +60,51 @@ class PanoramaCommandConsumer(val manager: GlobalManager) {
 //    0x14: Top View
 //    0x15~0x1F: Reserved
     private fun consumeCameraChangeCommand(command: CarCmd) {
-        if (ICar.CAMERA_CHANGE == command.car) {
-            var mask = IPart.HEAD
-            var aera = "前"
-            var expect = false
-            if (Action.TURN_ON == command.action) {
-                expect = true
-            } else if (Action.TURN_OFF == command.action) {
-                expect = false
-            }
-            val actionName = if (expect) "切换到" else "关闭"
-
-            if (mask == (mask and command.part)) {
-                aera = "前"
-                if (expect) {
-                    sendCabinValue(CarCabinManager.ID_APA_AVM_VIEW_SET, 0x9)
-                }
-            }
-            mask = IPart.TAIL
-            if (mask == (mask and command.part)) {
-                aera = "后"
-                if (expect) {
-                    sendCabinValue(CarCabinManager.ID_APA_AVM_VIEW_SET, 0xA)
-                }
-            }
-            mask = IPart.LEFT
-            if (mask == (mask and command.part)) {
-                aera = "左"
-                if (expect) {
-                    sendCabinValue(CarCabinManager.ID_APA_AVM_VIEW_SET, 0xB)
-                }
-            }
-            mask = IPart.RIGHT
-            if (mask == (mask and command.part)) {
-                aera = "右"
-                if (expect) {
-                    sendCabinValue(CarCabinManager.ID_APA_AVM_VIEW_SET, 0xC)
-                }
-            }
-            if (!expect) {
-                sendCabinValue(CarCabinManager.ID_APA_AVM_DISP_SWT, 0x2)
-            }
-            command.message = "已$actionName${aera}视角"
-            command.status = IStatus.RUNNING
+        if (Action.CHANGED != command.action) {
+            return
         }
+        var aera = "前"
+        var mask = IPart.HEAD
+        val fAct = mask == (mask and command.part)
+        mask = IPart.TAIL
+        val bAct = mask == (mask and command.part)
+        mask = IPart.L_F or IPart.L_B
+        val lAct = mask == (mask and command.part)
+        mask = IPart.R_F or IPart.R_B
+        val rAct = mask == (mask and command.part)
+        var value = Constant.INVALID
+        val is3D = obtainCameraMode()
+        if (fAct) {
+            aera = "前"
+            value = if (is3D) 0x9 else 0x1
+        } else if (bAct) {
+            aera = "后"
+            value = if (is3D) 0xA else 0x2
+        } else if (lAct) {
+            aera = "左"
+            value = if (is3D) 0xD else 0x3
+        } else if (rAct) {
+            aera = "右"
+            value = if (is3D) 0xE else 0x4
+        }
+        if (!isAvmEngine()) {
+            sendCabinValue(CarCabinManager.ID_APA_AVM_SWT, 0x1)
+        }
+        sendCabinValue(CarCabinManager.ID_APA_AVM_VIEW_SET, value)
+        command.message = "好的，已为您切换到${aera}视角"
+        command.status = IStatus.RUNNING
     }
 
     private fun consumeModeCommand(command: CarCmd) {
-        val mask = ICar.MODE_3D_2D
 //        The AVM 2D/3D view set request signal.2D/3D模式切换
 //        0x0: Inactive; 0x1: 2D; 0x2: 3D; 0x3: Invalid
-        if ((mask == command.car) && (Action.OPTION == command.action)) {
-            if (command.value == (mask shl 1)) {
+        if (Action.OPTION == command.action) {
+            if (command.value == (Action.OPTION shl 1)) {
                 command.status = IStatus.RUNNING
                 sendCabinValue(CarCabinManager.ID_APA_AVM_VIEW_MOD_SET, 0x1)
                 command.message = "已切换到2D模式"
             }
-            if (command.value == (mask shl 2)) {
+            if (command.value == (Action.OPTION shl 2)) {
                 command.status = IStatus.RUNNING
                 sendCabinValue(CarCabinManager.ID_APA_AVM_VIEW_MOD_SET, 0x2)
                 command.message = "已切换到3D模式"
@@ -124,17 +112,40 @@ class PanoramaCommandConsumer(val manager: GlobalManager) {
         }
     }
 
-    //            0x1: ON; 0x2: OFF
+//            0x1: ON; 0x2: OFF
     private fun consumerSwitchCommand(command: CarCmd) {
-        if (Action.OPEN == command.action) {
+        if (Action.TURN_ON == command.action) {
             command.status = IStatus.RUNNING
-            sendCabinValue(CarCabinManager.ID_APA_AVM_DISP_SWT, 0x1)
+//            ID_APA_AVM_DISP_SWT
+            sendCabinValue(CarCabinManager.ID_APA_AVM_SWT, 0x1)
             command.message = "全景开启成功"
         }
-        if (Action.CLOSE == command.action) {
+        if (Action.TURN_OFF == command.action) {
             command.status = IStatus.RUNNING
-            sendCabinValue(CarCabinManager.ID_APA_AVM_DISP_SWT, 0x2)
+//            ID_APA_AVM_DISP_SWT
+            sendCabinValue(CarCabinManager.ID_APA_AVM_SWT, 0x2)
             command.message = "全景关闭成功"
         }
     }
+
+    private fun obtainCameraView(): Int {
+        val signal = CarCabinManager.ID_AVM_VIEW_MOD
+        val result = manager.readIntProperty(signal, Origin.CABIN)
+        return result
+    }
+
+    private fun obtainCameraMode(): Boolean {
+        val signal = Constant.INVALID
+        val value = manager.readIntProperty(signal, Origin.CABIN)
+        val result = value == 0x2
+        return result
+    }
+
+    private fun isAvmEngine(): Boolean {
+        val signal = Constant.INVALID
+        val value = manager.readIntProperty(signal, Origin.CABIN)
+        val result = value == 0x1
+        return result
+    }
+
 }

@@ -2,7 +2,10 @@ package com.chinatsp.vehicle.controller.bean
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.chinatsp.vehicle.controller.annotation.*
+import com.chinatsp.vehicle.controller.annotation.Action
+import com.chinatsp.vehicle.controller.annotation.IAir
+import com.chinatsp.vehicle.controller.annotation.IOrien
+import com.chinatsp.vehicle.controller.annotation.Model
 
 /**
  * @author : luohong
@@ -11,47 +14,30 @@ import com.chinatsp.vehicle.controller.annotation.*
  * @desc   :
  * @version: 1.0
  */
-class AirCmd(
-    @Model model: Int,
-    @Action action: Int,
-    @IStatus status: Int,
-) : BaseCmd(model, action, status), Parcelable {
+class AirCmd(@Model model: Int, @Action action: Int) : BaseCmd(model, action), Parcelable {
 
     var air: Int = IAir.VOID
-
-    var part: Int = IPart.VOID
 
     /**
      * 空调 吹风方向
      */
-    var orien: Int = IOrien.DEFAULT
+    var orien: Int = IOrien.VOID
 
     var graded: Boolean = false
 
-    var expect: Int = -1
+    constructor(@Action action: Int) : this(model = Model.CABIN_AIR, action = action)
 
-    constructor(@Action action: Int) : this(
-        model = Model.CABIN_AIR,
-        status = IStatus.INIT,
-        action = action)
-
-    constructor(parcel: Parcel) : this(
-        status = parcel.readInt(),
-        action = parcel.readInt(),
-        model = parcel.readInt()) {
+    constructor(parcel: Parcel) : this(model = parcel.readInt(), action = parcel.readInt()) {
+        fromParcel(parcel)
         air = parcel.readInt()
-        part = parcel.readInt()
         orien = parcel.readInt()
-        expect = parcel.readInt()
         graded = parcel.readByte() != 0.toByte()
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         super.writeToParcel(parcel, flags)
         parcel.writeInt(air)
-        parcel.writeInt(part)
         parcel.writeInt(orien)
-        parcel.writeInt(expect)
         parcel.writeByte(if (graded) 1 else 0)
     }
 

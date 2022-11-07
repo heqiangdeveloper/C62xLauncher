@@ -26,6 +26,8 @@ object CarController : IController {
 
     private val otherProducer: OtherCommandProducer by lazy { OtherCommandProducer() }
 
+    private val lampsProducer: LampCommandProducer get() = LampCommandProducer()
+
     override fun doVoiceVehicleQuery(
         controller: IOuterController,
         callback: ICmdCallback,
@@ -47,19 +49,22 @@ object CarController : IController {
         val slots: Slots = model.slots
         var command: CarCmd? = null
         if (null == command) {
-            command = accessProducer.attemptAccessCommand(slots)
+            command = accessProducer.attemptCreateCommand(slots)
         }
         if (null == command) {
-            command = seatProducer.attemptChairCommand(slots)
+            command = seatProducer.attemptCreateCommand(slots)
         }
         if (null == command) {
-            command = ambientProducer.attemptAmbientCommand(slots)
+            command = ambientProducer.attemptCreateCommand(slots)
         }
         if (null == command) {
-            command = panoramaProducer.attemptPanoramaCommand(slots)
+            command = panoramaProducer.attemptCreateCommand(slots)
         }
         if (null == command) {
-            command = otherProducer.attemptCommand(slots)
+            command = otherProducer.attemptCreateCommand(slots)
+        }
+        if (null == command) {
+            command = lampsProducer.attemptCreateCommand(slots)
         }
         if (null == command) {
             command = attemptAutoParkCommand(slots)

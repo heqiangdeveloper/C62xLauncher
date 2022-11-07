@@ -2,7 +2,6 @@ package com.chinatsp.vehicle.controller.producer
 
 import com.chinatsp.vehicle.controller.LogManager
 import com.chinatsp.vehicle.controller.annotation.Action
-import com.chinatsp.vehicle.controller.annotation.ICar
 import com.chinatsp.vehicle.controller.annotation.IPart
 import com.chinatsp.vehicle.controller.annotation.Model
 import com.chinatsp.vehicle.controller.bean.CarCmd
@@ -16,9 +15,9 @@ import com.chinatsp.vehicle.controller.utils.Keywords
  * @desc   :
  * @version: 1.0
  */
-class PanoramaCommandProducer: ICommandProducer {
+class PanoramaCommandProducer : ICommandProducer {
 
-    fun attemptPanoramaCommand(slots: Slots): CarCmd? {
+    fun attemptCreateCommand(slots: Slots): CarCmd? {
         var command: CarCmd? = null
         if (!slots.text.contains("倒车")) {
             if (null == command) {
@@ -59,39 +58,27 @@ class PanoramaCommandProducer: ICommandProducer {
 //    0x15~0x1F: Reserved
     private fun attemptCameraCommand(slots: Slots): CarCmd? {
         LogManager.e("", "${slots.insType}, ${slots.text}")
-//        if ("OPEN_PHOTO" == slots.insType) {
-            var action = Action.VOID
-            var part = IPart.VOID
-            var car = ICar.VOID
-            if (contains(slots.text, "前摄像头", "前视角")) {
-                part = part or IPart.HEAD
-                car = ICar.CAMERA_CHANGE
-            }
-            if (contains(slots.text, "后摄像头", "后视角")) {
-                part = part or IPart.TAIL
-                car = ICar.CAMERA_CHANGE
-            }
-            if (contains(slots.text, "左摄像头", "左视角")) {
-                part = part or IPart.LEFT
-                car = ICar.CAMERA_CHANGE
-            }
-            if (contains(slots.text, "右摄像头", "右视角")) {
-                part = part or IPart.RIGHT
-                car = ICar.CAMERA_CHANGE
-            }
-            if (contains(slots.text, "打开", "切换")) {
-                action = Action.TURN_ON
-            }
-            if (contains(slots.text, "关闭", "退出")) {
-                action = Action.TURN_OFF
-            }
-            if (Action.VOID != action && ICar.VOID != car && IPart.VOID != part) {
-                val command = CarCmd(action = action, model = Model.PANORAMA)
-                command.car = car
-                command.part = part
-                return command
-            }
-//        }
+        val part: Int
+        var action = Action.VOID
+        if (contains(slots.text, "前摄像头", "前视角")) {
+            part = IPart.HEAD
+        } else if (contains(slots.text, "后摄像头", "后视角")) {
+            part = IPart.TAIL
+        } else if (contains(slots.text, "左摄像头", "左视角")) {
+            part = IPart.L_F or IPart.L_B
+        } else if (contains(slots.text, "右摄像头", "右视角")) {
+            part = IPart.R_F or IPart.R_B
+        } else {
+            part = IPart.HEAD
+        }
+        if (contains(slots.text, "打开", "切换")) {
+            action = Action.CHANGED
+        }
+        if (Action.VOID != action && IPart.VOID != part) {
+            val command = CarCmd(action = action, model = Model.PANORAMA)
+            command.part = part
+            return command
+        }
         return null
     }
 
@@ -100,15 +87,13 @@ class PanoramaCommandProducer: ICommandProducer {
         if ("2D模式" == slots.text || "打开2D模式" == slots.text || "关闭3D模式" == slots.text) {
             //切换到2D模式
             val command = CarCmd(action = Action.OPTION, model = Model.PANORAMA)
-            command.car = ICar.MODE_3D_2D
-            command.value = ICar.MODE_3D_2D shl 1
+            command.value = Action.OPTION shl 1
             return command
         }
         if ("3D模式" == slots.text || "打开3D模式" == slots.text || "关闭2D模式" == slots.text) {
             //切换到3D模式
             val command = CarCmd(action = Action.OPTION, model = Model.PANORAMA)
-            command.car = ICar.MODE_3D_2D
-            command.value = ICar.MODE_3D_2D shl 2
+            command.value = Action.OPTION shl 2
             return command
         }
         return null
@@ -120,11 +105,16 @@ class PanoramaCommandProducer: ICommandProducer {
             val model = Model.PANORAMA
             var action = Action.VOID
             if (Keywords.OPEN == slots.operation) {
-                action = Action.OPEN
+                action = Action.TURN_ON
             }
             if (Keywords.CLOSE == slots.operation) {
-                action = Action.CLOSE
+                action = Action.TURN_OFF
             }
+            return CarCmd(action = action, model = model)
+        }
+        if (contains(slots.text, "关闭", "退出")) {
+            val model = Model.PANORAMA
+            val action = Action.TURN_OFF
             return CarCmd(action = action, model = model)
         }
         return null

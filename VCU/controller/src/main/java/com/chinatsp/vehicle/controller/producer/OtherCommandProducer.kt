@@ -18,7 +18,7 @@ import com.chinatsp.vehicle.controller.utils.Keywords.Companion.WIPERS
  */
 class OtherCommandProducer : ICommandProducer {
 
-    fun attemptCommand(slots: Slots): CarCmd? {
+    fun attemptCreateCommand(slots: Slots): CarCmd? {
         var command: CarCmd? = null
         if (null == command) {
             command = attemptWheelCommand(slots)
@@ -129,7 +129,7 @@ class OtherCommandProducer : ICommandProducer {
             if ((Action.VOID != action) && slots.mode.contains(HEAT)) {
                 val command = CarCmd(action = action, model = Model.CABIN_WHEEL)
                 command.slots = slots
-                command.car = ICar.WHEEL_HOT
+                command.car = ICar.WHEEL
                 return command
             }
         }

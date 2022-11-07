@@ -1,8 +1,6 @@
 package com.chinatsp.settinglib.manager.cabin
 
-import com.chinatsp.settinglib.bean.AirCmdParcel
-import com.chinatsp.vehicle.controller.ICmdCallback
-import com.chinatsp.vehicle.controller.bean.AirCmd
+import com.chinatsp.settinglib.bean.CommandParcel
 
 /**
  * @author : luohong
@@ -14,26 +12,26 @@ import com.chinatsp.vehicle.controller.bean.AirCmd
 interface IAirMaster {
     /**
      * 打开空调
-     * @param hint 当空调已经打开时 是否给出相应的提示
+     * @param  parcel
      * @return 返回当前空调状态（是否打开）
      */
-    fun doLaunchConditioner(airCmdParcel: AirCmdParcel): Boolean
+    fun doLaunchConditioner(parcel: CommandParcel): Boolean
     /**
      * 关闭空调
-     * @param isHint 当空调已经关闭时 是否给出相应的提示
+     * @param parcel
      */
-    fun doCeaseConditioner(airCmdParcel: AirCmdParcel)
+    fun doCeaseConditioner(parcel: CommandParcel)
     /**
      * 调节空调的吹风方向（例：吹头，吹脚，吹身体）
      */
-    fun doAdjustAirDirection(airCmdParcel: AirCmdParcel)
-    /**
-     * 调节空调风速
-     */
-    fun doAdjustAirWindSpeed(airCmdParcel: AirCmdParcel)
-    /**
-     * 调节空调温度
-     */
-    fun doAdjustAirTemperature(airCmdParcel: AirCmdParcel)
+    fun doAdjustAirDirection(parcel: CommandParcel)
+//    /**
+//     * 调节空调风速
+//     */
+//    fun doAdjustAirWindSpeed(airCmdParcel: CommandParcel)
+//    /**
+//     * 调节空调温度
+//     */
+//    fun doAdjustAirTemperature(airCmdParcel: CommandParcel)
 
 }

@@ -4,7 +4,6 @@ import android.car.hardware.CarPropertyValue
 import com.chinatsp.settinglib.ITabStore
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
-import com.chinatsp.settinglib.manager.cabin.WheelManager
 import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.annotation.Model
@@ -78,14 +77,14 @@ class AccessManager private constructor() : BaseManager(), ITabStore {
         }
     }
 
-    override fun doCarControlCommand(cmd: CarCmd, callback: ICmdCallback?) {
+    override fun doCarControlCommand(command: CarCmd, callback: ICmdCallback?, fromUser: Boolean) {
         Timber.e("doCarControlCommand ")
-        if (Model.ACCESS_WINDOW == cmd.model) {
-            WindowManager.instance.doCarControlCommand(cmd, callback)
-        } else if (Model.ACCESS_DOOR == cmd.model) {
-            DoorManager.instance.doCarControlCommand(cmd, callback)
-        } else if (Model.ACCESS_STERN == cmd.model) {
-            SternDoorManager.instance.doCarControlCommand(cmd, callback)
+        if (Model.ACCESS_WINDOW == command.model) {
+            WindowManager.instance.doCarControlCommand(command, callback, fromUser)
+        } else if (Model.ACCESS_DOOR == command.model) {
+//            DoorManager.instance.doCarControlCommand(command, callback, fromUser)
+        } else if (Model.ACCESS_STERN == command.model) {
+            SternDoorManager.instance.doCarControlCommand(command, callback, fromUser)
         }
     }
 

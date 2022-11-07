@@ -1,7 +1,9 @@
 package com.chinatsp.settinglib.bean
 
+import com.chinatsp.settinglib.manager.ICmdExpress
 import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.bean.AirCmd
+import com.chinatsp.vehicle.controller.bean.BaseCmd
 
 /**
  * @author : luohong
@@ -10,7 +12,12 @@ import com.chinatsp.vehicle.controller.bean.AirCmd
  * @desc   :
  * @version: 1.0
  */
-class AirCmdParcel(val cmd: AirCmd, val callback: ICmdCallback?, var retryCount: Int = 1) {
+class CommandParcel(
+    val command: BaseCmd,
+    val callback: ICmdCallback?,
+    val receiver: ICmdExpress,
+    var retryCount: Int = 1,
+) {
 
     fun isRetry(): Boolean {
         return retryCount > 0

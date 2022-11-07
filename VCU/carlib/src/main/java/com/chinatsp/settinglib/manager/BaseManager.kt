@@ -225,8 +225,8 @@ abstract class BaseManager : IManager {
 
     protected open fun onMcuPropertyChanged(property: CarPropertyValue<*>) {}
 
-    open fun doAirControlCommand(cmd: AirCmd, callback: ICmdCallback?) {}
+    open fun doAirControlCommand(command: AirCmd, callback: ICmdCallback?, fromUser: Boolean = true) {}
 
-    open fun doCarControlCommand(cmd: CarCmd, callback: ICmdCallback?) {}
+    open fun doCarControlCommand(command: CarCmd, callback: ICmdCallback?, fromUser: Boolean = true) {}
 }
 

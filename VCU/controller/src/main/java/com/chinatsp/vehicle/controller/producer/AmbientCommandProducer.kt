@@ -29,7 +29,7 @@ import org.json.JSONObject
  */
 class AmbientCommandProducer : ICommandProducer {
 
-    fun attemptAmbientCommand(slots: Slots): CarCmd? {
+    fun attemptCreateCommand(slots: Slots): CarCmd? {
         var command: CarCmd? = null
         if (slots.name.contains(Keywords.LAMP)) {
             if (null == command) {

@@ -9,19 +9,13 @@ import androidx.annotation.IntDef
  * @desc   :
  * @version: 1.0
  */
-@IntDef(
-    IOrien.DEFAULT,
-    IOrien.FACE,
-    IOrien.BODY,
-    IOrien.FOOT,
-    IOrien.LEFT,
-    IOrien.MIDDLE,
-    IOrien.RIGHT
+@IntDef(IOrien.VOID, IOrien.FACE, IOrien.BODY, IOrien.FOOT,
+    IOrien.LEFT, IOrien.MIDDLE, IOrien.RIGHT
 )
 @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
 annotation class IOrien {
     companion object {
-        const val DEFAULT = 0X0
+        const val VOID = 0X0
 
         const val FACE = 0x1 shl 0
         const val BODY = 0x1 shl 1

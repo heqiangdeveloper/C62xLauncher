@@ -152,16 +152,16 @@ class DoorManager private constructor() : BaseManager(), IOptionManager, IAccess
                 onRadioChanged(RadioNode.DOOR_FLAMEOUT_UNLOCK, flameoutAutoUnlock, property)
             }
             CarCabinManager.ID_DR_DOOR_OPEN -> {
-                onDoorStatusChanged(IPart.LEFT_FRONT, Model.ACCESS_DOOR, property.value)
+                onDoorStatusChanged(IPart.L_F, Model.ACCESS_DOOR, property.value)
             }
             CarCabinManager.ID_PA_DOOR_OPEN -> {
-                onDoorStatusChanged(IPart.RIGHT_FRONT, Model.ACCESS_DOOR, property.value)
+                onDoorStatusChanged(IPart.R_F, Model.ACCESS_DOOR, property.value)
             }
             CarCabinManager.ID_REAR_LEFT_DOOR_OPEN -> {
-                onDoorStatusChanged(IPart.LEFT_BACK, Model.ACCESS_DOOR, property.value)
+                onDoorStatusChanged(IPart.L_B, Model.ACCESS_DOOR, property.value)
             }
             CarCabinManager.ID_REAR_RIGHT_DOOR_OPEN -> {
-                onDoorStatusChanged(IPart.RIGHT_BACK, Model.ACCESS_DOOR, property.value)
+                onDoorStatusChanged(IPart.R_B, Model.ACCESS_DOOR, property.value)
             }
             else -> {}
         }
@@ -230,10 +230,10 @@ class DoorManager private constructor() : BaseManager(), IOptionManager, IAccess
             return null
         }
         return when (part) {
-            IPart.LEFT_FRONT -> readIntProperty(CarCabinManager.ID_DR_DOOR_OPEN, Origin.CABIN)
-            IPart.RIGHT_FRONT -> readIntProperty(CarCabinManager.ID_PA_DOOR_OPEN, Origin.CABIN)
-            IPart.LEFT_BACK -> readIntProperty(CarCabinManager.ID_REAR_LEFT_DOOR_OPEN, Origin.CABIN)
-            IPart.RIGHT_BACK -> readIntProperty(CarCabinManager.ID_REAR_RIGHT_DOOR_OPEN,
+            IPart.L_F -> readIntProperty(CarCabinManager.ID_DR_DOOR_OPEN, Origin.CABIN)
+            IPart.R_F -> readIntProperty(CarCabinManager.ID_PA_DOOR_OPEN, Origin.CABIN)
+            IPart.L_B -> readIntProperty(CarCabinManager.ID_REAR_LEFT_DOOR_OPEN, Origin.CABIN)
+            IPart.R_B -> readIntProperty(CarCabinManager.ID_REAR_RIGHT_DOOR_OPEN,
                 Origin.CABIN)
             else -> null
         }

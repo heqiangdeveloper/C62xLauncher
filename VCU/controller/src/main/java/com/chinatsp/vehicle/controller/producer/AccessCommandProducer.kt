@@ -20,24 +20,7 @@ import java.util.regex.Pattern
  */
 class AccessCommandProducer : ICommandProducer {
 
-//    private val gradeMap: HashMap<String, Int>
-//        get() {
-//            val map = HashMap<String, Int>()
-//            map["一"] = 1
-//            map["二"] = 2
-//            map["三"] = 3
-//            map["四"] = 4
-//            map["五"] = 5
-//            map["六"] = 6
-//            map["七"] = 7
-//            map["八"] = 8
-//            map["九"] = 9
-//            map["十"] = 10
-//            return map
-//        }
-
-
-    fun attemptAccessCommand(slots: Slots): CarCmd? {
+    fun attemptCreateCommand(slots: Slots): CarCmd? {
         var command: CarCmd? = null
         if (null == command) {
             command = attemptLouverCommand(slots)
@@ -84,39 +67,31 @@ class AccessCommandProducer : ICommandProducer {
         }
         var part = IPart.VOID
         if (isMatch(Keywords.WINDOW_ALL, slots.name)) {
-            part = IPart.LEFT_FRONT or IPart.LEFT_BACK or IPart.RIGHT_FRONT or IPart.RIGHT_BACK
+            part = IPart.L_F or IPart.L_B or IPart.R_F or IPart.R_B
         }
         if (IPart.VOID == part) {
-            part = checkoutPart(slots.name)
+            part = checkoutPart(slots.name, flag = false)
         }
         if (IPart.VOID == part) {
-            if (isMatch(Keywords.L_WINDOW, slots.name)) {
-                part = IPart.LEFT_FRONT or IPart.LEFT_BACK
-            } else if (isMatch(Keywords.R_WINDOW, slots.name)) {
-                part = IPart.RIGHT_FRONT or IPart.RIGHT_BACK
-            } else if (isMatch(Keywords.F_WINDOW, slots.name)) {
-                part = IPart.LEFT_FRONT or IPart.RIGHT_FRONT
-            } else if (isMatch(Keywords.B_WINDOW, slots.name)) {
-                part = IPart.LEFT_BACK or IPart.RIGHT_BACK
-            }
+            part = checkoutPart(slots.name, flag = true)
         }
-        if (Action.VOID == part) {
+        if (IPart.VOID == part) {
             return null
         }
-        val nameValue = slots.nameValue?.toString() ?: ""
-        var action = Action.VOID
         var value = -1
+        var action = Action.VOID
+        val nameValue = slots.nameValue?.toString() ?: ""
         if (isLikeJson(nameValue)) {
 
         } else {
-            if ("MORE" == nameValue) {
-                action = Action.PLUS
-            } else if ("LITTLE" == nameValue) {
-                action = Action.MINUS
-            } else {
-                val pair = obtainDegree(nameValue)
-                action = pair.first
-                value = pair.second
+            when (nameValue) {
+                "MORE" -> action = Action.PLUS
+                "LITTLE" -> action = Action.MINUS
+                else -> {
+                    val pair = obtainDegree(nameValue)
+                    action = pair.first
+                    value = pair.second
+                }
             }
         }
         if (Action.VOID == action) {
@@ -139,10 +114,10 @@ class AccessCommandProducer : ICommandProducer {
         }
         var part = IPart.VOID
         if (isMatch(Keywords.SKYLIGHTS, slots.name)) {
-            part = IPart.SKYLIGHT
+            part = IPart.TOP
         }
         if (Keywords.ABAT_VENT == slots.name) {
-            part = IPart.LOVE_LUCY
+            part = IPart.BOTTOM
         }
         if (Action.VOID == part) {
             return null
@@ -224,28 +199,37 @@ class AccessCommandProducer : ICommandProducer {
     }
 
 
-    private fun checkoutPart(name: String): Int {
+    private fun checkoutPart(name: String, flag: Boolean = false): Int {
         var part = IPart.VOID
-        if (isContains(name, Keywords.L_F)) {
-            part = part or IPart.LEFT_FRONT
-        } else if (isContains(name, Keywords.L_R)) {
-            part = part or IPart.LEFT_BACK
-        } else if (isContains(name, Keywords.R_F)) {
-            part = part or IPart.RIGHT_FRONT
-        } else if (isContains(name, Keywords.R_R)) {
-            part = part or IPart.RIGHT_BACK
-        } else if (isContains(name, Keywords.L_C)) {
-            part = part or IPart.LEFT_FRONT or IPart.LEFT_BACK
-        } else if (isContains(name, Keywords.R_C)) {
-            part = part or IPart.RIGHT_FRONT or IPart.RIGHT_BACK
-        } else if (isContains(name, Keywords.F_R)) {
-            part = part or IPart.LEFT_FRONT or IPart.RIGHT_FRONT
-        } else if (isContains(name, Keywords.B_R)) {
-            part = part or IPart.LEFT_BACK or IPart.RIGHT_BACK
+        if (flag) {
+            if (isMatch(Keywords.L_WINDOW, name)) {
+                part = IPart.L_F or IPart.L_B
+            } else if (isMatch(Keywords.R_WINDOW, name)) {
+                part = IPart.R_F or IPart.R_B
+            } else if (isMatch(Keywords.F_WINDOW, name)) {
+                part = IPart.L_F or IPart.R_F
+            } else if (isMatch(Keywords.B_WINDOW, name)) {
+                part = IPart.L_B or IPart.R_B
+            }
+        } else {
+            if (isContains(name, Keywords.L_F)) {
+                part = part or IPart.L_F
+            } else if (isContains(name, Keywords.L_R)) {
+                part = part or IPart.L_B
+            } else if (isContains(name, Keywords.R_F)) {
+                part = part or IPart.R_F
+            } else if (isContains(name, Keywords.R_R)) {
+                part = part or IPart.R_B
+            } else if (isContains(name, Keywords.L_C)) {
+                part = part or IPart.L_F or IPart.L_B
+            } else if (isContains(name, Keywords.R_C)) {
+                part = part or IPart.R_F or IPart.R_B
+            } else if (isContains(name, Keywords.F_R)) {
+                part = part or IPart.L_F or IPart.R_F
+            } else if (isContains(name, Keywords.B_R)) {
+                part = part or IPart.L_B or IPart.R_B
+            }
         }
-//        else {
-//            part = IPart.LEFT_FRONT or IPart.LEFT_BACK or IPart.RIGHT_FRONT or IPart.RIGHT_BACK
-//        }
         return part
     }
 

@@ -188,37 +188,35 @@ class GlobalManager private constructor() : BaseManager() {
         return hashSet
     }
 
-    override fun doAirControlCommand(cmd: AirCmd, callback: ICmdCallback?) {
-//        val modelSerial = Model.obtainEchelon(cmd.model)
-//        Timber.d("doAirControlCommand modelSerial:${Utils.toFullBinary(modelSerial)}")
-        if (Model.CABIN_AIR == cmd.model) {
-            ACManager.instance.doAirControlCommand(cmd, callback)
+    override fun doAirControlCommand(command: AirCmd, callback: ICmdCallback?, fromUser: Boolean) {
+        if (Model.CABIN_AIR == command.model) {
+            ACManager.instance.doAirControlCommand(command, callback)
         }
     }
 
-    override fun doCarControlCommand(cmd: CarCmd, callback: ICmdCallback?) {
-        val modelSerial = Model.obtainEchelon(cmd.model)
+    override fun doCarControlCommand(command: CarCmd, callback: ICmdCallback?, fromUser: Boolean) {
+        val modelSerial = Model.obtainEchelon(command.model)
         Timber.d("doOuterControlCommand modelSerial:${Utils.toFullBinary(modelSerial)}")
         if (Model.ACCESS == modelSerial) {
-            AccessManager.instance.doCarControlCommand(cmd, callback)
+            AccessManager.instance.doCarControlCommand(command, callback, fromUser)
         } else if (Model.LIGHT == modelSerial) {
-            LampManager.instance.doCarControlCommand(cmd, callback)
+            LampManager.instance.doCarControlCommand(command, callback, fromUser)
         } else if (Model.AUDIO == modelSerial) {
-            AudioManager.instance.doCarControlCommand(cmd, callback)
+//            AudioManager.instance.doCarControlCommand(command, callback, fromUser)
         } else if (Model.CABIN == modelSerial) {
-            CabinManager.instance.doCarControlCommand(cmd, callback)
+            CabinManager.instance.doCarControlCommand(command, callback, fromUser)
         } else if (Model.ADAS == modelSerial) {
-            AdasManager.instance.doCarControlCommand(cmd, callback)
+//            AdasManager.instance.doCarControlCommand(command, callback, fromUser)
         } else if (Model.PANORAMA == modelSerial) {
-            PanoramaCommandConsumer(this).consumerCommand(cmd, callback)
+            PanoramaCommandConsumer(this).consumerCommand(command, callback, fromUser)
         } else if (Model.AUTO_PARK == modelSerial) {
-            sendAutoParkCommand(cmd)
+            sendAutoParkCommand(command)
         } else if (Model.GLOBAL == modelSerial) {
-            doConsumerCommand(cmd, callback)
+            doConsumerCommand(command, callback, fromUser)
         }
     }
 
-    private fun doConsumerCommand(command: CarCmd, callback: ICmdCallback?) {
+    private fun doConsumerCommand(command: CarCmd, callback: ICmdCallback?, fromUser: Boolean) {
         if (IAct.ENDURANCE_MILEAGE == command.act) {
             val value = readIntProperty(CarCabinManager.ID_ENDURANCE_MILEAGE, Origin.CABIN)
             command.message = "您的爱车${command.slots?.name}为${value}千米"

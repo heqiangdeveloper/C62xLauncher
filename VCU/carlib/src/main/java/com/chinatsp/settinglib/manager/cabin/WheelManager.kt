@@ -7,11 +7,13 @@ import android.content.Intent
 import com.chinatsp.settinglib.BaseApp
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
+import com.chinatsp.settinglib.bean.CommandParcel
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.sound.ISoundManager
 import com.chinatsp.settinglib.manager.BaseManager
+import com.chinatsp.settinglib.manager.ICmdExpress
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
@@ -31,7 +33,7 @@ import timber.log.Timber
  * @version: 1.0
  */
 
-class WheelManager private constructor() : BaseManager(), ISoundManager {
+class WheelManager private constructor() : BaseManager(), ISoundManager, ICmdExpress {
 
     private val swhFunction: SwitchState by lazy {
         val node = SwitchNode.DRIVE_WHEEL_AUTO_HEAT
@@ -256,22 +258,30 @@ class WheelManager private constructor() : BaseManager(), ISoundManager {
         return success
     }
 
-    override fun doCarControlCommand(cmd: CarCmd, callback: ICmdCallback?) {
-        if (ICar.WHEEL_HOT == cmd.car) {
-            var status = false
-            if (Action.TURN_ON == cmd.action) {
-                status = true
-            }
-            if (Action.TURN_OFF == cmd.action) {
-                status = false
+    override fun doCarControlCommand(command: CarCmd, callback: ICmdCallback?, fromUser: Boolean) {
+        val parcel = CommandParcel(command, callback, receiver = this)
+        doCommandExpress(parcel)
+    }
+
+    override fun doCommandExpress(parcel: CommandParcel, fromUser: Boolean) {
+
+        val command = parcel.command as CarCmd
+        val callback = parcel.callback
+        if (ICar.WHEEL == command.car) {
+            val status = if (Action.TURN_ON == command.action) {
+                true
+            } else if (Action.TURN_OFF == command.action) {
+                false
+            } else {
+                false
             }
             val result = doSetSwitchOption(SwitchNode.DRIVE_WHEEL_AUTO_HEAT, status)
             if (result) {
-                cmd.message = "方向盘加热已${if (status) "打开" else "关闭"}"
+                command.message = "方向盘加热已${if (status) "打开" else "关闭"}"
             } else {
-                cmd.message = "方向盘加热${if (status) "打开" else "关闭"}失败了"
+                command.message = "方向盘加热${if (status) "打开" else "关闭"}失败了"
             }
-            callback?.onCmdHandleResult(cmd)
+            callback?.onCmdHandleResult(command)
         }
     }
 }

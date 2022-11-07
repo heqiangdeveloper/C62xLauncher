@@ -208,7 +208,7 @@ enum class SwitchNode(
     DRIVE_WIRELESS_CHARGING(
         get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_WCM_SOFT_SW_STATE),
         set = Norm(on = 0x2, off = 0x1, signal = CarCabinManager.ID_WCM_SWT),
-        default = true
+        default = false
     ),
 
     /**

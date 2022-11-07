@@ -3,16 +3,10 @@ package com.chinatsp.vehicle.settings.vm
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.chinatsp.settinglib.bean.RadioState
-import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IAccessListener
-import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.manager.access.DoorManager
 import com.chinatsp.settinglib.manager.access.SternDoorManager
 import com.chinatsp.settinglib.manager.access.WindowManager
-import com.chinatsp.settinglib.optios.RadioNode
-import com.chinatsp.settinglib.optios.SwitchNode
-import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.annotation.IPart
 import com.chinatsp.vehicle.controller.annotation.Model
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
@@ -175,20 +169,20 @@ class KanziViewModel @Inject constructor(app: Application, model: BaseModel) :
     override fun onAccessChanged(part: Int, model: Int, value: Int) {
         if (Model.ACCESS_DOOR == model) {
             when (part) {
-                IPart.LEFT_FRONT -> doUpdate(_lfDoor, value, true)
-                IPart.RIGHT_FRONT -> doUpdate(_rfDoor, value, true)
-                IPart.LEFT_BACK -> doUpdate(_lrDoor, value, true)
-                IPart.RIGHT_BACK -> doUpdate(_rrDoor, value, true)
+                IPart.L_F -> doUpdate(_lfDoor, value, true)
+                IPart.R_F -> doUpdate(_rfDoor, value, true)
+                IPart.L_B -> doUpdate(_lrDoor, value, true)
+                IPart.R_B -> doUpdate(_rrDoor, value, true)
                 else -> {}
             }
             return
         }
         if (Model.ACCESS_WINDOW == model) {
             when (part) {
-                IPart.LEFT_FRONT -> doUpdate(_lfWindow, value, true)
-                IPart.RIGHT_FRONT -> doUpdate(_rfWindow, value, true)
-                IPart.LEFT_BACK -> doUpdate(_lrWindow, value, true)
-                IPart.RIGHT_BACK -> doUpdate(_rrWindow, value, true)
+                IPart.L_F -> doUpdate(_lfWindow, value, true)
+                IPart.R_F -> doUpdate(_rfWindow, value, true)
+                IPart.L_B -> doUpdate(_lrWindow, value, true)
+                IPart.R_B -> doUpdate(_rrWindow, value, true)
                 else -> {}
             }
             return

@@ -46,6 +46,10 @@ interface Keywords {
         const val ABAT_VENT = "遮阳帘"
         const val DRIVING_MODE = "驾驶模式"
         const val LAMP = "氛围灯"
+        val DIPPED_HEAD_LIGHT = arrayOf("近光灯", "小灯")
+        val DISTANT_HEAD_LIGHT = arrayOf("远光灯", "大灯")
+        val FOG_LIGHT: String get() = "雾灯"
+        val SIDE_LIGHT: String get() = "位置灯"
         val AMBIENTS = arrayOf("氛围灯", "前排氛围灯", "后排氛围灯")
         const val LAMPLIGHTPLUS = "PLUS"
         const val LAMPLIGHTMINUS = "MINUS"
