@@ -75,9 +75,10 @@ class CabinManagerFragment : BaseTabFragment<BaseViewModel, CabinFragmentBinding
             val child = tab.getChildAt(it)
             child.apply { setOnClickListener { onClick(this) } }
         }.toList()
-        if (VcuUtils.isCareLevel(Level.LEVEL3)) {
+        //最新需求，LV3显示座椅功能，解决BUG 73942
+        /*if (VcuUtils.isCareLevel(Level.LEVEL3)) {
             binding.cabinManagerLeftTab[2].visibility = View.GONE
-        }
+        }*/
         initRouteListener()
     }
 
