@@ -12,4 +12,8 @@
     <string name="card_name_e_connection">亿连</string>
     <string name="card_name_drive_consultant">行车顾问</string>
     <string name="card_name_default">卡片</string>
+    <string name="search_content_number">搜索内容不能超过29个字符</string>
+    <string name="search_content_not">⽆搜索结果，请重新输⼊搜索关键词</string>
+    <string name="search_history">历史搜索</string>
+
 </resources>

@@ -4,4 +4,15 @@
     <dimen name="drawer_content_width">543px</dimen>
     <dimen name="drawer_search_height">68px</dimen>
     <dimen name="drawer_item_top_margin">28px</dimen>
+    <dimen name="search_history">36px</dimen>
+    <dimen name="search_content_not">30px</dimen>
+    <dimen name="search_hint_width">277px</dimen>
+    <dimen name="search_hint_height">30px</dimen>
+    <dimen name="search_hint_size">24px</dimen>
+    <dimen name="search_hint_top">14px</dimen>
+    <dimen name="search_btn_clear">18px</dimen>
+    <dimen name="search_btn_back">172px</dimen>
+    <dimen name="search_btn_back_height">90px</dimen>
+    <dimen name="search_edit_width">1058px</dimen>
+    <dimen name="search_edit_height">64px</dimen>
 </resources>
