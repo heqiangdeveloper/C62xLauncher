@@ -79,7 +79,7 @@ public class WeekDayAdapter extends RecyclerView.Adapter<WeekDayAdapter.ViewHold
             if (dayWeatherBean == null) {
                 return;
             }
-            WeatherUtil.logD("bind WeatherInfo: "+dayWeatherBean);
+//            WeatherUtil.logD("bind WeatherInfo: "+dayWeatherBean);
             tvItemWeatherWeekDay.setText(getWeekDayRes(dayWeatherBean));
             String weather = dayWeatherBean.getWeather();
             tvItemWeatherWord.setText(weather);

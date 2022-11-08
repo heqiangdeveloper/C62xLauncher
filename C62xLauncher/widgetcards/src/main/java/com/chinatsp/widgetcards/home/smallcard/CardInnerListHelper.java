@@ -1,5 +1,6 @@
 package com.chinatsp.widgetcards.home.smallcard;
 
+import android.os.Handler;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -42,6 +43,7 @@ public class CardInnerListHelper {
         @Override
         public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
             super.onScrollStateChanged(recyclerView, newState);
+            EasyLog.d("CardInnerListHelper", "onScrollStateChanged");
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                 try {
                     int currentPosition = ((RecyclerView.LayoutParams) recyclerView.getChildAt(0).getLayoutParams()).getViewAdapterPosition();
@@ -68,11 +70,26 @@ public class CardInnerListHelper {
         smallCardsAdapter.setCardEntityList(smallCardList);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(smallCardsAdapter);
+        LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (currentSmallCardPosition < bigCardPosition) {
+//                    mRecyclerView.scrollToPosition(currentSmallCardPosition);
+//                } else {
+//                    // 如果小卡位于大卡右侧, 则小卡在剩余小卡列表中的位置要-1
+//                    mRecyclerView.scrollToPosition(currentSmallCardPosition - 1);
+//                }
+//            }
+//        }, 500);
         if (currentSmallCardPosition < bigCardPosition) {
             mRecyclerView.scrollToPosition(currentSmallCardPosition);
+            layoutManager.scrollToPositionWithOffset(currentSmallCardPosition, 0);
         } else {
             // 如果小卡位于大卡右侧, 则小卡在剩余小卡列表中的位置要-1
             mRecyclerView.scrollToPosition(currentSmallCardPosition - 1);
+            layoutManager.scrollToPositionWithOffset(currentSmallCardPosition - 1, 0);
+
         }
     }
 
@@ -87,7 +104,9 @@ public class CardInnerListHelper {
         mRecyclerView.setVisibility(View.GONE);
     }
 
-    // 需要剔除大卡,  以及将列表位置定位到当前小卡
+    /**
+     * 获取剩余的小卡列表. 需要剔除大卡,  以及将列表位置定位到当前小卡
+     */
     public List<LauncherCard> getSmallCardList(int bigCardPosition) {
         CardManager cardManager = CardManager.getInstance();
         List<LauncherCard> homeList = cardManager.getHomeList();

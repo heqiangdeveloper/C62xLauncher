@@ -127,6 +127,17 @@ public class HomeCardsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return mViewHolderMap.get(card);
     }
 
+    public RecyclerView.ViewHolder findViewHolderByPosition(int position) {
+        if (position < 0 || position >= getItemCount()) {
+            return null;
+        }
+        int realCardPosition = position;
+        if (isIncludeDrawer()) {
+            realCardPosition = position - 1;
+        }
+        return find(mCardEntityList.get(realCardPosition));
+    }
+
     public int getPositionByCard(LauncherCard card) {
         int position = CardManager.getInstance().getHomeList().indexOf(card);
         if (isIncludeDrawer()) {
