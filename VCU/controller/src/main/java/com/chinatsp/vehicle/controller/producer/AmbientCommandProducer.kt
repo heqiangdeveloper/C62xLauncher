@@ -29,7 +29,7 @@ import org.json.JSONObject
  */
 class AmbientCommandProducer : ICommandProducer {
 
-    fun attemptAmbientCommand(slots: Slots): CarCmd? {
+    fun attemptCreateCommand(slots: Slots): CarCmd? {
         var command: CarCmd? = null
         if (slots.name.contains(Keywords.LAMP)) {
             if (null == command) {
@@ -95,12 +95,10 @@ class AmbientCommandProducer : ICommandProducer {
         if (!CarController.isLikeJson(value)) {
             val pair = obtainActionPair(value)
             action = pair.first
-            val step = pair.second
             if (Action.VOID != action) {
                 command = CarCmd(action = action, model = Model.LIGHT_AMBIENT)
-                command.step = step
+                command.step = pair.second
             }
-            return command
         } else {
             val jsonObject = JSONObject(value)
             val consult = jsonObject.getString("ref")

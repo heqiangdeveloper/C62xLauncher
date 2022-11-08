@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="iquting_unlogin_slogan">Login Tencent interest\n enjoy the travel time</string>
+    <string name="iquting_disconnect_tip">network disconnected</string>
+    <string name="iquting_tab_rank_music">Music billboard</string>
+    <string name="iquting_tab_daily_music">Recommended daily</string>
+    <string name="iquting_get_data_error">获取数据失败</string>
+    <string name="iquting_play_state_value">playing</string>
+</resources>

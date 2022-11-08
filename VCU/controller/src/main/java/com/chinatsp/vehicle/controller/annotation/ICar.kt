@@ -10,27 +10,26 @@ import androidx.annotation.IntDef
  * @version: 1.0
  */
 @IntDef(ICar.VOID,
-    ICar.WHEEL_HOT,
+    ICar.WHEEL,
     ICar.AMBIENT,
     ICar.BRIGHTNESS,
     ICar.COLOR,
     ICar.RHYTHM_MODE,
-    ICar.MODE_3D_2D,
-    ICar.CAMERA_CHANGE,
     ICar.WINDOWS,
     ICar.LOUVER,
     ICar.DOORS,
     ICar.CHAIR,
-    ICar.WIPER
+    ICar.WIPER,
+    ICar.LAMPS
 )
 @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
 annotation class ICar {
     companion object {
         const val VOID = 0x0
         /**
-         * 方向盘加热
+         * 方向盘
          */
-        const val WHEEL_HOT = 0x01
+        const val WHEEL = 0x01
 
         /**
          * 氛围灯
@@ -40,51 +39,37 @@ annotation class ICar {
          * 亮度
          */
         const val BRIGHTNESS = 0x03
-
         /**
          * 亮度
          */
         const val COLOR = 0x04
-
         /**
          * 亮度
          */
         const val RHYTHM_MODE = 0x05
-
-        /**
-         * 全景 2D 3D 模式
-         */
-        const val MODE_3D_2D = 0x06
-
-        /**
-         * 视角切换
-         */
-        const val CAMERA_CHANGE = 0x07
-
         /**
          * 车窗
          */
         const val WINDOWS = 0x08
-
         /**
          * 天窗（包括遮阳帘）
          */
         const val LOUVER = 0x09
-
         /**
          * 车门
          */
         const val DOORS = 0x0A
-
         /**
          * 座椅
          */
         const val CHAIR = 0x0B
-
         /**
          * 雨刮
          */
         const val WIPER = 0x0C
-
+        /**
+         * 灯光
+         */
+        const val LAMPS = 0x0D
     }
 }

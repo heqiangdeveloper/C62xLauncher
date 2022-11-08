@@ -103,6 +103,7 @@ public class ColorPickerView extends View {
     private int currentColor;
     private int topIndex = 0;//记录上一次颜色段
     private List<Color> colorInfoList;
+    private boolean isTouchEvent = false;//是否是按下还是抬起
 
     /**
      * 控件方向
@@ -434,11 +435,12 @@ public class ColorPickerView extends View {
         } else if (index > colorIndex) {
             index = colorIndex;
         }
-        if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+        if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {//按下
             if (colorPickerChangeListener != null) {
                 colorPickerChangeListener.onStartTrackingTouch(this);
                 calcuColor();
                 if (topIndex != index) {
+                    isTouchEvent = true;
                     colorPickerChangeListener.onColorChanged(this, currentColor, index);
                 }
 
@@ -448,6 +450,7 @@ public class ColorPickerView extends View {
             if (colorPickerChangeListener != null) {
                 colorPickerChangeListener.onStopTrackingTouch(this);
                 calcuColor();
+                isTouchEvent = false;
                 if (topIndex != index) {
                     colorPickerChangeListener.onColorChanged(this, currentColor, index);
                 }
@@ -457,6 +460,7 @@ public class ColorPickerView extends View {
             if (colorPickerChangeListener != null) {
                 calcuColor();
                 if (topIndex != index) {
+                    isTouchEvent = true;
                     colorPickerChangeListener.onColorChanged(this, currentColor, index);
                 }
             }
@@ -642,6 +646,9 @@ public class ColorPickerView extends View {
     }
 
     public void setIndicatorIndex(int index) {
+        if (isTouchEvent) {
+            return;
+        }
         if (index <= 0) {
             index = 1;
         } else if (index > colorIndex) {

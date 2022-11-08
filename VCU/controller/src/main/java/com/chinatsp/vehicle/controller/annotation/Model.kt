@@ -14,7 +14,7 @@ import java.lang.annotation.RetentionPolicy
  */
 @SuppressLint("UniqueConstants")
 @IntDef(
-    Model.INVALID, Model.GLOBAL,
+    Model.VOID, Model.GLOBAL,
     Model.ACCESS_DOOR, Model.ACCESS_WINDOW, Model.ACCESS_STERN, Model.ACCESS_MIRROR,
     Model.LIGHT_COMMON, Model.LIGHT_AMBIENT, Model.LIGHT_SCREEN,
     Model.AUDIO_SOUND, Model.AUDIO_EFFECT,
@@ -34,7 +34,7 @@ annotation class Model {
         const val PANORAMA = 0x7 shl 28
         const val AUTO_PARK = 0x8 shl 28
 
-        const val INVALID = -1
+        const val VOID = 0
 
         const val ACCESS_DOOR = 0x01 or ACCESS
         const val ACCESS_WINDOW = 0x02 or ACCESS

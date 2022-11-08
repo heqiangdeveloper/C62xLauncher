@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.IBinder
 import android.text.TextUtils
 import android.view.WindowManager
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.app.Toast
 import com.chinatsp.vehicle.settings.fragment.dialog.DialogMaster
@@ -75,7 +76,10 @@ class SystemService : Service(), SystemDialogHelper.OnCountDownListener {
     }
 
     override fun onFinished() {
-        updateHintMessage()
+        /**避免延迟回来之后车子已启动*/
+        if(!VcuUtils.isEngineRunning()){
+            updateHintMessage()
+        }
     }
 
     private fun updateHintMessage() {

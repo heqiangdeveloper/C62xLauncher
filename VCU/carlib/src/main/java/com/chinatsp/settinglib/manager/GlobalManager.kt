@@ -88,22 +88,9 @@ class GlobalManager private constructor() : BaseManager() {
             return true
         }
         /**开关机状态*/
-        /*if (CarMcuManager.ID_VENDOR_MCU_POWER_MODE == property.propertyId) {
-            val value = property.value as Int
-            val tempPowerMode: Int = mPowerMode
-            mPowerMode = value
-            Timber.d("ACC VALUE:$tempPowerMode $value")
-            if (tempPowerMode > 4 && value <= 4) {
-                //ACC ON -> ACC OFF
-                startDialogService("ON")
-            }*//* else if (tempPowerMode <= 4 && value > 4) {
-                //ACC OFF -> ACC ON
-
-            }*//*
-            return true
-        }*/
         if (origin == Origin.CABIN && CarCabinManager.ID_POWER_MODE_BCM == property.propertyId) {
             val value = property.value as Int
+
             /**电源管理是否有效  0x0*/
             val loUPwrStatMngtVldValue =
                 readIntProperty(CarCabinManager.ID_LOUPWRSTATMNGTVLD, Origin.CABIN)
@@ -120,20 +107,19 @@ class GlobalManager private constructor() : BaseManager() {
             Timber.d("CABIN loUPwrStatMngtVldValue:$loUPwrStatMngtVldValue")
             Timber.d("CABIN value:$value")
             Timber.d("CABIN loUPwrMngtStatlvl:$loUPwrMngtStatlvl")
-            loUPwrMngtStatlvl = 0
             if (value == 0x0) {
                 //0ff 电源等级LV0时，延迟五分钟弹《五分钟即将关闭》
-                if (loUPwrStatMngtVldValue == 0x0 && loUPwrMngtStatlvl == 0x0) {
-                    startDialogService("powerSupply")
+                if (loUPwrMngtStatlvl == 0x0) {
+                    startDialogService("ON")
                 }
             } else if (value == 0x2) {
-                //ON 未打火 电源等级LV1的时候延迟15分钟弹“5分钟即将关闭”弹框，
+                //ON 发动机未打火 电源等级LV1的时候延迟15分钟弹“5分钟即将关闭”弹框，
                 // 电源等级LV2的时候OFF——>ON马上弹
-                if(loUPwrStatMngtVldValue == 0x0 && !status){
+                if (loUPwrStatMngtVldValue == 0x0 && !status) {
                     if (loUPwrMngtStatlvl == 0x1) {
                         //level1延迟15分钟弹出提示
                         startDialogService("leve1")
-                    }else if(loUPwrMngtStatlvl == 0x2){
+                    } else if (loUPwrMngtStatlvl == 0x2) {
                         //leve2的时候立马弹出
                         startDialogService("leve2")
                     }
@@ -203,42 +189,47 @@ class GlobalManager private constructor() : BaseManager() {
         return hashSet
     }
 
-    override fun doAirControlCommand(cmd: AirCmd, callback: ICmdCallback?) {
-//        val modelSerial = Model.obtainEchelon(cmd.model)
-//        Timber.d("doAirControlCommand modelSerial:${Utils.toFullBinary(modelSerial)}")
-        if (Model.CABIN_AIR == cmd.model) {
-            ACManager.instance.doAirControlCommand(cmd, callback)
+    override fun doAirControlCommand(command: AirCmd, callback: ICmdCallback?, fromUser: Boolean) {
+        if (Model.CABIN_AIR == command.model) {
+            ACManager.instance.doAirControlCommand(command, callback)
         }
     }
 
-    override fun doCarControlCommand(cmd: CarCmd, callback: ICmdCallback?) {
-        val modelSerial = Model.obtainEchelon(cmd.model)
+    override fun doCarControlCommand(command: CarCmd, callback: ICmdCallback?, fromUser: Boolean) {
+        val modelSerial = Model.obtainEchelon(command.model)
         Timber.d("doOuterControlCommand modelSerial:${Utils.toFullBinary(modelSerial)}")
         if (Model.ACCESS == modelSerial) {
-            AccessManager.instance.doCarControlCommand(cmd, callback)
+            AccessManager.instance.doCarControlCommand(command, callback, fromUser)
         } else if (Model.LIGHT == modelSerial) {
-            LampManager.instance.doCarControlCommand(cmd, callback)
+            LampManager.instance.doCarControlCommand(command, callback, fromUser)
         } else if (Model.AUDIO == modelSerial) {
-            AudioManager.instance.doCarControlCommand(cmd, callback)
+//            AudioManager.instance.doCarControlCommand(command, callback, fromUser)
         } else if (Model.CABIN == modelSerial) {
-            CabinManager.instance.doCarControlCommand(cmd, callback)
+            CabinManager.instance.doCarControlCommand(command, callback, fromUser)
         } else if (Model.ADAS == modelSerial) {
-            AdasManager.instance.doCarControlCommand(cmd, callback)
+//            AdasManager.instance.doCarControlCommand(command, callback, fromUser)
         } else if (Model.PANORAMA == modelSerial) {
-            PanoramaCommandConsumer(this).consumerCommand(cmd, callback)
+            PanoramaCommandConsumer(this).consumerCommand(command, callback, fromUser)
         } else if (Model.AUTO_PARK == modelSerial) {
-            sendAutoParkCommand(cmd)
+            sendAutoParkCommand(command)
         } else if (Model.GLOBAL == modelSerial) {
-            doConsumerCommand(cmd, callback)
+            doConsumerCommand(command, callback, fromUser)
         }
     }
 
-    private fun doConsumerCommand(command: CarCmd, callback: ICmdCallback?) {
+    private fun doConsumerCommand(command: CarCmd, callback: ICmdCallback?, fromUser: Boolean) {
         if (IAct.ENDURANCE_MILEAGE == command.act) {
             val value = readIntProperty(CarCabinManager.ID_ENDURANCE_MILEAGE, Origin.CABIN)
-            command.message = "您的爱车${command.slots?.name}为${value}千米"
+            val meterValue = value * 1000
+            command.message = "您的爱车${command.slots?.name}为${meterValue}米"
             callback?.onCmdHandleResult(command)
             return
+        }
+        if (IAct.ENDURANCE_MILEAGE_KM == command.act) {
+            val value = readIntProperty(CarCabinManager.ID_ENDURANCE_MILEAGE, Origin.CABIN)
+            command.message = "您的爱车${command.slots?.name}为${value}公里"
+            callback?.onCmdHandleResult(command)
+
         }
         if (IAct.MAINTAIN_MILEAGE == command.act) {
             val value = readIntProperty(CarCabinManager.ID_REMAIN_MAINTAIN_MILEAGE, Origin.CABIN)
@@ -259,6 +250,19 @@ class GlobalManager private constructor() : BaseManager() {
         if (IAct.INSTANTANEOUS_FUEL_CONSUMPTION == command.act) {
             val value = readFloatProperty(CarCabinManager.ID_IP_REALFUELCONSUMPTION, Origin.CABIN)
             command.message = "您的爱车${command.slots?.name}为每百公里${value}升"
+            callback?.onCmdHandleResult(command)
+            return
+        }
+        if (IAct.TIRE_PRESSURE == command.act) {
+            //val value = readFloatProperty(CarCabinManager.ID_IP_REALFUELCONSUMPTION, Origin.CABIN)
+            //北汽还未提供胎压是否正常信号
+            command.message = "胎压正常"
+            callback?.onCmdHandleResult(command)
+            return
+        }
+        if (IAct.REMAINING == command.act) {
+            val value = readFloatProperty(CarCabinManager.ID_IP_FUELLEFTOVER, Origin.CABIN)
+            command.message = "您的爱车${command.slots?.name}为${value}升"
             callback?.onCmdHandleResult(command)
             return
         }

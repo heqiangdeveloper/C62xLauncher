@@ -216,7 +216,7 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
             }
             SwitchNode.DRIVE_BATTERY_OPTIMIZE.get.signal -> {
                 val node = SwitchNode.DRIVE_BATTERY_OPTIMIZE
-                var convert = convert(property, node.get.off, 0x2, 0x5)
+                var convert = convert(property, node.get.off, 0x5)
                 if (null == convert) convert = property
                 onSwitchChanged(node, batteryOptimize, convert)
             }

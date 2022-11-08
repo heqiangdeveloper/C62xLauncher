@@ -38,4 +38,6 @@ dependencies {
     implementation rootProject.ext.dependencies.material
     implementation rootProject.ext.dependencies.constraintlayout
     implementation project(path: ':baseCard')
+    api project(path: ':carservice')
+
 }

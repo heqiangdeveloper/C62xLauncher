@@ -1,19 +1,25 @@
 package com.chinatsp.settinglib.manager.lamp
 
 import android.car.hardware.CarPropertyValue
+import android.car.hardware.cabin.CarCabinManager
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.IProgressManager
+import com.chinatsp.settinglib.bean.CommandParcel
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.manager.BaseManager
+import com.chinatsp.settinglib.manager.ICmdExpress
 import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
+import com.chinatsp.vehicle.controller.ICmdCallback
+import com.chinatsp.vehicle.controller.annotation.*
+import com.chinatsp.vehicle.controller.bean.CarCmd
 import timber.log.Timber
 import java.lang.ref.WeakReference
 import kotlin.math.abs
@@ -27,7 +33,7 @@ import kotlin.math.abs
  */
 
 
-class LightManager private constructor() : BaseManager(), IOptionManager, IProgressManager {
+class LightManager private constructor() : BaseManager(), IOptionManager, IProgressManager, ICmdExpress {
 
     companion object : ISignal {
         override val TAG: String = LightManager::class.java.simpleName
@@ -51,10 +57,6 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
 
     private val insideMeetLight: SwitchState by lazy {
         val node = SwitchNode.LIGHT_INSIDE_MEET
-//        AtomicBoolean(node.default).apply {
-//            val value = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateSwitchValue(node, this, value)
-//        }
         return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
@@ -69,10 +71,6 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
 
     private val outsideMeetLight: SwitchState by lazy {
         val node = SwitchNode.LIGHT_OUTSIDE_MEET
-//        AtomicBoolean(node.default).apply {
-//            val value = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateSwitchValue(node, this, value)
-//        }
         return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
@@ -80,10 +78,6 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
 
     private val lightDelayOut: RadioState by lazy {
         val node = RadioNode.LIGHT_DELAYED_OUT
-//        AtomicInteger(node.default).apply {
-//            val value = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateRadioValue(node, this, value)
-//        }
         return@lazy createAtomicInteger(node) { result, value ->
             doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
@@ -91,10 +85,6 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
 
     private val lightFlicker: RadioState by lazy {
         val node = RadioNode.LIGHT_FLICKER
-//        AtomicInteger(node.default).apply {
-//            val value = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateRadioValue(node, this, value)
-//        }
         return@lazy createAtomicInteger(node) { result, value ->
             doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
@@ -102,10 +92,6 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
 
     private val lightCeremonySense: RadioState by lazy {
         val node = RadioNode.LIGHT_CEREMONY_SENSE
-//        AtomicInteger(node.default).apply {
-//            val value = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateRadioValue(node, this, value)
-//        }
         return@lazy createAtomicInteger(node) { result, value ->
             doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
@@ -315,5 +301,223 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
         return success
     }
 
+    override fun doCarControlCommand(command: CarCmd, callback: ICmdCallback?, fromUser: Boolean) {
+        val parcel = CommandParcel(command, callback, receiver = this)
+        doCommandExpress(parcel)
+    }
+
+    private fun doSwitchFogLight(parcel: CommandParcel) {
+        val command = parcel.command
+        do {
+            val isHead = IPart.HEAD == IPart.HEAD and command.part
+            val isTail = IPart.TAIL == IPart.TAIL and command.part
+            if (Action.TURN_ON == command.action) {
+                var result: Boolean = false
+                if (isHead) {
+                    val isWrite = updateFogLight(true, IPart.HEAD)
+                    result = result or isWrite
+                }
+                if (isTail) {
+                    val isWrite = updateFogLight(true, IPart.TAIL)
+                    result = result or isWrite
+                }
+                command.message = "${command.slots?.name}${if (!result) "已经" else ""}打开了"
+                break
+            }
+            if (Action.TURN_OFF == command.action) {
+                var result: Boolean = false
+                if (isHead) {
+                    val isWrite = updateFogLight(false, IPart.HEAD)
+                    result = result or isWrite
+                }
+                if (isTail) {
+                    val isWrite = updateFogLight(false, IPart.TAIL)
+                    result = result or isWrite
+                }
+                command.message = "${command.slots?.name}${if (!result) "已经" else ""}关闭了"
+                break
+            }
+        } while (false)
+        parcel.callback?.onCmdHandleResult(command)
+    }
+
+    private fun doSwitchSideLight(parcel: CommandParcel) {
+        val command = parcel.command
+        do {
+            if (Action.TURN_ON == command.action) {
+                val result = updateSideLight(true)
+                command.message = "${command.slots?.name}${if (!result) "已经" else ""}打开了"
+                break
+            }
+            if (Action.TURN_OFF == command.action) {
+                val result = updateSideLight(false)
+                command.message = "${command.slots?.name}${if (!result) "已经" else ""}关闭了"
+                break
+            }
+        } while (false)
+        parcel.callback?.onCmdHandleResult(command)
+    }
+
+    private fun doSwitchDippedLight(parcel: CommandParcel) {
+        val command = parcel.command
+        do {
+            if (Action.TURN_ON == command.action) {
+                val result = updateDippedLight(true)
+                command.message = "${command.slots?.name}${if (!result) "已经" else ""}打开了"
+                break
+            }
+            if (Action.TURN_OFF == command.action) {
+                val result = updateDippedLight(false)
+                command.message = "${command.slots?.name}${if (!result) "已经" else ""}关闭了"
+                break
+            }
+        } while (false)
+        parcel.callback?.onCmdHandleResult(command)
+
+    }
+
+    private fun doSwitchDistantLight(parcel: CommandParcel) {
+        val command = parcel.command
+        do {
+            if (Action.TURN_ON == command.action) {
+                val result = updateDistantLight(true)
+                command.message = "${command.slots?.name}${if (!result) "已经" else ""}打开了"
+                break
+            }
+            if (Action.TURN_OFF == command.action) {
+                val result = updateDistantLight(false)
+                command.message = "${command.slots?.name}${if (!result) "已经" else ""}关闭了"
+                break
+            }
+        } while (false)
+        parcel.callback?.onCmdHandleResult(command)
+    }
+
+    private fun updateSideLight(expect: Boolean): Boolean {
+        val actual = isSideLight()
+        val result = actual != expect
+        if (result) {
+            val signal = CarCabinManager.ID_AVN_PARK_LIGHT
+//            AVN request park light on or offreserved[0x1,0,0x0,0x3]
+//            0x0: Inactive  0x1: On  0x2: Off   0x3: Not used
+            val value = if (expect) 0x1 else 0x2
+            writeProperty(signal, value, Origin.CABIN)
+        }
+        return result
+    }
+
+    private fun updateDippedLight(expect: Boolean): Boolean {
+        val actual = isDippedLight()
+        val result = actual != expect
+        if (result) {
+            val signal = CarCabinManager.ID_AVN_LOW_BEAM
+//            AVN request low beam on or offreserved[0x1,0,0x0,0x3]
+//            0x0: Inactive  0x1: On  0x2: Off   0x3: Not used
+            val value = if (expect) 0x1 else 0x2
+            writeProperty(signal, value, Origin.CABIN)
+        }
+        return result
+    }
+
+    private fun updateDistantLight(expect: Boolean): Boolean {
+        val actual = isDistantLight()
+        val result = actual != expect
+        if (result) {
+            val signal = CarCabinManager.ID_AVN_HIGH_BEAM
+//            AVN request high beam on or offreserved[0x1,0,0x0,0x3]
+//            0x0: Inactive  0x1: On  0x2: Off   0x3: Not used
+            val value = if (expect) 0x1 else 0x2
+            writeProperty(signal, value, Origin.CABIN)
+        }
+        return result
+    }
+
+    private fun updateFogLight(expect: Boolean, @IPart part: Int): Boolean {
+        val actual = isFogLight(part)
+        val result = actual != expect
+        if (result) {
+            val signal = if (IPart.HEAD == part) {
+                CarCabinManager.ID_AVN_FRONT_FOG_LIGHT
+            } else if (IPart.TAIL == part) {
+                CarCabinManager.ID_AVN_REAR_FOG_LIGHT
+            } else {
+                Constant.INVALID
+            }
+//            AVN  follow HMA_STATUS  0x0 to set  'off', follow  HMA_STATUS 0x1-0x2
+//            to set 'on'.Set state 'inactive'  when receive HMA_STATUS 0x3-0x7 or HMA_STATUS
+//            signal timeout.[0x1,0,0x0,0x3]
+//            0x0: Inactive  0x1: On  0x2: Off   0x3: Not used
+            val value = if (expect) 0x1 else 0x2
+            writeProperty(signal, value, Origin.CABIN)
+        }
+        return result
+    }
+
+    private fun isFogLight(@IPart part: Int): Boolean {
+        val signal = if (IPart.HEAD == part) {
+            CarCabinManager.ID_TELLTALE_FRONT_FOG_LIGHT
+        } else if (IPart.TAIL == part) {
+            CarCabinManager.ID_TELLTALE_REAR_FOG_LIGHT
+        } else {
+            Constant.INVALID
+        }
+//        val signal = CarCabinManager.ID_FOG_LAMP_SWITCH
+//        Status of front fog light; 0x0: Not active; 0x1: Active
+        val value = readIntProperty(signal, Origin.CABIN)
+        Timber.d("isFogLight signal:$signal value:$value")
+//        val statusValue = if (IPart.HEAD == part) 0x2 else 0x1
+//            Status of fog lamp switch. Status of rear fog lamp SW is same as status of rear fog lamp.
+//        0x0: Inactive/Default
+//        0x1: Rear fog lamp switch active
+//        0x2: Front fog lamp switch active
+        return value == 0x1
+    }
+
+    private fun isSideLight(): Boolean {
+        val signalA = CarCabinManager.ID_PARK_LIGHT_A_INDICATION
+        val signalB = CarCabinManager.ID_PARK_LIGHT_B_INDICATION
+        val valueA = readIntProperty(signalA, Origin.CABIN)
+        val valueB = readIntProperty(signalB, Origin.CABIN)
+        val result = valueA ==0x1 && valueB == 0x1
+        Timber.d("isSideLight signalA:$signalA valueA:$valueA, signalA:$signalA valueA:$valueA, result:$result")
+//        Status of park light B
+//        C51/C53/C62:B=RIGHT
+//        other projects unless specified: REAR
+//        0x0: Off
+//        0x1: On
+        return result
+    }
+
+    private fun isDippedLight(): Boolean {
+        val signal = CarCabinManager.ID_LOW_BEAM_INDICATOR
+//        Low beam indicator 0x0: Off; 0x1: On
+        val value = readIntProperty(signal, Origin.CABIN)
+        Timber.d("isDippedLight signal:$signal value:$value")
+        return value == 0x1
+    }
+
+    private fun isDistantLight(): Boolean {
+        val signal = CarCabinManager.ID_HIGH_BEAM_INDICATOR
+//        High beam indicator 0x0: Off; 0x1: On
+        val value = readIntProperty(signal, Origin.CABIN)
+        Timber.d("isDistantLight signal:$signal value:$value")
+        return value == 0x1
+    }
+
+    override fun doCommandExpress(parcel: CommandParcel, fromUser: Boolean) {
+        val command = parcel.command as CarCmd
+        if ((Model.LIGHT_COMMON == command.model) && (ICar.LAMPS == command.car)) {
+            val callback = parcel.callback
+            if (IAct.DISTANT_LIGHT == command.act) {
+                doSwitchDistantLight(parcel)
+            } else if (IAct.DIPPED_LIGHT == command.act) {
+                doSwitchDippedLight(parcel)
+            } else if (IAct.SIDE_LIGHT == command.act) {
+                doSwitchSideLight(parcel)
+            } else if (IAct.FOG_LIGHT == command.act) {
+                doSwitchFogLight(parcel)
+            }
+        }
+    }
 
 }

@@ -6,7 +6,7 @@ import androidx.annotation.IntDef
  * @author : luohong
  * @e-mail : luohong1@bdstar.com
  * @date : 2022/7/18 15:17
- * @desc :
+ * @desc : 车型配置
  * @version: 1.0
  */
 @IntDef(Level.LEVEL3, Level.LEVEL4, Level.LEVEL5, Level.LEVEL5_2)

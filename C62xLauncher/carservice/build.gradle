@@ -27,7 +27,8 @@ android {
 
 dependencies {
 
-    implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
+    //implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
+    compileOnly files('libs/car-lib.jar')
     implementation project(path: ':base')
 
 }

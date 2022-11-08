@@ -54,8 +54,8 @@ object AirController : IController {
     // 温度降低/风量降低
     private const val MINUS = "MINUS"
 
-    // 温度设为中档
-    private const val MEDIUM = "MEDIUM"
+//    // 温度设为中档
+//    private const val MEDIUM = "MEDIUM"
 
     // 温度最高/风量最高
     private const val MAX = "MAX"
@@ -63,8 +63,8 @@ object AirController : IController {
     // 温度最低
     private const val MIN = "MIN"
 
-    //中风
-    private const val WIND_CENTER = "中风"
+//    //中风
+//    private const val WIND_CENTER = "中风"
 
     // 升高两度参数
     private const val REF_CUR = "CUR"
@@ -84,9 +84,9 @@ object AirController : IController {
     private val FRONT_DEFROST = arrayOf("前除霜", "前除雾")
     private val REAR_DEFROST = arrayOf("后除霜", "后除雾")
     private const val PURIFIER = "空气净化器"
-    private const val POST_DEFROST1 = "后除霜"
-    private const val POST_DEFROST2 = "外后视镜"
-    private const val POST_DEFROST3 = "后视镜加热"
+//    private const val POST_DEFROST1 = "后除霜"
+//    private const val POST_DEFROST2 = "外后视镜"
+//    private const val POST_DEFROST3 = "后视镜加热"
 
     override fun doVoiceController(
         controller: IOuterController,
@@ -123,7 +123,7 @@ object AirController : IController {
             command = attemptCreateAutoModeCmd(slots)
         }
         if (null != command) {
-            controller.doAirControlCommand(command as AirCmd, callback)
+            controller.doAirControlCommand(command, callback)
         }
         return null != command
     }
@@ -195,7 +195,7 @@ object AirController : IController {
             return null
         }
         var action = Action.VOID
-        var orien = IOrien.DEFAULT
+        var orien = IOrien.VOID
         if (AIR_FLOW_FACE == slots.airflowDirection) {
             action = Action.OPTION
             orien = orien or IOrien.FACE
@@ -215,7 +215,7 @@ object AirController : IController {
         if (Action.VOID == action) {
             return null
         }
-        var command = AirCmd(action)
+        val command = AirCmd(action)
         command.orien = orien
         command.air = IAir.AIR_FLOW
         return command
@@ -254,10 +254,14 @@ object AirController : IController {
                 }
             }
             if (Keywords.OPEN == slots.insType) {
-                return AirCmd(Action.OPEN)
+                val command = AirCmd(Action.TURN_ON)
+                command.air = IAir.ENGINE
+                return command
             }
             if (Keywords.CLOSE == slots.insType) {
-                return AirCmd(Action.CLOSE)
+                val command = AirCmd(Action.TURN_OFF)
+                command.air = IAir.ENGINE
+                return command
             }
         }
         return null
@@ -268,12 +272,12 @@ object AirController : IController {
         var value = IAir.VOID
         var action = Action.VOID
         if (isMatch(COLD_MODES, slots.mode)) {
-            air = IAir.MODE_COLD_HEAT
-            value = (IAir.MODE_COLD_HEAT shl 1)
+            air = IAir.COLD_HEAT
+            value = (IAir.COLD_HEAT shl 1)
         }
         if (isMatch(HEAT_MODES, slots.mode)) {
-            air = IAir.MODE_COLD_HEAT
-            value = (IAir.MODE_COLD_HEAT shl 2)
+            air = IAir.COLD_HEAT
+            value = (IAir.COLD_HEAT shl 2)
         }
         if (IAir.VOID == air) {
             return null
@@ -440,11 +444,11 @@ object AirController : IController {
 
     private fun obtainDirection(value: String?): Int {
         if (DRIVER == value) {
-            return IPart.LEFT_FRONT
+            return IPart.L_F
         }
         if (COPILOT == value) {
-            return IPart.RIGHT_FRONT
+            return IPart.R_F
         }
-        return IPart.LEFT_FRONT or IPart.RIGHT_FRONT
+        return IPart.L_F or IPart.R_F
     }
 }

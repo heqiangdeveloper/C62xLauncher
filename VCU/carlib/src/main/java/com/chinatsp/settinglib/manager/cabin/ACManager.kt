@@ -1,7 +1,7 @@
 package com.chinatsp.settinglib.manager.cabin
 
 import android.car.hardware.CarPropertyValue
-import com.chinatsp.settinglib.bean.AirCmdParcel
+import com.chinatsp.settinglib.bean.CommandParcel
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IBaseListener
@@ -162,13 +162,13 @@ class ACManager private constructor() : BaseManager(), IOptionManager {
         }
     }
 
-    override fun doAirControlCommand(cmd: AirCmd, callback: ICmdCallback?) {
-        val airCmdParcel = AirCmdParcel(cmd, callback)
+    override fun doAirControlCommand(command: AirCmd, callback: ICmdCallback?, fromUser: Boolean) {
+        val airCmdParcel = CommandParcel(command, callback, receiver = airSupplier)
         val mask = Action.OPEN
-        if ((mask != cmd.action) && mask == (mask and cmd.action)) {
+        if ((mask != command.action) && mask == (mask and command.action)) {
             airCmdParcel.retryCount = 2
         }
-        airSupplier.doAirControlCommand(airCmdParcel)
+        airSupplier.doCommandExpress(airCmdParcel)
     }
 
 

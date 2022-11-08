@@ -33,8 +33,6 @@ object VcuUtils {
         info.versionName
     }
 
-
-
     fun isEngineRunning(manager: BaseManager = GlobalManager.instance): Boolean {
 //        0x0: Engine NOT running 0x1: Cranking 0x2: Engine running 0x3: Fault
         val signal = CarCabinManager.ID_ENGINE_RUNNING

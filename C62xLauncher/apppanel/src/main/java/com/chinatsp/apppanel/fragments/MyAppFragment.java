@@ -170,6 +170,8 @@ public class MyAppFragment extends Fragment {
             sortWithPriority();
         }
         addDownloadApps();//添加正在下载的apps
+        //更新应用名称，与系统语言保持一致
+        refreshAppName();
         loadingTv.setVisibility(View.GONE);
         mMyAppInfoAdapter = new MyAppInfoAdapter(view.getContext(), data);
         appInfoClassifyView.setAdapter(mMyAppInfoAdapter);
@@ -836,6 +838,24 @@ public class MyAppFragment extends Fragment {
         return packageManager.queryIntentActivities(i,0);
     }
 
+    private String getAppName(String pkgName){
+        String name = "";
+        if(TextUtils.isEmpty(pkgName)){
+            name = "";
+        }else if(pkgName.equals(AppLists.APPMANAGEMENT)) {
+            name = getResources().getString(R.string.appmanagement_name);
+        }else {
+            List<ResolveInfo> allApps = getApps();
+            A:for(int i = 0; i < allApps.size(); i++){
+                if(pkgName.equals(allApps.get(i).activityInfo.packageName)){
+                    name = (allApps.get(i).activityInfo.loadLabel(getContext().getPackageManager())).toString();
+                    break A;
+                }
+            }
+        }
+        return name;
+    }
+
     /*
     *  剔除黑名单中的APP
      */
@@ -959,6 +979,22 @@ public class MyAppFragment extends Fragment {
         }
     }
 
+    /*
+    * 更新应用名称，与系统语言保持一致
+     */
+    private void refreshAppName(){
+        for(List<LocationBean> lists:data){
+            if(lists != null){
+                for(int i = 0; i < lists.size(); i++){
+                    locationBean = lists.get(i);
+                    if(locationBean != null){
+                        locationBean.setName(getAppName(locationBean.getPackageName()));
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -1000,6 +1036,7 @@ public class MyAppFragment extends Fragment {
                         locationBean.setParentIndex(i);
                         locationBean.setChildIndex(-1);
                         locationBean.setTitle("");
+                        locationBean.setName(getAppName(locationBean.getPackageName()));
 
 //                        baos = new ByteArrayOutputStream();
 //                        if(null == locationBean.getImgDrawable()){
@@ -1036,6 +1073,7 @@ public class MyAppFragment extends Fragment {
                             }
                             locationBean.setParentIndex(i);
                             locationBean.setChildIndex(j);
+                            locationBean.setName(getAppName(locationBean.getPackageName()));
 //                            locationBean.setTitle(appInfo.getTitle());
 //                            locationBean.setPackageName(appInfo.getPackageName());
 

@@ -23,4 +23,10 @@ data class SwitchState(var data: Boolean) {
 
     fun enable(value: Int) = value == Constant.VIEW_ENABLE
 
+    fun isEnableChanged(value: Int) :Boolean  {
+        val actual = enable()
+        val expect = value == Constant.VIEW_ENABLE
+        return actual xor expect
+    }
+
 }

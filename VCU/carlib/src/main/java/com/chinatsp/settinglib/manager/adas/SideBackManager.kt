@@ -112,6 +112,8 @@ class SideBackManager : BaseManager(), IOptionManager {
             }
             SwitchNode.ADAS_BSC.get.signal -> {
                 onSwitchChanged(SwitchNode.ADAS_BSC, bscValue, property)
+                val value = if (bscValue.get()) "ON" else "OFF"
+                VcuUtils.setConfigParameters(OffLine.BSC, value)
             }
             SwitchNode.ADAS_BSD.get.signal -> {
                 onSwitchChanged(SwitchNode.ADAS_BSD, bsdValue, property)
@@ -202,7 +204,6 @@ class SideBackManager : BaseManager(), IOptionManager {
                 doSetSwitchOption(node, status, mebValue)
             }
             SwitchNode.ADAS_GUIDES -> {
-//                VcuUtils.putInt(key = Constant.AUXILIARY_LINE, value = node.value(status))
                 val value = if (status) "ON" else "OFF"
                 val result = VcuUtils.setConfigParameters(OffLine.GUIDES, value)
                 if (result) {

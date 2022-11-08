@@ -13,6 +13,7 @@ import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.ISwitchAction
 import com.chinatsp.vehicle.settings.R
+import com.chinatsp.vehicle.settings.app.Toast
 import com.chinatsp.vehicle.settings.databinding.CabinSeatFragmentBinding
 import com.chinatsp.vehicle.settings.fragment.cabin.dialog.CopilotGuestsDialogFragment
 import com.chinatsp.vehicle.settings.fragment.cabin.dialog.SeatHeatingDialogFragment
@@ -138,6 +139,9 @@ class CabinSeatFragment : BaseFragment<SeatViewModel, CabinSeatFragmentBinding>(
     private fun setSwitchListener() {
         binding.seatMainMeetSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.SEAT_MAIN_DRIVE_MEET, buttonView, isChecked)
+            if(!isChecked){
+                Toast.showToast(context, getString(R.string.cabin_seat_welcomes_guests_close), true)
+            }
         }
     }
 

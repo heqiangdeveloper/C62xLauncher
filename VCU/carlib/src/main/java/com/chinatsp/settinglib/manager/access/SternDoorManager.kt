@@ -6,6 +6,7 @@ import android.car.hardware.cabin.CarCabinManager
 import com.chinatsp.settinglib.AppExecutors
 import com.chinatsp.settinglib.IProgressManager
 import com.chinatsp.settinglib.VcuUtils
+import com.chinatsp.settinglib.bean.CommandParcel
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
@@ -13,6 +14,7 @@ import com.chinatsp.settinglib.constants.OffLine
 import com.chinatsp.settinglib.listener.IAccessListener
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.manager.BaseManager
+import com.chinatsp.settinglib.manager.ICmdExpress
 import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.optios.Progress
@@ -37,7 +39,7 @@ import java.lang.ref.WeakReference
  */
 
 
-class SternDoorManager private constructor() : BaseManager(), IOptionManager, IProgressManager {
+class SternDoorManager private constructor() : BaseManager(), IOptionManager, IProgressManager, ICmdExpress {
 
     companion object : ISignal {
         override val TAG: String = SternDoorManager::class.java.simpleName
@@ -228,28 +230,12 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
         }
     }
 
-    override fun doCarControlCommand(command: CarCmd, callback: ICmdCallback?) {
-        if (Model.ACCESS_STERN != command.model) {
-            return
-        }
-        Timber.d("doOuterControlCommand $command")
-        if (ICar.DOORS == command.car) {
-            if (IPart.HEAD == command.part) {
-                doControlHood(command, callback)
-                return
-            }
-            if (IPart.TAIL == command.part) {
-                doControlTrunk(command, callback)
-                return
-            }
-        }
+    override fun doCarControlCommand(command: CarCmd, callback: ICmdCallback?, fromUser: Boolean) {
+        val parcel = CommandParcel(command, callback, receiver = this)
+        doCommandExpress(parcel)
     }
 
     private fun doControlHood(command: CarCmd, callback: ICmdCallback?) {
-//        if (!VcuUtils.isSupportFunction(OffLine.ETRUNK)) {
-//            command.message = "您的爱车不支持此功能！"
-//            return
-//        }
         if (Action.OPEN == command.action) {
             doTrunkAction(isTrunkOpened(), isTrunkOpening(), 1)
             command.message = "${command.slots?.name}已打开"
@@ -358,6 +344,21 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
 
     private fun isValidValue(value: Int, vararg arrays: Int): Boolean {
         return !arrays.contains(value)
+    }
+
+    override fun doCommandExpress(parcel: CommandParcel, fromUser: Boolean) {
+        val command = parcel.command as CarCmd
+        if (ICar.DOORS == command.car) {
+            val callback = parcel.callback
+            if (IPart.HEAD == command.part) {
+                doControlHood(command, callback)
+                return
+            }
+            if (IPart.TAIL == command.part) {
+                doControlTrunk(command, callback)
+                return
+            }
+        }
     }
 
 }

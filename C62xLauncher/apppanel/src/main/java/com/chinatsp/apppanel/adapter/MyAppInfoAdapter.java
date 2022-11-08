@@ -70,6 +70,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import launcher.base.utils.property.PropertyUtils;
 import launcher.base.utils.recent.RecentAppHelper;
@@ -352,27 +353,64 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
     private String getName(int installed,String name){
         if(installed == 0 || installed == AppState.INSTALLED || installed == AppState.COULD_UPDATE ||
             installed == AppState.INSTALLED_COMPLETELY){//已安装
-            return name;
+            return getNewName(name);
         }else if(installed == AppState.DOWNLOADING){//下载中
             return context.getString(R.string.download_downloading);
         }else if(installed == AppState.DOWNLOAD_PAUSED){//暂停中
             return context.getString(R.string.download_pause);
         }else if(installed == AppState.COULD_BE_CANCELED){//可取消
-            return name;
+            return getNewName(name);
         }else if(installed == AppState.DOWNLOAD_FAIL){//下载失败
             return context.getString(R.string.download_fail);
         }else if(installed == AppState.INSTALLING){//安装中
             return context.getString(R.string.download_installing);
         }else {
-            return name;
+            return getNewName(name);
         }
+    }
+
+    private static final String FOLDERCN = "文件夹";
+    private static final String FOLDEREN = "Folder";
+    private String getNewName(String name){
+        String s = "";
+        if(name.equals(FOLDERCN) || name.equals(FOLDEREN)){
+            s = context.getString(R.string.folder_name);
+        }else if(name.startsWith(FOLDERCN)){
+            s = name.substring(FOLDERCN.length());
+            if(isInteger(s)){
+                s = name.replace(FOLDERCN,context.getString(R.string.folder_name));
+            }else {
+                s = name;
+            }
+        }else if(name.startsWith(FOLDEREN)){
+            s = name.substring(FOLDEREN.length());
+            if(isInteger(s)){
+                s = name.replace(FOLDEREN,context.getString(R.string.folder_name));
+            }else {
+                s = name;
+            }
+        }else {
+            s = name;
+        }
+        return s;
+    }
+
+    /**
+     * 校验字符串是否是纯数字
+     *
+     * @param str 数字字符串
+     * @return boolean
+     */
+    private static boolean isInteger(String str) {
+        String s = "^[-+]?[\\d]*$";
+        Pattern pattern = Pattern.compile(s);
+        return pattern.matcher(str).matches();
     }
 
     /*
     *   -1没有“文件夹” 0有“文件夹” X“文件夹X”
      */
     private int getExistDirIndex(List<String> titleLists){
-        List<String> titles = new ArrayList<>();
         int lastNumber = -1;
         for(String title : titleLists){
             if(title.startsWith("文件夹") && title.length() <= 5){
@@ -621,70 +659,129 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         }
 
         RelativeLayout relativeLayout = (RelativeLayout) view;
-        ImageView iv = (ImageView) relativeLayout.getChildAt(2);
-        TextView tv = (TextView) relativeLayout.getChildAt(3);
-        if(tv.getText().toString().trim().equals(context.getString(R.string.add))){
-            if(isTimeEnabled()){//防抖处理
-                editor.putBoolean(MyConfigs.SHOWDELETE,false);
-                editor.putBoolean(MyConfigs.MAINSHOWDELETE,false);
-                editor.commit();
-                hideDeleteIcon((RecyclerView) relativeLayout.getParent());
-                showAddDialog(parentIndex);
-            }
-        }else if(tv.getText().toString().trim().equals(context.getString(R.string.appmanagement_name))){
-            if(isTimeEnabled()) {//防抖处理
-                editor.putBoolean(MyConfigs.SHOWDELETE,false);
-                editor.putBoolean(MyConfigs.MAINSHOWDELETE,false);
-                editor.commit();
-                hideDeleteIcon((RecyclerView) relativeLayout.getParent());
-                //showAppManagementDialog();
-                AppManagementWindow.getInstance(context).show();
-            }
-        }else {
-            if(isTimeEnabled()) {//防抖处理
-                String pkgName = "";
-                if(index == -1){
-                    pkgName = mData.get(parentIndex).get(0).getPackageName();
-                }else {
-                    pkgName = mData.get(parentIndex).get(index).getPackageName();
-                }
-                boolean isSystemApp = AppLists.isSystemApplication(context,pkgName);
-                Log.d("MyAppInfoAdapter","onItemClick isClickDelete: " + isClickDelete + ",isSystemApp: " + isSystemApp +
-                        "，package: " + pkgName);
-                if(isClickDelete && !isSystemApp){//如果点击的是删除
-                    //hideDeleteIcon((RecyclerView) relativeLayout.getParent());
-                    //resetDeleteFlag(true,parentIndex);//position不为-1就行,用parentIndex
+//        ImageView iv = (ImageView) relativeLayout.getChildAt(2);
+//        TextView tv = (TextView) relativeLayout.getChildAt(3);
+//        if(tv.getText().toString().trim().equals(context.getString(R.string.add))){
+//            if(isTimeEnabled()){//防抖处理
+//                editor.putBoolean(MyConfigs.SHOWDELETE,false);
+//                editor.putBoolean(MyConfigs.MAINSHOWDELETE,false);
+//                editor.commit();
+//                hideDeleteIcon((RecyclerView) relativeLayout.getParent());
+//                showAddDialog(parentIndex);
+//            }
+//        }else if(tv.getText().toString().trim().equals(context.getString(R.string.appmanagement_name))){
+//            if(isTimeEnabled()) {//防抖处理
+//                editor.putBoolean(MyConfigs.SHOWDELETE,false);
+//                editor.putBoolean(MyConfigs.MAINSHOWDELETE,false);
+//                editor.commit();
+//                hideDeleteIcon((RecyclerView) relativeLayout.getParent());
+//                //showAppManagementDialog();
+//                AppManagementWindow.getInstance(context).show();
+//            }
+//        }else {
+//            if(isTimeEnabled()) {//防抖处理
+//                String pkgName = "";
+//                if(index == -1){
+//                    pkgName = mData.get(parentIndex).get(0).getPackageName();
+//                }else {
+//                    pkgName = mData.get(parentIndex).get(index).getPackageName();
+//                }
+//                boolean isSystemApp = AppLists.isSystemApplication(context,pkgName);
+//                Log.d("MyAppInfoAdapter","onItemClick isClickDelete: " + isClickDelete + ",isSystemApp: " + isSystemApp +
+//                        "，package: " + pkgName);
+//                if(isClickDelete && !isSystemApp){//如果点击的是删除
+//                    //hideDeleteIcon((RecyclerView) relativeLayout.getParent());
+//                    //resetDeleteFlag(true,parentIndex);//position不为-1就行,用parentIndex
+//
+//                    if(index == -1){//main中
+//                        editor.putBoolean(MyConfigs.MAINSHOWDELETE,true);
+//                        editor.commit();
+//                        showDeleteDialog(mData.get(parentIndex).get(0).getName(),pkgName,true);
+//                    }else {//sub中
+//                        editor.putBoolean(MyConfigs.SHOWDELETE,true);
+//                        editor.commit();
+//                        showDeleteDialog(mData.get(parentIndex).get(index).getName(),pkgName,false);
+//                    }
+//                }else {
+//                    editor.putBoolean(MyConfigs.SHOWDELETE,false);
+//                    editor.putBoolean(MyConfigs.MAINSHOWDELETE,false);
+//                    editor.commit();
+//                    hideDeleteIcon((RecyclerView) relativeLayout.getParent());
+//
+//                    if(index == -1){//-1 是main area
+//                        doClick(mData.get(parentIndex).get(0));
+//                    }else {
+//                        if(mData.get(parentIndex).get(index) != null){
+//                            doClick(mData.get(parentIndex).get(index));
+//                        }else {
+//                            Log.d("MyAppInfoAdapter","get location is null");
+//                            return;
+//                        }
+//                    }
+//    //                Utils.launchApp(context,packageName);
+//                }
+//            }else {
+//                Log.d("MyAppInfoAdapter","click too fast,ignore");
+//            }
+//        }
+        commandItemClick((RecyclerView) relativeLayout.getParent(),parentIndex,index);
+    }
 
-                    if(index == -1){//main中
-                        editor.putBoolean(MyConfigs.MAINSHOWDELETE,true);
-                        editor.commit();
-                        showDeleteDialog(mData.get(parentIndex).get(0).getName(),pkgName,true);
-                    }else {//sub中
-                        editor.putBoolean(MyConfigs.SHOWDELETE,true);
-                        editor.commit();
-                        showDeleteDialog(mData.get(parentIndex).get(index).getName(),pkgName,false);
-                    }
-                }else {
+    private void commandItemClick(RecyclerView relativeLayout,int parentIndex, int index){
+        if(isTimeEnabled()) {//防抖处理
+            String pkgName = "";
+            if(index == -1){
+                locationBean = mData.get(parentIndex).get(0);
+            }else {
+                locationBean = mData.get(parentIndex).get(index);
+            }
+
+            if(locationBean == null){//添加按钮
+                if(isTimeEnabled()){//防抖处理
                     editor.putBoolean(MyConfigs.SHOWDELETE,false);
                     editor.putBoolean(MyConfigs.MAINSHOWDELETE,false);
                     editor.commit();
-                    hideDeleteIcon((RecyclerView) relativeLayout.getParent());
-
-                    if(index == -1){//-1 是main area
-                        doClick(mData.get(parentIndex).get(0));
-                    }else {
-                        if(mData.get(parentIndex).get(index) != null){
-                            doClick(mData.get(parentIndex).get(index));
-                        }else {
-                            Log.d("MyAppInfoAdapter","get location is null");
-                            return;
-                        }
-                    }
-    //                Utils.launchApp(context,packageName);
+                    hideDeleteIcon(relativeLayout);
+                    showAddDialog(parentIndex);
+                }
+            }else if(AppLists.APPMANAGEMENT.equals(locationBean.getPackageName())){//应用管理
+                if(isTimeEnabled()) {//防抖处理
+                    editor.putBoolean(MyConfigs.SHOWDELETE,false);
+                    editor.putBoolean(MyConfigs.MAINSHOWDELETE,false);
+                    editor.commit();
+                    hideDeleteIcon(relativeLayout);
+                    AppManagementWindow.getInstance(context).show();
                 }
             }else {
-                Log.d("MyAppInfoAdapter","click too fast,ignore");
+                if(isTimeEnabled()) {//防抖处理
+                    pkgName = locationBean.getPackageName();
+                    boolean isSystemApp = AppLists.isSystemApplication(context,pkgName);
+                    Log.d("MyAppInfoAdapter","onItemClick isClickDelete: " + isClickDelete + ",isSystemApp: " + isSystemApp +
+                            "，package: " + pkgName);
+                    if(isClickDelete && !isSystemApp){//如果点击的是删除
+                        if(index == -1){//main中
+                            editor.putBoolean(MyConfigs.MAINSHOWDELETE,true);
+                            editor.commit();
+                            showDeleteDialog(locationBean.getName(),pkgName,true);
+                        }else {//sub中
+                            editor.putBoolean(MyConfigs.SHOWDELETE,true);
+                            editor.commit();
+                            showDeleteDialog(locationBean.getName(),pkgName,false);
+                        }
+                    }else {
+                        editor.putBoolean(MyConfigs.SHOWDELETE,false);
+                        editor.putBoolean(MyConfigs.MAINSHOWDELETE,false);
+                        editor.commit();
+                        hideDeleteIcon(relativeLayout);
+
+                        doClick(locationBean);
+                    }
+                }else {
+                    Log.d("MyAppInfoAdapter","click too fast,ignore");
+                }
             }
+        }else {
+            Log.d("MyAppInfoAdapter","click too fast,ignore");
         }
     }
 

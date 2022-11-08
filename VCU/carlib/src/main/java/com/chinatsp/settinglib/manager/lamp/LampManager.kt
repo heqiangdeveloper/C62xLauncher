@@ -4,9 +4,6 @@ import android.car.hardware.CarPropertyValue
 import com.chinatsp.settinglib.ITabStore
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ISignal
-import com.chinatsp.settinglib.manager.access.DoorManager
-import com.chinatsp.settinglib.manager.access.SternDoorManager
-import com.chinatsp.settinglib.manager.access.WindowManager
 import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.annotation.Model
@@ -79,11 +76,12 @@ class LampManager private constructor() : BaseManager(), ITabStore {
         }
     }
 
-    override fun doCarControlCommand(cmd: CarCmd, callback: ICmdCallback?) {
-        if (Model.LIGHT_AMBIENT == cmd.model) {
-            AmbientLightingManager.instance.doCarControlCommand(cmd, callback)
+    override fun doCarControlCommand(command: CarCmd, callback: ICmdCallback?, fromUser: Boolean) {
+        if (Model.LIGHT_AMBIENT == command.model) {
+            AmbientLightingManager.instance.doCarControlCommand(command, callback, fromUser)
+        } else if (Model.LIGHT_COMMON == command.model) {
+            LightManager.instance.doCarControlCommand(command, callback, fromUser)
         }
-
     }
 
 

@@ -20,4 +20,6 @@
     <string name="update_dialog_warn">下次不再提醒</string>
     <string name="update_dialog_open">打开应用（%ss）</string>
     <string name="update_dialog_update">更新</string>
+    <string name="appmanagement_clear_toast">已释放%s内存</string>
+    <string name="folder_name">文件夹</string>
 </resources>

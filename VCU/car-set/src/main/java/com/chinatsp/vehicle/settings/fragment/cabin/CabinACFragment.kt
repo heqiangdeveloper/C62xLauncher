@@ -47,7 +47,7 @@ class CabinACFragment : BaseFragment<CabinACViewModel, CabinAcFragmentBinding>()
     }
 
     private fun initViewsDisplay() {
-        if (VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL5)) {//lv4跟lv5没有预通风功能
+        if (VcuUtils.isCareLevel(Level.LEVEL3)) {//lv3没有预通风功能
             binding.cabinAcAutoWindLayout.visibility = View.GONE
             binding.line3.visibility = View.GONE
         }

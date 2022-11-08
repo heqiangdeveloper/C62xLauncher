@@ -24,7 +24,7 @@ object Constant {
 
     const val DEFAULT: Int = INVALID
 
-    const val VIEW_ENABLE = 0x1
+    const val VIEW_ENABLE = -100
 
     /**
      * 浅色主题（白天模式）

@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/btnBack"
-        android:layout_width="172px"
-        android:layout_height="90px"
+        android:layout_width="@dimen/search_btn_back"
+        android:layout_height="@dimen/search_btn_back_height"
         android:onClick="clickBackBtn"
         android:src="@drawable/search_back_selector"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,8 +18,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutSearchEdit"
-        android:layout_width="1058px"
-        android:layout_height="64px"
+        android:layout_width="@dimen/search_edit_width"
+        android:layout_height="@dimen/search_edit_height"
         android:background="@drawable/launcher_search_edittext_bg"
         app:layout_constraintBottom_toBottomOf="@id/btnBack"
         app:layout_constraintEnd_toEndOf="parent"
@@ -29,7 +29,7 @@
         <ImageView
             android:layout_width="@dimen/card_icon_size_lv3"
             android:layout_height="@dimen/card_icon_size_lv3"
-            android:layout_marginStart="18px"
+            android:layout_marginStart="18dp"
             android:src="@drawable/icon_search_48"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -40,9 +40,9 @@
             android:id="@+id/edittextSearchWord"
             style="@style/CardLv2TextView"
             android:layout_width="0px"
-            android:layout_height="46px"
-            android:layout_marginStart="77px"
-            android:layout_marginEnd="96px"
+            android:layout_height="46dp"
+            android:layout_marginStart="77dp"
+            android:layout_marginEnd="96dp"
             android:background="@android:color/transparent"
             android:gravity="center_vertical"
             android:maxLength="29"
@@ -55,7 +55,7 @@
             android:id="@+id/btnClearText"
             android:layout_width="@dimen/card_icon_size_lv3"
             android:layout_height="@dimen/card_icon_size_lv3"
-            android:layout_marginEnd="18px"
+            android:layout_marginEnd="@dimen/search_btn_clear"
             android:onClick="clearSearchText"
             android:src="@drawable/card_icon_close_48"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -66,12 +66,12 @@
 
     <TextView
         android:id="@+id/search_hint"
-        android:layout_width="277px"
-        android:layout_height="30px"
-        android:layout_marginTop="14px"
-        android:text="搜索内容不能超过29个字符"
-        android:textColor="#FF7B7B83"
-        android:textSize="24px"
+        android:layout_width="@dimen/search_hint_width"
+        android:layout_height="@dimen/search_hint_height"
+        android:layout_marginTop="@dimen/search_hint_top"
+        android:text="@string/search_content_number"
+        android:textColor="@color/search_hint_color"
+        android:textSize="@dimen/search_hint_size"
         app:layout_constraintStart_toStartOf="@id/layoutSearchEdit"
         app:layout_constraintTop_toBottomOf="@id/layoutSearchEdit" />
 
@@ -114,9 +114,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="43dp"
-                android:text="⽆搜索结果，请重新输⼊搜索关键词"
+                android:text="@string/search_content_not"
                 android:textColor="@color/white"
-                android:textSize="30px" />
+                android:textSize="@dimen/search_content_not" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -138,15 +138,15 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="历史搜索"
-                android:textColor="@color/white"
-                android:textSize="36px" />
+                android:text="@string/search_history"
+                android:textColor="@color/search_search_history"
+                android:textSize="@dimen/search_history" />
 
             <ImageView
                 android:id="@+id/deleteHistorical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:src="@drawable/search_dele_selector"
                 android:onClick="clearHistorical"/>
         </RelativeLayout>

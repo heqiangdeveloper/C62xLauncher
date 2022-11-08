@@ -7,6 +7,7 @@ import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.ISwitchAction
 import com.chinatsp.vehicle.settings.R
+import com.chinatsp.vehicle.settings.app.Toast
 import com.chinatsp.vehicle.settings.databinding.SeatHeatingDialogFragmentBinding
 import com.chinatsp.vehicle.settings.vm.cabin.SeatViewModel
 import com.common.library.frame.base.BaseDialogFragment
@@ -98,6 +99,9 @@ class SeatHeatingDialogFragment :
             updateEnable(binding.seatHeatingStartTemperatureSeekBar,
                 true,
                 binding.seatAutomaticHeatingSwitch.isChecked)
+          if(!isChecked){
+              Toast.showToast(context, getString(R.string.cabin_seat_automatic_heating_close), true)
+          }
         }
     }
 

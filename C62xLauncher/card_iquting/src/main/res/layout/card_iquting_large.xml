@@ -6,7 +6,7 @@
 
     <TextView
         android:id="@+id/tvCardIQuTingLoginTipBig"
-        android:layout_width="222px"
+        android:layout_width="wrap_content"
         android:layout_height="92px"
         style="@style/CardLv2TextView"
         android:text="@string/iquting_unlogin_slogan"
@@ -22,7 +22,7 @@
         android:id="@+id/tvIQuTingDailySongs"
         android:text="@string/iquting_tab_daily_music"
         android:clickable="true"
-        android:layout_width="119px"
+        android:layout_width="wrap_content"
         android:layout_height="92px"
         style="@style/CardLv3TextView"
         android:textColor="@color/card_main_theme"
@@ -36,7 +36,7 @@
         android:id="@+id/tvIQuTingRankSongs"
         android:text="@string/iquting_tab_rank_music"
         android:clickable="true"
-        android:layout_width="148px"
+        android:layout_width="wrap_content"
         android:layout_height="92px"
         style="@style/CardLv3TextView"
         android:textColor="@color/card_blue_default"
