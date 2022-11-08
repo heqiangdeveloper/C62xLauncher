@@ -136,7 +136,7 @@ class SettingManager private constructor() {
                 val signalArray =
                     signals.stream().filter { it != -1 }.mapToInt { obj: Int -> obj }.toArray()
                 Arrays.stream(signalArray).forEach {
-                    Timber.d("register MCU: hex propertyId:${Integer.toHexString(it)},  dec propertyId:$it")
+                    Timber.d("register MCU: hex propertyId:${Integer.toHexString(it)},  dec propertyId:$it, ${VcuUtils.V_N}")
                 }
                 mCarMcuManager!!.registerCallback(mcuEventListener, signalArray)
             }
@@ -208,7 +208,7 @@ class SettingManager private constructor() {
         override fun onChangeEvent(property: CarPropertyValue<*>) {
             val id = property.propertyId
             Timber.tag(Constant.VehicleSignal)
-                .d("doActionSignal-cabin receive-cabin hex-id::${Integer.toHexString(id)}, dec-id:$id value:${property.value}")
+                .d("doActionSignal-cabin receive-cabin hex-id::${Integer.toHexString(id)}, dec-id:$id value:${property.value}, ${VcuUtils.V_N}")
             GlobalManager.instance.onDispatchSignal(property, Origin.CABIN)
         }
 
@@ -221,7 +221,7 @@ class SettingManager private constructor() {
         override fun onChangeEvent(property: CarPropertyValue<*>) {
             val id = property.propertyId
             Timber.tag(Constant.VehicleSignal)
-                .d("doActionSignal-mcu receive-mcu hex-id::${Integer.toHexString(id)}, dec-id:$id value:${property.value}")
+                .d("doActionSignal-mcu receive-mcu hex-id::${Integer.toHexString(id)}, dec-id:$id value:${property.value}, ${VcuUtils.V_N}")
             GlobalManager.instance.onDispatchSignal(property, Origin.MCU)
         }
 

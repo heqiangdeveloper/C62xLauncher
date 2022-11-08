@@ -201,8 +201,6 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
             updateSwitchEnable(SwitchNode.ADAS_BSC)
             updateSwitchEnable(SwitchNode.ADAS_GUIDES)
             updateRadioEnable(RadioNode.ADAS_SIDE_BACK_SHOW_AREA)
-            val value = if (binding.adasSideBscSwitch.isChecked) "ON" else "OFF"
-            setSwitchConfigParameters(OffLine.BSC, value)
         }
         viewModel.bsdValue.observe(this) {
             doUpdateSwitch(SwitchNode.ADAS_BSD, it)

@@ -167,7 +167,7 @@ class CommonlyFragment : BaseTabFragment<KanziViewModel, AccessFragmentBinding>(
     }
 
     private fun observeAccessState() {
-        if (null != context) {
+        if (null != context && null != viewModel) {
             viewModel.headDoor.observe(this) {
                 sendIntValue(KanZiKeys.Hood, it)
             }

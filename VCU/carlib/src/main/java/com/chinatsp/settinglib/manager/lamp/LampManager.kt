@@ -82,7 +82,6 @@ class LampManager private constructor() : BaseManager(), ITabStore {
         } else if (Model.LIGHT_COMMON == command.model) {
             LightManager.instance.doCarControlCommand(command, callback, fromUser)
         }
-
     }
 
 

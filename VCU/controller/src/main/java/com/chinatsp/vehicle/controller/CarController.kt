@@ -58,13 +58,13 @@ object CarController : IController {
             command = ambientProducer.attemptCreateCommand(slots)
         }
         if (null == command) {
-            command = panoramaProducer.attemptCreateCommand(slots)
-        }
-        if (null == command) {
             command = otherProducer.attemptCreateCommand(slots)
         }
         if (null == command) {
             command = lampsProducer.attemptCreateCommand(slots)
+        }
+        if (null == command) {
+            command = panoramaProducer.attemptCreateCommand(slots)
         }
         if (null == command) {
             command = attemptAutoParkCommand(slots)

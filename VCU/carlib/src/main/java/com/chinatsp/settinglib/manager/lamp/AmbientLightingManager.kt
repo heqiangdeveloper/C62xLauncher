@@ -17,9 +17,11 @@ import com.chinatsp.vehicle.controller.annotation.Action
 import com.chinatsp.vehicle.controller.annotation.ICar
 import com.chinatsp.vehicle.controller.annotation.IPart
 import com.chinatsp.vehicle.controller.bean.CarCmd
+import com.chinatsp.vehicle.controller.utils.Keywords
 import timber.log.Timber
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.random.Random
 
 /**
  * @author : luohong
@@ -347,19 +349,15 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
         return success
     }
 
-    private fun interruptCommand(
-        command: CarCmd,
-        callback: ICmdCallback?,
-        coreEngine: Boolean = false,
-    ): Boolean {
+    private fun interruptCommand(parcel: CommandParcel, coreEngine: Boolean = false): Boolean {
         val result = if (coreEngine) {
             !VcuUtils.isPower() || !VcuUtils.isEngineRunning()
         } else {
             !VcuUtils.isPower()
         }
         if (result) {
-            command.message = "操作没有成功，请先启动发动机"
-            callback?.onCmdHandleResult(command)
+            parcel.command.message = "操作没有成功，请先启动发动机"
+            parcel.callback?.onCmdHandleResult(parcel.command)
         }
         return result
     }
@@ -371,102 +369,118 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
     }
 
     private fun isAmbient(): Boolean {
+        return true
         return frontLighting.get() || backLighting.get()
     }
 
-    private fun doUpdateAmbientRhythmMode(command: CarCmd, callback: ICmdCallback?) {
-        if (!isAmbient() || !alcSmartMode.get()) {
-            command.message = "智能模式已关闭，暂无法修改律动模式"
+    private fun doUpdateAmbientRhythmMode(parcel: CommandParcel) {
+        var modeName = ""
+        val result: String
+        val command = parcel.command
+        val callback = parcel.callback
+        val expect = Action.TURN_ON == command.action
+        val option = if (expect) "开启" else "关闭"
+        var node: SwitchNode = SwitchNode.INVALID
+        if (command.value == 1) {
+            modeName = "音乐律动"
+            node = SwitchNode.MUSIC_RHYTHM
+        } else if (command.value == 2) {
+            modeName = "车速律动"
+            node = SwitchNode.SPEED_RHYTHM
+        } else if (command.value == 3) {
+            modeName = "色彩呼吸"
+            node = SwitchNode.COLOUR_BREATHE
+        }
+        if (!isAmbient()) {
+            command.message = "氛围灯未打开，暂无法${option}${modeName}"
+            callback?.onCmdHandleResult(command)
+            return
+        }
+        if (!alcSmartMode.get()) {
+            command.message = "智能模式未打开，暂无法${option}${modeName}"
+            callback?.onCmdHandleResult(command)
+            return
+        }
+        if (SwitchNode.INVALID != node) {
+            val resultStatus = doSetSwitchOption(node, expect)
+            result = if (resultStatus) "成功" else "失败"
+            command.message = "$modeName$option$result"
         } else {
-            val expect = Action.TURN_ON == command.action
-            val option = if (expect) "开启" else "关闭"
-            var modeName = ""
-            val result: String
-            var node: SwitchNode = SwitchNode.INVALID
-            if (command.value == 1) {
-                modeName = "音乐律动"
-                node = SwitchNode.MUSIC_RHYTHM
-            } else if (command.value == 2) {
-                modeName = "车速律动"
-                node = SwitchNode.SPEED_RHYTHM
-            } else if (command.value == 3) {
-                modeName = "色彩呼吸"
-                node = SwitchNode.COLOUR_BREATHE
-            }
-            if (SwitchNode.INVALID != node) {
-                val resultStatus = doSetSwitchOption(node, expect)
-                result = if (resultStatus) "成功" else "失败"
-                command.message = "$modeName$option$result"
-            } else {
-                command.message = "我还不会这个操作"
-            }
+            command.message = Keywords.COMMAND_FAILED
         }
         callback?.onCmdHandleResult(command)
     }
 
-    private fun doAdjustAmbientColor(command: CarCmd, callback: ICmdCallback?) {
-        when (command.action) {
+    private fun doAdjustAmbientColor(parcel: CommandParcel) {
+        when (parcel.command.action) {
             Action.PLUS, Action.MINUS, Action.MIN, Action.MAX, Action.FIXED -> {
-                attemptUpdateAmbientColor(command, callback)
+                attemptUpdateAmbientColor(parcel)
             }
             else ->{}
         }
     }
 
-    private fun doAdjustAmbientBrightness(command: CarCmd, callback: ICmdCallback?) {
-        when (command.action) {
+    private fun doAdjustAmbientBrightness(parcel: CommandParcel) {
+        when (parcel.command.action) {
             Action.PLUS, Action.MINUS, Action.MIN, Action.MAX, Action.FIXED -> {
-                attemptUpdateAmbientBrightness(command, callback)
+                attemptUpdateAmbientBrightness(parcel)
             }
             else -> {}
         }
     }
 
-    private fun attemptUpdateAmbientBrightness(command: CarCmd, callback: ICmdCallback?) {
-        frontLighting.set(true)
+    private fun attemptUpdateAmbientBrightness(parcel: CommandParcel) {
+        val command = parcel.command as CarCmd
+        val callback = parcel.callback
         val modelName = command.slots?.name ?: "氛围灯"
         if (!isAmbient()) {
-            command.message = "${modelName}已关闭，无法调节其亮度"
+            command.message = "${modelName}未开启，暂无法调整${modelName}亮度"
+            callback?.onCmdHandleResult(command)
+            return
+        }
+        val node = Progress.AMBIENT_LIGHT_BRIGHTNESS
+        val expect = computeLampBrightness(command, node.min, node.max) + 1
+        val result = writeProperty(node.set.signal, expect, node.set.origin)
+        if (!result) {
+            command.message = Keywords.COMMAND_FAILED
         } else {
-            val node = Progress.AMBIENT_LIGHT_BRIGHTNESS
-            val expect = computeLampBrightness(command, node.min, node.max) + 1
-            val result = writeProperty(node.set.signal, expect, node.set.origin)
-            if (result) {
-                val message = when (expect) {
-                    node.min -> "${modelName}亮度已设置为最暗了"
-                    node.max -> "${modelName}亮度已设置为最亮了"
-                    else -> "${modelName}亮度已设置为${expect}档了"
-                }
-                command.message = message
-            } else {
-                command.message = "氛围灯亮度设置失败"
+            val value = expect - 1
+            command.message = when (value) {
+                node.min -> "${modelName}亮度已设置为最暗了"
+                node.max -> "${modelName}亮度已设置为最亮了"
+                else -> "${modelName}亮度已设置为${value}档了"
             }
         }
         callback?.onCmdHandleResult(command)
     }
 
-    private fun attemptUpdateAmbientColor(command: CarCmd, callback: ICmdCallback?) {
+    private fun attemptUpdateAmbientColor(parcel: CommandParcel) {
+        val command = parcel.command
+        val callback = parcel.callback
         Timber.e("attemptUpdateAmbientColor mode:${command.slots?.mode}," +
                 " name:${command.slots?.name}, color:${command.slots?.color}")
-        frontLighting.set(true)
         val modelName = command.slots?.name ?: "氛围灯"
         if (!isAmbient()) {
-            command.message = "${modelName}已关闭，无法调节其颜色"
+            command.message = "${modelName}未开启，暂无法调整${modelName}颜色"
+            callback?.onCmdHandleResult(command)
+            return
+        }
+        val node = Progress.AMBIENT_LIGHT_COLOR
+        var colorName = command.slots?.color ?: "随机"
+        val colors = obtainSupportColor()
+        var colorIndex: Int? = colors[colorName]
+        if (null == colorIndex) {
+            val randomIndex = Random.nextInt(colors.size)
+            val colorList = colors.toList()
+            val pair = colorList[randomIndex]
+            colorIndex = pair.second
+            colorName = pair.first
+        }
+        if (Constant.INVALID == colorIndex) {
+            command.message = "${modelName}不支持该颜色"
         } else {
-            val node = Progress.AMBIENT_LIGHT_COLOR
-//            val colors = arrayOf("红色", "紫色", "冰蓝色", "橙色", "绿色", "玫红色", "果绿色", "黄色", "蓝色", "白色")
-//            val expect = computeLampColor(command, node.min, node.max)
-            val serialNumber = findColorSerialNumberByColorName(command.slots?.color ?: "")
-            if (Constant.INVALID == serialNumber) {
-                command.message = "${modelName}不支持该颜色"
-            } else {
-                val result = writeProperty(node.set.signal, serialNumber, node.set.origin)
-                if (result) {
-                    command.message = "${modelName}颜色已设置为${command.color}了"
-                } else {
-                    command.message = "${modelName}颜色设置失败"
-                }
-            }
+            val result = writeProperty(node.set.signal, colorIndex, node.set.origin)
+            command.message = if (!result) Keywords.COMMAND_FAILED else "${modelName}颜色已设置为${colorName}了"
         }
         callback?.onCmdHandleResult(command)
     }
@@ -512,7 +526,9 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
         return expect
     }
 
-    private fun doSwitchAmbient(command: CarCmd, callback: ICmdCallback?) {
+    private fun doSwitchAmbient(parcel: CommandParcel) {
+        val command = parcel.command
+        val callback = parcel.callback
         val name = command.slots?.name ?: "氛围灯"
         var status = false
         if (Action.TURN_ON == command.action) {
@@ -537,40 +553,40 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
         callback?.onCmdHandleResult(command)
     }
 
-    private fun findColorSerialNumberByColorName(colorName: String): Int{
-        return when (colorName) {
-            "红色" -> 1
-            "橙色" -> 9
-            "黄色" -> 17
-            "白色" -> 22
-            "绿色" -> 30
-            "果绿色" -> 36
-            "冰蓝色" -> 42
-            "蓝色" -> 50
-            "紫色" -> 56
-            "玫红色" -> 64
-            else -> Constant.INVALID
-        }
+
+    private fun obtainSupportColor(): Map<String, Int> {
+        val map = HashMap<String, Int>()
+        map["红色"] = 1
+        map["橙色"] = 9
+        map["黄色"] = 17
+        map["白色"] = 22
+        map["绿色"] = 30
+        map["果绿色"] = 36
+        map["冰蓝色"] = 42
+        map["蓝色"] = 50
+        map["紫色"] = 56
+        map["玫红色"] = 64
+        return map
     }
 
     override fun doCommandExpress(parcel: CommandParcel, fromUser: Boolean) {
         val command = parcel.command as CarCmd
         val callback = parcel.callback
         if (ICar.AMBIENT == command.car) {
-            if (!interruptCommand(command, callback)) {
-                doSwitchAmbient(command, callback)
+            if (!interruptCommand(parcel)) {
+                doSwitchAmbient(parcel)
             }
         } else if (ICar.BRIGHTNESS == command.car) {
-            if (!interruptCommand(command, callback)) {
-                doAdjustAmbientBrightness(command, callback)
+            if (!interruptCommand(parcel)) {
+                doAdjustAmbientBrightness(parcel)
             }
         } else if (ICar.COLOR == command.car) {
-            if (!interruptCommand(command, callback)) {
-                doAdjustAmbientColor(command, callback)
+            if (!interruptCommand(parcel)) {
+                doAdjustAmbientColor(parcel)
             }
         } else if (ICar.RHYTHM_MODE == command.car) {
-            if (!interruptCommand(command, callback)) {
-                doUpdateAmbientRhythmMode(command, callback)
+            if (!interruptCommand(parcel)) {
+                doUpdateAmbientRhythmMode(parcel)
             }
         }
     }

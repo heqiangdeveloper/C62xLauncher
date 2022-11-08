@@ -60,10 +60,10 @@ enum class SwitchNode(
     /**
      * 座舱--空调--空调自干燥
      * set -> 自干燥使能开关 x0: Inactive；0x1: Enabled； 0x2: Disabled；0x3: Reserved
-     * get -> self-desiccation 自干燥功能状态显示 0x0:ON 0x1:OFF
+     * get -> self-desiccation 自干燥功能状态显示 0x0:OFF 0x1:ON
      */
     AC_AUTO_ARID(
-        get = Norm(on = 0x0, off = 0x1, signal = CarCabinManager.ID_ACSELFSTSDISP),
+        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ACSELFSTSDISP),
         set = Norm(
             on = 0x1, off = 0x2, origin = Origin.HVAC,
             signal = CarHvacManager.ID_HVAC_AVN_SELF_DESICAA_SWT
@@ -93,10 +93,10 @@ enum class SwitchNode(
     /**
      * 座舱--空调--预通风功能
      * set -> 解锁主动换气使能开关  0x0: Inactive  0x1: Enabled  0x2: Disabled 0x3: Reserved
-     * get -> 解锁预通风功能开启状态 0x0:ON 0x1:OFF
+     * get -> 解锁预通风功能开启状态 0x0:OFF 0x1:ON
      */
     AC_ADVANCE_WIND(
-        get = Norm(on = 0x0, off = 0x1, signal = CarCabinManager.ID_ACPREVENTNDISP),
+        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ACPREVENTNDISP),
         set = Norm(
             on = 0x1, off = 0x2, origin = Origin.HVAC,
             signal = CarHvacManager.ID_HVAC_AVN_UNLOCK_BREATHABLE_ENABLE
@@ -196,7 +196,7 @@ enum class SwitchNode(
     DRIVE_BATTERY_OPTIMIZE(
         get = Norm(on = 0x0, off = 0x4, signal = CarCabinManager.ID_LOU_PWR_MNGT_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_LOU_PWR_MNG_SWT),
-        inactive = intArrayOf(0x1, 0x3),
+        inactive = intArrayOf(0x1, 0x2, 0x3),
         default = false
     ),
 

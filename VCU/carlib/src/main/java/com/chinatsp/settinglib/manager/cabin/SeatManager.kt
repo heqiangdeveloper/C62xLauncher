@@ -182,31 +182,45 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         return success
     }
 
-    private fun obtainChairHeatLevel(@IPart part: Int, default: Int = Constant.INVALID): Int {
+    private fun obtainChairHeatLevel(@IPart part: Int): Int {
 //        int类型数据 0x0:Inactive 0x1:OFF(default)
 //        0x2:Level 1; 0x3:Level 2; 0x4:Level 3
 //        0x5 ………… 0x7:reserved
-        val areaSignal = if (Constant.INVALID == default) obtainChairAreaSignal(part) else default
-        return readIntProperty(-1, Origin.CABIN, areaSignal)
+
+//        int[0] 主驾座椅加热状态 0x0: OFF; 0x1: Level 1; 0x2: Level 2; 0x3: Level 3
+        if (IPart.L_F == part) {
+            val values = readIntArrayProperty(CarCabinManager.ID_FSH_STATUS_FL_FR, Origin.CABIN)
+            return values[0]
+        }
+//        int[1] 副驾座椅加热状态 0x0: OFF; 0x1: Level 1; 0x2: Level 2; 0x3: Level 3
+        if (IPart.R_F == part) {
+            val values = readIntArrayProperty(CarCabinManager.ID_FSH_STATUS_FL_FR, Origin.CABIN)
+            return values[1]
+        }
+        return Constant.INVALID
     }
 
-    private fun obtainChairVentilateLevel(@IPart part: Int, default: Int = Constant.INVALID): Int {
-//        int类型数据  0x0:Inactive  0x1:OFF(default)
-//        0x2:Level 1; 0x3:Level 2; 0x4:Level 3
-//        0x5 ………… 0x7:reserved
-        val areaSignal = if (Constant.INVALID == default) obtainChairAreaSignal(part) else default
-        return readIntProperty(-1, Origin.CABIN, areaSignal)
+    private fun obtainChairVentilateLevel(@IPart part: Int): Int {
+//        左前座椅通风状态 0x0: OFF; 0x1: Level 1; 0x2: Level 2; 0x3: Level 3
+        val signal = when (part) {
+            IPart.L_F -> CarCabinManager.ID_FSV_STATUS_FL
+            IPart.L_B -> Constant.INVALID
+            IPart.R_F -> CarCabinManager.ID_FSV_STATUS_FR
+            IPart.R_B -> Constant.INVALID
+            else -> Constant.INVALID
+        }
+        return readIntProperty(signal, Origin.CABIN)
     }
 
     private fun updateChairHeatLevel(@IPart part: Int, expectLevel: Int): Boolean {
 //        int类型数据 0x0:Inactive 0x1:OFF(default)
 //        0x2:Level 1; 0x3:Level 2; 0x4:Level 3
 //        0x5 ………… 0x7:reserved
-        val areaValue = obtainChairAreaSignal(part)
-        val actualLevel = obtainChairHeatLevel(part, areaValue)
+        val actualLevel = obtainChairHeatLevel(part)
         val result = expectLevel != actualLevel
         if (result) {
             val signal = CarCabinManager.ID_HUM_SEAT_HEAT_POS
+            val areaValue = obtainChairAreaSignal(part)
             writeProperty(signal, expectLevel, Origin.CABIN, areaValue)
         }
         return result
@@ -217,18 +231,18 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
 //        int类型数据 0x0:Inactive 0x1:OFF(default)
 //        0x2:Level 1; 0x3:Level 2; 0x4:Level 3
 //        0x5 ………… 0x7:reserved
-        val areaValue = obtainChairAreaSignal(part)
-        val actualLevel = obtainChairVentilateLevel(part, areaValue)
-        val result = expectLevel != actualLevel
+        val actualLevel = obtainChairVentilateLevel(part)
+        val result = expectLevel != (actualLevel + 1)
         if (result) {
             val signal = CarCabinManager.ID_HUM_SEAT_VENT_POS
+            val areaValue = obtainChairAreaSignal(part)
             writeProperty(signal, expectLevel, Origin.CABIN, areaValue)
         }
         return result
     }
 
     private fun updateChairKneadLevel(@IPart part: Int, expectLevel: Int): Boolean {
-        val actualLevel = obtainChairKneadLevelGetSignal(part)
+        val actualLevel = obtainChairKneadLevel(part)
         val result = actualLevel != expectLevel
         if (result) {
             val setSignal = obtainChairKneadLevelSetSignal(part)
@@ -241,28 +255,34 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         return when (part) {
             IPart.L_F -> CarCabinManager.ID_HUM_SEATMASSLVL_FL
             IPart.R_F -> CarCabinManager.ID_HUM_SEATMASSLVL_FR
-            IPart.L_B -> Constant.INVALID
-            IPart.R_B -> Constant.INVALID
-            else -> Constant.INVALID
-        }
-    }
-
-    private fun obtainChairKneadLevelGetSignal(@IPart part: Int): Int {
-        return when (part) {
-            IPart.L_F -> Constant.INVALID
-            IPart.R_F -> Constant.INVALID
-            IPart.L_B -> CarCabinManager.ID_RLSSM_SEAT_LVL_SET_STS
-            IPart.R_B -> CarCabinManager.ID_RRSSM_SEAT_LVL_SET_STS
+            IPart.L_B -> CarCabinManager.ID_HUM_SEATMASSLVL_RL_SET
+            IPart.R_B -> CarCabinManager.ID_HUM_SEATMASSLVL_RR_SET
             else -> Constant.INVALID
         }
     }
 
     private fun obtainChairKneadLevel(@IPart part: Int): Int {
-        val signal = obtainChairKneadLevelGetSignal(part)
-        if (Constant.INVALID != signal) {
-            return readIntProperty(signal, Origin.CABIN)
+        return when (part) {
+            IPart.L_F -> {
+                val signal = CarCabinManager.ID_SEAT_LVL_SET_STS_D_P
+                val values = readIntArrayProperty(signal, Origin.CABIN)
+                return values[0]
+            }
+            IPart.R_F -> {
+                val signal = CarCabinManager.ID_SEAT_LVL_SET_STS_D_P
+                val values = readIntArrayProperty(signal, Origin.CABIN)
+                return values[1]
+            }
+            IPart.L_B -> {
+                val signal = CarCabinManager.ID_RLSSM_SEAT_LVL_SET_STS
+                return readIntProperty(signal, Origin.CABIN)
+            }
+            IPart.R_B -> {
+                val signal = CarCabinManager.ID_RRSSM_SEAT_LVL_SET_STS
+                return readIntProperty(signal, Origin.CABIN)
+            }
+            else -> Constant.INVALID
         }
-        return Constant.INVALID
     }
 
     private fun doControlChairTilt(parcel: CommandParcel) {
@@ -385,9 +405,9 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         var rfLevel = Constant.INVALID
         var rbLevel = Constant.INVALID
         val lfAct = IPart.L_F == (IPart.L_F and command.part)
-        val lbAct = IPart.L_B == (IPart.L_B and command.part)
+        val lbAct = false //IPart.L_B == (IPart.L_B and command.part)
         val rfAct = IPart.R_F == (IPart.R_F and command.part)
-        val rbAct = IPart.R_B == (IPart.R_B and command.part)
+        val rbAct = false//IPart.R_B == (IPart.R_B and command.part)
         if (Action.TURN_ON == command.action) {
             expectLevel = maxLevel
             if (lfAct) lfLevel = expectLevel
@@ -489,9 +509,9 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         var rfLevel = Constant.INVALID
         var rbLevel = Constant.INVALID
         val lfAct = IPart.L_F == (IPart.L_F and command.part)
-        val lbAct = IPart.L_B == (IPart.L_B and command.part)
+        val lbAct = false//IPart.L_B == (IPart.L_B and command.part)
         val rfAct = IPart.R_F == (IPart.R_F and command.part)
-        val rbAct = IPart.R_B == (IPart.R_B and command.part)
+        val rbAct = false//IPart.R_B == (IPart.R_B and command.part)
         if (command.status == IStatus.INIT) {
             var expectLevel: Int
             if (Action.TURN_ON == command.action) {

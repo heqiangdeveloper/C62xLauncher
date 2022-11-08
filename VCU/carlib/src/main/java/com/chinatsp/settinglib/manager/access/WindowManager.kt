@@ -8,10 +8,7 @@ import com.chinatsp.settinglib.bean.CommandParcel
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.ISwitchListener
-import com.chinatsp.settinglib.manager.BaseManager
-import com.chinatsp.settinglib.manager.ICmdExpress
-import com.chinatsp.settinglib.manager.ISignal
-import com.chinatsp.settinglib.manager.ISwitchManager
+import com.chinatsp.settinglib.manager.*
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.ICmdCallback
@@ -232,18 +229,19 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager, ICmdE
 
     private fun doControlSwitchWindow(command: CarCmd, callback: ICmdCallback?, status: Boolean) {
         Timber.e("doControlSwitchWindow status:$status command:$command")
-        val result = updateWindowSwitch(status, command.part)
+        val pair = updateWindowSwitch(status, command.part)
         val name = command.slots?.name ?: Keywords.WINDOW
         val append: String = if (status) "打开" else "关闭"
-        if (result) {
+        if (pair.first) {
             command.status = IStatus.RUNNING
-            command.message = "好的，${name}${append}了"
+            command.message = "好的，${name}${append}了, ${pair.second}"
         } else {
             command.status = IStatus.SUCCESS
-            command.message = "${name}已经${append}了"
+            command.message = "${name}已经${append}了, ${pair.second}"
         }
         callback?.onCmdHandleResult(command)
     }
+
 
     private fun doControlWindowLevel(command: CarCmd, callback: ICmdCallback?) {
         var expect = Constant.INVALID
@@ -291,7 +289,7 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager, ICmdE
         callback?.onCmdHandleResult(command)
     }
 
-    private fun updateLouverSwitch(status: Boolean, @IPart part: Int) {
+    private fun updateLouverSwitch(status: Boolean, parcel: CommandParcel) {
 //        控制天窗全部打开[0x1,-1,0x0,0xf]
 //        0x0: Inactive
 //        0x1: No command
@@ -302,9 +300,14 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager, ICmdE
 //        0x6: global close glass only
 //        0x7: global open Rollo only
 //        0x8~0xF: reserved
+        val part = parcel.command.part
+        val command = parcel.command
+        val callback = parcel.callback
         val signal = CarCabinManager.ID_AVN_BCM_COM_REQ_RCM
         if (IPart.TOP == part) {
             if (status) {
+                val louverState = obtainLouverState()
+                Timber.e("-------------------louverState-$louverState")
                 writeProperty(signal, 0x3, Origin.CABIN)
             } else {
                 writeProperty(signal, 0x6, Origin.CABIN)
@@ -321,7 +324,8 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager, ICmdE
     /**
      * 天窗控制
      */
-    private fun doControlLouverSwitch(command: CarCmd, callback: ICmdCallback?) {
+    private fun doControlLouverSwitch(parcel: CommandParcel) {
+        val command = parcel.command as CarCmd
         var expect = Constant.INVALID
         if (Action.FIXED == command.action) {
             val degree = (command.value.toFloat() / 10).roundToInt()
@@ -348,30 +352,32 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager, ICmdE
         }
         if (status is String) {
             command.message = status
-            callback?.onCmdHandleResult(command)
+            parcel.callback?.onCmdHandleResult(command)
             return
         }
-        doControlLouverSwitch(command, callback, status as Boolean)
+        doControlLouverSwitch(parcel, status as Boolean)
     }
 
     /**
      * 天窗控制
      */
-    private fun doControlLouverSwitch(command: CarCmd, callback: ICmdCallback?, value: Boolean) {
-        Timber.e("doControlLouverSwitch value:$value command:$command")
-        val mask = IPart.TOP
-        val isLouver = mask == (mask and command.part)
-        val append = if (value) "打开" else "关闭"
-        updateLouverSwitch(value, command.part)
-        val name = command.slots?.name ?: (if (isLouver) Keywords.SKYLIGHT else Keywords.ABAT_VENT)
+    private fun doControlLouverSwitch(parcel: CommandParcel, value: Boolean) {
+//        Timber.e("doControlLouverSwitch value:$value command:$command")
+//        val mask = IPart.TOP
+//        val isLouver = mask == (mask and command.part)
+//        val append = if (value) "打开" else "关闭"
+        updateLouverSwitch(value, parcel)
+//        val name = command.slots?.name ?: (if (isLouver) Keywords.SKYLIGHT else Keywords.ABAT_VENT)
         if (true) {
-            command.status = IStatus.RUNNING
-            command.message = "好的，${name}${append}了"
-        } else {
-            command.status = IStatus.SUCCESS
-            command.message = "${name}已经${append}了"
+            parcel.command.status = IStatus.RUNNING
+//            command.message = "好的，${name}${append}了"
+            parcel.command.message = "好的"
         }
-        callback?.onCmdHandleResult(command)
+//        else {
+//            command.status = IStatus.SUCCESS
+//            command.message = "${name}已经${append}了"
+//        }
+        parcel.callback?.onCmdHandleResult(parcel.command)
     }
 
     /**
@@ -474,8 +480,7 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager, ICmdE
 //        0xA: Open position 2（Reserved ） 0xB: Open position 3（Reserved ）
 //        0xC: Open position 4（Reserved ）0xD: Open manual（Reserved ）
 //        0xE~0xF: Not used
-        val value = readIntProperty(CarCabinManager.ID_BCM_SUNROOF_BTN_STS, Origin.CABIN)
-        return value
+        return readIntProperty(CarCabinManager.ID_BCM_SUNROOF_BTN_STS, Origin.CABIN)
     }
 
     private fun obtainSkylightLevel(): Int {
@@ -485,16 +490,14 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager, ICmdE
 //        0x6: Open 10%  0x7: Open 20%  0x8: Open 30%  0x9: Open 40%
 //        0xA: Open 50%  0xB: Open 60%  0xC: Open 70%
 //        0xD: Open 80%  0xE: Open 90%  0xF: Open 100%
-        val value = readIntProperty(CarCabinManager.ID_BCM_SUNROOF_POS, Origin.CABIN)
-        return value
+        return readIntProperty(CarCabinManager.ID_BCM_SUNROOF_POS, Origin.CABIN)
     }
 
     private fun obtainLoveLucyState(): Int {
 //        Rollo Operation state,遮阳帘运行状态
 //        0x0: Idle / Not pressed  0x1: Manual open  0x2: Auto open
 //        0x3: Manual close  0x4: Auto close  0x5~0x7: Reserved
-        val value = readIntProperty(CarCabinManager.ID_BCM_ROLLO_BTN_STS, Origin.CABIN)
-        return value
+        return readIntProperty(CarCabinManager.ID_BCM_ROLLO_BTN_STS, Origin.CABIN)
     }
 
     private fun obtainLoveLucyLevel(): Int {
@@ -503,8 +506,7 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager, ICmdE
 //        0x4: Open 30%  0x5: Open 40%  0x6: Open 50% 0x7: Open 60%
 //        0x8: Open 70%  0x9: Open 80%  0xA: Open 90%  0xB: Open 100%
 //        0xC~0xF: Reserved
-        val value = readIntProperty(CarCabinManager.ID_BCM_ROLLO_POS, Origin.CABIN)
-        return value
+        return readIntProperty(CarCabinManager.ID_BCM_ROLLO_POS, Origin.CABIN)
     }
 
     private fun updateSkylightLevel(expect: Int): Boolean {
@@ -586,38 +588,71 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager, ICmdE
     /**
      * 设置车窗开度
      */
-    private fun updateWindowSwitch(value: Boolean, @IPart part: Int): Boolean {
+    private fun updateWindowSwitch(value: Boolean, @IPart part: Int): Pair<Boolean, String> {
         var result = false
-        var mask = IPart.L_F
-        var signal: Int
-        if (mask == (mask and part)) {
-            signal = obtainWindowSignal(mask)
-            if (Constant.INVALID != signal) {
-                result = result or updateWindowSwitch(signal, value, mask)
+        val lfAct = IPart.L_F == (IPart.L_F and part)
+        val rfAct = IPart.R_F == (IPart.R_F and part)
+        val lbAct = IPart.L_B == (IPart.L_B and part)
+        val rbAct = IPart.R_B == (IPart.R_B and part)
+        val builder = StringBuilder()
+        var flag = true
+        if (lfAct) {
+            val pair = doWindowSwitch(IPart.L_F, lfAct, value)
+            result = result || pair.first
+            if (!pair.second) {
+                builder.append("前排左车窗异常,")
             }
         }
-        mask = IPart.R_F
-        if (mask == (mask and part)) {
-            signal = obtainWindowSignal(mask)
-            if (Constant.INVALID != signal) {
-                result = result or updateWindowSwitch(signal, value, mask)
+        if (rfAct) {
+            val pair = doWindowSwitch(IPart.R_F, rfAct, value)
+            result = result || pair.first
+            if (!pair.second) {
+                builder.append("前排右车窗异常,")
             }
         }
-        mask = IPart.L_B
-        if (mask == (mask and part)) {
-            signal = obtainWindowSignal(mask)
-            if (Constant.INVALID != signal) {
-                result = result or updateWindowSwitch(signal, value, mask)
+        if (lbAct) {
+            val pair = doWindowSwitch(IPart.L_B, lbAct, value)
+            result = result || pair.first
+            if (!pair.second) {
+                builder.append("后排左车窗异常,")
             }
         }
-        mask = IPart.R_B
-        if (mask == (mask and part)) {
-            signal = obtainWindowSignal(mask)
-            if (Constant.INVALID != signal) {
-                result = result or updateWindowSwitch(signal, value, mask)
+        if (rbAct) {
+            val pair = doWindowSwitch(IPart.R_B, rbAct, value)
+            result = result || pair.first
+            if (!pair.second) {
+                builder.append("后排右车窗异常")
             }
         }
-        return result
+        return Pair(result, builder.toString())
+    }
+
+    private fun doWindowSwitch(part: Int, active: Boolean, value: Boolean): Pair<Boolean, Boolean> {
+        var result = false
+        var reliable = true
+        if (active) {
+            val signal = obtainWindowSignal(part)
+            if (Constant.INVALID != signal) {
+                reliable = isReliableWindow(part)
+                if (reliable) {
+                    result = updateWindowSwitch(signal, value, part)
+                }
+            }
+        }
+        return Pair(result, reliable)
+    }
+
+    private fun isReliableWindow(@IPart part: Int): Boolean {
+        val signal = when (part) {
+            IPart.L_F -> CarCabinManager.ID_BCM_DCM_ERROR_FL
+            IPart.R_F -> CarCabinManager.ID_BCM_DCM_ERROR_FR
+            IPart.L_B -> CarCabinManager.ID_BCM_DCM_ERROR_RL
+            IPart.R_B -> CarCabinManager.ID_BCM_DCM_ERROR_RR
+            else -> CarCabinManager.ID_BCM_DCM_ERROR_FL
+        }
+//        门窗模块无故障反馈0x0: No Error; 0x1: Error
+        val value = readIntProperty(signal, Origin.CABIN)
+        return value == 0x0
     }
 
     private fun updateWindowLevel(signal: Int, expect: Int, @IPart part: Int): Boolean {
@@ -693,7 +728,7 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager, ICmdE
                 return
             }
 //            doControlLouverLevel(command, callback)
-            doControlLouverSwitch(command, callback)
+            doControlLouverSwitch(parcel)
             return
         }
         if (ICar.WIPER == command.car) {

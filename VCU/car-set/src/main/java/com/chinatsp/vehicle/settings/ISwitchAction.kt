@@ -93,8 +93,4 @@ interface ISwitchAction : IAction {
         }
     }
 
-    fun setSwitchConfigParameters(keySerial: String, value: String) {
-        VcuUtils.setConfigParameters(keySerial, value)
-    }
-
 }
