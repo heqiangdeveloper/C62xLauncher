@@ -1,5 +1,6 @@
 package com.chinatsp.weaher;
 
+import com.chinatsp.weaher.repository.IWeatherDataCallback;
 import com.chinatsp.weaher.repository.WeatherBean;
 import com.chinatsp.weaher.repository.WeatherRepository;
 import com.iflytek.autofly.weather.entity.WeatherInfo;
@@ -10,12 +11,15 @@ import java.util.List;
 import launcher.base.ipc.IConnectListener;
 import launcher.base.ipc.IOnRequestListener;
 import launcher.base.ipc.IRemoteDataCallback;
+import launcher.base.utils.EasyLog;
 
 public class WeatherCardController {
     private WeatherCardView mCardView;
     private WeatherRepository mWeatherRepository;
+    private String TAG = "WeatherCardController";
 
     public WeatherCardController(WeatherCardView cardView) {
+        EasyLog.i(TAG, "WeatherCardController init "+hashCode());
         mCardView = cardView;
         mWeatherRepository = WeatherRepository.getInstance();
         mWeatherRepository.init(mCardView.getContext());
@@ -77,21 +81,29 @@ public class WeatherCardController {
         }
     };
 
+    private final IWeatherDataCallback mWeatherDataCallback = new IWeatherDataCallback() {
+        @Override
+        public void onCityList(List<String> cityList) {
+            EasyLog.d(TAG, "onCityList " + cityList);
+        }
+
+        @Override
+        public void onWeatherList(List<WeatherInfo> weatherList) {
+            if (weatherList == null || weatherList.isEmpty()) {
+                mCardView.refreshDefault();
+            } else {
+                EasyLog.d(TAG, "onWeatherList DataCallback, list size: " + weatherList.size());
+                mCardView.refreshData(weatherList);
+            }
+        }
+    };
+
     void addDataCallback() {
-        mWeatherRepository.registerDataCallback(iRemoteDataCallback);
+        mWeatherRepository.registerDataCallback(mWeatherDataCallback);
     }
 
     void removeDataCallback() {
-        mWeatherRepository.unregisterDataCallback(iRemoteDataCallback);
-    }
-
-    private WeatherBean convert(WeatherInfo weatherInfo) {
-        if (weatherInfo == null) {
-            return null;
-        }
-        WeatherBean weatherBean = new WeatherBean(WeatherBean.TYPE_FOG, "22 ~ 35", "", "重庆");
-        return weatherBean;
-
+        mWeatherRepository.unregisterDataCallback(mWeatherDataCallback);
     }
 
     public List<WeatherInfo> getWeatherList() {

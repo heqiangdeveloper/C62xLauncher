@@ -6,11 +6,17 @@
     android:layout_height="@dimen/card_height"
     tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        />
     <ImageView
         android:id="@+id/ivWeatherBg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/card_weather_bg_sunny" />
+        android:src="@drawable/card_weather_bg_default" />
 
     <ImageView
         android:id="@+id/ivCardWeatherLocation"
@@ -39,7 +45,7 @@
         android:layout_height="@dimen/card_icon_size_weather_sun"
         android:layout_marginStart="175px"
         android:layout_marginTop="133px"
-        android:src="@drawable/weather_icon_sunny"
+        android:src="@drawable/weather_icon_unkown"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

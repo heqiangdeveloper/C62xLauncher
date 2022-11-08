@@ -12,6 +12,8 @@ import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.chinatsp.drawer.CollapseController;
+import com.chinatsp.drawer.ICollapseListener;
 import com.chinatsp.widgetcards.home.CardIndicator;
 import com.chinatsp.widgetcards.home.CardScrollUtil;
 import com.chinatsp.widgetcards.home.ExpandStateManager;
@@ -41,10 +43,12 @@ public class CardHomeFragment extends BaseFragment {
     private Handler mUiHandler = new Handler();
     private int mCardDividerWidth;
     private boolean mInitialed = false;
+    private CollapseController mCollapseController;
 
 
     @Override
     protected void initViews(View rootView) {
+        mCollapseController = new CollapseController(getContext(), mDrawerCollapseListener);
         mCardDividerWidth = getResources().getDimensionPixelOffset(R.dimen.card_divider_width);
         CardScrollUtil.setDivider(mCardDividerWidth);
         initObservers();
@@ -73,7 +77,7 @@ public class CardHomeFragment extends BaseFragment {
         EasyLog.d(TAG, "onResume");
         mCardsAdapter.notifyItemChanged(0);
         if (mInitialed) {
-            collapseControlViewsOnResume();
+            collapseControlViews();
         }
         mInitialed = true;
     }
@@ -103,10 +107,10 @@ public class CardHomeFragment extends BaseFragment {
         EasyLog.d(TAG, "onStart");
     }
 
-    private void collapseControlViewsOnResume() {
+    private void collapseControlViews() {
         // 在已初始化的情况下, 检查是否显示了控件组, 如果显示了就收起
         boolean showingControlViews = isShowingControlViews();
-        EasyLog.d(TAG, "collapseControlViewsOnResume , showingControlViews:"+showingControlViews);
+        EasyLog.d(TAG, "collapseControlViews , showingControlViews:"+showingControlViews);
         if (showingControlViews) {
             scrollToFirstCardSmooth();
         }
@@ -115,11 +119,13 @@ public class CardHomeFragment extends BaseFragment {
     private void initObservers() {
         ExpandStateManager.getInstance().register(this, mExpandOb);
         CardManager.getInstance().registerHomeCardsOb(this, mHomeCardsOb);
+        mCollapseController.register();
     }
 
     private void releaseObservers() {
         ExpandStateManager.getInstance().unregister(mExpandOb);
         CardManager.getInstance().unregisterHomeCardsOb(mHomeCardsOb);
+        mCollapseController.unRegister();
     }
 
     Observer<Boolean> mExpandOb = new Observer<Boolean>() {
@@ -181,6 +187,13 @@ public class CardHomeFragment extends BaseFragment {
             if (mCardsAdapter.isIncludeDrawer()) {
                 scrollToFirstCard();
             }
+        }
+    };
+
+    private ICollapseListener mDrawerCollapseListener = new ICollapseListener() {
+        @Override
+        public void onCollapse() {
+            collapseControlViews();
         }
     };
 

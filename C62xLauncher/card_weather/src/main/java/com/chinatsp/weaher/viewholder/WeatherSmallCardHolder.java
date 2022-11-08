@@ -5,6 +5,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.viewpager.widget.ViewPager;
+
 import com.chinatsp.weaher.R;
 import com.chinatsp.weaher.WeatherTypeRes;
 import com.chinatsp.weaher.WeatherUtil;
@@ -23,6 +25,8 @@ public class WeatherSmallCardHolder extends WeatherCardHolder{
     private final TextView tvCardWeatherDate;
     private final ImageView ivCardWeatherIcon;
     private final ImageView ivWeatherBg;
+
+    private ViewPager viewPager;
 
     public WeatherSmallCardHolder(View rootView) {
         super(rootView);
@@ -43,7 +47,7 @@ public class WeatherSmallCardHolder extends WeatherCardHolder{
 
     @Override
     public void updateWeather(WeatherInfo weatherInfo) {
-        WeatherUtil.logD("updateWeather weatherInfo : "+weatherInfo);
+        WeatherUtil.logD("WeatherSmallCardHolder updateWeather weatherInfo : "+weatherInfo);
         if (weatherInfo == null) {
             return;
         }

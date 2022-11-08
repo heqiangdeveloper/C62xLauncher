@@ -16,8 +16,8 @@ public class BaseRemoteConnector {
     private volatile boolean startBindService = false;
     private volatile boolean mServiceConnect;
     private Set<IConnectListener> mConnectListeners = new HashSet<>();
-    private Set<IRemoteDataCallback> mRemoteDataCallbacks = new HashSet<>();
-    private RemoteProxy mRemoteProxy;
+    protected Set<IRemoteDataCallback> mRemoteDataCallbacks = new HashSet<>();
+    protected RemoteProxy mRemoteProxy;
     protected String TAG;
 
     public BaseRemoteConnector(@NonNull RemoteProxy remoteProxy) {
@@ -51,7 +51,7 @@ public class BaseRemoteConnector {
     }
 
 
-    private IRemoteDataCallback createRemoteDataCallback() {
+    protected IRemoteDataCallback createRemoteDataCallback() {
         return new IRemoteDataCallback() {
             @Override
             public void notifyData(Object o) {
@@ -62,23 +62,14 @@ public class BaseRemoteConnector {
                     }
                 });
             }
-//            @Override
-//            public <T> void notifyData(T t) {
-//                AsyncSchedule.execute(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        notifyDataCallback(t);
-//                    }
-//                });
-//            }
         };
     }
 
-    private <T> void notifyDataCallback(T t) {
+    protected <T> void notifyDataCallback(T t) {
         AsyncSchedule.execute(new Runnable() {
             @Override
             public void run() {
-//                EasyLog.i(TAG, "notifyDataCallback , listeners:" + mRemoteDataCallbacks);
+                EasyLog.i(TAG, "notifyDataCallback , listeners:" + mRemoteDataCallbacks);
                 for (IRemoteDataCallback remoteDataCallback : mRemoteDataCallbacks) {
                     remoteDataCallback.notifyData(t);
                 }

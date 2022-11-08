@@ -1,9 +1,11 @@
 package com.chinatsp.drawer.weather;
 
 import com.chinatsp.weaher.WeatherUtil;
+import com.chinatsp.weaher.repository.IWeatherDataCallback;
 import com.chinatsp.weaher.repository.WeatherRepository;
 import com.iflytek.autofly.weather.entity.WeatherInfo;
 
+import java.util.IllegalFormatCodePointException;
 import java.util.List;
 
 import launcher.base.ipc.IOnRequestListener;
@@ -19,7 +21,7 @@ class WeatherDrawerController {
         mViewHelper = viewHelper;
         mWeatherRepository = WeatherRepository.getInstance();
         mWeatherRepository.init(viewHelper.getContext());
-        mWeatherRepository.registerDataCallback(mIRemoteDataCallback);
+        mWeatherRepository.registerDataCallback(mWeatherDataCallback);
     }
 
     void requestWeatherInfo() {
@@ -47,12 +49,22 @@ class WeatherDrawerController {
         }
     }
 
-    IRemoteDataCallback<List<WeatherInfo>> mIRemoteDataCallback = weatherInfoList -> {
-        EasyLog.d(TAG, "requestWeatherInfo DataCallback, list size: " + weatherInfoList.size());
-        refresh(weatherInfoList);
+    IWeatherDataCallback mWeatherDataCallback = new IWeatherDataCallback() {
+        @Override
+        public void onCityList(List<String> cityList) {
+
+        }
+
+        @Override
+        public void onWeatherList(List<WeatherInfo> weatherInfoList) {
+            if (weatherInfoList != null) {
+                EasyLog.d(TAG, "onWeatherList DataCallback, list size: " + weatherInfoList.size());
+            }
+            refresh(weatherInfoList);
+        }
     };
 
     private void removeCallback() {
-        mWeatherRepository.unregisterDataCallback(mIRemoteDataCallback);
+        mWeatherRepository.unregisterDataCallback(mWeatherDataCallback);
     }
 }
