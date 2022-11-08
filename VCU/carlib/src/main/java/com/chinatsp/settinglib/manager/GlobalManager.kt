@@ -256,7 +256,7 @@ class GlobalManager private constructor() : BaseManager() {
         if (IAct.TIRE_PRESSURE == command.act) {
             //val value = readFloatProperty(CarCabinManager.ID_IP_REALFUELCONSUMPTION, Origin.CABIN)
             //北汽还未提供胎压是否正常信号
-            command.message = "胎压正常"
+            command.message = "您的爱车${command.slots?.name}正常"
             callback?.onCmdHandleResult(command)
             return
         }

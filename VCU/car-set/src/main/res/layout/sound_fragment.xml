@@ -253,7 +253,8 @@
                             style="@style/image_prompt"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toRightOf="@+id/sound_loudness_text"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:tag="dialogImage"/>
 
                         <com.common.xui.widget.button.switchbutton.SwitchButton
                             android:id="@+id/sound_loudness_switch"

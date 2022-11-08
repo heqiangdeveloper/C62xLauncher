@@ -48,7 +48,8 @@
                             style="@style/image_prompt"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toRightOf="@+id/drive_dow_title"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:tag="dialogImage"/>
 
                         <androidx.appcompat.widget.AppCompatTextView
                             style="@style/txt_prompt"
@@ -92,7 +93,8 @@
                             style="@style/image_prompt"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toRightOf="@+id/adas_meb_tv_title"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:tag="dialogImage"/>
 
                         <androidx.appcompat.widget.AppCompatTextView
                             style="@style/txt_prompt"
@@ -136,7 +138,8 @@
                             style="@style/image_prompt"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toRightOf="@+id/drive_bsd_title"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:tag="dialogImage"/>
 
                         <androidx.appcompat.widget.AppCompatTextView
                             style="@style/txt_prompt"
@@ -180,7 +183,8 @@
                             style="@style/image_prompt"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toRightOf="@+id/drive_bsd_camera_title"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:tag="dialogImage"/>
 
                         <androidx.appcompat.widget.AppCompatTextView
                             style="@style/txt_prompt"

@@ -69,7 +69,8 @@
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/electric_tail_details"
                         style="@style/image_prompt"
-                        android:layout_marginLeft="@dimen/x10" />
+                        android:layout_marginStart="@dimen/x10"
+                        android:tag="dialogImage"/>
                 </LinearLayout>
 
 
