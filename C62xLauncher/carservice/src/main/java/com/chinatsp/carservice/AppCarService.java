@@ -1,5 +1,7 @@
 package com.chinatsp.carservice;
 
+import static android.car.VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL;
+
 import android.car.Car;
 import android.car.CarNotConnectedException;
 import android.car.hardware.cabin.CarCabinManager;
@@ -7,6 +9,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+
+import java.util.Arrays;
 
 import launcher.base.service.AppServiceManager;
 import launcher.base.service.car.ICarService;
@@ -58,12 +62,12 @@ public class AppCarService implements ICarService {
     public boolean isHasDVR() {
         int getDVR = PropertyUtils.getInt(mContext, DVR, 0);
         EasyLog.d(TAG, "getDVR: " + getDVR);
-        return getDVR == 1 ? true : false;
+        return getDVR == 1;
     }
 
     @Override
     public boolean doSwitchWindow(boolean isOpenCmd) {
-        EasyLog.i(TAG, "doSwitchWindow  open: "+isOpenCmd);
+        EasyLog.i(TAG, "doSwitchWindow  open: " + isOpenCmd);
         int value = isOpenCmd ? 0x01 : 0x02;
         CarPropertyUtil.writeWindowSwitch(mCarCabinManager, value);
         return true;
@@ -98,5 +102,44 @@ public class AppCarService implements ICarService {
 
     public CarCabinManager getCarCabinManager() {
         return mCarCabinManager;
+    }
+
+    /*
+     * 设置律动数组
+     *
+     */
+    public void setMusicFrequencyData(int[] value) {
+        if (mCarCabinManager != null) {
+            try {
+                mCarCabinManager.setIntArrayProperty(CarCabinManager.ID_HUM_ALC_ALL_FREQUENCY, VEHICLE_AREA_TYPE_GLOBAL, value);
+                EasyLog.d(TAG, "setIntProperty, propertyId = " + "value = " + Arrays.toString(value));
+            } catch (Exception e) {
+                //   CarUtil.getInstance(mContext).handleException(e);
+            }
+        }
+    }
+
+    /*
+     * 律动开关获取
+     *
+     */
+    public boolean isAlcMusicOn() {
+        int result = getIntProperty(CarCabinManager.ID_ALC_MUSIC_RHY_SW_RESPONSE);
+        EasyLog.d(TAG, "result = " + result);
+        return result == 0x1;
+    }
+
+    private int getIntProperty(int propertyId) {
+        if (mCarCabinManager != null) {
+            try {
+                int value = mCarCabinManager.getIntProperty(propertyId, VEHICLE_AREA_TYPE_GLOBAL);
+                EasyLog.d(TAG, "getIntProperty, propertyId = " + propertyId + "(0x"
+                        + Integer.toHexString(propertyId) + ")" + "value = " + value);
+                return value;
+            } catch (Exception e) {
+                // CarUtil.getInstance(mContext).handleException(e);
+            }
+        }
+        return -1;
     }
 }
