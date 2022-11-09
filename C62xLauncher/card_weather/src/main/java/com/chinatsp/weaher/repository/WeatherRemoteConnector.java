@@ -2,6 +2,7 @@ package com.chinatsp.weaher.repository;
 
 import androidx.annotation.NonNull;
 
+import com.chinatsp.weaher.WeatherUtil;
 import com.iflytek.autofly.weather.entity.WeatherInfo;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class WeatherRemoteConnector extends BaseRemoteConnector {
                 AsyncSchedule.execute(new Runnable() {
                     @Override
                     public void run() {
+
                         notifyCityList(cityList);
                     }
                 });
@@ -47,7 +49,7 @@ public class WeatherRemoteConnector extends BaseRemoteConnector {
         AsyncSchedule.execute(new Runnable() {
             @Override
             public void run() {
-                EasyLog.i(TAG, "notifyDataCallback , listeners:" + mRemoteDataCallbacks);
+                WeatherUtil.logD("WeatherRemoteConnector notify Weather , listeners:" + mRemoteDataCallbacks);
                 for (IRemoteDataCallback remoteDataCallback : mRemoteDataCallbacks) {
                     if (remoteDataCallback instanceof IWeatherDataCallback) {
                         ((IWeatherDataCallback) remoteDataCallback).onWeatherList(weatherInfoList);
@@ -61,7 +63,7 @@ public class WeatherRemoteConnector extends BaseRemoteConnector {
         AsyncSchedule.execute(new Runnable() {
             @Override
             public void run() {
-                EasyLog.i(TAG, "notifyDataCallback , listeners:" + mRemoteDataCallbacks);
+                WeatherUtil.logD("WeatherRemoteConnector notify city , listeners:" + mRemoteDataCallbacks);
                 for (IRemoteDataCallback remoteDataCallback : mRemoteDataCallbacks) {
                     if (remoteDataCallback instanceof IWeatherDataCallback) {
                         ((IWeatherDataCallback) remoteDataCallback).onCityList(cityList);

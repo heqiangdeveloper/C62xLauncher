@@ -6,11 +6,6 @@
     android:layout_height="@dimen/card_height"
     tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcvCityList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
     <ImageView
         android:id="@+id/ivWeatherBg"
         android:layout_width="match_parent"

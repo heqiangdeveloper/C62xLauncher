@@ -41,7 +41,7 @@ public class WeatherDrawerViewHelper {
         mRootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RecentAppHelper.launchApp(getContext(),"com.iflytek.autofly.weather");
+                WeatherUtil.goApp(getContext());
             }
         });
     }
