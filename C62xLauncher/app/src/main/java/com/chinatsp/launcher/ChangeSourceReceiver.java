@@ -28,6 +28,7 @@ public class ChangeSourceReceiver extends BroadcastReceiver {
     public static final String KEY_PLAY_PAUSE = "PAUSE_PLAY";
     private static final String SAVE_SOURCE = "SAVE_SOURCE"; //保存音源值
     private static final String AQT_PARAM = "isOpen"; // true : 打开爱趣听 ，false :不打开爱趣听
+    private static final String AQT = "AQT";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -38,8 +39,10 @@ public class ChangeSourceReceiver extends BroadcastReceiver {
         } else if (intent.getAction().equals(HARD_KEY_ACTION)) {
             String code = intent.getStringExtra(EXTRA_KEY_CODE);
             String state = intent.getStringExtra(EXTRA_KEY_STATE);
-            Log.d(TAG, "KEY_code:" + code + " KEY_state:" + state);
-            if (state.equals(KEY_STATE_DOWN)) {
+            String source = Settings.System.getString(context.getContentResolver(), SAVE_SOURCE);
+            Log.d(TAG, "KEY_code:" + code + " KEY_state:" + state + " source:" + source);
+
+            if (!source.equals(AQT) || state.equals(KEY_STATE_DOWN)) {
                 return;
             }
             if (code.equals(KEY_PRE)) {
@@ -76,7 +79,7 @@ public class ChangeSourceReceiver extends BroadcastReceiver {
                     Log.d(TAG, "check iquting LoginStatus: " + mIsLogin);
                     if (mIsLogin) {
                         FlowPlayControl.getInstance().doPlay();
-                        Settings.System.putString(context.getContentResolver(), SAVE_SOURCE, "AQT");
+                        Settings.System.putString(context.getContentResolver(), SAVE_SOURCE, AQT);
                     } else {
                         Toast.makeText(context, context.getString(R.string.play_iquting_warning), Toast.LENGTH_SHORT).show();
                     }
