@@ -128,6 +128,17 @@ object Constant {
     val AMBIENT_LIGHTING_SETTING: String
         get() = "AMBIENT_LIGHTING_SETTING"
 
+    /**
+     * 黑夜模式
+     */
+    val DARK_BRIGHTNESS_LEVEL: String
+        get() = "DARK_BRIGHTNESS_LEVEL"
+    /**
+     * 白天模式
+     */
+    val LIGHT_BRIGHTNESS_LEVEL: String
+        get() = "LIGHT_BRIGHTNESS_LEVEL"
+
     val VCU_GENERAL_ROUTER: String
         get() = "com.chinatsp.vcu.actions.VCU_GENERAL_ROUTER"
 
@@ -163,5 +174,9 @@ object Constant {
             }
             return eqIdArray.toIntArray()
         }
+
+    val LIGHT_LEVEL: IntArray by lazy {
+        intArrayOf(0x19, 0x33, 0x4C, 0x66, 0x7F, 0x99, 0xB2, 0xCC, 0xE5, 0xFF)
+    }
 
 }

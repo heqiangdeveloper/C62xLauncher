@@ -3,7 +3,6 @@ package com.chinatsp.settinglib
 import android.car.VehicleAreaType
 import android.car.hardware.cabin.CarCabinManager
 import android.content.Context
-import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.database.ContentObserver
 import android.os.SystemProperties
@@ -29,7 +28,7 @@ object VcuUtils {
     val V_N: String by lazy {
         val context = BaseApp.instance.applicationContext
         val manager = context.packageManager
-        val info = manager.getPackageInfo(context.packageName, 0) //P
+        val info = manager.getPackageInfo(context.packageName, PackageManager.GET_META_DATA) //P
         info.versionName
     }
 
@@ -86,10 +85,10 @@ object VcuUtils {
      * @param keySerial: 下线配置项 key
      * @return 是否支持
      */
-    fun isSupportFunction(keySerial: String): Boolean {
+    fun isSupport(keySerial: String): Boolean {
         //0 无 1有
         val value = getConfigParameters(keySerial, Constant.INVALID)
-        Timber.d("isSupportFunction keySerial: $keySerial, value: $value")
+        Timber.d("isSupport keySerial: $keySerial, value: $value")
         return value == 1
     }
 
@@ -197,18 +196,6 @@ object VcuUtils {
         }
         Timber.d("getConfigParam key:%s, def:%s, result:%s", keySerial, default, result)
         return result
-    }
-
-    val versionName: String by lazy {
-        try {
-            return@lazy BaseApp.instance.packageManager.getPackageInfo(
-                BaseApp.instance.packageName,
-                PackageManager.GET_META_DATA
-            )?.versionName ?: ""
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return@lazy ""
     }
 
 //    ID_TCU_SELECTED_GEAR 挡位

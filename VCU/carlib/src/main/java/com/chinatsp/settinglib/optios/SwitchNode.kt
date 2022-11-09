@@ -823,6 +823,36 @@ enum class SwitchNode(
         default = false
     ),
 
+    /**
+     * 灯光自动模式
+     * get -> auto模式反馈 0x0: Off; 0x1: On
+     * set -> screen brightness auto mode 0x0: Inactive; 0x1: On; 0x2: Off; 0x3: Not used
+     */
+    LIGHT_AUTO_MODE(
+        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ICM_SCR_AUTO_STS),
+        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HUM_MIRROR_SEE_G_SET),
+        default = false
+    ),
+
+    /**
+     * 白天黑夜模式
+     * get -> Status of exterior lamp switch  0x0: Off; 0x1: Auto; 0x2: Park; 0x3: Low Beam
+     */
+    DARK_LIGHT_MODE(
+        get = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_EXTERIOR_LAMP_SWITCH),
+        set = Norm(on = 0x1, off = 0x2, signal = -1),
+        default = false
+    ){
+        override fun isActive(value: Int): Boolean {
+            return value in 0..3
+        }
+
+        override fun isOn(value: Int): Boolean {
+
+            return 0x2 == value || 0x3 == value
+        }
+     },
+
     INVALID(
         get = Norm(on = 0x1, off = 0x0, signal = -1),
         set = Norm(on = 0x1, off = 0x2, signal = -1),
@@ -839,9 +869,9 @@ enum class SwitchNode(
 
 //    fun isValid(value: Int) = isActive(value) or isInactive(value)
 
-    fun isActive(value: Int) = (get.on == value) or (get.off == value)
+    open fun isActive(value: Int) = (get.on == value) or (get.off == value)
 
     fun isInactive(value: Int) = inactive?.contains(value) ?: false
 
-    fun isOn(value: Int) = if (careOn) get.on == value else get.off != value
+    open fun isOn(value: Int) = if (careOn) get.on == value else get.off != value
 }

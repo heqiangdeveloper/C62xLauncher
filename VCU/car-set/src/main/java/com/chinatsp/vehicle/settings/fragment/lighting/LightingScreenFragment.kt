@@ -1,7 +1,9 @@
 package com.chinatsp.vehicle.settings.fragment.lighting
 
 import android.os.Bundle
+import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.IProgressManager
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.manager.lamp.BrightnessManager
 import com.chinatsp.settinglib.optios.Progress
@@ -16,7 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class LightingScreenFragment : BaseFragment<BrightnessViewModel, LightingScreenFragmentBinding>(),
     VSeekBar.OnSeekBarListener {
 
-    private val manager: IProgressManager
+    private val manager: BrightnessManager
         get() = BrightnessManager.instance
 
     override fun getLayoutId(): Int {
@@ -27,6 +29,30 @@ class LightingScreenFragment : BaseFragment<BrightnessViewModel, LightingScreenF
         initSeekBar()
         setSeekBarListener(this)
         initSeekLiveData()
+
+        initSwitchStatus()
+        initSwitchStatusListener()
+    }
+
+    private fun initSwitchStatus() {
+        val status = viewModel.lightAutoMode.value?.get() ?: false
+        updateBrightnessEnable(!status)
+    }
+
+    private fun initSwitchStatusListener() {
+        viewModel.lightAutoMode.observe(this){
+            updateBrightnessEnable(!it.get())
+        }
+    }
+
+    private fun updateBrightnessEnable(enable: Boolean) {
+        val alpha = if (enable) 1.0f else 0.6f
+        binding.lightScreenCarSeekbar.alpha = alpha
+        binding.lightScreenCarSeekbar.isEnabled = enable
+        binding.lightScreenMeterSeekbar.alpha = alpha
+        binding.lightScreenMeterSeekbar.isEnabled = enable
+        binding.lightScreenAcSeekbar.alpha = alpha
+        binding.lightScreenAcSeekbar.isEnabled = enable
     }
 
     private fun initSeekLiveData() {
@@ -76,6 +102,11 @@ class LightingScreenFragment : BaseFragment<BrightnessViewModel, LightingScreenF
             when (this) {
                 binding.lightScreenCarSeekbar -> {
                     manager.doSetVolume(Progress.HOST_SCREEN_BRIGHTNESS, newValue)
+                    if (this.isTouching) {
+                        updateDarkLightLevel(newValue)
+                    } else {
+
+                    }
                 }
                 binding.lightScreenAcSeekbar -> {
                     manager.doSetVolume(Progress.CONDITIONER_SCREEN_BRIGHTNESS, newValue)
@@ -85,6 +116,19 @@ class LightingScreenFragment : BaseFragment<BrightnessViewModel, LightingScreenF
                 }
                 else -> {}
             }
+        }
+    }
+
+    private fun updateDarkLightLevel(level: Int) {
+        var value = level
+        val type = Progress.HOST_SCREEN_BRIGHTNESS
+        if (value < type.min) value = type.min
+        if (value > type.max) value = type.max
+        val darkActive = manager.isDarkModeActive()
+        if (darkActive) {
+            VcuUtils.putInt(key = Constant.DARK_BRIGHTNESS_LEVEL, value = value)
+        } else {
+            VcuUtils.putInt(key = Constant.LIGHT_BRIGHTNESS_LEVEL, value = value)
         }
     }
 }

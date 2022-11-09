@@ -1,12 +1,16 @@
 package com.chinatsp.vehicle.settings.vm.light
 
 import android.app.Application
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.IProgressManager
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IProgressListener
+import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.manager.lamp.BrightnessManager
 import com.chinatsp.settinglib.optios.Progress
+import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.common.library.frame.base.BaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,9 +19,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BrightnessViewModel @Inject constructor(app: Application, model: BaseModel) :
-    BaseViewModel(app, model), IProgressListener {
+    BaseViewModel(app, model), IProgressListener, ISwitchListener {
 
-    private val manager: IProgressManager by lazy {
+    private val manager: BrightnessManager by lazy {
         BrightnessManager.instance
     }
 
@@ -29,6 +33,13 @@ class BrightnessViewModel @Inject constructor(app: Application, model: BaseModel
     override fun onDestroy() {
         manager.unRegisterVcuListener(serial = keySerial)
         super.onDestroy()
+    }
+
+    val lightAutoMode: LiveData<SwitchState> by lazy { _lightAutoMode }
+
+    private val _lightAutoMode: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.LIGHT_AUTO_MODE
+        MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val acScreenVolume: MutableLiveData<Volume> by lazy {
@@ -83,6 +94,17 @@ class BrightnessViewModel @Inject constructor(app: Application, model: BaseModel
                 updateVolumeValue(acScreenVolume, node, value)
             }
             else -> {}
+        }
+    }
+
+    override fun onSwitchOptionChanged(status: SwitchState, node: SwitchNode) {
+        when (node) {
+            SwitchNode.LIGHT_AUTO_MODE -> {
+                doUpdate(_lightAutoMode, status)
+            }
+            else -> {
+
+            }
         }
     }
 }

@@ -532,19 +532,21 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     }
 
     fun isShowSeek(): Boolean {
-        return binding.sternElectricSwitch.isChecked && (binding.sternSmartEnterRadio.checked == "1")
+        return if (isHasSmartAccessOption()){
+            binding.sternElectricSwitch.isChecked && (binding.sternSmartEnterRadio.checked == "1")
+        } else {
+            true
+        }
     }
 
     fun isShowKey(): Boolean {
-        return binding.sternElectricSwitch.isChecked && (binding.sternSmartEnterRadio.checked != "1")
+        return isHasSmartAccessOption() && binding.sternElectricSwitch.isChecked && (binding.sternSmartEnterRadio.checked != "1")
     }
 
     private fun isDrawableView() {
         if (binding.carTrunkDoorHeight.text.equals(activity?.getString(R.string.car_trunk_door_height))) {
             val drawable = activity?.let {
-                AppCompatResources.getDrawable(
-                    it, R.drawable.information_selector
-                )
+                AppCompatResources.getDrawable(it, R.drawable.information_selector)
             }
             binding.carTrunkDoorHeight.compoundDrawablePadding = 4
             //binding.carTrunkDoorHeight.setCompoundDrawables(null,null,drawable,null)
@@ -562,6 +564,10 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
                 null
             )
         }
+    }
+
+    private fun isHasSmartAccessOption(): Boolean {
+        return !VcuUtils.isCareLevel(Level.LEVEL5, expect = true)
     }
 
 }

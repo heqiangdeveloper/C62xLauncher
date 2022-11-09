@@ -70,10 +70,7 @@ class SafeManager private constructor() : BaseManager(), ISwitchManager {
                         value = node.value(node.default))
                     Timber.d("observer onChange node:$node value:$value")
                     doUpdateSwitchValue(node,
-                        videoModeFunction,
-                        node.isOn(value),
-                        instance::doSwitchChanged)
-                }
+                        videoModeFunction, node.isOn(value), instance::doSwitchChanged)}
             })
     }
 
