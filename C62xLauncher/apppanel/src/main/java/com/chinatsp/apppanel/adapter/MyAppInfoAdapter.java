@@ -377,14 +377,14 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             s = context.getString(R.string.folder_name);
         }else if(name.startsWith(FOLDERCN)){
             s = name.substring(FOLDERCN.length());
-            if(isInteger(s)){
+            if(Utils.isInteger(s)){
                 s = name.replace(FOLDERCN,context.getString(R.string.folder_name));
             }else {
                 s = name;
             }
         }else if(name.startsWith(FOLDEREN)){
             s = name.substring(FOLDEREN.length());
-            if(isInteger(s)){
+            if(Utils.isInteger(s)){
                 s = name.replace(FOLDEREN,context.getString(R.string.folder_name));
             }else {
                 s = name;
@@ -393,18 +393,6 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             s = name;
         }
         return s;
-    }
-
-    /**
-     * 校验字符串是否是纯数字
-     *
-     * @param str 数字字符串
-     * @return boolean
-     */
-    private static boolean isInteger(String str) {
-        String s = "^[-+]?[\\d]*$";
-        Pattern pattern = Pattern.compile(s);
-        return pattern.matcher(str).matches();
     }
 
     /*
@@ -625,17 +613,6 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         }
 
         return view;
-    }
-
-    public void changeTitle(ChangeTitleEvent event){
-        L.d("changeTile to " + event.getTitle());
-        List<LocationBean> infos = mData.get(event.getParentIndex());
-        for(LocationBean locationBean : infos){
-            if(locationBean != null){
-                locationBean.setTitle(event.getTitle());
-                db.updateTitle(locationBean);
-            }
-        }
     }
 
     @Override

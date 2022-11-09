@@ -956,19 +956,19 @@ public class ClassifyView extends FrameLayout {
                     if(afterAddPosition >= 0){
                         mOpenDirPosition = afterAddPosition;
                     }
-                    RecyclerView.ViewHolder target = mMainRecyclerView.findViewHolderForAdapterPosition(mOpenDirPosition);
-                    if(target == null){
-                        L.d("target is null");
-                    }else {
-                        if(!TextUtils.isEmpty(titleEt.getText().toString())){
-                            RelativeLayout relativeLayout = (RelativeLayout)target.itemView;
-                            TextView nameTv = (TextView) relativeLayout.getChildAt(3);
-                            nameTv.setText(titleEt.getText().toString());
-                        }
-                    }
-                    if(!TextUtils.isEmpty(titleEt.getText().toString())){
+//                    RecyclerView.ViewHolder target = mMainRecyclerView.findViewHolderForAdapterPosition(mOpenDirPosition);
+//                    if(target == null){
+//                        L.d("target is null");
+//                    }else {
+//                        if(!TextUtils.isEmpty(titleEt.getText().toString().trim())){
+//                            RelativeLayout relativeLayout = (RelativeLayout)target.itemView;
+//                            TextView nameTv = (TextView) relativeLayout.getChildAt(3);
+//                            nameTv.setText(titleEt.getText().toString().trim());
+//                        }
+//                    }
+                    if(!TextUtils.isEmpty(titleEt.getText().toString().trim())){
                         //通知adapter更新title
-                        EventBus.getDefault().post(new ChangeTitleEvent(mOpenDirPosition,titleEt.getText().toString()));
+                        EventBus.getDefault().post(new ChangeTitleEvent(mOpenDirPosition,titleEt.getText().toString().trim()));
                     }
                 }
                 //隐藏弹出的文件夹框
