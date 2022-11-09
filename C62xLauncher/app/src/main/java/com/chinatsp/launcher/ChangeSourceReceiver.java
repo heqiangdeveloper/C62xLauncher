@@ -42,7 +42,7 @@ public class ChangeSourceReceiver extends BroadcastReceiver {
             String source = Settings.System.getString(context.getContentResolver(), SAVE_SOURCE);
             Log.d(TAG, "KEY_code:" + code + " KEY_state:" + state + " source:" + source);
 
-            if (!source.equals(AQT) || state.equals(KEY_STATE_DOWN)) {
+            if (!AQT.equals(source) || KEY_STATE_DOWN.equals(state)) {
                 return;
             }
             if (code.equals(KEY_PRE)) {
