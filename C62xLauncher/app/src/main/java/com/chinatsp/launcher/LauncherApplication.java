@@ -76,6 +76,7 @@ public class LauncherApplication extends Application {
     private void registChangeSourceBroadcast(){
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ChangeSourceReceiver.AQT_PLAY_ACTION);
+        intentFilter.addAction(ChangeSourceReceiver.HARD_KEY_ACTION);
         registerReceiver(new ChangeSourceReceiver(),intentFilter);
     }
 }
