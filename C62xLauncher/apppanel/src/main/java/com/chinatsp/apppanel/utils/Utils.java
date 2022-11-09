@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
+import java.util.regex.Pattern;
 
 import launcher.base.utils.recent.RecentAppHelper;
 
@@ -58,5 +59,16 @@ public class Utils {
             return format.format(bytes) + "B";
         }
 
+    }
+
+    /**
+     * 校验字符串是否是纯数字
+     * @param str 数字字符串
+     * @return boolean
+     */
+    public static boolean isInteger(String str) {
+        String s = "^[-+]?[\\d]*$";
+        Pattern pattern = Pattern.compile(s);
+        return pattern.matcher(str).matches();
     }
 }

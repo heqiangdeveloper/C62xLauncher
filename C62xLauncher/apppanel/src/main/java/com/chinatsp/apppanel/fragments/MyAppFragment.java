@@ -31,6 +31,7 @@ import com.anarchy.classifyview.event.HideSubContainerEvent;
 import com.anarchy.classifyview.event.JumpToCardEvent;
 import com.anarchy.classifyview.event.ReStoreDataEvent;
 import com.anarchy.classifyview.listener.SoftKeyBoardListener;
+import com.anarchy.classifyview.util.L;
 import com.anarchy.classifyview.util.MyConfigs;
 import com.chinatsp.apppanel.AppConfigs.AppLists;
 import com.chinatsp.apppanel.AppConfigs.Priorities;
@@ -57,6 +58,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import launcher.base.async.AsyncSchedule;
@@ -452,7 +455,7 @@ public class MyAppFragment extends Fragment {
         if(event instanceof ChangeTitleEvent){
             //重置delete标签
             resetSubDeleteFlag(false);
-            mMyAppInfoAdapter.changeTitle((ChangeTitleEvent)event);
+            changeTitle((ChangeTitleEvent)event);
         }else if(event instanceof HideSubContainerEvent){
             //重置delete标签
             resetSubDeleteFlag(false);
@@ -815,6 +818,53 @@ public class MyAppFragment extends Fragment {
                 if(appInfoClassifyView.titleTv != null) appInfoClassifyView.titleTv.setText(title);
             }
         }
+    }
+
+    public void changeTitle(ChangeTitleEvent event){
+        L.d("changeTile to " + event.getTitle());
+        List<LocationBean> infos = data.get(event.getParentIndex());
+        String newTitle = getNewTitle(event.getParentIndex(),event.getTitle());
+        for(LocationBean locationBean : infos){
+            if(locationBean != null){
+                locationBean.setTitle(newTitle);
+                db.updateTitle(locationBean);
+            }
+        }
+        mMyAppInfoAdapter.notifyDataSetChanged();
+    }
+
+    private List<String> titleLists = new ArrayList<>();
+    private String getNewTitle(int index,String title){
+        List<LocationBean> lists;
+        titleLists.clear();
+        A:for(int i = 0; i < data.size(); i++){
+            lists = data.get(i);
+            if(i != index && lists != null && lists.size() > 1){
+                titleLists.add(lists.get(0).getTitle());
+            }
+        }
+
+        titleLists = titleLists.stream().distinct().collect(Collectors.toList());//去掉重复的
+        if(titleLists.contains(title)){
+            Pattern pattern = Pattern.compile("\\d+$");
+            Matcher matcher = pattern.matcher(title);
+
+            int num = 1;
+            if(matcher.find()){
+                String s = matcher.group();
+                Log.d(TAG,"字符串 " + title + " 是以数字结尾的，结尾的数字是：" + s);
+                title = title.replace(s,"");
+                num = Integer.parseInt(s);
+            } else{
+                Log.d(TAG,"字符串" + title + "不是以数字结尾的");
+            }
+
+            while (titleLists.contains(title + num)){
+                num++;
+            }
+            title = title + num;
+        }
+        return title;
     }
 
     private void resetMainDeleteFlag(boolean isShowDelete){
