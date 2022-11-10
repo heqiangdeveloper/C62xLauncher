@@ -48,7 +48,8 @@
                             style="@style/image_prompt"
                             android:layout_marginTop="@dimen/x16"
                             app:layout_constraintLeft_toRightOf="@+id/lane_assist_system"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:tag="dialogImage"/>
 
                         <com.common.xui.widget.tabbar.TabControlView
                             android:id="@+id/adas_lane_lane_assist_radio"

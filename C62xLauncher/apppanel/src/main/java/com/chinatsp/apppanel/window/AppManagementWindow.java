@@ -5,21 +5,23 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
-import android.graphics.Rect;
 import android.os.Build;
 import android.os.Debug;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.core.view.GestureDetectorCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,7 +34,6 @@ import com.chinatsp.apppanel.utils.Utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ThreadPoolExecutor;
 
 import launcher.base.async.AsyncSchedule;
 import launcher.base.service.AppServiceManager;
@@ -76,7 +77,7 @@ public class AppManagementWindow {
     public void show(){
         if(isShow) return;
         isShow = true;
-        checkPermission();
+        //checkPermission();
         WindowManager.LayoutParams params = getParams();
         view = LayoutInflater.from(mContext).inflate(R.layout.appmanage_dialog_layout, null);
         //区域外点击消失，目前因为背景是1920*720，不支持
@@ -120,6 +121,48 @@ public class AppManagementWindow {
             }
         });
         rv.setAdapter(appManageAdapter);
+        GestureDetectorCompat gestureDetectorCompat = new GestureDetectorCompat(mContext, new GestureDetector.SimpleOnGestureListener(){
+            //此事件是移动视口的过程中
+            @Override
+            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+                return super.onScroll(e1, e2, distanceX, distanceY);
+            }
+
+            //此事件是用户在动作结束时抬起手指(这onFling就是所谓的一次动作的原因)
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                View pressedView = findChildView(rv, e1);
+                if (pressedView != null) {
+                    if(isNeedDelete(e1,e2)){
+                        int position = rv.getChildAdapterPosition(pressedView);
+                        RecyclerView.ViewHolder target = rv.findViewHolderForAdapterPosition(position);
+                        LinearLayout relativeLayout = (LinearLayout)target.itemView;
+                        FrameLayout frameLayout = (FrameLayout) relativeLayout.getChildAt(0);
+                        ImageView deleteImg = (ImageView) frameLayout.getChildAt(1);
+                        deleteImg.callOnClick();//删除
+                    }
+                }
+                return super.onFling(e1, e2, velocityX, velocityY);
+            }
+        });
+        RecyclerView.OnItemTouchListener onItemTouchListener = new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                gestureDetectorCompat.onTouchEvent(e);
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                gestureDetectorCompat.onTouchEvent(e);
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+            }
+        };
+        rv.addOnItemTouchListener(onItemTouchListener);
         rv.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL,false));
         rv.addItemDecoration(new AppManageDecoration(100,0));
         clearTv.setOnClickListener(new View.OnClickListener() {
@@ -143,6 +186,25 @@ public class AppManagementWindow {
 
         Log.i(TAG, "show appMangementWindow");
         winManager.addView(view, params);
+    }
+
+    /*
+    * 上滑删除
+     */
+    private boolean isNeedDelete(MotionEvent e1, MotionEvent e2) {
+        float moveY = e2.getY() - e1.getY();
+        if(moveY < 0 && Math.abs(moveY) > 10){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private View findChildView(RecyclerView recyclerView, MotionEvent event) {
+        // first check elevated views, if none, then call RV
+        final float x = event.getX();
+        final float y = event.getY();
+        return recyclerView.findChildViewUnder(x, y);
     }
 
     public void hide(){

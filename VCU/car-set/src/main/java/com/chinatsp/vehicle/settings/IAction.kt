@@ -23,7 +23,9 @@ interface IAction {
     }
 
     private fun updateEnable(view: View, enable: Boolean) {
-        view.isEnabled = enable
+        if (view.tag != "dialogImage") {
+            view.isEnabled = enable
+        }
         if (view is ViewGroup) {
             for (index in 0 until view.childCount) {
                 updateEnable(view.getChildAt(index), enable)

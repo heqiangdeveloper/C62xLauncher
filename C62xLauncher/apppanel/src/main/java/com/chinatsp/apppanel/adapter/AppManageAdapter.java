@@ -2,7 +2,9 @@ package com.chinatsp.apppanel.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -10,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.view.GestureDetectorCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chinatsp.apppanel.R;
@@ -68,6 +71,7 @@ public class AppManageAdapter extends RecyclerView.Adapter<AppManageAdapter.View
             @Override
             public void onClick(View v) {
                 Utils.launchApp(context,packageName);
+                deletedCallback.onDeleted();
             }
         });
     }
@@ -82,10 +86,10 @@ public class AppManageAdapter extends RecyclerView.Adapter<AppManageAdapter.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        LinearLayout root;
-        ImageView iconIv;
-        ImageView deleteIv;
-        TextView nameTv;
+        public LinearLayout root;
+        public ImageView iconIv;
+        public ImageView deleteIv;
+        public TextView nameTv;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

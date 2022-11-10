@@ -36,7 +36,8 @@
                     style="@style/image_prompt"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="@+id/remote_rose_window"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:tag="dialogImage"/>
 
                 <com.common.xui.widget.button.switchbutton.SwitchButton
                     android:id="@+id/car_window_remote_control_swb"
@@ -75,7 +76,8 @@
                     style="@style/image_prompt"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="@+id/car_lock_text"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:tag="dialogImage"/>
 
                 <com.common.xui.widget.button.switchbutton.SwitchButton
                     android:id="@+id/car_window_lock_car_swb"
@@ -145,7 +147,8 @@
                     style="@style/image_prompt"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="@+id/car_wiper_text"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:tag="dialogImage"/>
 
                 <com.common.xui.widget.button.switchbutton.SwitchButton
                     android:id="@+id/car_window_wiper_swb"

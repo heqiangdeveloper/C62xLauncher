@@ -562,10 +562,10 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                             if(mNormalBigCardViewHolder != null) mNormalBigCardViewHolder.updateSongs(rankSongLists);
                         }
                     }
-                    for(BaseSongItemBean bean : songLists){
-                        Log.d(TAG_CONTENT,"" + bean.getSong_name() +
-                                "," + bean.getSinger_name() + "," + bean.getVip() + ",Song_id = " + bean.getSong_id());
-                    }
+//                    for(BaseSongItemBean bean : songLists){
+//                        Log.d(TAG_CONTENT,"" + bean.getSong_name() +
+//                                "," + bean.getSinger_name() + "," + bean.getVip() + ",Song_id = " + bean.getSong_id());
+//                    }
                 }else {
                     Log.d(TAG_CONTENT,"getAreaContentData songLists is null");
                 }

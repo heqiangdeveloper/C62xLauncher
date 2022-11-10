@@ -65,7 +65,8 @@
                     style="@style/image_prompt"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="@+id/cabin_ac_auto_wind_text"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:tag="dialogImage"/>
 
                 <com.common.xui.widget.button.switchbutton.SwitchButton
                     android:id="@+id/cabin_safe_movie_switch"

@@ -166,20 +166,24 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
     }
 
     private fun setAnimation(value: String) {
-        if (value.equals("3")) {
-            binding.rightCarDoorlock.visibility = View.GONE
-            binding.rightFlameout.visibility = View.GONE
-            animationCloseLock.start(false, 50, null)
-        } else if (value.equals("1")) {
-            binding.rightCarDoorlock.visibility = View.GONE
-            binding.rightFlameout.visibility = View.VISIBLE
-            animationOpenLock.start(false, 50, null)
-            animationFlameout.start(false, 50, null)
-        } else {
-            binding.rightCarDoorlock.visibility = View.VISIBLE
-            binding.rightFlameout.visibility = View.GONE
-            animationOpenLock.start(false, 50, null)
-            animationCarDoor.start(false, 50, null)
+        when (value) {
+            "3" -> {
+                binding.rightCarDoorlock.visibility = View.GONE
+                binding.rightFlameout.visibility = View.GONE
+                animationCloseLock.start(false, 50, null)
+            }
+            "1" -> {
+                binding.rightCarDoorlock.visibility = View.GONE
+                binding.rightFlameout.visibility = View.VISIBLE
+                animationOpenLock.start(false, 50, null)
+                animationFlameout.start(false, 50, null)
+            }
+            else -> {
+                binding.rightCarDoorlock.visibility = View.VISIBLE
+                binding.rightFlameout.visibility = View.GONE
+                animationOpenLock.start(false, 50, null)
+                animationCarDoor.start(false, 50, null)
+            }
         }
     }
 }

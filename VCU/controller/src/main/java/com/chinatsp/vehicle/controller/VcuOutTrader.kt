@@ -190,19 +190,24 @@ class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback, 
 
     override fun doResolverData(data: String) {
         try {
-//            val jsonObject = JSONObject(data)
-//            val jsonData = jsonObject.getString("intent")
-//            LogManager.d("ReceiveVoice", "jsonData: $jsonData")
-            val voiceJson = GsonUtil.stringToObject(data, VoiceJson::class.java)
-//            if (null != voiceJson &&  ("airControl" == voiceJson.service || "carControl" == voiceJson.service)
-//                || "chat" == voiceJson.service || TextUtils.isEmpty(voiceJson.service)) {
+            var voiceJson: VoiceJson? = null
+            try {
+                val jsonObject = JSONObject(data)
+                val jsonData = jsonObject.getString("intent")
+                voiceJson = GsonUtil.stringToObject(jsonData, VoiceJson::class.java)
+            } catch (e: Exception) {
+                e.message
+            }
+            if (null == voiceJson) {
+                voiceJson = GsonUtil.stringToObject(data, VoiceJson::class.java)
+            }
             voiceJson?.answer?.let {
                 LogManager.d("ReceiveVoice", "voiceJson-answer: $it")
             }
             voiceJson?.semantic?.slots?.let {
                 LogManager.d("ReceiveVoice", "voiceJson-semantic-slots: $it")
             }
-            val convert = voiceJson.convert()
+            val convert = voiceJson!!.convert()
             convert.slots.json = data
             onSrAction(convert)
 //            }
