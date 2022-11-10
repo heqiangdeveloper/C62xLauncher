@@ -62,8 +62,8 @@ public class DragHelper {
             statusBarHeight = res.getDimensionPixelSize(resourceId);
         }
         EasyLog.d(TAG, "computeContainerLocation statusBarHeight: " + statusBarHeight);
-        EasyLog.d(TAG, "computeContainerLocation: " + mContainerX + " , " + mContainerY);
         mContainerY = mContainerY + statusBarHeight;
+        EasyLog.d(TAG, "computeContainerLocation: " + mContainerX + " , " + mContainerY);
     }
 
     public void initTouchListener(IOnSwipeFinish onSwipeFinish) {
@@ -343,6 +343,7 @@ public class DragHelper {
         mTargetItemView = viewWrapper.getView();
 //        EasyLog.i(TAG, "showTargetHighlight :" + mTargetRecyclerView.getChildAdapterPosition(mTargetItemView));
         if (mTargetItemView != null) {
+            // debug使用, 用于展示当卡片可以交换时,  目标卡片的背景的高亮显示
 //            mTargetItemView.setBackgroundColor(mContext.getColor(R.color.card_blue_default));
         }
     }
@@ -351,8 +352,8 @@ public class DragHelper {
     private DragViewWrapper findTargetView(MotionEvent event) {
         float rawX = event.getRawX();
         float rawY = event.getRawY();
-        int x;
-        int y;
+        int x = 0;
+        int y = 0;
         View targetView = null;
         RecyclerView rcv = null;
         RecyclerView[] recyclerViews = new RecyclerView[]{mRecyclerView1, mRecyclerView2};
@@ -360,7 +361,7 @@ public class DragHelper {
             RecyclerView tRcv = recyclerViews[i];
             x = (int) (rawX - tRcv.getX());
             y = (int) (rawY - tRcv.getY());
-            targetView = tRcv.findChildViewUnder(x, y);
+            targetView = tRcv.findChildViewUnder(x, y - mContainerY);
             rcv = tRcv;
             if (targetView != null) {
                 break;
@@ -370,7 +371,7 @@ public class DragHelper {
             EasyLog.w(TAG, "findTargetView failed, nothing be found.");
             return null;
         }
-
+        EasyLog.i(TAG, "findTargetView success. "+x+" , "+y);
         DragViewWrapper targetViewWrapper = new DragViewWrapper(targetView, rcv);
         return targetViewWrapper;
     }
