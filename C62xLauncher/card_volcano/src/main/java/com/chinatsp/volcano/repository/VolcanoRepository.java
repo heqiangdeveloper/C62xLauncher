@@ -66,7 +66,7 @@ public class VolcanoRepository {
         volcanoApi.ApiSubscribe(iHomeCardApi.getHomeCards(queryParams, header), new BaseObserver<VolcanoResponse>() {
             @Override
             public void onNext(VolcanoResponse volcanoResponse) {
-                EasyLog.d(TAG, "getHomeCards success :" + volcanoResponse);
+                EasyLog.d(TAG, "loadFromServer success :" + volcanoResponse);
                 if (volcanoResponse.getErrno() == VolcanoResponse.CODE_SUCCESS) {
                     saveList(volcanoResponse.getData(), source);
                     if (listener != null) {
