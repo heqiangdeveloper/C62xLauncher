@@ -90,6 +90,13 @@
                 <action android:name="com.chinatsp.vehicle.settings.service.SystemService" />
             </intent-filter>
         </service>
+        <service
+            android:name="com.chinatsp.vehicle.settings.service.GrayPopoverService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.chinatsp.vehicle.settings.service.GrayPopoverService" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

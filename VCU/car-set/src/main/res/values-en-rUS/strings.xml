@@ -378,4 +378,5 @@ IACC会优先通过识别⻋道两侧清晰的⻋道线进⾏横向辅助控制�
     <string name="low">low</string>
     <string name="left">left</string>
     <string name="right">right</string>
+    <string name="dow_error">开门预警DOW已置灰</string>
 </resources>

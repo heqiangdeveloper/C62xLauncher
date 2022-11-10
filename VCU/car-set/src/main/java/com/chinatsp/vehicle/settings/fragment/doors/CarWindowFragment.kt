@@ -91,6 +91,9 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
 
             binding.carWindowLockCar.visibility = View.GONE
             binding.line2.visibility = View.GONE
+
+            binding.carWindowRemoteControl.visibility = View.GONE
+            binding.line1.visibility = View.GONE
         }
     }
 

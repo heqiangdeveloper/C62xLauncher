@@ -582,7 +582,11 @@ enum class SwitchNode(
         inactive = intArrayOf(0x0, 0x2, 0x4, 0x5, 0x6, 0x7),
         default = true,
         careOn = false
-    ),
+    ){
+         override fun isPopWindow(value: Int): Boolean {
+            return 0x4 == value
+        }
+     },
 
     /**
      * 驾驶辅助--侧后辅助--盲区监测 BSD
@@ -874,4 +878,6 @@ enum class SwitchNode(
     fun isInactive(value: Int) = inactive?.contains(value) ?: false
 
     open fun isOn(value: Int) = if (careOn) get.on == value else get.off != value
+
+    open fun isPopWindow(value: Int) =  (0X4 == value)
 }
