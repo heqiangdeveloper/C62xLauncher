@@ -81,6 +81,9 @@ public class CircleProgressView extends View {
     }
 
     public void setMax(long _max) {
+        if(_max == 0){
+            _max = 1L;
+        }
         this._max = _max;
     }
 
