@@ -206,7 +206,7 @@ public class IqutingBindService {
     }
 
     public boolean isServiceConnect(){
-        if(FlowPlayControl.getInstance().isServiceConnected() &&
+        if(FlowPlayControl.getInstance().isServiceConnected() ||
                 ContentManager.getInstance().isConnected()){
             return true;
         }else {

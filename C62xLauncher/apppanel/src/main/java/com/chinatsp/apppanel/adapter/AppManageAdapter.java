@@ -23,6 +23,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import launcher.base.applists.AppLists;
+
 public class AppManageAdapter extends RecyclerView.Adapter<AppManageAdapter.ViewHolder> {
     private Context context;
     private List<HashMap<String,Object>> infos;
@@ -53,7 +55,11 @@ public class AppManageAdapter extends RecyclerView.Adapter<AppManageAdapter.View
         holder.deleteIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.forceStopPackage(context,(String) infos.get(holder.getAdapterPosition()).get("packageName"));
+                if(AppLists.iquting.equals(packageName)){
+                    Utils.closeWecarFlowUI();
+                }else {
+                    Utils.forceStopPackage(context,packageName);
+                }
                 if(infos.size() == 1){
                     deletedCallback.onDeleted();
                 }else {

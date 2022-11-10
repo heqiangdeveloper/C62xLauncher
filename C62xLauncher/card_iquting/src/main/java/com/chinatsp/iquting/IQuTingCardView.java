@@ -61,6 +61,7 @@ import launcher.base.network.NetworkObserver;
 import launcher.base.network.NetworkStateReceiver;
 import launcher.base.network.NetworkUtils;
 import launcher.base.recyclerview.SimpleRcvDecoration;
+import launcher.base.utils.flowcontrol.PollingTask;
 import launcher.base.utils.glide.GlideHelper;
 import launcher.base.utils.recent.RecentAppHelper;
 import launcher.base.utils.view.CircleProgressView;
@@ -150,6 +151,28 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
     private long currentDuration = 0l;
     private long totalDuration = 1l;
     private boolean isLogin = false;
+
+    private boolean isServiceConnected = false;
+    private volatile boolean mExecuteTask = false;
+    private PollingTask mServiceConnectTask = new PollingTask(0, 2000, TAG) {
+        @Override
+        protected void executeTask() {
+            ((Activity)getContext()).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    addPlayContentListener(IQuTingCardView.this);
+                }
+            });
+        }
+
+        @Override
+        protected boolean enableExit() {
+            if(isServiceConnected){
+                mExecuteTask = false;
+            }
+            return isServiceConnected;
+        }
+    };
 
     private void init() {
         Log.d(TAG,"init");
@@ -272,6 +295,7 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
             mState.updateViewState(IQuTingCardView.this, mExpand);
         }else {
             if(IqutingBindService.getInstance().isServiceConnect()){
+                isServiceConnected = true;
                 Log.d(TAG,"addPlayContentListener PlayContentService Connect");
                 //查询用户登录状态
                 IqutingBindService.getInstance().checkLoginStatus(new IQueryIqutingLoginStatus() {
@@ -305,6 +329,7 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                     }
                 });
             }else {
+                isServiceConnected = false;
                 isLogin = false;
                 removePlayStateListener();
                 removeMediaChangeListener();
@@ -312,7 +337,10 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                 mState.updateViewState(IQuTingCardView.this, mExpand);
 
                 Log.d(TAG,"PlayContentService disConnected");
-                FlowPlayControl.getInstance().bindPlayService(context);//注册爱趣听播放服务
+                if (mServiceConnectTask != null && !mExecuteTask) {
+                    mExecuteTask = true;
+                    mServiceConnectTask.execute();
+                }
             }
         }
     }

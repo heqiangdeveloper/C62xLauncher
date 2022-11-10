@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import launcher.base.applists.AppLists;
 import launcher.base.async.AsyncSchedule;
 import launcher.base.service.AppServiceManager;
 import launcher.base.service.tencentsdk.ITencentSdkService;
@@ -281,20 +282,11 @@ public class AppManagementWindow {
 
         for(int i = 0; i < infos.size(); i++){
             String pkgName = (String) infos.get(i).get("packageName");
-            if("com.tencent.wecarflow".equals(pkgName)){
-                closeWecarFlowUI();
+            if(AppLists.iquting.equals(pkgName)){
+                Utils.closeWecarFlowUI();
             }else {
                 Utils.forceStopPackage(mContext,pkgName);
             }
         }
-    }
-
-    /*
-    *  退出爱趣听UI，但不改变播放状态
-     */
-    private void closeWecarFlowUI() {
-        ITencentSdkService service =
-                (ITencentSdkService) AppServiceManager.getService(AppServiceManager.SERVICE_TENCENT_SDK);
-        service.closeUI();
     }
 }

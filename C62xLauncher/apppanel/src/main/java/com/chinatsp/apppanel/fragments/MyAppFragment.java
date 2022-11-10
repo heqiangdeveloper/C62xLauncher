@@ -1,6 +1,5 @@
 package com.chinatsp.apppanel.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,7 +32,7 @@ import com.anarchy.classifyview.event.ReStoreDataEvent;
 import com.anarchy.classifyview.listener.SoftKeyBoardListener;
 import com.anarchy.classifyview.util.L;
 import com.anarchy.classifyview.util.MyConfigs;
-import com.chinatsp.apppanel.AppConfigs.AppLists;
+import launcher.base.applists.AppLists;
 import com.chinatsp.apppanel.AppConfigs.Priorities;
 import com.chinatsp.apppanel.R;
 import com.chinatsp.apppanel.adapter.AddAppAdapter;
