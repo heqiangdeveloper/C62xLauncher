@@ -10,6 +10,8 @@ import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.util.regex.Pattern;
 
+import launcher.base.service.AppServiceManager;
+import launcher.base.service.tencentsdk.ITencentSdkService;
 import launcher.base.utils.recent.RecentAppHelper;
 
 public class Utils {
@@ -70,5 +72,14 @@ public class Utils {
         String s = "^[-+]?[\\d]*$";
         Pattern pattern = Pattern.compile(s);
         return pattern.matcher(str).matches();
+    }
+
+    /*
+     *  退出爱趣听UI，但不改变播放状态
+     */
+    public static void closeWecarFlowUI() {
+        ITencentSdkService service =
+                (ITencentSdkService) AppServiceManager.getService(AppServiceManager.SERVICE_TENCENT_SDK);
+        service.closeUI();
     }
 }

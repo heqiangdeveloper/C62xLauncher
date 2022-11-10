@@ -149,6 +149,7 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
         binding.adasLaneLaneAssistRadio.let {
             it.setOnTabSelectionChangedListener { _, value ->
                 doUpdateRadio(RadioNode.ADAS_LANE_ASSIST_MODE, value, viewModel.laneAssistMode, it)
+                startVideo()
             }
         }
         binding.adasLaneLdwStyleRadio.let {
@@ -253,6 +254,12 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
                 )
             })
         }
+    }
+    private fun startVideo(){
+        val uri =
+            "android.resource://" + activity?.packageName + "/" + R.raw.video_auxiliary_system
+        binding.video.setVideoURI(Uri.parse(uri));
+        binding.video.start()
     }
 }
 

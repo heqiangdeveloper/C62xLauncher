@@ -8,7 +8,6 @@ import android.view.View
 import android.widget.CompoundButton
 import androidx.core.content.ContextCompat
 import com.chinatsp.settinglib.VcuUtils
-import com.chinatsp.settinglib.constants.OffLine
 import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.ISwitchManager
@@ -191,10 +190,13 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
         updateSwitchEnable(SwitchNode.ADAS_GUIDES)
     }
 
+
     private fun addSwitchLiveDataListener() {
         viewModel.dowValue.observe(this) {
             doUpdateSwitch(SwitchNode.ADAS_DOW, it)
             updateSwitchEnable(SwitchNode.ADAS_DOW)
+            //目前还没有置灰弹窗功能，当UE有的时候在放开此功能
+            //startWidowServer(SwitchNode.ADAS_DOW.isPopWindow(it.enableStatus),R.string.dow_error)
         }
         viewModel.bscValue.observe(this) {
             doUpdateSwitch(SwitchNode.ADAS_BSC, it)
@@ -599,6 +601,8 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
             })
         }
     }
+
+
 
 //    private fun checkDisableOtherDiv(swb: SwitchButton, status: Boolean) {
 //        if (swb == binding.adasSideBscSwitch) {

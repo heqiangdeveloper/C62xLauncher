@@ -99,6 +99,9 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
             SwitchNode.AUDIO_ENVI_AUDIO -> {
                 doUpdate(_effectStatus, status)
             }
+            SwitchNode.AUDIO_SOUND_LOUDNESS -> {
+                doUpdate(_audioLoudness, status)
+            }
             else -> {}
         }
     }

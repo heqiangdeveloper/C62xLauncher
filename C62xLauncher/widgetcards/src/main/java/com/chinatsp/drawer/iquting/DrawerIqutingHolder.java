@@ -22,6 +22,8 @@ import com.chinatsp.iquting.callback.IQueryIqutingLoginStatus;
 import com.chinatsp.iquting.callback.IQueryMusicLists;
 import com.chinatsp.iquting.callback.ITabClickCallback;
 import com.chinatsp.iquting.configs.IqutingConfigs;
+import com.chinatsp.iquting.ipc.IqutingMediaChangeListener;
+import com.chinatsp.iquting.ipc.IqutingPlayStateListener;
 import com.chinatsp.iquting.service.IqutingBindService;
 import com.chinatsp.widgetcards.R;
 import com.tencent.wecarflow.contentsdk.ContentManager;
@@ -46,7 +48,7 @@ import launcher.base.recyclerview.SimpleRcvDecoration;
 import launcher.base.utils.flowcontrol.PollingTask;
 
 public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
-    private static final String TAG = DrawerIqutingHolder.class.getName();
+    private static final String TAG = "DrawerIqutingHolder";
     private ImageView ivDrawerIqutingDirect;
     private RecyclerView rcvDrawerIqutingLogin;
     private SongsAdapter mSongsAdapter;
@@ -185,8 +187,8 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
                     public void onSuccess(boolean mIsLogin) {
                         Log.d(TAG, "addPlayContentListener checkLoginStatus: " + mIsLogin);
                         if (mIsLogin) {
-                            addIqutingMediaChangeListener();//监听爱趣听媒体的变化
-                            addIqutingPlayStateListener();//监听爱趣听播放状态变化
+                            addIqutingMediaChangeListener2();//监听爱趣听媒体的变化
+                            addIqutingPlayStateListener2();//监听爱趣听播放状态变化
 
                             queryPlayStatus();//查看当前的歌曲信息
                             showUI(TYPE_NORMAL);
@@ -326,96 +328,98 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
         });
     }
 
+    IqutingMediaChangeListener iqutingMediaChangeListener = new IqutingMediaChangeListener() {
+        @Override
+        public void onMediaChange(MediaInfo mediaInfo) {
+            if (mediaInfo != null) {
+                itemUUIDInDrawer = mediaInfo.getItemUUID();
+                Log.d(TAG, "onMediaChange " + itemUUIDInDrawer);
+            } else {
+                itemUUIDInDrawer = "";
+                Log.d(TAG, "onMediaChange, mediaInfo is null");
+            }
+        }
+
+        @Override
+        public void onMediaChange(MediaInfo mediaInfo, NavigationInfo navigationInfo) {
+
+        }
+
+        @Override
+        public void onFavorChange(boolean b, String s) {
+
+        }
+
+        @Override
+        public void onModeChange(int i) {
+
+        }
+
+        @Override
+        public void onPlayListChange() {
+
+        }
+    };
+
     //监听爱趣听媒体的变化
-    private void addIqutingMediaChangeListener() {
-        mediaChangeListener = new MediaChangeListener() {
-            @Override
-            public void onMediaChange(MediaInfo mediaInfo) {
-                if (mediaInfo != null) {
-                    itemUUIDInDrawer = mediaInfo.getItemUUID();
-                    Log.d(TAG, "onMediaChange " + itemUUIDInDrawer);
-                } else {
-                    itemUUIDInDrawer = "";
-                    Log.d(TAG, "onMediaChange, mediaInfo is null");
-                }
-            }
-
-            @Override
-            public void onMediaChange(MediaInfo mediaInfo, NavigationInfo navigationInfo) {
-                Log.d(TAG, "onMediaChange ");
-            }
-
-            @Override
-            public void onFavorChange(boolean b, String s) {
-                Log.d(TAG, "onFavorChange");
-            }
-
-            @Override
-            public void onModeChange(int i) {
-                Log.d(TAG, "onModeChange");
-            }
-
-            @Override
-            public void onPlayListChange() {
-                Log.d(TAG, "onPlayListChange");
-            }
-        };
-        FlowPlayControl.getInstance().addMediaChangeListener(mediaChangeListener);
+    private void addIqutingMediaChangeListener2() {
+        IqutingBindService.getInstance().registerMediaChangeListener(iqutingMediaChangeListener);
     }
 
+    IqutingPlayStateListener iqutingPlayStateListener = new IqutingPlayStateListener() {
+        @Override
+        public void onStart() {
+            Log.d(TAG, "onStart");
+            isPlaying = true;
+            //更新播放按钮状态
+            checkStatusInList();
+        }
+
+        @Override
+        public void onPause() {
+            Log.d(TAG, "onPause");
+            isPlaying = false;
+            //更新播放按钮状态
+            checkStatusInList();
+        }
+
+        @Override
+        public void onStop() {
+            Log.d(TAG, "onStop");
+            isPlaying = false;
+            //更新播放按钮状态
+            checkStatusInList();
+        }
+
+        @Override
+        public void onProgress(String s, long l, long l1) {
+
+        }
+
+        @Override
+        public void onBufferingStart() {
+
+        }
+
+        @Override
+        public void onBufferingEnd() {
+
+        }
+
+        @Override
+        public void onPlayError(int i, String s) {
+
+        }
+
+        @Override
+        public void onAudioSessionId(int i) {
+
+        }
+    };
+
     //监听爱趣听播放状态变化
-    private void addIqutingPlayStateListener() {
-        playStateListener = new PlayStateListener() {
-            @Override
-            public void onStart() {
-                Log.d(TAG, "onStart");
-                isPlaying = true;
-                //更新播放按钮状态
-                checkStatusInList();
-            }
-
-            @Override
-            public void onPause() {
-                Log.d(TAG, "onPause");
-                isPlaying = false;
-                //更新播放按钮状态
-                checkStatusInList();
-            }
-
-            @Override
-            public void onStop() {
-                Log.d(TAG, "onStop");
-                isPlaying = false;
-                //更新播放按钮状态
-                checkStatusInList();
-            }
-
-            @Override
-            public void onProgress(String s, long l, long l1) {//s 类型，l 当前进度， l1总进度
-
-            }
-
-            @Override
-            public void onBufferingStart() {
-                Log.d(TAG, "onBufferingStart");
-            }
-
-            @Override
-            public void onBufferingEnd() {
-                Log.d(TAG, "onBufferingEnd");
-            }
-
-            @Override
-            public void onPlayError(int i, String s) {
-                Log.d(TAG, "onPlayError");
-            }
-
-            @Override
-            public void onAudioSessionId(int i) {
-                Log.d(TAG, "onAudioSessionId");
-            }
-        };
-        FlowPlayControl.getInstance().addPlayStateListener(playStateListener);
+    private void addIqutingPlayStateListener2() {
+        IqutingBindService.getInstance().registerPlayStateListener(iqutingPlayStateListener);
     }
 
     //更新推荐列表中的播放选中状态
@@ -453,10 +457,10 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
     }
 
     private void removeMediaChangeListener() {
-        FlowPlayControl.getInstance().removeMediaChangeListener(mediaChangeListener);
+        IqutingBindService.getInstance().removeRegistedMediaChangeListener(iqutingMediaChangeListener);
     }
 
     private void removePlayStateListener() {
-        FlowPlayControl.getInstance().removePlayStateListener(playStateListener);
+        IqutingBindService.getInstance().removeRegistedPlayStateListener(iqutingPlayStateListener);
     }
 }

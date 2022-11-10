@@ -246,8 +246,10 @@ enum class SwitchNode(
     ),
 
     SPEED_VOLUME_OFFSET_INSERT(
-        get = Norm(on = 0x01, off = 0x02, origin = Origin.MCU,
-            signal = CarMcuManager.ID_MCU_RET_AUDIO_INFO),
+        get = Norm(
+            on = 0x01, off = 0x02, origin = Origin.MCU,
+            signal = CarMcuManager.ID_MCU_RET_AUDIO_INFO
+        ),
         set = Norm(on = 0x01, off = 0x02, signal = CarCabinManager.ID_SETVOLUMESPEED),
         default = false
     ),
@@ -297,7 +299,8 @@ enum class SwitchNode(
             off = CarAudioManager.BEEP_VOLUME_LEVEL_CLOSE, origin = Origin.SPECIAL
         ),
         inactive = intArrayOf(
-            CarAudioManager.BEEP_VOLUME_LEVEL_LOW, CarAudioManager.BEEP_VOLUME_LEVEL_HIGH),
+            CarAudioManager.BEEP_VOLUME_LEVEL_LOW, CarAudioManager.BEEP_VOLUME_LEVEL_HIGH
+        ),
         default = false,
         careOn = false
     ),
@@ -312,7 +315,6 @@ enum class SwitchNode(
      */
 
 
-
     DOOR_SMART_ENTER(
         get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_SMART_ENTRY_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_AVN_SMART_ENTRY_EN),
@@ -325,8 +327,10 @@ enum class SwitchNode(
      * set -> 遥控升降窗软开关 0x0: Inactive; 0x1: Enabled; 0x2: Disabled; 0x3: Reserved
      */
     WIN_REMOTE_CONTROL(
-        get = Norm(on = 0x1, off = 0x2,
-            signal = CarCabinManager.ID_REMOTE_WINDOW_RISE_FALL_STATES),
+        get = Norm(
+            on = 0x1, off = 0x2,
+            signal = CarCabinManager.ID_REMOTE_WINDOW_RISE_FALL_STATES
+        ),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_REMOTE_WINDOW_RISE_FALL_SW),
         inactive = intArrayOf(0x3),
         default = false
@@ -362,10 +366,12 @@ enum class SwitchNode(
      *
      */
     RAIN_WIPER_REPAIR(
-        get = Norm(on = 0x1, off = 0x2,
-            signal = CarCabinManager.ID_FRONT_WIPER_MAINTENNANCE_STATES),
+        get = Norm(
+            on = 0x1, off = 0x2,
+            signal = CarCabinManager.ID_FRONT_WIPER_MAINTENNANCE_STATES
+        ),
         set = Norm(on = 0x2, off = 0x3, signal = CarCabinManager.ID_FRONT_WIPER_MAINTENNANCE_SW),
-        inactive = intArrayOf(0x1, 0x4),
+        inactive = intArrayOf(0x1, 0x4, 0x3),
         default = false
     ),
 
@@ -576,7 +582,11 @@ enum class SwitchNode(
         inactive = intArrayOf(0x0, 0x2, 0x4, 0x5, 0x6, 0x7),
         default = true,
         careOn = false
-    ),
+    ){
+         override fun isPopWindow(value: Int): Boolean {
+            return 0x4 == value
+        }
+     },
 
     /**
      * 驾驶辅助--侧后辅助--盲区监测 BSD
@@ -657,10 +667,14 @@ enum class SwitchNode(
      *        0x0:Disabled; 0x1:low Varient(reserved); 0x2:Middle Varient(reserved); 0x3:Hign Varient
      */
     LIGHT_CEREMONY_SENSE(
-        get = Norm(on = 0x3, off = 0x0,
-            signal = CarCabinManager.ID_BCM_EL_CERE_SENSE_STATUS),
-        set = Norm(on = 0x4, off = 0x1,
-            signal = CarCabinManager.ID_HMI_EL_CERE_SENSE_TYPE_SET),
+        get = Norm(
+            on = 0x3, off = 0x0,
+            signal = CarCabinManager.ID_BCM_EL_CERE_SENSE_STATUS
+        ),
+        set = Norm(
+            on = 0x4, off = 0x1,
+            signal = CarCabinManager.ID_HMI_EL_CERE_SENSE_TYPE_SET
+        ),
         inactive = intArrayOf(0x1, 0x2),
         default = false
     ),
@@ -706,7 +720,8 @@ enum class SwitchNode(
     ALC_LOCK_HINT(
         get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ALC_HUM_LUCK_SW_RESPONSE),
         set = Norm(
-            on = 0x1, off = 0x2, signal = CarCabinManager.ID_ALC_HUM_ALC_SW_LOCK_REMIND_ENABLE),
+            on = 0x1, off = 0x2, signal = CarCabinManager.ID_ALC_HUM_ALC_SW_LOCK_REMIND_ENABLE
+        ),
         default = false
     ),
 
@@ -751,7 +766,8 @@ enum class SwitchNode(
     ALC_SMART_MODE(
         get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ALC_INTE_MODE_SW_RESPONSE),
         set = Norm(
-            on = 0x1, off = 0x2, signal = CarCabinManager.ID_ALC_HUM_ALC_INTELLIGENT_MODE_SW),
+            on = 0x1, off = 0x2, signal = CarCabinManager.ID_ALC_HUM_ALC_INTELLIGENT_MODE_SW
+        ),
         area = Area.AREA_TYPE_GLOBAL,
         default = true
     ),
@@ -811,6 +827,36 @@ enum class SwitchNode(
         default = false
     ),
 
+    /**
+     * 灯光自动模式
+     * get -> auto模式反馈 0x0: Off; 0x1: On
+     * set -> screen brightness auto mode 0x0: Inactive; 0x1: On; 0x2: Off; 0x3: Not used
+     */
+    LIGHT_AUTO_MODE(
+        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ICM_SCR_AUTO_STS),
+        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HUM_MIRROR_SEE_G_SET),
+        default = false
+    ),
+
+    /**
+     * 白天黑夜模式
+     * get -> Status of exterior lamp switch  0x0: Off; 0x1: Auto; 0x2: Park; 0x3: Low Beam
+     */
+    DARK_LIGHT_MODE(
+        get = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_EXTERIOR_LAMP_SWITCH),
+        set = Norm(on = 0x1, off = 0x2, signal = -1),
+        default = false
+    ){
+        override fun isActive(value: Int): Boolean {
+            return value in 0..3
+        }
+
+        override fun isOn(value: Int): Boolean {
+
+            return 0x2 == value || 0x3 == value
+        }
+     },
+
     INVALID(
         get = Norm(on = 0x1, off = 0x0, signal = -1),
         set = Norm(on = 0x1, off = 0x2, signal = -1),
@@ -827,9 +873,11 @@ enum class SwitchNode(
 
 //    fun isValid(value: Int) = isActive(value) or isInactive(value)
 
-    fun isActive(value: Int) = (get.on == value) or (get.off == value)
+    open fun isActive(value: Int) = (get.on == value) or (get.off == value)
 
     fun isInactive(value: Int) = inactive?.contains(value) ?: false
 
-    fun isOn(value: Int) = if (careOn) get.on == value else get.off != value
+    open fun isOn(value: Int) = if (careOn) get.on == value else get.off != value
+
+    open fun isPopWindow(value: Int) =  (0X4 == value)
 }

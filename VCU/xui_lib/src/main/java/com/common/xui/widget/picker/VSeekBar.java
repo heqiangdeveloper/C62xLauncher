@@ -875,4 +875,8 @@ public class VSeekBar extends View {
         return value;
     }
 
+    public boolean isTouching() {
+        return mIsTouching;
+    }
+
 }

@@ -82,10 +82,10 @@ class PanoramaCommandConsumer(val manager: GlobalManager) {
             value = if (is3D) 0xA else 0x2
         } else if (lAct) {
             aera = "左"
-            value = if (is3D) 0xD else 0x3
+            value = if (is3D) 0xB else 0x3
         } else if (rAct) {
             aera = "右"
-            value = if (is3D) 0xE else 0x4
+            value = if (is3D) 0xC else 0x4
         }
         if (!isAvmEngine()) {
             sendCabinValue(CarCabinManager.ID_APA_AVM_SWT, 0x1)

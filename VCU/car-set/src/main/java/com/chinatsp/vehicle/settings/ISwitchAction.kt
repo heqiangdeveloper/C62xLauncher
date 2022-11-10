@@ -1,8 +1,10 @@
 package com.chinatsp.vehicle.settings
 
+import android.content.Intent
+import android.os.Bundle
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
-import com.chinatsp.settinglib.VcuUtils
+import com.chinatsp.settinglib.BaseApp
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -90,6 +92,17 @@ interface ISwitchAction : IAction {
             val dependActive = obtainDependByNode(node)
             Timber.d("updateSwitchEnable $node, selfActive:$selfActive, dependActive:$dependActive")
             updateEnable(it, obtainActiveByNode(node), obtainDependByNode(node))
+        }
+    }
+
+    fun startWidowServer(value:Boolean,content:Int){
+        if(value){
+            val intent = Intent("com.chinatsp.vehicle.settings.service.GrayPopoverService")
+            intent.setPackage("com.chinatsp.vehicle.settings")
+            val bundleSimple = Bundle()
+            bundleSimple.putInt("content", content)
+            intent.putExtras(bundleSimple)
+            BaseApp.instance.startService(intent)
         }
     }
 

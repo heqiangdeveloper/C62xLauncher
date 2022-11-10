@@ -65,6 +65,7 @@ class RegisterSignalManager private constructor() {
 
                     add(CarCabinManager.ID_BCM_ROLLO_BTN_STS)
                     add(CarCabinManager.ID_BCM_SUNROOF_BTN_STS)
+
                     this.remove(Constant.INVALID)
                 }
             }

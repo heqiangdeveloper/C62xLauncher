@@ -109,7 +109,7 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
     }
 
     private fun findBacklightLevel(value: Int, type: Progress): Int {
-        val levels = getBacklightLevel()
+        val levels = Constant.LIGHT_LEVEL
         var level = Constant.INVALID
         levels.forEachIndexed { index, i ->
             if (i == value) level = index
@@ -117,24 +117,19 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
         if (Constant.INVALID == level) {
             val first = levels.indexOfFirst { it >= value }
             val last = levels.indexOfLast { it <= value }
-            if (first == last) {
+            val isFindLast = Constant.INVALID != last
+            val isFindFirst = Constant.INVALID != first
+            if (isFindFirst && !isFindLast) {
                 level = first
-            }
-            when (Constant.INVALID) {
-                first -> {
-                    level = last
-                }
-                last -> {
-                    level = first
-                }
-                else -> {
+            } else if (!isFindFirst && isFindLast) {
+                level = last
+            } else if (isFindFirst && isFindLast) {
+                level = if (first == last) {
+                    first
+                } else {
                     val offsetBefore = abs(value - levels[last])
                     val offsetAfter = abs(value - levels[first])
-                    level = if (offsetBefore > offsetAfter) {
-                        first
-                    } else {
-                        last
-                    }
+                    if (offsetBefore > offsetAfter) first else last
                 }
             }
             Timber.d("findBacklightLevel first:$first, last:$last, level:$level")
@@ -143,10 +138,6 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
             level = type.def
         }
         return level + type.min
-    }
-
-    private fun getBacklightLevel(): IntArray {
-        return intArrayOf(0x19, 0x33, 0x4C, 0x66, 0x7F, 0x99, 0xB2, 0xCC, 0xE5, 0xFF)
     }
 
     override fun isCareSignal(signal: Int, origin: Origin): Boolean {
@@ -196,7 +187,7 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
     override fun doSetVolume(type: Progress, position: Int): Boolean {
         return when (type) {
             Progress.SWITCH_BACKLIGHT_BRIGHTNESS -> {
-                val backlightLevel = getBacklightLevel()
+                val backlightLevel = Constant.LIGHT_LEVEL
                 val index = position - 1
                 if (index in backlightLevel.indices) {
                     val value = backlightLevel[index]

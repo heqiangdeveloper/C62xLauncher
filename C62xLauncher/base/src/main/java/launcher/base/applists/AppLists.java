@@ -1,4 +1,4 @@
-package com.chinatsp.apppanel.AppConfigs;
+package launcher.base.applists;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -14,16 +14,16 @@ import launcher.base.utils.property.PropertyUtils;
 *  launcher 黑名单
  */
 public class AppLists {
-    private static final String aospSettings = "com.android.settings";//原生设置
-    private static final String launcher = "com.chinatsp.launcher";//luancher
-    private static final String CarTrustAgentService = "com.android.car.trust";//CarTrustAgentService
-    private static final String AVMCalibration = "com.mediatek.avmcalibration";//AVMCalibration
-    private static final String aospFilemanager = "com.android.documentsui";//文件
-    private static final String tfactory = "com.chinatsp.tfactoryapp";//工厂设置
-    private static final String subscriber = "com.google.android.car.vms.subscriber";//VmsSubscriberClientSample
-    private static final String avmDemo = "com.mediatek.avm";//AVMDemo
-    private static final String carcorderdemo = "com.mediatek.carcorderdemo";//Carcorder Demo
-    private static final String b561Radio = "com.oushang.radio";//b561 Radio
+    public static final String aospSettings = "com.android.settings";//原生设置
+    public static final String launcher = "com.chinatsp.launcher";//luancher
+    public static final String CarTrustAgentService = "com.android.car.trust";//CarTrustAgentService
+    public static final String AVMCalibration = "com.mediatek.avmcalibration";//AVMCalibration
+    public static final String aospFilemanager = "com.android.documentsui";//文件
+    public static final String tfactory = "com.chinatsp.tfactoryapp";//工厂设置
+    public static final String subscriber = "com.google.android.car.vms.subscriber";//VmsSubscriberClientSample
+    public static final String avmDemo = "com.mediatek.avm";//AVMDemo
+    public static final String carcorderdemo = "com.mediatek.carcorderdemo";//Carcorder Demo
+    public static final String b561Radio = "com.oushang.radio";//b561 Radio
 
     public static final String btPhone = "com.chinatsp.phone";//蓝牙电话
     public static final String filemanager = "com.chinatsp.filemanager";//文件管理
@@ -43,6 +43,7 @@ public class AppLists {
     public static final String easyconn = "net.easyconn";//亿连手机互联
     public static final String weather = "com.iflytek.autofly.weather";//天气
     public static final String applet = "com.iflytek.autofly.applet";//讯飞语音中转服务
+    public static final String ota = "com.hmi.beic62.pc";//BEIJING OS,OTA升级用
 
     public static final String APPMANAGEMENT = "com.chinatsp.appmanagement";//应用管理，自定义的包名，实际不存在此应用
     //不显示在桌面的应用名单

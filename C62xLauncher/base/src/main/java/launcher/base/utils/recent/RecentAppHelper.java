@@ -15,20 +15,27 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import launcher.base.applists.AppLists;
+
 public class RecentAppHelper {
     //不出现在应用管理中的应用名单
     public static List<String> notInAppManageListApps = Arrays.asList(
-        "com.chinatsp.launcher",//launcher
-        "com.oushang.datastat",//埋点
-        "com.iflytek.autofly.voicecoreservice",//语音
-        "com.autonavi.amapauto",//高德
-        "com.hmi.beic62.pc"//BEIJING OS,OTA升级用
+        AppLists.launcher,//launcher
+        AppLists.buryPoint,//埋点
+        AppLists.ifly,//语音
+        AppLists.amap,//高德
+        AppLists.ota,//BEIJING OS,OTA升级用
+        AppLists.vehicleSettings,//车辆设置
+        AppLists.systemSettings,//系统设置
+        AppLists.btPhone,//电话
+        AppLists.iquting,//爱趣听
+        AppLists.media//媒体
     );
 
     //不出现在常用推荐中的应用名单
     public static List<String> notInRecentAppListApps = Arrays.asList(
-        "com.chinatsp.launcher",//launcher
-        "com.oushang.datastat"//埋点
+        AppLists.launcher,//launcher
+        AppLists.buryPoint//埋点
     );
 
     public static final int FROM_APPMANAGEMENT = 1;

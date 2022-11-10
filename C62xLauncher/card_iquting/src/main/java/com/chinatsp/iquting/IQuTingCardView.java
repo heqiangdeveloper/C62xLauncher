@@ -31,6 +31,8 @@ import com.chinatsp.iquting.event.ContentConnectEvent;
 import com.chinatsp.iquting.event.ControlEvent;
 import com.chinatsp.iquting.event.Event;
 import com.chinatsp.iquting.event.PlayConnectEvent;
+import com.chinatsp.iquting.ipc.IqutingMediaChangeListener;
+import com.chinatsp.iquting.ipc.IqutingPlayStateListener;
 import com.chinatsp.iquting.service.IqutingBindService;
 import com.chinatsp.iquting.songs.IQuTingSongsAdapter;
 import com.chinatsp.iquting.state.NetWorkDisconnectState;
@@ -61,6 +63,7 @@ import launcher.base.network.NetworkObserver;
 import launcher.base.network.NetworkStateReceiver;
 import launcher.base.network.NetworkUtils;
 import launcher.base.recyclerview.SimpleRcvDecoration;
+import launcher.base.utils.flowcontrol.PollingTask;
 import launcher.base.utils.glide.GlideHelper;
 import launcher.base.utils.recent.RecentAppHelper;
 import launcher.base.utils.view.CircleProgressView;
@@ -150,6 +153,28 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
     private long currentDuration = 0l;
     private long totalDuration = 1l;
     private boolean isLogin = false;
+
+    private boolean isServiceConnected = false;
+    private volatile boolean mExecuteTask = false;
+    private PollingTask mServiceConnectTask = new PollingTask(0, 2000, TAG) {
+        @Override
+        protected void executeTask() {
+            ((Activity)getContext()).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    addPlayContentListener(IQuTingCardView.this);
+                }
+            });
+        }
+
+        @Override
+        protected boolean enableExit() {
+            if(isServiceConnected){
+                mExecuteTask = false;
+            }
+            return isServiceConnected;
+        }
+    };
 
     private void init() {
         Log.d(TAG,"init");
@@ -272,6 +297,7 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
             mState.updateViewState(IQuTingCardView.this, mExpand);
         }else {
             if(IqutingBindService.getInstance().isServiceConnect()){
+                isServiceConnected = true;
                 Log.d(TAG,"addPlayContentListener PlayContentService Connect");
                 //查询用户登录状态
                 IqutingBindService.getInstance().checkLoginStatus(new IQueryIqutingLoginStatus() {
@@ -281,8 +307,8 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                         if(mIsLogin){
                             isLogin = true;
                             //因为在onWindowVisibilityChanged窗口不可见时，移除了监听
-                            addIqutingMediaChangeListener();//监听爱趣听媒体的变化
-                            addIqutingPlayStateListener();//监听爱趣听播放状态变化
+                            addIqutingMediaChangeListener2();//监听爱趣听媒体的变化
+                            addIqutingPlayStateListener2();//监听爱趣听播放状态变化
                             //if(mState == null || mState instanceof UnLoginState || mState instanceof NetWorkDisconnectState){
                                 mState = new NormalState();
                                 mState.updateViewState(view, mExpand);
@@ -305,6 +331,7 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                     }
                 });
             }else {
+                isServiceConnected = false;
                 isLogin = false;
                 removePlayStateListener();
                 removeMediaChangeListener();
@@ -312,7 +339,10 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                 mState.updateViewState(IQuTingCardView.this, mExpand);
 
                 Log.d(TAG,"PlayContentService disConnected");
-                FlowPlayControl.getInstance().bindPlayService(context);//注册爱趣听播放服务
+                if (mServiceConnectTask != null && !mExecuteTask) {
+                    mExecuteTask = true;
+                    mServiceConnectTask.execute();
+                }
             }
         }
     }
@@ -330,86 +360,87 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
         }
     }
 
-    //监听爱趣听媒体的变化
-    private void addIqutingMediaChangeListener(){
-        mediaChangeListener = new MediaChangeListener() {
-            @Override
-            public void onMediaChange(MediaInfo mediaInfo) {
-                currentMediaInfo = mediaInfo;
-                if(mediaInfo != null){
-                    isHasMediaPlay = true;
-                    artist = mediaInfo.getMediaAuthor();
-                    name = mediaInfo.getMediaName();
-                    iconUrl = mediaInfo.getMediaImage();
-                    itemUUID = mediaInfo.getItemUUID();
-                    Log.d(TAG,"onMediaChange " + name + "," + artist +
-                            "," + mediaInfo.getMediaType() + "," + itemUUID + "," + iconUrl);
-                    if(mExpand){//中卡
-                        mTvIQuTingMediaNameBig.setText(name);
-                        mTvIQuTingArtistBig.setText(artist);
-                        if(!isDestroy((Activity) context)){
-                            GlideHelper.loadUrlImage(context,mIvIQuTingCoverBig,iconUrl);
-                        }
+    IqutingMediaChangeListener iqutingMediaChangeListener = new IqutingMediaChangeListener() {
+        @Override
+        public void onMediaChange(MediaInfo mediaInfo) {
+            currentMediaInfo = mediaInfo;
+            if(mediaInfo != null){
+                isHasMediaPlay = true;
+                artist = mediaInfo.getMediaAuthor();
+                name = mediaInfo.getMediaName();
+                iconUrl = mediaInfo.getMediaImage();
+                itemUUID = mediaInfo.getItemUUID();
+                Log.d(TAG,"onMediaChange " + name + "," + artist +
+                        "," + mediaInfo.getMediaType() + "," + itemUUID + "," + iconUrl);
+                if(mExpand){//中卡
+                    mTvIQuTingMediaNameBig.setText(name);
+                    mTvIQuTingArtistBig.setText(artist);
+                    if(!isDestroy((Activity) context)){
+                        GlideHelper.loadUrlImage(context,mIvIQuTingCoverBig,iconUrl);
+                    }
 
-                        mCircleProgressView.setCurrent(0);
-                        if(mediaInfo.getMediaType() != null){
-                            showFavor(mIvIQuTingLikeBtnBig,mediaInfo.getMediaType().trim(),mediaInfo.isFavored());
-                        }
-                    }else {
-                        mTvIQuTingMediaName.setText(name + "-" + artist);
-                        if(!isDestroy((Activity) context)){
-                            GlideHelper.loadUrlAlbumCoverRadius(context,mIvCover,iconUrl,RADIUS);
-                        }
-
-                        mProgressHorizontalIQuTing.updateProgress(0);
-                        mTvIQuTingPlayPosition.setText(ToolUtils.formatTime(0));
-                        mTvIQuTingPlayDuration.setText(ToolUtils.formatTime(mediaInfo.getDuration()));
-                        if(mediaInfo.getMediaType() != null){
-                            showFavor(mIvIQuTingLike,mediaInfo.getMediaType().trim(),mediaInfo.isFavored());
-                        }
+                    mCircleProgressView.setCurrent(0);
+                    if(mediaInfo.getMediaType() != null){
+                        showFavor(mIvIQuTingLikeBtnBig,mediaInfo.getMediaType().trim(),mediaInfo.isFavored());
                     }
                 }else {
-                    Log.d(TAG,"onMediaChange, mediaInfo is null");
-                    isHasMediaPlay = false;
-                    mState = new NormalState();
-                    mState.updateViewState(IQuTingCardView.this, mExpand);
+                    mTvIQuTingMediaName.setText(name + "-" + artist);
+                    if(!isDestroy((Activity) context)){
+                        GlideHelper.loadUrlAlbumCoverRadius(context,mIvCover,iconUrl,RADIUS);
+                    }
 
-                    if(mExpand){
-                        GlideHelper.loadLocalCircleImage(getContext(), mIvIQuTingCoverBig, R.drawable.test_cover2);
-                        mTvIQuTingMediaNameBig.setText("暗里着迷");
-                        mTvIQuTingArtistBig.setText("刘德华");
-                        mCircleProgressView.setCurrent(0);
-                    }else {
-                        if(!isDestroy((Activity) getContext())){
-                            GlideHelper.loadLocalAlbumCoverRadius(getContext(), mIvCover, R.drawable.test_cover2, RADIUS);
-                        }
-                        mTvIQuTingMediaName.setText("暗里着迷—刘德华");
-                        mProgressHorizontalIQuTing.updateProgress(0);
+                    mProgressHorizontalIQuTing.updateProgress(0);
+                    mTvIQuTingPlayPosition.setText(ToolUtils.formatTime(0));
+                    mTvIQuTingPlayDuration.setText(ToolUtils.formatTime(mediaInfo.getDuration()));
+                    if(mediaInfo.getMediaType() != null){
+                        showFavor(mIvIQuTingLike,mediaInfo.getMediaType().trim(),mediaInfo.isFavored());
                     }
                 }
-            }
+            }else {
+                Log.d(TAG,"onMediaChange, mediaInfo is null");
+                isHasMediaPlay = false;
+                mState = new NormalState();
+                mState.updateViewState(IQuTingCardView.this, mExpand);
 
-            @Override
-            public void onMediaChange(MediaInfo mediaInfo, NavigationInfo navigationInfo) {
-                Log.d(TAG,"onMediaChange ");
+                if(mExpand){
+                    GlideHelper.loadLocalCircleImage(getContext(), mIvIQuTingCoverBig, R.drawable.test_cover2);
+                    mTvIQuTingMediaNameBig.setText("暗里着迷");
+                    mTvIQuTingArtistBig.setText("刘德华");
+                    mCircleProgressView.setCurrent(0);
+                }else {
+                    if(!isDestroy((Activity) getContext())){
+                        GlideHelper.loadLocalAlbumCoverRadius(getContext(), mIvCover, R.drawable.test_cover2, RADIUS);
+                    }
+                    mTvIQuTingMediaName.setText("暗里着迷—刘德华");
+                    mProgressHorizontalIQuTing.updateProgress(0);
+                }
             }
+        }
 
-            @Override
-            public void onFavorChange(boolean b, String s) {
-                Log.d(TAG,"onFavorChange");
-            }
+        @Override
+        public void onMediaChange(MediaInfo mediaInfo, NavigationInfo navigationInfo) {
 
-            @Override
-            public void onModeChange(int i) {
-                Log.d(TAG,"onModeChange");
-            }
+        }
 
-            @Override
-            public void onPlayListChange() {
-                Log.d(TAG,"onPlayListChange");
-            }
-        };
-        FlowPlayControl.getInstance().addMediaChangeListener(mediaChangeListener);
+        @Override
+        public void onFavorChange(boolean b, String s) {
+
+        }
+
+        @Override
+        public void onModeChange(int i) {
+
+        }
+
+        @Override
+        public void onPlayListChange() {
+
+        }
+    };
+
+    //监听爱趣听媒体的变化
+    private void addIqutingMediaChangeListener2(){
+        IqutingBindService.getInstance().registerMediaChangeListener(iqutingMediaChangeListener);
     }
 
     private void showFavor(ImageView iv,String type,boolean isFavor){
@@ -452,88 +483,86 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
         }
     }
 
+    IqutingPlayStateListener iqutingPlayStateListener = new IqutingPlayStateListener() {
+        @Override
+        public void onStart() {
+            isPlaying = true;
+            if(mExpand){
+                //更新选中框
+                if(mNormalBigCardViewHolder != null){
+                    mNormalBigCardViewHolder.updateAllInStatus();
+                }
+                mIvIQuTingPlayPauseBtnBig.setImageResource(R.drawable.play_card_iquting_selector);
+                checkStatusInList();
+            }else {
+                mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.play_card_iquting_selector);
+            }
+        }
+
+        @Override
+        public void onPause() {
+            isPlaying = false;
+            if(mExpand){
+                mIvIQuTingPlayPauseBtnBig.setImageResource(R.drawable.pause_card_iquting_selector);
+                checkStatusInList();
+            }else {
+                mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.pause_card_iquting_selector);
+            }
+        }
+
+        @Override
+        public void onStop() {
+            isPlaying = false;
+            if(mExpand){
+                mIvIQuTingPlayPauseBtnBig.setImageResource(R.drawable.pause_card_iquting_selector);
+                checkStatusInList();
+            }else {
+                mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.pause_card_iquting_selector);
+            }
+        }
+
+        @Override
+        public void onProgress(String s, long l, long l1) {
+            //播放进度，如果是音乐，新闻，电台类音频，按毫秒为单位，如果是有声书，按字数为单位。
+            //Log.d(TAG,"onProgress " + s + "," +l + "," +l1);
+            isPlaying = true;
+            currentDuration = l;
+            totalDuration = l1;
+            if(mExpand){
+                mCircleProgressView.setMax(l1);
+                mCircleProgressView.setCurrent(l);
+            }else {
+                mTvIQuTingPlayPosition.setText(ToolUtils.formatTime(l / 1000));
+                mTvIQuTingPlayDuration.setText(ToolUtils.formatTime(l1 / 1000));
+                mProgressHorizontalIQuTing.setMaxValue(l1);
+                mProgressHorizontalIQuTing.updateProgress(l);
+            }
+        }
+
+        @Override
+        public void onBufferingStart() {
+
+        }
+
+        @Override
+        public void onBufferingEnd() {
+
+        }
+
+        @Override
+        public void onPlayError(int i, String s) {
+
+        }
+
+        @Override
+        public void onAudioSessionId(int i) {
+
+        }
+    };
+
     //监听爱趣听播放状态变化
-    private void addIqutingPlayStateListener(){
-        playStateListener = new PlayStateListener() {
-            @Override
-            public void onStart() {
-                Log.d(TAG,"onStart");
-                isPlaying = true;
-                if(mExpand){
-                    //更新选中框
-                    if(mNormalBigCardViewHolder != null){
-                        mNormalBigCardViewHolder.updateAllInStatus();
-                    }
-                    mIvIQuTingPlayPauseBtnBig.setImageResource(R.drawable.play_card_iquting_selector);
-                    checkStatusInList();
-                }else {
-                    mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.play_card_iquting_selector);
-                }
-            }
-
-            @Override
-            public void onPause() {
-                Log.d(TAG,"onPause");
-                isPlaying = false;
-                if(mExpand){
-                    mIvIQuTingPlayPauseBtnBig.setImageResource(R.drawable.pause_card_iquting_selector);
-                    checkStatusInList();
-                }else {
-                    mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.pause_card_iquting_selector);
-                }
-            }
-
-            @Override
-            public void onStop() {
-                Log.d(TAG,"onStop");
-                isPlaying = false;
-                if(mExpand){
-                    mIvIQuTingPlayPauseBtnBig.setImageResource(R.drawable.pause_card_iquting_selector);
-                    checkStatusInList();
-                }else {
-                    mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.pause_card_iquting_selector);
-                }
-            }
-
-            @Override
-            public void onProgress(String s, long l, long l1) {//s 类型，l 当前进度， l1总进度
-                //播放进度，如果是音乐，新闻，电台类音频，按毫秒为单位，如果是有声书，按字数为单位。
-                //Log.d(TAG,"onProgress " + s + "," +l + "," +l1);
-                isPlaying = true;
-                currentDuration = l;
-                totalDuration = l1;
-                if(mExpand){
-                    mCircleProgressView.setMax(l1);
-                    mCircleProgressView.setCurrent(l);
-                }else {
-                    mTvIQuTingPlayPosition.setText(ToolUtils.formatTime(l / 1000));
-                    mTvIQuTingPlayDuration.setText(ToolUtils.formatTime(l1 / 1000));
-                    mProgressHorizontalIQuTing.setMaxValue(l1);
-                    mProgressHorizontalIQuTing.updateProgress(l);
-                }
-            }
-
-            @Override
-            public void onBufferingStart() {
-                Log.d(TAG,"onBufferingStart");
-            }
-
-            @Override
-            public void onBufferingEnd() {
-                Log.d(TAG,"onBufferingEnd");
-            }
-
-            @Override
-            public void onPlayError(int i, String s) {
-                Log.d(TAG,"onPlayError");
-            }
-
-            @Override
-            public void onAudioSessionId(int i) {
-                Log.d(TAG,"onAudioSessionId");
-            }
-        };
-        FlowPlayControl.getInstance().addPlayStateListener(playStateListener);
+    private void addIqutingPlayStateListener2(){
+        IqutingBindService.getInstance().registerPlayStateListener(iqutingPlayStateListener);
     }
 
     //获取音乐榜单
@@ -1037,11 +1066,13 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
     }
 
     private void removeMediaChangeListener(){
-        FlowPlayControl.getInstance().removeMediaChangeListener(mediaChangeListener);
+        //FlowPlayControl.getInstance().removeMediaChangeListener(mediaChangeListener);
+        IqutingBindService.getInstance().removeRegistedMediaChangeListener(iqutingMediaChangeListener);
     }
 
     private void removePlayStateListener(){
-        FlowPlayControl.getInstance().removePlayStateListener(playStateListener);
+        //FlowPlayControl.getInstance().removePlayStateListener(playStateListener);
+        IqutingBindService.getInstance().removeRegistedPlayStateListener(iqutingPlayStateListener);
     }
 
     private void addEventBus(){

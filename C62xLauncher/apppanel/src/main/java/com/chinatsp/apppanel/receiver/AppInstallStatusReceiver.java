@@ -11,7 +11,7 @@ import android.util.Log;
 
 import com.anarchy.classifyview.Bean.LocationBean;
 import com.anarchy.classifyview.event.AppInstallStatusEvent;
-import com.chinatsp.apppanel.AppConfigs.AppLists;
+import launcher.base.applists.AppLists;
 import com.chinatsp.apppanel.AppConfigs.Priorities;
 import com.chinatsp.apppanel.db.MyAppDB;
 import com.huawei.appmarket.launcheragent.launcher.AppState;

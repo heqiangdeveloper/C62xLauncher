@@ -523,6 +523,7 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
         }
         if (expect > max) expect = max
         if (expect < min) expect = min
+        command.expect = expect
         return expect
     }
 

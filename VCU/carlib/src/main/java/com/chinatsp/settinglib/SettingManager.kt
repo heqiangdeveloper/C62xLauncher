@@ -198,6 +198,7 @@ class SettingManager private constructor() {
                         .d("register cabin: hex propertyId:${Integer.toHexString(it)},  dec propertyId:$it")
                 }
                 it.registerCallback(cabinEventListener, signalArray)
+                BrightnessManager.instance.initDarkLightMode()
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -398,7 +399,7 @@ class SettingManager private constructor() {
                 try {
                     val hasManager = null != mCarAudioManager
                     Timber.tag(Constant.VehicleSignal)
-                        .d("doActionSignal-cabin send-cabin hex-id:${Integer.toHexString(id)}, dec-id:$id, value:$value, has:$hasManager, versionName:${VcuUtils.versionName}")
+                        .d("doActionSignal-cabin send-cabin hex-id:${Integer.toHexString(id)}, dec-id:$id, value:$value, has:$hasManager, V_N:${VcuUtils.V_N}")
                     mCarCabinManager?.setIntProperty(id, areaValue, value)
                 } catch (e: Exception) {
                     Timber.e(e)
@@ -415,7 +416,7 @@ class SettingManager private constructor() {
                 try {
                     val hasManager = null != mCarMcuManager
                     Timber.tag(Constant.VehicleSignal)
-                        .d("doActionSignal-mcu send-mcu hex-id:${Integer.toHexString(id)}, dec-id:$id, value:$value, has:$hasManager, versionName:${VcuUtils.versionName}")
+                        .d("doActionSignal-mcu send-mcu hex-id:${Integer.toHexString(id)}, dec-id:$id, value:$value, has:$hasManager, V_N:${VcuUtils.V_N}")
                     mCarMcuManager?.setIntArrayProperty(id, areaValue, value)
                 } catch (e: Exception) {
                     Timber.e(e)
@@ -432,7 +433,7 @@ class SettingManager private constructor() {
                 try {
                     val hasManager = null != hvacManager
                     Timber.tag(Constant.VehicleSignal)
-                        .d("doActionSignal-hvac send-hvac hex-id:${Integer.toHexString(id)}, dec-id:$id, value:$value, has:$hasManager, versionName:${VcuUtils.versionName}")
+                        .d("doActionSignal-hvac send-hvac hex-id:${Integer.toHexString(id)}, dec-id:$id, value:$value, has:$hasManager, V_N:${VcuUtils.V_N}")
                     hvacManager?.setIntProperty(id, areaValue, value)
                 } catch (e: Exception) {
                     Timber.e(e)
@@ -1017,6 +1018,7 @@ class SettingManager private constructor() {
 
     fun setAudioEQ(eqMode: Int) {
         try {
+            Timber.e("setAudioEQ-----------------eqMode--$eqMode")
             mCarAudioManager?.eqMode = eqMode
         } catch (e: Exception) {
             e.printStackTrace()
