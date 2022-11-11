@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -191,6 +192,7 @@ public class LauncherSearchActivity extends AppCompatActivity implements SearchA
             findViewById(R.id.search_hint).setVisibility(View.GONE);
             //List<SearchBean> beans = FileUtils.fuzzySearch(s.toString(),db.getData());
             if (!db.isTableExist() || db.countLocation() == 0) {
+                Log.d(TAG,"edit search insertDB");
                 SearchManager.getInstance().insertDB();
             }
             List<SearchBean> beans = db.getData1(searchStr);

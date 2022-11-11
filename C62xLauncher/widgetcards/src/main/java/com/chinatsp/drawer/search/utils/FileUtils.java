@@ -103,6 +103,7 @@ public class FileUtils {
      */
     public static SpannableStringBuilder fillColor(Context context,String wholeStr, String[] keyStr, int keyStrColor) {
         if (!TextUtils.isEmpty(wholeStr) ) {
+
             SpannableStringBuilder spBuilder = new SpannableStringBuilder(wholeStr);
             for(int i = 0;i<keyStr.length;i++){
                 CharacterStyle charaStyle = new ForegroundColorSpan(context.getResources().getColor(keyStrColor));
@@ -147,5 +148,23 @@ public class FileUtils {
             times++;
             isClosed = manager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
         }
+    }
+    /**
+     * 判断str1中包含str2的个数
+     * @param str1
+     * @param str2
+     * @return counter
+     */
+    private static int counter = 0;
+    public static int countStr(String str1, String str2) {
+        if (str1.indexOf(str2) == -1) {
+            return 0;
+        } else if (str1.indexOf(str2) != -1) {
+            counter++;
+            countStr(str1.substring(str1.indexOf(str2) +
+                    str2.length()), str2);
+            return counter;
+        }
+        return 0;
     }
 }

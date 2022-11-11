@@ -93,7 +93,7 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
     }
 
     private fun initViewsDisplay() {
-        if (VcuUtils.isCareLevel(Level.LEVEL5, Level.LEVEL5_2, expect = true)) {
+        if (VcuUtils.isCareLevel(Level.LEVEL5, expect = true)) {
             binding.soundLoudnessControl.visibility = View.GONE
             binding.line7.visibility = View.GONE
         }

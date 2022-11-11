@@ -558,14 +558,17 @@ enum class SwitchNode(
      *        0x0: Inactive; 0x1: On; 0x2: Off; 0x3: Reserved
      * 一个是HMA_ON_OFF_REQ，一个是AVN_HMA_ON_OFF_STS，
      */
-    ADAS_HMA(//向产品确认值
+    ADAS_HMA(
         get = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_HMA_STATUS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HMA_ON_OFF_SWT),
-        //0x3, 0x4, 0x5 为置灰且进界面需要弹窗提示（未实现）
         inactive = intArrayOf(0x3, 0x4, 0x5, 0x6, 0x7),
         default = false,
         careOn = false
-    ),
+    ) {
+        override fun isPopWindow(value: Int): Boolean {
+            return 0x3 == value
+        }
+    },
 
     /**
      * 驾驶辅助--侧后辅助--开门预警 DOW
@@ -582,11 +585,11 @@ enum class SwitchNode(
         inactive = intArrayOf(0x0, 0x2, 0x4, 0x5, 0x6, 0x7),
         default = true,
         careOn = false
-    ){
-         override fun isPopWindow(value: Int): Boolean {
+    ) {
+        override fun isPopWindow(value: Int): Boolean {
             return 0x4 == value
         }
-     },
+    },
 
     /**
      * 驾驶辅助--侧后辅助--盲区监测 BSD
@@ -846,7 +849,7 @@ enum class SwitchNode(
         get = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_EXTERIOR_LAMP_SWITCH),
         set = Norm(on = 0x1, off = 0x2, signal = -1),
         default = false
-    ){
+    ) {
         override fun isActive(value: Int): Boolean {
             return value in 0..3
         }
@@ -855,7 +858,7 @@ enum class SwitchNode(
 
             return 0x2 == value || 0x3 == value
         }
-     },
+    },
 
     INVALID(
         get = Norm(on = 0x1, off = 0x0, signal = -1),
@@ -879,5 +882,5 @@ enum class SwitchNode(
 
     open fun isOn(value: Int) = if (careOn) get.on == value else get.off != value
 
-    open fun isPopWindow(value: Int) =  (0X4 == value)
+    open fun isPopWindow(value: Int) = (0X4 == value)
 }

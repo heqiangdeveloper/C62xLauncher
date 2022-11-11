@@ -103,7 +103,7 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
     }
 
     private fun initViewsDisplay() {
-        if (VcuUtils.isCareLevel(Level.LEVEL5, Level.LEVEL5_2, expect = true)) {
+        if (VcuUtils.isCareLevel(Level.LEVEL5, expect = true)) {
             binding.soundLoudnessControlCompensation.visibility = View.VISIBLE
             binding.line3.visibility = View.VISIBLE
         }

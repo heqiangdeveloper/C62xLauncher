@@ -1,4 +1,4 @@
-package com.common.animationlib;
+package com.chinatsp.vehicle.settings.widget;
 
 import android.content.Context;
 import android.content.res.XmlResourceParser;

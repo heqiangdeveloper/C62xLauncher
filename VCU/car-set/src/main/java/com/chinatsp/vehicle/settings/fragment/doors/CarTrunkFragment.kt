@@ -17,7 +17,7 @@ import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CarTrunkFragmentBinding
 import com.chinatsp.vehicle.settings.vm.accress.SternDoorViewModel
-import com.common.animationlib.AnimationDrawable
+import com.chinatsp.vehicle.settings.widget.AnimationDrawable
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.picker.ArcSeekBar

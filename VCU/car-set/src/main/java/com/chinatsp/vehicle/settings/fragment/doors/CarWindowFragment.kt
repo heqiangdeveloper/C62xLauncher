@@ -12,10 +12,9 @@ import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.ISwitchAction
 import com.chinatsp.vehicle.settings.R
-import com.chinatsp.vehicle.settings.ShellUtils
 import com.chinatsp.vehicle.settings.databinding.CarWindowFragmentBinding
 import com.chinatsp.vehicle.settings.vm.accress.WindowViewModel
-import com.common.animationlib.AnimationDrawable
+import com.chinatsp.vehicle.settings.widget.AnimationDrawable
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.popupwindow.PopWindow

@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.os.Handler;
+import android.util.Log;
 
 import com.chinatsp.drawer.bean.SearchBean;
 import com.chinatsp.drawer.search.db.SearchDB;
@@ -36,6 +38,8 @@ public class SearchManager {
         public static SearchManager manager = new SearchManager();
     }
 
+    private static final String TAG = "SearchManager";
+
     public static SearchManager getInstance() {
         return SearchManager.Holder.manager;
     }
@@ -63,9 +67,14 @@ public class SearchManager {
                 //删除之前数据库
                 db.deleteLocation();
                 //插入数据库
+                Log.d(TAG, "add insertDB");
                 insertDB();
             }
         } else {
+            Log.d(TAG, "NO tab insertDB");
+            if (!db.isTableExist()) {
+                db.createSearchTable();
+            }
             insertDB();
         }
     }
@@ -99,9 +108,7 @@ public class SearchManager {
     );
 
     /**
-     * 得到最完整的桌面应用、剔除不在桌面的应用
-     *
-     * @return
+     * @return 得到最完整的桌面应用、剔除不在桌面的应用
      */
     private List<SearchBean> getDesktopList() {
         List<SearchBean> list = new ArrayList<>();
@@ -133,13 +140,11 @@ public class SearchManager {
         searchBean.setIntentAction("com.chinatsp.appmanagement");
         if (FileUtils.getLanguage() == 1) {
             searchBean.setChineseFunction("应用管理");
-            searchBean.setEnglishFunction("Application management");
         } else {
             searchBean.setChineseFunction("");
-            searchBean.setEnglishFunction("Application management");
         }
         searchBean.setChineseFunctionLevel("");
-        searchBean.setEnglishFunction("");
+        searchBean.setEnglishFunction("Application management");
         searchBean.setEnglishFunctionLevel("");
         searchBean.setIntentInterface("");
         searchBean.setCarVersion("");
@@ -152,14 +157,18 @@ public class SearchManager {
      * 插入数据库
      */
     public void insertDB() {
-        JsonParser parser = new JsonParser();
-        JsonObject jsonObject = parser.parse(FileUtils.getFromAssets(mContext, "search_data.json")).getAsJsonObject();
-        List<SearchBean> searchBeanList = new ArrayList<>();
-        searchBeanList.addAll(getDesktopList());
-        searchBeanList.addAll(FileUtils.stringToList(jsonObject.get("Keywords").toString(), SearchBean.class));
-        for (int i = 0; i < searchBeanList.size(); i++) {
-            db.insertSearch(searchBeanList.get(i));//循环插入数据库
-        }
+        int EXPAND_ANIM_DURATION = 200;
+        new Handler().postDelayed(() -> {
+            // 此处延迟,是为了等待清空表的时候在插入，避免奔溃
+            JsonParser parser = new JsonParser();
+            JsonObject jsonObject = parser.parse(FileUtils.getFromAssets(mContext, "search_data.json")).getAsJsonObject();
+            List<SearchBean> searchBeanList = new ArrayList<>();
+            searchBeanList.addAll(getDesktopList());
+            searchBeanList.addAll(FileUtils.stringToList(jsonObject.get("Keywords").toString(), SearchBean.class));
+            for (int i = 0; i < searchBeanList.size(); i++) {
+                db.insertSearch(searchBeanList.get(i));//循环插入数据库
+            }
+        }, EXPAND_ANIM_DURATION);
     }
 
     private void registerAppInstallBroadcast() {
@@ -175,6 +184,6 @@ public class SearchManager {
      * 删除数据库数据
      */
     public void deleteDB() {
-        db.deleteLocation();//循环插入数据库
+        db.deleteLocation();
     }
 }

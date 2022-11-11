@@ -4,12 +4,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.chinatsp.drawer.bean.SearchBean;
 import com.chinatsp.drawer.bean.SearchHistoricalBean;
 import com.chinatsp.drawer.search.utils.FileUtils;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,13 +74,45 @@ public class SearchDB extends SQLiteOpenHelper {
         db.execSQL(sql_search_english);
     }
 
+    public void createSearchTable() {
+        if (FileUtils.getLanguage() == 1) {
+            String sql_location = "CREATE TABLE " + SEARCH_TABLE + "(" +
+                    //ID + " INTEGER PRIMARY KEY autoincrement," +
+                    MODELNAME + " text," +
+                    CHINESEFUNCTION + " text," +
+                    CHINESEFUNCTIONLEVEL + " text," +
+                    ENGLISHFUNCTION + " text," +
+                    ENGLISHFUNCTIONLEVEL + " text," +
+                    INTENTACTION + " text," +
+                    INTENTINTERFACE + " text," +
+                    DATAVERSION + " text," +
+                    CARVERSION + " text" +
+                    ")";
+            db.execSQL(sql_location);
+        } else {
+            String sql_search_english = "CREATE TABLE " + SEARCH_TABLE_ENGLISH + "(" +
+                    //ID + " INTEGER PRIMARY KEY autoincrement," +
+                    MODELNAME + " text," +
+                    CHINESEFUNCTION + " text," +
+                    CHINESEFUNCTIONLEVEL + " text," +
+                    ENGLISHFUNCTION + " text," +
+                    ENGLISHFUNCTIONLEVEL + " text," +
+                    INTENTACTION + " text," +
+                    INTENTINTERFACE + " text," +
+                    DATAVERSION + " text," +
+                    CARVERSION + " text" +
+                    ")";
+            db.execSQL(sql_search_english);
+        }
+    }
+
     //判断表是否存在
     public boolean isTableExist() {
         boolean isTableExist = true;
         String table;
-        if(FileUtils.getLanguage() ==1){
+        if (FileUtils.getLanguage() == 1) {
             table = SEARCH_TABLE;
-        }else{
+        } else {
             table = SEARCH_TABLE_ENGLISH;
         }
         //sqlite_master是sqlite系统表
@@ -116,9 +148,9 @@ public class SearchDB extends SQLiteOpenHelper {
     public int countLocation() {
         int count = 0;
         String table;
-        if(FileUtils.getLanguage() ==1){
+        if (FileUtils.getLanguage() == 1) {
             table = SEARCH_TABLE;
-        }else{
+        } else {
             table = SEARCH_TABLE_ENGLISH;
         }
         if (isTableExist()) {
@@ -137,9 +169,9 @@ public class SearchDB extends SQLiteOpenHelper {
      */
     public List<SearchBean> getData() {
         String table;
-        if(FileUtils.getLanguage() ==1){
+        if (FileUtils.getLanguage() == 1) {
             table = SEARCH_TABLE;
-        }else{
+        } else {
             table = SEARCH_TABLE_ENGLISH;
         }
         List<SearchBean> data = new ArrayList<>();
@@ -186,13 +218,13 @@ public class SearchDB extends SQLiteOpenHelper {
         String table;
         String language;
         List<SearchBean> data = new ArrayList<>();
-        if (str.contains("%")){
+        if (str.contains("%")) {
             return data;
         }
-        if(FileUtils.getLanguage() ==1){
+        if (FileUtils.getLanguage() == 1) {
             table = SEARCH_TABLE;
             language = CHINESEFUNCTION;
-        }else{
+        } else {
             table = SEARCH_TABLE_ENGLISH;
             language = ENGLISHFUNCTION;
         }
@@ -263,13 +295,6 @@ public class SearchDB extends SQLiteOpenHelper {
             cursor.close();
         } catch (Exception e) {
             Log.d(TAG, "read db exception");
-            //deleteLocation();//删除数据库
-            //将读取的数据库中的数据打印
-           /* for (SearchHistoricalBean searchBean : lists) {
-                searchBean.printLog();
-            }
-            lists.clear();
-            data.clear();*/
         }
 
         return data;
@@ -280,26 +305,34 @@ public class SearchDB extends SQLiteOpenHelper {
         if (searchBean == null) {
             return;
         }
+        //判断download表是否存在
+        if (!isTableExist()) {
+            createSearchTable();
+        }
         String table;
-        if(FileUtils.getLanguage() ==1){
+        if (FileUtils.getLanguage() == 1) {
             table = SEARCH_TABLE;
-        }else{
+        } else {
             table = SEARCH_TABLE_ENGLISH;
         }
-        String sql = "INSERT into " + table + "(" +
-                MODELNAME + "," +
-                CHINESEFUNCTION + "," +
-                CHINESEFUNCTIONLEVEL + "," +
-                ENGLISHFUNCTION + "," +
-                ENGLISHFUNCTIONLEVEL + "," +
-                INTENTACTION + "," +
-                INTENTINTERFACE + "," +
-                DATAVERSION + "," +
-                CARVERSION + ")" +
-                " values(?,?,?,?,?,?,?,?,?)";
-        db.execSQL(sql, new Object[]{searchBean.getModelName(), searchBean.getChineseFunction(), searchBean.getChineseFunctionLevel(),
-                searchBean.getEnglishFunction(), searchBean.getEnglishFunctionLevel(), searchBean.getIntentAction(), searchBean.getIntentInterface(),
-                searchBean.getDataVersion(), searchBean.getCarVersion()});
+        try {
+            String sql = "INSERT into " + table + "(" +
+                    MODELNAME + "," +
+                    CHINESEFUNCTION + "," +
+                    CHINESEFUNCTIONLEVEL + "," +
+                    ENGLISHFUNCTION + "," +
+                    ENGLISHFUNCTIONLEVEL + "," +
+                    INTENTACTION + "," +
+                    INTENTINTERFACE + "," +
+                    DATAVERSION + "," +
+                    CARVERSION + ")" +
+                    " values(?,?,?,?,?,?,?,?,?)";
+            db.execSQL(sql, new Object[]{searchBean.getModelName(), searchBean.getChineseFunction(), searchBean.getChineseFunctionLevel(),
+                    searchBean.getEnglishFunction(), searchBean.getEnglishFunctionLevel(), searchBean.getIntentAction(), searchBean.getIntentInterface(),
+                    searchBean.getDataVersion(), searchBean.getCarVersion()});
+        } catch (Exception e) {
+            Log.d(TAG, "SEARCH insert db exception: " + e);
+        }
     }
 
     /**
@@ -311,16 +344,20 @@ public class SearchDB extends SQLiteOpenHelper {
         if (bean == null) {
             return;
         }
-        if (!isTableHistoricalExist()) {
-            String sql_historical = "CREATE TABLE " + SEARCH_HISTORICAL_TABLE + "(" +
-                    CONTENT + " text" +
-                    ")";
-            db.execSQL(sql_historical);
+        try {
+            if (!isTableHistoricalExist()) {
+                String sql_historical = "CREATE TABLE " + SEARCH_HISTORICAL_TABLE + "(" +
+                        CONTENT + " text" +
+                        ")";
+                db.execSQL(sql_historical);
+            }
+            String sql = "INSERT into " + SEARCH_HISTORICAL_TABLE + "(" +
+                    CONTENT + ")" +
+                    " values(?)";
+            db.execSQL(sql, new Object[]{bean});
+        } catch (Exception e) {
+            Log.d(TAG, "historical db exception");
         }
-        String sql = "INSERT into " + SEARCH_HISTORICAL_TABLE + "(" +
-                CONTENT + ")" +
-                " values(?)";
-        db.execSQL(sql, new Object[]{bean});
     }
 
     /*
@@ -328,9 +365,9 @@ public class SearchDB extends SQLiteOpenHelper {
      */
     public synchronized void deleteLocation() {
         String table;
-        if(FileUtils.getLanguage() ==1){
+        if (FileUtils.getLanguage() == 1) {
             table = SEARCH_TABLE;
-        }else{
+        } else {
             table = SEARCH_TABLE_ENGLISH;
         }
         String sql = "delete from " + table;

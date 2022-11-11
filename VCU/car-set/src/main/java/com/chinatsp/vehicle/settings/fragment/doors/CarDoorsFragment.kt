@@ -14,7 +14,7 @@ import com.chinatsp.vehicle.settings.IOptionAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CarDoorsFragmentBinding
 import com.chinatsp.vehicle.settings.vm.DoorsViewModel
-import com.common.animationlib.AnimationDrawable
+import com.chinatsp.vehicle.settings.widget.AnimationDrawable
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.tabbar.TabControlView
@@ -60,7 +60,7 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
         if (VcuUtils.isCareLevel(
                 Level.LEVEL3,
                 Level.LEVEL4,
-                Level.LEVEL5_2
+                Level.LEVEL5
             )
         ) {//lv4跟lv5智能钥匙版本有车门智能进入功能
             binding.wheelAutomaticHeating.visibility = View.VISIBLE

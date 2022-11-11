@@ -377,4 +377,5 @@ IACC会优先通过识别⻋道两侧清晰的⻋道线进⾏横向辅助控制�
     <string name="left">左</string>
     <string name="right">右</string>
     <string name="dow_error">开门预警DOW已置灰</string>
+    <string name="hma_error">智能远光灯辅助HMA信号有误</string>
 </resources>

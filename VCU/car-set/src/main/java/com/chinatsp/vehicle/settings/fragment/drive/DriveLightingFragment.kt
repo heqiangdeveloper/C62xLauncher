@@ -125,6 +125,8 @@ class DriveLightingFragment : BaseFragment<CombineViewModel, DriveLightingFragme
         viewModel.hmaValue.observe(this) {
             doUpdateSwitch(SwitchNode.ADAS_HMA, it)
             updateSwitchEnable(SwitchNode.ADAS_HMA)
+            //目前还没有置灰弹窗功能，当UE有的时候在放开此功能
+            //startWidowServer(SwitchNode.ADAS_HMA.isPopWindow(it.enableStatus),R.string.hma_error)
         }
     }
 
