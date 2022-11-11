@@ -586,7 +586,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         iconIv.setScaleType(ImageView.ScaleType.FIT_XY);
         if(mainPosition < mData.size() && subPosition < mData.get(mainPosition).size()){
             if(mData.get(mainPosition).get(subPosition) == null){
-                iconIv.setImageResource(R.drawable.add_app_icon);
+                iconIv.setImageResource(R.drawable.add_app_icon_new);
             }else{
                 if(null == mData.get(mainPosition).get(subPosition).getImgDrawable()){
                     byte[] b = mData.get(mainPosition).get(subPosition).getImgByte();

@@ -232,7 +232,7 @@ public class MyAppFragment extends Fragment {
             if(info == null){//说明是应用管理，特殊处理
                 Log.d(TAG,"command appmanagement");
                 locationBean.setPackageName(AppLists.APPMANAGEMENT);
-                drawable = getResources().getDrawable(R.mipmap.ic_appmanagement);
+                drawable = getResources().getDrawable(R.mipmap.ic_appmanagement_new);
                 locationBean.setName(getResources().getString(R.string.appmanagement_name));
             }else {
                 locationBean.setPackageName(info.activityInfo.packageName);
