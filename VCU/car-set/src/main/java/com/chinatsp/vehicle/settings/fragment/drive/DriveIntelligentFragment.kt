@@ -151,12 +151,15 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
 
         updateSwitchEnable(SwitchNode.ADAS_IACC)
         updateSwitchEnable(SwitchNode.ADAS_LIMBER_LEAVE)
+        updateRadioEnable(RadioNode.ADAS_LIMBER_LEAVE)
     }
 
     private fun addSwitchLiveDataListener() {
         viewModel.cruiseAssistFunction.observe(this) {
             doUpdateSwitch(SwitchNode.ADAS_IACC, it)
             updateSwitchEnable(SwitchNode.ADAS_IACC)
+            updateSwitchEnable(SwitchNode.ADAS_LIMBER_LEAVE)
+            updateRadioEnable(RadioNode.ADAS_LIMBER_LEAVE)
         }
         viewModel.limberLeaveFunction.observe(this) {
             doUpdateSwitch(SwitchNode.ADAS_LIMBER_LEAVE, it)
@@ -175,14 +178,18 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
     override fun obtainActiveByNode(node: SwitchNode): Boolean {
         return when (node) {
             SwitchNode.ADAS_IACC -> viewModel.cruiseAssistFunction.value?.enable() ?: false
-            SwitchNode.ADAS_LIMBER_LEAVE -> viewModel.limberLeaveFunction.value?.enable() ?: false
+            SwitchNode.ADAS_LIMBER_LEAVE -> obtainActiveByNode(SwitchNode.ADAS_IACC)
+                    && binding.accessCruiseCruiseAssist.isChecked
+                    && (viewModel.limberLeaveFunction.value?.enable() ?: false)
             else -> super.obtainActiveByNode(node)
         }
     }
 
     override fun obtainActiveByNode(node: RadioNode): Boolean {
         return when (node) {
-            RadioNode.ADAS_LIMBER_LEAVE -> viewModel.limberLeaveRadio.value?.enable() ?: false
+            RadioNode.ADAS_LIMBER_LEAVE -> obtainActiveByNode(SwitchNode.ADAS_IACC)
+                    && binding.accessCruiseCruiseAssist.isChecked
+                    && (viewModel.limberLeaveRadio.value?.enable() ?: false)
             else -> super.obtainActiveByNode(node)
         }
     }
@@ -220,6 +227,9 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
             } else {
                 dynamicEffect()
             }
+            updateSwitchEnable(SwitchNode.ADAS_IACC)
+            updateSwitchEnable(SwitchNode.ADAS_LIMBER_LEAVE)
+            updateRadioEnable(RadioNode.ADAS_LIMBER_LEAVE)
         }
         binding.adasForwardLeaveSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.ADAS_LIMBER_LEAVE, buttonView, isChecked)
@@ -231,17 +241,11 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
         binding.intelligentCruise.visibility = View.VISIBLE
         if (binding.accessCruiseCruiseAssist.isChecked) {
             binding.intelligentCruise.setImageDrawable(activity?.let {
-                ContextCompat.getDrawable(
-                    it,
-                    R.drawable.intelligent_cruise_open
-                )
+                ContextCompat.getDrawable(it, R.drawable.intelligent_cruise_open)
             })
         } else {
             binding.intelligentCruise.setImageDrawable(activity?.let {
-                ContextCompat.getDrawable(
-                    it,
-                    R.drawable.intelligent_cruise
-                )
+                ContextCompat.getDrawable(it, R.drawable.intelligent_cruise)
             })
         }
     }
@@ -250,10 +254,7 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
         super.onPause()
         binding.intelligentCruise.visibility = View.VISIBLE
         binding.intelligentCruise.setImageDrawable(activity?.let {
-            ContextCompat.getDrawable(
-                it,
-                R.drawable.intelligent_cruise
-            )
+            ContextCompat.getDrawable(it, R.drawable.intelligent_cruise)
         })
         binding.video.pause()
     }

@@ -369,7 +369,6 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
     }
 
     private fun isAmbient(): Boolean {
-        return true
         return frontLighting.get() || backLighting.get()
     }
 
@@ -434,7 +433,7 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
         val callback = parcel.callback
         val modelName = command.slots?.name ?: "氛围灯"
         if (!isAmbient()) {
-            command.message = "${modelName}未开启，暂无法调整${modelName}亮度"
+            command.message = "${modelName}未开启，暂无法调整${modelName}亮度, 请您先打开$modelName"
             callback?.onCmdHandleResult(command)
             return
         }

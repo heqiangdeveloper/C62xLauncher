@@ -882,5 +882,6 @@ enum class SwitchNode(
 
     open fun isOn(value: Int) = if (careOn) get.on == value else get.off != value
 
-    open fun isPopWindow(value: Int) = (0X4 == value)
+    open fun isPopWindow(value: Int) = false
+
 }

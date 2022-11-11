@@ -337,11 +337,14 @@ object AirController : IController {
         }
         var action = Action.VOID
         var command: AirCmd? = null
+        var step = 1
         if (!isLikeJson(value)) {
             if ((PLUS == value) || (PLUS_MORE == value) || (PLUS_LITTLE == value)) {
                 action = Action.PLUS
+                step = checkoutStep(value)
             } else if ((MINUS == value) || (MINUS_MORE == value) || (MINUS_LITTLE == value)) {
                 action = Action.MINUS
+                step = checkoutStep(value)
             } else if (MIN == value) {
                 action = Action.MIN
             } else if (MAX == value) {
@@ -350,7 +353,7 @@ object AirController : IController {
             if (Action.VOID != action) {
                 command = AirCmd(action = action)
                 command.slots = slots
-                command.step = checkoutStep(value)
+                command.step = step
                 command.air = IAir.AIR_TEMP
                 command.part = obtainDirection(slots.direction)
             }
@@ -369,12 +372,13 @@ object AirController : IController {
                 if ("-" == rule) {
                     action = Action.MINUS
                 }
+                step = offset
             }
             if (Action.VOID != action) {
                 command = AirCmd(action = action)
                 command.slots = slots
                 command.value = offset
-                command.step = checkoutStep(value)
+                command.step = step
                 command.air = IAir.AIR_TEMP
                 command.part = obtainDirection(slots.direction)
             }
@@ -389,11 +393,14 @@ object AirController : IController {
         }
         var action = Action.VOID
         var command: AirCmd? = null
+        var step = 1
         if (!isLikeJson(value)) {
             if ((PLUS == value) || (PLUS_MORE == value) || (PLUS_LITTLE == value)) {
                 action = Action.PLUS
+                step = checkoutStep(value)
             } else if ((MINUS == value) || (MINUS_MORE == value) || (MINUS_LITTLE == value)) {
                 action = Action.MINUS
+                step = checkoutStep(value)
             } else if (MIN == value) {
                 action = Action.MIN
             } else if (MAX == value) {
@@ -402,7 +409,7 @@ object AirController : IController {
             if (Action.VOID != action) {
                 command = AirCmd(action = action)
                 command.slots = slots
-                command.step = checkoutStep(value)
+                command.step = step
                 command.air = IAir.AIR_WIND
                 command.part = obtainDirection(slots.direction)
             }
@@ -413,6 +420,7 @@ object AirController : IController {
             if (REF_ZERO == consult) {
                 action = Action.FIXED
             } else if (REF_CUR == consult) {
+                step = offset
                 val rule = json.getString("direct")
                 if ("+" == rule) {
                     action = Action.PLUS
@@ -425,7 +433,7 @@ object AirController : IController {
                 command = AirCmd(action = action)
                 command.slots = slots
                 command.value = offset
-                command.step = checkoutStep(value)
+                command.step = step
                 command.air = IAir.AIR_WIND
                 command.part = obtainDirection(slots.direction)
             }

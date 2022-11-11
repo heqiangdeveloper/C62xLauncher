@@ -319,7 +319,7 @@ enum class RadioNode(
 
     ICM_VOLUME_LEVEL(
         get = RNorm(values = intArrayOf(0x3, 0x2, 0x1), origin = Origin.MCU,
-            signal = CarMcuManager.ID_AUDIO_VOL_INFO),
+            signal = CarMcuManager.ID_AUDIO_VOL_SETTING_INFO),
         set = RNorm(values = intArrayOf(0x3, 0x2, 0x1), origin = Origin.MCU,
             signal = CarMcuManager.ID_AUDIO_VOL_INFO),
         def = 0x3
@@ -423,8 +423,7 @@ enum class RadioNode(
         get = RNorm(values = intArrayOf(200, 500, 1000, 2000), signal = -1),
         set = RNorm(values = intArrayOf(200, 500, 1000, 2000), signal = -1),
         def = 200
-    )
-    ;
+    );
 
     open fun isValid(value: Int, isGet: Boolean = true): Boolean {
         return if (isGet) {

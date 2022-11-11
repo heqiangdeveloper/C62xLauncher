@@ -103,6 +103,7 @@ class AmbientCommandProducer : ICommandProducer {
             val jsonObject = JSONObject(value)
             val consult = jsonObject.getString("ref")
             if (Keywords.REF_CUR == consult) {
+                val offset = jsonObject.getInt("offset")
                 val rule = jsonObject.getString("direct")
                 action = when (rule) {
                     "+" -> Action.PLUS
@@ -111,6 +112,7 @@ class AmbientCommandProducer : ICommandProducer {
                 }
                 if (Action.VOID != action) {
                     command = CarCmd(action = action, model = Model.LIGHT_AMBIENT)
+                    command.step = offset
                 }
             } else if (Keywords.REF_ZERO == consult) {
                 val offset = jsonObject.getInt("offset")
@@ -163,7 +165,7 @@ class AmbientCommandProducer : ICommandProducer {
     }
 
     private fun obtainActionPair(value: String): Pair<Int, Int> {
-        val step = 2
+        var step = 1
         var action = Action.VOID
         do {
             if (MIN == value) {
@@ -176,10 +178,12 @@ class AmbientCommandProducer : ICommandProducer {
             }
             if (PLUS_MORE == value) {
                 action = Action.PLUS
+                step = 2
                 break
             }
             if (MINUS_MORE == value) {
                 action = Action.MINUS
+                step = 2
                 break
             }
             if ((PLUS == value) || (PLUS_LITTLE == value)) {

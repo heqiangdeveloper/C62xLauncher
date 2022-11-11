@@ -146,7 +146,10 @@ class SeatCommandProducer : ICommandProducer {
         }
         var value = -1
         var action = Action.VOID
-        val pair = attemptCreatePair(slots.nameValue?.toString())
+        var pair = attemptCreatePair(slots.nameValue?.toString())
+        if (null == pair) {
+            pair = attemptCreatePair(slots.temperature?.toString())
+        }
         if (null != pair) {
             action = pair.first
             value = pair.second

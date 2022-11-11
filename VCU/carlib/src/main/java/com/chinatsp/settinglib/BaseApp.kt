@@ -1,6 +1,7 @@
 package com.chinatsp.settinglib
 
 import android.app.Application
+import android.content.Intent
 import android.os.Handler
 import kotlin.properties.Delegates
 
@@ -20,6 +21,11 @@ open class BaseApp : Application() {
     override fun onCreate() {
         super.onCreate()
         TestReceiver().register(context = applicationContext)
+    }
+
+    fun sendBroadcast(action: String) {
+        val intent = Intent(action)
+        sendBroadcast(intent)
     }
 
     companion object {

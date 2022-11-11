@@ -39,14 +39,8 @@ interface IRadioManager : IManager {
         Timber.e("onRadioChanged but value is not Int! node:$node, id:${p.propertyId}")
     }
 
-    fun onRadioChanged(node: RadioNode, atomic: RadioState, intArray: IntArray) {
-        val isCore = 0x1F == intArray[0]
-        if (isCore) {
-            val value = intArray[1]
-            Timber.d("onRadioChanged ------ node:$node, value:$value")
-            onRadioChanged(node, atomic, value, this::doUpdateRadioValue, this::doOptionChanged)
-            return
-        }
+    fun onRadioChanged(node: RadioNode, atomic: RadioState, value: Int) {
+        onRadioChanged(node, atomic, value, this::doUpdateRadioValue, this::doOptionChanged)
     }
 
     fun onRadioChanged(

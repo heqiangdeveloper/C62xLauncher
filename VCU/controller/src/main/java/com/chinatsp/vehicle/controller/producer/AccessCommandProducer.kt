@@ -9,6 +9,7 @@ import com.chinatsp.vehicle.controller.annotation.Model
 import com.chinatsp.vehicle.controller.bean.CarCmd
 import com.chinatsp.vehicle.controller.semantic.Slots
 import com.chinatsp.vehicle.controller.utils.Keywords
+import java.util.*
 import java.util.regex.Pattern
 
 /**
@@ -48,6 +49,17 @@ class AccessCommandProducer : ICommandProducer {
             part = part or IPart.TAIL
             action = obtainSwitchAction(slots.operation)
         }
+        if (IPart.VOID == part) {
+            LogManager.e("attemptDoorCommand================text:${slots.text}")
+            if (isContains(slots.text, Keywords.HOODS)) {
+                part = part or IPart.HEAD
+                action = obtainSwitchAction(slots.operation)
+            } else if (isContains(slots.text, Keywords.TRUNKS)) {
+                part = part or IPart.TAIL
+                action = obtainSwitchAction(slots.operation)
+            }
+        }
+
         if (Action.VOID != action) {
             val command = CarCmd(action = action, model = Model.ACCESS_STERN)
             command.slots = slots

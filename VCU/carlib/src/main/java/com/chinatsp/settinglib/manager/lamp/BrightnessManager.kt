@@ -252,13 +252,18 @@ class BrightnessManager : BaseManager(), IProgressManager, ISwitchManager {
 
     private fun doSwitchLightDarkMode(dark: Boolean) {
         val progress = Progress.HOST_SCREEN_BRIGHTNESS
-        val screenLevel = if (dark) {
-            VcuUtils.getInt(key = Constant.DARK_BRIGHTNESS_LEVEL, value = progress.min)
+        val action: String
+        val screenLevel: Int
+        if (dark) {
+            action = "net.easyconn.navi.night"
+            screenLevel = VcuUtils.getInt(key = Constant.DARK_BRIGHTNESS_LEVEL, value = progress.min)
         } else {
-            VcuUtils.getInt(key = Constant.LIGHT_BRIGHTNESS_LEVEL, value = progress.def)
+            action = "net.easyconn.navi.daytime"
+            screenLevel = VcuUtils.getInt(key = Constant.LIGHT_BRIGHTNESS_LEVEL, value = progress.def)
         }
         Timber.e("DARK_LIGHT_MODE doSwitchLightDarkMode dark:$dark, screenLevel:$screenLevel")
         doSetVolume(progress, screenLevel)
+        BaseApp.instance.sendBroadcast(action)
     }
 
     fun initDarkLightMode() {

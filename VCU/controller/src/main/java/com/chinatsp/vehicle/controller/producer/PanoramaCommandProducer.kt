@@ -19,7 +19,7 @@ class PanoramaCommandProducer : ICommandProducer {
 
     fun attemptCreateCommand(slots: Slots): CarCmd? {
         var command: CarCmd? = null
-        if (!slots.text.contains("倒车")) {
+        if (!slots.text.contains("倒车") && !slots.text.contains("泊车")) {
             if (null == command) {
                 command = attemptSwitchCommand(slots)
             }

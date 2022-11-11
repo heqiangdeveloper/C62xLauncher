@@ -1,7 +1,6 @@
 package com.chinatsp.settinglib.manager.sound
 
 import android.car.hardware.CarPropertyValue
-import android.car.hardware.mcu.CarMcuManager
 import android.car.media.CarAudioManager
 import android.content.ContentUris
 import android.database.ContentObserver
@@ -52,11 +51,12 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
     override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
             val mcuSet = HashSet<Int>().apply {
-                /**【反馈】返回设置音源音量信息*/
-//                add(CarMcuManager.ID_AUDIO_VOL_SETTING_INFO)
                 if (VcuUtils.isAmplifier) {
                     add(SwitchNode.SPEED_VOLUME_OFFSET_INSERT.get.signal)
                 }
+                /**【反馈】返回设置音源音量信息*/
+//                add(CarMcuManager.ID_AUDIO_VOL_SETTING_INFO)
+                add(RadioNode.ICM_VOLUME_LEVEL.get.signal)
             }
             put(Origin.MCU, mcuSet)
             val cabinSet = HashSet<Int>().apply {
@@ -69,7 +69,6 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
                 }
                 add(SwitchNode.AUDIO_SOUND_LOUDNESS.get.signal)
 
-                add(RadioNode.ICM_VOLUME_LEVEL.get.signal)
                 add(RadioNode.NAVI_AUDIO_MIXING.get.signal)
                 add(RadioNode.SPEED_VOLUME_OFFSET.get.signal)
             }
@@ -144,8 +143,8 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         val node = RadioNode.ICM_VOLUME_LEVEL
         RadioState(node.def).apply {
             val array = readIntArray(node)
-            if (array.size >= 2 && 0x1F == array[0]) {
-                val value = array[1]
+            val value = pickIndexValue(array, 4)
+            if (null != value) {
                 doUpdateRadioValue(node, this, value)
             }
         }
@@ -191,61 +190,41 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         get() = object : ContentObserver(BaseApp.instance.mainHandler) {
             override fun onChange(selfChange: Boolean, uri: Uri?) {
                 super.onChange(selfChange, uri)
-                uri?.let {
-                    val parseId = ContentUris.parseId(uri)
-                    when (parseId) {
-                        0L -> {
-                            Timber.d("navi")
-                            val progress = Progress.NAVI
-                            doUpdateProgress(
-                                naviVolume,
-                                getVolumePosition(progress),
-                                true,
-                                instance::doProgressChanged
-                            )
-                        }
-                        1L -> {
-                            Timber.d("media")
-                            val progress = Progress.MEDIA
-                            doUpdateProgress(
-                                mediaVolume,
-                                getVolumePosition(progress),
-                                true,
-                                instance::doProgressChanged
-                            )
-                        }
-                        2L -> {
-                            Timber.d("phone")
-                            val progress = Progress.PHONE
-                            doUpdateProgress(
-                                phoneVolume,
-                                getVolumePosition(progress),
-                                true,
-                                instance::doProgressChanged
-                            )
-                        }
-                        3L -> {
-                            Timber.d("tts")
-                            val progress = Progress.VOICE
-                            doUpdateProgress(
-                                voiceVolume,
-                                getVolumePosition(progress),
-                                true,
-                                instance::doProgressChanged
-                            )
-                        }
-                        4L -> {
-                            Timber.d("cruise")
-                            val progress = Progress.SYSTEM
-                            doUpdateProgress(
-                                systemVolume,
-                                getVolumePosition(progress),
-                                true,
-                                instance::doProgressChanged
-                            )
-                        }
-                        else -> {}
+                if (null == uri) {
+                    return
+                }
+                when (ContentUris.parseId(uri)) {
+                    0L -> {
+                        Timber.d("navi")
+                        val progress = Progress.NAVI
+                        val method = instance::doProgressChanged
+                        doUpdateProgress(naviVolume, obtainVolume(progress), true, method)
                     }
+                    1L -> {
+                        Timber.d("media")
+                        val progress = Progress.MEDIA
+                        val method = instance::doProgressChanged
+                        doUpdateProgress(mediaVolume, obtainVolume(progress), true, method)
+                    }
+                    2L -> {
+                        Timber.d("phone")
+                        val progress = Progress.PHONE
+                        val method = instance::doProgressChanged
+                        doUpdateProgress(phoneVolume, obtainVolume(progress), true, method)
+                    }
+                    3L -> {
+                        Timber.d("tts")
+                        val progress = Progress.VOICE
+                        val method = instance::doProgressChanged
+                        doUpdateProgress(voiceVolume, obtainVolume(progress), true, method)
+                    }
+                    4L -> {
+                        Timber.d("cruise")
+                        val progress = Progress.SYSTEM
+                        val method = instance::doProgressChanged
+                        doUpdateProgress(systemVolume, obtainVolume(progress), true, method)
+                    }
+                    else -> {}
                 }
             }
         }
@@ -275,10 +254,22 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         return true
     }
 
+    private fun pickIndexValue(array: IntArray, index: Int): Int? {
+        if (index in array.indices) {
+            return array[index]
+        }
+        return null
+    }
+
     override fun onMcuPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
-            CarMcuManager.ID_AUDIO_VOL_SETTING_INFO -> {
-                onMcuVolumeChanged(property)
+            RadioNode.ICM_VOLUME_LEVEL.get.signal -> {
+//                onMcuVolumeChanged(property)
+                val array = (property.value as Array<*>).map { it as Int }.toIntArray()
+                val value = pickIndexValue(array, 4)
+                if (null != value) {
+                    onRadioChanged(RadioNode.ICM_VOLUME_LEVEL, icmVolumeLevel, value)
+                }
             }
             volumeSpeedSwitch.get.signal -> {
                 val value = property.value
@@ -300,24 +291,22 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
     }
 
     private fun initVolume(type: Progress): Volume {
-        var pos = getVolumePosition(type)
+        var pos = obtainVolume(type)
         val max = getVolumeMaximum(type)
         if (pos < type.min) pos = type.min
         if (pos > max) pos = max
         return Volume(type, type.min, max, pos)
     }
 
-    private fun onMcuVolumeChanged(property: CarPropertyValue<*>) {
-        property.value?.let {
-            if ((it is Array<*>) && (it.size >= 5)) {
-                updateVolumePosition(mediaVolume, it.elementAt(0) as Int)
-                updateVolumePosition(phoneVolume, it.elementAt(1) as Int)
-                updateVolumePosition(voiceVolume, it.elementAt(2) as Int)
-                updateVolumePosition(naviVolume, it.elementAt(3) as Int)
-                updateVolumePosition(systemVolume, it.elementAt(4) as Int)
-                Timber.d("return volume media:${it[0]}, phone:${it[1]}, voice:${it[2]}, navi:${it[3]}, system:${it[4]}")
-                onMcuVolumeChanged()
-            }
+    private fun onMcuVolumeChanged(values: IntArray) {
+        if (6 == values.size) {
+            updateVolumePosition(mediaVolume, values[0])
+            updateVolumePosition(phoneVolume, values[1])
+            updateVolumePosition(systemVolume, values[2])
+            updateVolumePosition(naviVolume, values[3])
+            updateVolumePosition(voiceVolume, values[5])
+            Timber.d("return volume media:${values[0]}, phone:${values[1]}, voice:${values[5]}, navi:${values[3]}, system:${values[2]}")
+            onMcuVolumeChanged()
         }
     }
 
@@ -452,32 +441,18 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
             RadioNode.NAVI_AUDIO_MIXING.get.signal -> {
                 onRadioChanged(RadioNode.NAVI_AUDIO_MIXING, naviAudioMixing, property)
             }
-            RadioNode.ICM_VOLUME_LEVEL.get.signal -> {
-                val aa = property.value
-                Timber.e("-----------aa-${aa.javaClass.name}")
-                onRadioChanged(RadioNode.ICM_VOLUME_LEVEL, icmVolumeLevel, property.value as IntArray)
-            }
             else -> {}
         }
     }
 
+
     override fun doGetVolume(type: Progress): Volume? {
         return when (type) {
-            Progress.NAVI -> {
-                naviVolume
-            }
-            Progress.VOICE -> {
-                voiceVolume
-            }
-            Progress.MEDIA -> {
-                mediaVolume
-            }
-            Progress.PHONE -> {
-                phoneVolume
-            }
-            Progress.SYSTEM -> {
-                systemVolume
-            }
+            Progress.NAVI -> naviVolume
+            Progress.VOICE -> voiceVolume
+            Progress.MEDIA -> mediaVolume
+            Progress.PHONE -> phoneVolume
+            Progress.SYSTEM -> systemVolume
             else -> null
         }
     }
@@ -498,7 +473,7 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    private fun getVolumePosition(type: Progress): Int {
+    private fun obtainVolume(type: Progress): Int {
         try {
             val value = manager?.let {
                 it.getGroupVolume(it.getVolumeGroupIdForUsage(type.get.signal))
@@ -534,7 +509,6 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
 
     private fun switchTouchTone(node: SwitchNode, status: Boolean): Boolean {
         try {
-
             if (node.set.origin == Origin.SPECIAL) {
                 val result = manager?.let {
                     val expect = if (status) node.set.on else node.set.off
