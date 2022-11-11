@@ -64,6 +64,7 @@ public class CardViewCreatorFactory {
 
     private static ICardViewCreator createWeather() {
         return WeatherCardView::new;
+//        return WeatherCardViewTest::new;
     }
 
     private static ICardViewCreator createVideo() {

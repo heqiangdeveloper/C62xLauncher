@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/card_width_large"
+    android:layout_height="@dimen/card_height_large"
+    >
+
+    <ImageView
+        android:id="@+id/ivWeatherBg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/card_weather_bg_default_large" />
+
+    <ImageView
+        android:id="@+id/ivCardWeatherLocation"
+        android:layout_width="@dimen/card_icon_size_lv2"
+        android:layout_height="@dimen/card_icon_size_lv2"
+        android:layout_marginStart="62px"
+        android:layout_marginTop="89px"
+        android:src="@drawable/card_weather_icon_location"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvCardWeatherLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="@color/card_weather_location"
+        android:textSize="@dimen/card_text_size_lv3"
+        app:layout_constraintBottom_toBottomOf="@id/ivCardWeatherLocation"
+        app:layout_constraintStart_toEndOf="@id/ivCardWeatherLocation"
+        app:layout_constraintTop_toTopOf="@id/ivCardWeatherLocation" />
+
+    <TextView
+        android:id="@+id/tvCardWeatherWord"
+        android:layout_width="wrap_content"
+        android:layout_height="48px"
+        android:layout_marginLeft="54px"
+        android:text=""
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_weather_word"
+        app:layout_constraintStart_toEndOf="@id/ivCardWeatherIcon"
+        app:layout_constraintTop_toTopOf="@id/ivCardWeatherIcon" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="272px"
+        android:layout_height="90px"
+        android:layout_marginStart="36px"
+        android:background="@drawable/rect_round_12"
+        app:layout_constraintBottom_toBottomOf="@id/ivCardWeatherIcon"
+        app:layout_constraintStart_toEndOf="@id/ivCardWeatherIcon">
+
+        <TextView
+            android:id="@+id/tvCardWeatherAirValue"
+            android:layout_width="wrap_content"
+            android:layout_height="39px"
+            android:layout_marginLeft="18px"
+            android:layout_marginTop="6px"
+            android:includeFontPadding="false"
+            android:text=""
+            android:textColor="@color/card_weather_pm"
+            android:textSize="34px"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/ivCardWeatherPm"
+            android:layout_width="35px"
+            android:layout_height="35px"
+            android:layout_marginStart="3px"
+            android:src="@drawable/card_weather_icon_pm"
+            app:layout_constraintBottom_toBottomOf="@id/tvCardWeatherAirValue"
+            app:layout_constraintStart_toEndOf="@id/tvCardWeatherAirValue"
+            app:layout_constraintTop_toTopOf="@id/tvCardWeatherAirValue" />
+
+        <TextView
+            android:id="@+id/tvCardWeatherAirDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="29px"
+            android:layout_marginLeft="16px"
+            android:layout_marginTop="15px"
+            android:includeFontPadding="false"
+            android:text="空气质量  "
+            android:textColor="@color/white"
+            android:textSize="22px"
+            app:layout_constraintStart_toEndOf="@id/ivCardWeatherPm"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvCardWeatherPmLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="36px"
+            android:includeFontPadding="false"
+            android:text="车外PM"
+            android:textColor="@color/white"
+            android:textSize="32px"
+            app:layout_constraintStart_toStartOf="@id/tvCardWeatherAirValue"
+            app:layout_constraintTop_toBottomOf="@id/tvCardWeatherAirValue" />
+
+        <TextView
+            android:id="@+id/tvCardWeatherPmLabel2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2px"
+            android:includeFontPadding="false"
+            android:text="2.5"
+            android:textColor="@color/white"
+            android:textSize="24px"
+            app:layout_constraintBaseline_toBaselineOf="@id/tvCardWeatherPmLabel"
+            app:layout_constraintStart_toEndOf="@id/tvCardWeatherPmLabel" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/ivCardWeatherIcon"
+        android:layout_width="@dimen/card_icon_size_weather_sun"
+        android:layout_height="@dimen/card_icon_size_weather_sun"
+        android:layout_marginStart="239px"
+        android:layout_marginTop="117px"
+        android:src="@drawable/weather_icon_sunny"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvCardWeatherTemperature"
+        android:layout_width="145px"
+        android:layout_height="133px"
+        android:gravity="center"
+        android:textSize="114px"
+        android:text="\?"
+        android:textColor="@color/white"
+        android:includeFontPadding="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="77px"
+        android:layout_marginEnd="161px"
+        />
+    <TextView
+        android:layout_width="34px"
+        android:layout_height="37px"
+        android:includeFontPadding="false"
+        android:text="@string/symbol_celsius"
+        android:textColor="@color/white"
+        android:textSize="34px"
+        app:layout_constraintTop_toTopOf="@id/tvCardWeatherTemperature"
+        app:layout_constraintStart_toEndOf="@id/tvCardWeatherTemperature"
+        android:layout_marginTop="14px"
+        />
+
+    <TextView
+        android:id="@+id/tvCardWeatherTemperatureRange"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:includeFontPadding="false"
+        android:text=""
+        android:textColor="@color/white"
+        android:textSize="32px"
+        app:layout_constraintTop_toBottomOf="@id/tvCardWeatherTemperature"
+        app:layout_constraintStart_toStartOf="@id/tvCardWeatherTemperature"
+        app:layout_constraintEnd_toEndOf="@id/tvCardWeatherTemperature"
+        android:layout_marginTop="6px"
+        />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcvCardWeatherWeek"
+        android:layout_width="1012px"
+        android:layout_height="186px"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="61px"
+        android:layout_marginBottom="51px"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

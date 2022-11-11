@@ -27,7 +27,6 @@ public class WeatherRemoteConnector extends BaseRemoteConnector {
                 AsyncSchedule.execute(new Runnable() {
                     @Override
                     public void run() {
-
                         notifyCityList(cityList);
                     }
                 });
@@ -78,9 +77,11 @@ public class WeatherRemoteConnector extends BaseRemoteConnector {
             ((WeatherConnectProxy) mRemoteProxy).requestCityList();
         }
     }
+
     public void requestCityWeather(IOnRequestListener onRequestListener,String city) {
         if (mRemoteProxy instanceof WeatherConnectProxy) {
             ((WeatherConnectProxy) mRemoteProxy).requestByCity(onRequestListener, city);
         }
     }
+
 }

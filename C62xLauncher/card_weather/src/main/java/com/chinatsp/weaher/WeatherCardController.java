@@ -14,11 +14,11 @@ import launcher.base.ipc.IRemoteDataCallback;
 import launcher.base.utils.EasyLog;
 
 public class WeatherCardController {
-    private WeatherCardView mCardView;
+    private IWeatherCardView mCardView;
     private WeatherRepository mWeatherRepository;
     private String TAG = "WeatherCardController ";
 
-    public WeatherCardController(WeatherCardView cardView) {
+    public WeatherCardController(IWeatherCardView cardView) {
         EasyLog.i(TAG, "WeatherCardController init " + hashCode());
         mCardView = cardView;
         mWeatherRepository = WeatherRepository.getInstance();
@@ -28,31 +28,12 @@ public class WeatherCardController {
         requestCityList();
     }
 
-    void requestWeatherInfo() {
-        WeatherUtil.logD(TAG + "requestWeatherInfo");
-        mWeatherRepository.requestRefreshWeatherInfo(new IOnRequestListener<List<WeatherInfo>>() {
-            @Override
-            public void onSuccess(List<WeatherInfo> weatherInfoList) {
-                WeatherUtil.logD("requestWeatherInfo onSuccess");
-                if (weatherInfoList == null || weatherInfoList.isEmpty()) {
-                    mCardView.refreshDefault();
-                } else {
-                    mCardView.refreshData(weatherInfoList);
-                }
-            }
-
-            @Override
-            public void onFail(String msg) {
-                WeatherUtil.logE("requestWeatherInfo onFail: " + msg);
-                if (mCardView != null) {
-                    mCardView.refreshDefault();
-                }
-            }
-        });
-    }
-
     void requestCityList() {
         WeatherUtil.logI(TAG + "requestCityList");
+        List<String> cityFromCache = mWeatherRepository.getCityFromCache();
+        if (cityFromCache != null && !cityFromCache.isEmpty()) {
+            mCardView.refreshCityList(cityFromCache);
+        }
         mWeatherRepository.requestCityList();
     }
 
@@ -74,21 +55,11 @@ public class WeatherCardController {
         }
     };
 
-    private final IRemoteDataCallback<List<WeatherInfo>> iRemoteDataCallback = new IRemoteDataCallback<List<WeatherInfo>>() {
-        @Override
-        public void notifyData(List<WeatherInfo> weatherList) {
-            if (weatherList == null || weatherList.isEmpty()) {
-                mCardView.refreshDefault();
-            } else {
-                mCardView.refreshData(weatherList);
-            }
-        }
-    };
-
     private final IWeatherDataCallback mWeatherDataCallback = new IWeatherDataCallback() {
         @Override
         public void onCityList(List<String> cityList) {
             EasyLog.d(TAG, TAG + "onCityList " + cityList);
+            mWeatherRepository.saveToCache(cityList);
             mCardView.refreshCityList(cityList);
         }
 
@@ -111,7 +82,4 @@ public class WeatherCardController {
         mWeatherRepository.unregisterDataCallback(mWeatherDataCallback);
     }
 
-    public List<WeatherInfo> getWeatherList() {
-        return mWeatherRepository.getWeatherInfo();
-    }
 }
