@@ -64,15 +64,15 @@ public class VisualizerTool {
         for (int i = 0; i < fft.length; i++) {
             int nextLimitAtPosition = Math.abs(fft[i]) * 2 +
                     (int) Math.floor(FREQUENCY_BAND_LIMITS[currentFrequencyBandLimitIndex] / 20_000.0f * fft.length);
-            Log.i(TAG, "nextLimitAtPosition =" + nextLimitAtPosition);
+            //Log.i(TAG, "nextLimitAtPosition =" + nextLimitAtPosition);
             // 汉明窗口修正
             int m = FREQUENCY_BAND_LIMITS.length >> 1;
             float windowed =
                     (float) (nextLimitAtPosition * (0.54f + 0.46f * Math.cos((currentFrequencyBandLimitIndex - m) * Math.PI / (m + 1))));
 
-            Log.i("calcLuminance", "calcLuminance =" + windowed);
+            //Log.i("calcLuminance", "calcLuminance =" + windowed);
             result[i] = (int) nextLimitAtPosition;
-            Log.d(TAG, "currentFftPosition =" + currentFftPosition + ",max =" + max);
+            //Log.d(TAG, "currentFftPosition =" + currentFftPosition + ",max =" + max);
             currentFrequencyBandLimitIndex++;
         }
         return result;
@@ -84,12 +84,13 @@ public class VisualizerTool {
      * @param audioSessionId
      */
     public VisualizerTool(int audioSessionId/*,Visualizer.OnDataCaptureListener dataCaptureListener*/) {
+        Log.d(TAG,"init VisualizerTool");
         try {
             visualizer = new Visualizer(audioSessionId);
             int captureSize = Visualizer.getCaptureSizeRange()[1];
             int captureRate = Visualizer.getMaxCaptureRate() * 3 / 4;
-            Log.d(TAG, "精度: :: " + captureSize);
-            Log.d(TAG, "刷新频率: :: " + captureRate);
+            //Log.d(TAG, "精度: :: " + captureSize);
+            //Log.d(TAG, "刷新频率: :: " + captureRate);
 
             visualizer.setCaptureSize(captureSize);
             Visualizer.OnDataCaptureListener dataCaptureListener = new Visualizer.OnDataCaptureListener() {
@@ -120,6 +121,7 @@ public class VisualizerTool {
      *
      */
     public void releaseVisualizer() {
+        Log.d(TAG,"releaseVisualizer");
         if (visualizer != null) {
             visualizer.release();
             visualizer = null;
