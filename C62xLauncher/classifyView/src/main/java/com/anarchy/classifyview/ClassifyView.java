@@ -524,8 +524,8 @@ public class ClassifyView extends FrameLayout {
                 if (pressedView == null) {
                     //点击的非RecyclerView的空白区域
                     Log.d("MyAppInfoAdapter","pressedView is null");
-                    for(int i = 0; i < recyclerView.getChildCount(); i++){
-                        relativeLayout = (RelativeLayout) recyclerView.getChildAt(i);
+                    for(int i = 0; i < mMainRecyclerView.getChildCount(); i++){
+                        relativeLayout = (RelativeLayout) mMainRecyclerView.getChildAt(i);
                         insertAbleGridView = (InsertAbleGridView) relativeLayout.getChildAt(0);
                         if(insertAbleGridView.getChildCount() == 1){//非文件夹
                             ImageView iv = (ImageView) relativeLayout.getChildAt(2);
