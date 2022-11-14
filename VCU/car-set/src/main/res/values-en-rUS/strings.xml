@@ -355,7 +355,7 @@ IACC会优先通过识别⻋道两侧清晰的⻋道线进⾏横向辅助控制�
     <string name="six_thousand_five_hundred">6500</string>
     <string name="eight_thousand_five_hundred">8500</string>
     <string name="eighteen_thousand">18000</string>
-    <string name="default＿">Default</string>
+    <string name="default＿">Standard</string>
     <string name="classical">Classical</string>
     <string name="pop">Pop</string>
     <string name="jazz">Jazz</string>

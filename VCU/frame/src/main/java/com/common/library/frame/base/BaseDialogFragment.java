@@ -34,6 +34,7 @@ import androidx.lifecycle.ViewModelStoreOwner;
 import com.common.library.frame.R;
 import com.common.library.frame.base.livedata.MessageEvent;
 import com.common.library.frame.base.livedata.StatusEvent;
+import com.common.library.frame.util.Utils;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -122,7 +123,9 @@ public abstract class BaseDialogFragment<VM extends BaseViewModel, VDB extends V
         if (window != null) {
             window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             window.getAttributes().windowAnimations = R.style.common_frame_dialog_animation;
-            setWindow(window, Gravity.NO_GRAVITY, getWidthRatio(), 0, 0, 0, 0, 0, 0);
+            //setWindow(window, Gravity.NO_GRAVITY, getWidthRatio(), 0, 0, 0, 0, 0, 0);
+            int barHeight = Utils.getStatusBarHeight(getActivity());
+            setWindow(window, Gravity.NO_GRAVITY, getWidthRatio(), 0, -barHeight+20, 0, 0, 0, 0);
         }
     }
 

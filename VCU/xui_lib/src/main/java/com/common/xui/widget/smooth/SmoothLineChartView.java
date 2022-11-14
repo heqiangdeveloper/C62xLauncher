@@ -138,7 +138,7 @@ public class SmoothLineChartView extends View {
     private void calculateInterval() {
         mXDataTop.clear();
         for (int i = 0; i < mValues.size(); i++) {
-            mXDataTop.add(Math.round(mValues.get(i)) + "DB");
+            mXDataTop.add(Math.round(mValues.get(i)) + "dB");
         }
     }
 

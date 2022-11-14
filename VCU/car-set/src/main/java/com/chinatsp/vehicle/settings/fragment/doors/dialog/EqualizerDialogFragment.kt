@@ -173,9 +173,10 @@ class EqualizerDialogFragment :
         return if (VcuUtils.isAmplifier) {
             1000f / 1920f
         }else{
-            1300f / 1920f
+            960f / 1920f
         }
     }
+
 }
 
 
