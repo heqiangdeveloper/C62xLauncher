@@ -52,7 +52,7 @@ public class WeatherConnectProxy implements RemoteProxy {
 
             @Override
             public void onCityList(List<String> list) {
-                WeatherUtil.logD("WeatherConnectProxy onCityList : "+list.size());
+                WeatherUtil.logD("WeatherConnectProxy onCityList : "+list);
                 if (mWeatherDataCallback != null) {
                     mWeatherDataCallback.onCityList(list);
                 }
@@ -119,13 +119,13 @@ public class WeatherConnectProxy implements RemoteProxy {
         mWeatherRemoteControl.requestCityList(new IRequestCallback() {
             @Override
             public void onSuccess(List<WeatherInfo> list) throws RemoteException {
-                WeatherUtil.logD("WeatherConnectProxy requestCityList2 onSuccess : " + list);
+                WeatherUtil.logD("WeatherConnectProxy requestCityList onSuccess : " + list);
 
             }
 
             @Override
             public void onFail(String s) throws RemoteException {
-                WeatherUtil.logD("WeatherConnectProxy requestCityList2 onFail : " + s);
+                WeatherUtil.logD("WeatherConnectProxy requestCityList onFail : " + s);
 
             }
 

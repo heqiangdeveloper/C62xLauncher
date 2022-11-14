@@ -69,9 +69,10 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
     private View mSmallCardView;
     private WeatherSmallCardHolder mSmallCardHolder;
     private WeatherBigCardHolder mBigCardHolder;
-    private ImageView ivCardWeatherRefresh;
     private boolean mExpand;
     private LifecycleRegistry mLifecycleRegistry = new LifecycleRegistry(this);
+    private ImageView ivCardWeatherRefresh;
+
 
     private void init() {
         WeatherUtil.logI("WeatherCard init:"+hashCode());
@@ -82,21 +83,23 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
         mSmallWidth = (int) getResources().getDimension(R.dimen.card_width);
         mLargeWidth = (int) getResources().getDimension(R.dimen.card_width_large);
         mController = new WeatherCardController(this);
-        ivCardWeatherRefresh = findViewById(R.id.ivCardWeatherRefresh);
-        ivCardWeatherRefresh.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mController.requestWeatherInfo();
-            }
-        });
+
         //点击空白跳转至天气
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentAppHelper.launchApp(getContext(),"com.iflytek.autofly.weather");
+                WeatherUtil.goApp(getContext());
             }
         });
-        mController.requestWeatherInfo();
+        mController.requestCityList();
+        ivCardWeatherRefresh = findViewById(R.id.ivCardWeatherRefresh);
+        ivCardWeatherRefresh.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mController.requestCityList();
+                showLoading();
+            }
+        });
     }
 
     @Override
@@ -179,6 +182,19 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
         });
     }
 
+    public void refreshCityList(List<String> cityList) {
+        post(new Runnable() {
+            @Override
+            public void run() {
+                if (mExpand) {
+                    mBigCardHolder.updateCityList(cityList);
+                } else {
+                    mSmallCardHolder.updateCityList(cityList);
+                }
+            }
+        });
+    }
+
     public void refreshDefault() {
         post(new Runnable() {
             @Override
@@ -195,9 +211,8 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
     private ObjectAnimator mObjectAnimator;
     private final int MIN_LOADING_ANIM_TIME = 1000;
     public void showLoading() {
+        EasyLog.d(TAG, "showLoading");
         post(() -> {
-            EasyLog.d(TAG, "showLoading");
-            ivCardWeatherRefresh.setClickable(false);
             if (mObjectAnimator == null) {
                 mObjectAnimator = createLoadingAnimator();
             } else {
@@ -206,25 +221,11 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
             mObjectAnimator.start();
         });
     }
-
     private ObjectAnimator createLoadingAnimator() {
         EasyLog.d(TAG, "createLoadingAnimator");
         ObjectAnimator animator = ObjectAnimator.ofFloat(ivCardWeatherRefresh, "rotation", 0f, 360f).setDuration(MIN_LOADING_ANIM_TIME);
         animator.setRepeatMode(ValueAnimator.RESTART);
         animator.setRepeatCount(1);
-//        animator.setInterpolator(new BounceInterpolator());
         return animator;
-    }
-
-    public void hideLoading() {
-        post(() -> {
-            EasyLog.d(TAG, "hideLoading");
-            ivCardWeatherRefresh.setClickable(true);
-//            if (mObjectAnimator != null) {
-//                if (mObjectAnimator.isRunning()|| mObjectAnimator.isStarted()) {
-//                    mObjectAnimator.cancel();
-//                }
-//            }
-        });
     }
 }

@@ -55,7 +55,7 @@ public class ResponseParser {
     }
 
     private void dispatchInWorkThread(GaoDeResponse gaoDeResponse) {
-//        NavigationUtil.logI(TAG + "dispatch :" + mProtocolId + "\nBody: " + mJSONObject);
+        NavigationUtil.logI(TAG + "dispatch :" + mProtocolId + "\nBody: " + mJSONObject);
         Message message = mHandler.obtainMessage();
         message.what = mProtocolId;
         message.obj = gaoDeResponse;
