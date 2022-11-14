@@ -1,6 +1,7 @@
 package com.chinatsp.weaher.viewholder;
 
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.chinatsp.weaher.R;
 import com.chinatsp.weaher.WeatherUtil;
 import com.chinatsp.weaher.viewholder.city.SmallCityListAdapter;
+import com.chinatsp.weaher.viewholder.indicator.PointIndicator;
 import com.iflytek.autofly.weather.entity.WeatherInfo;
 
 import java.util.IllegalFormatCodePointException;
@@ -31,6 +33,8 @@ public class WeatherSmallCardHolder extends WeatherCardHolder{
     private SmallCityListAdapter mCityListAdapter;
 
     private OnPageChangedListener mOnPageChangedListener;
+    private ViewGroup mLayoutIndicator;
+    private PointIndicator mIndicator;
 
     public void setOnPageChangedListener(OnPageChangedListener onPageChangedListener) {
         mOnPageChangedListener = onPageChangedListener;
@@ -46,6 +50,9 @@ public class WeatherSmallCardHolder extends WeatherCardHolder{
         ivWeatherBg = rootView.findViewById(R.id.ivWeatherBg);
         rcvCityList = rootView.findViewById(R.id.rcvCityList);
         ivCardWeatherRefresh = rootView.findViewById(R.id.ivCardWeatherRefresh);
+        mLayoutIndicator = rootView.findViewById(R.id.layoutIndicator);
+        mIndicator = new PointIndicator(mLayoutIndicator);
+
         initCityRcv(rcvCityList);
     }
 
@@ -73,6 +80,7 @@ public class WeatherSmallCardHolder extends WeatherCardHolder{
     }
 
     private void updatePosition(int pos) {
+        mIndicator.select(pos);
         if (mOnPageChangedListener != null) {
             mOnPageChangedListener.onSelected(pos);
         }
@@ -82,6 +90,7 @@ public class WeatherSmallCardHolder extends WeatherCardHolder{
         LinearLayoutManager layoutManager = (LinearLayoutManager) rcvCityList.getLayoutManager();
         if (layoutManager != null) {
             layoutManager.scrollToPositionWithOffset(pos,0);
+            mIndicator.select(pos);
         }
     }
 
@@ -105,6 +114,7 @@ public class WeatherSmallCardHolder extends WeatherCardHolder{
     }
 
     public void updateCityList(List<String> cityList) {
+        mIndicator.reset(cityList.size());
         showCityListRecyclerView();
         mCityListAdapter.setData(cityList);
         WeatherUtil.logI("WeatherSmallCardHolder updateCityList "+ cityList);
