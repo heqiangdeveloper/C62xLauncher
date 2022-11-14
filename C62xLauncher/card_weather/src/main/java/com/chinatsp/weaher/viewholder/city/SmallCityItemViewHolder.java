@@ -1,4 +1,4 @@
-package com.chinatsp.weaher.viewholder;
+package com.chinatsp.weaher.viewholder.city;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -23,7 +23,6 @@ import java.util.List;
 import launcher.base.ipc.IOnRequestListener;
 import launcher.base.recyclerview.BaseViewHolder;
 import launcher.base.utils.EasyLog;
-import launcher.base.utils.recent.RecentAppHelper;
 
 public class SmallCityItemViewHolder extends BaseViewHolder<String> {
     private static final String TAG = "SmallCityItemViewHolder";
@@ -73,7 +72,7 @@ public class SmallCityItemViewHolder extends BaseViewHolder<String> {
     private void loadWeatherInfo(String city) {
         WeatherUtil.logD("SmallCityItemViewHolder loadWeatherInfo");
         showLoading();
-        WeatherRepository.getInstance().requestRefreshWeatherInfo(new IOnRequestListener() {
+        WeatherRepository.getInstance().loadWeatherByCity(new IOnRequestListener() {
             @Override
             public void onSuccess(Object o) {
                 List<WeatherInfo> mData = (List<WeatherInfo>) o;

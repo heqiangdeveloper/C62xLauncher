@@ -1,28 +1,21 @@
 package com.chinatsp.weaher.viewholder;
 
-import android.content.res.Resources;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 
 import com.chinatsp.weaher.R;
-import com.chinatsp.weaher.WeatherTypeRes;
 import com.chinatsp.weaher.WeatherUtil;
-import com.chinatsp.weaher.repository.WeatherBean;
-import com.chinatsp.weaher.type.C62WeatherType;
-import com.chinatsp.weaher.type.C62WeatherTypeAdapter;
-import com.chinatsp.weaher.type.MoJiWeatherType;
-import com.chinatsp.weaher.type.WeatherTypeAdapter;
+import com.chinatsp.weaher.viewholder.city.SmallCityListAdapter;
 import com.iflytek.autofly.weather.entity.WeatherInfo;
 
+import java.util.IllegalFormatCodePointException;
 import java.util.List;
-
-import launcher.base.utils.EasyLog;
 
 public class WeatherSmallCardHolder extends WeatherCardHolder{
 
@@ -36,6 +29,13 @@ public class WeatherSmallCardHolder extends WeatherCardHolder{
 
     private RecyclerView rcvCityList;
     private SmallCityListAdapter mCityListAdapter;
+
+    private OnPageChangedListener mOnPageChangedListener;
+
+    public void setOnPageChangedListener(OnPageChangedListener onPageChangedListener) {
+        mOnPageChangedListener = onPageChangedListener;
+    }
+
 
     public WeatherSmallCardHolder(View rootView) {
         super(rootView);
@@ -56,34 +56,46 @@ public class WeatherSmallCardHolder extends WeatherCardHolder{
         rcvCityList.setLayoutManager(layoutManager);
         PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
         pagerSnapHelper.attachToRecyclerView(rcvCityList);
+
+        rcvCityList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    View snapView = pagerSnapHelper.findSnapView(recyclerView.getLayoutManager());
+                    if (snapView != null) {
+                        int pos = layoutManager.getPosition(snapView);
+                        updatePosition(pos);
+                    }
+                }
+            }
+        });
+    }
+
+    private void updatePosition(int pos) {
+        if (mOnPageChangedListener != null) {
+            mOnPageChangedListener.onSelected(pos);
+        }
+    }
+
+    public void scrollToPosition(int pos) {
+        LinearLayoutManager layoutManager = (LinearLayoutManager) rcvCityList.getLayoutManager();
+        if (layoutManager != null) {
+            layoutManager.scrollToPositionWithOffset(pos,0);
+        }
     }
 
     @Override
     public void updateDefault() {
-//        tvCardWeatherDate.setText(WeatherUtil.getToday());
-//        WeatherTypeRes weatherTypeRes = new WeatherTypeRes(WeatherBean.TYPE_UNKNOWN);
-//        ivCardWeatherIcon.setImageResource(weatherTypeRes.getIcon());
-//        ivWeatherBg.setVisibility(View.INVISIBLE);
+
     }
 
     @Override
     public void updateWeather(WeatherInfo weatherInfo) {
-//        WeatherUtil.logD("WeatherSmallCardHolder updateWeather weatherInfo : "+weatherInfo);
-//        if (weatherInfo == null) {
-//            return;
-//        }
-//        Resources resources = mRootView.getResources();
-//        tvCardWeatherCity.setText(weatherInfo.getCity());
-//        tvCardWeatherTemperature.setText(WeatherUtil.getTemperatureRange(weatherInfo, resources));
-//        tvCardWeatherDate.setText(WeatherUtil.getToday());
-//
-//        WeatherTypeRes weatherTypeRes = WeatherUtil.parseType(weatherInfo.getWeather());
-//        ivCardWeatherIcon.setImageResource(weatherTypeRes.getIcon());
-//        ivWeatherBg.setVisibility(View.VISIBLE);
-//        ivWeatherBg.setImageResource(weatherTypeRes.getSmallCardBg());
+
     }
 
-    void showCityListRecyclerView() {
+    private void showCityListRecyclerView() {
         tvCardWeatherCity.setVisibility(View.INVISIBLE);
         tvCardWeatherTemperature.setVisibility(View.INVISIBLE);
         tvCardWeatherDate.setVisibility(View.INVISIBLE);

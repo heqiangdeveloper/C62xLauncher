@@ -12,4 +12,17 @@
         android:visibility="visible"
         />
 
+    <LinearLayout
+        android:id="@+id/layoutIndicator"
+        android:layout_width="18px"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="500px"
+        android:orientation="vertical"
+        android:background="#ff5ff9"
+        android:gravity="center"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

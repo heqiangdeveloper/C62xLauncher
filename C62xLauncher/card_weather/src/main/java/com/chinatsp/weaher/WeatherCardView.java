@@ -6,6 +6,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
@@ -21,8 +22,10 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chinatsp.weaher.repository.WeatherBean;
+import com.chinatsp.weaher.viewholder.OnPageChangedListener;
 import com.chinatsp.weaher.viewholder.WeatherBigCardHolder;
 import com.chinatsp.weaher.viewholder.WeatherSmallCardHolder;
+import com.chinatsp.weaher.viewholder.indicator.PointIndicator;
 import com.chinatsp.weaher.weekday.DayWeatherBean;
 import com.iflytek.autofly.weather.entity.WeatherInfo;
 
@@ -35,9 +38,10 @@ import launcher.base.utils.recent.RecentAppHelper;
 import launcher.base.utils.view.LayoutParamUtil;
 
 
-public class WeatherCardView extends ConstraintLayout implements ICardStyleChange, LifecycleOwner {
+public class WeatherCardView extends ConstraintLayout implements ICardStyleChange, LifecycleOwner, IWeatherCardView, OnPageChangedListener {
 
     private static final String TAG = "WeatherCardView";
+    private ViewGroup mLayoutIndicator;
 
     public WeatherCardView(@NonNull Context context) {
         super(context);
@@ -64,7 +68,6 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
     private int mSmallWidth;
     private int mLargeWidth;
 
-    private RecyclerView mRcvCardWeatherWeek;
     private View mLargeCardView;
     private View mSmallCardView;
     private WeatherSmallCardHolder mSmallCardHolder;
@@ -72,6 +75,8 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
     private boolean mExpand;
     private LifecycleRegistry mLifecycleRegistry = new LifecycleRegistry(this);
     private ImageView ivCardWeatherRefresh;
+    private int currentCityIndex;
+    private PointIndicator mIndicator;
 
 
     private void init() {
@@ -79,6 +84,7 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
         LayoutInflater.from(getContext()).inflate(R.layout.card_weather, this);
         mSmallCardView = findViewById(R.id.layoutSmallCardView);
         mSmallCardHolder = new WeatherSmallCardHolder(mSmallCardView);
+        mSmallCardHolder.setOnPageChangedListener(this);
         refreshDefault();
         mSmallWidth = (int) getResources().getDimension(R.dimen.card_width);
         mLargeWidth = (int) getResources().getDimension(R.dimen.card_width_large);
@@ -100,6 +106,8 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
                 showLoading();
             }
         });
+        mLayoutIndicator = findViewById(R.id.layoutIndicator);
+        mIndicator = new PointIndicator(mLayoutIndicator);
     }
 
     @Override
@@ -108,13 +116,24 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
         if (mLargeCardView == null) {
             mLargeCardView = LayoutInflater.from(getContext()).inflate(R.layout.card_weather_large, this, false);
             mBigCardHolder = new WeatherBigCardHolder(mLargeCardView);
+            mBigCardHolder.setOnPageChangedListener(this);
         }
         addView(mLargeCardView);
         mLargeCardView.setVisibility(VISIBLE);
         mSmallCardView.setVisibility(GONE);
         LayoutParamUtil.setWidth(mLargeWidth, this);
         runExpandAnim();
-        mBigCardHolder.updateWeatherList(mController.getWeatherList());
+        mController.requestCityList();
+        mBigCardHolder.scrollToPosition(currentCityIndex);
+        post(new Runnable() {
+            @Override
+            public void run() {
+                ConstraintLayout.LayoutParams indicatorLP = (LayoutParams) mLayoutIndicator.getLayoutParams();
+                indicatorLP.setMarginStart(800);
+                mLayoutIndicator.setLayoutParams(indicatorLP);
+            }
+        });
+
     }
 
 
@@ -125,6 +144,16 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
         mLargeCardView.setVisibility(GONE);
         removeView(mLargeCardView);
         LayoutParamUtil.setWidth(mSmallWidth, this);
+
+        mSmallCardHolder.scrollToPosition(currentCityIndex);
+        post(new Runnable() {
+            @Override
+            public void run() {
+                ConstraintLayout.LayoutParams indicatorLP = (LayoutParams) mLayoutIndicator.getLayoutParams();
+                indicatorLP.setMarginStart(500);
+                mLayoutIndicator.setLayoutParams(indicatorLP);
+            }
+        });
     }
 
     @Override
@@ -186,6 +215,7 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
         post(new Runnable() {
             @Override
             public void run() {
+                mIndicator.reset(cityList.size());
                 if (mExpand) {
                     mBigCardHolder.updateCityList(cityList);
                 } else {
@@ -227,5 +257,11 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
         animator.setRepeatMode(ValueAnimator.RESTART);
         animator.setRepeatCount(1);
         return animator;
+    }
+
+    @Override
+    public void onSelected(int position) {
+        currentCityIndex = Math.max(position, 0);
+        mIndicator.select(position);
     }
 }

@@ -1,10 +1,9 @@
-package com.chinatsp.weaher.viewholder;
+package com.chinatsp.weaher.viewholder.city;
 
 import android.content.Context;
 import android.view.View;
 
 import com.chinatsp.weaher.R;
-import com.iflytek.autofly.weather.entity.WeatherInfo;
 
 import launcher.base.recyclerview.BaseRcvAdapter;
 import launcher.base.recyclerview.BaseViewHolder;
