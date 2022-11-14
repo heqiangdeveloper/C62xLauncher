@@ -9,7 +9,7 @@
         android:id="@+id/ivWeatherBg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/card_weather_bg_default_large" />
+        />
 
     <ImageView
         android:id="@+id/ivCardWeatherLocation"
@@ -118,7 +118,7 @@
         android:layout_height="@dimen/card_icon_size_weather_sun"
         android:layout_marginStart="239px"
         android:layout_marginTop="117px"
-        android:src="@drawable/weather_icon_sunny"
+        android:src="@drawable/weather_icon_unkown"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

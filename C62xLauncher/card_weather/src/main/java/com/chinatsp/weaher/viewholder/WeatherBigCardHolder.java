@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +22,7 @@ import com.chinatsp.weaher.WeatherUtil;
 import com.chinatsp.weaher.repository.WeatherBean;
 import com.chinatsp.weaher.viewholder.city.BigCityListAdapter;
 import com.chinatsp.weaher.viewholder.city.SmallCityListAdapter;
+import com.chinatsp.weaher.viewholder.indicator.PointIndicator;
 import com.chinatsp.weaher.weekday.WeekDayAdapter;
 import com.iflytek.autofly.weather.entity.WeatherInfo;
 
@@ -39,11 +41,17 @@ public class WeatherBigCardHolder extends WeatherCardHolder{
         mOnPageChangedListener = onPageChangedListener;
     }
 
+    private ViewGroup mLayoutIndicator;
+    private PointIndicator mIndicator;
+
     public WeatherBigCardHolder(View rootView) {
         super(rootView);
         rcvCityList = rootView.findViewById(R.id.rcvCityList);
+        mLayoutIndicator = rootView.findViewById(R.id.layoutIndicator);
+        mIndicator = new PointIndicator(mLayoutIndicator);
         initCityRcv(rcvCityList);
     }
+
 
     private void initCityRcv(RecyclerView rcvCityList) {
         mCityListAdapter = new BigCityListAdapter(mRootView.getContext());
@@ -69,6 +77,7 @@ public class WeatherBigCardHolder extends WeatherCardHolder{
     }
 
     private void updatePosition(int pos) {
+        mIndicator.select(pos);
         if (mOnPageChangedListener != null) {
             mOnPageChangedListener.onSelected(pos);
         }
@@ -81,6 +90,7 @@ public class WeatherBigCardHolder extends WeatherCardHolder{
                 LinearLayoutManager layoutManager = (LinearLayoutManager) rcvCityList.getLayoutManager();
                 if (layoutManager != null) {
                     layoutManager.scrollToPositionWithOffset(pos, 0);
+                    mIndicator.select(pos);
                 }
             }
         });
@@ -99,6 +109,7 @@ public class WeatherBigCardHolder extends WeatherCardHolder{
 
     @Override
     public void updateCityList(List<String> cityList) {
+        mIndicator.reset(cityList.size());
         showCityListRecyclerView();
         mCityListAdapter.setData(cityList);
         WeatherUtil.logI("WeatherBigCardHolder updateCityList "+ cityList);

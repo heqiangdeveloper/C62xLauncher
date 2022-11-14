@@ -11,4 +11,24 @@
         android:layout_height="match_parent"
         />
 
+    <View
+        android:id="@+id/viewIndicatorHorizontalCenterLine"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="252px"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+    <LinearLayout
+        android:id="@+id/layoutIndicator"
+        android:layout_width="18px"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/viewIndicatorHorizontalCenterLine"
+        app:layout_constraintBottom_toBottomOf="@id/viewIndicatorHorizontalCenterLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="57px"
+        android:orientation="vertical"
+        android:gravity="center"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

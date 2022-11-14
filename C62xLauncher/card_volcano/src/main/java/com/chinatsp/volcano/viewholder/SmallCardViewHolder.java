@@ -28,6 +28,7 @@ public class SmallCardViewHolder extends VolcanoViewHolder{
     private VolcanoVideo volcanoVideo;
     private ImageView ivCardVolcanoNetworkErr;
     private TextView tvCardVolcanoNetworkErr;
+    private View layoutCardVolcanoNetworkErr;
 
     public SmallCardViewHolder(View rootView) {
         super(rootView);
@@ -38,6 +39,7 @@ public class SmallCardViewHolder extends VolcanoViewHolder{
         tvCardVolcanoSource = rootView.findViewById(R.id.tvCardVolcanoSource);
         ivCardVolcanoNetworkErr = rootView.findViewById(R.id.ivCardVolcanoNetworkErr);
         tvCardVolcanoNetworkErr = rootView.findViewById(R.id.tvCardVolcanoNetworkErr);
+        layoutCardVolcanoNetworkErr = rootView.findViewById(R.id.layoutCardVolcanoNetworkErr);
 
         rootView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,9 +104,8 @@ public class SmallCardViewHolder extends VolcanoViewHolder{
     @Override
     public void showNetworkError() {
         ivCardVolcanoNetworkErr.setImageResource(R.drawable.card_icon_wifi_disconnect);
-        ivCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
         tvCardVolcanoNetworkErr.setText(R.string.card_network_err);
-        tvCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
+        layoutCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
         ivCardVolcanoSourceLogo.setVisibility(View.INVISIBLE);
         tvCardVolcanoSource.setVisibility(View.INVISIBLE);
         ivCardVolcanoVideoCover.setVisibility(View.INVISIBLE);
@@ -113,8 +114,7 @@ public class SmallCardViewHolder extends VolcanoViewHolder{
 
     @Override
     public void hideNetworkError() {
-        ivCardVolcanoNetworkErr.setVisibility(View.INVISIBLE);
-        tvCardVolcanoNetworkErr.setVisibility(View.INVISIBLE);
+        layoutCardVolcanoNetworkErr.setVisibility(View.INVISIBLE);
         ivCardVolcanoSourceLogo.setVisibility(View.VISIBLE);
         tvCardVolcanoSource.setVisibility(View.VISIBLE);
         ivCardVolcanoVideoCover.setVisibility(View.VISIBLE);
@@ -124,9 +124,8 @@ public class SmallCardViewHolder extends VolcanoViewHolder{
     @Override
     public void showDataError() {
         ivCardVolcanoNetworkErr.setImageResource(R.drawable.card_icon_date_error);
-        ivCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
         tvCardVolcanoNetworkErr.setText(R.string.card_data_err);
-        tvCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
+        layoutCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
         ivCardVolcanoSourceLogo.setVisibility(View.INVISIBLE);
         tvCardVolcanoSource.setVisibility(View.INVISIBLE);
         ivCardVolcanoVideoCover.setVisibility(View.INVISIBLE);

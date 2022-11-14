@@ -72,6 +72,7 @@ public class SmallCityItemViewHolder extends BaseViewHolder<String> {
     private void loadWeatherInfo(String city) {
         WeatherUtil.logD("SmallCityItemViewHolder loadWeatherInfo");
         showLoading();
+        tvCardWeatherCity.setText(city);
         WeatherRepository.getInstance().loadWeatherByCity(new IOnRequestListener() {
             @Override
             public void onSuccess(Object o) {
@@ -95,7 +96,6 @@ public class SmallCityItemViewHolder extends BaseViewHolder<String> {
         if (weatherInfo == null) {
             return;
         }
-        tvCardWeatherCity.setText(weatherInfo.getCity());
         tvCardWeatherTemperature.setText(WeatherUtil.getTemperatureRange(weatherInfo, mResources));
         tvCardWeatherDate.setText(WeatherUtil.getToday());
 

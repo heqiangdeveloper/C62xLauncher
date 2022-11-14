@@ -89,6 +89,7 @@ public class BigCityItemViewHolder extends BaseViewHolder<String> {
 
     private void loadWeatherInfo(String city) {
         WeatherUtil.logD("BigCityItemViewHolder loadWeatherInfo");
+        tvCardWeatherLocation.setText(city);
         WeatherRepository.getInstance().loadWeatherByCity(new IOnRequestListener() {
             @Override
             public void onSuccess(Object o) {
@@ -119,7 +120,6 @@ public class BigCityItemViewHolder extends BaseViewHolder<String> {
     }
 
     public void updateWeather(WeatherInfo weatherInfo) {
-        tvCardWeatherLocation.setText(weatherInfo.getCity());
         tvCardWeatherWord.setText(weatherInfo.getWeather());
         tvCardWeatherAirValue.setText(weatherInfo.getAirData());
         tvCardWeatherAirDesc.setText("空气质量 " + weatherInfo.getAirQuality());
