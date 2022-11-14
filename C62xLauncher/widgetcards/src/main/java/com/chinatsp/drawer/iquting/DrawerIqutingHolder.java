@@ -236,7 +236,7 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
                 Log.d(TAG, "queryPlayStatus onSuccess: isPlaying=" + aBoolean);
                 if (!aBoolean) {
                     //爱趣听没有播放，需要先调起爱趣听播放服务
-                    LaunchConfig launchConfig = new LaunchConfig(false, false);
+                    LaunchConfig launchConfig = new LaunchConfig(true, false,true);
                     FlowPlayControl.getInstance().launchPlayService(mContext, launchConfig);
                 }
                 isPlaying = aBoolean;

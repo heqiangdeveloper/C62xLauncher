@@ -413,7 +413,7 @@ public class ClassifyView extends FrameLayout {
         addViewInLayout(mDragView, -1, generateDefaultLayoutParams());
         setUpTouchListener(context);
         //初始化CountTimer，设置倒计时为10s。
-        countTimerView = new CountTimer(10000L,1000L,getMainRecyclerView());
+        countTimerView = new CountTimer(10000L,1000L,getMainRecyclerView(),editor);
     }
 
     protected
@@ -524,14 +524,9 @@ public class ClassifyView extends FrameLayout {
                 if (pressedView == null) {
                     //点击的非RecyclerView的空白区域
                     Log.d("MyAppInfoAdapter","pressedView is null");
-                    for(int i = 0; i < mMainRecyclerView.getChildCount(); i++){
-                        relativeLayout = (RelativeLayout) mMainRecyclerView.getChildAt(i);
-                        insertAbleGridView = (InsertAbleGridView) relativeLayout.getChildAt(0);
-                        if(insertAbleGridView.getChildCount() == 1){//非文件夹
-                            ImageView iv = (ImageView) relativeLayout.getChildAt(2);
-                            iv.setVisibility(View.GONE);
-                        }
-                    }
+                    editor.putBoolean(MyConfigs.MAINSHOWDELETE,false);
+                    editor.commit();
+                    mMainRecyclerView.getAdapter().notifyDataSetChanged();
                     return false;
                 }
                 position = mMainRecyclerView.getChildAdapterPosition(pressedView);
