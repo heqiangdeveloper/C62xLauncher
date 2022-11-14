@@ -1,10 +1,12 @@
 package com.chinatsp.vehicle.settings.fragment.sound
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
+import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.ISwitchManager
@@ -23,15 +25,23 @@ import com.chinatsp.vehicle.settings.vm.sound.SoundEffectViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.popupwindow.PopWindow
+import com.common.xui.widget.smooth.SmoothLineChartView
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
+import kotlin.properties.Delegates
 
 @AndroidEntryPoint
 class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragmentBinding>(),
     IOptionAction {
 
     private val map: HashMap<Int, View> = HashMap()
+    private lateinit var xValue: List<String>
+    private lateinit var vList: List<Float>
+    private var value by Delegates.notNull<Int>()
+    private val offset: Float by lazy {
+        if (VcuUtils.isAmplifier) 9f else 5f
+    }
 
     override fun getLayoutId(): Int {
         return R.layout.sound_effect_fragment
@@ -39,7 +49,7 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
 
     override fun initData(savedInstanceState: Bundle?) {
         initClickView()
-
+        initSmoothLineData()
         setCheckedChangeListener()
         initViewsDisplay()
 
@@ -47,12 +57,14 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
         addSwitchLiveDataListener()
         setSwitchListener()
 
+
         initRadioOption()
         addRadioLiveDataListener()
         setRadioListener()
         initDetailsClickListener()
         updateOptionActive()
 
+        initView()
         initRouteListener()
     }
 
@@ -74,7 +86,7 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
                     level1.cnode?.takeIf { child -> child.valid && child.uid == uid }
                         .let { level2 ->
                             level2?.cnode?.let { lv3Node ->
-                                map[lv3Node.uid]?.run { onViewClick(this, lv3Node.uid, true) }
+                                map[lv3Node.uid]?.run { onViewClick(this, lv3Node.uid) }
                             }
                         }
                 }
@@ -82,7 +94,7 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
         }
     }
 
-    private fun onViewClick(view: View, clickUid: Int, frank: Boolean) {
+    private fun onViewClick(view: View, clickUid: Int) {
         onViewClick(view)
         obtainRouter()?.resetLevelRouter(pid, uid, clickUid)
     }
@@ -102,14 +114,17 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
     }
 
     private fun initViewsDisplay() {
-        if (VcuUtils.isCareLevel(Level.LEVEL5, expect = true)) {
-            binding.soundLoudnessControlCompensation.visibility = View.VISIBLE
-            binding.line3.visibility = View.VISIBLE
-        }
         //LV3-LV4无环境音效功能
         if (VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4, expect = true)) {
             binding.soundEnvironmentalCompensation.visibility = View.GONE
             binding.line1.visibility = View.GONE
+            binding.LV3Layout.visibility = View.VISIBLE
+            binding.lv5Layout.visibility = View.GONE
+        }else{
+            binding.soundLoudnessControlCompensation.visibility = View.VISIBLE
+            binding.line3.visibility = View.VISIBLE
+            binding.LV3Layout.visibility = View.GONE
+            binding.lv5Layout.visibility = View.VISIBLE
         }
     }
 
@@ -121,6 +136,7 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
 
     private fun initRadioOption() {
         initRadioOption(RadioNode.AUDIO_ENVI_AUDIO, viewModel.effectOption)
+        initRadioOption(RadioNode.SYSTEM_SOUND_EFFECT, viewModel.currentEffect)
     }
 
     private fun addRadioLiveDataListener() {
@@ -131,13 +147,22 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
             val array = resources.getStringArray(R.array.sound_equalizer_option)
             binding.soundEffectHint.text = array[it.data]
         }
+        viewModel.currentEffect.observe(this) {
+            doUpdateRadio(RadioNode.SYSTEM_SOUND_EFFECT, it, false)
+            binding.smoothChartView.setEnableView(it.data == 6)
+        }
     }
-
 
     private fun setRadioListener() {
         binding.soundEnvironmentalTab.let {
             it.setOnTabSelectionChangedListener { _, value ->
                 doUpdateRadio(RadioNode.AUDIO_ENVI_AUDIO, value, viewModel.effectOption, it)
+            }
+        }
+        binding.soundEffectRadio.let {
+            it.setOnTabSelectionChangedListener { _, value ->
+                doUpdateRadio(RadioNode.SYSTEM_SOUND_EFFECT, value, viewModel.currentEffect, it)
+//                onPostSelected(it, value.toInt())
             }
         }
     }
@@ -192,6 +217,7 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
     override fun findRadioByNode(node: RadioNode): TabControlView? {
         return when (node) {
             RadioNode.AUDIO_ENVI_AUDIO -> binding.soundEnvironmentalTab
+            RadioNode.SYSTEM_SOUND_EFFECT -> binding.soundEffectRadio
             else -> null
         }
     }
@@ -292,26 +318,106 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
             value
         }.toList()
         val intent = Intent("com.chinatsp.vehiclenetwork.usercenter")
-        val systemHint = getSwitchManager().doGetSwitchOption(SwitchNode.TOUCH_PROMPT_TONE)?.data//系统提示音
-        val speedVolumeCompensation = getSwitchManager().doGetSwitchOption(VoiceManager.instance.volumeSpeedSwitch)?.data//速度音量补偿
-        val loudnessControl = getSwitchManager().doGetSwitchOption(SwitchNode.AUDIO_SOUND_LOUDNESS)?.data//响度控制
-        val navigationMixing = getRadioManager().doGetRadioOption(RadioNode.NAVI_AUDIO_MIXING)?.data//导航混音
+        val systemHint =
+            getSwitchManager().doGetSwitchOption(SwitchNode.TOUCH_PROMPT_TONE)?.data//系统提示音
+        val speedVolumeCompensation =
+            getSwitchManager().doGetSwitchOption(VoiceManager.instance.volumeSpeedSwitch)?.data//速度音量补偿
+        val loudnessControl =
+            getSwitchManager().doGetSwitchOption(SwitchNode.AUDIO_SOUND_LOUDNESS)?.data//响度控制
+        val navigationMixing =
+            getRadioManager().doGetRadioOption(RadioNode.NAVI_AUDIO_MIXING)?.data//导航混音
         val fadeValue = EffectManager.instance.audioFade()//音量补偿-逐渐消失值
         val balanceValue = EffectManager.instance.getAudioBalance()//音量补偿-平衡音量
-        val json = "{\"systemHint\":\""+systemHint+"\",\"speedVolumeCompensation\":\""+
-                speedVolumeCompensation+"\",\"loudnessControl\":\""+
-                loudnessControl+"\",\"navigationMixing\":\""+
-                navigationMixing+"\",\"fadeValue\":\""+
-                fadeValue+"\",\"balanceValue\":\""+
-                balanceValue+"\",\"equalizerValue\":\""+
-                toList+"\"}"
+        val json = "{\"systemHint\":\"" + systemHint + "\",\"speedVolumeCompensation\":\"" +
+                speedVolumeCompensation + "\",\"loudnessControl\":\"" +
+                loudnessControl + "\",\"navigationMixing\":\"" +
+                navigationMixing + "\",\"fadeValue\":\"" +
+                fadeValue + "\",\"balanceValue\":\"" +
+                balanceValue + "\",\"equalizerValue\":\"" +
+                toList + "\"}"
         intent.putExtra("app", "com.chinatsp.vehicle.settings")
-        intent.putExtra("soundEffects",json)
+        intent.putExtra("soundEffects", json)
         intent.setPackage("com.chinatsp.usercenter")
         activity?.startService(intent)
         Timber.d("soundEffects intent json:$json")
     }
-    private val offset: Float by lazy {
-        if (VcuUtils.isAmplifier) 9f else 5f
+
+    private fun initSmoothLineData() {
+        if (VcuUtils.isAmplifier) {
+            xValue = listOf(
+                activity?.resources?.getString(R.string.bass),
+                activity?.resources?.getString(R.string.medium_bass),
+                activity?.resources?.getString(R.string.medium),
+                activity?.resources?.getString(R.string.medium_treble),
+                activity?.resources?.getString(R.string.treble)
+            ) as List<String>
+        } else {
+            xValue = listOf(
+                activity?.resources?.getString(R.string.sixty_five),
+                activity?.resources?.getString(R.string.two_hundred_fifty),
+                activity?.resources?.getString(R.string.seven_hundred_fifty),
+                activity?.resources?.getString(R.string.one_thousand_three_hundred),
+                activity?.resources?.getString(R.string.two_thousand_three_hundred),
+                activity?.resources?.getString(R.string.three_thousand_five_hundred),
+                activity?.resources?.getString(R.string.six_thousand_five_hundred),
+                activity?.resources?.getString(R.string.eight_thousand_five_hundred),
+                activity?.resources?.getString(R.string.eighteen_thousand)
+            ) as List<String>
+        }
+    }
+    private fun initView() {
+
+        binding.smoothChartView.setInterval(-1 * offset, offset)
+        binding.smoothChartView.isCustomBorder = true
+        binding.smoothChartView.setTagDrawable(R.drawable.ac_blue_52)
+        binding.smoothChartView.textColor = Color.TRANSPARENT
+        binding.smoothChartView.textSize = 20
+        binding.smoothChartView.textOffset = 4
+        binding.smoothChartView.minY = -1 * offset
+        binding.smoothChartView.maxY = offset
+        binding.smoothChartView.enableShowTag(false)
+        binding.smoothChartView.enableDrawArea(true)
+        binding.smoothChartView.lineColor = resources.getColor(R.color.smooth_line_color)
+        binding.smoothChartView.circleColor = resources.getColor(R.color.smooth_circle_color)
+        binding.smoothChartView.innerCircleColor = Color.parseColor("#ffffff")
+        binding.smoothChartView.nodeStyle = SmoothLineChartView.NODE_STYLE_RING
+        binding.smoothChartView.setOnChartClickListener { position, value ->
+//            viewModel.setAudioEQ(position)
+            doSendCustomEqValue()
+        }
+//        onPostSelected(RadioNode.SYSTEM_SOUND_EFFECT, viewModel.currentEffect.value!!)
+
+    }
+
+    override fun onPostSelected(tabView: TabControlView, value: Int) {
+//        val result = node.obtainSelectValue(value)
+        val values = viewModel.getEffectValues(value).toList()
+        Timber.d("onPostSelected 11111111111111 tabView:$tabView, value:$value, values:%s", values)
+        val toList = values.map {
+            var value = it.toFloat() - 1
+            if (value < 0f) {
+                value = 0f
+            } else if (value > 2 * offset) {
+                value = 2 * offset
+            }
+            value
+        }.toList()
+        Timber.d("onPostSelected 22222222222222 tabView:$tabView, value:$value, toList:%s", toList)
+        this.vList = toList
+        this.value = value
+        binding.smoothChartView.setData(toList, xValue)
+    }
+
+    private fun doSendCustomEqValue() {
+        val node = RadioNode.SYSTEM_SOUND_EFFECT
+        val values = node.get.values
+        viewModel.currentEffect.let {
+            if (it.value!!.data == values.last()) {
+                val progress = binding.smoothChartView.obtainProgress()
+                if (null != progress && progress.size == Constant.EQ_SIZE) {
+                    EffectManager.instance.doSetEQ(it.value!!.data, progress)
+                }
+            }
+        }
     }
 }
