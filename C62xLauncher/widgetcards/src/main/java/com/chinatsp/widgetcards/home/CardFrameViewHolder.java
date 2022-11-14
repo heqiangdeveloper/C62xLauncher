@@ -76,8 +76,6 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
         if (mOnClickListener == null) {
             mOnClickListener = createListener(cardEntity);
         }
-        mIvCardZoom.setOnClickListener(mOnClickListener);
-        mTvCardName.setOnClickListener(mOnClickListener);
         EasyLog.d(TAG, "bind position:" + position + ", " + cardEntity.getName());
         itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -94,6 +92,11 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
             }
         });
         itemView.setOnTouchListener(mOnTouchListener);
+        mIvCardZoom.setOnClickListener(mOnClickListener);
+        mTvCardName.setOnClickListener(mOnClickListener);
+//        itemView.setOnClickListener(v -> {
+//            EasyLog.d(TAG, "Launcher App......");
+//        });
 
         int smallCardPosition = ExpandStateManager.getInstance().getSmallCardPosition();
         boolean isSmall = (smallCardPosition == position);

@@ -89,13 +89,13 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
         mLargeWidth = (int) getResources().getDimension(R.dimen.card_width_large);
         mController = new WeatherCardController(this);
 
-        //点击空白跳转至天气
-        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                WeatherUtil.goApp(getContext());
-            }
-        });
+//        //点击空白跳转至天气
+//        setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                WeatherUtil.goApp(getContext());
+//            }
+//        });
         mController.requestCityList();
         ivCardWeatherRefresh = findViewById(R.id.ivCardWeatherRefresh);
         ivCardWeatherRefresh.setOnClickListener(new OnClickListener() {

@@ -85,7 +85,14 @@ public class BigCityItemViewHolder extends BaseViewHolder<String> {
     public void bind(int position, String city) {
         super.bind(position, city);
         loadWeatherInfo(city);
+        itemView.setOnClickListener(mOnClickListener);
     }
+    View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            WeatherUtil.goApp(v.getContext());
+        }
+    };
 
     private void loadWeatherInfo(String city) {
         WeatherUtil.logD("BigCityItemViewHolder loadWeatherInfo");
