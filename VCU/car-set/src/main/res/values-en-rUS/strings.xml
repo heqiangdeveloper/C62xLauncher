@@ -368,9 +368,10 @@ IACC会优先通过识别⻋道两侧清晰的⻋道线进⾏横向辅助控制�
     <string name="strong">strong</string>
     <string name="metric">Metric</string>
     <string name="imperial">Imperial</string>
+    <string name="close">close</string>
     <string name="recognize_prompt">Recognize prompt</string>
     <string name="disappear_prompt">Disappear prompt</string>
-    <string name="recognize_disappear_prompt_both">recognize and disappear prompt both</string>
+    <string name="recognize_disappear_prompt_both">recognize and disappear \nprompt both</string>
     <string name="icon">Icon</string>
     <string name="icon_sound">Icon+sound</string>
     <string name="high">High</string>

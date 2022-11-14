@@ -2,7 +2,6 @@ package com.chinatsp.vehicle.settings.fragment.sound
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources

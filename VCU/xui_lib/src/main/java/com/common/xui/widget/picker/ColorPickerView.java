@@ -371,11 +371,11 @@ public class ColorPickerView extends View {
         int radius = 55;
 
         paintForIndicator.setColor(Color.WHITE);
-        c.drawRoundRect(new RectF(0, 0, bitmapForIndicator.getWidth(), bitmapForIndicator.getHeight()), 35, radius, paintForIndicator);
+        c.drawRoundRect(new RectF(0, 0, bitmapForIndicator.getWidth(), bitmapForIndicator.getHeight()), 35, 65, paintForIndicator);
 
         paintForIndicator.setColor(mIndicatorColor);
         //paintForIndicator.setShadowLayer(20, 20, 20, Color.WHITE);
-        c.drawRoundRect(new RectF(4, 6, bitmapForIndicator.getWidth() - 4, bitmapForIndicator.getHeight() - 6), 35, radius, paintForIndicator);
+        c.drawRoundRect(new RectF(4, 6.5f, bitmapForIndicator.getWidth() - 4, bitmapForIndicator.getHeight() - 6.5f), 35, radius, paintForIndicator);
         needReDrawIndicator = false;
     }
 

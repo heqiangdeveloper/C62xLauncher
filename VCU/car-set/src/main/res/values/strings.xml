@@ -366,9 +366,10 @@ IACC会优先通过识别⻋道两侧清晰的⻋道线进⾏横向辅助控制�
     <string name="strong">强劲</string>
     <string name="metric">公制</string>
     <string name="imperial">英制</string>
+    <string name="close">关闭</string>
     <string name="recognize_prompt">识别提示</string>
     <string name="disappear_prompt">消失提示</string>
-    <string name="recognize_disappear_prompt_both">识别消失均提示</string>
+    <string name="recognize_disappear_prompt_both">识别消失\n均提示</string>
     <string name="icon">图示</string>
     <string name="icon_sound">图示+声音</string>
     <string name="high">高</string>

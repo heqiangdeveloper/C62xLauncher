@@ -53,7 +53,7 @@ enum class RadioNode(
             signal = CarCabinManager.ID_VSPEED_LOCK
         ),
         inactive = intArrayOf(0x0),
-        def = 0x1
+        def = 0x4
     ),
 
     /**
@@ -111,11 +111,11 @@ enum class RadioNode(
      */
     ADAS_LIMBER_LEAVE(
         get = RNorm(
-            values = intArrayOf(0x1, 0x2, 0x3),
+            values = intArrayOf(0x4,0x1, 0x2, 0x3),
             signal = CarCabinManager.ID_OBJ_DETECTION_RES
         ),
         set = RNorm(
-            values = intArrayOf(0x1, 0x2, 0x3),
+            values = intArrayOf(0x4,0x1, 0x2, 0x3),
             signal = CarCabinManager.ID_OBJ_DETECTION_SWT
         ),
         inactive = intArrayOf(0x0, 0x4, 0x5, 0x6, 0x7),

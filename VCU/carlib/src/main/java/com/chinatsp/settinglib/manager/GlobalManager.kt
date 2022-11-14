@@ -229,7 +229,7 @@ class GlobalManager private constructor() : BaseManager() {
             val value = readIntProperty(CarCabinManager.ID_ENDURANCE_MILEAGE, Origin.CABIN)
             command.message = "您的爱车${command.slots?.name}为${value}公里"
             callback?.onCmdHandleResult(command)
-
+            return
         }
         if (IAct.MAINTAIN_MILEAGE == command.act) {
             val value = readIntProperty(CarCabinManager.ID_REMAIN_MAINTAIN_MILEAGE, Origin.CABIN)
