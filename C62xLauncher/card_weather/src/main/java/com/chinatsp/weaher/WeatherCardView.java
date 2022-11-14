@@ -6,6 +6,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
@@ -21,8 +22,10 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chinatsp.weaher.repository.WeatherBean;
+import com.chinatsp.weaher.viewholder.OnPageChangedListener;
 import com.chinatsp.weaher.viewholder.WeatherBigCardHolder;
 import com.chinatsp.weaher.viewholder.WeatherSmallCardHolder;
+import com.chinatsp.weaher.viewholder.indicator.PointIndicator;
 import com.chinatsp.weaher.weekday.DayWeatherBean;
 import com.iflytek.autofly.weather.entity.WeatherInfo;
 
@@ -35,9 +38,10 @@ import launcher.base.utils.recent.RecentAppHelper;
 import launcher.base.utils.view.LayoutParamUtil;
 
 
-public class WeatherCardView extends ConstraintLayout implements ICardStyleChange, LifecycleOwner {
+public class WeatherCardView extends ConstraintLayout implements ICardStyleChange, LifecycleOwner, IWeatherCardView, OnPageChangedListener {
 
     private static final String TAG = "WeatherCardView";
+
 
     public WeatherCardView(@NonNull Context context) {
         super(context);
@@ -64,39 +68,43 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
     private int mSmallWidth;
     private int mLargeWidth;
 
-    private RecyclerView mRcvCardWeatherWeek;
     private View mLargeCardView;
     private View mSmallCardView;
     private WeatherSmallCardHolder mSmallCardHolder;
     private WeatherBigCardHolder mBigCardHolder;
-    private ImageView ivCardWeatherRefresh;
     private boolean mExpand;
     private LifecycleRegistry mLifecycleRegistry = new LifecycleRegistry(this);
+    private ImageView ivCardWeatherRefresh;
+    private int currentCityIndex;
+
 
     private void init() {
         WeatherUtil.logI("WeatherCard init:"+hashCode());
         LayoutInflater.from(getContext()).inflate(R.layout.card_weather, this);
         mSmallCardView = findViewById(R.id.layoutSmallCardView);
         mSmallCardHolder = new WeatherSmallCardHolder(mSmallCardView);
+        mSmallCardHolder.setOnPageChangedListener(this);
         refreshDefault();
         mSmallWidth = (int) getResources().getDimension(R.dimen.card_width);
         mLargeWidth = (int) getResources().getDimension(R.dimen.card_width_large);
         mController = new WeatherCardController(this);
-        ivCardWeatherRefresh = findViewById(R.id.ivCardWeatherRefresh);
-        ivCardWeatherRefresh.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mController.requestWeatherInfo();
-            }
-        });
+
         //点击空白跳转至天气
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentAppHelper.launchApp(getContext(),"com.iflytek.autofly.weather");
+                WeatherUtil.goApp(getContext());
             }
         });
-        mController.requestWeatherInfo();
+        mController.requestCityList();
+        ivCardWeatherRefresh = findViewById(R.id.ivCardWeatherRefresh);
+        ivCardWeatherRefresh.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mController.requestCityList();
+                showLoading();
+            }
+        });
     }
 
     @Override
@@ -105,13 +113,15 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
         if (mLargeCardView == null) {
             mLargeCardView = LayoutInflater.from(getContext()).inflate(R.layout.card_weather_large, this, false);
             mBigCardHolder = new WeatherBigCardHolder(mLargeCardView);
+            mBigCardHolder.setOnPageChangedListener(this);
         }
-        addView(mLargeCardView);
+        addView(mLargeCardView,1);
         mLargeCardView.setVisibility(VISIBLE);
         mSmallCardView.setVisibility(GONE);
         LayoutParamUtil.setWidth(mLargeWidth, this);
         runExpandAnim();
-        mBigCardHolder.updateWeatherList(mController.getWeatherList());
+        mController.requestCityList();
+        mBigCardHolder.scrollToPosition(currentCityIndex);
     }
 
 
@@ -122,6 +132,7 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
         mLargeCardView.setVisibility(GONE);
         removeView(mLargeCardView);
         LayoutParamUtil.setWidth(mSmallWidth, this);
+        mSmallCardHolder.scrollToPosition(currentCityIndex);
     }
 
     @Override
@@ -179,6 +190,22 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
         });
     }
 
+    public void refreshCityList(List<String> cityList) {
+        post(new Runnable() {
+            @Override
+            public void run() {
+                if (mExpand) {
+                    mBigCardHolder.updateCityList(cityList);
+                    mBigCardHolder.scrollToPosition(currentCityIndex);
+                } else {
+                    mSmallCardHolder.updateCityList(cityList);
+                    mSmallCardHolder.scrollToPosition(currentCityIndex);
+
+                }
+            }
+        });
+    }
+
     public void refreshDefault() {
         post(new Runnable() {
             @Override
@@ -195,9 +222,8 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
     private ObjectAnimator mObjectAnimator;
     private final int MIN_LOADING_ANIM_TIME = 1000;
     public void showLoading() {
+        EasyLog.d(TAG, "showLoading");
         post(() -> {
-            EasyLog.d(TAG, "showLoading");
-            ivCardWeatherRefresh.setClickable(false);
             if (mObjectAnimator == null) {
                 mObjectAnimator = createLoadingAnimator();
             } else {
@@ -206,25 +232,16 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
             mObjectAnimator.start();
         });
     }
-
     private ObjectAnimator createLoadingAnimator() {
         EasyLog.d(TAG, "createLoadingAnimator");
         ObjectAnimator animator = ObjectAnimator.ofFloat(ivCardWeatherRefresh, "rotation", 0f, 360f).setDuration(MIN_LOADING_ANIM_TIME);
         animator.setRepeatMode(ValueAnimator.RESTART);
         animator.setRepeatCount(1);
-//        animator.setInterpolator(new BounceInterpolator());
         return animator;
     }
 
-    public void hideLoading() {
-        post(() -> {
-            EasyLog.d(TAG, "hideLoading");
-            ivCardWeatherRefresh.setClickable(true);
-//            if (mObjectAnimator != null) {
-//                if (mObjectAnimator.isRunning()|| mObjectAnimator.isStarted()) {
-//                    mObjectAnimator.cancel();
-//                }
-//            }
-        });
+    @Override
+    public void onSelected(int position) {
+        currentCityIndex = Math.max(position, 0);
     }
 }

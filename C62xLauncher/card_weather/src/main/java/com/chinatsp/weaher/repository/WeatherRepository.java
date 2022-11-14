@@ -6,6 +6,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.chinatsp.weaher.WeatherUtil;
+import com.chinatsp.weaher.repository.cache.IWeatherCache;
+import com.chinatsp.weaher.repository.cache.WeatherCache;
 import com.iflytek.autofly.weather.entity.WeatherInfo;
 import com.iflytek.weathercontrol.WeatherRemoteControl;
 
@@ -18,11 +20,12 @@ import launcher.base.ipc.IConnectListener;
 import launcher.base.ipc.IOnRequestListener;
 import launcher.base.ipc.IRemoteDataCallback;
 import launcher.base.ipc.RemoteProxy;
+import launcher.base.utils.EasyLog;
 import launcher.base.utils.flowcontrol.PollingTask;
 
 public class WeatherRepository extends BaseRepository {
 
-    private static class Holder{
+    private static class Holder {
         private static WeatherRepository instance = new WeatherRepository();
     }
 
@@ -33,10 +36,9 @@ public class WeatherRepository extends BaseRepository {
     public static WeatherRepository getInstance() {
         return Holder.instance;
     }
-    private List<WeatherInfo> mData;
-    private List<String> mCityList;
 
-    private IWeatherDataCallback mWeatherDataCallback;
+
+    private IWeatherCache mCache = new WeatherCache();
 
     @Override
     public void init(@NonNull Context context) {
@@ -51,14 +53,27 @@ public class WeatherRepository extends BaseRepository {
         WeatherConnectProxy remoteProxy = new WeatherConnectProxy(WeatherRemoteControl.getInstance());
         return new WeatherRemoteConnector(remoteProxy);
     }
-    public void requestRefreshWeatherInfo(IOnRequestListener onRequestListener) {
+
+    /**
+     * 获取默认城市天气. 首先从缓存取数据, 随后再从远程进程获取最新的数据.
+     * 缓存机制是为了保证快速响应请求.
+     */
+    public void loadDefaultWeather(IOnRequestListener onRequestListener) {
+        List<WeatherInfo> mCacheDefaultWeather = mCache.getDefaultWeather();
+        if (mCacheDefaultWeather != null) {
+            WeatherUtil.logD("WeatherRepository loadDefaultWeather success from cache.");
+            if (onRequestListener != null) {
+                onRequestListener.onSuccess(mCacheDefaultWeather);
+            }
+        }
         if (mRemoteConnector != null) {
             if (mRemoteConnector.isServiceConnect()) {
-                WeatherUtil.logD("mRemoteConnector requestWeatherInfo....");
+                WeatherUtil.logD("WeatherRepository loadDefaultWeather ....");
                 mRemoteConnector.requestData(new IOnRequestListener() {
                     @Override
                     public void onSuccess(Object o) {
-                        mData = (List<WeatherInfo>) o;
+                        List<WeatherInfo> mData = (List<WeatherInfo>) o;
+                        mCache.saveDefaultWeather(mData);
                         if (onRequestListener != null) {
                             onRequestListener.onSuccess(mData);
                         }
@@ -72,14 +87,14 @@ public class WeatherRepository extends BaseRepository {
                     }
                 });
             } else {
-                String disconnectMsg = "mRemoteConnector disconnect.";
+                String disconnectMsg = "WeatherRepository loadDefaultWeather, mRemoteConnector disconnect.";
                 WeatherUtil.logW(disconnectMsg);
                 if (onRequestListener != null) {
                     onRequestListener.onFail(disconnectMsg);
                 }
             }
         } else {
-            String errMsg = "mRemoteConnector is NULL.";
+            String errMsg = "WeatherRepository loadDefaultWeather, mRemoteConnector is NULL.";
             WeatherUtil.logW(errMsg);
             if (onRequestListener != null) {
                 onRequestListener.onFail(errMsg);
@@ -87,22 +102,46 @@ public class WeatherRepository extends BaseRepository {
         }
     }
 
-    public void requestRefreshWeatherInfo(IOnRequestListener onRequestListener, String city) {
+    public void loadWeatherByCity(IOnRequestListener onRequestListener, String city) {
+        List<WeatherInfo> cacheWeatherByCity = mCache.getWeatherByCity(city);
+        if (cacheWeatherByCity != null) {
+            WeatherUtil.logD("WeatherRepository loadWeatherByCity success from cache. city:"+city);
+            if (onRequestListener != null) {
+                onRequestListener.onSuccess(cacheWeatherByCity);
+            }
+        }
         if (mRemoteConnector != null) {
             if (mRemoteConnector.isServiceConnect()) {
-                WeatherUtil.logD("mRemoteConnector requestWeatherInfo , city:"+city);
+                WeatherUtil.logD("WeatherRepository loadWeatherByCity from remote , city:" + city);
                 if (mRemoteConnector instanceof WeatherRemoteConnector) {
-                    ((WeatherRemoteConnector) mRemoteConnector).requestCityWeather(onRequestListener, city);
+                    IOnRequestListener innerListener = new IOnRequestListener() {
+                        @Override
+                        public void onSuccess(Object o) {
+                            List<WeatherInfo> mData = (List<WeatherInfo>) o;
+                            mCache.saveCityWeather(city, mData);
+                            if (onRequestListener != null) {
+                                onRequestListener.onSuccess(mData);
+                            }
+                        }
+
+                        @Override
+                        public void onFail(String msg) {
+                            if (onRequestListener != null) {
+                                onRequestListener.onFail(msg);
+                            }
+                        }
+                    };
+                    ((WeatherRemoteConnector) mRemoteConnector).requestCityWeather(innerListener, city);
                 }
             } else {
-                String disconnectMsg = "mRemoteConnector disconnect.";
+                String disconnectMsg = "WeatherRepository loadWeatherByCity , mRemoteConnector disconnect.";
                 WeatherUtil.logW(disconnectMsg);
                 if (onRequestListener != null) {
                     onRequestListener.onFail(disconnectMsg);
                 }
             }
         } else {
-            String errMsg = "mRemoteConnector is NULL.";
+            String errMsg = "WeatherRepository loadWeatherByCity, mRemoteConnector is NULL.";
             WeatherUtil.logW(errMsg);
             if (onRequestListener != null) {
                 onRequestListener.onFail(errMsg);
@@ -116,8 +155,17 @@ public class WeatherRepository extends BaseRepository {
         }
     }
 
-    public List<WeatherInfo> getWeatherInfo() {
-        return mData;
+    public void saveToCache(List<String> cityList) {
+        if (mCache != null) {
+            mCache.saveCityList(cityList);
+        }
+    }
+
+    public List<String> getCityFromCache() {
+        if (mCache != null) {
+            return mCache.getCityList();
+        }
+        return null;
     }
 
     public void registerDataCallback(IRemoteDataCallback remoteDataCallback) {
@@ -125,6 +173,7 @@ public class WeatherRepository extends BaseRepository {
             mRemoteConnector.registerRemoteDataCallbacks(remoteDataCallback);
         }
     }
+
     public void unregisterDataCallback(IRemoteDataCallback remoteDataCallback) {
         if (mRemoteConnector != null) {
             mRemoteConnector.unregisterRemoteDataCallbacks(remoteDataCallback);

@@ -1,21 +1,23 @@
 package com.chinatsp.weaher.viewholder;
 
-import android.content.res.Resources;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.viewpager.widget.ViewPager;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.PagerSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.chinatsp.weaher.R;
-import com.chinatsp.weaher.WeatherTypeRes;
 import com.chinatsp.weaher.WeatherUtil;
-import com.chinatsp.weaher.repository.WeatherBean;
-import com.chinatsp.weaher.type.C62WeatherType;
-import com.chinatsp.weaher.type.C62WeatherTypeAdapter;
-import com.chinatsp.weaher.type.MoJiWeatherType;
-import com.chinatsp.weaher.type.WeatherTypeAdapter;
+import com.chinatsp.weaher.viewholder.city.SmallCityListAdapter;
+import com.chinatsp.weaher.viewholder.indicator.PointIndicator;
 import com.iflytek.autofly.weather.entity.WeatherInfo;
+
+import java.util.IllegalFormatCodePointException;
+import java.util.List;
 
 public class WeatherSmallCardHolder extends WeatherCardHolder{
 
@@ -25,8 +27,19 @@ public class WeatherSmallCardHolder extends WeatherCardHolder{
     private final TextView tvCardWeatherDate;
     private final ImageView ivCardWeatherIcon;
     private final ImageView ivWeatherBg;
+    private final ImageView ivCardWeatherRefresh;
 
-    private ViewPager viewPager;
+    private RecyclerView rcvCityList;
+    private SmallCityListAdapter mCityListAdapter;
+
+    private OnPageChangedListener mOnPageChangedListener;
+    private ViewGroup mLayoutIndicator;
+    private PointIndicator mIndicator;
+
+    public void setOnPageChangedListener(OnPageChangedListener onPageChangedListener) {
+        mOnPageChangedListener = onPageChangedListener;
+    }
+
 
     public WeatherSmallCardHolder(View rootView) {
         super(rootView);
@@ -35,30 +48,75 @@ public class WeatherSmallCardHolder extends WeatherCardHolder{
         tvCardWeatherDate = rootView.findViewById(R.id.tvCardWeatherDate);
         ivCardWeatherIcon = rootView.findViewById(R.id.ivCardWeatherIcon);
         ivWeatherBg = rootView.findViewById(R.id.ivWeatherBg);
+        rcvCityList = rootView.findViewById(R.id.rcvCityList);
+        ivCardWeatherRefresh = rootView.findViewById(R.id.ivCardWeatherRefresh);
+        mLayoutIndicator = rootView.findViewById(R.id.layoutIndicator);
+        mIndicator = new PointIndicator(mLayoutIndicator);
+
+        initCityRcv(rcvCityList);
+    }
+
+    private void initCityRcv(RecyclerView rcvCityList) {
+        mCityListAdapter = new SmallCityListAdapter(mRootView.getContext());
+        rcvCityList.setAdapter(mCityListAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(rcvCityList.getContext());
+        rcvCityList.setLayoutManager(layoutManager);
+        PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
+        pagerSnapHelper.attachToRecyclerView(rcvCityList);
+
+        rcvCityList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    View snapView = pagerSnapHelper.findSnapView(recyclerView.getLayoutManager());
+                    if (snapView != null) {
+                        int pos = layoutManager.getPosition(snapView);
+                        updatePosition(pos);
+                    }
+                }
+            }
+        });
+    }
+
+    private void updatePosition(int pos) {
+        mIndicator.select(pos);
+        if (mOnPageChangedListener != null) {
+            mOnPageChangedListener.onSelected(pos);
+        }
+    }
+
+    public void scrollToPosition(int pos) {
+        LinearLayoutManager layoutManager = (LinearLayoutManager) rcvCityList.getLayoutManager();
+        if (layoutManager != null) {
+            layoutManager.scrollToPositionWithOffset(pos,0);
+            mIndicator.select(pos);
+        }
     }
 
     @Override
     public void updateDefault() {
-        tvCardWeatherDate.setText(WeatherUtil.getToday());
-        WeatherTypeRes weatherTypeRes = new WeatherTypeRes(WeatherBean.TYPE_UNKNOWN);
-        ivCardWeatherIcon.setImageResource(weatherTypeRes.getIcon());
-        ivWeatherBg.setVisibility(View.INVISIBLE);
+
     }
 
     @Override
     public void updateWeather(WeatherInfo weatherInfo) {
-        WeatherUtil.logD("WeatherSmallCardHolder updateWeather weatherInfo : "+weatherInfo);
-        if (weatherInfo == null) {
-            return;
-        }
-        Resources resources = mRootView.getResources();
-        tvCardWeatherCity.setText(weatherInfo.getCity());
-        tvCardWeatherTemperature.setText(WeatherUtil.getTemperatureRange(weatherInfo, resources));
-        tvCardWeatherDate.setText(WeatherUtil.getToday());
 
-        WeatherTypeRes weatherTypeRes = WeatherUtil.parseType(weatherInfo.getWeather());
-        ivCardWeatherIcon.setImageResource(weatherTypeRes.getIcon());
-        ivWeatherBg.setVisibility(View.VISIBLE);
-        ivWeatherBg.setImageResource(weatherTypeRes.getSmallCardBg());
+    }
+
+    private void showCityListRecyclerView() {
+        tvCardWeatherCity.setVisibility(View.INVISIBLE);
+        tvCardWeatherTemperature.setVisibility(View.INVISIBLE);
+        tvCardWeatherDate.setVisibility(View.INVISIBLE);
+        ivCardWeatherIcon.setVisibility(View.INVISIBLE);
+        ivWeatherBg.setVisibility(View.INVISIBLE);
+        ivCardWeatherRefresh.setVisibility(View.INVISIBLE);
+    }
+
+    public void updateCityList(List<String> cityList) {
+        mIndicator.reset(cityList.size());
+        showCityListRecyclerView();
+        mCityListAdapter.setData(cityList);
+        WeatherUtil.logI("WeatherSmallCardHolder updateCityList "+ cityList);
     }
 }

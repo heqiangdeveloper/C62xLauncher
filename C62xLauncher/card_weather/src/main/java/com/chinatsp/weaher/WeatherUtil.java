@@ -1,5 +1,6 @@
 package com.chinatsp.weaher;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.text.TextUtils;
 
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import launcher.base.utils.EasyLog;
+import launcher.base.utils.recent.RecentAppHelper;
 
 public class WeatherUtil {
     public static final String TAG = "WeatherUtil";
@@ -105,5 +107,10 @@ public class WeatherUtil {
         int c62WeatherTypeValue = c62WeatherType.getValue();
         WeatherTypeRes weatherTypeRes = new WeatherTypeRes(c62WeatherTypeValue);
         return weatherTypeRes;
+    }
+
+    public static void goApp(Context context) {
+        RecentAppHelper.launchApp(context, "com.iflytek.autofly.weather");
+
     }
 }

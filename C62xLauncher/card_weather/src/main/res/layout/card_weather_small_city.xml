@@ -6,11 +6,6 @@
     android:layout_height="@dimen/card_height"
     tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcvCityList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
     <ImageView
         android:id="@+id/ivWeatherBg"
         android:layout_width="match_parent"
@@ -78,24 +73,4 @@
         app:layout_constraintEnd_toEndOf="@id/tvCardWeatherDate"
         app:layout_constraintStart_toStartOf="@id/tvCardWeatherDate"
         app:layout_constraintTop_toBottomOf="@id/tvCardWeatherDate" />
-
-    <View
-        android:id="@+id/viewIndicatorHorizontalCenterLine"
-        android:layout_width="1dp"
-        android:layout_height="1dp"
-        android:layout_marginTop="252px"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        />
-    <LinearLayout
-        android:id="@+id/layoutIndicator"
-        android:layout_width="18px"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/viewIndicatorHorizontalCenterLine"
-        app:layout_constraintBottom_toBottomOf="@id/viewIndicatorHorizontalCenterLine"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="57px"
-        android:orientation="vertical"
-        android:gravity="center"
-        />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,15 +1,12 @@
 package com.chinatsp.drawer.weather;
 
-import com.chinatsp.weaher.WeatherUtil;
 import com.chinatsp.weaher.repository.IWeatherDataCallback;
 import com.chinatsp.weaher.repository.WeatherRepository;
 import com.iflytek.autofly.weather.entity.WeatherInfo;
 
-import java.util.IllegalFormatCodePointException;
 import java.util.List;
 
 import launcher.base.ipc.IOnRequestListener;
-import launcher.base.ipc.IRemoteDataCallback;
 import launcher.base.utils.EasyLog;
 
 class WeatherDrawerController {
@@ -26,7 +23,7 @@ class WeatherDrawerController {
 
     void requestWeatherInfo() {
         EasyLog.d(TAG, "requestWeatherInfo "+this.hashCode());
-        mWeatherRepository.requestRefreshWeatherInfo(new IOnRequestListener<List<WeatherInfo>>() {
+        mWeatherRepository.loadDefaultWeather(new IOnRequestListener<List<WeatherInfo>>() {
             @Override
             public void onSuccess(List<WeatherInfo> weatherInfoList) {
                 EasyLog.d(TAG, "requestWeatherInfo onSuccess");
