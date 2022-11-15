@@ -6,4 +6,8 @@ public class IqutingConfigs {
 
     public static final int CLICK_TYPE_ITEM = 1;
     public static final int CLICK_TYPE_COVER = 2;
+
+    public static final String SAVE_SOURCE = "SAVE_SOURCE"; //保存音源值
+    public static final String AQT_PARAM = "isOpen"; // true : 打开爱趣听 ，false :不打开爱趣听
+    public static final String AQT = "AQT";
 }
