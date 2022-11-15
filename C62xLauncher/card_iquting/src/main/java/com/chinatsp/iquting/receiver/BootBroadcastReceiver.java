@@ -17,7 +17,7 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
 //            FlowPlayControl.getInstance().bindPlayService(context);
 //            IqutingBindService.getInstance().bindPlayService(context);//注册爱趣听播放服务
 //            IqutingBindService.getInstance().bindContentService(context);//注册爱趣听内容服务
-            sendBoot();
+            //sendBoot();
         }
     }
 

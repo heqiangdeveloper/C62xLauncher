@@ -1,6 +1,7 @@
 package com.chinatsp.iquting.service;
 
 import android.content.Context;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.chinatsp.iquting.R;
@@ -8,6 +9,7 @@ import com.chinatsp.iquting.callback.INetworkChangeListener;
 import com.chinatsp.iquting.callback.IQueryIqutingLoginStatus;
 import com.chinatsp.iquting.callback.IQueryMusicLists;
 import com.chinatsp.iquting.callback.ITabClickCallback;
+import com.chinatsp.iquting.configs.IqutingConfigs;
 import com.chinatsp.iquting.event.ContentConnectEvent;
 import com.chinatsp.iquting.event.PlayConnectEvent;
 import com.chinatsp.iquting.ipc.IqutingMediaChangeListener;
@@ -25,6 +27,7 @@ import com.tencent.wecarflow.controlsdk.MediaChangeListener;
 import com.tencent.wecarflow.controlsdk.MediaInfo;
 import com.tencent.wecarflow.controlsdk.PlayStateListener;
 import com.tencent.wecarflow.controlsdk.QueryCallback;
+import com.tencent.wecarflow.controlsdk.data.LaunchConfig;
 import com.tencent.wecarflow.controlsdk.data.NavigationInfo;
 import com.tencent.wecarflow.controlsdk.data.UserInfo;
 
@@ -85,7 +88,10 @@ public class IqutingBindService {
             @Override
             public void onServiceConnected() {
                 Log.d(TAG,"onServiceConnected");
-                EventBus.getDefault().post(new PlayConnectEvent(PlayConnectEvent.CONNECTED));
+                //设置重启后，断点续播
+                LaunchConfig launchConfig = new LaunchConfig(true, false,true);
+                FlowPlayControl.getInstance().launchPlayService(mContext, launchConfig);
+                //EventBus.getDefault().post(new PlayConnectEvent(PlayConnectEvent.CONNECTED));
                 addPlayStateListener();
             }
 
@@ -135,21 +141,21 @@ public class IqutingBindService {
             @Override
             public void onConnected() {
                 Log.d(TAG_CONTENT,"bindContentService onConnected");
-                EventBus.getDefault().post(new ContentConnectEvent(ContentConnectEvent.CONNECTED));
+                //EventBus.getDefault().post(new ContentConnectEvent(ContentConnectEvent.CONNECTED));
                 addMediaChangeListener();
             }
 
             @Override
             public void onDisconnected() {
                 Log.d(TAG_CONTENT,"bindContentService onDisconnected");
-                EventBus.getDefault().post(new ContentConnectEvent(ContentConnectEvent.DISCONNECTED));
+                //EventBus.getDefault().post(new ContentConnectEvent(ContentConnectEvent.DISCONNECTED));
                 removeMediaChangeListener();
             }
 
             @Override
             public void onConnectionDied() {
                 Log.d(TAG_CONTENT,"bindContentService onConnectionDied");
-                EventBus.getDefault().post(new ContentConnectEvent(ContentConnectEvent.CONNECTIONDIED));
+                //EventBus.getDefault().post(new ContentConnectEvent(ContentConnectEvent.CONNECTIONDIED));
             }
         };
         ContentManager.getInstance().init(mContext,connListener);
@@ -311,6 +317,7 @@ public class IqutingBindService {
             Log.d(TAG,"onStart");
             isPlaying = true;
             doMusicRhythm();//音乐律动
+            Settings.System.putString(mContext.getContentResolver(), IqutingConfigs.SAVE_SOURCE, IqutingConfigs.AQT);//音源写入数据库
             playStateListenerList = playStateListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
             for(IqutingPlayStateListener listener : playStateListenerList){
                 listener.onStart();

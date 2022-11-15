@@ -224,16 +224,16 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
     public void onMessageEvent(Event event){
         if(event instanceof PlayConnectEvent){
             if(((PlayConnectEvent)event).getType() == PlayConnectEvent.CONNECTED){
-                addPlayContentListener(IQuTingCardView.this);
+                //addPlayContentListener(IQuTingCardView.this);
             }
         }else if(event instanceof ContentConnectEvent){
             if(((ContentConnectEvent)event).getType() == ContentConnectEvent.CONNECTED){
                 Log.d(TAG_CONTENT,"ContentService connect addContentListener");
                 //addContentListener();
-                addPlayContentListener(IQuTingCardView.this);
+                //addPlayContentListener(IQuTingCardView.this);
             }
         }else if(event instanceof BootEvent){
-            addPlayContentListener(IQuTingCardView.this);
+            //addPlayContentListener(IQuTingCardView.this);
             Log.d(TAG_CONTENT,"boot addContentListener");
             //addContentListener();
         }else if(event instanceof ControlEvent){
@@ -621,11 +621,11 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
             @Override
             public void onSuccess(Boolean aBoolean) {
                 Log.d(TAG,"queryPlayStatus onSuccess: isPlaying=" + aBoolean);
-                if(!aBoolean){
-                    //爱趣听没有播放，需要先调起爱趣听播放服务
-                    LaunchConfig launchConfig = new LaunchConfig(true,false,true);
-                    FlowPlayControl.getInstance().launchPlayService(context,launchConfig);
-                }
+//                if(!aBoolean){
+//                    //爱趣听没有播放，需要先调起爱趣听播放服务
+//                    LaunchConfig launchConfig = new LaunchConfig(true,false,true);
+//                    FlowPlayControl.getInstance().launchPlayService(context,launchConfig);
+//                }
                 isPlaying = aBoolean;
                 if(isPlaying){
                     mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.play_card_iquting_selector);
