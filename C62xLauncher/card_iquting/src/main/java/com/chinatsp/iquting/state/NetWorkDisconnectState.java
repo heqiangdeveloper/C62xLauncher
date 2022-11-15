@@ -19,7 +19,7 @@ public class NetWorkDisconnectState implements IQuTingState {
 
         ivCardIQuTingLogo.setImageResource(R.drawable.card_icon_wifi_disconnect);
         tvCardIQuTingTip.setText(R.string.iquting_disconnect_tip);
-        ivCardIQuTingButton.setImageResource(R.drawable.card_icon_left_in_normal  );
+        ivCardIQuTingButton.setImageResource(R.drawable.card_common_left_in_selector);
 
         ivCardIQuTingLogo.setVisibility(View.VISIBLE);
         tvCardIQuTingTip.setVisibility(View.VISIBLE);
