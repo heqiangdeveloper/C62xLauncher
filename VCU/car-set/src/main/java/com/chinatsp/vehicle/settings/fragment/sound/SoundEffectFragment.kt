@@ -319,13 +319,13 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
         }.toList()
         val intent = Intent("com.chinatsp.vehiclenetwork.usercenter")
         val systemHint =
-            getSwitchManager().doGetSwitchOption(SwitchNode.TOUCH_PROMPT_TONE)?.data//系统提示音
+            VoiceManager.instance.doGetSwitchOption(SwitchNode.TOUCH_PROMPT_TONE)?.data//系统提示音
         val speedVolumeCompensation =
             getSwitchManager().doGetSwitchOption(VoiceManager.instance.volumeSpeedSwitch)?.data//速度音量补偿
         val loudnessControl =
             getSwitchManager().doGetSwitchOption(SwitchNode.AUDIO_SOUND_LOUDNESS)?.data//响度控制
         val navigationMixing =
-            getRadioManager().doGetRadioOption(RadioNode.NAVI_AUDIO_MIXING)?.data//导航混音
+            VoiceManager.instance.doGetRadioOption(RadioNode.NAVI_AUDIO_MIXING)?.data//导航混音
         val fadeValue = EffectManager.instance.audioFade()//音量补偿-逐渐消失值
         val balanceValue = EffectManager.instance.getAudioBalance()//音量补偿-平衡音量
         val json = "{\"systemHint\":\"" + systemHint + "\",\"speedVolumeCompensation\":\"" +

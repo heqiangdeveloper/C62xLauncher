@@ -169,7 +169,8 @@
             android:src="@drawable/lock_animation"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginBottom="@dimen/x20"/>
+            android:layout_marginBottom="@dimen/x20"
+            android:visibility="gone"/>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/right_car_doorlock"

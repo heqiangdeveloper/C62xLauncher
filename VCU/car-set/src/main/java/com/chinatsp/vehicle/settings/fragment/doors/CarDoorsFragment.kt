@@ -23,8 +23,8 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>(), IOptionAction {
 
-    private var animationOpenLock: AnimationDrawable = AnimationDrawable()
-    private var animationCloseLock: AnimationDrawable = AnimationDrawable()
+    //private var animationOpenLock: AnimationDrawable = AnimationDrawable()
+    //private var animationCloseLock: AnimationDrawable = AnimationDrawable()
     private var animationFlameout: AnimationDrawable = AnimationDrawable()
     private var animationCarDoor: AnimationDrawable = AnimationDrawable()
 
@@ -75,8 +75,8 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
 
     private fun initAnimation() {
         val cxt = activity
-        animationOpenLock.setAnimation(cxt, R.drawable.lock_animation, binding.lockIv)
-        animationCloseLock.setAnimation(cxt, R.drawable.close_lock_animation, binding.lockIv)
+        //animationOpenLock.setAnimation(cxt, R.drawable.lock_animation, binding.lockIv)
+        //animationCloseLock.setAnimation(cxt, R.drawable.close_lock_animation, binding.lockIv)
         animationFlameout.setAnimation(cxt, R.drawable.flameout_animation, binding.rightFlameout)
         animationCarDoor.setAnimation(cxt, R.drawable.car_door_animation, binding.rightCarDoorlock)
     }
@@ -170,18 +170,18 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
             "3" -> {
                 binding.rightCarDoorlock.visibility = View.GONE
                 binding.rightFlameout.visibility = View.GONE
-                animationCloseLock.start(false, 50, null)
+                //animationCloseLock.start(false, 50, null)
             }
             "1" -> {
                 binding.rightCarDoorlock.visibility = View.GONE
                 binding.rightFlameout.visibility = View.VISIBLE
-                animationOpenLock.start(false, 50, null)
+                //animationOpenLock.start(false, 50, null)
                 animationFlameout.start(false, 50, null)
             }
             else -> {
                 binding.rightCarDoorlock.visibility = View.VISIBLE
                 binding.rightFlameout.visibility = View.GONE
-                animationOpenLock.start(false, 50, null)
+                //animationOpenLock.start(false, 50, null)
                 animationCarDoor.start(false, 50, null)
             }
         }
