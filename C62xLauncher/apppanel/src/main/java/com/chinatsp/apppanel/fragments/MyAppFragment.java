@@ -7,9 +7,15 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.PixelFormat;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.fragment.app.Fragment;
 
 import android.text.TextUtils;
@@ -90,6 +96,7 @@ public class MyAppFragment extends Fragment {
     private ByteArrayOutputStream baos;
     private Bitmap bitmap;
     private Drawable drawable;
+    private RoundedBitmapDrawable roundedBitmapDrawable;
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
     private MyAppInfoAdapter mMyAppInfoAdapter;
@@ -174,6 +181,8 @@ public class MyAppFragment extends Fragment {
         addDownloadApps();//添加正在下载的apps
         //更新应用名称，与系统语言保持一致
         refreshAppName();
+        //更新应用图标
+        refreshIcon();
         loadingTv.setVisibility(View.GONE);
         mMyAppInfoAdapter = new MyAppInfoAdapter(view.getContext(), data);
         appInfoClassifyView.setAdapter(mMyAppInfoAdapter);
@@ -232,7 +241,8 @@ public class MyAppFragment extends Fragment {
             if(info == null){//说明是应用管理，特殊处理
                 Log.d(TAG,"command appmanagement");
                 locationBean.setPackageName(AppLists.APPMANAGEMENT);
-                drawable = getResources().getDrawable(R.mipmap.ic_appmanagement_new);
+                //drawable = getResources().getDrawable(R.mipmap.ic_appmanagement_new);
+                drawable = AppLists.getResId(getContext(),locationBean.getPackageName());
                 locationBean.setName(getResources().getString(R.string.appmanagement_name));
             }else {
                 locationBean.setPackageName(info.activityInfo.packageName);
@@ -1038,6 +1048,25 @@ public class MyAppFragment extends Fragment {
                     locationBean = lists.get(i);
                     if(locationBean != null){
                         locationBean.setName(getAppName(locationBean.getPackageName()));
+                    }
+                }
+            }
+        }
+    }
+
+    /*
+    * 更新应用图标
+     */
+    private void refreshIcon(){
+        for(List<LocationBean> lists:data){
+            if(lists != null){
+                for(int i = 0; i < lists.size(); i++){
+                    locationBean = lists.get(i);
+                    if(locationBean != null){
+                        drawable = AppLists.getResId(getContext(),locationBean.getPackageName());
+                        if(drawable != null){//非第三方应用
+                            locationBean.setImgDrawable(drawable);
+                        }
                     }
                 }
             }

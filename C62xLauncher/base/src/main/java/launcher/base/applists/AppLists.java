@@ -3,11 +3,13 @@ package launcher.base.applists;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 
 import java.util.Arrays;
 import java.util.List;
 
+import launcher.base.R;
 import launcher.base.utils.property.PropertyUtils;
 
 /*
@@ -126,5 +128,60 @@ public class AppLists {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /*
+    *  根据包名，获取默认的图片
+     */
+    public static Drawable getResId(Context context, String pkgName){
+        int resId = -1;
+        switch (pkgName){
+            case systemSettings:
+                resId = R.drawable.ic_app_settings;
+                break;
+            case vehicleSettings:
+                resId = R.drawable.ic_app_carsettings;
+                break;
+            case media:
+                resId = R.drawable.ic_app_media;
+                break;
+            case usercenter:
+                resId = R.drawable.ic_app_account;
+                break;
+            case btPhone:
+                resId = R.drawable.ic_app_phone;
+                break;
+            case APPMANAGEMENT:
+                resId = R.drawable.ic_appmanagement_new;
+                break;
+            case iot:
+                resId = R.drawable.ic_app_driving_assistant;
+                break;
+            case dvr:
+                resId = R.drawable.ic_app_dvr;
+                break;
+            case userbook:
+                resId = R.drawable.ic_app_instructions;
+                break;
+            case appmarket:
+                resId = R.drawable.ic_app_store;
+                break;
+            case amap:
+                resId = R.drawable.ic_app_map;
+                break;
+            case easyconn:
+                resId = R.drawable.ic_app_yilian;
+                break;
+            case weather:
+                resId = R.drawable.ic_app_weather;
+                break;
+            default:
+                break;
+        }
+        if(resId == -1){//如果是第三方应用
+            return null;
+        }else {
+            return context.getResources().getDrawable(resId);
+        }
     }
 }

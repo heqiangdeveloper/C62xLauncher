@@ -115,7 +115,10 @@ public class RecentAppHelper {
             if (resolveInfo != null) {
                 final ActivityInfo activityInfo = resolveInfo.activityInfo;
                 final String title = activityInfo.loadLabel(pm).toString();
-                Drawable icon = activityInfo.loadIcon(pm);
+                Drawable icon = AppLists.getResId(context,activityInfo.packageName);
+                if(icon == null){
+                    icon = activityInfo.loadIcon(pm);
+                }
 
                 if (title != null && title.length() > 0 && icon != null) {
                     singleAppInfo.put("title", title);
