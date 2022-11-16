@@ -45,18 +45,35 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         get() = SternDoorManager.instance
 
     private val trunkAnimationResource: IntArray by lazy {
-        intArrayOf(
-            R.drawable.trunk_door_00,
-            R.drawable.trunk_door_01,
-            R.drawable.trunk_door_02,
-            R.drawable.trunk_door_03,
-            R.drawable.trunk_door_04,
-            R.drawable.trunk_door_05,
-            R.drawable.trunk_door_06,
-            R.drawable.trunk_door_07,
-            R.drawable.trunk_door_08,
-            R.drawable.trunk_door_09
-        )
+        if (VcuUtils.isCareLevel(Level.LEVEL5, expect = true)) {
+            intArrayOf(
+                R.drawable.trunk_door_lv5_10,
+                R.drawable.trunk_door_lv5_09,
+                R.drawable.trunk_door_lv5_08,
+                R.drawable.trunk_door_lv5_07,
+                R.drawable.trunk_door_lv5_06,
+                R.drawable.trunk_door_lv5_05,
+                R.drawable.trunk_door_lv5_04,
+                R.drawable.trunk_door_lv5_03,
+                R.drawable.trunk_door_lv5_02,
+                R.drawable.trunk_door_lv5_01,
+                R.drawable.trunk_door_lv5_00
+            )
+        }else {
+            intArrayOf(
+                R.drawable.trunk_door_10,
+                R.drawable.trunk_door_09,
+                R.drawable.trunk_door_08,
+                R.drawable.trunk_door_07,
+                R.drawable.trunk_door_06,
+                R.drawable.trunk_door_05,
+                R.drawable.trunk_door_04,
+                R.drawable.trunk_door_03,
+                R.drawable.trunk_door_02,
+                R.drawable.trunk_door_01,
+                R.drawable.trunk_door_00
+            )
+        }
     }
 
     override fun getLayoutId(): Int {

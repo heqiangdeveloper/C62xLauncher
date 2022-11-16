@@ -96,7 +96,7 @@ class GlobalManager private constructor() : BaseManager() {
                 readIntProperty(CarCabinManager.ID_LOUPWRSTATMNGTVLD, Origin.CABIN)
 
             /**电源等级*/
-            var loUPwrMngtStatlvl =
+            val loUPwrMngtStatlvl =
                 readIntProperty(CarCabinManager.ID_LOUPWRMNGTSTATLVL, Origin.CABIN)
 
             /**发动机状态*/
@@ -261,8 +261,8 @@ class GlobalManager private constructor() : BaseManager() {
             return
         }
         if (IAct.REMAINING == command.act) {
-            val value = readFloatProperty(CarCabinManager.ID_IP_FUELLEFTOVER, Origin.CABIN)
-            command.message = "您的爱车${command.slots?.name}为${value}升"
+            val value = readFloatProperty(CarCabinManager.ID_FUELTANK_REMAINING, Origin.CABIN)
+            command.message = "您的爱车${command.slots?.name}为百分之${value}"
             callback?.onCmdHandleResult(command)
             return
         }

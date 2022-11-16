@@ -77,7 +77,7 @@ public class LauncherSearchActivity extends AppCompatActivity implements SearchA
         }
     }
 
-    private TextWatcher mTextWatcher = new TextWatcher() {
+    private final TextWatcher mTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -161,27 +161,18 @@ public class LauncherSearchActivity extends AppCompatActivity implements SearchA
             final ImageView icon = view.findViewById(R.id.delete_icon);  //查找  到当前  删除小图标
             text.setText(list.get(i).getContent());
             int finalI = i;
-            text.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mEdittextSearchWord.setText(list.get(finalI).getContent());
-                    mEdittextSearchWord.setSelection(list.get(finalI).getContent().length());//将光标移到文字最后
-                }
+            text.setOnClickListener(v -> {
+                mEdittextSearchWord.setText(list.get(finalI).getContent());
+                mEdittextSearchWord.setSelection(list.get(finalI).getContent().length());//将光标移到文字最后
             });
-            text.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    icon.setVisibility(View.VISIBLE);
-                    text.setBackground(ContextCompat.getDrawable(LauncherSearchActivity.this, R.drawable.soushuo_sel_bg_198));
-                    return true;
-                }
+            text.setOnLongClickListener(v -> {
+                icon.setVisibility(View.VISIBLE);
+                text.setBackground(ContextCompat.getDrawable(LauncherSearchActivity.this, R.drawable.soushuo_sel_bg_198));
+                return true;
             });
-            icon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    db.deleteCountHistorical(list.get(finalI).getContent());
-                    initLayout();
-                }
+            icon.setOnClickListener(v -> {
+                db.deleteCountHistorical(list.get(finalI).getContent());
+                initLayout();
             });
             tagLayout.addView(view);
         }
@@ -209,8 +200,12 @@ public class LauncherSearchActivity extends AppCompatActivity implements SearchA
                 rcvSearch.setAdapter(adapter);
             }
         } else {
+            if (db.getHistoricalData().size() == 0) {
+                findViewById(R.id.historical_layout).setVisibility(View.GONE);
+            } else {
+                findViewById(R.id.historical_layout).setVisibility(View.VISIBLE);
+            }
             findViewById(R.id.search_hint).setVisibility(View.VISIBLE);
-            findViewById(R.id.historical_layout).setVisibility(View.VISIBLE);
             findViewById(R.id.rcvSearch).setVisibility(View.GONE);
             findViewById(R.id.list_hint).setVisibility(View.GONE);
         }
