@@ -481,6 +481,8 @@ public class MyAppFragment extends Fragment {
                 if(data.size() == 0){
                     getOriginalData();
                 }
+                //更新应用图标
+                refreshIcon();
                 mMyAppInfoAdapter = new MyAppInfoAdapter(getContext(), data);
                 appInfoClassifyView.setAdapter(mMyAppInfoAdapter);
 //                appInfoClassifyView.setCanUninstallNameLists(getCanUninstallLists());

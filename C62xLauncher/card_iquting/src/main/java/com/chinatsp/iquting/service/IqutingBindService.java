@@ -246,6 +246,9 @@ public class IqutingBindService {
                 public void onSuccess(Integer s) {
                     //此处为回调的sessionId
                     Log.d(TAG,"sessionId: " + s.intValue());
+                    if(visualizerTool != null){
+                        visualizerTool.releaseVisualizer();
+                    }
                     visualizerTool = new VisualizerTool(s.intValue());
                     visualizerTool.setPlayStatus(true);
                 }
@@ -254,6 +257,7 @@ public class IqutingBindService {
             if(visualizerTool != null){
                 visualizerTool.setPlayStatus(false);
                 visualizerTool.releaseVisualizer();
+                visualizerTool = null;
             }
         }
     }
