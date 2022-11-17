@@ -11,6 +11,15 @@
             android:name=".editor.ui.CardEditorActivity"
             android:launchMode="singleInstance"
             android:exported="false" />
+
+        <service
+            android:name=".CardIntentService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.chinatsp.launcher.cardCommandService" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

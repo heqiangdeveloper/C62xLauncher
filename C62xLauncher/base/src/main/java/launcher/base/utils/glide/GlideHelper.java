@@ -98,7 +98,7 @@ public class GlideHelper {
                 .apply(new GlideCommonRequestOption());
         if (radius > 0) {
             requestBuilder = requestBuilder.transform(
-                    new RoundBitmapTransformation(radius, radius, radius, radius));
+                    new RoundBitmapTransformation(radius, true));
         }
         requestBuilder.into(imageView);
     }

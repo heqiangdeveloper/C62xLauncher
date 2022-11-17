@@ -106,7 +106,7 @@
     <TextView
         android:id="@+id/tvCardVolcanoNetworkErr"
         style="@style/CardLv2TextView"
-        android:layout_width="222px"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:letterSpacing="0.01"
         android:lineSpacingMultiplier="1.5"

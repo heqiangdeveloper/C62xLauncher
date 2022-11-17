@@ -12,14 +12,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="41px"
-
+        android:scaleType="centerCrop"
         />
 
     <TextView
         android:id="@+id/tvVolcanoVideoItemTitle"
         android:layout_width="0px"
         android:layout_height="46px"
-        android:text="给我一首歌的时间"
+        android:text=""
         style="@style/CardLv2TextView"
         android:ellipsize="end"
         android:maxLines="1"

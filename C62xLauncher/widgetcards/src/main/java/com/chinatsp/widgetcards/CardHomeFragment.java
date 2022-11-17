@@ -226,7 +226,6 @@ public class CardHomeFragment extends BaseFragment {
             @Override
             public boolean canScrollHorizontally() {
                 // 展开时, 禁止滑动
-//                return true;
                 return !ExpandStateManager.getInstance().getExpandState();
             }
 

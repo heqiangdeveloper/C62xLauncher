@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
+import com.bumptech.glide.load.resource.bitmap.TransformationUtils;
 import com.bumptech.glide.util.Preconditions;
 import com.bumptech.glide.util.Util;
 
@@ -23,6 +24,8 @@ public final class RoundBitmapTransformation extends BitmapTransformation {
     private final int leftBottomRadius;
     private final int rightBottomRadius;
 
+
+    private boolean mCenterCrop;
 
     /**
      * @param leftTopRadius     the corner radius of Left (in device-specific pixels).
@@ -43,11 +46,25 @@ public final class RoundBitmapTransformation extends BitmapTransformation {
         this.rightBottomRadius = rightBottomRadius;
     }
 
+    public RoundBitmapTransformation(int radius, boolean centerCrop) {
+        Preconditions.checkArgument(radius >= 0, "radius must be greater than 0.");
+        this.leftTopRadius = radius;
+        this.rightTopRadius = radius;
+        this.leftBottomRadius = radius;
+        this.rightBottomRadius = radius;
+        this.mCenterCrop = centerCrop;
+    }
+
     @Override
     protected Bitmap transform(
             @NonNull BitmapPool pool, @NonNull Bitmap toTransform, int outWidth, int outHeight) {
-        return RoundTransformationUtils.roundedCorners(pool, toTransform,
-            leftTopRadius, rightTopRadius, leftBottomRadius, rightBottomRadius);
+        if (mCenterCrop) {
+            Bitmap bitmap = TransformationUtils.centerCrop(pool, toTransform, outWidth, outHeight);
+            return TransformationUtils.roundedCorners(pool, bitmap, leftTopRadius);
+        } else {
+            return RoundTransformationUtils.roundedCorners(pool, toTransform,
+                    leftTopRadius, rightTopRadius, leftBottomRadius, rightBottomRadius);
+        }
     }
 
     @Override

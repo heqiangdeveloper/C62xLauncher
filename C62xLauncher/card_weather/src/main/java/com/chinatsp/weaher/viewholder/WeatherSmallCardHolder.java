@@ -16,10 +16,11 @@ import com.chinatsp.weaher.viewholder.city.SmallCityListAdapter;
 import com.chinatsp.weaher.viewholder.indicator.PointIndicator;
 import com.iflytek.autofly.weather.entity.WeatherInfo;
 
-import java.util.IllegalFormatCodePointException;
 import java.util.List;
 
-public class WeatherSmallCardHolder extends WeatherCardHolder{
+import launcher.base.utils.EasyLog;
+
+public class WeatherSmallCardHolder extends WeatherCardHolder {
 
 
     private final TextView tvCardWeatherCity;
@@ -29,7 +30,7 @@ public class WeatherSmallCardHolder extends WeatherCardHolder{
     private final ImageView ivWeatherBg;
     private final ImageView ivCardWeatherRefresh;
 
-    private RecyclerView rcvCityList;
+    private InnerVerticalRecyclerView rcvCityList;
     private SmallCityListAdapter mCityListAdapter;
 
     private OnPageChangedListener mOnPageChangedListener;
@@ -77,6 +78,7 @@ public class WeatherSmallCardHolder extends WeatherCardHolder{
                 }
             }
         });
+
     }
 
     private void updatePosition(int pos) {
@@ -84,13 +86,25 @@ public class WeatherSmallCardHolder extends WeatherCardHolder{
         if (mOnPageChangedListener != null) {
             mOnPageChangedListener.onSelected(pos);
         }
+        EasyLog.d("updatePosition", "updatePosition pos:"+pos);
+        updateRcvStatus(pos);
     }
 
     public void scrollToPosition(int pos) {
         LinearLayoutManager layoutManager = (LinearLayoutManager) rcvCityList.getLayoutManager();
         if (layoutManager != null) {
-            layoutManager.scrollToPositionWithOffset(pos,0);
+            layoutManager.scrollToPositionWithOffset(pos, 0);
             mIndicator.select(pos);
+            EasyLog.d("scrollToPosition", "scrollToPosition pos:"+pos);
+            updateRcvStatus(pos);
+        }
+    }
+
+    private void updateRcvStatus(int pos) {
+        if (pos > 0) {
+            rcvCityList.setScrollTop(false);
+        } else if (pos == 0) {
+            rcvCityList.setScrollTop(true);
         }
     }
 
@@ -117,6 +131,8 @@ public class WeatherSmallCardHolder extends WeatherCardHolder{
         mIndicator.reset(cityList.size());
         showCityListRecyclerView();
         mCityListAdapter.setData(cityList);
-        WeatherUtil.logI("WeatherSmallCardHolder updateCityList "+ cityList);
+        WeatherUtil.logI("WeatherSmallCardHolder updateCityList " + cityList);
+        rcvCityList.setScrollTop(true);
     }
+
 }

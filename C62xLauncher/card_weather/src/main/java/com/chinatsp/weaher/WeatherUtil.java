@@ -1,6 +1,7 @@
 package com.chinatsp.weaher;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.text.TextUtils;
 
@@ -112,5 +113,17 @@ public class WeatherUtil {
     public static void goApp(Context context) {
         RecentAppHelper.launchApp(context, "com.iflytek.autofly.weather");
 
+    }
+
+    public static void startCardEditor(Context context) {
+        Intent intent = new Intent();
+        String commandAction = "com.chinatsp.launcher.cardCommandService";
+        String opKey = "OP_KEY";
+        intent.setPackage("com.chinatsp.launcher");
+        intent.setAction(commandAction);
+        // 1: 卡片编辑界面参数
+        // 方法中的参数, 请参考 CardIntentService
+        intent.putExtra(opKey, 1);
+        context.startService(intent);
     }
 }

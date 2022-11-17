@@ -7,12 +7,22 @@
     android:focusable="false"
     android:background="@drawable/card_bg_small">
 
+    <View
+        android:id="@+id/ivCardTopSpace"
+        android:layout_width="match_parent"
+        android:layout_height="64px"
+        android:layout_marginTop="31px"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/viewPager2InSmallCard"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
         />
+
 
     <ImageView
         android:id="@+id/ivCardZoom"

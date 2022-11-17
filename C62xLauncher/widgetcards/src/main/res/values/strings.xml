@@ -15,5 +15,11 @@
     <string name="search_content_number">搜索内容不能超过29个字符</string>
     <string name="search_content_not">⽆搜索结果，请重新输⼊搜索关键词</string>
     <string name="search_history">历史搜索</string>
+    <string name="drawer_name_common_recommend">常用推荐</string>
+    <string name="card_state_no_content">暂无内容</string>
+    <string name="drawer_consultant_evaluation">车辆健康评价</string>
+    <string name="drawer_consultant_economy_rank">经济性排名</string>
+    <string name="drawer_consultant_maintenance_mileage">剩余保养里程</string>
+    <string name="drawer_consultant_service_mileage_exceed">超出保养里程</string>
 
 </resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="btn_finish">OK</string>
+    <string name="card_network_err">network disconnected</string>
+    <string name="card_data_err">Load failed</string>
+    <string name="card_edit_msg_ok">modification successful</string>
+    <string name="card_edit_btn_save">Save</string>
+    <string name="card_edit_btn_cancel">Abandon</string>
+    <string name="card_edit_modification_warning">The changes have not been saved, \nwhether to save the changes and exit</string>
+</resources>

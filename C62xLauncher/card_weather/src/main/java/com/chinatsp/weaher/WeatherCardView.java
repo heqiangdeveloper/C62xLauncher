@@ -6,11 +6,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,23 +14,16 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
-import androidx.lifecycle.Observer;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.chinatsp.weaher.repository.WeatherBean;
 import com.chinatsp.weaher.viewholder.OnPageChangedListener;
 import com.chinatsp.weaher.viewholder.WeatherBigCardHolder;
 import com.chinatsp.weaher.viewholder.WeatherSmallCardHolder;
-import com.chinatsp.weaher.viewholder.indicator.PointIndicator;
-import com.chinatsp.weaher.weekday.DayWeatherBean;
 import com.iflytek.autofly.weather.entity.WeatherInfo;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import card.service.ICardStyleChange;
 import launcher.base.utils.EasyLog;
-import launcher.base.utils.recent.RecentAppHelper;
 import launcher.base.utils.view.LayoutParamUtil;
 
 

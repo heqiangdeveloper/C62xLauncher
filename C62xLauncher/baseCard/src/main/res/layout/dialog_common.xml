@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="当前有卡片编辑修改尚未保存\n是否保存修改并退出"
+        android:text="@string/card_edit_modification_warning"
         android:lineSpacingExtra="10px"
         style="@style/CardLv2TextView"
         android:includeFontPadding="false"

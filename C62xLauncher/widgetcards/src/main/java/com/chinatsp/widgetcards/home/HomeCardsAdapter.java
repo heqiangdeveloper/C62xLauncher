@@ -65,7 +65,13 @@ public class HomeCardsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         ViewGroup layout;
         layout = (ViewGroup) mLayoutInflater.inflate(R.layout.item_card_frame, parent, false);
         View innerCard = cardEntity.getLayout(layout.getContext());
-        layout.addView(innerCard, 0);
+        if (viewType == CardManager.CardType.PHONE) {
+            // 蓝牙卡片: 添加在第1个child之后. 因为顶部有两个TAB按钮,  不能被卡片顶部ivCardTopSpace覆盖
+            layout.addView(innerCard, 1);
+        } else {
+            // 普通卡片: 添加在第0个child之后
+            layout.addView(innerCard, 0);
+        }
         EasyLog.d(TAG, "createCardFrameHolder: " + cardEntity.getName());
         CardFrameViewHolder viewHolder = new CardFrameViewHolder(layout, mRecyclerView, innerCard);
         mViewHolderMap.put(cardEntity, viewHolder);

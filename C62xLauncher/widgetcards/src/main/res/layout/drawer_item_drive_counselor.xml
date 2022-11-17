@@ -17,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="42px"
         android:layout_marginTop="3px"
-        android:text="行车顾问"
+        android:text="@string/card_name_drive_consultant"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,7 +35,7 @@
             android:layout_height="42px"
             android:layout_marginStart="18px"
             android:layout_marginTop="18px"
-            android:text="车辆健康评价"
+            android:text="@string/drawer_consultant_evaluation"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -88,7 +88,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="63px"
-            android:text="剩余保养里程"
+            android:text="@string/drawer_consultant_maintenance_mileage"
             android:textSize="22px"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -134,7 +134,7 @@
             style="@style/CardLv4TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="经济性排名"
+            android:text="@string/drawer_consultant_economy_rank"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="18px"

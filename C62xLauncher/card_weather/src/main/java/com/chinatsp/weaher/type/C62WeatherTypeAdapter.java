@@ -27,7 +27,7 @@ public class C62WeatherTypeAdapter implements WeatherTypeAdapter {
         } else if (isWind(target)) {
             return new C62WeatherType(WeatherBean.TYPE_WINDY);
         } else if (isOvercast(target)) {
-            return new C62WeatherType(WeatherBean.TYPE_WINDY);
+            return new C62WeatherType(WeatherBean.TYPE_OVERCAST);
         }
 
         return new C62WeatherType(WeatherBean.TYPE_UNKNOWN);
