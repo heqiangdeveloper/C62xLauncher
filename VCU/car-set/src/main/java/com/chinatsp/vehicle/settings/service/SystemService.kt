@@ -4,10 +4,8 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import android.text.TextUtils
-import android.view.WindowManager
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.vehicle.settings.R
-import com.chinatsp.vehicle.settings.app.Toast
 import com.chinatsp.vehicle.settings.fragment.dialog.DialogMaster
 import com.chinatsp.vehicle.settings.fragment.dialog.SystemAlertDialog
 import com.common.xui.utils.SystemDialogHelper
@@ -20,6 +18,7 @@ class SystemService : Service(), SystemDialogHelper.OnCountDownListener {
     private var contentStr = R.string.global_txt_close
     private var isShowing = true
     private var cancelable = true//是否可以点击外面消失
+    private lateinit var editDialog: SystemAlertDialog
     override fun onBind(p0: Intent?): IBinder? {
         return null
     }
@@ -39,37 +38,42 @@ class SystemService : Service(), SystemDialogHelper.OnCountDownListener {
             waitTime = 100
             setDialogTime()
             cancelable = true
-        }else if (!TextUtils.isEmpty(type) && type == "leve1") {
+        } else if (!TextUtils.isEmpty(type) && type == "leve1") {
             contentStr = R.string.global_txt_close
             waitTime = 1000 * 60 * 15
             setDialogTime()
             cancelable = true
-        }else if (!TextUtils.isEmpty(type) && type == "leve2") {
+        } else if (!TextUtils.isEmpty(type) && type == "leve2") {
             contentStr = R.string.global_txt_close
             waitTime = 200
             setDialogTime()
             cancelable = true
-        }else if(!TextUtils.isEmpty(type) && type == "transportMode"){
+        } else if (!TextUtils.isEmpty(type) && type == "transportMode") {
             /**运输模式*/
             //Toast.showToast(applicationContext, getString(R.string.transport_mode), true)
             contentStr = R.string.transport_mode
             waitTime = 100
             setDialogTime()
             cancelable = false
-        }else if(!TextUtils.isEmpty(type) && type == "exhibitionMode"){
+        } else if (!TextUtils.isEmpty(type) && type == "exhibitionMode") {
             /**展车模式*/
             //Toast.showToast(applicationContext, getString(R.string.exhibition_mode), true)
             contentStr = R.string.exhibition_mode
             waitTime = 100
             setDialogTime()
             cancelable = true
-        }else if(!TextUtils.isEmpty(type) && type == "exhibitionModeError"){
+        } else if (!TextUtils.isEmpty(type) && type == "exhibitionModeError") {
             /**展车模式切换失败*/
             //Toast.showToast(applicationContext, getString(R.string.exhibition_mode), true)
             contentStr = R.string.exhibition_mode_error
             waitTime = 100
             setDialogTime()
             cancelable = true
+        } else if (!TextUtils.isEmpty(type) && type == "default") {
+            /**正常模式*/
+            if (!isShowing && contentStr == R.string.transport_mode) {
+                editDialog.dismiss()
+            }
         }
 
         return super.onStartCommand(intent, flags, startId)
@@ -77,7 +81,7 @@ class SystemService : Service(), SystemDialogHelper.OnCountDownListener {
 
     override fun onFinished() {
         /**避免延迟回来之后车子已启动*/
-        if(!VcuUtils.isEngineRunning()){
+        if (!VcuUtils.isEngineRunning()) {
             updateHintMessage()
         }
     }
@@ -88,7 +92,7 @@ class SystemService : Service(), SystemDialogHelper.OnCountDownListener {
             { },
             { }, 740, 488
         )
-        val editDialog: SystemAlertDialog = dialogMaster.dialog
+        editDialog = dialogMaster.dialog
         editDialog.setDetailsContent(contentStr)
         editDialog.setCancelable(cancelable)
         //6.0 TYPE_APPLICATION_OVERLAY    TYPE_STATUS_BAR_PANEL
@@ -101,7 +105,8 @@ class SystemService : Service(), SystemDialogHelper.OnCountDownListener {
         isShowing = false
 
     }
-    private fun setDialogTime(){
+
+    private fun setDialogTime() {
         //if (isShowing) {//避免几个弹窗同时出现，已跟产品沟通，可以同时出现
         val helper = SystemDialogHelper()
         helper.timeSchedule(waitTime, this)

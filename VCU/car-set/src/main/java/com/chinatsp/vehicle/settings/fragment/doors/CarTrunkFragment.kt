@@ -1,6 +1,7 @@
 package com.chinatsp.vehicle.settings.fragment.doors
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
@@ -203,6 +204,9 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     private fun addRadioLiveDataListener() {
         viewModel.sternSmartEnter.observe(this) {
             doUpdateRadio(RadioNode.STERN_SMART_ENTER, it, false)
+        }
+        viewModel.gearsFunction.observe(this){
+            Log.i("ttttttt","挡位变化： "+it.get())
         }
     }
 
@@ -411,6 +415,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         initSwitchOption(SwitchNode.AS_STERN_ELECTRIC, viewModel.electricFunction)
         initSwitchOption(SwitchNode.STERN_LIGHT_ALARM, viewModel.lightAlarmFunction)
         initSwitchOption(SwitchNode.STERN_AUDIO_ALARM, viewModel.audioAlarmFunction)
+        initSwitchOption(SwitchNode.GEARS, viewModel.gearsFunction)
     }
 
     override fun findSwitchByNode(node: SwitchNode): SwitchButton? {

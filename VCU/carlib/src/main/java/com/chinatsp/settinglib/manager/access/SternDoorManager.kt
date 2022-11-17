@@ -62,6 +62,13 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
         }
     }
 
+    private val gearsAlarmSwitchState: SwitchState by lazy {
+        val node = SwitchNode.GEARS
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+        }
+    }
+
     private val audioAlarmSwitchState: SwitchState by lazy {
         val node = SwitchNode.STERN_AUDIO_ALARM
         return@lazy createAtomicBoolean(node) { result, value ->
@@ -91,6 +98,7 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
             val cabinSet = HashSet<Int>().apply {
                 add(SwitchNode.AS_STERN_ELECTRIC.get.signal)
                 add(SwitchNode.STERN_LIGHT_ALARM.get.signal)
+                add(SwitchNode.GEARS.get.signal)
                 add(SwitchNode.STERN_AUDIO_ALARM.get.signal)
                 add(RadioNode.STERN_SMART_ENTER.get.signal)
                 add(Progress.TRUNK_STOP_POSITION.get.signal)
@@ -164,6 +172,7 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
             SwitchNode.AS_STERN_ELECTRIC -> electricSwitchState.copy()
             SwitchNode.STERN_LIGHT_ALARM -> lightAlarmSwitchState.copy()
             SwitchNode.STERN_AUDIO_ALARM -> audioAlarmSwitchState.copy()
+            SwitchNode.GEARS -> gearsAlarmSwitchState.copy()
             else -> null
         }
     }
@@ -172,6 +181,7 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
         val result = when (node) {
             SwitchNode.STERN_AUDIO_ALARM -> audioAlarmSwitchState
             SwitchNode.STERN_LIGHT_ALARM -> lightAlarmSwitchState
+            SwitchNode.GEARS -> gearsAlarmSwitchState
             SwitchNode.AS_STERN_ELECTRIC -> electricSwitchState
             else -> null
         }
@@ -194,6 +204,9 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
             }
             SwitchNode.STERN_AUDIO_ALARM.get.signal -> {
                 onSwitchChanged(SwitchNode.STERN_AUDIO_ALARM, audioAlarmSwitchState, property)
+            }
+            SwitchNode.GEARS.get.signal -> {
+                onSwitchChanged(SwitchNode.GEARS, gearsAlarmSwitchState, property)
             }
             RadioNode.STERN_SMART_ENTER.get.signal -> {
                 onRadioChanged(RadioNode.STERN_SMART_ENTER, sternSmartEnter, property)
@@ -304,6 +317,28 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
         val signal = CarCabinManager.ID_BODY_DOOR_TRUNK_DOOR_STATE;
         //VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL
         return readIntProperty(signal, Origin.CABIN, VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL)
+    }
+
+    /**
+     * 获取挡位信息
+     *
+     * @return 0x0=Unkonw；
+     */
+    fun getGearsValue(node: SwitchNode): SwitchState? {
+        val signal = CarCabinManager.ID_TCU_TARGETGEAR
+        // return when (node) {
+        //            SwitchNode.AS_STERN_ELECTRIC -> electricSwitchState.copy()
+        //            SwitchNode.STERN_LIGHT_ALARM -> lightAlarmSwitchState.copy()
+        //            SwitchNode.STERN_AUDIO_ALARM -> audioAlarmSwitchState.copy()
+        //            else -> null
+        //        }
+        //return readIntProperty(signal, Origin.CABIN, VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL)
+        return when (node) {
+            SwitchNode.GEARS -> electricSwitchState.copy()
+            SwitchNode.STERN_LIGHT_ALARM -> lightAlarmSwitchState.copy()
+            SwitchNode.STERN_AUDIO_ALARM -> audioAlarmSwitchState.copy()
+            else -> null
+        }
     }
 
     /**

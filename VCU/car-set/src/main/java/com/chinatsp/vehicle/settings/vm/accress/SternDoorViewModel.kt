@@ -8,10 +8,12 @@ import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.listener.IProgressListener
+import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.access.SternDoorManager
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
+import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.common.library.frame.base.BaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,6 +30,13 @@ class SternDoorViewModel @Inject constructor(app: Application, model: BaseModel)
 
     private val _electricFunction: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.AS_STERN_ELECTRIC
+        MutableLiveData(manager.doGetSwitchOption(node))
+    }
+
+    val gearsFunction: LiveData<SwitchState> get() = _gearsFunction
+
+    private val _gearsFunction: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.GEARS
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
@@ -81,6 +90,9 @@ class SternDoorViewModel @Inject constructor(app: Application, model: BaseModel)
             }
             SwitchNode.STERN_AUDIO_ALARM -> {
                 doUpdate(_audioAlarmFunction, status)
+            }
+            SwitchNode.GEARS  -> {
+                doUpdate(_gearsFunction, status)
             }
             else -> {}
         }

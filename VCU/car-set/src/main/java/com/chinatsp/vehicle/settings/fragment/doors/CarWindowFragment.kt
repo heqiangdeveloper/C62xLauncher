@@ -100,6 +100,7 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
         binding.carLockDetails.setOnClickListener(this::onViewClick)
         binding.carWiperDetails.setOnClickListener(this::onViewClick)
         binding.remoteRoseWindowDetails.setOnClickListener(this::onViewClick)
+        binding.carWindowRainyDetails.setOnClickListener(this::onViewClick)
     }
 
     private fun onViewClick(view: View, clickUid: Int, frank: Boolean) {
@@ -117,6 +118,9 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
             }
             binding.remoteRoseWindowDetails -> {
                 showPopWindow(R.string.car_window_lock_content, it)
+            }
+            binding.carWindowRainyDetails-> {
+                showPopWindow(R.string.car_window_rainy_content, it)
             }
         }
     }
@@ -215,9 +219,9 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
             popWindow = PopWindow(activity, R.layout.pop_window,
                 activity?.let {
                     AppCompatResources.getDrawable(it,
-                        R.drawable.popup_bg_qipao172_1)
+                        R.drawable.popup_bg_qipao451_424)
                 })
-            popWindow.showDownLift(view, 30, -340)
+            popWindow.showDownLift(view, 30, -170)
         } else if (view.id == binding.remoteRoseWindowDetails.id) {
             popWindow = PopWindow(activity, R.layout.pop_window,
                 activity?.let {
@@ -225,6 +229,13 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
                         R.drawable.popup_bg_qipao172_2)
                 })
             popWindow.showDownLift(view, 30, -80)
+        }else if (view.id == binding.carWindowRainyDetails.id) {
+            popWindow = PopWindow(activity, R.layout.pop_window,
+                activity?.let {
+                    AppCompatResources.getDrawable(it,
+                        R.drawable.popup_bg_qipao451_424)
+                })
+            popWindow.showDownLift(view, 30, -175)
         } else {
             popWindow = PopWindow(activity, R.layout.pop_window,
                 activity?.let {

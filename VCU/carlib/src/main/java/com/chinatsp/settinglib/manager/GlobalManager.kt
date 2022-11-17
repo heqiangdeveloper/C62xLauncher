@@ -73,12 +73,19 @@ class GlobalManager private constructor() : BaseManager() {
 //            0x0: Normal Mode（default） 0x1: Transport Mode  0x2: Exhibition Mode
 //            0x3: Factory Mode（reserved）  0x4: Crash Mode（reserved）
 //            0x5: Test Mode（reserved）  0x6: Reserved  0x7: Rerserved
-            if (0x1 == value) {
-                /**运输模式*/
-                startDialogService("transportMode")
-            } else if (0x2 == value) {
-                /**展车模式*/
-                startDialogService("exhibitionMode")
+            when (value) {
+                0x0 -> {
+                    /**正常模式*/
+                    startDialogService("default")
+                }
+                0x1 -> {
+                    /**运输模式*/
+                    startDialogService("transportMode")
+                }
+                0x2 -> {
+                    /**展车模式*/
+                    startDialogService("exhibitionMode")
+                }
             }/*else if(0x4 == value){
                 */
             /**展车模式切换失败*//*

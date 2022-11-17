@@ -104,11 +104,20 @@
                 app:layout_constraintTop_toBottomOf="@id/line2">
 
                 <TextView
+                    android:id="@+id/car_window_rainy_txt"
                     style="@style/switch_row_option_style"
                     android:text="@string/car_window_rainy_day"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/car_window_rainy_details"
+                    style="@style/image_prompt"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/car_window_rainy_txt"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:tag="dialogImage"/>
 
                 <com.common.xui.widget.button.switchbutton.SwitchButton
                     android:id="@+id/car_window_rainy_day_swb"

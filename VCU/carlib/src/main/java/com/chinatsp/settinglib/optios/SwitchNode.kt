@@ -387,6 +387,17 @@ enum class SwitchNode(
     ),
 
     /**
+     * 挡位
+     * set ->
+     * get -> 0x0: Disable 0x0A: Enable
+     */
+    GEARS(
+        get = Norm( off = 0x0A, signal = CarCabinManager.ID_TCU_TARGETGEAR),
+        set = Norm(),
+        default = true
+    ),
+
+    /**
      * 车门车窗--电动尾门--灯光闪烁报警
      * set -> 0x1: ON    0x2: OFF
      * get -> 0x0: Disable 0x1: Enable
