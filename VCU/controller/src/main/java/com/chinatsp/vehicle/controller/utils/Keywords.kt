@@ -28,6 +28,9 @@ interface Keywords {
 
         const val KM = "公里"
 
+        const val PANORAMA = "360"
+
+        const val VIEW_TRANS = "VIEW_TRANS"
 
 
 
@@ -53,7 +56,7 @@ interface Keywords {
         const val ABAT_VENT = "遮阳帘"
         const val DRIVING_MODE = "驾驶模式"
         const val LAMP = "氛围灯"
-        val DIPPED_HEAD_LIGHT = arrayOf("近光灯", "小灯")
+        val DIPPED_HEAD_LIGHT = arrayOf("近光灯", "小灯", "灯光")
         val DISTANT_HEAD_LIGHT = arrayOf("远光灯", "大灯")
         val FOG_LIGHT: String get() = "雾灯"
         val SIDE_LIGHT: String get() = "位置灯"
@@ -196,5 +199,9 @@ interface Keywords {
         const val REF_ZERO = "ZERO"
 
         const val COMMAND_FAILED = "操作没有成功，等一下再试吧"
+
+        const val NEED_START_ENGINE = "操作没有成功，请先启动发动机"
+
+
     }
 }

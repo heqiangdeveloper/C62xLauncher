@@ -1,5 +1,6 @@
 package com.chinatsp.vehicle.controller.producer
 
+import android.text.TextUtils
 import com.chinatsp.vehicle.controller.LogManager
 import com.chinatsp.vehicle.controller.annotation.Action
 import com.chinatsp.vehicle.controller.annotation.IPart
@@ -19,21 +20,33 @@ class PanoramaCommandProducer : ICommandProducer {
 
     fun attemptCreateCommand(slots: Slots): CarCmd? {
         var command: CarCmd? = null
-        if (!slots.text.contains("倒车") && !slots.text.contains("泊车")) {
-            if (null == command) {
-                command = attemptSwitchCommand(slots)
-            }
-            if (null == command) {
-                command = attemptModeCommand(slots)
-            }
-            if (null == command) {
-                command = attemptCameraCommand(slots)
-            }
+        if (Keywords.PANORAMA != slots.name) {
+            return command
         }
+        if (null == command) {
+            command = attemptSwitchCommand(slots)
+        }
+        if (null == command) {
+            command = attemptModeCommand(slots)
+        }
+        if (null == command) {
+            command = attemptCameraCommand(slots)
+        }
+//        if (!slots.text.contains("倒车") && !slots.text.contains("泊车")) {
+//            if (null == command) {
+//                command = attemptSwitchCommand(slots)
+//            }
+//            if (null == command) {
+//                command = attemptModeCommand(slots)
+//            }
+//            if (null == command) {
+//                command = attemptCameraCommand(slots)
+//            }
+//        }
         return command
     }
 
-//    AVM view set request signal 切换全景视图命令，Reserved
+    //    AVM view set request signal 切换全景视图命令，Reserved
 //    0x0: Inactive
 //    0x1: Front view
 //    0x2: Rear view
@@ -58,21 +71,21 @@ class PanoramaCommandProducer : ICommandProducer {
 //    0x15~0x1F: Reserved
     private fun attemptCameraCommand(slots: Slots): CarCmd? {
         LogManager.e("", "${slots.insType}, ${slots.text}")
-        val part: Int
         var action = Action.VOID
-        if (contains(slots.text, "前摄像头", "前视角")) {
-            part = IPart.HEAD
-        } else if (contains(slots.text, "后摄像头", "后视角")) {
-            part = IPart.TAIL
-        } else if (contains(slots.text, "左摄像头", "左视角")) {
-            part = IPart.L_F or IPart.L_B
-        } else if (contains(slots.text, "右摄像头", "右视角")) {
-            part = IPart.R_F or IPart.R_B
+        val direction = slots.direction
+        val part = if (!TextUtils.isEmpty(direction)) {
+            checkoutPart(direction)
         } else {
-            part = IPart.HEAD
+            parsePartInText(slots.text)
         }
-        if (contains(slots.text, "打开", "切换")) {
+        if (Keywords.OPEN == slots.operation) {
             action = Action.CHANGED
+        } else if (Keywords.VIEW_TRANS == slots.operation) {
+            action = Action.CHANGED
+        } else {
+            if (contains(slots.text, "打开", "切换")) {
+                action = Action.CHANGED
+            }
         }
         if (Action.VOID != action && IPart.VOID != part) {
             val command = CarCmd(action = action, model = Model.PANORAMA)
@@ -81,6 +94,19 @@ class PanoramaCommandProducer : ICommandProducer {
         }
         return null
     }
+
+    private fun parsePartInText(text: String) =
+        if (contains(text, "前摄像头", "前视角")) {
+            IPart.HEAD
+        } else if (contains(text, "后摄像头", "后视角")) {
+            IPart.TAIL
+        } else if (contains(text, "左摄像头", "左视角")) {
+            IPart.L_F or IPart.L_B
+        } else if (contains(text, "右摄像头", "右视角")) {
+            IPart.R_F or IPart.R_B
+        } else {
+            IPart.VOID
+        }
 
     private fun attemptModeCommand(slots: Slots): CarCmd? {
         LogManager.e("", "attemptModeCommand text:${slots.text}")
@@ -100,8 +126,7 @@ class PanoramaCommandProducer : ICommandProducer {
     }
 
     private fun attemptSwitchCommand(slots: Slots): CarCmd? {
-        val keyCode = "360"
-        if (keyCode == slots.name && keyCode == slots.mode) {
+        if (Keywords.PANORAMA == slots.mode) {
             val model = Model.PANORAMA
             var action = Action.VOID
             if (Keywords.OPEN == slots.operation) {
@@ -122,6 +147,45 @@ class PanoramaCommandProducer : ICommandProducer {
 
     private fun contains(source: String, target: String, target2: String = ""): Boolean {
         return source.contains(target) || source.contains(target2)
+    }
+
+    private fun isContains(value: String, array: Array<String>): Boolean {
+        for (item in array) {
+            if (value.contains(item)) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun checkoutPart(name: String): Int {
+        var part = IPart.VOID
+        if (isContains(name, Keywords.L_F)) {
+            part = IPart.L_F
+        } else if (isContains(name, Keywords.L_R)) {
+            part = IPart.L_B
+        } else if (isContains(name, Keywords.R_F)) {
+            part = IPart.R_F
+        } else if (isContains(name, Keywords.R_R)) {
+            part = IPart.R_B
+        } else if (isContains(name, Keywords.L_C)) {
+            part = IPart.L_F or IPart.L_B
+        } else if (isContains(name, Keywords.R_C)) {
+            part = IPart.R_F or IPart.R_B
+        } else if (isContains(name, Keywords.F_R)) {
+            part = IPart.L_F or IPart.R_F
+        } else if (isContains(name, Keywords.B_R)) {
+            part = IPart.L_B or IPart.R_B
+        } else if (name.contains("前")) {
+            part = IPart.HEAD
+        } else if (name.contains("后")) {
+            part = IPart.TAIL
+        } else if (name.contains("左")) {
+            part = IPart.L_F or IPart.L_B
+        } else if (name.contains("右")) {
+            part = IPart.R_F or IPart.R_B
+        }
+        return part
     }
 
 

@@ -42,6 +42,7 @@ import com.chinatsp.settinglib.manager.lamp.BrightnessManager
 import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.settinglib.optios.Area
 import com.chinatsp.settinglib.optios.RadioNode
+import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import timber.log.Timber
 import java.util.*
@@ -167,8 +168,10 @@ class SettingManager private constructor() {
     private val cabinEventListener = object : CarCabinManager.CarCabinEventCallback {
         override fun onChangeEvent(property: CarPropertyValue<*>) {
             val id = property.propertyId
-            Timber.tag(Constant.VehicleSignal)
-                .d("doActionSignal-cabin receive-cabin hex-id::${Integer.toHexString(id)}, dec-id:$id value:${property.value}, ${VcuUtils.V_N}")
+            if (SwitchNode.ADAS_FCW.get.signal != id && SwitchNode.ADAS_AEB.get.signal != id) {
+                Timber.tag(Constant.VehicleSignal)
+                    .d("doActionSignal-cabin receive-cabin hex-id::${Integer.toHexString(id)}, dec-id:$id value:${property.value}, ${VcuUtils.V_N}")
+            }
             GlobalManager.instance.onDispatchSignal(property, Origin.CABIN)
         }
 

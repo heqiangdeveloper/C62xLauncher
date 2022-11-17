@@ -7,7 +7,7 @@ import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.LogManager
 import com.chinatsp.vehicle.controller.annotation.IOrien
 import com.chinatsp.vehicle.controller.annotation.IPart
-import com.chinatsp.vehicle.controller.utils.Utils
+import com.chinatsp.vehicle.controller.bean.BaseCmd
 import timber.log.Timber
 
 /**
@@ -91,16 +91,58 @@ class AirSetter(val manager: ACManager, private val getter: AirGetter) {
         return result
     }
 
-    fun doUpdateTemperature(left: Int, right: Int, isLeft: Boolean, isRight: Boolean): Boolean {
-        LogManager.d("", "doUpdateTemperature left:$left, right:$right, isLeft:$isLeft, isRight:$isRight")
-        if (isLeft && isRight) {
-            val result = left != getter.getDriverTemperature() //|| left != getter.getCopilotTemperature()
-            if (result) {
-                hvacSignal(CarHvacManager.ID_HVAC_AVN_KEY_TEMP_LEFT, left)
+    fun doUpdateTemp(@IPart part: Int, expect: Int, command: BaseCmd): Boolean {
+        val lfAct = IPart.L_F == part
+        LogManager.d("", "doUpdateTemp part:$part, lfAct:$lfAct, expect:$expect")
+//        val actual = if (lfAct) getter.getDriverTemperature() else getter.getCopilotTemperature()
+//        val result = actual != expect
+        val result = true
+        if (result) {
+            val signal = if (lfAct) {
+                CarHvacManager.ID_HVAC_AVN_KEY_TEMP_LEFT
+            } else {
+                CarHvacManager.ID_HVAC_AVN_KEY_TEMP_RIGHT
             }
-            if (!getter.isDoubleMode()) {
-                hvacSignal(CarHvacManager.ID_HVAC_AVN_KEY_TEMP_RIGHT, left)
+            hvacSignal(signal, expect)
+        }
+        command.sent(part)
+        return result
+    }
+
+    fun doUpdateTemperature(left: Int, right: Int, lfAct: Boolean, rfAct: Boolean): Boolean {
+        LogManager.d("", "doUpdateTemperature left:$left, right:$right, lfAct:$lfAct, rfAct:$rfAct")
+        val isDoubleMode = getter.isDoubleMode()
+        val lfActual = if (lfAct) getter.getDriverTemperature() else left
+        val rfActual = if (rfAct) getter.getCopilotTemperature() else right
+        if (lfAct && rfAct) {
+            var result = false
+            val isSame = left == right //左右目标温度电影天堂相等
+            if (isSame) {
+                if (isDoubleMode) {
+                    if (left != lfActual) {
+                        hvacSignal(CarHvacManager.ID_HVAC_AVN_KEY_TEMP_LEFT, left)
+                        result = true
+                    }
+                } else {
+                    if (left != lfActual) {
+                        hvacSignal(CarHvacManager.ID_HVAC_AVN_KEY_TEMP_LEFT, left)
+                        result = true
+                    }
+                    if (rfActual != rfActual) {
+                        hvacSignal(CarHvacManager.ID_HVAC_AVN_KEY_TEMP_RIGHT, left)
+                        result = true
+                    }
+                }
+            } else {
+
             }
+//            val result = left != getter.getDriverTemperature()
+//            if (result) {
+//                hvacSignal(CarHvacManager.ID_HVAC_AVN_KEY_TEMP_LEFT, left)
+//            }
+//            if (!getter.isDoubleMode()) {
+//                hvacSignal(CarHvacManager.ID_HVAC_AVN_KEY_TEMP_RIGHT, left)
+//            }
             return result
         }
         if (getter.isDoubleMode()) {
@@ -110,14 +152,14 @@ class AirSetter(val manager: ACManager, private val getter: AirGetter) {
             }
             return result
         }
-        if (isLeft) {
+        if (lfAct) {
             val result = left != getter.getDriverTemperature()
             if (result) {
                 hvacSignal(CarHvacManager.ID_HVAC_AVN_KEY_TEMP_LEFT, left)
             }
             return result
         }
-        if (isRight) {
+        if (rfAct) {
             val result = right != getter.getCopilotTemperature()
             if (result) {
                 hvacSignal(CarHvacManager.ID_HVAC_AVN_KEY_TEMP_RIGHT, right)

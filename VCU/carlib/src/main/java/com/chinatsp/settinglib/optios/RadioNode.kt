@@ -4,6 +4,7 @@ import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.hvac.CarHvacManager
 import android.car.hardware.mcu.CarMcuManager
 import com.chinatsp.settinglib.VcuUtils
+import com.chinatsp.settinglib.bean.Norm
 import com.chinatsp.settinglib.bean.RNorm
 import com.chinatsp.settinglib.sign.Origin
 import timber.log.Timber
@@ -412,6 +413,18 @@ enum class RadioNode(
     DEVICE_TRAILER_SENSITIVITY(
         get = RNorm(values = intArrayOf(0x1, 0x2, 0x3), signal = -1),
         set = RNorm(values = intArrayOf(0x1, 0x2, 0x3), signal = -1),
+        def = 0x1
+    ),
+
+    /**
+     * 挡位
+     * set ->
+     * get -> 0x0: Initial/Interval ("Interval" is only used for CVT) 0x1: P (Park) 0x2: R (reverse)
+     *        0x3: N (Neutral) 0x4: D (Drive) 0xB: M(Manual) 0xC: L (Reserved) 0xD: S
+     */
+    GEARS(
+        get = RNorm(values = intArrayOf(0x1, 0x2, 0x3, 0x4), signal = CarCabinManager.ID_TCU_SELECTED_GEAR),
+        set = RNorm(values = intArrayOf(0x1, 0x2, 0x3, 0x4), signal = -1),
         def = 0x1
     ),
 

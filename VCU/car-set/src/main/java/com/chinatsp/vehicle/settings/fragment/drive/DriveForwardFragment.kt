@@ -174,6 +174,7 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
                 val url = "android.resource://" + activity?.packageName + "/" + R.raw.video_abe
                 binding.video.setVideoURI(Uri.parse(url))
                 binding.video.start()
+                doUpdateSwitchOption(SwitchNode.ADAS_AEB, buttonView, isChecked)
             } else {
                 //dynamicEffect()
                 val fragment = CloseBrakeDialogFragment()
@@ -182,7 +183,6 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
                 }
                 binding.adasForwardAebSwitch.setCheckedImmediatelyNoEvent(!isChecked)
             }
-            doUpdateSwitchOption(SwitchNode.ADAS_AEB, buttonView, isChecked)
         }
     }
 

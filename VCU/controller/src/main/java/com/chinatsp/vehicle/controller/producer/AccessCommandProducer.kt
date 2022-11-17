@@ -152,6 +152,13 @@ class AccessCommandProducer : ICommandProducer {
         }
         if (Action.VOID == action) {
             action = obtainSwitchAction(slots.operation)
+        } else {
+            if (Action.PLUS == action || Action.MINUS == action || Action.FIXED == action || Action.MAX == action) {
+                action = Action.OPEN
+            }
+            if (Action.MIN == action) {
+                action = Action.CLOSE
+            }
         }
         if (Action.VOID != action) {
             val command = CarCmd(action = action, model = Model.ACCESS_WINDOW)

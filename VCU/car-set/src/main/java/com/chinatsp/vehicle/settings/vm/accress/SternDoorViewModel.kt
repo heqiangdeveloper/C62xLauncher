@@ -8,12 +8,10 @@ import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.listener.IProgressListener
-import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.access.SternDoorManager
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
-import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.common.library.frame.base.BaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,11 +31,11 @@ class SternDoorViewModel @Inject constructor(app: Application, model: BaseModel)
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val gearsFunction: LiveData<SwitchState> get() = _gearsFunction
+    val gearsFunction: LiveData<RadioState> get() = _gearsFunction
 
-    private val _gearsFunction: MutableLiveData<SwitchState> by lazy {
-        val node = SwitchNode.GEARS
-        MutableLiveData(manager.doGetSwitchOption(node))
+    private val _gearsFunction: MutableLiveData<RadioState> by lazy {
+        val node = RadioNode.GEARS
+        MutableLiveData(manager.doGetRadioOption(node))
     }
 
     val lightAlarmFunction: LiveData<SwitchState> get() = _lightAlarmFunction
@@ -91,9 +89,6 @@ class SternDoorViewModel @Inject constructor(app: Application, model: BaseModel)
             SwitchNode.STERN_AUDIO_ALARM -> {
                 doUpdate(_audioAlarmFunction, status)
             }
-            SwitchNode.GEARS  -> {
-                doUpdate(_gearsFunction, status)
-            }
             else -> {}
         }
     }
@@ -101,6 +96,8 @@ class SternDoorViewModel @Inject constructor(app: Application, model: BaseModel)
     override fun onRadioOptionChanged(node: RadioNode, value: RadioState) {
         if (RadioNode.STERN_SMART_ENTER == node) {
             doUpdate(_sternSmartEnter, value)
+        } else if (RadioNode.GEARS == node) {
+            doUpdate(_gearsFunction, value)
         }
     }
 

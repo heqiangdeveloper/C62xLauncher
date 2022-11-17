@@ -47,6 +47,10 @@ class GlobalManager private constructor() : BaseManager() {
         AtomicInteger(0)
     }
 
+    private val panoramaConsumer: PanoramaCommandConsumer by lazy {
+        PanoramaCommandConsumer(this)
+    }
+
     fun getTabSerial() = tabSerial.get()
 
     fun setTabSerial(serial: Int) = tabSerial.set(serial)
@@ -216,7 +220,7 @@ class GlobalManager private constructor() : BaseManager() {
         } else if (Model.ADAS == modelSerial) {
 //            AdasManager.instance.doCarControlCommand(command, callback, fromUser)
         } else if (Model.PANORAMA == modelSerial) {
-            PanoramaCommandConsumer(this).consumerCommand(command, callback, fromUser)
+            panoramaConsumer.consumerCommand(command, callback, fromUser)
         } else if (Model.AUTO_PARK == modelSerial) {
             sendAutoParkCommand(command)
         } else if (Model.GLOBAL == modelSerial) {

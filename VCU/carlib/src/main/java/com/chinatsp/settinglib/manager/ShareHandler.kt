@@ -19,6 +19,7 @@ object ShareHandler {
     const val LOW_DELAY = 100
     const val MID_DELAY = 200
     const val HIG_DELAY = 300
+    const val SEC_DELAY = 1000
 
     private val handler: Handler by lazy {
         val looperThread = HandlerThread("")
@@ -41,6 +42,12 @@ object ShareHandler {
         loopParcel(parcel.command.action, parcel, delayed)
     }
 
+    fun dumpParcel(parcel: CommandParcel?) {
+        if (null != parcel) {
+            handler.removeMessages(parcel.command.action, parcel)
+        }
+    }
+
     class ParcelCallback : Handler.Callback {
         override fun handleMessage(message: Message): Boolean {
             val parcel = message.obj
@@ -48,7 +55,7 @@ object ShareHandler {
                 if (parcel.command.action == message.what) {
                     parcel.retryCount -= 1
                 }
-                parcel.receiver.doCommandExpress(parcel, false)
+                parcel.receiver?.doCommandExpress(parcel, false)
             }
             return true
         }

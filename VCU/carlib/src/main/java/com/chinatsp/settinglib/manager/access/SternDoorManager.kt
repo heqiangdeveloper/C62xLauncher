@@ -3,30 +3,24 @@ package com.chinatsp.settinglib.manager.access
 import android.car.VehicleAreaType
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
+import android.car.hardware.hvac.CarHvacManager
 import com.chinatsp.settinglib.AppExecutors
 import com.chinatsp.settinglib.IProgressManager
-import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.CommandParcel
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
-import com.chinatsp.settinglib.constants.OffLine
 import com.chinatsp.settinglib.listener.IAccessListener
 import com.chinatsp.settinglib.listener.IBaseListener
-import com.chinatsp.settinglib.manager.BaseManager
-import com.chinatsp.settinglib.manager.ICmdExpress
-import com.chinatsp.settinglib.manager.IOptionManager
-import com.chinatsp.settinglib.manager.ISignal
+import com.chinatsp.settinglib.manager.*
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.ICmdCallback
-import com.chinatsp.vehicle.controller.annotation.Action
-import com.chinatsp.vehicle.controller.annotation.ICar
-import com.chinatsp.vehicle.controller.annotation.IPart
-import com.chinatsp.vehicle.controller.annotation.Model
+import com.chinatsp.vehicle.controller.annotation.*
 import com.chinatsp.vehicle.controller.bean.CarCmd
+import com.chinatsp.vehicle.controller.utils.Keywords
 import timber.log.Timber
 import java.lang.ref.WeakReference
 
@@ -62,10 +56,10 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
         }
     }
 
-    private val gearsAlarmSwitchState: SwitchState by lazy {
-        val node = SwitchNode.GEARS
-        return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+    private val gearsState: RadioState by lazy {
+        val node = RadioNode.GEARS
+        return@lazy createAtomicInteger(node) { result, value ->
+            doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
     }
 
@@ -98,7 +92,7 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
             val cabinSet = HashSet<Int>().apply {
                 add(SwitchNode.AS_STERN_ELECTRIC.get.signal)
                 add(SwitchNode.STERN_LIGHT_ALARM.get.signal)
-                add(SwitchNode.GEARS.get.signal)
+                add(RadioNode.GEARS.get.signal)
                 add(SwitchNode.STERN_AUDIO_ALARM.get.signal)
                 add(RadioNode.STERN_SMART_ENTER.get.signal)
                 add(Progress.TRUNK_STOP_POSITION.get.signal)
@@ -120,9 +114,8 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
 
     override fun doGetRadioOption(node: RadioNode): RadioState? {
         return when (node) {
-            RadioNode.STERN_SMART_ENTER -> {
-                sternSmartEnter.copy()
-            }
+            RadioNode.STERN_SMART_ENTER -> sternSmartEnter.copy()
+            RadioNode.GEARS -> gearsState.copy()
             else -> null
         }
     }
@@ -172,7 +165,6 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
             SwitchNode.AS_STERN_ELECTRIC -> electricSwitchState.copy()
             SwitchNode.STERN_LIGHT_ALARM -> lightAlarmSwitchState.copy()
             SwitchNode.STERN_AUDIO_ALARM -> audioAlarmSwitchState.copy()
-            SwitchNode.GEARS -> gearsAlarmSwitchState.copy()
             else -> null
         }
     }
@@ -181,7 +173,6 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
         val result = when (node) {
             SwitchNode.STERN_AUDIO_ALARM -> audioAlarmSwitchState
             SwitchNode.STERN_LIGHT_ALARM -> lightAlarmSwitchState
-            SwitchNode.GEARS -> gearsAlarmSwitchState
             SwitchNode.AS_STERN_ELECTRIC -> electricSwitchState
             else -> null
         }
@@ -205,8 +196,8 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
             SwitchNode.STERN_AUDIO_ALARM.get.signal -> {
                 onSwitchChanged(SwitchNode.STERN_AUDIO_ALARM, audioAlarmSwitchState, property)
             }
-            SwitchNode.GEARS.get.signal -> {
-                onSwitchChanged(SwitchNode.GEARS, gearsAlarmSwitchState, property)
+            RadioNode.GEARS.get.signal -> {
+                onRadioChanged(RadioNode.GEARS, gearsState, property)
             }
             RadioNode.STERN_SMART_ENTER.get.signal -> {
                 onRadioChanged(RadioNode.STERN_SMART_ENTER, sternSmartEnter, property)
@@ -248,38 +239,93 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
         doCommandExpress(parcel)
     }
 
-    private fun doControlHood(command: CarCmd, callback: ICmdCallback?) {
+    private fun doControlHood(parcel: CommandParcel) {
+        val command = parcel.command
         if (Action.OPEN == command.action) {
             doTrunkAction(isTrunkOpened(), isTrunkOpening(), 1)
             command.message = "${command.slots?.name}已打开"
-            callback?.onCmdHandleResult(command)
+            parcel.callback?.onCmdHandleResult(command)
         } else if (Action.CLOSE == command.action) {
             doTrunkAction(isTrunkClosed(), isTrunkClosing(), 0)
             command.message = "${command.slots?.name}已关闭"
-            callback?.onCmdHandleResult(command)
+            parcel.callback?.onCmdHandleResult(command)
         }
     }
 
-    private fun doControlTrunk(command: CarCmd, callback: ICmdCallback?) {
-//        if (!VcuUtils.isSupportFunction(OffLine.ETRUNK)) {
-//            command.message = "您的爱车不支持此功能！"
-//            return
-//        }
-        val signal = CarCabinManager.ID_AVN_TRUNK_RELEASE
+    private fun doControlTrunk(parcel: CommandParcel) {
+//        0x1: ON;  0x2: OFF;  0x3: Stop
+        val signal = CarCabinManager.ID_PTM_OPER_CMD
+        val command = parcel.command
+        val state = obtainTrunkState()
+        val name = command.slots?.name ?: "电动尾门"
+        val isRetry = parcel.isRetry()
+        if (IStatus.INIT == command.status) {
+            command.lfCount = 1
+            parcel.retryCount = 40
+        }
         if (Action.OPEN == command.action) {
-//            doTrunkAction(isTrunkOpened(), isTrunkOpening(), 1)
-//        AVN request trunk release.
-//        0x0: Inactive   0x1: Not released   0x2: Released   0x3: Not used
-            val value = 0x2
-            writeProperty(signal, value, Origin.CABIN)
-            command.message = "${command.slots?.name}已打开"
-            callback?.onCmdHandleResult(command)
+            val opening = isStandard(state, 0x3)
+            if (opening) {
+                command.message = "${name}开启中"
+                if (IStatus.INIT == command.status) {
+                    parcel.callback?.onCmdHandleResult(command)
+                    return
+                } else {
+                    ShareHandler.loopParcel(parcel, ShareHandler.HIG_DELAY)
+                    return
+                }
+            }
+            val opened = isStandard(state, 0x1)
+            if (opened) {
+                command.message = "${name}已打开"
+                parcel.callback?.onCmdHandleResult(command)
+                return
+            }
+//            val stopped = isStandard(state, 0x0)
+//            val closing = isStandard(state, 0x4)
+            if (!command.isSent()) {
+                command.status = IStatus.RUNNING
+                writeProperty(signal, 0x1, Origin.CABIN)
+                command.sent()
+            }
+            if (isRetry) {
+                ShareHandler.loopParcel(parcel, ShareHandler.MID_DELAY)
+            } else {
+                command.message = Keywords.COMMAND_FAILED
+                parcel.callback?.onCmdHandleResult(command)
+            }
         } else if (Action.CLOSE == command.action) {
-//            doTrunkAction(isTrunkClosed(), isTrunkClosing(), 0)
             val value = 0x1
-            writeProperty(signal, value, Origin.CABIN)
-            command.message = "${command.slots?.name}已关闭"
-            callback?.onCmdHandleResult(command)
+            val closing = isStandard(state, 0x4)
+            if (closing) {
+                command.message = "${name}关闭中"
+                if (IStatus.INIT == command.status) {
+                    parcel.callback?.onCmdHandleResult(command)
+                    return
+                } else {
+                    ShareHandler.loopParcel(parcel, ShareHandler.HIG_DELAY)
+                    return
+                }
+            }
+            val closed = isStandard(state, 0x2)
+            if (closed) {
+                command.message = "${name}已关闭"
+                parcel.callback?.onCmdHandleResult(command)
+                return
+            }
+//            val stopped = isStandard(state, 0x0)
+//            val opening = isStandard(state, 0x3)
+            if (!command.isSent()) {
+                command.status = IStatus.RUNNING
+                writeProperty(signal, 0x2, Origin.CABIN)
+                command.sent()
+            }
+            if (isRetry) {
+                ShareHandler.loopParcel(parcel, ShareHandler.MID_DELAY)
+            } else {
+                command.message = Keywords.COMMAND_FAILED
+                parcel.callback?.onCmdHandleResult(command)
+            }
         }
     }
 
@@ -319,6 +365,14 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
         return readIntProperty(signal, Origin.CABIN, VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL)
     }
 
+    private fun obtainTrunkState(): Int {
+        val signal = CarCabinManager.ID_PTM_OPERATE_STATUS
+//        0x0: Stop; 0x1: Open; 0x2: close; 0x3: opening; 0x4: Closing; 0x5~0x7:Reserved
+        return readIntProperty(signal, Origin.CABIN)
+    }
+
+    private fun isStandard(actual: Int, expect: Int): Boolean = actual == expect
+
     /**
      * 获取挡位信息
      *
@@ -334,7 +388,7 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
         //        }
         //return readIntProperty(signal, Origin.CABIN, VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL)
         return when (node) {
-            SwitchNode.GEARS -> electricSwitchState.copy()
+//            SwitchNode.GEARS -> electricSwitchState.copy()
             SwitchNode.STERN_LIGHT_ALARM -> lightAlarmSwitchState.copy()
             SwitchNode.STERN_AUDIO_ALARM -> audioAlarmSwitchState.copy()
             else -> null
@@ -386,11 +440,11 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
         if (ICar.DOORS == command.car) {
             val callback = parcel.callback
             if (IPart.HEAD == command.part) {
-                doControlHood(command, callback)
+                doControlHood(parcel)
                 return
             }
             if (IPart.TAIL == command.part) {
-                doControlTrunk(command, callback)
+                doControlTrunk(parcel)
                 return
             }
         }

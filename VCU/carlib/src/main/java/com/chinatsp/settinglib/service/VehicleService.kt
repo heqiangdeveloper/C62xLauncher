@@ -182,7 +182,7 @@ class VehicleService : Service() {
         }
 
         fun doParseSourceData(data: String?) {
-            Timber.d("doParseSourceData $data")
+            Timber.e("doParseSourceData $data")
             if (!TextUtils.isEmpty(data)) {
                 resolver?.doResolverData(data)
             }

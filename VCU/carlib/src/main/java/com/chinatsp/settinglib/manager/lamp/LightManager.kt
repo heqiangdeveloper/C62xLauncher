@@ -33,7 +33,8 @@ import kotlin.math.abs
  */
 
 
-class LightManager private constructor() : BaseManager(), IOptionManager, IProgressManager, ICmdExpress {
+class LightManager private constructor() : BaseManager(), IOptionManager, IProgressManager,
+    ICmdExpress {
 
     companion object : ISignal {
         override val TAG: String = LightManager::class.java.simpleName
@@ -302,8 +303,16 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
         do {
             val isHead = IPart.HEAD == IPart.HEAD and command.part
             val isTail = IPart.TAIL == IPart.TAIL and command.part
+
+            val name = command.slots?.name ?: if (isHead && !isTail) {
+                "前雾灯"
+            } else if (!isHead && isTail) {
+                "后雾灯"
+            } else {
+                "雾灯"
+            }
             if (Action.TURN_ON == command.action) {
-                var result: Boolean = false
+                var result = false
                 if (isHead) {
                     val isWrite = updateFogLight(true, IPart.HEAD)
                     result = result or isWrite
@@ -312,11 +321,11 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
                     val isWrite = updateFogLight(true, IPart.TAIL)
                     result = result or isWrite
                 }
-                command.message = "${command.slots?.name}${if (!result) "已经" else ""}打开了"
+                command.message = "${name}${if (!result) "已经" else ""}打开了"
                 break
             }
             if (Action.TURN_OFF == command.action) {
-                var result: Boolean = false
+                var result = false
                 if (isHead) {
                     val isWrite = updateFogLight(false, IPart.HEAD)
                     result = result or isWrite
@@ -325,7 +334,7 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
                     val isWrite = updateFogLight(false, IPart.TAIL)
                     result = result or isWrite
                 }
-                command.message = "${command.slots?.name}${if (!result) "已经" else ""}关闭了"
+                command.message = "${name}${if (!result) "已经" else ""}关闭了"
                 break
             }
         } while (false)
@@ -335,14 +344,15 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
     private fun doSwitchSideLight(parcel: CommandParcel) {
         val command = parcel.command
         do {
+            val name = command.slots?.name ?: "位置灯"
             if (Action.TURN_ON == command.action) {
                 val result = updateSideLight(true)
-                command.message = "${command.slots?.name}${if (!result) "已经" else ""}打开了"
+                command.message = "${name}${if (!result) "已经" else ""}打开了"
                 break
             }
             if (Action.TURN_OFF == command.action) {
                 val result = updateSideLight(false)
-                command.message = "${command.slots?.name}${if (!result) "已经" else ""}关闭了"
+                command.message = "${name}${if (!result) "已经" else ""}关闭了"
                 break
             }
         } while (false)
@@ -352,14 +362,15 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
     private fun doSwitchDippedLight(parcel: CommandParcel) {
         val command = parcel.command
         do {
+            val name = command.slots?.name ?: "近光灯"
             if (Action.TURN_ON == command.action) {
                 val result = updateDippedLight(true)
-                command.message = "${command.slots?.name}${if (!result) "已经" else ""}打开了"
+                command.message = "${name}${if (!result) "已经" else ""}打开了"
                 break
             }
             if (Action.TURN_OFF == command.action) {
                 val result = updateDippedLight(false)
-                command.message = "${command.slots?.name}${if (!result) "已经" else ""}关闭了"
+                command.message = "${name}${if (!result) "已经" else ""}关闭了"
                 break
             }
         } while (false)
@@ -370,14 +381,15 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
     private fun doSwitchDistantLight(parcel: CommandParcel) {
         val command = parcel.command
         do {
+            val name = command.slots?.name ?: "远光灯"
             if (Action.TURN_ON == command.action) {
                 val result = updateDistantLight(true)
-                command.message = "${command.slots?.name}${if (!result) "已经" else ""}打开了"
+                command.message = "${name}${if (!result) "已经" else ""}打开了"
                 break
             }
             if (Action.TURN_OFF == command.action) {
                 val result = updateDistantLight(false)
-                command.message = "${command.slots?.name}${if (!result) "已经" else ""}关闭了"
+                command.message = "${name}${if (!result) "已经" else ""}关闭了"
                 break
             }
         } while (false)
@@ -385,7 +397,7 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
     }
 
     private fun updateSideLight(expect: Boolean): Boolean {
-        val actual = isSideLight()
+        val actual = isSideLight(expect)
         val result = actual != expect
         if (result) {
             val signal = CarCabinManager.ID_AVN_PARK_LIGHT
@@ -464,18 +476,16 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
         return value == 0x1
     }
 
-    private fun isSideLight(): Boolean {
+    private fun isSideLight(expect: Boolean): Boolean {
         val signalA = CarCabinManager.ID_PARK_LIGHT_A_INDICATION
         val signalB = CarCabinManager.ID_PARK_LIGHT_B_INDICATION
         val valueA = readIntProperty(signalA, Origin.CABIN)
         val valueB = readIntProperty(signalB, Origin.CABIN)
-        val result = valueA ==0x1 && valueB == 0x1
+        val result =
+            if (expect) (valueA == 0x1 && valueB == 0x1) else (valueA == 0x1 || valueB == 0x1)
         Timber.d("isSideLight signalA:$signalA valueA:$valueA, signalA:$signalA valueA:$valueA, result:$result")
-//        Status of park light B
-//        C51/C53/C62:B=RIGHT
-//        other projects unless specified: REAR
-//        0x0: Off
-//        0x1: On
+//        Status of park light B; C51/C53/C62:B=RIGHT
+//        other projects unless specified: REAR; 0x0: Off;  0x1: On
         return result
     }
 
@@ -495,10 +505,19 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
         return value == 0x1
     }
 
+    private fun isExteriorLampOff(): Boolean {
+        val signal = CarCabinManager.ID_EXTERIOR_LAMP_SWITCH
+//        Status of exterior lamp switch
+//        0x0: Off; 0x1: Auto; 0x2: Park; 0x3: Low Beam
+        val value = readIntProperty(signal, Origin.CABIN)
+        Timber.d("isDistantLight signal:$signal value:$value")
+        return value == 0x0
+    }
+
+
     override fun doCommandExpress(parcel: CommandParcel, fromUser: Boolean) {
         val command = parcel.command as CarCmd
         if ((Model.LIGHT_COMMON == command.model) && (ICar.LAMPS == command.car)) {
-            val callback = parcel.callback
             if (IAct.DISTANT_LIGHT == command.act) {
                 doSwitchDistantLight(parcel)
             } else if (IAct.DIPPED_LIGHT == command.act) {

@@ -38,6 +38,9 @@ class LampCommandProducer : ICommandProducer {
             if (null == command) {
                 command = attemptCreateFogLightCommand(slots)
             }
+            if (null == command) {
+                command = attemptCreateLightCommand(slots)
+            }
         }
         return command
     }
@@ -83,6 +86,21 @@ class LampCommandProducer : ICommandProducer {
      */
     private fun attemptCreateDippedHeadlightCommand(slots: Slots): CarCmd? {
         if (!isMatch(Keywords.DIPPED_HEAD_LIGHT, slots.name)) {
+            return null
+        }
+        val action = obtainSwitchAction(slots.operation)
+        if (Action.VOID == action) {
+            return null
+        }
+        val command = CarCmd(action = action, model = Model.LIGHT_COMMON)
+        command.slots = slots
+        command.car = ICar.LAMPS
+        command.act = IAct.DIPPED_LIGHT
+        return command
+    }
+
+    private fun attemptCreateLightCommand(slots: Slots): CarCmd? {
+        if (!slots.name.contains("灯光")) {
             return null
         }
         val action = obtainSwitchAction(slots.operation)

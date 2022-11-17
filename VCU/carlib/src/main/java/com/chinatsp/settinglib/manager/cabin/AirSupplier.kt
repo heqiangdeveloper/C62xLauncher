@@ -9,9 +9,10 @@ import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.annotation.Action
 import com.chinatsp.vehicle.controller.annotation.IAir
 import com.chinatsp.vehicle.controller.annotation.IPart
+import com.chinatsp.vehicle.controller.annotation.IStatus
 import com.chinatsp.vehicle.controller.bean.AirCmd
 import com.chinatsp.vehicle.controller.utils.Keywords
-import kotlin.math.min
+import timber.log.Timber
 
 /**
  * @author : luohong
@@ -35,10 +36,11 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
     override fun doLaunchConditioner(parcel: CommandParcel): Boolean {
         val command = parcel.command as AirCmd
         val isRetry = parcel.isRetry()
-        val isCareCmd = Action.TURN_ON == command.action && (IAir.ENGINE == (IAir.ENGINE and command.air))
+        val isCareCmd =
+            Action.TURN_ON == command.action && (IAir.ENGINE == (IAir.ENGINE and command.air))
         if (airGetter.isConditioner()) {//空调已开启
             if (isCareCmd) {
-                command.message = if (isRetry) "空调已经打开了" else  "好的，已为您打开空调"
+                command.message = if (isRetry) "空调已经打开了" else "好的，已为您打开空调"
                 parcel.callback?.onCmdHandleResult(command)
             }
             return true
@@ -69,11 +71,12 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
 
     override fun doCeaseConditioner(parcel: CommandParcel) {
         val command = parcel.command as AirCmd
-        val isCareCmd = Action.TURN_OFF == command.action && (IAir.ENGINE == (IAir.ENGINE and command.air))
+        val isCareCmd =
+            Action.TURN_OFF == command.action && (IAir.ENGINE == (IAir.ENGINE and command.air))
         val isRetry = parcel.isRetry()
         if (!airGetter.isConditioner()) {//空调已关闭
             if (isCareCmd) {
-                command.message = if (isRetry) "空调已经关闭了" else  "好的，已为您关闭空调"
+                command.message = if (isRetry) "空调已经关闭了" else "好的，已为您关闭空调"
                 parcel.callback?.onCmdHandleResult(command)
             }
             return
@@ -120,7 +123,8 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
     }
 
     private fun interruptCommand(
-        command: AirCmd, callback: ICmdCallback?, coreEngine: Boolean = false, ): Boolean {
+        command: AirCmd, callback: ICmdCallback?, coreEngine: Boolean = false,
+    ): Boolean {
         val result = if (coreEngine) {
             !VcuUtils.isPower() || !VcuUtils.isEngineRunning()
         } else {
@@ -279,7 +283,8 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
             } else {
                 status = airSetter.doSwitchAutoMode(expect)
                 if (status) {
-                    command.message = if (parcel.isRetry()) "${name}${onOff}中……" else "${name}${onOff}失败"
+                    command.message =
+                        if (parcel.isRetry()) "${name}${onOff}中……" else "${name}${onOff}失败"
                 } else {
                     command.message = "${name}已${onOff}"
                 }
@@ -293,7 +298,8 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
         } else {
             status = airSetter.doSwitchAutoMode(expect)
             if (status) {
-                command.message = if (parcel.isRetry()) "${name}${onOff}中……" else "${name}${onOff}失败"
+                command.message =
+                    if (parcel.isRetry()) "${name}${onOff}中……" else "${name}${onOff}失败"
             } else {
                 command.message = "${name}已${onOff}"
             }
@@ -330,12 +336,12 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
                 break
             }
             mask = IAir.AIR_PURGE
-            if (mask ==  (mask and command.air)) {
+            if (mask == (mask and command.air)) {
                 switchAirCleaning(parcel, true)
                 break
             }
             mask = IAir.LOOP_MODE
-            if (mask ==  (mask and command.air)) {
+            if (mask == (mask and command.air)) {
                 val value = parcel.command.value
                 if (value == (mask shl 1)) {
                     switchLoopInner(parcel, true)
@@ -349,17 +355,17 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
                 break
             }
             mask = IAir.AIR_DEFROST
-            if (mask ==  (mask and command.air)) {
+            if (mask == (mask and command.air)) {
                 switchGlassDefrost(parcel, true)
                 break
             }
             mask = IAir.AIR_DOUBLE
-            if (mask ==  (mask and command.air)) {
+            if (mask == (mask and command.air)) {
                 switchDoubleMode(parcel, true)
                 break
             }
             mask = IAir.AUTO_MODE
-            if (mask ==  (mask and command.air)) {
+            if (mask == (mask and command.air)) {
                 switchAutoMode(parcel, true)
                 break
             }
@@ -385,7 +391,8 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
             } else {
                 status = airSetter.doSwitchDoubleMode(expect)
                 if (status) {
-                    command.message = if (parcel.isRetry()) "${name}${onOff}中……" else "${name}${onOff}失败"
+                    command.message =
+                        if (parcel.isRetry()) "${name}${onOff}中……" else "${name}${onOff}失败"
                 } else {
                     command.message = "${name}已${onOff}"
                 }
@@ -399,7 +406,8 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
         } else {
             status = airSetter.doSwitchDoubleMode(expect)
             if (status) {
-                command.message = if (parcel.isRetry()) "${name}${onOff}中……" else "${name}${onOff}失败"
+                command.message =
+                    if (parcel.isRetry()) "${name}${onOff}中……" else "${name}${onOff}失败"
             } else {
                 command.message = "${name}已${onOff}"
             }
@@ -487,10 +495,10 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
         if (head && tail) {
             return "除霜"
         }
-        if (head) {
+        if (head && !tail) {
             return "前除霜"
         }
-        if (tail) {
+        if (tail && !head) {
             return "后除霜"
         }
         return "除霜"
@@ -514,7 +522,8 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
             } else {
                 status = airSetter.doSwitchAutoLooper(expect)
                 if (status) {
-                    command.message = if (parcel.isRetry()) "空调自动循环${onOff}中……" else "空调自动循环${onOff}失败"
+                    command.message =
+                        if (parcel.isRetry()) "空调自动循环${onOff}中……" else "空调自动循环${onOff}失败"
                 } else {
                     command.message = "空调自动循环已${onOff}"
                 }
@@ -560,7 +569,8 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
             } else {
                 status = airSetter.doSwitchOuterLooper(expect)
                 if (status) {
-                    command.message = if (parcel.isRetry()) "空调外循环${onOff}中……" else "空调外循环${onOff}失败"
+                    command.message =
+                        if (parcel.isRetry()) "空调外循环${onOff}中……" else "空调外循环${onOff}失败"
                 } else {
                     command.message = "空调外循环已${onOff}"
                 }
@@ -606,7 +616,8 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
             } else {
                 status = airSetter.doSwitchInnerLooper(expect)
                 if (status) {
-                    command.message = if (parcel.isRetry()) "空调内循环${onOff}中……" else "空调内循环${onOff}失败"
+                    command.message =
+                        if (parcel.isRetry()) "空调内循环${onOff}中……" else "空调内循环${onOff}失败"
                 } else {
                     command.message = "空调内循环已${onOff}"
                 }
@@ -651,7 +662,8 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
             } else {
                 status = airSetter.doSwitchAirClean(expect)
                 if (status) {
-                    command.message = if (parcel.isRetry()) "空气净化${onOff}中……" else Keywords.COMMAND_FAILED
+                    command.message =
+                        if (parcel.isRetry()) "空气净化${onOff}中……" else Keywords.COMMAND_FAILED
                 } else {
                     command.message = "空气净化已${onOff}"
                 }
@@ -665,7 +677,8 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
         } else {
             status = airSetter.doSwitchAirClean(expect)
             if (status) {
-                command.message = if (parcel.isRetry()) "空气净化${onOff}中……" else Keywords.COMMAND_FAILED
+                command.message =
+                    if (parcel.isRetry()) "空气净化${onOff}中……" else Keywords.COMMAND_FAILED
             } else {
                 command.message = "好的，已为您${onOff}空气净化"
             }
@@ -697,7 +710,8 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
         } else {
             status = airSetter.doSwitchCompressor(false)
             if (status) {
-                command.message = if (parcel.isRetry())  "制冷模式${onOff}中……" else Keywords.COMMAND_FAILED
+                command.message =
+                    if (parcel.isRetry()) "制冷模式${onOff}中……" else Keywords.COMMAND_FAILED
             } else {
                 command.message = "好的，已为您${onOff}制冷模式"
             }
@@ -727,7 +741,8 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
         } else {
             status = airSetter.doSwitchHeater(true)
             if (status) {
-                command.message = if (parcel.isRetry())  "制热模式${onOff}中……" else Keywords.COMMAND_FAILED
+                command.message =
+                    if (parcel.isRetry()) "制热模式${onOff}中……" else Keywords.COMMAND_FAILED
             } else {
                 command.message = "好的，已为您${onOff}制热模式"
             }
@@ -759,7 +774,8 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
         } else {
             status = airSetter.doSwitchHeater(false)
             if (status) {
-                command.message = if (parcel.isRetry())  "制冷模式${onOff}中……" else Keywords.COMMAND_FAILED
+                command.message =
+                    if (parcel.isRetry()) "制冷模式${onOff}中……" else Keywords.COMMAND_FAILED
             } else {
                 command.message = "好的，已为您${onOff}制热模式"
             }
@@ -789,7 +805,8 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
         } else {
             status = airSetter.doSwitchCompressor(true)
             if (status) {
-                command.message = if (parcel.isRetry())  "制冷模式${onOff}中……" else Keywords.COMMAND_FAILED
+                command.message =
+                    if (parcel.isRetry()) "制冷模式${onOff}中……" else Keywords.COMMAND_FAILED
             } else {
                 command.message = "制冷模式已${onOff}"
             }
@@ -872,73 +889,218 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
      * 0x02~0x0F: Reserved; 0x10:Low; 0x11:17℃，0x12:18℃………… 0x1E: 30℃; 0x1F: 31℃; 0x20: High
      */
     private fun adjustAirTemperature(parcel: CommandParcel) {
-        var status = true
         val command = parcel.command as AirCmd
-        if (dependConditioner(command.action)) {
-            status = doLaunchConditioner(parcel)
-        }
-        if (!status) {
-            if (parcel.isRetry()) {
-                ShareHandler.loopParcel(parcel, delayed)
-            } else {
-                command.message = "空调未开启，暂无法调整空调温度"
-                parcel.callback?.onCmdHandleResult(parcel.command)
+        val min = airGetter.tempRange.first
+        val max = airGetter.tempRange.last
+        val lfAct = IPart.L_F == (IPart.L_F and command.part)
+        val rfAct = IPart.R_F == (IPart.R_F and command.part)
+        if (IStatus.INIT == command.status) {
+            parcel.retryCount = 3
+            if (lfAct) {
+                command.lfExpect = opnTempLevel(command, min, max, IPart.L_F)
+                command.lfCount = 1
             }
-        } else {
-            val min = airGetter.tempRange.first
-            val max = airGetter.tempRange.last
-            var mask = IPart.L_F
-            val isLeft = mask == (mask and command.part)
-            mask = IPart.R_F
-            val isRight = mask == (mask and command.part)
-            if (Constant.INVALID == command.expect) {
-                var left = min
-                var right = min
-                if (isLeft) {
-                    left = operationTemperature(command, min, max, IPart.L_F)
-                }
-                if (isRight) {
-                    right = operationTemperature(command, min, max, IPart.R_F)
-                }
-                if (isLeft && isRight) {
-                    command.expect = min(left, right)
+            if (rfAct) {
+                command.rfExpect = opnTempLevel(command, min, max, IPart.R_F)
+                command.rfCount = 1
+            }
+        }
+        val lfExpect = command.lfExpect
+        val rfExpect = command.rfExpect
+        val lfActual = if (lfAct) obtainTempeLevel(IPart.L_F) else lfExpect
+        val rfActual = if (rfAct) obtainTempeLevel(IPart.R_F) else rfExpect
+        val isDouble = airGetter.isDoubleMode()
+        val isRetry = parcel.isRetry()
+        Timber.e("updateTemp lfExpect:$lfExpect, rfExpect:$rfExpect, lfActual:$lfActual, " +
+                "rfActual:$rfActual, isDouble:$isDouble, isRetry:$isRetry, lfAct:$lfAct, rfAct:$rfAct")
+        if (lfAct && rfAct) {
+            if (isDouble) {
+                if (lfExpect == rfExpect) {
+                    if (lfActual == lfExpect) {
+                        command.message = "好的，空调温度已经调到${tempHint(lfExpect, min, max)}了"
+                    } else {
+                        if (!isRetry) {
+                            command.message = Keywords.COMMAND_FAILED
+                        } else {
+                            if (IStatus.RUNNING != command.status && !command.isSent(IPart.L_F)) {
+                                airSetter.doUpdateTemp(IPart.L_F, lfExpect, command)
+                                command.status = IStatus.RUNNING
+                                command.message = "好的，空调温度已经调到${tempHint(lfExpect, min, max)}"
+                            }
+                            ShareHandler.loopParcel(parcel, delayed)
+                            return
+                        }
+                    }
                 } else {
-                    if (isLeft) {
-                        command.expect = left
+                    if (!isRetry) {
+                        command.message = Keywords.COMMAND_FAILED
+                    } else {
+                        if (IStatus.INIT == command.status) {
+                            airSetter.doSwitchDoubleMode(false)
+                            command.status = IStatus.PREPARED
+                        }
+                        if (IStatus.PREPARED == command.status) {
+                            ShareHandler.loopParcel(parcel, delayed)
+                            return
+                        }
                     }
-                    if (isRight) {
-                        command.expect = right
+                }
+            } else {
+                val lfSuccess = lfActual == lfExpect
+                val rfSuccess = rfActual == rfExpect
+                if (lfExpect == rfExpect) {
+                    if (lfSuccess && rfSuccess) {
+                        command.message = if (IStatus.RUNNING == command.status) {
+                            "好的，空调温度已经调到${tempHint(lfExpect, min, max)}了"
+                        } else {
+                            "您好，空调温度当前已经是${tempHint(rfExpect, min, max)}了"
+                        }
+                    } else {
+                        if (!isRetry) {
+                            command.message = if (lfSuccess && !rfSuccess) {
+                                "你好，主驾温度已经调到${tempHint(lfExpect, min, max)}, 副驾温度调节没有成功"
+                            } else if (!lfSuccess && rfSuccess) {
+                                "你好，副驾温度已经调到${tempHint(rfExpect, min, max)}, 主驾温度调节没有成功"
+                            } else {
+                                Keywords.COMMAND_FAILED
+                            }
+                        } else {
+                            if (!lfSuccess && !command.isSent(IPart.L_F)) {
+                                airSetter.doUpdateTemp(IPart.L_F, lfExpect, command)
+                                command.status = IStatus.RUNNING
+                                ShareHandler.loopParcel(parcel, delayed)
+                                return
+                            }
+                            if (!rfSuccess && !command.isSent(IPart.R_F)) {
+                                airSetter.doUpdateTemp(IPart.R_F, rfExpect, command)
+                                command.status = IStatus.RUNNING
+                                ShareHandler.loopParcel(parcel, delayed)
+                                return
+                            }
+                            ShareHandler.loopParcel(parcel, delayed)
+                            return
+                        }
+                    }
+                } else {
+                    if (lfSuccess && rfSuccess) {
+                        command.message = if (IStatus.RUNNING == command.status) {
+                            "好的，主驾温度已经调到${tempHint(lfExpect, min, max)}, " +
+                                    "副驾温度已经调到${tempHint(rfExpect, min, max)}了"
+                        } else {
+                            "您好，主驾温度已经调到${tempHint(lfExpect, min, max)}, " +
+                                    "副驾温度已经调到${tempHint(rfExpect, min, max)}了"
+                        }
+                    } else {
+                        if (!isRetry) {
+                            command.message = if (lfSuccess && !rfSuccess) {
+                                "你好，主驾温度已经调到${tempHint(lfExpect, min, max)}, 副驾温度调节没有成功"
+                            } else if (!lfSuccess && rfSuccess) {
+                                "你好，副驾温度已经调到${tempHint(rfExpect, min, max)}, 主驾温度调节没有成功"
+                            } else {
+                                Keywords.COMMAND_FAILED
+                            }
+                        } else {
+                            if (!lfSuccess && !command.isSent(IPart.L_F)) {
+                                airSetter.doUpdateTemp(IPart.L_F, lfExpect, command)
+                                command.status = IStatus.RUNNING
+                                ShareHandler.loopParcel(parcel, delayed)
+                                return
+                            }
+                            if (!rfSuccess && !command.isSent(IPart.R_F)) {
+                                airSetter.doUpdateTemp(IPart.R_F, rfExpect, command)
+                                command.status = IStatus.RUNNING
+                                ShareHandler.loopParcel(parcel, delayed)
+                                return
+                            }
+                            ShareHandler.loopParcel(parcel, delayed)
+                            return
+                        }
                     }
                 }
             }
-            val expect = command.expect
-            status = airSetter.doUpdateTemperature(expect, expect, isLeft, isRight)
-            if (status) {
-                command.message = if (parcel.isRetry())  "温度调节中……" else Keywords.COMMAND_FAILED
+        } else if (lfAct && !rfAct) {
+            if (lfActual == lfExpect) {
+                command.message = if (IStatus.RUNNING == command.status) {
+                    "好的，主驾温度已经调到${tempHint(lfExpect, min, max)}了"
+                } else {
+                    "您好，主驾温度当前已经是${tempHint(lfExpect, min, max)}了"
+                }
             } else {
-                val append = obtainAppend(expect, min, max)
-                command.message = "好的，温度已经调到${append}"
+                if (isDouble) {
+                    if (!isRetry) {
+                        command.message = Keywords.COMMAND_FAILED
+                    } else {
+                        if (IStatus.INIT == command.status) {
+                            airSetter.doSwitchDoubleMode(false)
+                            command.status = IStatus.PREPARED
+                        }
+                        if (IStatus.PREPARED == command.status) {
+                            ShareHandler.loopParcel(parcel, delayed)
+                            return
+                        }
+                    }
+                } else {
+                    if (!isRetry) {
+                        command.message = Keywords.COMMAND_FAILED
+                    } else {
+                        if (IStatus.RUNNING != command.status) {
+                            airSetter.doUpdateTemp(IPart.L_F, lfExpect, command)
+                            command.status = IStatus.RUNNING
+                        }
+                        ShareHandler.loopParcel(parcel, delayed)
+                        return
+                    }
+                }
             }
-            if (!status || !parcel.isRetry()) {
-                parcel.callback?.onCmdHandleResult(parcel.command)
-            }
-            if (status && parcel.isRetry()) {
-                ShareHandler.loopParcel(parcel, delayed)
+        } else if (!lfAct && rfAct) {
+            if (rfActual == rfExpect) {
+                command.message = if (IStatus.RUNNING == command.status) {
+                    "好的，副驾温度已经调到${tempHint(rfExpect, min, max)}了"
+                } else {
+                    "您好，副驾温度当前已经是${tempHint(rfExpect, min, max)}了"
+                }
+            } else {
+                if (isDouble) {
+                    if (!isRetry) {
+                        command.message = Keywords.COMMAND_FAILED
+                    } else {
+                        if (IStatus.INIT == command.status) {
+                            airSetter.doSwitchDoubleMode(false)
+                            command.status = IStatus.PREPARED
+                        }
+                        if (IStatus.PREPARED == command.status) {
+                            ShareHandler.loopParcel(parcel, delayed)
+                            return
+                        }
+                    }
+                } else {
+                    if (!isRetry) {
+                        command.message = Keywords.COMMAND_FAILED
+                    } else {
+                        if (IStatus.RUNNING != command.status) {
+                            airSetter.doUpdateTemp(IPart.R_F, rfExpect, command)
+                            command.status = IStatus.RUNNING
+                        }
+                        ShareHandler.loopParcel(parcel, delayed)
+                        return
+                    }
+                }
             }
         }
+        parcel.callback?.onCmdHandleResult(parcel.command)
     }
 
-    private fun obtainAppend(value: Int, min: Int, max: Int): String {
-        if (min == value) {
+    private fun tempHint(value: Int, min: Int, max: Int): String {
+        if (value <= min) {
             return "最低"
         }
-        if (max == value) {
+        if (value >= max) {
             return "最高"
         }
-        return value.toString()
+        return "${value}摄氏度"
     }
 
-    private fun obtainActualTemperature(@IPart part: Int): Int {
+    private fun obtainTempeLevel(@IPart part: Int): Int {
         return when (part) {
             IPart.L_F -> airGetter.getDriverTemperature()
             IPart.R_F -> airGetter.getCopilotTemperature()
@@ -946,13 +1108,13 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
         }
     }
 
-    private fun operationTemperature(cmd: AirCmd, min: Int, max: Int, @IPart part: Int): Int {
+    private fun opnTempLevel(cmd: AirCmd, min: Int, max: Int, @IPart part: Int): Int {
         var expect = 0
         if (Action.PLUS == cmd.action) {
-            val current = obtainActualTemperature(part)
+            val current = obtainTempeLevel(part)
             expect = current + cmd.step
         } else if (Action.MINUS == cmd.action) {
-            val current = obtainActualTemperature(part)
+            val current = obtainTempeLevel(part)
             expect = current - cmd.step
         } else if (Action.FIXED == cmd.action) {
             expect = cmd.value
@@ -980,10 +1142,10 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
                 parcel.callback?.onCmdHandleResult(parcel.command)
             }
         } else {
-            if (Constant.INVALID == command.expect) {
-                command.expect = operationBlowerLevel(command)
+            if (Constant.INVALID == command.lfExpect) {
+                command.lfExpect = operationBlowerLevel(command)
             }
-            val expect = command.expect + 1
+            val expect = command.lfExpect + 1
             status = airSetter.doUpdateBlowerLevel(expect, command.part)
             if (status) {
                 if (parcel.isRetry()) {

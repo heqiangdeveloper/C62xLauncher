@@ -25,7 +25,6 @@ import com.common.xui.widget.picker.ArcSeekBar
 import com.common.xui.widget.popupwindow.PopWindow
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.HashMap
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
@@ -415,7 +414,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         initSwitchOption(SwitchNode.AS_STERN_ELECTRIC, viewModel.electricFunction)
         initSwitchOption(SwitchNode.STERN_LIGHT_ALARM, viewModel.lightAlarmFunction)
         initSwitchOption(SwitchNode.STERN_AUDIO_ALARM, viewModel.audioAlarmFunction)
-        initSwitchOption(SwitchNode.GEARS, viewModel.gearsFunction)
+//        initSwitchOption(SwitchNode.GEARS, viewModel.gearsFunction)
     }
 
     override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
@@ -589,7 +588,8 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     }
 
     private fun isHasSmartAccessOption(): Boolean {
-        return !VcuUtils.isCareLevel(Level.LEVEL5, expect = true)
+        return true
+//        return !VcuUtils.isCareLevel(Level.LEVEL5, expect = true)
     }
 
 }

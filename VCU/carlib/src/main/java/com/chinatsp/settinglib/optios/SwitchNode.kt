@@ -386,16 +386,17 @@ enum class SwitchNode(
         default = true
     ),
 
-    /**
-     * 挡位
-     * set ->
-     * get -> 0x0: Disable 0x0A: Enable
-     */
-    GEARS(
-        get = Norm( off = 0x01, signal = CarCabinManager.ID_TCU_SELECTED_GEAR),
-        set = Norm(),
-        default = true
-    ),
+//    /**
+//     * 挡位
+//     * set ->
+//     * get -> 0x0: Initial/Interval ("Interval" is only used for CVT) 0x1: P (Park) 0x2: R (reverse)
+//     *        0x3: N (Neutral) 0x4: D (Drive) 0xB: M(Manual) 0xC: L (Reserved) 0xD: S
+//     */
+//    GEARS(
+//        get = Norm(on = 0x1, signal = CarCabinManager.ID_TCU_SELECTED_GEAR),
+//        set = Norm(),
+//        default = true
+//    ),
 
     /**
      * 车门车窗--电动尾门--灯光闪烁报警
