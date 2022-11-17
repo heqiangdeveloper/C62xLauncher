@@ -5,6 +5,7 @@
     <application>
         <activity
             android:name=".ApppanelActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="true">
             <intent-filter>
 
