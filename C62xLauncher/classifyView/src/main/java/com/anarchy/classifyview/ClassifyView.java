@@ -122,6 +122,7 @@ public class ClassifyView extends FrameLayout {
     private EditText titleEt;
     public TextView titleTv;
     private RelativeLayout editRl;
+    private ImageView topBarIv;
 
     private int mMainSpanCount;
     private int mSubSpanCount;
@@ -224,6 +225,16 @@ public class ClassifyView extends FrameLayout {
         mAnimationDuration = a.getInt(R.styleable.ClassifyView_AnimationDuration, 200);
         mEdgeWidth = a.getDimensionPixelSize(R.styleable.ClassifyView_EdgeWidth, 15);
         a.recycle();
+        //添加下拉条
+        topBarIv = new ImageView(context);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 30);
+        topBarIv.setPadding(855,11,0,0);
+        topBarIv.setImageResource(R.drawable.ic_top_bar);
+        topBarIv.setLayoutParams(params);
+        topBarIv.setScaleType(ImageView.ScaleType.MATRIX);
+        //topBarIv.setBackgroundColor(Color.WHITE);
+        mMainContainer.addView(topBarIv);
+
         mMainRecyclerView = getMain(context, attrs);
         mMainRecyclerView.setPadding(EDGEWIDTH,0,EDGEWIDTH,0);
         mMainRecyclerView.setOverScrollMode(OVER_SCROLL_NEVER);//去掉滑动到顶/底部时的阴影
@@ -412,6 +423,7 @@ public class ClassifyView extends FrameLayout {
         mDragView.setVisibility(GONE);
         addViewInLayout(mDragView, -1, generateDefaultLayoutParams());
         setUpTouchListener(context);
+        setTopBarIvTouchListener(context);//设置topbar下拉事件
         //初始化CountTimer，设置倒计时为10s。
         countTimerView = new CountTimer(10000L,1000L,getMainRecyclerView(),editor);
     }
@@ -420,7 +432,10 @@ public class ClassifyView extends FrameLayout {
     @NonNull
     RecyclerView getMain(Context context, AttributeSet parentAttrs) {
         RecyclerView recyclerView = new RecyclerView(context);
-        recyclerView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        RecyclerView.LayoutParams params= new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        //顶部距离topbar 30
+        params.setMargins(0,30,0,0);
+        recyclerView.setLayoutParams(params);
         recyclerView.setLayoutManager(new GridLayoutManager(context, mMainSpanCount));
         recyclerView.setItemAnimator(new ClassifyItemAnimator());
         return recyclerView;
@@ -640,9 +655,12 @@ public class ClassifyView extends FrameLayout {
                 *  mMainRecyclerView滑动至顶部后，空白区域下滑超过200px，跳转至卡片页
                  */
                 if(mMainRecyclerView!= null && !mMainRecyclerView.canScrollVertically(-1)){//mMainRecyclerView已经到达顶部
+                    topBarIv.setVisibility(View.VISIBLE);
                     if(isNeedJumpCard(e1,e2)){
                         EventBus.getDefault().post(new JumpToCardEvent());
                     }
+                }else {
+                    topBarIv.setVisibility(View.GONE);
                 }
                 return super.onScroll(e1, e2, distanceX, distanceY);
             }
@@ -851,6 +869,38 @@ public class ClassifyView extends FrameLayout {
         };
     }
 
+    private void setTopBarIvTouchListener(final Context context){
+        GestureDetectorCompat gestureDetectorCompat = new GestureDetectorCompat(context, new GestureDetector.SimpleOnGestureListener(){
+            //此事件是移动视口的过程中
+            @Override
+            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+                return super.onScroll(e1, e2, distanceX, distanceY);
+            }
+
+            //此事件是用户在动作结束时抬起手指(这onFling就是所谓的一次动作的原因)
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                if(isNeedJumpMain(e1,e2)){
+                    EventBus.getDefault().post(new JumpToCardEvent());
+                }
+                return super.onFling(e1, e2, velocityX, velocityY);
+            }
+        });
+        topBarIv.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                gestureDetectorCompat.onTouchEvent(motionEvent);
+                return false;
+            }
+        });
+        topBarIv.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EventBus.getDefault().post(new JumpToCardEvent());
+            }
+        });
+    }
+
     /*
      *  热区：mMainRecyclerView左右两边宽度160的区域
      */
@@ -868,6 +918,18 @@ public class ClassifyView extends FrameLayout {
         //向下移动350时
         if(moveY >= 350){
             Log.d("onscroll", "isNeedJumpCard true");
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    /*
+     *  热区：topBarIv的区域  1920 * 30
+     */
+    private boolean isNeedJumpMain(MotionEvent e1, MotionEvent e2) {
+        float moveY = e2.getY() - e1.getY();
+        if(e1.getY() < 30  && moveY >= 5){
             return true;
         }else {
             return false;
