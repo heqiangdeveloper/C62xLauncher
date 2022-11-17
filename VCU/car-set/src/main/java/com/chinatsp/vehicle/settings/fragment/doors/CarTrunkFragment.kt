@@ -155,10 +155,10 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     }
 
     private fun initViewDisplay() {
-        if (VcuUtils.isCareLevel(Level.LEVEL5, expect = true)) {
+       /* if (VcuUtils.isCareLevel(Level.LEVEL5, expect = true)) {
             binding.linearLayout.visibility = View.GONE
             binding.line2.visibility = View.GONE
-        }
+        }*/
     }
 
     private fun initAnimation() {

@@ -238,8 +238,8 @@ public class SearchDB extends SQLiteOpenHelper {
         }
         List<SearchBean> lists = new ArrayList<>();
         try {
-            String sql = "select distinct * from " + table + " where " + language + "  like '%" + s + "%'";
-
+            String sql = "select distinct * from " + table + " where " + language + "  like '%\\" + s + "%' escape \'\\\'";
+            Log.d(TAG, "getData1 SQL "+sql);
             Cursor cursor = db.rawQuery(sql, null);
             cursor.moveToFirst();
             if (null != cursor && cursor.moveToFirst()) {

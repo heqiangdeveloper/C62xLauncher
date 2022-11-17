@@ -153,7 +153,7 @@ public class VSeekBar extends View {
             //气泡
             mIsShowBubble = array.getBoolean(R.styleable.XSeekBar_xsb_isShowBubble, false);
             boolean isFitColor = array.getBoolean(R.styleable.XSeekBar_xsb_isFitColor, true);
-            mIsShowNumber = array.getBoolean(R.styleable.XSeekBar_xsb_isShowNumber, true);
+            mIsShowNumber = array.getBoolean(R.styleable.XSeekBar_xsb_isShowNumber, false);
             mNumberTextColor = array.getColor(R.styleable.XSeekBar_xsb_numberTextColor, colorAccent);
             mNumberTextSize = array.getDimensionPixelSize(R.styleable.XSeekBar_xsb_numberTextSize, DensityUtils.sp2px(12));
             mNumberMarginBottom = array.getDimensionPixelSize(R.styleable.XSeekBar_xsb_numberMarginBottom, DensityUtils.dp2px(2));
@@ -285,9 +285,9 @@ public class VSeekBar extends View {
         drawEntireRangeLine(canvas);
         drawSelectedRangeLine(canvas);
 //        drawSelectBorder(canvas);
-//        if (mIsShowNumber) {
-////            drawSelectedNumber(canvas);
-//        }
+        if (mIsShowNumber) {
+            drawSelectedNumber(canvas);
+        }
 //        drawRuler(canvas);
 //        drawSelectedTargets(canvas);
         drawIcon(canvas);
@@ -488,10 +488,10 @@ public class VSeekBar extends View {
             yText = top + mBubbleBitmap.getHeight() / 2F + mMaxTextRect.height() / 2F - 6;
             canvas.drawBitmap(mBubbleBitmap, mMaxPosition - mBubbleBitmap.getWidth() / 2F, top, mPaint);
         } else {
-            yText = mMiddleY - mSliderIcon.getHeight() / 2F - mNumberMarginBottom;
+            yText = mMiddleY - mSliderIcon.getHeight() / 2F - mNumberMarginBottom - 36;
         }
         //text
-        float maxX = mMaxPosition - mMaxTextRect.width() / 2F;
+        float maxX = mMaxPosition - mMaxTextRect.width() / 2F - 6;
         mPaint.setTextSize(mNumberTextSize);
         mPaint.setColor(mNumberTextColor);
         canvas.drawText(max, maxX, yText, mPaint);
@@ -672,15 +672,15 @@ public class VSeekBar extends View {
 //                        mMaxPosition = touchX;
 //                        callMaxChangedCallbacks();
 //                    }
-                    int touchX = (int) event.getX();
-                    touchX = clamp(touchX, mLineStartX, mLineEndX);
-                    mMaxPosition = touchX;
-                    isChanged = isChanged();
-                    callMaxChangedCallbacks();
-                    if (lastValue == mMin) mMaxPosition = mLineStartX;
-                    if (lastValue == mMax) mMaxPosition = mLineEndX;
-                    if (isChanged || lastValue == mMin || lastValue == mMax) //            invalidate();
-                        tryInvalidate();
+                int touchX = (int) event.getX();
+                touchX = clamp(touchX, mLineStartX, mLineEndX);
+                mMaxPosition = touchX;
+                isChanged = isChanged();
+                callMaxChangedCallbacks();
+                if (lastValue == mMin) mMaxPosition = mLineStartX;
+                if (lastValue == mMax) mMaxPosition = mLineEndX;
+                if (isChanged || lastValue == mMin || lastValue == mMax) //            invalidate();
+                    tryInvalidate();
 //                }
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:

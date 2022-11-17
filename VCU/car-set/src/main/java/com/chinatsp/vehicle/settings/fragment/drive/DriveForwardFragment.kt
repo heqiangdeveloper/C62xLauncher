@@ -76,8 +76,8 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
 
     private fun onViewClick(it: View) {
         when (it) {
-            binding.driveAebDetails ->  updateHintMessage(R.string.drive_warning_fcw, R.string.fcw_details)
-            binding.driveWarningFcwDetails -> updateHintMessage(R.string.drive_aeb_title, R.string.aeb_details)
+            binding.driveWarningFcwDetails ->  updateHintMessage(R.string.drive_warning_fcw, R.string.fcw_details)
+            binding.driveAebDetails -> updateHintMessage(R.string.drive_aeb_title, R.string.aeb_details)
         }
     }
 

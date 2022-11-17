@@ -92,7 +92,10 @@
                 app:xsb_insideRangeLineStrokeWidth="@dimen/x32"
                 app:xsb_outsideRangeLineStrokeWidth="@dimen/x32"
                 app:xsb_sliderIcon="@null"
-                app:xsb_verticalPadding="@dimen/x23" />
+                app:xsb_verticalPadding="@dimen/x43"
+                app:xsb_isShowNumber="true"
+                app:xsb_numberTextColor="@color/acr_seek_txt_old_color"
+                app:xsb_numberTextSize="@dimen/x14"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
