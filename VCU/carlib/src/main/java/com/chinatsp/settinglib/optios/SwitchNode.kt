@@ -392,7 +392,7 @@ enum class SwitchNode(
      * get -> 0x0: Disable 0x0A: Enable
      */
     GEARS(
-        get = Norm( off = 0x0A, signal = CarCabinManager.ID_TCU_TARGETGEAR),
+        get = Norm( off = 0x01, signal = CarCabinManager.ID_TCU_SELECTED_GEAR),
         set = Norm(),
         default = true
     ),
