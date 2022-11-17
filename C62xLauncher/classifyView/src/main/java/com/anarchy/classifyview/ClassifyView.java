@@ -177,6 +177,7 @@ public class ClassifyView extends FrameLayout {
     private boolean isHasDeletedItems = false;//sub中是否有可删除的item
     private CountTimer countTimerView;
     private static final int EDGEWIDTH = 160;//左右边缘间距
+    private static final int TOPBARHEIGHT = 30;//topbar的高度
     public ClassifyView(Context context) {
         super(context);
         init(context, null, 0);
@@ -227,8 +228,8 @@ public class ClassifyView extends FrameLayout {
         a.recycle();
         //添加下拉条
         topBarIv = new ImageView(context);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 30);
-        topBarIv.setPadding(855,11,0,0);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TOPBARHEIGHT);
+        topBarIv.setPadding(855,11,0,0);//水平居中，topbar图片源尺寸是180 * 8，paddingTop = 30/2 - 8/2 = 11
         topBarIv.setImageResource(R.drawable.ic_top_bar);
         topBarIv.setLayoutParams(params);
         topBarIv.setScaleType(ImageView.ScaleType.MATRIX);
@@ -434,7 +435,7 @@ public class ClassifyView extends FrameLayout {
         RecyclerView recyclerView = new RecyclerView(context);
         RecyclerView.LayoutParams params= new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         //顶部距离topbar 30
-        params.setMargins(0,30,0,0);
+        params.setMargins(0,TOPBARHEIGHT,0,0);
         recyclerView.setLayoutParams(params);
         recyclerView.setLayoutManager(new GridLayoutManager(context, mMainSpanCount));
         recyclerView.setItemAnimator(new ClassifyItemAnimator());
@@ -1091,7 +1092,7 @@ public class ClassifyView extends FrameLayout {
                     if (inMainRegion) {
                         //rl.setBackgroundColor(Color.GREEN);
                         oldPositionView.setX(mSelected.getX() + mSelected.getWidth()/2 - 60);//图片大小是120*120
-                        oldPositionView.setY(mSelected.getY() + mSelected.getHeight()/2 - 60);
+                        oldPositionView.setY(mSelected.getY() + mSelected.getHeight()/2 - 60 + TOPBARHEIGHT);
                         oldPositionView.setVisibility(View.VISIBLE);
 
                         L.d("ACTION_DRAG_STARTED");
@@ -1401,8 +1402,8 @@ public class ClassifyView extends FrameLayout {
                         L.d("Sub ACTION_DRAG_STARTED");
                         L.d("x： " + mDragView.getX() + ",y: " + mDragView.getY());
 
-                        oldPositionViewSub.setX(mSelected.getX() + mSelected.getWidth()/2 - 60);//图片大小是120*120
-                        oldPositionViewSub.setY(mSelected.getY() + mSelected.getHeight()/2 - 60);
+                        oldPositionViewSub.setX(mSelected.getX() + mSelected.getWidth()/2 - 60 + 50);//图片大小是120*120
+                        oldPositionViewSub.setY(mSelected.getY() + mSelected.getHeight()/2 - 60 + 10);
                         oldPositionViewSub.setVisibility(View.VISIBLE);
 
                         obtainVelocityTracker();
