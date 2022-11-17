@@ -71,6 +71,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="46px"
         android:layout_marginStart="697px"
+        android:textAllCaps="false"
         />
     <Button
         android:id="@+id/btnCardEditorCancel"
@@ -82,6 +83,7 @@
         app:layout_constraintStart_toEndOf="@id/btnCardEditorOk"
         app:layout_constraintBottom_toBottomOf="@id/btnCardEditorOk"
         android:layout_marginStart="70px"
+        android:textAllCaps="false"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -28,38 +28,74 @@ public class InnerVerticalRecyclerView extends RecyclerView {
     private int mLastX;
     private int mLastY;
 
+    private boolean mScrollTop;
+
     private boolean mUserPlayB = false;
 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent e) {
+        if (mUserPlayB) {
+            final int action = e.getAction();
+            int x = (int) e.getX();
+            int y = (int) e.getY();
+            switch (action) {
+                case MotionEvent.ACTION_DOWN:
+                    getParent().requestDisallowInterceptTouchEvent(true);
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    float distanceX = Math.abs(x - mLastX);
+                    float distanceY = Math.abs(y - mLastY);
+                    if (isReadyDrag(distanceX, distanceY)) {
+                        getParent().requestDisallowInterceptTouchEvent(false);
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                    break;
+            }
+            mLastX = x;
+            mLastY = y;
+            EasyLog.i("InnerVerticalRecyclerView", "dispatchTouchEvent PlanA");
+        } else {
+            EasyLog.i("InnerVerticalRecyclerView", "dispatchTouchEvent PlanB");
+        }
+        return super.dispatchTouchEvent(e);
+    }
+
+
 //    @Override
-//    public boolean dispatchTouchEvent(MotionEvent e) {
-//        if (mUserPlayB) {
-//            final int action = e.getAction();
-//            int x = (int) e.getX();
-//            int y = (int) e.getY();
-//            switch (action) {
-//                case MotionEvent.ACTION_DOWN:
+//    public boolean onInterceptTouchEvent(MotionEvent ev) {
+//        int action = ev.getAction();
+//        int y = (int) ev.getY();
+//        switch (action) {
+//            case MotionEvent.ACTION_DOWN:
+//                mLastY = y;
+//                break;
+//            case MotionEvent.ACTION_MOVE:
+//                if (notDispatch(y - mLastY)) {
 //                    getParent().requestDisallowInterceptTouchEvent(true);
-//                    break;
-//                case MotionEvent.ACTION_MOVE:
-//                    float distanceX = Math.abs(x - mLastX);
-//                    float distanceY = Math.abs(y - mLastY);
-//                    if (isReadyDrag(distanceX, distanceY)) {
-//                        getParent().requestDisallowInterceptTouchEvent(false);
-//                    }
-//                    break;
-//                case MotionEvent.ACTION_UP:
-//                    break;
-//            }
-//            mLastX = x;
-//            mLastY = y;
-//            EasyLog.i("InnerVerticalRecyclerView", "dispatchTouchEvent PlanA");
-//        } else {
-//            EasyLog.i("InnerVerticalRecyclerView", "dispatchTouchEvent PlanB");
+//                    return true;
+//                }
+//                break;
+//            case MotionEvent.ACTION_UP:
+//                break;
 //        }
-//        return super.dispatchTouchEvent(e);
+//        return super.onInterceptTouchEvent(ev);
 //    }
 
     private boolean isReadyDrag(float distanceX, float distanceY) {
         return distanceX > distanceY;
+    }
+
+    public boolean isScrollTop() {
+        return mScrollTop;
+    }
+
+    public void setScrollTop(boolean scrollTop) {
+        mScrollTop = scrollTop;
+    }
+
+    private boolean notDispatch(int dy) {
+        EasyLog.d("notDispatch", "mScrollTop:"+mScrollTop+" , dy:"+dy);
+        return dy > 0 && mScrollTop;
     }
 }

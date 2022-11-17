@@ -2,6 +2,8 @@ package com.chinatsp.weaher.viewholder.city;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Looper;
@@ -62,6 +64,13 @@ public class SmallCityItemViewHolder extends BaseViewHolder<String> {
             }
         });
         itemView.setOnClickListener(mOnClickListener);
+        itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                WeatherUtil.startCardEditor(v.getContext());
+                return true;
+            }
+        });
     }
 
     View.OnClickListener mOnClickListener = new View.OnClickListener() {

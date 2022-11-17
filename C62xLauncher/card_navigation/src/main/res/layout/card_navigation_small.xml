@@ -136,7 +136,7 @@
     <TextView
         android:id="@+id/tvCardNetworkErr"
         style="@style/CardLv2TextView"
-        android:layout_width="222px"
+        android:layout_width="wrap_content"
         android:layout_height="92px"
         android:layout_marginTop="35px"
         android:gravity="bottom|center"

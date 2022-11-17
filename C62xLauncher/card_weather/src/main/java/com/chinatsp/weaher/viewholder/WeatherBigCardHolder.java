@@ -1,15 +1,9 @@
 package com.chinatsp.weaher.viewholder;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,19 +11,12 @@ import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chinatsp.weaher.R;
-import com.chinatsp.weaher.WeatherTypeRes;
 import com.chinatsp.weaher.WeatherUtil;
-import com.chinatsp.weaher.repository.WeatherBean;
 import com.chinatsp.weaher.viewholder.city.BigCityListAdapter;
-import com.chinatsp.weaher.viewholder.city.SmallCityListAdapter;
 import com.chinatsp.weaher.viewholder.indicator.PointIndicator;
-import com.chinatsp.weaher.weekday.WeekDayAdapter;
 import com.iflytek.autofly.weather.entity.WeatherInfo;
 
 import java.util.List;
-
-import launcher.base.recyclerview.SimpleRcvDecoration;
-import launcher.base.utils.recent.RecentAppHelper;
 
 public class WeatherBigCardHolder extends WeatherCardHolder{
 

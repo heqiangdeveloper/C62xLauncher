@@ -124,7 +124,7 @@ public class AppStoreCardView extends ConstraintLayout implements ICardStyleChan
         mIvAppIconTop.setOnClickListener(this);
         mIvAppIconBottom.setOnClickListener(this);
         //点击空白处跳转至应用商城
-        setOnClickListener(this);
+//        setOnClickListener(this);
 
         NetworkStateReceiver.getInstance().registerObserver(networkObserver);
         loadData();

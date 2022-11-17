@@ -6,4 +6,5 @@
     <string name="card_edit_msg_ok">修改成功</string>
     <string name="card_edit_btn_save">保存修改</string>
     <string name="card_edit_btn_cancel">放弃修改</string>
+    <string name="card_edit_modification_warning">当前有卡片编辑修改尚未保存\n是否保存修改并退出</string>
 </resources>

@@ -23,7 +23,7 @@
         />
 
     <TextView
-        android:text="今日"
+        android:text="@string/card_drive_info_today"
         android:layout_width="wrap_content"
         android:layout_height="42px"
         style="@style/CardLv3TextView"
@@ -57,7 +57,7 @@
         />
 
     <TextView
-        android:text="用油量"
+        android:text="@string/card_drive_info_oil_consumption"
         android:layout_width="wrap_content"
         android:layout_height="30px"
         style="@style/CardLv3TextView"
@@ -66,6 +66,8 @@
         app:layout_constraintBottom_toBottomOf="@id/ivCardDriveOilIcon"
         app:layout_constraintStart_toEndOf="@id/ivCardDriveOilIcon"
         android:layout_marginStart="15px"
+
+
         />
 
     <ImageView
@@ -79,7 +81,7 @@
         />
 
     <TextView
-        android:text="用车时长"
+        android:text="@string/card_drive_info_driving_time"
         android:layout_width="wrap_content"
         android:layout_height="30px"
         style="@style/CardLv3TextView"
@@ -88,6 +90,8 @@
         app:layout_constraintBottom_toBottomOf="@id/ivCardDriveTimeIcon"
         app:layout_constraintStart_toEndOf="@id/ivCardDriveTimeIcon"
         android:layout_marginStart="15px"
+
+
         />
 
     <ImageView
@@ -101,7 +105,7 @@
         />
 
     <TextView
-        android:text="行驶里程"
+        android:text="@string/card_drive_info_driving_distance"
         android:layout_width="wrap_content"
         android:layout_height="30px"
         style="@style/CardLv3TextView"
@@ -110,6 +114,8 @@
         app:layout_constraintBottom_toBottomOf="@id/ivCardDriveDistanceIcon"
         app:layout_constraintStart_toEndOf="@id/ivCardDriveDistanceIcon"
         android:layout_marginStart="15px"
+
+
         />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineDriveInfoValueLeft"

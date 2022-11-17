@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="card_drive_info_oil_consumption">用油量</string>
+    <string name="card_drive_info_driving_time">用车时长</string>
+    <string name="card_drive_info_driving_distance">行驶里程</string>
+    <string name="card_drive_info_today">今日</string>
+</resources>

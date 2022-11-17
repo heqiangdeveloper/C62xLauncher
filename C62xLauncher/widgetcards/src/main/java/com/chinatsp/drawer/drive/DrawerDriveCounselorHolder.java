@@ -55,10 +55,10 @@ public class DrawerDriveCounselorHolder extends BaseViewHolder<DrawerEntity> {
 
     public void updateMaintenanceMileage(int maintenanceMile,float percent) {
         if (maintenanceMile >= 0) {
-            tvDrawerDriveDistanceLabel.setText("剩余保养里程");
+            tvDrawerDriveDistanceLabel.setText(R.string.drawer_consultant_maintenance_mileage);
             tvDrawerDriveDistance.setText(String.valueOf(maintenanceMile));
         } else {
-            tvDrawerDriveDistanceLabel.setText("超出保养里程");
+            tvDrawerDriveDistanceLabel.setText(R.string.drawer_consultant_service_mileage_exceed);
             tvDrawerDriveDistance.setText(String.valueOf(Math.abs(maintenanceMile)));
         }
         progressDrawerDriveDistance.setProgress(percent);

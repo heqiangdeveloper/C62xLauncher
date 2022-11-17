@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.chinatsp.drawer.search.LauncherSearchActivity;
+import com.chinatsp.widgetcards.CardIntentService;
 import com.chinatsp.widgetcards.R;
 import com.chinatsp.widgetcards.editor.ui.CardEditorActivity;
 import com.chinatsp.widgetcards.home.smallcard.CardInnerListHelper;
@@ -38,7 +41,6 @@ import card.base.LauncherCard;
 import launcher.base.routine.ActivityBus;
 import launcher.base.utils.EasyLog;
 import launcher.base.utils.flowcontrol.StableOnClickListener;
-import launcher.base.utils.view.RecyclerViewUtil;
 
 public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     private static final String TAG = "CardFrameViewHolder";
@@ -47,6 +49,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     private RecyclerView mRecyclerView;
     private TextView mTvCardName;
     private ImageView mIvCardZoom;
+    private View ivCardTopSpace;
     private View mCardInner;
     private boolean mExpandState;
     private LauncherCard mLauncherCard;
@@ -60,6 +63,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
         this.mRecyclerView = recyclerView;
         mTvCardName = itemView.findViewById(R.id.tvCardName);
         mIvCardZoom = itemView.findViewById(R.id.ivCardZoom);
+        ivCardTopSpace = itemView.findViewById(R.id.ivCardTopSpace);
         mCardInner = cardInner;
         mCardInnerListHelper = new CardInnerListHelper(
                 itemView.findViewById(R.id.viewPager2InSmallCard)
@@ -77,26 +81,30 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
             mOnClickListener = createListener(cardEntity);
         }
         EasyLog.d(TAG, "bind position:" + position + ", " + cardEntity.getName());
-        itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                int fingerCount = mPointsDown.size();
-                EasyLog.d(TAG, "onLongClick " + cardEntity.getName() + ",  fingerCount:" + fingerCount + " , itemView :" + itemView);
-                if (fingerCount > 1) {
-                    return false;
-                }
-                ActivityBus.newInstance(itemView.getContext())
-                        .withClass(CardEditorActivity.class)
-                        .go();
-                return false;
-            }
-        });
-        itemView.setOnTouchListener(mOnTouchListener);
-        mIvCardZoom.setOnClickListener(mOnClickListener);
-        mTvCardName.setOnClickListener(mOnClickListener);
-//        itemView.setOnClickListener(v -> {
-//            EasyLog.d(TAG, "Launcher App......");
+
+//        itemView.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                int fingerCount = mPointsDown.size();
+//                EasyLog.d(TAG, "onLongClick " + cardEntity.getName() + ",  fingerCount:" + fingerCount + " , itemView :" + itemView);
+//                if (fingerCount > 1) {
+//                    return false;
+//                }
+//                ActivityBus.newInstance(itemView.getContext())
+//                        .withClass(CardEditorActivity.class)
+//                        .go();
+//                return false;
+//            }
 //        });
+
+        itemView.setOnTouchListener(mOnTouchListener);
+//        mIvCardZoom.setOnClickListener(mOnClickListener);
+//        mTvCardName.setOnClickListener(mOnClickListener);
+        ivCardTopSpace.setOnClickListener(mOnClickListener);
+        itemView.setOnClickListener(v -> {
+            EasyLog.d(TAG, "OnClickListener Launcher App......" + mLauncherCard.getName());
+            AppLauncherUtil.start(v.getContext(), mLauncherCard.getType());
+        });
 
         int smallCardPosition = ExpandStateManager.getInstance().getSmallCardPosition();
         boolean isSmall = (smallCardPosition == position);
@@ -112,6 +120,21 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
         }
 //        hideSmallCardsInnerList();
     }
+
+    View.OnLongClickListener mOnLongClickListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+            int fingerCount = mPointsDown.size();
+            EasyLog.d(TAG, "onLongClick " + mLauncherCard.getName() + ",  fingerCount:" + fingerCount + " , itemView :" + itemView);
+            if (fingerCount > 1) {
+                return false;
+            }
+            ActivityBus.newInstance(itemView.getContext())
+                    .withClass(CardEditorActivity.class)
+                    .go();
+            return false;
+        }
+    };
 
     private boolean checkNeedHideTitle() {
         boolean hideDefault = false;
@@ -228,7 +251,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
                 if (!cardEntity.isCanExpand()) {
                     return;
                 }
-                if (view == mIvCardZoom || view == mTvCardName) {
+                if (view == mIvCardZoom || view == mTvCardName || view == ivCardTopSpace) {
                     changeExpandState(false);
                 }
                 ExpandStateManager.getInstance().setExpand(mExpandState);
@@ -533,13 +556,18 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
 
     private float mPointsDistance = 0;
     private float downX, downY;
+    private float moveX, moveY;
+    private boolean mReadyLongPress = false;
+    private long mDownTimestamp;
+
+    private boolean mLongPressTriggered = false;
 
     View.OnTouchListener mOnTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if (!mExpandState) {
                 EasyLog.w(TAG, "onTouch , card is in collapse");
-                return false;
+//                return false;
             }
             Float[][] pointerCoordinate = new Float[1][2];
             Float[][] pointerDown;
@@ -557,16 +585,24 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
                     mPointsDown.put(pointerId, pointerCoordinate);
                     downX = pointX;
                     downY = pointY;
+                    mReadyLongPress = true;
+                    mDownTimestamp = System.currentTimeMillis();
                     break;
                 case MotionEvent.ACTION_POINTER_DOWN:
                     EasyLog.i(TAG, "ACTION_POINTER_DOWN");
                     mLatestPointerPressTime = System.currentTimeMillis();
                     // 副指针到来时，将副指针的数据记录下来，方便后续使用
                     mPointsDown.put(pointerId, pointerCoordinate);
+                    mReadyLongPress = false;
                     break;
 
                 case MotionEvent.ACTION_MOVE:
-                    EasyLog.d(TAG, "ACTION_MOVE . mShouldTriggerScreenShot:" + mShouldTriggerScreenShot + ",  pointX:" + pointX);
+                    EasyLog.d(TAG, "ACTION_MOVE . mShouldTriggerScreenShot:" + mShouldTriggerScreenShot + ",  pointX:" + pointX + ". Point count:" + event.getPointerCount());
+                    if (event.getPointerCount() == 1) {
+                        moveX = event.getX();
+                        moveY = event.getY();
+                    }
+
                     if (event.getPointerCount() == FINGER_NUM_TRIGGER_SCREEN_SHOT) {
                         mPointsDistance = Math.abs(pointX - downX) + Math.abs(pointY - downY);
 //                        for (int i = 0; i < event.getPointerCount(); i++) {
@@ -577,8 +613,23 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
 //                            mFinalShouldTriggerScreenShot = true;
 //                        }
                     }
+
                     break;
                 case MotionEvent.ACTION_UP:
+                    if (event.getPointerCount() == 1) {
+                        moveX = event.getX();
+                        moveY = event.getY();
+                        float deltaY = moveY - downY;
+                        float deltaX = moveX - downX;
+                        EasyLog.d(TAG, "check up deltaY:" + deltaY + " , deltaX:" + deltaX + " , mReadLongPress:" + mReadyLongPress);
+//                        boolean checkAndGoSearchActivity = checkAndGoSearchActivity(deltaY, deltaX);
+//                        if (mReadyLongPress && !checkAndGoSearchActivity) {
+//                            checkAndPerformLongPress(deltaY, deltaX);
+//                        }
+                        checkAndPerformClick(deltaY, deltaX);
+                        mReadyLongPress = false;
+                        return true;
+                    }
                     mPointsUp.put(pointerId, pointerCoordinate);
                     // 前面的条件都满足触发截屏的条件时，还需要根据mPointersDown和mPointersUp这两个数据来计算每个手指滑动的距离是否满足TouchSlop等条件
                     long flashTime = System.currentTimeMillis() - mLatestPointerPressTime;
@@ -597,6 +648,56 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
         }
     };
 
+    private boolean checkAndGoSearchActivity(float deltaY, float deltaX) {
+        boolean enableDragDownToSearch = false;
+        if (enableDragDownToSearch) {
+            if (deltaY > 100 && Math.abs(deltaX) < 20) {
+                ActivityBus.newInstance(itemView.getContext())
+                        .withClass(LauncherSearchActivity.class)
+                        .go();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private final int LONG_PRESS_TIME = 600;
+
+    private void checkAndPerformLongPress(float deltaY, float deltaX) {
+        if (checkTouchMoveTooFar(deltaY, deltaX)) {
+            long now = System.currentTimeMillis();
+            long touchTime = now - mDownTimestamp;
+            if (touchTime > LONG_PRESS_TIME) {
+                // 长按
+                EasyLog.d(TAG, "checkAndPerformLongPress Launcher Editor......" + mLauncherCard.getName());
+//                ActivityBus.newInstance(itemView.getContext())
+//                        .withClass(CardEditorActivity.class)
+//                        .go();
+                CardIntentService.start(itemView.getContext(), CardIntentService.OP_VALUE_START_CARD_EDIT);
+            } else {
+                // 短按
+                EasyLog.d(TAG, "checkAndPerformLongPress Launcher App......" + mLauncherCard.getName());
+                AppLauncherUtil.start(itemView.getContext(), mLauncherCard.getType());
+            }
+        }
+    }
+
+    private void checkAndPerformClick(float deltaY, float deltaX) {
+        if (checkTouchMoveTooFar(deltaY, deltaX)) {
+            long now = System.currentTimeMillis();
+            long touchTime = now - mDownTimestamp;
+            if (touchTime < LONG_PRESS_TIME) {
+                // 短按
+                EasyLog.d(TAG, "checkAndPerformClick Launcher App......" + mLauncherCard.getName());
+                AppLauncherUtil.start(itemView.getContext(), mLauncherCard.getType());
+            }
+        }
+    }
+
+    private boolean checkTouchMoveTooFar(float deltaY, float deltaX) {
+        return Math.abs(deltaY) < 5 && Math.abs(deltaX) < 5;
+    }
+
     private void resetTouchEvent() {
         mPointsDown.clear();
         mPointsUp.clear();
@@ -605,6 +706,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
         mPointsDistance = 0;
         downX = 0;
         downY = 0;
+        mReadyLongPress = false;
     }
 
     private void doSwipe() {

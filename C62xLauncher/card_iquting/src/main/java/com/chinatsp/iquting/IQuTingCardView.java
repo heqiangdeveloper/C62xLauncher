@@ -205,7 +205,7 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
         mIvIQuTingLike.setOnClickListener(this);
         mIvCardIQuTingButton.setOnClickListener(this);
         //点击空白处跳转至爱趣听
-        setOnClickListener(this);
+//        setOnClickListener(this);
 
         //注册网络动态监听
         NetworkStateReceiver.getInstance().registerObserver(networkObserver);

@@ -8,7 +8,7 @@
     tools:context=".CardHomeFragment"
     >
 
-    <com.chinatsp.widgetcards.home.FrameRecyclerView
+    <com.chinatsp.widgetcards.home.HomeCardRecyclerView
         android:id="@+id/rcvCards"
         android:layout_width="match_parent"
         android:layout_height="@dimen/card_height"

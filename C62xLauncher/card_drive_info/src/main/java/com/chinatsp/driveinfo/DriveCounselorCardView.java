@@ -61,12 +61,12 @@ public class DriveCounselorCardView extends ConstraintLayout {
     }
 
     private void initViews() {
-        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RecentAppHelper.launchApp(getContext(), "com.uaes.adviser");
-            }
-        });
+//        setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                RecentAppHelper.launchApp(getContext(), "com.uaes.adviser");
+//            }
+//        });
 
     }
 

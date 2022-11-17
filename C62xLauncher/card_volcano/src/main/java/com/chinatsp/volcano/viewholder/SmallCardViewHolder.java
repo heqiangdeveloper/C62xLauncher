@@ -28,6 +28,7 @@ public class SmallCardViewHolder extends VolcanoViewHolder{
     private VolcanoVideo volcanoVideo;
     private ImageView ivCardVolcanoNetworkErr;
     private TextView tvCardVolcanoNetworkErr;
+    private ImageView ivCardVolcanoNetworkErrCloseBtn;
     private View layoutCardVolcanoNetworkErr;
 
     public SmallCardViewHolder(View rootView) {
@@ -39,20 +40,26 @@ public class SmallCardViewHolder extends VolcanoViewHolder{
         tvCardVolcanoSource = rootView.findViewById(R.id.tvCardVolcanoSource);
         ivCardVolcanoNetworkErr = rootView.findViewById(R.id.ivCardVolcanoNetworkErr);
         tvCardVolcanoNetworkErr = rootView.findViewById(R.id.tvCardVolcanoNetworkErr);
+        ivCardVolcanoNetworkErrCloseBtn = rootView.findViewById(R.id.ivCardVolcanoNetworkErrCloseBtn);
         layoutCardVolcanoNetworkErr = rootView.findViewById(R.id.layoutCardVolcanoNetworkErr);
 
-        rootView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (volcanoVideo != null) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(volcanoVideo.getSchema()));
-                    rootView.getContext().startActivity(intent);
-                } else {
-                    RecentAppHelper.launchApp(rootView.getContext(), "com.bytedance.byteautoservice");
-                }
-            }
-        });
+        ivCardVolcanoVideoCover.setOnClickListener(mOnClickListener);
+        layoutCardVolcanoNetworkErr.setOnClickListener(mOnClickListener);
+        ivCardVolcanoNetworkErrCloseBtn.setOnClickListener(mOnClickListener);
+
     }
+
+    private View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (volcanoVideo != null) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(volcanoVideo.getSchema()));
+                v.getContext().startActivity(intent);
+            } else {
+                RecentAppHelper.launchApp(v.getContext(), "com.bytedance.byteautoservice");
+            }
+        }
+    };
 
     @Override
     public void showNormal() {
