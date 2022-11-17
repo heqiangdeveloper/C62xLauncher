@@ -15,7 +15,7 @@ import launcher.base.routine.ActivityBus;
 import launcher.base.utils.EasyLog;
 
 public class CardWrapperLayout extends ConstraintLayout {
-    private static final String TAG = "CommonCardLayout";
+    private static final String TAG = "CardWrapperLayout";
     private static final float MOVE_Y_GO_SEARCH = 100;
     private boolean mLongPressTriggered = false;
 

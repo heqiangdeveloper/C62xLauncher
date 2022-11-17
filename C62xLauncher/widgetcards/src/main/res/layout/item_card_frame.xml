@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.chinatsp.widgetcards.home.CardWrapperLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/card_width"
     android:layout_height="@dimen/card_height"
@@ -43,4 +43,4 @@
         android:visibility="gone"
         />
 
-</com.chinatsp.widgetcards.home.CardWrapperLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

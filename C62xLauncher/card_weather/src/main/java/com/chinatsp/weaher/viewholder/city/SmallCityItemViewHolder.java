@@ -61,13 +61,15 @@ public class SmallCityItemViewHolder extends BaseViewHolder<String> {
                 WeatherRepository.getInstance().requestCityList();
             }
         });
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                WeatherUtil.goApp(itemView.getContext());
-            }
-        });
+        itemView.setOnClickListener(mOnClickListener);
     }
+
+    View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            WeatherUtil.goApp(v.getContext());
+        }
+    };
 
     private void loadWeatherInfo(String city) {
         WeatherUtil.logD("SmallCityItemViewHolder loadWeatherInfo");
