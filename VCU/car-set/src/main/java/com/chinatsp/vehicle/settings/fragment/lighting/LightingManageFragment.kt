@@ -100,9 +100,11 @@ class LightingManageFragment : BaseTabFragment<BaseViewModel, LightingManageFrag
             }
             R.id.lighting_atmosphere -> {
                 if (VcuUtils.isCareLevel(Level.LEVEL3, expect = true)) {
-                    binding.constraint.setBackgroundResource(R.drawable.intelligent_model_lv3)
+                    binding.lightingManagerLeftTab.setBackgroundResource(R.drawable.left_bar_lv3)
+                }else if (VcuUtils.isCareLevel(Level.LEVEL4, expect = true)) {
+                    binding.lightingManagerLeftTab.setBackgroundResource(R.drawable.left_bar_lv4)
                 } else {
-                    binding.constraint.setBackgroundResource(R.drawable.intelligent_model_lv4_5)
+                    binding.lightingManagerLeftTab.setBackgroundResource(R.drawable.left_bar_lv5)
                 }
                 fragment = AmbientLightingFragment()
                 fragment.pid = uid

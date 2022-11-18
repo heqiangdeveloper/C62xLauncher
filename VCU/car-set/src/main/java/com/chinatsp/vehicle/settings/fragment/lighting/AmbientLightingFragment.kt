@@ -1,8 +1,10 @@
 package com.chinatsp.vehicle.settings.fragment.lighting
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.chinatsp.settinglib.Applet
 import com.chinatsp.settinglib.Constant
@@ -12,6 +14,7 @@ import com.chinatsp.settinglib.manager.lamp.AmbientLightingManager
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
+import com.chinatsp.vehicle.settings.HintHold
 import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.ISwitchAction
 import com.chinatsp.vehicle.settings.R
@@ -32,6 +35,7 @@ class AmbientLightingFragment :
     var settingFragment: DialogFragment? = null
 
     private val map: HashMap<Int, View> = HashMap()
+    private val colorList: List<Color> = Applet.getLampSupportColor()
 
     private val manager: AmbientLightingManager
         get() = AmbientLightingManager.instance
@@ -130,61 +134,62 @@ class AmbientLightingFragment :
     }
 
     private fun initViewLight() {
+        val color = colorList[binding.picker.pickerIndex]
+        val colorId = Color.rgb(color.red().toInt(), color.green().toInt(), color.blue().toInt())
         if (VcuUtils.isCareLevel(Level.LEVEL3, expect = true)) {
+            binding.lightingImage.setImageDrawable(activity?.let {
+                ContextCompat.getDrawable(
+                    it,
+                    R.drawable.img_light_lv3
+                )
+            })
             if (isFront) {
-                binding.imgLight1.visibility = View.VISIBLE
-                binding.imgLight2.visibility = View.GONE
-                binding.imgLight3.visibility = View.VISIBLE
-                binding.imgLight4.visibility = View.GONE
-                binding.imgLight5.visibility = View.GONE
+                binding.lightingView.setBackgroundColor(colorId)
             } else {
-                binding.imgLight1.visibility = View.GONE
-                binding.imgLight2.visibility = View.GONE
-                binding.imgLight3.visibility = View.GONE
-                binding.imgLight4.visibility = View.GONE
-                binding.imgLight5.visibility = View.GONE
+                activity?.let { binding.lightingView.setBackgroundColor(it.getColor(R.color.lighting_bg)) }
             }
         } else if (VcuUtils.isCareLevel(Level.LEVEL4, expect = true)) {
+            binding.lightingImage.setImageDrawable(activity?.let {
+                ContextCompat.getDrawable(
+                    it,
+                    R.drawable.img_light_lv4
+                )
+            })
             if (isFront) {
-                binding.imgLight1.visibility = View.VISIBLE
-                binding.imgLight2.visibility = View.GONE
-                binding.imgLight3.visibility = View.VISIBLE
-                binding.imgLight4.visibility = View.VISIBLE
-                binding.imgLight5.visibility = View.GONE
+                binding.lightingView.setBackgroundColor(colorId)
             } else {
-                binding.imgLight1.visibility = View.GONE
-                binding.imgLight2.visibility = View.GONE
-                binding.imgLight3.visibility = View.GONE
-                binding.imgLight4.visibility = View.GONE
-                binding.imgLight5.visibility = View.GONE
+                activity?.let { binding.lightingView.setBackgroundColor(it.getColor(R.color.lighting_bg)) }
             }
         } else if (VcuUtils.isCareLevel(Level.LEVEL5, expect = true)) {
+            binding.lightingImage.setImageDrawable(activity?.let {
+                ContextCompat.getDrawable(
+                    it,
+                    R.drawable.img_light_lv5
+                )
+            })
             if (isFront && isBack) {
-                binding.imgLight1.visibility = View.VISIBLE
-                binding.imgLight2.visibility = View.VISIBLE
-                binding.imgLight3.visibility = View.VISIBLE
-                binding.imgLight4.visibility = View.VISIBLE
-                binding.imgLight5.visibility = View.VISIBLE
-            } else if (isFront && !isBack) {
-                binding.imgLight1.visibility = View.VISIBLE
-                binding.imgLight2.visibility = View.VISIBLE
-                binding.imgLight3.visibility = View.VISIBLE
-                binding.imgLight4.visibility = View.VISIBLE
-                binding.imgLight5.visibility = View.GONE
-            } else if (!isFront && isBack) {
-                binding.imgLight1.visibility = View.GONE
-                binding.imgLight2.visibility = View.GONE
-                binding.imgLight3.visibility = View.GONE
-                binding.imgLight4.visibility = View.GONE
-                binding.imgLight5.visibility = View.VISIBLE
-            } else {
-                binding.imgLight1.visibility = View.GONE
-                binding.imgLight2.visibility = View.GONE
-                binding.imgLight3.visibility = View.GONE
-                binding.imgLight4.visibility = View.GONE
-                binding.imgLight5.visibility = View.GONE
+                binding.lightingView.setBackgroundColor(colorId)
+                binding.lightingViewBack1.visibility = View.GONE
+                binding.lightingViewBack2.visibility = View.GONE
+                binding.lightingViewBack3.visibility = View.GONE
+            }else if(!isFront && isBack){
+                binding.lightingView.setBackgroundColor(colorId)
+                binding.lightingViewBack1.visibility = View.VISIBLE
+                binding.lightingViewBack2.visibility = View.GONE
+                binding.lightingViewBack3.visibility = View.GONE
+            }else if(isFront && !isBack){
+                binding.lightingView.setBackgroundColor(colorId)
+                binding.lightingViewBack1.visibility = View.GONE
+                binding.lightingViewBack2.visibility = View.VISIBLE
+                binding.lightingViewBack3.visibility = View.VISIBLE
+            }else if(!isFront && !isBack){
+                activity?.let { binding.lightingView.setBackgroundColor(it.getColor(R.color.lighting_bg)) }
+                binding.lightingViewBack1.visibility = View.GONE
+                binding.lightingViewBack2.visibility = View.GONE
+                binding.lightingViewBack3.visibility = View.GONE
             }
         }
+
     }
 
     private fun initSwitchOption() {
@@ -277,6 +282,8 @@ class AmbientLightingFragment :
 
     private fun showModeFragment() {
         if (isLightingActive()) {
+            HintHold.setTitle(1)
+            HintHold.setContent(binding.picker.pickerIndex)
             modeFragment = AmbientLightingModelDialogFragment()
             activity?.supportFragmentManager?.let {
                 modeFragment!!.show(it, modeFragment!!::javaClass.name)
@@ -407,6 +414,9 @@ class AmbientLightingFragment :
         Timber.d("onColorChanged color:%s, index:%s", color, index)
         viewModel.onAmbientColorChanged(index)
         picker?.setIndicatorColorIndex(index)
+        val color = colorList[index]
+        val colorId = Color.rgb(color.red().toInt(), color.green().toInt(), color.blue().toInt())
+        binding.lightingView.setBackgroundColor(colorId)
     }
 
     override fun onStartTrackingTouch(picker: ColorPickerView?) {
@@ -434,9 +444,10 @@ class AmbientLightingFragment :
     override fun onPause() {
         super.onPause()
         val intent = Intent("com.chinatsp.vehiclenetwork.usercenter")
-        val json = "{\"color\":\""+binding.picker.pickerIndex+"\",\"lighting\":\""+binding.ambientLightingBrightness.mSelectedNumber+"\"}"
+        val json =
+            "{\"color\":\"" + binding.picker.pickerIndex + "\",\"lighting\":\"" + binding.ambientLightingBrightness.mSelectedNumber + "\"}"
         intent.putExtra("app", "com.chinatsp.vehicle.settings")
-        intent.putExtra("atmosphereLamp",json)
+        intent.putExtra("atmosphereLamp", json)
         intent.setPackage("com.chinatsp.usercenter")
         activity?.startService(intent)
         Timber.d("lighting intent json:$json")

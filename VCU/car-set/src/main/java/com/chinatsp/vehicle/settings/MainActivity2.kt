@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.chinatsp.settinglib.BaseApp
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.GlobalManager
@@ -60,6 +59,11 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
             doRouteToDeviceUpgrade()
         }
     }
+
+  /*  override fun onResume() {
+        super.onResume()
+        initTabLayout()
+    }*/
 
 //    override fun onCreate(savedInstanceState: Bundle?) {
 //        window.setBackgroundDrawableResource(R.color.transparent);
@@ -180,7 +184,8 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
             val values = obtainTabs()
             values.forEach {
                 val tab = binding.tabLayout.newTab()
-                tab.text = it.desc
+                //tab.text = it.desc
+                tab.text = resources.getString(it.desc)
                 tab.tag = it
                 binding.tabLayout.addTab(tab)
                 tab.view.isLongClickable = false

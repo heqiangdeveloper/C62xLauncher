@@ -46,4 +46,8 @@ object HintHold {
         return ""
     }
 
+    fun getContent(): Int? {
+        return content
+    }
+
 }

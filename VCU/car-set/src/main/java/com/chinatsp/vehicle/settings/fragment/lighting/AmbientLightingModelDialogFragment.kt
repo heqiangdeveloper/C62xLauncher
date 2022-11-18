@@ -1,15 +1,18 @@
 package com.chinatsp.vehicle.settings.fragment.lighting
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
+import com.chinatsp.settinglib.Applet
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.lamp.AmbientLightingManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
+import com.chinatsp.vehicle.settings.HintHold
 import com.chinatsp.vehicle.settings.ISwitchAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.LightingModelDialogFragmentBinding
@@ -22,14 +25,13 @@ import dagger.hilt.android.AndroidEntryPoint
 class AmbientLightingModelDialogFragment :
     BaseDialogFragment<AmbientLightingSmartModeViewModel, LightingModelDialogFragmentBinding>(),
     ISwitchAction {
-
+    private val colorList: List<Color> = Applet.getLampSupportColor()
     private val manager: AmbientLightingManager
         get() = AmbientLightingManager.instance
 
     override fun getLayoutId(): Int {
         return R.layout.lighting_model_dialog_fragment
     }
-
     override fun initData(savedInstanceState: Bundle?) {
         binding.closeDialog.setOnClickListener { dismiss() }
         initViewsDisplay()
@@ -69,33 +71,24 @@ class AmbientLightingModelDialogFragment :
     }
 
     private fun initViewsDisplay() {
+        val color = colorList[HintHold.getContent()!!]
+        val colorId = Color.rgb(color.red().toInt(), color.green().toInt(), color.blue().toInt())
+        binding.lightingView.setBackgroundColor(colorId)
         //根据不同车型选择不同车模及灯光
         if (VcuUtils.isCareLevel(Level.LEVEL3, expect = true)) {
             binding.carModel.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(it,
-                    R.drawable.intelligent_model_lv3_mix)
-            })
-            binding.carLight.setImageDrawable(activity?.let {
-                ContextCompat.getDrawable(it,
-                    R.drawable.img_carlight_lv3mix)
+                    R.drawable.img_light_small_lv3)
             })
         } else if (VcuUtils.isCareLevel(Level.LEVEL4, expect = true)) {
             binding.carModel.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(it,
-                    R.drawable.intelligent_model_lv4_5_mix)
-            })
-            binding.carLight.setImageDrawable(activity?.let {
-                ContextCompat.getDrawable(it,
-                    R.drawable.img_carlight_lv4_mix)
+                    R.drawable.img_light_small_lv4)
             })
         } else if (VcuUtils.isCareLevel(Level.LEVEL5, expect = true)) {
             binding.carModel.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(it,
-                    R.drawable.intelligent_model_lv4_5_mix)
-            })
-            binding.carLight.setImageDrawable(activity?.let {
-                ContextCompat.getDrawable(it,
-                    R.drawable.img_carlight_lv5_mix)
+                    R.drawable.img_light_small_lv5)
             })
         }
     }
