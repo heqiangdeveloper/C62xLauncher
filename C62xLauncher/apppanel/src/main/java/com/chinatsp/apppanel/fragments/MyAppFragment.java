@@ -1060,12 +1060,24 @@ public class MyAppFragment extends Fragment {
     * 更新应用图标
      */
     private void refreshIcon(){
+        String pkgName = "";
         for(List<LocationBean> lists:data){
             if(lists != null){
                 for(int i = 0; i < lists.size(); i++){
                     locationBean = lists.get(i);
                     if(locationBean != null){
-                        drawable = AppLists.getResId(getContext(),locationBean.getPackageName());
+                        pkgName = locationBean.getPackageName();
+                        if(AppLists.volcano.equals(pkgName)){//火山车娱
+                            List<ResolveInfo> allApps = getApps();
+                            A:for(int k = 0; k < allApps.size(); k++){
+                                if(pkgName.equals(allApps.get(k).activityInfo.packageName)){
+                                    drawable = allApps.get(k).activityInfo.loadIcon(getContext().getPackageManager());
+                                    break A;
+                                }
+                            }
+                        }else {
+                            drawable = AppLists.getResId(getContext(),pkgName);
+                        }
                         if(drawable != null){//非第三方应用
                             locationBean.setImgDrawable(drawable);
                         }
