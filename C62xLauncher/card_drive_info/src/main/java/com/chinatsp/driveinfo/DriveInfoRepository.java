@@ -74,8 +74,11 @@ public class DriveInfoRepository {
             public void onServiceDisconnected() {
                 mServiceConnect = false;
                 EasyLog.w(TAG, "onServiceConnected-->断开连接");
+                mCacheDriveInfo = readDriveInfo();
+                notifyReadOnBindService(null);
             }
         });
+        // 执行轮询任务: 每2秒执行一次绑定服务的任务, 直到退出
         mServiceConnectTask = new PollingTask(0, 2000, TAG) {
             @Override
             protected void executeTask() {
@@ -164,6 +167,9 @@ public class DriveInfoRepository {
 
     public DriveInfo readDriveInfo() {
         EasyLog.i(TAG, "readDriveInfo start");
+        if (!mServiceConnect) {
+            return null;
+        }
         float drivingMileage = 0;
         int drivingTime = 0;
         float oilConsumption = 0;

@@ -94,7 +94,9 @@ public class HomeCardRecyclerView extends RecyclerView {
         int action = event.getAction();
         switch (action) {
             case MotionEvent.ACTION_DOWN: {
-                scheduleLongPress();
+                if (!isShowingControlViews()) {
+                    scheduleLongPress();
+                }
                 downX = event.getX();
                 downY = event.getY();
                 break;
@@ -149,4 +151,10 @@ public class HomeCardRecyclerView extends RecyclerView {
         return Math.abs(deltaY) > 5 || Math.abs(deltaX) > 5;
     }
 
+    /**
+     * @return true: 正在显示控件组
+     */
+    private boolean isShowingControlViews() {
+        return !canScrollHorizontally(-1);
+    }
 }

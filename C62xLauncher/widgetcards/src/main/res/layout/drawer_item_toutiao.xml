@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="322px"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <ImageView
         android:layout_width="@dimen/card_icon_size_lv3"
         android:layout_height="@dimen/card_icon_size_lv3"
@@ -38,6 +39,8 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="56px"
         android:visibility="invisible"
+        android:src="@drawable/drawer_bg_volcano"
+        android:foreground="@drawable/drawer_app_fg_selector"
         >
         <ImageView
             android:id="@+id/ivErrorIcon"
@@ -67,7 +70,7 @@
         android:id="@+id/rcvDrawerVolcanoVideos"
         android:layout_width="match_parent"
         android:layout_height="264px"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_marginTop="16px"
         app:layout_constraintTop_toBottomOf="@id/tvTitle"
         app:layout_constraintStart_toStartOf="parent"

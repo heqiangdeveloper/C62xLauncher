@@ -32,7 +32,8 @@
         android:layout_marginTop="16px"
         app:layout_constraintTop_toBottomOf="@id/tvTitle"
         android:visibility="visible"
-        android:background="@drawable/drawer_volcano_bg_selector"
+        android:background="@drawable/drawer_bg_iquting"
+        android:foreground="@drawable/drawer_app_fg_selector"
         />
 
     <LinearLayout

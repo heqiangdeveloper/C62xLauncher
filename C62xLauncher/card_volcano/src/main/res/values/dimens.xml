@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="card_volcano_cover_width">384px</dimen>
+    <dimen name="card_volcano_cover_height">216px</dimen>
+</resources>

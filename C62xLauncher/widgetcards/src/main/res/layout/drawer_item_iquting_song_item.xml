@@ -4,6 +4,7 @@
     android:layout_height="329px"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/drawer_bg_iquting_song_item"
+    android:foreground="@drawable/drawer_app_fg_selector"
     >
 
     <ImageView

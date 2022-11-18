@@ -26,7 +26,13 @@ public class CardEditorController {
         mHomeList.clear();
         mUnselectList.clear();
         mHomeList.addAll(cardManager.getHomeList());
-        mUnselectList.addAll(cardManager.getUnselectCardList());
+
+        List<LauncherCard> unselectCardList = cardManager.getUnselectCardList();
+        for (LauncherCard card : unselectCardList) {
+            if (card != null && card.getType() != CardManager.CardType.EMPTY) {
+                mUnselectList.add(card);
+            }
+        }
     }
 
     void swipeHomeItem(int p1, int p2) {

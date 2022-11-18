@@ -2,6 +2,8 @@ package com.chinatsp.navigation.gaode.bean;
 
 import android.text.TextUtils;
 
+import com.chinatsp.navigation.R;
+
 import org.json.JSONObject;
 
 public class RoadInfo {
@@ -18,9 +20,6 @@ public class RoadInfo {
         String roadName = null;
         if (jsonObject != null) {
             roadName = jsonObject.optString("curRoadName");
-        }
-        if (TextUtils.isEmpty(roadName)) {
-            roadName = "未知道路";
         }
         roadInfo.curRoadName = roadName;
         return roadInfo;
