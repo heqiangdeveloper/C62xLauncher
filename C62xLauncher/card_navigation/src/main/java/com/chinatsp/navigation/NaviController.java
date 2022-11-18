@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 
 import androidx.appcompat.content.res.AppCompatResources;
 
@@ -152,9 +153,16 @@ public class NaviController implements INaviCallback {
     public void receiveCurRoadInfo(GaoDeResponse<RoadInfo> gaoDeResponse) {
         RoadInfo roadInfo = gaoDeResponse.getData();
         NavigationUtil.logD(TAG + "receiveCurRoadInfo roadInfo:" + roadInfo);
+        String roadName;
         if (roadInfo != null) {
-            mView.refreshMyLocation(roadInfo.getCurRoadName());
+            roadName = roadInfo.getCurRoadName();
+            if (TextUtils.isEmpty(roadName)) {
+                roadName = mView.getContext().getString(R.string.card_navi_msg_road_name);
+            }
+        } else {
+            roadName = mView.getContext().getString(R.string.card_navi_msg_road_name);
         }
+        mView.refreshMyLocation(roadName);
     }
 
     @Override

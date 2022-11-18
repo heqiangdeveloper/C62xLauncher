@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/card_width"
+    android:layout_height="@dimen/card_height"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:focusable="false"
+    android:background="@drawable/card_bg_small">
+
+    <View
+        android:id="@+id/ivCardTopSpace"
+        android:layout_width="360px"
+        android:layout_height="64px"
+        android:layout_marginTop="31px"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/viewPager2InSmallCard"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        />
+
+
+    <ImageView
+        android:id="@+id/ivCardZoom"
+        android:layout_width="64px"
+        android:layout_height="64px"
+        android:src="@drawable/card_icon_expand"
+        android:layout_marginStart="2px"
+        android:layout_marginTop="31px"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/tvCardName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/CardTitleTextView"
+        android:paddingStart="8px"
+        app:layout_constraintStart_toEndOf="@id/ivCardZoom"
+        android:layout_marginTop="42px"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ff8865"
+        android:visibility="gone"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

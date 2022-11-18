@@ -31,10 +31,6 @@ public class CardInitial {
         cardList.add(CardEntityFactory.create(CardManager.CardType.PHONE));
         cardList.add(CardEntityFactory.create(CardManager.CardType.MEDIA));
         cardList.add(CardEntityFactory.create(CardManager.CardType.APP_STORE));
-        cardList.add(CardEntityFactory.create(CardManager.CardType.EMPTY));
-        cardList.add(CardEntityFactory.create(CardManager.CardType.EMPTY));
-        cardList.add(CardEntityFactory.create(CardManager.CardType.EMPTY));
-        cardList.add(CardEntityFactory.create(CardManager.CardType.EMPTY));
         return cardList;
     }
 

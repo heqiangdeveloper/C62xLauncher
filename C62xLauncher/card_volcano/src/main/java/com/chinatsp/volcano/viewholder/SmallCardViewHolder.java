@@ -1,6 +1,7 @@
 package com.chinatsp.volcano.viewholder;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,7 +20,7 @@ import launcher.base.routine.ActivityBus;
 import launcher.base.utils.glide.GlideHelper;
 import launcher.base.utils.recent.RecentAppHelper;
 
-public class SmallCardViewHolder extends VolcanoViewHolder{
+public class SmallCardViewHolder extends VolcanoViewHolder {
     private ImageView ivCardVolcanoSourceLogo;
     private ImageView ivCardVolcanoVideoCover;
     private TextView tvCardVolcanoVideoArtist;
@@ -30,6 +31,9 @@ public class SmallCardViewHolder extends VolcanoViewHolder{
     private TextView tvCardVolcanoNetworkErr;
     private ImageView ivCardVolcanoNetworkErrCloseBtn;
     private View layoutCardVolcanoNetworkErr;
+    private View layoutCardVolcanoNormal;
+    private Resources mResources;
+    private int mCoverWidth, mCoverHeight;
 
     public SmallCardViewHolder(View rootView) {
         super(rootView);
@@ -42,11 +46,15 @@ public class SmallCardViewHolder extends VolcanoViewHolder{
         tvCardVolcanoNetworkErr = rootView.findViewById(R.id.tvCardVolcanoNetworkErr);
         ivCardVolcanoNetworkErrCloseBtn = rootView.findViewById(R.id.ivCardVolcanoNetworkErrCloseBtn);
         layoutCardVolcanoNetworkErr = rootView.findViewById(R.id.layoutCardVolcanoNetworkErr);
+        layoutCardVolcanoNormal = rootView.findViewById(R.id.layoutCardVolcanoNormal);
 
         ivCardVolcanoVideoCover.setOnClickListener(mOnClickListener);
         layoutCardVolcanoNetworkErr.setOnClickListener(mOnClickListener);
         ivCardVolcanoNetworkErrCloseBtn.setOnClickListener(mOnClickListener);
 
+        mResources = rootView.getResources();
+        mCoverWidth = mResources.getDimensionPixelOffset(R.dimen.card_volcano_cover_width);
+        mCoverHeight = mResources.getDimensionPixelOffset(R.dimen.card_volcano_cover_height);
     }
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -76,10 +84,11 @@ public class SmallCardViewHolder extends VolcanoViewHolder{
         if (volcanoVideo == null) {
             return;
         }
-        GlideHelper.loadUrlImage(ivCardVolcanoSourceLogo.getContext(),ivCardVolcanoVideoCover,
-                volcanoVideo.getCover_url(),384,216, 10);
+        // 圆角: 10px
+        GlideHelper.loadUrlImage(ivCardVolcanoSourceLogo.getContext(), ivCardVolcanoVideoCover,
+                volcanoVideo.getCover_url(), mCoverWidth, mCoverHeight, 10);
         tvCardVolcanoVideoName.setText(volcanoVideo.getTitle());
-//        tvCardVolcanoVideoArtist.setVisibility(View.INVISIBLE);
+        layoutCardVolcanoNormal.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -99,6 +108,8 @@ public class SmallCardViewHolder extends VolcanoViewHolder{
 //        ivCardVolcanoSourceLogo.setVisibility(View.INVISIBLE);
 //        ivCardVolcanoVideoCover.setVisibility(View.INVISIBLE);
 //        tvCardVolcanoVideoName.setVisibility(View.INVISIBLE);
+        layoutCardVolcanoNetworkErr.setVisibility(View.INVISIBLE);
+        layoutCardVolcanoNormal.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -113,19 +124,14 @@ public class SmallCardViewHolder extends VolcanoViewHolder{
         ivCardVolcanoNetworkErr.setImageResource(R.drawable.card_icon_wifi_disconnect);
         tvCardVolcanoNetworkErr.setText(R.string.card_network_err);
         layoutCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
-        ivCardVolcanoSourceLogo.setVisibility(View.INVISIBLE);
-        tvCardVolcanoSource.setVisibility(View.INVISIBLE);
-        ivCardVolcanoVideoCover.setVisibility(View.INVISIBLE);
-        tvCardVolcanoVideoName.setVisibility(View.INVISIBLE);
+        layoutCardVolcanoNormal.setVisibility(View.INVISIBLE);
+
     }
 
     @Override
     public void hideNetworkError() {
         layoutCardVolcanoNetworkErr.setVisibility(View.INVISIBLE);
-        ivCardVolcanoSourceLogo.setVisibility(View.VISIBLE);
-        tvCardVolcanoSource.setVisibility(View.VISIBLE);
-        ivCardVolcanoVideoCover.setVisibility(View.VISIBLE);
-        tvCardVolcanoVideoName.setVisibility(View.VISIBLE);
+        layoutCardVolcanoNormal.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -133,9 +139,6 @@ public class SmallCardViewHolder extends VolcanoViewHolder{
         ivCardVolcanoNetworkErr.setImageResource(R.drawable.card_icon_date_error);
         tvCardVolcanoNetworkErr.setText(R.string.card_data_err);
         layoutCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
-        ivCardVolcanoSourceLogo.setVisibility(View.INVISIBLE);
-        tvCardVolcanoSource.setVisibility(View.INVISIBLE);
-        ivCardVolcanoVideoCover.setVisibility(View.INVISIBLE);
-        tvCardVolcanoVideoName.setVisibility(View.INVISIBLE);
+        layoutCardVolcanoNormal.setVisibility(View.INVISIBLE);
     }
 }

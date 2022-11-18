@@ -75,7 +75,7 @@ class SongsAdapter extends BaseRcvAdapter<BaseSongItemBean> {
                     iPlayItemCallback.onItemClick(position,songId);
                 }
             });
-            mIvIqutingDrawerSongItemCover.setOnClickListener(new View.OnClickListener() {
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     FlowPlayControl.getInstance().openPlayDetail(mIvIqutingDrawerSongItemCover.getContext());

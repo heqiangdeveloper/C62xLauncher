@@ -104,6 +104,7 @@ public class DriveCounselorCardView extends ConstraintLayout {
 
         private void update(DriveInfo driveInfo) {
             if (driveInfo == null) {
+                setNotDataUI();
                 return;
             }
             updateOilConsumption(driveInfo.getOilConsumption());
@@ -131,6 +132,11 @@ public class DriveCounselorCardView extends ConstraintLayout {
                 tvCardDriveDistanceValue.setText(String.valueOf(distance));
             }
         }
+        void setNotDataUI() {
+            tvCardDriveOilValue.setText("---");
+            tvCardDriveTimeValue.setText("---");
+            tvCardDriveDistanceValue.setText("---");
+        }
     }
 
     void updateDriveInfo(DriveInfo driveInfo) {
@@ -149,4 +155,6 @@ public class DriveCounselorCardView extends ConstraintLayout {
     void updateDriveMileage(float distance) {
         post(() -> mViewHolder.updateDriveMileage(distance));
     }
+
+
 }
