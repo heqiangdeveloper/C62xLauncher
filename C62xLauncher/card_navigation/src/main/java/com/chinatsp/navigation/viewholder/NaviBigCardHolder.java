@@ -124,7 +124,8 @@ public class NaviBigCardHolder extends NaviCardHolder {
 
     @Override
     public void setLocation(String myLocationName) {
-
+        ivCardNaviBigDefaultMap.setVisibility(View.INVISIBLE);
+        surfaceViewNavi.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -266,11 +267,16 @@ public class NaviBigCardHolder extends NaviCardHolder {
         int max = 4, size = laneInfoList.size();
         if (size > max) {
             List<TrafficLaneModel.LaneInfo> more4Lanes = laneInfoList.subList(max, laneInfoList.size());
-            EasyLog.d("XXXTTTT", "filter " + laneInfoList.size() + ", " + more4Lanes.size());
+//            EasyLog.d("XXXTTTT", "filter " + laneInfoList.size() + ", " + more4Lanes.size());
             for (int i = size - 1; i >= max; i--) {
                 laneInfoList.remove(i);
             }
-            EasyLog.d("XXXTTTT", "filter " + laneInfoList.size());
+//            EasyLog.d("XXXTTTT", "filter " + laneInfoList.size());
         }
+    }
+
+    public void showUnknownLocationUI() {
+        ivCardNaviBigDefaultMap.setVisibility(View.VISIBLE);
+        surfaceViewNavi.setVisibility(View.INVISIBLE);
     }
 }

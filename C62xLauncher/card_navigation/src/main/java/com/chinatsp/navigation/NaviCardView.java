@@ -142,9 +142,13 @@ public class NaviCardView extends ConstraintLayout implements ICardStyleChange {
         return false;
     }
 
-    public void refreshMyLocation(String myLocationName) {
+    public void refreshMyLocation(String myLocationName, boolean unknownLocation) {
         if (mExpand) {
-            mBigCardHolder.setLocation(myLocationName);
+            if (unknownLocation) {
+                mBigCardHolder.showUnknownLocationUI();
+            } else {
+                mBigCardHolder.setLocation(myLocationName);
+            }
         } else {
             mSmallCardHolder.setLocation(myLocationName);
         }

@@ -14,6 +14,7 @@ import java.util.Arrays;
 
 import launcher.base.service.AppServiceManager;
 import launcher.base.service.car.ICarService;
+import launcher.base.service.car.OffLineConfig;
 import launcher.base.service.platform.PlatformService;
 import launcher.base.utils.EasyLog;
 import launcher.base.utils.property.PropertyUtils;
@@ -51,6 +52,11 @@ public class AppCarService implements ICarService {
         EasyLog.d(TAG, "getCarType , is connect: " + mConnected);
         EasyLog.d(TAG, "getCarType , carbin : " + mCarCabinManager);
         return CarPropertyUtil.getCarModel(mCarCabinManager);
+    }
+
+    @Override
+    public int getOffLineCfg() {
+        return PropertyUtils.getInt(mContext, OffLineConfig.PROPERTY_NAME, 1);
     }
 
     @Override
