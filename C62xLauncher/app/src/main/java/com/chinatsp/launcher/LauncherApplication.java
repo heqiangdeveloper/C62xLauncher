@@ -41,7 +41,8 @@ public class LauncherApplication extends Application {
         NetworkStateReceiver.getInstance().registerReceiver(this);//注册网络监听
         IqutingBindService.getInstance().bindPlayService(this);//注册爱趣听播放服务
         IqutingBindService.getInstance().bindContentService(this);//注册爱趣听内容服务
-        registChangeSourceBroadcast();//注册爱趣听接受切源的广播
+        //改为静态注册方式
+        //registChangeSourceBroadcast();//注册爱趣听接受切源的广播
     }
 
     private void initLog() {
