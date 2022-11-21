@@ -1456,4 +1456,7 @@
     <dimen name="line_height">0.3px</dimen>
 
     <dimen name="vcu_radius_pop_window">@dimen/x8</dimen>
+    <dimen name="seekbar_bg_radius">70px</dimen>
+    <dimen name="seekbar_height">400px</dimen>
+    <dimen name="seekbar_width">112px</dimen>
 </resources>

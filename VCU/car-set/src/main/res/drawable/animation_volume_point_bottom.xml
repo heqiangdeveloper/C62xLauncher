@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="true">
+
+    <item android:drawable="@drawable/animation_volume_point_bottom0" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom1" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom2" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom3" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom4" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom5" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom6" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom7" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom8" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom9" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom10" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom11" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom12" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom13" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom14" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom15" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom16" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom17" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom18" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom19" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom20" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom21" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom22" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom23" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom24" android:duration="50"></item>
+
+
+</animation-list>

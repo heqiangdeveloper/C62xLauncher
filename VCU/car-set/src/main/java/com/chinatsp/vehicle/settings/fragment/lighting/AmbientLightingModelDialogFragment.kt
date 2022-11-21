@@ -94,7 +94,7 @@ class AmbientLightingModelDialogFragment :
     }
 
     override fun getWidthRatio(): Float {
-        return 882f / 1920f
+        return 960f / 1920f
     }
 
     private fun initSwitchOption() {

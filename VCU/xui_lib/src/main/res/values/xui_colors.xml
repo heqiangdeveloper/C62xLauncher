@@ -205,4 +205,12 @@
     <color name="acr_seek_txt_color">#4Dffffff</color>
     <color name="acr_seek_txt_old_color">#ffffff</color>
     <color name="seek_chick_color">#26C3FE</color>
+
+
+    <color name="seekbar_stroke_color">#138CFF</color>
+    <color name="seekbar_start_color">#00B6FF</color>
+    <color name="seekbar_end_color">#a6299EEE</color>
+
+
+    <color name="pop_txt">#ABD3E1</color>
 </resources>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="true">
+
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide0" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide1" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide2" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide3" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide4" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide5" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide6" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide7" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide8" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide9" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide10" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide11" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide12" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide13" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide14" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide15" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide16" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide17" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide18" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide19" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide20" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide21" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide22" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide23" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide24" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide25" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide26" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide27" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide28" android:duration="50"></item>
+    <item android:drawable="@drawable/animation_volume_point_bottom_hide29" android:duration="50"></item>
+
+
+</animation-list>

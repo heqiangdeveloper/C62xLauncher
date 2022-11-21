@@ -2,28 +2,61 @@ package com.common.xui.widget.picker;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.SeekBar;
 
+import com.common.xui.R;
 import com.common.xui.utils.ThreadUtil;
 
 @SuppressLint("AppCompatCustomView")
 public class VerSeekBar extends SeekBar {
     private OnSeekBarChangeListener onSeekBarChangeListener;
+    private int mWidth, mHeight;
+    private Paint mShadowPaint, mBorderPaint;
+    private float mBorderWidth = 2.6f;       // 描边宽度
+    private float mShadowRadius = 10f;
+    private float radius = 70;
 
     public VerSeekBar(Context context) {
         super(context);
+        initPaint();
+    }
+
+    private void initPaint() {
+        mBorderWidth = getResources().getDimension(R.dimen.border_width);
+        mShadowRadius = getResources().getDimension(R.dimen.shade_width);
+        radius = getResources().getDimension(R.dimen.seekbar_bg_radius_small);
+        // 初始化光晕效果画笔
+        mShadowPaint = new Paint();
+        mShadowPaint.setStyle(Paint.Style.FILL);
+        mShadowPaint.setColor(getContext().getColor(R.color.seekbar_start_color));
+        mShadowPaint.setAlpha(200);
+        mShadowPaint.setMaskFilter(new BlurMaskFilter(mShadowRadius - 1, BlurMaskFilter.Blur.OUTER));
+        // 抖动处理
+        mShadowPaint.setDither(true);
+        //描边
+        mBorderPaint = new Paint();
+        mBorderPaint.setAntiAlias(true);
+        mBorderPaint.setStrokeWidth(mBorderWidth);
+        mBorderPaint.setAlpha(170);
+        mBorderPaint.setStyle(Paint.Style.STROKE);
+        mBorderPaint.setColor(getContext().getColor(R.color.seekbar_start_color));
     }
 
     public VerSeekBar(Context context, AttributeSet attrs) {
         super(context, attrs);
+        initPaint();
     }
 
     public VerSeekBar(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        initPaint();
     }
 
     @Override
@@ -34,6 +67,8 @@ public class VerSeekBar extends SeekBar {
     @Override
     protected synchronized void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        mWidth = getMeasuredWidth();
+        mHeight = getMeasuredHeight();
     }
 
     @Override
@@ -47,6 +82,77 @@ public class VerSeekBar extends SeekBar {
         canvas.rotate(-90);
         canvas.translate(-getHeight(), 0);
         super.onDraw(canvas);
+
+        if (isPressed())
+            drawShade(canvas);
+    }
+
+    private int error = 5;
+
+    private void drawShade(Canvas canvas) {
+        int offset = 17;
+        int progress = getProgress();
+        int max = getMax();
+        if (max < 10) {
+            max = max * 10;
+            progress = progress * 10;
+        }
+        int max2 = max / 2;
+        int a = (max2 - progress) * offset / max2;
+        float topProgress = mHeight * progress / max + a;
+
+        float top = mHeight - mShadowRadius - mBorderWidth;
+        float left = mShadowRadius;
+        float right = mWidth - mShadowRadius;
+        float bottom = mShadowRadius + mBorderWidth;
+
+//        Logcat.e("mWidth: " + mWidth + "  mHeight: " + mHeight + "  topProgress: " + topProgress + "  offset: " + offset);
+
+        Path path = new Path();
+        if (topProgress <= offset) {
+            return;
+        } else {
+            path.moveTo(bottom + radius, left);
+            path.quadTo(bottom + error + 4, left + error, bottom + 1, left + radius);
+            path.lineTo(bottom - 1, right - radius);
+            path.quadTo(bottom + error + 5, right - error, bottom + radius - 2, right - 1);
+
+            path.lineTo(top - radius, right);
+            path.quadTo(top - error - 3, right - error-2, top-1, right - radius - 2);
+            path.lineTo(top - 10, left + radius);
+            path.quadTo(top - error - 6, left + error, top - radius, left);
+            path.close();
+
+            Path oPath = new Path();
+            oPath.moveTo(bottom, left);
+            oPath.lineTo(bottom, right);
+            oPath.lineTo(topProgress, right);
+            oPath.lineTo(topProgress, left);
+            oPath.close();
+
+            path.op(oPath, Path.Op.INTERSECT);
+
+//        } else if (top < mHeight - mShadowRadius - radius) {
+//            // 顶部未进入半圆
+//            path.moveTo(bottom + radius, left);
+//            path.quadTo(bottom + mBorderWidth, left + mBorderWidth, bottom, left + radius);
+//            path.lineTo(bottom, right - radius);
+//            path.quadTo(bottom + mBorderWidth, right - mBorderWidth, bottom + radius, right);
+//            path.lineTo(top, right);
+//            path.lineTo(top, left);
+//            path.close();
+        }
+
+        canvas.drawPath(path, mShadowPaint);
+        canvas.drawPath(path, mBorderPaint);
+
+    }
+
+    private boolean isTouched;
+
+    @Override
+    public boolean isPressed() {
+        return isTouched;
     }
 
     @Override
@@ -56,34 +162,29 @@ public class VerSeekBar extends SeekBar {
             return false;
         }
 
-        //Logcat.i(TAG,  "onTouchEvent setPressed true");
-        setPressed(true);
-        ThreadUtil.getInstance().getMainThreadHandler().removeCallbacks(resetRunnable);
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                isTouched = true;
+                invalidate();
                 if (onSeekBarChangeListener != null)
                     onSeekBarChangeListener.onStartTrackingTouch(this);
                 setProgress(getMax() - (int) (getMax() * event.getY() / getHeight()));
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
+                isTouched = false;
+                invalidate();
                 if (onSeekBarChangeListener != null)
                     onSeekBarChangeListener.onStopTrackingTouch(this);
+                setProgress(getMax() - (int) (getMax() * event.getY() / getHeight()));
+                break;
             case MotionEvent.ACTION_MOVE:
+                isTouched = true;
                 setProgress(getMax() - (int) (getMax() * event.getY() / getHeight()));
                 break;
         }
-        ThreadUtil.getInstance().getMainThreadHandler().postDelayed(resetRunnable, 500);
         return true;
     }
-
-    private Runnable resetRunnable = new Runnable() {
-        @Override
-        public void run() {
-            //Logcat.i(TAG,  "resetRunnable setPressed false");
-            setPressed(false);
-        }
-    };
 
     @Override
     public synchronized void setProgress(int progress) {
@@ -92,19 +193,6 @@ public class VerSeekBar extends SeekBar {
     }
 
     private static final String TAG = VerticalSeekBar.class.getSimpleName();
-
-    @Override
-    public void setPressed(boolean pressed) {
-        super.setPressed(pressed);
-    }
-
-    @Override
-    public boolean isPressed() {
-        boolean isPressed = super.isPressed();
-        //Logcat.i(TAG,  "isPressed " + isPressed);
-        return isPressed;
-    }
-
 
     @Override
     public void setProgressDrawableTiled(Drawable d) {
