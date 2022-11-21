@@ -110,6 +110,9 @@ public class FileUtils {
                // int start = wholeStr.indexOf(keyStr[i]);
                 String str = wholeStr.toLowerCase();
                 int start = str.indexOf(keyStr[i].toLowerCase());
+                if (start < 0) {
+                    continue;
+                }
                 int end = start + keyStr[i].length();
                 spBuilder.setSpan(charaStyle, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }

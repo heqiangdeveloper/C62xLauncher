@@ -17,7 +17,7 @@
       "chineseFunctionLevel": "连接",
       "englishFunction": "Wi-Fi",
       "englishFunctionLevel": "Wifi connect",
-      "intentAction": "com.chinatsp.vcu.action",
+      "intentAction": "com.chinatsp.settings.SETTINGS",
       "intentInterface": "open_network",
       "dataVersion": "1",
       "carVersion": "0"
