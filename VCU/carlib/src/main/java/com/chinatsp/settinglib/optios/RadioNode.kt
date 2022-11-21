@@ -425,6 +425,7 @@ enum class RadioNode(
     GEARS(
         get = RNorm(values = intArrayOf(0x1, 0x2, 0x3, 0x4), signal = CarCabinManager.ID_TCU_SELECTED_GEAR),
         set = RNorm(values = intArrayOf(0x1, 0x2, 0x3, 0x4), signal = -1),
+        inactive = intArrayOf(0x1),
         def = 0x1
     ),
 

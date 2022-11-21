@@ -10,54 +10,62 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/img_light_1"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/lighting_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/img_light_1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="@dimen/x72"
-            android:layout_marginStart="@dimen/x417" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/img_light_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/img_light_2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="@dimen/x100"
-            android:layout_marginStart="@dimen/x340" />
+            <View
+                android:id="@+id/lighting_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/x10"
+                android:background="#000000"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/img_light_3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/img_light_3"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="@dimen/x93"
-            android:layout_marginStart="@dimen/x242" />
+            <View
+                android:id="@+id/lighting_view_back_1"
+                android:layout_width="@dimen/x420"
+                android:layout_height="@dimen/x200"
+                android:layout_marginEnd="@dimen/x140"
+                android:layout_marginBottom="@dimen/x100"
+                android:background="#000000"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/img_light_4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/img_light_4"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="@dimen/x77"
-            android:layout_marginStart="@dimen/x386" />
+         <View
+                android:id="@+id/lighting_view_back_2"
+                android:layout_width="@dimen/x100"
+                android:layout_height="@dimen/x100"
+                android:background="#000000"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginBottom="@dimen/x30"
+                android:layout_marginEnd="@dimen/x20" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/img_light_5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/img_light_5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="@dimen/x4" />
+            <View
+                android:id="@+id/lighting_view_back_3"
+                android:layout_width="@dimen/x100"
+                android:layout_height="@dimen/x100"
+                android:background="#000000"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="@dimen/x100"
+                android:layout_marginStart="@dimen/x130"/>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/lighting_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/img_light_lv3"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

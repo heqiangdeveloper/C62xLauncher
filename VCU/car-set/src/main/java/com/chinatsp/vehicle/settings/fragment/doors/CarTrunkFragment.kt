@@ -1,7 +1,6 @@
 package com.chinatsp.vehicle.settings.fragment.doors
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
@@ -59,7 +58,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
                 R.drawable.trunk_door_lv5_01,
                 R.drawable.trunk_door_lv5_00
             )
-        }else {
+        } else {
             intArrayOf(
                 R.drawable.trunk_door_10,
                 R.drawable.trunk_door_09,
@@ -155,10 +154,10 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     }
 
     private fun initViewDisplay() {
-       /* if (VcuUtils.isCareLevel(Level.LEVEL5, expect = true)) {
-            binding.linearLayout.visibility = View.GONE
-            binding.line2.visibility = View.GONE
-        }*/
+        /* if (VcuUtils.isCareLevel(Level.LEVEL5, expect = true)) {
+             binding.linearLayout.visibility = View.GONE
+             binding.line2.visibility = View.GONE
+         }*/
     }
 
     private fun initAnimation() {
@@ -204,8 +203,13 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         viewModel.sternSmartEnter.observe(this) {
             doUpdateRadio(RadioNode.STERN_SMART_ENTER, it, false)
         }
-        viewModel.gearsFunction.observe(this){
-            Log.i("ttttttt","挡位变化： "+it.get())
+        viewModel.gearsFunction.observe(this) {
+            if (0x1 != it.get()) {
+                binding.sternElectricSwitch.setCheckedImmediately(false)
+                updateOptionActive()
+                doElectricTrunkFollowing(false)
+                updateRadioEnable(RadioNode.GEARS)
+            }
         }
     }
 
@@ -244,10 +248,16 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     private fun setSwitchListener() {
         binding.sternElectricSwitch.let {
             it.setOnCheckedChangeListener { buttonView, isChecked ->
-                doUpdateSwitchOption(SwitchNode.AS_STERN_ELECTRIC, buttonView, isChecked)
+                val gears = manager.doGetRadioOption(RadioNode.GEARS)?.data
+                if (isChecked && 0x1 != gears) {
+                    binding.sternElectricSwitch.setCheckedImmediately(false)
+                }
+                if (0x1 == gears) {
+                    doUpdateSwitchOption(SwitchNode.AS_STERN_ELECTRIC, buttonView, isChecked)
 //                checkDisableOtherDiv(it, isChecked)
-                updateOptionActive()
-                doElectricTrunkFollowing(it.isChecked)
+                    updateOptionActive()
+                    doElectricTrunkFollowing(it.isChecked)
+                }
             }
         }
         binding.accessSternLightAlarmSw.let {
@@ -553,7 +563,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     }
 
     fun isShowSeek(): Boolean {
-        return if (isHasSmartAccessOption()){
+        return if (isHasSmartAccessOption()) {
             binding.sternElectricSwitch.isChecked && (binding.sternSmartEnterRadio.checked == "1")
         } else {
             true

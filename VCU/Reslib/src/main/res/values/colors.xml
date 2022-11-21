@@ -38,4 +38,5 @@
     <color name="volume_txt_color">#ffffff</color>
 
     <color name="dialog_txt_hint">#7B7B82</color>
+    <color name="lighting_bg">#000000</color>
 </resources>

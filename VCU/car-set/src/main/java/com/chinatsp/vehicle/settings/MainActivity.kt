@@ -170,27 +170,27 @@ class MainActivity : BaseActivity<MainViewModel, MainActivityTablayoutBinding>()
                 TabPage.COMMONLY -> {
                     val fragment = CommonlyFragment::class.java
                     //                    fragment.userVisibleHint = true
-                    mAdapter.addFragment(fragment, it.desc)
+                    mAdapter.addFragment(fragment, resources.getString(it.desc))
                 }
                 TabPage.ACCESS -> {
                     val fragment = DoorsManageFragment::class.java
-                    mAdapter.addFragment(fragment, it.desc)
+                    mAdapter.addFragment(fragment, resources.getString(it.desc))
                 }
                 TabPage.LIGHTING -> {
                     val fragment = LightingManageFragment::class.java
-                    mAdapter.addFragment(fragment, it.desc)
+                    mAdapter.addFragment(fragment, resources.getString(it.desc))
                 }
                 TabPage.SOUND -> {
                     val fragment = SoundManageFragment::class.java
-                    mAdapter.addFragment(fragment, it.desc)
+                    mAdapter.addFragment(fragment, resources.getString(it.desc))
                 }
                 TabPage.COCKPIT -> {
                     val fragment = CabinManagerFragment::class.java
-                    mAdapter.addFragment(fragment, it.desc)
+                    mAdapter.addFragment(fragment, resources.getString(it.desc))
                 }
                 TabPage.ADAS -> {
                     val fragment = DriveManageFragment::class.java
-                    mAdapter.addFragment(fragment, it.desc)
+                    mAdapter.addFragment(fragment, resources.getString(it.desc))
                 }
             }
         }

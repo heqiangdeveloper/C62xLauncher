@@ -12,6 +12,16 @@
         android:background="@drawable/bg_sound_popup_20"
         android:paddingBottom="@dimen/x15">
 
+        <View
+            android:id="@+id/lighting_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x200"
+            android:layout_margin="@dimen/x10"
+            android:background="@color/xui_config_color_red"
+            android:src="@drawable/intelligent_model"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/car_model"
             android:layout_width="match_parent"
@@ -20,17 +30,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/car_light"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/img_carlight_lv3mix"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-        </androidx.appcompat.widget.AppCompatImageView>
 
         <RelativeLayout
             android:id="@+id/pop_title"
