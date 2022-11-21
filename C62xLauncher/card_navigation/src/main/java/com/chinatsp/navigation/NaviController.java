@@ -135,9 +135,6 @@ public class NaviController implements INaviCallback {
     public void receiveMyLocation(GaoDeResponse<Address> gaoDeResponse) {
         Address address = gaoDeResponse.getData();
         NavigationUtil.logD(TAG + "receiveMyLocation address:" + address);
-        if (address != null) {
-            mView.refreshMyLocation(address.getPoiName());
-        }
     }
 
     @Override
@@ -154,15 +151,18 @@ public class NaviController implements INaviCallback {
         RoadInfo roadInfo = gaoDeResponse.getData();
         NavigationUtil.logD(TAG + "receiveCurRoadInfo roadInfo:" + roadInfo);
         String roadName;
+        boolean unknownLocation = true;
         if (roadInfo != null) {
             roadName = roadInfo.getCurRoadName();
             if (TextUtils.isEmpty(roadName)) {
                 roadName = mView.getContext().getString(R.string.card_navi_msg_road_name);
+            } else {
+                unknownLocation = false;
             }
         } else {
             roadName = mView.getContext().getString(R.string.card_navi_msg_road_name);
         }
-        mView.refreshMyLocation(roadName);
+        mView.refreshMyLocation(roadName, unknownLocation);
     }
 
     @Override
@@ -176,7 +176,7 @@ public class NaviController implements INaviCallback {
                 // 导航
                 mState = STATE_IN_NAVIGATION;
                 mView.refreshState(mState);
-            }else if (guideInfo.getType() == 1 && mState != STATE_IN_NAVIGATION_MOCK){
+            } else if (guideInfo.getType() == 1 && mState != STATE_IN_NAVIGATION_MOCK) {
                 // 模拟导航
                 mState = STATE_IN_NAVIGATION_MOCK;
                 mView.refreshState(mState);
@@ -196,9 +196,9 @@ public class NaviController implements INaviCallback {
         boolean needRefreshState = true;
         if (autoStatus == MapStatus.START_NAVIGATION) {
             mState = STATE_IN_NAVIGATION;
-        } else if (autoStatus == MapStatus.START_MOCK_NAVIGATION){
+        } else if (autoStatus == MapStatus.START_MOCK_NAVIGATION) {
             mState = STATE_IN_NAVIGATION_MOCK;
-        } else if (autoStatus == MapStatus.STOP_NAVIGATION){
+        } else if (autoStatus == MapStatus.STOP_NAVIGATION) {
             mState = STATE_CRUISE;
         } else if (autoStatus == MapStatus.STOP_MOCK_NAVIGATION) {
             mState = STATE_CRUISE;
@@ -240,11 +240,12 @@ public class NaviController implements INaviCallback {
         if (tempGuideInfoGaoDeResponse != null) {
             GuideInfo guideInfo = tempGuideInfoGaoDeResponse.getData();
             if (guideInfo != null) {
-                mView.refreshGuideInfo(tempGuideInfoGaoDeResponse.getData(),DriveDirection.parseFromType(guideInfo.getIcon()));
+                mView.refreshGuideInfo(tempGuideInfoGaoDeResponse.getData(), DriveDirection.parseFromType(guideInfo.getIcon()));
             }
         }
         checkNetwork();
     }
+
     /**
      * 10.23版本后不可用了
      */
@@ -258,6 +259,7 @@ public class NaviController implements INaviCallback {
         NavigationUtil.logD(TAG + "exitNaviStats");
         mNaviRepository.exitNaiveStatus();
     }
+
     void toApp(Context context) {
         RecentAppHelper.launchApp(context, "com.autonavi.amapauto");
     }

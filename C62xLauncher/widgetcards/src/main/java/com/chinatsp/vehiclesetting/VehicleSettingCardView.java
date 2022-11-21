@@ -13,6 +13,8 @@ import com.chinatsp.widgetcards.R;
 
 import launcher.base.service.AppServiceManager;
 import launcher.base.service.car.ICarService;
+import launcher.base.service.car.OffLineConfig;
+import launcher.base.utils.EasyLog;
 import launcher.base.utils.recent.RecentAppHelper;
 
 
@@ -46,6 +48,20 @@ public class VehicleSettingCardView extends ConstraintLayout {
         ivCloseWindow = findViewById(R.id.ivVehicleSettingCloseWindow);
         ivOpenWindow.setOnClickListener(mOnClickListener);
         ivCloseWindow.setOnClickListener(mOnClickListener);
+        initButtonStatus();
+    }
+
+    private void initButtonStatus() {
+        ICarService carService = (ICarService)AppServiceManager.getService(AppServiceManager.SERVICE_CAR);
+        int offLineCfg = carService.getOffLineCfg();
+        EasyLog.i("VehicleSettingCardView", "initButtonStatus , offLineCfg: "+offLineCfg);
+        if (offLineCfg <= OffLineConfig.LV3) {
+            ivOpenWindow.setVisibility(GONE);
+            ivCloseWindow.setVisibility(GONE);
+        } else {
+            ivOpenWindow.setVisibility(VISIBLE);
+            ivCloseWindow.setVisibility(VISIBLE);
+        }
     }
 
     private OnClickListener mOnClickListener = new OnClickListener() {
