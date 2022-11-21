@@ -111,6 +111,7 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
         val depend = !binding.soundEnvironmentalSw.isChecked
         updateEnable(binding.equalizer, true, depend)
         updateEnable(binding.volumeBalance, true, depend)
+        updateEnable(binding.audioEffectLoudnessSwitch, true, depend)
     }
 
     private fun initViewsDisplay() {
@@ -120,7 +121,7 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
             binding.line1.visibility = View.GONE
             binding.LV3Layout.visibility = View.VISIBLE
             binding.lv5Layout.visibility = View.GONE
-        }else{
+        } else {
             binding.soundLoudnessControlCompensation.visibility = View.VISIBLE
             binding.line3.visibility = View.VISIBLE
             binding.LV3Layout.visibility = View.GONE
@@ -206,6 +207,20 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
     override fun obtainDependByNode(node: RadioNode): Boolean {
         return when (node) {
             RadioNode.AUDIO_ENVI_AUDIO -> binding.soundEnvironmentalSw.isChecked
+            else -> super.obtainActiveByNode(node)
+        }
+    }
+
+    override fun obtainActiveByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.AUDIO_SOUND_LOUDNESS -> viewModel.audioLoudness.value?.enable() ?: false
+            else -> super.obtainActiveByNode(node)
+        }
+    }
+
+    override fun obtainDependByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.AUDIO_SOUND_LOUDNESS -> binding.soundEnvironmentalSw.isChecked
             else -> super.obtainActiveByNode(node)
         }
     }
@@ -365,6 +380,7 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
             ) as List<String>
         }
     }
+
     private fun initView() {
 
         binding.smoothChartView.setInterval(-1 * offset, offset)

@@ -29,7 +29,8 @@ class CommandParser {
                     CarController.doVoiceController(controller, callback, nlpVoiceModel)
                 }
                 "vehicleInfo" -> {
-                    CarController.doVoiceVehicleQuery(controller, callback, nlpVoiceModel)
+//                    CarController.doVoiceVehicleQuery(controller, callback, nlpVoiceModel)
+                    false
                 }
                 "app", "cmd", "radio", "video", "musicX" -> {
                     true

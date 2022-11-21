@@ -6,9 +6,12 @@ import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.CommandParcel
 import com.chinatsp.settinglib.bean.SwitchState
+import com.chinatsp.settinglib.bean.Volume
+import com.chinatsp.settinglib.listener.ISignalListener
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.manager.*
+import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.ICmdCallback
@@ -26,13 +29,15 @@ import kotlin.math.roundToInt
  * @desc   :
  * @version: 1.0
  */
-class WindowManager private constructor() : BaseManager(), ISwitchManager, ICmdExpress {
+class WindowManager private constructor() : BaseManager(), ISwitchManager,
+    IAccessManager, ICmdExpress {
 //    天窗开启控制语音开启的判定条件：
 //    车速小于120KM/H(车速使用仪表的车速！！)，
 //    超速时，用户触发语音开启指令后弹窗及语音播报提示“车速过快，建议不要开启天窗” 此时不用说“好的”
 //    此功能仅针对天窗的打开信号进行判断，关闭指令不受影响
 
     private var lucyReference: WeakReference<CommandParcel>? = null
+
     private var louverReference: WeakReference<CommandParcel>? = null
 
     private fun getCabinSignalValue(signal: Int): Int {
@@ -67,6 +72,29 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager, ICmdE
         }
     }
 
+    private val lfWindowDegree: Volume by lazy {
+        initProgress(Progress.WIN_L_F_DEGREE)
+    }
+
+    private val lbWindowDegree: Volume by lazy {
+        initProgress(Progress.WIN_L_B_DEGREE)
+    }
+
+    private val rfWindowDegree: Volume by lazy {
+        initProgress(Progress.WIN_R_F_DEGREE)
+    }
+
+    private val rbWindowDegree: Volume by lazy {
+        initProgress(Progress.WIN_R_B_DEGREE)
+    }
+
+    private fun initProgress(progress: Progress): Volume {
+        val result = readIntProperty(progress.get.signal, progress.get.origin)
+        val value = if (result in progress.min..progress.max) result else progress.def
+        Timber.d("initProgress progress:$progress, result:$result,, value:$value")
+        return Volume(progress, progress.min, progress.max, value)
+    }
+
     companion object : ISignal {
         override val TAG: String = WindowManager::class.java.simpleName
         val instance: WindowManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
@@ -81,6 +109,14 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager, ICmdE
                 add(SwitchNode.WIN_CLOSE_FOLLOW_LOCK.get.signal)
                 add(SwitchNode.WIN_REMOTE_CONTROL.get.signal)
                 add(SwitchNode.RAIN_WIPER_REPAIR.get.signal)
+
+                //================增加车窗位置信号监听 开始================
+                add(CarCabinManager.ID_BCM_POS_VIT_FL)
+                add(CarCabinManager.ID_BCM_POS_VIT_FR)
+                add(CarCabinManager.ID_BCM_POS_VIT_RL)
+                add(CarCabinManager.ID_BCM_POS_VIT_RR)
+                //================增加车窗位置信号监听 结束================
+
             }
             put(Origin.CABIN, cabinSet)
         }
@@ -124,40 +160,63 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager, ICmdE
     }
 
     override fun onRegisterVcuListener(priority: Int, listener: IBaseListener): Int {
-        if (listener is ISwitchListener) {
-            val serial: Int = System.identityHashCode(listener)
-            val writeLock = readWriteLock.writeLock()
-            try {
-                writeLock.lock()
-                unRegisterVcuListener(serial, identity)
-                listenerStore[serial] = WeakReference(listener)
-            } finally {
-                writeLock.unlock()
-            }
-            return serial
+        val serial: Int = System.identityHashCode(listener)
+        val writeLock = readWriteLock.writeLock()
+        try {
+            writeLock.lock()
+            unRegisterVcuListener(serial, identity)
+            listenerStore[serial] = WeakReference(listener)
+        } finally {
+            writeLock.unlock()
         }
-        return -1
+        return serial
     }
 
-    override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
+    override fun onCabinPropertyChanged(p: CarPropertyValue<*>) {
         /**雨天自动关窗*/
-        when (property.propertyId) {
+        when (p.propertyId) {
             SwitchNode.WIN_CLOSE_WHILE_RAIN.get.signal -> {
-                onSwitchChanged(SwitchNode.WIN_CLOSE_WHILE_RAIN, autoCloseWinInRain, property)
+                onSwitchChanged(SwitchNode.WIN_CLOSE_WHILE_RAIN, autoCloseWinInRain, p)
             }
             SwitchNode.WIN_CLOSE_FOLLOW_LOCK.get.signal -> {
-                onSwitchChanged(SwitchNode.WIN_CLOSE_FOLLOW_LOCK, autoCloseWinAtLock, property)
+                onSwitchChanged(SwitchNode.WIN_CLOSE_FOLLOW_LOCK, autoCloseWinAtLock, p)
             }
             SwitchNode.WIN_REMOTE_CONTROL.get.signal -> {
                 val node = SwitchNode.WIN_REMOTE_CONTROL
-                var convert = convert(property, node.get.on, 0x0)
-                if (null == convert) convert = property
+                var convert = convert(p, node.get.on, 0x0)
+                if (null == convert) convert = p
                 onSwitchChanged(node, winRemoteControl, convert)
 //                onSwitchChanged(SwitchNode.WIN_REMOTE_CONTROL, winRemoteControl, property)
             }
             SwitchNode.RAIN_WIPER_REPAIR.get.signal -> {
-                onSwitchChanged(SwitchNode.RAIN_WIPER_REPAIR, rainWiperRepair, property)
+                onSwitchChanged(SwitchNode.RAIN_WIPER_REPAIR, rainWiperRepair, p)
             }
+            //================增加车窗位置信号监听 开始================
+            CarCabinManager.ID_BCM_POS_VIT_FL -> {
+                onSignalChanged(IPart.L_F, Model.ACCESS_WINDOW, p.propertyId, p.value as Int)
+            }
+            CarCabinManager.ID_BCM_POS_VIT_FR -> {
+                onSignalChanged(IPart.R_F, Model.ACCESS_WINDOW, p.propertyId, p.value as Int)
+            }
+            CarCabinManager.ID_BCM_POS_VIT_RL -> {
+                onSignalChanged(IPart.L_B, Model.ACCESS_WINDOW, p.propertyId, p.value as Int)
+            }
+            CarCabinManager.ID_BCM_POS_VIT_RR -> {
+                onSignalChanged(IPart.R_B, Model.ACCESS_WINDOW, p.propertyId, p.value as Int)
+            }
+            //================增加车窗位置信号监听 结束================
+//            Progress.WIN_L_F_DEGREE.get.signal -> {
+//                doUpdateProgress(lfWindowDegree, property.value as Int, true, this::doProgressChanged)
+//            }
+//            Progress.WIN_L_B_DEGREE.get.signal -> {
+//                doUpdateProgress(lbWindowDegree, property.value as Int, true, this::doProgressChanged)
+//            }
+//            Progress.WIN_R_F_DEGREE.get.signal -> {
+//                doUpdateProgress(rfWindowDegree, property.value as Int, true, this::doProgressChanged)
+//            }
+//            Progress.WIN_R_B_DEGREE.get.signal -> {
+//                doUpdateProgress(rbWindowDegree, property.value as Int, true, this::doProgressChanged)
+//            }
             else -> {}
         }
     }
@@ -242,7 +301,6 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager, ICmdE
         }
         parcel.callback?.onCmdHandleResult(parcel.command)
     }
-
 
     private fun doControlWindowLevel(command: CarCmd, callback: ICmdCallback?) {
         var expect = Constant.INVALID
@@ -330,8 +388,8 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager, ICmdE
 //        0x2: global close; 0x3: global open; 0x4: global tilt
 //        0x5: stop; 0x6: global close glass only; 0x7: global open Rollo only
 //        0x8~0xF: reserved
-        val signal = CarCabinManager.ID_AVN_BCM_COM_REQ_RCM
         val part = parcel.command.part
+        val signal = CarCabinManager.ID_AVN_BCM_COM_REQ_RCM
         if (IStatus.INIT == parcel.command.status) {
             parcel.retryCount = 20
             parcel.command.lfCount = 1
@@ -380,6 +438,7 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager, ICmdE
 //                  0x5: stop; 0x6: global close glass only; 0x7: global open Rollo only
                     val value = if (status) 0x3 else 0x6
                     writeProperty(signal, value, Origin.CABIN)
+                    command.status = IStatus.RUNNING
                     command.sent()
                     louverReference = WeakReference(parcel)
                 }
@@ -420,6 +479,7 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager, ICmdE
 //                  0x5: stop; 0x6: global close glass only; 0x7: global open Rollo only
                     val value = if (status) 0x7 else 0x2
                     writeProperty(signal, value, Origin.CABIN)
+                    command.status = IStatus.RUNNING
                     command.sent()
                     lucyReference = WeakReference(parcel)
                 }
@@ -432,10 +492,6 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager, ICmdE
     private fun cleanCommandParcel(@IPart part: Int, status: Boolean) {
         ShareHandler.dumpParcel(lucyReference?.get())
         ShareHandler.dumpParcel(louverReference?.get())
-//        if (IPart.TOP == part) {
-//        }
-//        if (IPart.BOTTOM == part) {
-//        }
     }
 
     /**
@@ -650,11 +706,24 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager, ICmdE
      */
     private fun updateWindowSwitch(parcel: CommandParcel, status: Boolean): Pair<Boolean, String> {
         var result = false
-        val part = parcel.command.part
-        val lfAct = IPart.L_F == (IPart.L_F and part)
-        val rfAct = IPart.R_F == (IPart.R_F and part)
-        val lbAct = IPart.L_B == (IPart.L_B and part)
-        val rbAct = IPart.R_B == (IPart.R_B and part)
+        val command = parcel.command
+        val part = command.part
+        var lfAct = IPart.L_F == (IPart.L_F and part)
+        var rfAct = IPart.R_F == (IPart.R_F and part)
+        var lbAct = IPart.L_B == (IPart.L_B and part)
+        var rbAct = IPart.R_B == (IPart.R_B and part)
+        val vague = IPart.VAGUE == (IPart.VAGUE and part)
+        if (vague && IPart.VOID != command.soundDirection) {
+            if (IPart.L_F == command.soundDirection) {
+                rfAct = false
+                lbAct = false
+                rbAct = false
+            } else {
+                lfAct = false
+                lbAct = false
+                rbAct = false
+            }
+        }
         val builder = StringBuilder()
         if (lfAct) {
             val pair = doWindowSwitch(IPart.L_F, lfAct, status)
@@ -761,9 +830,12 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager, ICmdE
         return result
     }
 
+    private fun isTiltCmd(action: Int): Boolean {
+        return Action.TURN_ON == action || Action.TURN_OFF == action
+    }
+
     override fun doCommandExpress(parcel: CommandParcel, fromUser: Boolean) {
         val command = parcel.command as CarCmd
-        val callback = parcel.callback
         if (Model.ACCESS_WINDOW != command.model) {
             return
         }
@@ -775,12 +847,152 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager, ICmdE
             return
         }
         if (ICar.LOUVER == command.car) {
-            doControlLouverSwitch(parcel)
+            if (isTiltCmd(command.action)) {
+                doControlLouverTilt(parcel)
+            } else {
+                doControlLouverSwitch(parcel)
+            }
             return
         }
         if (ICar.WIPER == command.car) {
             doControlWiper(parcel)
             return
+        }
+        if (ICar.WASHING == command.car) {
+            doControlGlassWashing(parcel)
+            return
+        }
+    }
+
+    private fun doControlGlassWashing(parcel: CommandParcel) {
+//        AVN request front washer and wiper on or off[0x1,0,0x0,0x3]
+//        0x0: Inactive   0x1: On  0x2: Off(Not used)   0x3: Not used
+        val command = parcel.command
+        val expect = Action.TURN_ON == command.action
+        val actionName = if (expect) "打开" else "关闭"
+        val value = if (expect) 0x1 else 0x2
+        if (Constant.INVALID == value) {
+            command.message = actionName
+            parcel.callback?.onCmdHandleResult(command)
+            return
+        }
+        val fAct = IPart.HEAD == (IPart.HEAD and command.part)
+        val bAct = IPart.TAIL == (IPart.TAIL and command.part)
+        var fSend = false
+        var bSend = false
+        if (fAct) {
+            val actual = isWashingStatus(isHead = true)
+            val signal = CarCabinManager.ID_AVN_FRONT_WASHER_WIPER
+            if (actual xor expect) {
+                fSend = true
+                writeProperty(signal, value, Origin.CABIN)
+            }
+        }
+        if (bAct) {
+            val actual = isWashingStatus(isHead = false)
+            val signal = CarCabinManager.ID_AVN_REAR_WASHER_WIPER
+            if (actual xor expect) {
+                bSend = true
+                writeProperty(signal, value, Origin.CABIN)
+            }
+        }
+        val message = if (fSend or bSend) "好的, ${command.slots?.name}${actionName}了"
+        else "好的, ${command.slots?.name}已经${actionName}了"
+        command.message = message
+        parcel.callback?.onCmdHandleResult(command)
+    }
+
+    /**
+     * 天窗控制
+     */
+    private fun doControlLouverTilt(parcel: CommandParcel) {
+//        控制天窗全部打开[0x1,-1,0x0,0xf]
+//        0x0: Inactive; 0x1: No command
+//        0x2: global close; 0x3: global open; 0x4: global tilt
+//        0x5: stop; 0x6: global close glass only; 0x7: global open Rollo only
+//        0x8~0xF: reserved
+        val command = parcel.command
+        val part = command.part
+        val status = Action.TURN_ON == command.action
+        val signal = CarCabinManager.ID_AVN_BCM_COM_REQ_RCM
+        if (IStatus.INIT == command.status) {
+            command.lfCount = 1
+            parcel.retryCount = 4
+        }
+        val level = obtainSkylightLevel()
+        val isStandard = if (status) { level in 0x5..0xF } else { level == 0x1 }
+        val isRetry = parcel.isRetry()
+        if (IPart.TOP == part) {
+            val action = if (status) "翘起" else "合拢"
+            if (isStandard) {
+                command.message = "天窗已经${action}了"
+                parcel.callback?.onCmdHandleResult(command)
+                return
+            }
+            if (!isRetry) {
+                command.message = Keywords.COMMAND_FAILED
+                parcel.callback?.onCmdHandleResult(command)
+                return
+            }
+            if (!command.isSent()) {
+                cleanCommandParcel(part, status)
+//                  0x2: global close; 0x3: global open; 0x4: global tilt
+//                  0x5: stop; 0x6: global close glass only; 0x7: global open Rollo only
+                val value = if (status) 0x4 else 0x2
+                writeProperty(signal, value, Origin.CABIN)
+                command.status = IStatus.RUNNING
+                command.sent()
+            }
+            ShareHandler.loopParcel(parcel, ShareHandler.SEC_DELAY)
+            return
+        }
+    }
+
+    private fun isWiperStatus(isHead: Boolean): Boolean {
+        val signal = if (isHead) {
+            CarCabinManager.ID_FRONT_WIPER_OUTPUT_STATUS
+        } else{
+            CarCabinManager.ID_REAR_WIPER_OUTPUT_STATUS
+        }
+        val value = readIntProperty(signal, Origin.CABIN)
+        return if (isHead) (value == 0x1 || value == 0x2) else value == 0x1
+    }
+
+    private fun isWashingStatus(isHead: Boolean): Boolean {
+        val signal = if (isHead) {
+            CarCabinManager.ID_FRONT_WASH_OUTPUT_STATUS
+        } else{
+            CarCabinManager.ID_REAR_WASH_OUTPUT_STATUS
+        }
+        val value = readIntProperty(signal, Origin.CABIN)
+        return if (isHead) value == 0x1 else value == 0x1
+    }
+
+    private fun onSignalChanged(@IPart part: Int, @Model model: Int, signal: Int, value: Int) {
+        val readLock = readWriteLock.readLock()
+        try {
+            readLock.lock()
+            listenerStore.forEach { (_, ref) ->
+                val listener = ref.get()
+                if (null != listener && listener is ISignalListener) {
+                    listener.onSignalChanged(part, model, signal, value)
+                }
+            }
+        } finally {
+            readLock.unlock()
+        }
+    }
+
+    override fun obtainAccessState(part: Int, model: Int): Int? {
+        if (Model.ACCESS_WINDOW != model) {
+            return null
+        }
+        return when (part) {
+            IPart.L_F -> readIntProperty(CarCabinManager.ID_BCM_POS_VIT_FL, Origin.CABIN)
+            IPart.R_F -> readIntProperty(CarCabinManager.ID_BCM_POS_VIT_FR, Origin.CABIN)
+            IPart.L_B -> readIntProperty(CarCabinManager.ID_BCM_POS_VIT_RL, Origin.CABIN)
+            IPart.R_B -> readIntProperty(CarCabinManager.ID_BCM_POS_VIT_RR, Origin.CABIN)
+            else -> null
         }
     }
 

@@ -132,8 +132,8 @@ class WheelManager private constructor() : BaseManager(), ISoundManager, ICmdExp
         }
     }
 
-    override fun doGetVolume(type: Progress): Volume? {
-        return when (type) {
+    override fun doGetVolume(progress: Progress): Volume? {
+        return when (progress) {
             Progress.STEERING_ONSET_TEMPERATURE -> {
                 steeringSillTemp
             }
@@ -141,8 +141,8 @@ class WheelManager private constructor() : BaseManager(), ISoundManager, ICmdExp
         }
     }
 
-    override fun doSetVolume(type: Progress, position: Int): Boolean {
-        return when (type) {
+    override fun doSetVolume(progress: Progress, position: Int): Boolean {
+        return when (progress) {
             Progress.STEERING_ONSET_TEMPERATURE -> {
                 val result = writeProperty(steeringSillTemp, position)
                 if (result) {

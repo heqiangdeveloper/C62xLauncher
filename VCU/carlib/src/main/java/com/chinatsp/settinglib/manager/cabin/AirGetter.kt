@@ -85,7 +85,6 @@ class AirGetter(val manager: ACManager) {
     fun isConditioner(): Boolean {
         val value = hvacValue(CarHvacManager.ID_HAVC_AC_SYS_ON_OFF_STATE)
         return 0x1 == value
-//        return true
     }
 
     /**

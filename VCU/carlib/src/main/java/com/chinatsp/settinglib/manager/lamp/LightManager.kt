@@ -9,6 +9,7 @@ import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IBaseListener
+import com.chinatsp.settinglib.listener.ISignalListener
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ICmdExpress
 import com.chinatsp.settinglib.manager.IOptionManager
@@ -51,6 +52,9 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
                 add(RadioNode.LIGHT_FLICKER.get.signal)
                 add(RadioNode.LIGHT_CEREMONY_SENSE.get.signal)
                 add(SwitchNode.LIGHT_CEREMONY_SENSE.get.signal)
+                add(CarCabinManager.ID_HIGH_BEAM_INDICATOR)
+                add(CarCabinManager.ID_LOW_BEAM_INDICATOR)
+                add(CarCabinManager.ID_TELLTALE_REAR_FOG_LIGHT)
             }
             put(Origin.CABIN, cabinSet)
         }
@@ -102,11 +106,11 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
         initProgress(Progress.SWITCH_BACKLIGHT_BRIGHTNESS)
     }
 
-    private fun initProgress(type: Progress): Volume {
-        val value = readIntProperty(type.get.signal, type.get.origin)
-        val position = findBacklightLevel(value, type)
-        Timber.d("initProgress $type type:$type, value:$value, position:$position")
-        return Volume(type, type.min, type.max, position)
+    private fun initProgress(progress: Progress): Volume {
+        val value = readIntProperty(progress.get.signal, progress.get.origin)
+        val position = findBacklightLevel(value, progress)
+        Timber.d("initProgress $progress progress:$progress, value:$value, position:$position")
+        return Volume(progress, progress.min, progress.max, position)
     }
 
     private fun findBacklightLevel(value: Int, type: Progress): Int {
@@ -174,8 +178,8 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
         }
     }
 
-    override fun doGetVolume(type: Progress): Volume? {
-        return when (type) {
+    override fun doGetVolume(progress: Progress): Volume? {
+        return when (progress) {
             Progress.SWITCH_BACKLIGHT_BRIGHTNESS -> {
                 switchBacklight
             }
@@ -185,14 +189,14 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
         }
     }
 
-    override fun doSetVolume(type: Progress, position: Int): Boolean {
-        return when (type) {
+    override fun doSetVolume(progress: Progress, position: Int): Boolean {
+        return when (progress) {
             Progress.SWITCH_BACKLIGHT_BRIGHTNESS -> {
                 val backlightLevel = Constant.LIGHT_LEVEL
                 val index = position - 1
                 if (index in backlightLevel.indices) {
                     val value = backlightLevel[index]
-                    return writeProperty(type.set.signal, value, type.set.origin)
+                    return writeProperty(progress.set.signal, value, progress.set.origin)
                 }
                 false
             }
@@ -243,32 +247,56 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
         }
     }
 
-    override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
-        when (property.propertyId) {
+    override fun onCabinPropertyChanged(p: CarPropertyValue<*>) {
+        when (p.propertyId) {
             SwitchNode.LIGHT_OUTSIDE_MEET.get.signal -> {
-                onSwitchChanged(SwitchNode.LIGHT_OUTSIDE_MEET, outsideMeetLight, property)
+                onSwitchChanged(SwitchNode.LIGHT_OUTSIDE_MEET, outsideMeetLight, p)
             }
             SwitchNode.LIGHT_INSIDE_MEET.get.signal -> {
-                onSwitchChanged(SwitchNode.LIGHT_INSIDE_MEET, insideMeetLight, property)
+                onSwitchChanged(SwitchNode.LIGHT_INSIDE_MEET, insideMeetLight, p)
             }
             SwitchNode.LIGHT_CEREMONY_SENSE.get.signal -> {
-                onSwitchChanged(SwitchNode.LIGHT_CEREMONY_SENSE, lightCeremonySenseSwitch, property)
+                onSwitchChanged(SwitchNode.LIGHT_CEREMONY_SENSE, lightCeremonySenseSwitch, p)
             }
             RadioNode.LIGHT_DELAYED_OUT.get.signal -> {
-                onRadioChanged(RadioNode.LIGHT_DELAYED_OUT, lightDelayOut, property)
+                onRadioChanged(RadioNode.LIGHT_DELAYED_OUT, lightDelayOut, p)
             }
             RadioNode.LIGHT_FLICKER.get.signal -> {
-                onRadioChanged(RadioNode.LIGHT_FLICKER, lightFlicker, property)
+                onRadioChanged(RadioNode.LIGHT_FLICKER, lightFlicker, p)
             }
             RadioNode.LIGHT_CEREMONY_SENSE.get.signal -> {
-                onRadioChanged(RadioNode.LIGHT_CEREMONY_SENSE, lightCeremonySense, property)
+                onRadioChanged(RadioNode.LIGHT_CEREMONY_SENSE, lightCeremonySense, p)
             }
             Progress.SWITCH_BACKLIGHT_BRIGHTNESS.get.signal -> {
-                val value = property.value as Int
+                val value = p.value as Int
                 val level = findBacklightLevel(value, Progress.SWITCH_BACKLIGHT_BRIGHTNESS)
                 doUpdateProgress(switchBacklight, level, true, this::doProgressChanged)
             }
+            CarCabinManager.ID_HIGH_BEAM_INDICATOR -> {
+                onSignalChanged(IPart.HEAD, Model.LIGHT_COMMON, Constant.HIGH_LAMP, p.value as Int)
+            }
+            CarCabinManager.ID_LOW_BEAM_INDICATOR -> {
+                onSignalChanged(IPart.HEAD, Model.LIGHT_COMMON, Constant.LOW_LAMP, p.value as Int)
+            }
+            CarCabinManager.ID_TELLTALE_REAR_FOG_LIGHT -> {
+                onSignalChanged(IPart.HEAD, Model.LIGHT_COMMON, Constant.B_FOG_LAMP, p.value as Int)
+            }
             else -> {}
+        }
+    }
+
+    private fun onSignalChanged(@IPart part: Int, @Model model: Int, signal: Int, value: Int) {
+        val readLock = readWriteLock.readLock()
+        try {
+            readLock.lock()
+            listenerStore.forEach { (_, ref) ->
+                val listener = ref.get()
+                if (null != listener && listener is ISignalListener) {
+                    listener.onSignalChanged(part, model, signal, value)
+                }
+            }
+        } finally {
+            readLock.unlock()
         }
     }
 

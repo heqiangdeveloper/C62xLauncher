@@ -446,8 +446,8 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
     }
 
 
-    override fun doGetVolume(type: Progress): Volume? {
-        return when (type) {
+    override fun doGetVolume(progress: Progress): Volume? {
+        return when (progress) {
             Progress.NAVI -> naviVolume
             Progress.VOICE -> voiceVolume
             Progress.MEDIA -> mediaVolume
@@ -457,14 +457,14 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    override fun doSetVolume(type: Progress, value: Int): Boolean {
-        return when (type) {
+    override fun doSetVolume(progress: Progress, value: Int): Boolean {
+        return when (progress) {
             Progress.NAVI, Progress.VOICE, Progress.MEDIA,
             Progress.PHONE, Progress.SYSTEM,
             -> {
-                val volume = doGetVolume(type)
+                val volume = doGetVolume(progress)
                 if (value != volume?.pos) {
-                    setVolumePosition(type.set.signal, value)
+                    setVolumePosition(progress.set.signal, value)
                 }
 //                doGetVolume(type)?.pos = value
                 true

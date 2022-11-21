@@ -51,6 +51,18 @@ object Constant {
      */
     const val NAVIGATION = 0x31
 
+    const val LOW_LAMP = 0x01
+    const val HIGH_LAMP = 0x02
+
+    const val F_FOG_LAMP = 0x03
+    const val B_FOG_LAMP = 0x04
+
+    const val POS_LAMP = 0x05
+    const val BRAKE_LAMP = 0x06
+
+    const val L_TURN_LAMP = 0x07
+    const val R_TURN_LAMP = 0x08
+
     val ANGLE_RETURN_SIGNAL: Int
         get() = CarCabinManager.ID_R_MIRROR_MEMORY_STS
 

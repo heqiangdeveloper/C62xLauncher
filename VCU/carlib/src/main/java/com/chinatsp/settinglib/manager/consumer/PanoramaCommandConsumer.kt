@@ -14,6 +14,7 @@ import com.chinatsp.vehicle.controller.annotation.IStatus
 import com.chinatsp.vehicle.controller.bean.CarCmd
 import com.chinatsp.vehicle.controller.utils.Keywords
 import timber.log.Timber
+import kotlin.random.Random
 
 /**
  * @author : luohong
@@ -33,7 +34,7 @@ class PanoramaCommandConsumer(val manager: GlobalManager) : ICmdExpress {
         doCommandExpress(parcel)
     }
 
-    //    AVM view set request signal 切换全景视图命令，Reserved
+//    AVM view set request signal 切换全景视图命令，Reserved
 //    0x0: Inactive
 //    0x1: Front view
 //    0x2: Rear view
@@ -56,77 +57,53 @@ class PanoramaCommandConsumer(val manager: GlobalManager) : ICmdExpress {
 //    0x13: EOL/Test-view
 //    0x14: Top View
 //    0x15~0x1F: Reserved
-    private fun consumeCameraChangeCommand(parcel: CommandParcel): Boolean {
+    private fun consumeViewCutCommand(parcel: CommandParcel): Boolean {
         val command = parcel.command as CarCmd
         val consume = Action.CHANGED == command.action
         if (!consume) {
             return consume
         }
-        val isRetry = parcel.isRetry()
         val isAvm = isAvmEngine()
+        val isRetry = parcel.isRetry()
         val isInit = IStatus.INIT == command.status
         if (isInit) {
-            val count = if (isAvm) 0x1 else 0x2
-            parcel.retryCount = count
-            command.resetSent(sendCount = count)
+            command.resetSent()
+            parcel.retryCount = if (isAvm) 0x1 else 0x2
         }
         if (!isAvm) {
-            if (isInit) {
-                sendCabinValue(CarCabinManager.ID_APA_AVM_SWT, 0x1)
-                command.status = IStatus.PREPARED
-            }
-            if (isRetry) {
-                ShareHandler.loopParcel(parcel, ShareHandler.MID_DELAY)
-            } else {
-                command.message = Keywords.COMMAND_FAILED
-                parcel.callback?.onCmdHandleResult(command)
-            }
+            attemptLaunchPanorama(isInit, isRetry, parcel)
             return consume
         }
-
-        var aera = "前"
-
         val mode3D = isMode3D()
         var expect = Constant.INVALID
         val actual = obtainCameraView()
-
         if (IPart.HEAD == command.part) {
-            aera = "前"
             expect = if (mode3D) 0x9 else 0x1
         } else if (IPart.TAIL ==  command.part) {
-            aera = "后"
             expect = if (mode3D) 0xA else 0x2
-        }
-
-        else if (IPart.L_F == command.part) {
-            aera = "左前"
+        } else if (IPart.L_F == command.part) {
             expect = if (mode3D) 0xD else 0x3
         } else if (IPart.L_B == command.part) {
-            aera = "左后"
             expect = if (mode3D) 0xF else 0x5
-        }
-
-        else if (IPart.R_F == command.part) {
-            aera = "右前"
+        } else if (IPart.R_F == command.part) {
             expect = if (mode3D) 0xE else 0x4
         } else if (IPart.R_B == command.part) {
-            aera = "右后"
             expect = if (mode3D) 0x10 else 0x6
-        }
-
-        else if ((IPart.L_F or IPart.L_B) == command.part) {
-            aera = "左"
+        } else if ((IPart.L_F or IPart.L_B) == command.part) {
             expect = if (mode3D) 0xB else 0x5
         } else if ((IPart.R_F or IPart.R_B) == command.part) {
-            aera = "右"
             expect = if (mode3D) 0xC else 6
+        } else if (IPart.RANDOM == command.part) {
+            expect = randomCameraView(mode3D)
+        } else if (IPart.TOP == command.part) {
+            expect = 0x14
         }
-
+        val areaName = command.slots?.direction ?: analysisAreaName(expect)
         if (actual == expect) {
             command.message = if (!command.isSent()) {
-                "不用再切了，目前是${aera}视角了"
+                "不用再切了，目前是${areaName}视角了"
             } else {
-                "好的，已为您切换到${aera}视角"
+                "好的，已为您切换到${areaName}视角"
             }
             parcel.callback?.onCmdHandleResult(command)
             return consume
@@ -145,6 +122,29 @@ class PanoramaCommandConsumer(val manager: GlobalManager) : ICmdExpress {
         return consume
     }
 
+    private fun randomCameraView(mode3D: Boolean): Int {
+        return if (mode3D) {
+            Random.nextInt(0x1, 0x7)
+        } else {
+            Random.nextInt(0x7, 0x11)
+        }
+    }
+
+    private fun analysisAreaName(areaId: Int): String {
+        return when (areaId) {
+             0x1, 0x9 -> "前"
+             0x2, 0xA -> "后"
+             0xB, 0x7 -> "左"
+             0xC, 0x8 -> "右"
+             0x3, 0xD -> "左前"
+             0x5, 0xF -> "左后"
+             0x4, 0xE -> "右前"
+             0x6, 0x10 -> "右后"
+             0x14 -> "顶部"
+            else -> "该"
+        }
+    }
+
     private fun consumeModeCommand(parcel: CommandParcel): Boolean {
 //        The AVM 2D/3D view set request signal.2D/3D模式切换
 //        0x0: Inactive; 0x1: 2D; 0x2: 3D; 0x3: Invalid
@@ -155,12 +155,18 @@ class PanoramaCommandConsumer(val manager: GlobalManager) : ICmdExpress {
         if (!consume) {
             return consume
         }
+        val isAvm = isAvmEngine()
+        val isRetry = parcel.isRetry()
         val isInit = IStatus.INIT == command.status
         if (isInit) {
-            command.resetSent(sendCount = 2)
+            parcel.retryCount = if (isAvm) 2 else 3
+            command.resetSent()
+        }
+        if (!isAvm) {
+            attemptLaunchPanorama(isInit, isRetry, parcel)
+            return consume
         }
         val actual = isMode3D()
-        val isRetry = parcel.isRetry()
         val expect = command.value == (mask shl 2)
         if (actual == expect) {
             val statusName = if (isInit) {
@@ -187,7 +193,21 @@ class PanoramaCommandConsumer(val manager: GlobalManager) : ICmdExpress {
         return consume
     }
 
-//  0x1: ON; 0x2: OFF
+    private fun attemptLaunchPanorama(isInit: Boolean, isRetry: Boolean, parcel: CommandParcel) {
+        val command = parcel.command
+        if (isInit) {
+            sendCabinValue(CarCabinManager.ID_APA_AVM_SWT, 0x1)
+            command.status = IStatus.PREPARED
+        }
+        if (isRetry) {
+            ShareHandler.loopParcel(parcel, ShareHandler.MID_DELAY)
+        } else {
+            command.message = Keywords.COMMAND_FAILED
+            parcel.callback?.onCmdHandleResult(command)
+        }
+    }
+
+    //  0x1: ON; 0x2: OFF
     private fun consumerSwitchCommand(parcel: CommandParcel): Boolean {
         val command = parcel.command as CarCmd
         val consume = Action.TURN_ON == command.action || Action.TURN_OFF == command.action
@@ -196,7 +216,8 @@ class PanoramaCommandConsumer(val manager: GlobalManager) : ICmdExpress {
         }
         val isInit = IStatus.INIT == command.status
         if (isInit) {
-            command.resetSent(sendCount = 1)
+            command.resetSent()
+            parcel.retryCount = 3
         }
         val actual = isAvmEngine()
         val isRetry = parcel.isRetry()
@@ -266,12 +287,18 @@ class PanoramaCommandConsumer(val manager: GlobalManager) : ICmdExpress {
     }
 
     private fun isAvmEngine(): Boolean {
-//        ID_APA_AVM_DISP_SWT
-//        AVM display set request signal. 全景影像界面退出开关。
-//        0x0: Inactive; 0x1: ON; 0x2: OFF; 0x3: Invalid
-        val signal = -1
+//        Indicate the current display requirement of AVM
+//        0x0: Initial
+//        0x1: Request to display normal view
+//        0x2: Request to display off view
+//        0x3: Request to display error view
+//        0x4: Request to display EVM view
+//        0x5: Request to display EVM view for fault and reduction of speed  reminding  请求开启EVM故障降速提示界面
+//        0x6: Request to display single  Left side view 请求单独显示左侧影像界面
+//        0x7: Request to display single Right side view 请求单独显示右侧影像界面
+        val signal = CarCabinManager.ID_AVM_AVM_DISP_REQ
         val value = manager.readIntProperty(signal, Origin.CABIN)
-        return 0x1 == value
+        return value == 0x1 || value == 0x4 || value == 0x5 || value == 0x6 || value == 0x7
     }
 
     override fun doCommandExpress(parcel: CommandParcel, fromUser: Boolean) {
@@ -284,7 +311,7 @@ class PanoramaCommandConsumer(val manager: GlobalManager) : ICmdExpress {
             consumed = consumeModeCommand(parcel)
         }
         if (!consumed) {
-            consumed = consumeCameraChangeCommand(parcel)
+            consumed = consumeViewCutCommand(parcel)
         }
         if (!consumed) {
             Timber.d("enter panorama consume but command not consumed!!!")

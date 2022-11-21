@@ -75,6 +75,7 @@ class SeatCommandProducer : ICommandProducer {
         command.car = ICar.CHAIR
         command.act = IAct.KNEAD
         command.part = checkoutPart(slots)
+        command.soundDirection = obtainDirection(slots.user)
         return command
     }
 
@@ -113,6 +114,7 @@ class SeatCommandProducer : ICommandProducer {
         command.act = IAct.COLD
         command.car = ICar.CHAIR
         command.part = checkoutPart(slots)
+        command.soundDirection = obtainDirection(slots.user)
         return command
     }
 
@@ -166,6 +168,7 @@ class SeatCommandProducer : ICommandProducer {
         command.act = IAct.HEAT
         command.car = ICar.CHAIR
         command.part = checkoutPart(slots)
+        command.soundDirection = obtainDirection(slots.user)
         return command
     }
 
@@ -229,6 +232,16 @@ class SeatCommandProducer : ICommandProducer {
         return false
     }
 
+    private fun obtainDirection(value: String?): Int {
+        if ("left" == value) {
+            return IPart.L_F
+        }
+        if ("right" == value) {
+            return IPart.R_F
+        }
+        return IPart.VOID
+    }
+
     private fun checkoutPart(slots: Slots): Int {
         var part = IPart.VOID
         if (isContains(slots.name, Keywords.L_F)) {
@@ -247,8 +260,10 @@ class SeatCommandProducer : ICommandProducer {
             part = part or IPart.L_F or IPart.R_F
         } else if (isContains(slots.name, Keywords.B_R)) {
             part = part or IPart.L_B or IPart.R_B
-        } else {
+        } else if (slots.name.contains(Keywords.ALL)) {
             part = IPart.L_F or IPart.L_B or IPart.R_F or IPart.R_B
+        } else {
+            part = IPart.L_F or IPart.L_B or IPart.R_F or IPart.R_B or IPart.VAGUE
         }
         return part
     }

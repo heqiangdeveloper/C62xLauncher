@@ -1,7 +1,5 @@
 package com.chinatsp.vehicle.controller.semantic
 
-import android.text.TextUtils
-import com.chinatsp.vehicle.controller.LogManager
 import java.util.*
 
 data class VoiceJson(
@@ -25,6 +23,10 @@ data class VoiceJson(
     val uuid: String?,
     val version: String?,
 ) {
+
+    val user: String = ""
+    val presetUser: String = ""
+
     fun convert(): NlpVoiceModel {
         val nlpVoiceModel = NlpVoiceModel()
         nlpVoiceModel.service = service ?: "default"
@@ -38,6 +40,9 @@ data class VoiceJson(
         nlpVoiceModel.slots.text = text ?: ""
         nlpVoiceModel.slots.operation = operation ?: ""
         nlpVoiceModel.response = this.toString()
+        nlpVoiceModel.slots.user = user
+
+        nlpVoiceModel.slots.presetUser = presetUser
         return nlpVoiceModel
     }
 }

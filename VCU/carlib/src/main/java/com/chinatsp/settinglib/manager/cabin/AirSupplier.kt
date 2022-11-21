@@ -59,10 +59,10 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
             } else {
                 command.message = "好的，已为您打开空调"
             }
-            if (!status || !parcel.isRetry()) {
+            if (!status || !isRetry) {
                 parcel.callback?.onCmdHandleResult(parcel.command)
             }
-            if (status && parcel.isRetry()) {
+            if (status && isRetry) {
                 ShareHandler.loopParcel(parcel, delayed)
             }
             return !status
@@ -103,28 +103,8 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
         }
     }
 
-    override fun doAdjustAirDirection(parcel: CommandParcel) {
-        var status = true
-        val command = parcel.command
-        if (dependConditioner(command.action)) {
-            status = doLaunchConditioner(parcel)
-        }
-        if (!status) {
-            if (parcel.isRetry()) {
-                ShareHandler.loopParcel(command.action, parcel, delayed)
-            } else {
-                command.message = "空调未打开，不能调节风向"
-                parcel.callback?.onCmdHandleResult(parcel.command)
-            }
-        } else {
-            //调节风向
-            parcel.callback?.onCmdHandleResult(parcel.command)
-        }
-    }
-
     private fun interruptCommand(
-        command: AirCmd, callback: ICmdCallback?, coreEngine: Boolean = false,
-    ): Boolean {
+        command: AirCmd, callback: ICmdCallback?, coreEngine: Boolean = false): Boolean {
         val result = if (coreEngine) {
             !VcuUtils.isPower() || !VcuUtils.isEngineRunning()
         } else {
@@ -144,12 +124,6 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
             return
         }
         when (command.action) {
-//            Action.OPEN -> {
-//                doLaunchConditioner(parcel)
-//            }
-//            Action.CLOSE -> {
-//                doCeaseConditioner(parcel)
-//            }
             Action.MIN -> {
                 tryMinValue(parcel)
             }
@@ -181,22 +155,9 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
     private fun changeAirOption(parcel: CommandParcel) {
         val command = parcel.command as AirCmd
         if (IAir.AIR_FLOW == command.air) {
-            var status = true
-            if (dependConditioner(command.action)) {
-                status = doLaunchConditioner(parcel)
-            }
-            if (!status) {
-                if (parcel.isRetry()) {
-                    ShareHandler.loopParcel(parcel, delayed)
-                } else {
-                    command.message = "空调未开启，暂无法使用此功能"
-                    parcel.callback?.onCmdHandleResult(parcel.command)
-                }
-            } else {
-                val result = airSetter.doUpdateAirFlowing(command.orien, command.part)
-                command.message = result
-                parcel.callback?.onCmdHandleResult(parcel.command)
-            }
+            val result = airSetter.doUpdateAirFlowing(command.orien, command.part)
+            command.message = result
+            parcel.callback?.onCmdHandleResult(parcel.command)
         }
 
     }
@@ -265,56 +226,43 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
     }
 
     private fun switchAutoMode(parcel: CommandParcel, expect: Boolean) {
-        var status = true
+        val status: Boolean
         val command = parcel.command
         val name = "自动模式"
+        val isRetry = parcel.isRetry()
         val onOff = if (expect) "打开" else "关闭"
         if (expect) {
-            if (dependConditioner(command.action)) {
-                status = doLaunchConditioner(parcel)
-            }
-            if (!status) {
-                if (parcel.isRetry()) {
-                    ShareHandler.loopParcel(parcel, delayed)
-                } else {
-                    command.message = "空调未开启，暂无法开启自动模式"
-                    parcel.callback?.onCmdHandleResult(parcel.command)
-                }
+            status = airSetter.doSwitchAutoMode(expect)
+            if (status) {
+                command.message = if (isRetry) "${name}${onOff}中……" else "${name}${onOff}失败"
             } else {
-                status = airSetter.doSwitchAutoMode(expect)
-                if (status) {
-                    command.message =
-                        if (parcel.isRetry()) "${name}${onOff}中……" else "${name}${onOff}失败"
-                } else {
-                    command.message = "${name}已${onOff}"
-                }
-                if (!status || !parcel.isRetry()) {
-                    parcel.callback?.onCmdHandleResult(parcel.command)
-                }
-                if (status && parcel.isRetry()) {
-                    ShareHandler.loopParcel(parcel, delayed)
-                }
+                command.message = "${name}已${onOff}"
+            }
+            if (!status || !isRetry) {
+                parcel.callback?.onCmdHandleResult(parcel.command)
+            }
+            if (status && isRetry) {
+                ShareHandler.loopParcel(parcel, delayed)
             }
         } else {
             status = airSetter.doSwitchAutoMode(expect)
             if (status) {
-                command.message =
-                    if (parcel.isRetry()) "${name}${onOff}中……" else "${name}${onOff}失败"
+                command.message = if (isRetry) "${name}${onOff}中……" else "${name}${onOff}失败"
             } else {
                 command.message = "${name}已${onOff}"
             }
-            if (!status || !parcel.isRetry()) {
+            if (!status || !isRetry) {
                 parcel.callback?.onCmdHandleResult(parcel.command)
             }
-            if (status && parcel.isRetry()) {
+            if (status && isRetry) {
                 ShareHandler.loopParcel(parcel, delayed)
             }
         }
     }
 
-    private fun dependConditioner(@Action action: Int): Boolean {
-        return (Action.OPEN == (Action.OPEN and action))
-    }
+//    private fun dependConditioner(@Action action: Int): Boolean {
+//        return (Action.OPEN == (Action.OPEN and action))
+//    }
 
     private fun launchFunction(parcel: CommandParcel) {
         do {
@@ -373,95 +321,73 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
     }
 
     private fun switchDoubleMode(parcel: CommandParcel, expect: Boolean) {
-        var status = true
+        val status: Boolean
         val command = parcel.command
         val name = "双区模式"
+        val isRetry = parcel.isRetry()
         val onOff = if (expect) "打开" else "关闭"
         if (expect) {
-            if (dependConditioner(command.action)) {
-                status = doLaunchConditioner(parcel)
-            }
-            if (!status) {
-                if (parcel.isRetry()) {
-                    ShareHandler.loopParcel(parcel, delayed)
-                } else {
-                    command.message = "空调未开启，暂无法${onOff}${name}"
-                    parcel.callback?.onCmdHandleResult(parcel.command)
-                }
+            status = airSetter.doSwitchDoubleMode(expect)
+            if (status) {
+                command.message =
+                    if (isRetry) "${name}${onOff}中……" else "${name}${onOff}失败"
             } else {
-                status = airSetter.doSwitchDoubleMode(expect)
-                if (status) {
-                    command.message =
-                        if (parcel.isRetry()) "${name}${onOff}中……" else "${name}${onOff}失败"
-                } else {
-                    command.message = "${name}已${onOff}"
-                }
-                if (!status || !parcel.isRetry()) {
-                    parcel.callback?.onCmdHandleResult(parcel.command)
-                }
-                if (status && parcel.isRetry()) {
-                    ShareHandler.loopParcel(parcel, delayed)
-                }
+                command.message = "${name}已${onOff}"
+            }
+            if (!status || !isRetry) {
+                parcel.callback?.onCmdHandleResult(parcel.command)
+            }
+            if (status && isRetry) {
+                ShareHandler.loopParcel(parcel, delayed)
             }
         } else {
             status = airSetter.doSwitchDoubleMode(expect)
             if (status) {
                 command.message =
-                    if (parcel.isRetry()) "${name}${onOff}中……" else "${name}${onOff}失败"
+                    if (isRetry) "${name}${onOff}中……" else "${name}${onOff}失败"
             } else {
                 command.message = "${name}已${onOff}"
             }
-            if (!status || !parcel.isRetry()) {
+            if (!status || !isRetry) {
                 parcel.callback?.onCmdHandleResult(parcel.command)
             }
-            if (status && parcel.isRetry()) {
+            if (status && isRetry) {
                 ShareHandler.loopParcel(parcel, delayed)
             }
         }
     }
 
     private fun switchGlassDefrost(parcel: CommandParcel, expect: Boolean) {
-        var status = true
+        val status: Boolean
         val command = parcel.command
+        val isRetry = parcel.isRetry()
         val isHead = IPart.HEAD == (IPart.HEAD and command.part)
         val isTail = IPart.TAIL == (IPart.TAIL and command.part)
         val name = getActionFunctionName(isHead, isTail)
         if (expect) {
-            if (dependConditioner(command.action)) {
-                status = doLaunchConditioner(parcel)
+            var isHeadStatus = !isHead
+            var isTailStatus = !isTail
+            if (isHead) {
+                isHeadStatus = airSetter.doSwitchHeadDefrost(expect)
             }
-            if (!status) {
-                if (parcel.isRetry()) {
-                    ShareHandler.loopParcel(parcel, delayed)
+            if (isTail) {
+                isTailStatus = airSetter.doSwitchTailDefrost(expect)
+            }
+            status = isHeadStatus && isTailStatus
+            if (status) {
+                if (isRetry) {
+                    command.message = "${name}开启中……"
                 } else {
-                    command.message = "空调未开启，暂无法开启${name}"
-                    parcel.callback?.onCmdHandleResult(parcel.command)
+                    command.message = "${name}开启失败"
                 }
             } else {
-                var isHeadStatus = !isHead
-                var isTailStatus = !isTail
-                if (isHead) {
-                    isHeadStatus = airSetter.doSwitchHeadDefrost(expect)
-                }
-                if (isTail) {
-                    isTailStatus = airSetter.doSwitchTailDefrost(expect)
-                }
-                status = isHeadStatus && isTailStatus
-                if (status) {
-                    if (parcel.isRetry()) {
-                        command.message = "${name}开启中……"
-                    } else {
-                        command.message = "${name}开启失败"
-                    }
-                } else {
-                    command.message = "${name}已开启"
-                }
-                if (!status || !parcel.isRetry()) {
-                    parcel.callback?.onCmdHandleResult(parcel.command)
-                }
-                if (status && parcel.isRetry()) {
-                    ShareHandler.loopParcel(parcel, delayed)
-                }
+                command.message = "${name}已开启"
+            }
+            if (!status || !isRetry) {
+                parcel.callback?.onCmdHandleResult(parcel.command)
+            }
+            if (status && isRetry) {
+                ShareHandler.loopParcel(parcel, delayed)
             }
         } else {
             var isHeadStatus = !isHead
@@ -474,7 +400,7 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
             }
             status = isHeadStatus && isTailStatus
             if (status) {
-                if (parcel.isRetry()) {
+                if (isRetry) {
                     command.message = "${name}关闭中……"
                 } else {
                     command.message = "${name}关闭失败"
@@ -482,10 +408,10 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
             } else {
                 command.message = "${name}已关闭"
             }
-            if (!status || !parcel.isRetry()) {
+            if (!status || !isRetry) {
                 parcel.callback?.onCmdHandleResult(parcel.command)
             }
-            if (status && parcel.isRetry()) {
+            if (status && isRetry) {
                 ShareHandler.loopParcel(parcel, delayed)
             }
         }
@@ -505,204 +431,149 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
     }
 
     private fun switchLoopAuto(parcel: CommandParcel, expect: Boolean) {
-        var status = true
+        val status: Boolean
         val command = parcel.command
+        val isRetry = parcel.isRetry()
         val onOff = if (expect) "打开" else "关闭"
         if (expect) {
-            if (dependConditioner(command.action)) {
-                status = doLaunchConditioner(parcel)
-            }
-            if (!status) {
-                if (parcel.isRetry()) {
-                    ShareHandler.loopParcel(parcel, delayed)
-                } else {
-                    command.message = "空调未开启，暂无法${onOff}自动循环"
-                    parcel.callback?.onCmdHandleResult(parcel.command)
-                }
-            } else {
-                status = airSetter.doSwitchAutoLooper(expect)
-                if (status) {
-                    command.message =
-                        if (parcel.isRetry()) "空调自动循环${onOff}中……" else "空调自动循环${onOff}失败"
-                } else {
-                    command.message = "空调自动循环已${onOff}"
-                }
-                if (!status || !parcel.isRetry()) {
-                    parcel.callback?.onCmdHandleResult(parcel.command)
-                }
-                if (status && parcel.isRetry()) {
-                    ShareHandler.loopParcel(parcel, delayed)
-                }
-            }
-        } else {
             status = airSetter.doSwitchAutoLooper(expect)
             if (status) {
-                command.message = if (parcel.isRetry()) "空调自动循环${onOff}中……" else "空调自动循环${onOff}失败"
+                command.message = if (isRetry) "空调自动循环${onOff}中……" else "空调自动循环${onOff}失败"
             } else {
                 command.message = "空调自动循环已${onOff}"
             }
-            if (!status || !parcel.isRetry()) {
+            if (!status || !isRetry) {
                 parcel.callback?.onCmdHandleResult(parcel.command)
             }
-            if (status && parcel.isRetry()) {
+            if (status && isRetry) {
+                ShareHandler.loopParcel(parcel, delayed)
+            }
+
+        } else {
+            status = airSetter.doSwitchAutoLooper(expect)
+            if (status) {
+                command.message = if (isRetry) "空调自动循环${onOff}中……" else "空调自动循环${onOff}失败"
+            } else {
+                command.message = "空调自动循环已${onOff}"
+            }
+            if (!status || !isRetry) {
+                parcel.callback?.onCmdHandleResult(parcel.command)
+            }
+            if (status && isRetry) {
                 ShareHandler.loopParcel(parcel, delayed)
             }
         }
-
     }
 
     private fun switchLoopOuter(parcel: CommandParcel, expect: Boolean) {
-        var status = true
+        val status: Boolean
         val command = parcel.command
+        val isRetry = parcel.isRetry()
         val onOff = if (expect) "打开" else "关闭"
         if (expect) {
-            if (dependConditioner(command.action)) {
-                status = doLaunchConditioner(parcel)
-            }
-            if (!status) {
-                if (parcel.isRetry()) {
-                    ShareHandler.loopParcel(parcel, delayed)
-                } else {
-                    command.message = "空调未开启，暂无法${onOff}外循环"
-                    parcel.callback?.onCmdHandleResult(parcel.command)
-                }
+            status = airSetter.doSwitchOuterLooper(expect)
+            if (status) {
+                command.message = if (isRetry) "空调外循环${onOff}中……" else "空调外循环${onOff}失败"
             } else {
-                status = airSetter.doSwitchOuterLooper(expect)
-                if (status) {
-                    command.message =
-                        if (parcel.isRetry()) "空调外循环${onOff}中……" else "空调外循环${onOff}失败"
-                } else {
-                    command.message = "空调外循环已${onOff}"
-                }
-                if (!status || !parcel.isRetry()) {
-                    parcel.callback?.onCmdHandleResult(parcel.command)
-                }
-                if (status && parcel.isRetry()) {
-                    ShareHandler.loopParcel(parcel, delayed)
-                }
+                command.message = "空调外循环已${onOff}"
+            }
+            if (!status || !isRetry) {
+                parcel.callback?.onCmdHandleResult(parcel.command)
+            }
+            if (status && isRetry) {
+                ShareHandler.loopParcel(parcel, delayed)
             }
         } else {
             status = airSetter.doSwitchOuterLooper(expect)
             if (status) {
-                command.message = if (parcel.isRetry()) "空调外循环${onOff}中……" else "空调外循环${onOff}失败"
+                command.message = if (isRetry) "空调外循环${onOff}中……" else "空调外循环${onOff}失败"
             } else {
                 command.message = "空调外循环已${onOff}"
             }
-            if (!status || !parcel.isRetry()) {
+            if (!status || !isRetry) {
                 parcel.callback?.onCmdHandleResult(parcel.command)
             }
-            if (status && parcel.isRetry()) {
+            if (status && isRetry) {
                 ShareHandler.loopParcel(parcel, delayed)
             }
         }
-
     }
 
     private fun switchLoopInner(parcel: CommandParcel, expect: Boolean) {
-        var status = true
+        val status: Boolean
         val command = parcel.command
+        val isRetry = parcel.isRetry()
         val onOff = if (expect) "打开" else "关闭"
         if (expect) {
-            if (dependConditioner(command.action)) {
-                status = doLaunchConditioner(parcel)
-            }
-            if (!status) {
-                if (parcel.isRetry()) {
-                    ShareHandler.loopParcel(parcel, delayed)
-                } else {
-                    command.message = "空调未开启，暂无法${onOff}内循环"
-                    parcel.callback?.onCmdHandleResult(parcel.command)
-                }
-            } else {
-                status = airSetter.doSwitchInnerLooper(expect)
-                if (status) {
-                    command.message =
-                        if (parcel.isRetry()) "空调内循环${onOff}中……" else "空调内循环${onOff}失败"
-                } else {
-                    command.message = "空调内循环已${onOff}"
-                }
-                if (!status || !parcel.isRetry()) {
-                    parcel.callback?.onCmdHandleResult(parcel.command)
-                }
-                if (status && parcel.isRetry()) {
-                    ShareHandler.loopParcel(parcel, delayed)
-                }
-            }
-        } else {
             status = airSetter.doSwitchInnerLooper(expect)
             if (status) {
-                command.message = if (parcel.isRetry()) "空调内循环${onOff}中……" else "空调内循环${onOff}失败"
+                command.message = if (isRetry) "空调内循环${onOff}中……" else "空调内循环${onOff}失败"
             } else {
                 command.message = "空调内循环已${onOff}"
             }
-            if (!status || !parcel.isRetry()) {
+            if (!status || !isRetry) {
                 parcel.callback?.onCmdHandleResult(parcel.command)
             }
-            if (status && parcel.isRetry()) {
+            if (status && isRetry) {
+                ShareHandler.loopParcel(parcel, delayed)
+            }
+
+        } else {
+            status = airSetter.doSwitchInnerLooper(expect)
+            if (status) {
+                command.message = if (isRetry) "空调内循环${onOff}中……" else "空调内循环${onOff}失败"
+            } else {
+                command.message = "空调内循环已${onOff}"
+            }
+            if (!status || !isRetry) {
+                parcel.callback?.onCmdHandleResult(parcel.command)
+            }
+            if (status && isRetry) {
                 ShareHandler.loopParcel(parcel, delayed)
             }
         }
     }
 
     private fun switchAirCleaning(parcel: CommandParcel, expect: Boolean) {
-        var status = true
+        val status: Boolean
         val command = parcel.command
+        val isRetry = parcel.isRetry()
         val onOff = if (expect) "打开" else "关闭"
         if (expect) {
-            if (dependConditioner(command.action)) {
-                status = doLaunchConditioner(parcel)
-            }
-            if (!status) {
-                if (parcel.isRetry()) {
-                    ShareHandler.loopParcel(parcel, delayed)
-                } else {
-                    command.message = "空调未开启，暂无法${onOff}空气净化"
-                    parcel.callback?.onCmdHandleResult(parcel.command)
-                }
+            status = airSetter.doSwitchAirClean(expect)
+            if (status) {
+                command.message =
+                    if (isRetry) "空气净化${onOff}中……" else Keywords.COMMAND_FAILED
             } else {
-                status = airSetter.doSwitchAirClean(expect)
-                if (status) {
-                    command.message =
-                        if (parcel.isRetry()) "空气净化${onOff}中……" else Keywords.COMMAND_FAILED
-                } else {
-                    command.message = "空气净化已${onOff}"
-                }
-                if (!status || !parcel.isRetry()) {
-                    parcel.callback?.onCmdHandleResult(parcel.command)
-                }
-                if (status && parcel.isRetry()) {
-                    ShareHandler.loopParcel(parcel, delayed)
-                }
+                command.message = "空气净化已${onOff}"
+            }
+            if (!status || !isRetry) {
+                parcel.callback?.onCmdHandleResult(parcel.command)
+            }
+            if (status && isRetry) {
+                ShareHandler.loopParcel(parcel, delayed)
             }
         } else {
             status = airSetter.doSwitchAirClean(expect)
             if (status) {
-                command.message =
-                    if (parcel.isRetry()) "空气净化${onOff}中……" else Keywords.COMMAND_FAILED
+                command.message = if (isRetry) "空气净化${onOff}中……" else Keywords.COMMAND_FAILED
             } else {
                 command.message = "好的，已为您${onOff}空气净化"
             }
-            if (!status || !parcel.isRetry()) {
+            if (!status || !isRetry) {
                 parcel.callback?.onCmdHandleResult(parcel.command)
             }
-            if (status && parcel.isRetry()) {
+            if (status && isRetry) {
                 ShareHandler.loopParcel(parcel, delayed)
             }
         }
     }
 
     private fun closeCompressor(parcel: CommandParcel) {
-        var status = true
+        var status: Boolean
         val command = parcel.command
+        val isRetry = parcel.isRetry()
         val onOff = "关闭"
-        if (dependConditioner(command.action)) {
-            status = airGetter.isConditioner()
-            command.message = "空调未开启"
-        }
-        if (!status) {
-            parcel.callback?.onCmdHandleResult(parcel.command)
-            return
-        }
         status = airGetter.isCompressor()
         if (!status) {
             command.message = "好的，已为您${onOff}制冷模式"
@@ -711,112 +582,78 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
             status = airSetter.doSwitchCompressor(false)
             if (status) {
                 command.message =
-                    if (parcel.isRetry()) "制冷模式${onOff}中……" else Keywords.COMMAND_FAILED
+                    if (isRetry) "制冷模式${onOff}中……" else Keywords.COMMAND_FAILED
             } else {
                 command.message = "好的，已为您${onOff}制冷模式"
             }
-            if (!status || !parcel.isRetry()) {
+            if (!status || !isRetry) {
                 parcel.callback?.onCmdHandleResult(parcel.command)
             }
-            if (status && parcel.isRetry()) {
+            if (status && isRetry) {
                 ShareHandler.loopParcel(parcel, delayed)
             }
         }
     }
 
     private fun launchHeater(parcel: CommandParcel) {
-        var status = true
         val command = parcel.command
+        val isRetry = parcel.isRetry()
         val onOff = "打开"
-        if (dependConditioner(command.action)) {
-            status = doLaunchConditioner(parcel)
-        }
-        if (!status) {
-            if (parcel.isRetry()) {
-                ShareHandler.loopParcel(parcel, delayed)
-            } else {
-                command.message = "空调未开启，暂无法${onOff}制热模式"
-                parcel.callback?.onCmdHandleResult(parcel.command)
-            }
+        val status: Boolean = airSetter.doSwitchHeater(true)
+        if (status) {
+            command.message = if (isRetry) "制热模式${onOff}中……" else Keywords.COMMAND_FAILED
         } else {
-            status = airSetter.doSwitchHeater(true)
-            if (status) {
-                command.message =
-                    if (parcel.isRetry()) "制热模式${onOff}中……" else Keywords.COMMAND_FAILED
-            } else {
-                command.message = "好的，已为您${onOff}制热模式"
-            }
-            if (!status || !parcel.isRetry()) {
-                parcel.callback?.onCmdHandleResult(parcel.command)
-            }
-            if (status && parcel.isRetry()) {
-                ShareHandler.loopParcel(parcel, delayed)
-            }
+            command.message = "好的，已为您${onOff}制热模式"
+        }
+        if (!status || !isRetry) {
+            parcel.callback?.onCmdHandleResult(parcel.command)
+        }
+        if (status && isRetry) {
+            ShareHandler.loopParcel(parcel, delayed)
         }
     }
 
     private fun closeHeater(parcel: CommandParcel) {
-        var status = true
         val command = parcel.command
+        val isRetry = parcel.isRetry()
         val onOff = "关闭"
-        if (dependConditioner(command.action)) {
-            status = airGetter.isConditioner()
-            command.message = "空调未开启，不需要${onOff}制热模式"
-        }
-        if (!status) {
-            parcel.callback?.onCmdHandleResult(parcel.command)
-            return
-        }
-        status = airGetter.isHeater()
+        var status: Boolean = airGetter.isHeater()
         if (!status) {
             command.message = "制热模式已经${onOff}"
             parcel.callback?.onCmdHandleResult(parcel.command)
         } else {
             status = airSetter.doSwitchHeater(false)
             if (status) {
-                command.message =
-                    if (parcel.isRetry()) "制冷模式${onOff}中……" else Keywords.COMMAND_FAILED
+                command.message = if (isRetry) "制冷模式${onOff}中……" else Keywords.COMMAND_FAILED
             } else {
                 command.message = "好的，已为您${onOff}制热模式"
             }
-            if (!status || !parcel.isRetry()) {
+            if (!status || !isRetry) {
                 parcel.callback?.onCmdHandleResult(parcel.command)
             }
-            if (status && parcel.isRetry()) {
+            if (status && isRetry) {
                 ShareHandler.loopParcel(parcel, delayed)
             }
         }
     }
 
     private fun launchCompressor(parcel: CommandParcel) {
-        var status = true
         val command = parcel.command
+        val isRetry = parcel.isRetry()
         val onOff = "打开"
-        if (dependConditioner(command.action)) {
-            status = doLaunchConditioner(parcel)
-        }
-        if (!status) {
-            if (parcel.isRetry()) {
-                ShareHandler.loopParcel(parcel, delayed)
-            } else {
-                command.message = "空调未开启，暂无法${onOff}制冷模式"
-                parcel.callback?.onCmdHandleResult(parcel.command)
-            }
+        val status: Boolean = airSetter.doSwitchCompressor(true)
+        if (status) {
+            command.message = if (isRetry) "制冷模式${onOff}中……" else Keywords.COMMAND_FAILED
         } else {
-            status = airSetter.doSwitchCompressor(true)
-            if (status) {
-                command.message =
-                    if (parcel.isRetry()) "制冷模式${onOff}中……" else Keywords.COMMAND_FAILED
-            } else {
-                command.message = "制冷模式已${onOff}"
-            }
-            if (!status || !parcel.isRetry()) {
-                parcel.callback?.onCmdHandleResult(parcel.command)
-            }
-            if (status && parcel.isRetry()) {
-                ShareHandler.loopParcel(parcel, delayed)
-            }
+            command.message = "制冷模式已${onOff}"
         }
+        if (!status || !isRetry) {
+            parcel.callback?.onCmdHandleResult(parcel.command)
+        }
+        if (status && isRetry) {
+            ShareHandler.loopParcel(parcel, delayed)
+        }
+
     }
 
     private fun tryFixedValue(parcel: CommandParcel) {
@@ -892,8 +729,17 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
         val command = parcel.command as AirCmd
         val min = airGetter.tempRange.first
         val max = airGetter.tempRange.last
-        val lfAct = IPart.L_F == (IPart.L_F and command.part)
-        val rfAct = IPart.R_F == (IPart.R_F and command.part)
+        val isDouble = airGetter.isDoubleMode()
+        var lfAct = IPart.L_F == (IPart.L_F and command.part)
+        var rfAct = IPart.R_F == (IPart.R_F and command.part)
+        if (IPart.VOID != command.soundDirection && lfAct && rfAct) {
+            val isLeft = IPart.L_F == command.soundDirection
+            if (isLeft) {
+                rfAct = isDouble
+            } else {
+                lfAct = false
+            }
+        }
         if (IStatus.INIT == command.status) {
             parcel.retryCount = 3
             if (lfAct) {
@@ -909,7 +755,6 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
         val rfExpect = command.rfExpect
         val lfActual = if (lfAct) obtainTempeLevel(IPart.L_F) else lfExpect
         val rfActual = if (rfAct) obtainTempeLevel(IPart.R_F) else rfExpect
-        val isDouble = airGetter.isDoubleMode()
         val isRetry = parcel.isRetry()
         Timber.e("updateTemp lfExpect:$lfExpect, rfExpect:$rfExpect, lfActual:$lfActual, " +
                 "rfActual:$rfActual, isDouble:$isDouble, isRetry:$isRetry, lfAct:$lfAct, rfAct:$rfAct")
@@ -1129,39 +974,27 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
     }
 
     private fun adjustBlowerLevel(parcel: CommandParcel) {
-        var status = true
+        val isRetry = parcel.isRetry()
         val command = parcel.command as AirCmd
-        if (dependConditioner(command.action)) {
-            status = doLaunchConditioner(parcel)
+        if (Constant.INVALID == command.lfExpect) {
+            command.lfExpect = operationBlowerLevel(command)
         }
-        if (!status) {
-            if (parcel.isRetry()) {
-                ShareHandler.loopParcel(parcel, delayed)
+        val expect = command.lfExpect + 1
+        val status = airSetter.doUpdateBlowerLevel(expect, command.part)
+        if (status) {
+            if (isRetry) {
+                command.message = "风量调节中……"
             } else {
-                command.message = "空调未开启，暂无法调整风量"
-                parcel.callback?.onCmdHandleResult(parcel.command)
+                command.message = Keywords.COMMAND_FAILED
             }
         } else {
-            if (Constant.INVALID == command.lfExpect) {
-                command.lfExpect = operationBlowerLevel(command)
-            }
-            val expect = command.lfExpect + 1
-            status = airSetter.doUpdateBlowerLevel(expect, command.part)
-            if (status) {
-                if (parcel.isRetry()) {
-                    command.message = "风量调节中……"
-                } else {
-                    command.message = Keywords.COMMAND_FAILED
-                }
-            } else {
-                command.message = "好的，风量已经调到${expect - 1}了"
-            }
-            if (!status || !parcel.isRetry()) {
-                parcel.callback?.onCmdHandleResult(parcel.command)
-            }
-            if (status && parcel.isRetry()) {
-                ShareHandler.loopParcel(parcel, delayed)
-            }
+            command.message = "好的，风量已经调到${expect - 1}了"
+        }
+        if (!status || !isRetry) {
+            parcel.callback?.onCmdHandleResult(parcel.command)
+        }
+        if (status && isRetry) {
+            ShareHandler.loopParcel(parcel, delayed)
         }
     }
 

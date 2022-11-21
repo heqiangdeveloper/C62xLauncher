@@ -2,9 +2,9 @@ package com.chinatsp.vehicle.controller.utils
 
 interface Keywords {
     companion object {
-        const val SET = "SET"
+        private const val SET = "SET"
+        private const val LAUNCH = "LAUNCH"
         const val OPEN = "OPEN"
-        const val LAUNCH = "LAUNCH"
         const val CLOSE = "CLOSE"
         const val QUERY = "QUERY"
         const val CHAIR = "座椅"
@@ -45,14 +45,9 @@ interface Keywords {
          */
         val OPT_CLOSES = arrayOf("EXIT", "CLOSE")
         val AIR_MODES = arrayOf("制冷", "压缩机")
-        val SKYLIGHTS = arrayOf("天窗", "天窗透气", "天窗通风", "打开透气", "天窗换气", "天窗翘起")
+        const val SKYLIGHT_UP = "天窗翘起"
+        val SKYLIGHTS = arrayOf("天窗", "天窗透气", "天窗通风", "打开透气", "天窗换气", SKYLIGHT_UP, "顶棚")
         const val SKYLIGHT = "天窗"
-        const val SKYLIGHT_OPEN = "天窗透气"
-        const val SKYLIGHT_OPEN2 = "天窗通风"
-        const val SKYLIGHT_OPEN3 = "打开透气"
-        const val SKYLIGHT_OPEN4 = "天窗换气"
-        const val SKYLIGHT_OPEN5 = "天窗翘起"
-        const val SKYLIGHT_MODE = "透气模式"
         const val ABAT_VENT = "遮阳帘"
         const val DRIVING_MODE = "驾驶模式"
         const val LAMP = "氛围灯"
@@ -65,8 +60,9 @@ interface Keywords {
         const val LAMPLIGHTMINUS = "MINUS"
         const val LAMPLIGHTPLUS_1 = "高"
         const val LAMPLIGHTPLUS_2 = "低"
+        const val ALL = "所有"
         val WINDOWS = arrayOf("车窗", "窗户")
-        val WINDOW_ALL = arrayOf("所有窗户", "所有车窗", "窗户", "车窗")
+//        val WINDOW_ALL = arrayOf("所有窗户", "所有车窗")
         val L_F = arrayOf("主驾", "左前", "前左")
         val L_R = arrayOf("左后", "后左")
         val R_F = arrayOf("副驾", "右前", "前右")
@@ -109,6 +105,7 @@ interface Keywords {
             "后备箱", "电动后备箱", "尾箱", "电动尾箱", "背门", "电动背门")
 //        val WIPERS = arrayOf("雨刮", "雨刷", "前雨刮", "前雨刮器", "雨刮器", "前雨刷", "前雨刷器", "雨刷器")
         val WIPERS = arrayOf("雨刮", "雨刷", "雨刮器", "雨刷器")
+        val WASHING = arrayOf("洗涤")
         val REAR_WIPERS = arrayOf("后雨刮", "后雨刮器", "后雨刷器", "后雨刷")
         val TIRE_PRESSURE_MONITORS = arrayOf("胎压监测", "胎压")
         val SMOKES = arrayOf("抽烟", "抽烟模式", "小欧我要抽烟")

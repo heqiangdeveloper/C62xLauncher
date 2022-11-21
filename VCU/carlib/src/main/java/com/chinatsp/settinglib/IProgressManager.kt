@@ -14,9 +14,9 @@ import timber.log.Timber
  */
 interface IProgressManager : IManager {
 
-    fun doGetVolume(type: Progress): Volume?
+    fun doGetVolume(progress: Progress): Volume?
 
-    fun doSetVolume(type: Progress, position: Int): Boolean
+    fun doSetVolume(progress: Progress, position: Int): Boolean
 
     fun doUpdateProgress(
         volume: Volume,

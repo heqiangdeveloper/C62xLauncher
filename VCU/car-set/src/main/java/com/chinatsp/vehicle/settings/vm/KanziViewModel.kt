@@ -3,7 +3,8 @@ package com.chinatsp.vehicle.settings.vm
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.chinatsp.settinglib.listener.IAccessListener
+import com.chinatsp.settinglib.Constant
+import com.chinatsp.settinglib.listener.ISignalListener
 import com.chinatsp.settinglib.manager.access.DoorManager
 import com.chinatsp.settinglib.manager.access.SternDoorManager
 import com.chinatsp.settinglib.manager.access.WindowManager
@@ -16,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class KanziViewModel @Inject constructor(app: Application, model: BaseModel) :
-    BaseViewModel(app, model), IAccessListener {
+    BaseViewModel(app, model), ISignalListener {
 
     private val doorManager: DoorManager get() = DoorManager.instance
 
@@ -24,46 +25,58 @@ class KanziViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val sternDoorManager: SternDoorManager get() = SternDoorManager.instance
 
+    private val OFF = 0x0
+
+    private val ON = 0x1
+
+    private val LOW_ON = 0x1
+
+    private val HIGH_ON = 0x2
+
+    var lowLamp: Int = 0x0
+
+    var highLamp: Int = 0x0
+
     val lfDoor: LiveData<Int>
         get() = _lfDoor
 
     private val _lfDoor: MutableLiveData<Int> by lazy {
-        MutableLiveData(0)
+        MutableLiveData(doorManager.obtainAccessState(IPart.L_F, Model.ACCESS_DOOR))
     }
 
     val lrDoor: LiveData<Int>
         get() = _lrDoor
 
     private val _lrDoor: MutableLiveData<Int> by lazy {
-        MutableLiveData(0)
+        MutableLiveData(doorManager.obtainAccessState(IPart.L_B, Model.ACCESS_DOOR))
     }
 
     val rfDoor: LiveData<Int>
         get() = _rfDoor
 
     private val _rfDoor: MutableLiveData<Int> by lazy {
-        MutableLiveData(0)
+        MutableLiveData(doorManager.obtainAccessState(IPart.R_F, Model.ACCESS_DOOR))
     }
 
     val rrDoor: LiveData<Int>
         get() = _rrDoor
 
     private val _rrDoor: MutableLiveData<Int> by lazy {
-        MutableLiveData(0)
+        MutableLiveData(doorManager.obtainAccessState(IPart.R_B, Model.ACCESS_DOOR))
     }
 
     val headDoor: LiveData<Int>
         get() = _headDoor
 
     private val _headDoor: MutableLiveData<Int> by lazy {
-        MutableLiveData(0)
+        MutableLiveData(sternDoorManager.obtainAccessState(IPart.HEAD, Model.ACCESS_STERN))
     }
 
     val tailDoor: LiveData<Int>
         get() = _tailDoor
 
     private val _tailDoor: MutableLiveData<Int> by lazy {
-        MutableLiveData(0)
+        MutableLiveData(sternDoorManager.obtainAccessState(IPart.TAIL, Model.ACCESS_STERN))
     }
 
 
@@ -71,28 +84,28 @@ class KanziViewModel @Inject constructor(app: Application, model: BaseModel) :
         get() = _lfWindow
 
     private val _lfWindow: MutableLiveData<Int> by lazy {
-        MutableLiveData(0)
+        MutableLiveData(windowManager.obtainAccessState(IPart.L_F, Model.ACCESS_WINDOW))
     }
 
     val lrWindow: LiveData<Int>
         get() = _lrWindow
 
     private val _lrWindow: MutableLiveData<Int> by lazy {
-        MutableLiveData(0)
+        MutableLiveData(windowManager.obtainAccessState(IPart.L_B, Model.ACCESS_WINDOW))
     }
 
     val rfWindow: LiveData<Int>
         get() = _rfWindow
 
     private val _rfWindow: MutableLiveData<Int> by lazy {
-        MutableLiveData(0)
+        MutableLiveData(windowManager.obtainAccessState(IPart.R_F, Model.ACCESS_WINDOW))
     }
 
     val rrWindow: LiveData<Int>
         get() = _rrWindow
 
     private val _rrWindow: MutableLiveData<Int> by lazy {
-        MutableLiveData(0)
+        MutableLiveData(windowManager.obtainAccessState(IPart.R_B, Model.ACCESS_WINDOW))
     }
 
     val fWiper: LiveData<Int>
@@ -126,6 +139,10 @@ class KanziViewModel @Inject constructor(app: Application, model: BaseModel) :
     val headLamps: LiveData<Int>
         get() = _headLamps
 
+    //前大灯状态
+    //0 关闭
+    //1 近光
+    //2 远光
     private val _headLamps: MutableLiveData<Int> by lazy {
         MutableLiveData(0)
     }
@@ -166,38 +183,107 @@ class KanziViewModel @Inject constructor(app: Application, model: BaseModel) :
         super.onDestroy()
     }
 
-    override fun onAccessChanged(part: Int, model: Int, value: Int) {
+    override fun onSignalChanged(part: Int, model: Int, signal: Int, value: Int) {
         if (Model.ACCESS_DOOR == model) {
-            when (part) {
-                IPart.L_F -> doUpdate(_lfDoor, value, true)
-                IPart.R_F -> doUpdate(_rfDoor, value, true)
-                IPart.L_B -> doUpdate(_lrDoor, value, true)
-                IPart.R_B -> doUpdate(_rrDoor, value, true)
-                else -> {}
-            }
-            return
-        }
-        if (Model.ACCESS_WINDOW == model) {
-            when (part) {
-                IPart.L_F -> doUpdate(_lfWindow, value, true)
-                IPart.R_F -> doUpdate(_rfWindow, value, true)
-                IPart.L_B -> doUpdate(_lrWindow, value, true)
-                IPart.R_B -> doUpdate(_rrWindow, value, true)
-                else -> {}
-            }
-            return
-        }
-
-        if (Model.ACCESS_STERN == model) {
-            when (part) {
-                IPart.HEAD -> doUpdate(_headDoor, value, true)
-                IPart.TAIL -> doUpdate(_tailDoor, value, true)
-                else -> {}
-            }
-            return
+            onDoorSignalChanged(part, value)
+        } else if (Model.ACCESS_WINDOW == model) {
+            onWindowSignalChanged(part, value)
+        } else if (Model.ACCESS_STERN == model) {
+            onInclusiveSignalChanged(part, value)
+        } else if (Model.LIGHT_COMMON == model) {
+            onLightSignalChanged(part, signal, value)
         }
     }
 
+    private fun onHeadLampChanged() {
+        val actual = headLamps.value!!
+        val isLow = ON == lowLamp
+        val isHigh = ON == highLamp
+        do {
+            if (0x0 == actual) {
+                if (isHigh) {
+                    doUpdate(_headLamps, HIGH_ON)
+                    break
+                }
+                if (isLow) {
+                    doUpdate(_headLamps, LOW_ON)
+                    break
+                }
+            } else if (0x1 == actual) {
+                if (isHigh) {
+                    doUpdate(_headLamps, HIGH_ON)
+                    break
+                }
+                if (!isLow) {
+                    doUpdate(_headLamps, OFF)
+                    break
+                }
+            } else if (0x2 == actual) {
+                if (isHigh) {
+                    break
+                }
+                if (isLow) {
+                    doUpdate(_headLamps, LOW_ON)
+                    break
+                }
+                doUpdate(_headLamps, OFF)
+            }
+        } while (false)
+    }
+
+    private fun onLightSignalChanged(part: Int, signal: Int, value: Int) {
+        when (signal) {
+            Constant.LOW_LAMP -> {
+                lowLamp = value
+                onHeadLampChanged()
+            }
+            Constant.HIGH_LAMP -> {
+                highLamp = value
+                onHeadLampChanged()
+            }
+            Constant.F_FOG_LAMP -> {}
+            Constant.B_FOG_LAMP -> {
+                doUpdate(_rearFogLamps, value)
+            }
+            Constant.POS_LAMP -> {
+                doUpdate(_positionLamps, value)
+            }
+            Constant.BRAKE_LAMP -> {}
+            else -> {}
+        }
+
+    }
+
+
+
+    private fun onInclusiveSignalChanged(part: Int, value: Int) {
+        when (part) {
+            IPart.HEAD -> doUpdate(_headDoor, value)
+            IPart.TAIL -> doUpdate(_tailDoor, value)
+            else -> {}
+        }
+    }
+
+    private fun onWindowSignalChanged(part: Int, degree: Int) {
+        val value = ((degree * -40).toFloat() / 100).toInt()
+        when (part) {
+            IPart.L_F -> doUpdate(_lfWindow, value)
+            IPart.R_F -> doUpdate(_rfWindow, value)
+            IPart.L_B -> doUpdate(_lrWindow, value)
+            IPart.R_B -> doUpdate(_rrWindow, value)
+            else -> {}
+        }
+    }
+
+    private fun onDoorSignalChanged(part: Int, value: Int) {
+        when (part) {
+            IPart.L_F -> doUpdate(_lfDoor, value)
+            IPart.R_F -> doUpdate(_rfDoor, value)
+            IPart.L_B -> doUpdate(_lrDoor, value)
+            IPart.R_B -> doUpdate(_rrDoor, value)
+            else -> {}
+        }
+    }
 
 
 }

@@ -8,6 +8,7 @@ import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.annotation.Model
 import com.chinatsp.vehicle.controller.bean.CarCmd
+import timber.log.Timber
 import java.util.concurrent.atomic.AtomicInteger
 
 /**

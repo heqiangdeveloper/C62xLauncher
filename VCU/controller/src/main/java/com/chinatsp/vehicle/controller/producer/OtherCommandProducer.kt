@@ -7,7 +7,6 @@ import com.chinatsp.vehicle.controller.semantic.Slots
 import com.chinatsp.vehicle.controller.utils.Keywords
 import com.chinatsp.vehicle.controller.utils.Keywords.Companion.HEAT
 import com.chinatsp.vehicle.controller.utils.Keywords.Companion.WHEELS
-import com.chinatsp.vehicle.controller.utils.Keywords.Companion.WIPERS
 
 /**
  * @author : luohong
@@ -46,11 +45,11 @@ class OtherCommandProducer : ICommandProducer {
         if (null == command) {
             command = attemptFuelConsumptionCommand(slots)
         }
-        if(null == command){
+        if (null == command) {
             command = attemptTirePressureCommand(slots)
         }
-        if(null == command){
-            command =attemptRemainingCommand(slots)
+        if (null == command) {
+            command = attemptRemainingCommand(slots)
         }
         return command
     }
@@ -126,9 +125,9 @@ class OtherCommandProducer : ICommandProducer {
             val command = CarCmd(action = Action.QUERY_INFO, model = Model.GLOBAL)
             command.car = ICar.WIPER
             command.slots = slots
-            if(Keywords.KM == slots.text.substring(slots.text.length-2)){//公里
+            if (Keywords.KM == slots.text.substring(slots.text.length - 2)) {//公里
                 command.act = IAct.ENDURANCE_MILEAGE_KM
-            }else{
+            } else {
                 command.act = IAct.ENDURANCE_MILEAGE
             }
             return command
@@ -137,27 +136,27 @@ class OtherCommandProducer : ICommandProducer {
     }
 
     private fun attemptWiperCommand(slots: Slots): CarCmd? {
-        if (isContains(slots.name, WIPERS)) {
-            var part = IPart.VOID
-            if (slots.name.contains("前")) {
-                part = part or IPart.HEAD
-            }
-            if (slots.name.contains("后")) {
-                part = part or IPart.TAIL
-            }
-            if (IPart.VOID == part) {
-                part = IPart.HEAD or IPart.TAIL
-            }
-            val action = obtainSwitchAction(slots.operation)
-            if (Action.VOID != action) {
-                val command = CarCmd(action = action, model = Model.ACCESS_WINDOW)
-                command.part = part
-                command.car = ICar.WIPER
-                command.slots = slots
-                return command
-            }
+        var car = ICar.VOID
+        var part = IPart.VOID
+        var action = Action.VOID
+        if (isContains(slots.name, Keywords.WIPERS)) {
+            car = ICar.WIPER
+            part = analysisPart(slots)
+            action = obtainSwitchAction(slots.operation)
+
+        } else if (isContains(slots.name, Keywords.WASHING)) {
+            car = ICar.WASHING
+            part = analysisPart(slots)
+            action = obtainSwitchAction(slots.operation)
         }
-        return null
+        if (Action.VOID == action) {
+            return null
+        }
+        val command = CarCmd(action = action, model = Model.ACCESS_WINDOW)
+        command.car = car
+        command.part = part
+        command.slots = slots
+        return command
     }
 
     private fun attemptWheelCommand(slots: Slots): CarCmd? {
@@ -181,6 +180,20 @@ class OtherCommandProducer : ICommandProducer {
             return Action.TURN_OFF
         }
         return Action.VOID
+    }
+
+    private fun analysisPart(slots: Slots): Int {
+        var part = IPart.VOID
+        if (slots.name.contains("前")) {
+            part = part or IPart.HEAD
+        }
+        if (slots.name.contains("后")) {
+            part = part or IPart.TAIL
+        }
+        if (IPart.VOID == part) {
+            part = IPart.HEAD or IPart.TAIL
+        }
+        return part
     }
 
     private fun isContains(value: String, array: Array<String>): Boolean {

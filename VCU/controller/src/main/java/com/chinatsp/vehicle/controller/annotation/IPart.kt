@@ -18,7 +18,9 @@ import androidx.annotation.IntDef
     IPart.R_B,
     IPart.TAIL,
     IPart.TOP,
-    IPart.BOTTOM
+    IPart.BOTTOM,
+    IPart.RANDOM,
+    IPart.VAGUE
 )
 @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
 annotation class IPart {
@@ -59,5 +61,15 @@ annotation class IPart {
          * 方向-底 (遮阳帘的方向)
          */
         const val BOTTOM = 0x1 shl 7
+
+        /**
+         * 随机方位
+         */
+        const val RANDOM = 0x1 shl 8
+
+        /**
+         * 不明确方位
+         */
+        const val VAGUE = 0x1 shl 9
     }
 }

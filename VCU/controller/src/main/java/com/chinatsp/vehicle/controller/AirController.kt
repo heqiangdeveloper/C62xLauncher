@@ -21,72 +21,49 @@ import org.json.JSONObject
 object AirController : IController {
     private const val DRIVER = "主驾"
     private const val COPILOT = "副驾"
-
     //内循环
     private const val MODE_RECYCLE_IN = "内循环"
-
     //外循环
     private const val MODE_RECYCLE_OUT = "外循环"
-
     //自动循环
     private const val MODE_RECYCLE_AUTO = "自动循环"
-
-
     private val COLD_MODES = arrayOf("制冷", "压缩机")
-
     private val HEAT_MODES = arrayOf("制热", "加热")
-
     //太热了
     private const val MINUS_MORE = "MINUS_MORE"
-
     //有点热
     private const val MINUS_LITTLE = "MINUS_LITTLE"
-
     // 太冷了
     private const val PLUS_MORE = "PLUS_MORE"
-
     //有点冷
     private const val PLUS_LITTLE = "PLUS_LITTLE"
-
     // 温度增高/风量增高
     private const val PLUS = "PLUS"
-
     // 温度降低/风量降低
     private const val MINUS = "MINUS"
-
 //    // 温度设为中档
 //    private const val MEDIUM = "MEDIUM"
-
     // 温度最高/风量最高
     private const val MAX = "MAX"
-
     // 温度最低
     private const val MIN = "MIN"
-
 //    //中风
 //    private const val WIND_CENTER = "中风"
-
     // 升高两度参数
     private const val REF_CUR = "CUR"
     private const val REF_ZERO = "ZERO"
-
     //面
     private const val AIR_FLOW_FACE = "面"
-
     //脚
     private const val AIR_FLOW_FOOT = "脚"
-
     //吹面吹脚
     private const val AIR_FLOW_FACE_FOOT = "吹面吹脚"
-
     // 除霜
     private val DOUBLE_DEFROST = arrayOf("除霜", "除雾")
     private val FRONT_DEFROST = arrayOf("前除霜", "前除雾")
     private val REAR_DEFROST = arrayOf("后除霜", "后除雾")
     private const val PURIFIER = "空气净化器"
-//    private const val POST_DEFROST1 = "后除霜"
-//    private const val POST_DEFROST2 = "外后视镜"
-//    private const val POST_DEFROST3 = "后视镜加热"
+
 
     override fun doVoiceController(
         controller: IOuterController,
@@ -356,6 +333,7 @@ object AirController : IController {
                 command.step = step
                 command.air = IAir.AIR_TEMP
                 command.part = obtainDirection(slots.direction)
+                command.soundDirection = obtainDirection(slots.user, true)
             }
         } else {
             LogManager.e("temperature", "temperature----$value")
@@ -381,6 +359,7 @@ object AirController : IController {
                 command.step = step
                 command.air = IAir.AIR_TEMP
                 command.part = obtainDirection(slots.direction)
+                command.soundDirection = obtainDirection(slots.user, true)
             }
         }
         return command
@@ -412,6 +391,7 @@ object AirController : IController {
                 command.step = step
                 command.air = IAir.AIR_WIND
                 command.part = obtainDirection(slots.direction)
+                command.soundDirection = obtainDirection(slots.user, true)
             }
         } else {
             val json = JSONObject(value)
@@ -436,6 +416,7 @@ object AirController : IController {
                 command.step = step
                 command.air = IAir.AIR_WIND
                 command.part = obtainDirection(slots.direction)
+                command.soundDirection = obtainDirection(slots.user, true)
             }
         }
         return command
@@ -450,13 +431,24 @@ object AirController : IController {
         }
     }
 
-    private fun obtainDirection(value: String?): Int {
-        if (DRIVER == value) {
-            return IPart.L_F
+    private fun obtainDirection(value: String?, isSound: Boolean = false): Int {
+        if (!isSound) {
+            if (DRIVER == value) {
+                return IPart.L_F
+            }
+            if (COPILOT == value) {
+                return IPart.R_F
+            }
+            return IPart.L_F or IPart.R_F
+        } else {
+            if ("left" == value) {
+                return IPart.L_F
+            }
+            if ("right" == value) {
+                return IPart.R_F
+            }
+            return IPart.VOID
         }
-        if (COPILOT == value) {
-            return IPart.R_F
-        }
-        return IPart.L_F or IPart.R_F
     }
+
 }

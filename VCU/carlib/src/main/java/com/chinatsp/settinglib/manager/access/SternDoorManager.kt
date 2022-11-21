@@ -3,14 +3,14 @@ package com.chinatsp.settinglib.manager.access
 import android.car.VehicleAreaType
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
-import android.car.hardware.hvac.CarHvacManager
 import com.chinatsp.settinglib.AppExecutors
+import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.IProgressManager
 import com.chinatsp.settinglib.bean.CommandParcel
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
-import com.chinatsp.settinglib.listener.IAccessListener
+import com.chinatsp.settinglib.listener.ISignalListener
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.manager.*
 import com.chinatsp.settinglib.optios.Progress
@@ -21,7 +21,6 @@ import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.annotation.*
 import com.chinatsp.vehicle.controller.bean.CarCmd
 import com.chinatsp.vehicle.controller.utils.Keywords
-import timber.log.Timber
 import java.lang.ref.WeakReference
 
 /**
@@ -33,7 +32,8 @@ import java.lang.ref.WeakReference
  */
 
 
-class SternDoorManager private constructor() : BaseManager(), IOptionManager, IProgressManager, ICmdExpress {
+class SternDoorManager private constructor() : BaseManager(), IOptionManager, IProgressManager,
+    IAccessManager, ICmdExpress {
 
     companion object : ISignal {
         override val TAG: String = SternDoorManager::class.java.simpleName
@@ -129,8 +129,8 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
         }
     }
 
-    override fun doGetVolume(type: Progress): Volume? {
-        return when (type) {
+    override fun doGetVolume(progress: Progress): Volume? {
+        return when (progress) {
             Progress.TRUNK_STOP_POSITION -> {
                 stopPosition
             }
@@ -138,10 +138,10 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
         }
     }
 
-    override fun doSetVolume(type: Progress, position: Int): Boolean {
-        return when (type) {
+    override fun doSetVolume(progress: Progress, position: Int): Boolean {
+        return when (progress) {
             Progress.TRUNK_STOP_POSITION -> {
-                writeProperty(type.set.signal, position, type.set.origin)
+                writeProperty(progress.set.signal, position + 1, progress.set.origin)
             }
             else -> false
         }
@@ -185,52 +185,48 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
         } ?: false
     }
 
-    override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
-        when (property.propertyId) {
+    override fun onCabinPropertyChanged(p: CarPropertyValue<*>) {
+        when (p.propertyId) {
             SwitchNode.AS_STERN_ELECTRIC.get.signal -> {
-                onSwitchChanged(SwitchNode.AS_STERN_ELECTRIC, electricSwitchState, property)
+                onSwitchChanged(SwitchNode.AS_STERN_ELECTRIC, electricSwitchState, p)
             }
             SwitchNode.STERN_LIGHT_ALARM.get.signal -> {
-                onSwitchChanged(SwitchNode.STERN_LIGHT_ALARM, lightAlarmSwitchState, property)
+                onSwitchChanged(SwitchNode.STERN_LIGHT_ALARM, lightAlarmSwitchState, p)
             }
             SwitchNode.STERN_AUDIO_ALARM.get.signal -> {
-                onSwitchChanged(SwitchNode.STERN_AUDIO_ALARM, audioAlarmSwitchState, property)
+                onSwitchChanged(SwitchNode.STERN_AUDIO_ALARM, audioAlarmSwitchState, p)
             }
             RadioNode.GEARS.get.signal -> {
-                onRadioChanged(RadioNode.GEARS, gearsState, property)
+                onRadioChanged(RadioNode.GEARS, gearsState, p)
             }
             RadioNode.STERN_SMART_ENTER.get.signal -> {
-                onRadioChanged(RadioNode.STERN_SMART_ENTER, sternSmartEnter, property)
+                onRadioChanged(RadioNode.STERN_SMART_ENTER, sternSmartEnter, p)
             }
             Progress.TRUNK_STOP_POSITION.get.signal -> {
-                doUpdateProgress(stopPosition, property.value as Int, true, this::doProgressChanged)
+                doUpdateProgress(stopPosition, p.value as Int, true, this::doProgressChanged)
             }
-
             CarCabinManager.ID_HOOD_LID_OPEN -> {
-                onDoorStatusChanged(IPart.HEAD, Model.ACCESS_STERN, property.value)
+                onSignalChanged(IPart.HEAD, Model.ACCESS_STERN, p.propertyId,  p.value as Int)
             }
             CarCabinManager.ID_TRUNK_LID_OPEN -> {
-                onDoorStatusChanged(IPart.TAIL, Model.ACCESS_STERN, property.value)
+                onSignalChanged(IPart.TAIL, Model.ACCESS_STERN, p.propertyId,  p.value as Int)
             }
             else -> {}
         }
     }
 
-    private fun onDoorStatusChanged(@IPart part: Int, @Model model: Int, value: Any?) {
-        if (value is Int) {
-            val readLock = readWriteLock.readLock()
-            try {
-                readLock.lock()
-                listenerStore.forEach { (_, ref) ->
-                    val listener = ref.get()
-                    if (null != listener && listener is IAccessListener) {
-                        listener.onAccessChanged(part, model, value)
-                        Timber.d("onDoorStatusChanged part:$part, model:$model, value:$value, listener:${listener::class.java.simpleName}")
-                    }
+    private fun onSignalChanged(@IPart part: Int, @Model model: Int, signal: Int, value: Int) {
+        val readLock = readWriteLock.readLock()
+        try {
+            readLock.lock()
+            listenerStore.forEach { (_, ref) ->
+                val listener = ref.get()
+                if (null != listener && listener is ISignalListener) {
+                    listener.onSignalChanged(part, model, signal, value)
                 }
-            } finally {
-                readLock.unlock()
             }
+        } finally {
+            readLock.unlock()
         }
     }
 
@@ -295,7 +291,6 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
                 parcel.callback?.onCmdHandleResult(command)
             }
         } else if (Action.CLOSE == command.action) {
-            val value = 0x1
             val closing = isStandard(state, 0x4)
             if (closing) {
                 command.message = "${name}关闭中"
@@ -448,6 +443,21 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
                 return
             }
         }
+    }
+
+    override fun obtainAccessState(part: Int, model: Int): Int? {
+        if (Model.ACCESS_STERN != model) {
+            return null
+        }
+        val signal = when (part) {
+            IPart.HEAD -> CarCabinManager.ID_HOOD_LID_OPEN
+            IPart.TAIL -> CarCabinManager.ID_TRUNK_LID_OPEN
+            else -> Constant.INVALID
+        }
+        if (Constant.INVALID == signal) {
+            return null
+        }
+        return readIntProperty(signal, Origin.CABIN)
     }
 
 }

@@ -15,6 +15,7 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -104,6 +105,8 @@ public class ColorPickerView extends View {
     private int topIndex = 0;//记录上一次颜色段
     private List<Color> colorInfoList;
     private boolean isTouchEvent = false;//是否是按下还是抬起
+
+    private long touchTime = 0;
 
     /**
      * 控件方向
@@ -443,10 +446,10 @@ public class ColorPickerView extends View {
                     isTouchEvent = true;
                     colorPickerChangeListener.onColorChanged(this, currentColor, index);
                 }
-
             }
 
         } else if (event.getActionMasked() == MotionEvent.ACTION_UP) { //手抬起
+            touchTime = SystemClock.elapsedRealtime();
             if (colorPickerChangeListener != null) {
                 colorPickerChangeListener.onStopTrackingTouch(this);
                 calcuColor();
@@ -646,7 +649,7 @@ public class ColorPickerView extends View {
     }
 
     public void setIndicatorIndex(int index) {
-        if (isTouchEvent) {
+        if (isTouchEvent || isInDelayTime()) {
             return;
         }
         if (index <= 0) {
@@ -660,10 +663,14 @@ public class ColorPickerView extends View {
         } else {
             curX = x + 30;
         }
+        boolean isSameIndex = pickerIndex == index;
         this.pickerIndex = index;
         Color color = colorInfoList.get(index - 1);
         this.mIndicatorColor = Color.rgb((int) color.red(), (int) color.green(), (int) color.blue());
         needReDrawIndicator = true;
+        if (isSameIndex) {
+            return;
+        }
         invalidate();
     }
 
@@ -671,9 +678,18 @@ public class ColorPickerView extends View {
         Color color = colorInfoList.get(index - 1);
         this.mIndicatorColor = Color.rgb((int) color.red(), (int) color.green(), (int) color.blue());
         needReDrawIndicator = true;
+        boolean isSameIndex = pickerIndex == index;
         this.pickerIndex = index;
         this.topIndex = index;
+        if (isSameIndex || isInDelayTime()) {
+            return;
+        }
         invalidate();
+    }
+
+    private boolean isInDelayTime() {
+        long current = SystemClock.elapsedRealtime();
+        return Math.abs(current - touchTime) < 300;
     }
 
     public void setIndicatorColor(int color) {

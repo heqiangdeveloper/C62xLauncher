@@ -132,8 +132,7 @@ enum class Progress(
         def = 0x0C,
         get = CanLocate(
             origin = Origin.ATTR,
-            signal = AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE
-        )
+            signal = AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE)
     ),
 
     VOICE(
@@ -170,7 +169,41 @@ enum class Progress(
         def = 75,
         get = CanLocate(signal = CarCabinManager.ID_PTM_POSITION_STATUS),
         set = CanLocate(signal = CarCabinManager.ID_PTM_STP_POSN_SET)
-    );
+    ),
+
+    WIN_L_F_DEGREE(
+        min = 0x00,
+        max = 0x64,
+        def = 0x00,
+        get = CanLocate(signal = CarCabinManager.ID_BCM_POS_VIT_FL),
+        set = CanLocate(signal = -1)
+    ),
+
+    WIN_L_B_DEGREE(
+        min = 0x00,
+        max = 0x64,
+        def = 0x00,
+        get = CanLocate(signal = CarCabinManager.ID_BCM_POS_VIT_RL),
+        set = CanLocate(signal = -1)
+    ),
+
+    WIN_R_F_DEGREE(
+        min = 0x00,
+        max = 0x64,
+        def = 0x00,
+        get = CanLocate(signal = CarCabinManager.ID_BCM_POS_VIT_FR),
+        set = CanLocate(signal = -1)
+    ),
+
+    WIN_R_B_DEGREE(
+        min = 0x00,
+        max = 0x64,
+        def = 0x00,
+        get = CanLocate(signal = CarCabinManager.ID_BCM_POS_VIT_RR),
+        set = CanLocate(signal = -1)
+    )
+
+    ;
 
 
     fun isValid(value: Int): Boolean = value in min..max

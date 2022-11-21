@@ -23,6 +23,7 @@ open class BaseCmd(
 
     var part: Int = IPart.VOID
 
+    var soundDirection = IPart.VOID
     /**
      * 增加 或 减少的步长
      * 当且仅池 action 为 Action.PLUS 或 Action.MINUS 时有效
@@ -36,8 +37,6 @@ open class BaseCmd(
     var value: Int = 1
 
     var option: Int = -1
-
-//    var expect: Int = -1
 
     var lfExpect: Int = -1
 
@@ -101,6 +100,7 @@ open class BaseCmd(
     fun fromParcel(parcel: Parcel): BaseCmd {
         status = parcel.readInt()
         part = parcel.readInt()
+        soundDirection = parcel.readInt()
         step = parcel.readInt()
         value = parcel.readInt()
         option = parcel.readInt()
@@ -127,6 +127,7 @@ open class BaseCmd(
         parcel.writeInt(status)
 
         parcel.writeInt(part)
+        parcel.writeInt(soundDirection)
         parcel.writeInt(step)
         parcel.writeInt(value)
         parcel.writeInt(option)

@@ -134,7 +134,7 @@ class AmbientLightingFragment :
     }
 
     private fun initViewLight() {
-        val color = colorList[binding.picker.pickerIndex]
+        val color = colorList[binding.picker.pickerIndex - 1]
         val colorId = Color.rgb(color.red().toInt(), color.green().toInt(), color.blue().toInt())
         if (VcuUtils.isCareLevel(Level.LEVEL3, expect = true)) {
             binding.lightingImage.setImageDrawable(activity?.let {

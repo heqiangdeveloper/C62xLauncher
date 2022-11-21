@@ -1,6 +1,7 @@
 package com.chinatsp.vehicle.controller.producer
 
 import android.text.TextUtils
+import com.chinatsp.vehicle.controller.AirController
 import com.chinatsp.vehicle.controller.LogManager
 import com.chinatsp.vehicle.controller.annotation.Action
 import com.chinatsp.vehicle.controller.annotation.ICar
@@ -78,8 +79,12 @@ class AccessCommandProducer : ICommandProducer {
             return null
         }
         var part = IPart.VOID
-        if (isMatch(Keywords.WINDOW_ALL, slots.name)) {
-            part = IPart.L_F or IPart.L_B or IPart.R_F or IPart.R_B
+        if (isMatch(Keywords.WINDOWS, slots.name)) {
+            part = if (slots.name.contains(Keywords.ALL)) {
+                IPart.L_F or IPart.L_B or IPart.R_F or IPart.R_B
+            } else {
+                IPart.L_F or IPart.L_B or IPart.R_F or IPart.R_B or IPart.VAGUE
+            }
         }
         if (IPart.VOID == part) {
             part = checkoutPart(slots.name, flag = false)
@@ -115,6 +120,7 @@ class AccessCommandProducer : ICommandProducer {
             command.value = value
             command.car = ICar.WINDOWS
             command.part = part
+            command.soundDirection = obtainDirection(slots.user)
             return command
         }
         return null
@@ -134,30 +140,37 @@ class AccessCommandProducer : ICommandProducer {
         if (Action.VOID == part) {
             return null
         }
-        val nameValue = slots.nameValue?.toString() ?: ""
-        var action = Action.VOID
         var value = -1
-        if (isLikeJson(nameValue)) {
-
-        } else {
-            when (nameValue) {
-                "MORE" -> action = Action.PLUS
-                "LITTLE" -> action = Action.MINUS
-                else -> {
-                    val pair = obtainDegree(nameValue)
-                    action = pair.first
-                    value = pair.second
-                }
-            }
+        var action = Action.VOID
+        val nameValue = slots.nameValue?.toString() ?: ""
+        if (Keywords.SKYLIGHT_UP == slots.name){
+            action = obtainSwitchAction(slots.operation, flag = false)
         }
         if (Action.VOID == action) {
-            action = obtainSwitchAction(slots.operation)
-        } else {
-            if (Action.PLUS == action || Action.MINUS == action || Action.FIXED == action || Action.MAX == action) {
-                action = Action.OPEN
+            if (isLikeJson(nameValue)) {
+
+            } else {
+                when (nameValue) {
+                    "MORE" -> action = Action.PLUS
+                    "LITTLE" -> action = Action.MINUS
+                    else -> {
+                        val pair = obtainDegree(nameValue)
+                        action = pair.first
+                        value = pair.second
+                    }
+                }
             }
-            if (Action.MIN == action) {
-                action = Action.CLOSE
+            if (Action.VOID == action) {
+                action = obtainSwitchAction(slots.operation)
+            } else {
+                if (Action.PLUS == action || Action.MINUS == action
+                    || Action.FIXED == action || Action.MAX == action
+                ) {
+                    action = Action.OPEN
+                }
+                if (Action.MIN == action) {
+                    action = Action.CLOSE
+                }
             }
         }
         if (Action.VOID != action) {
@@ -171,12 +184,12 @@ class AccessCommandProducer : ICommandProducer {
         return null
     }
 
-    private fun obtainSwitchAction(operation: String): Int {
+    private fun obtainSwitchAction(operation: String, flag: Boolean = true): Int {
         if (isMatch(Keywords.OPT_OPENS, operation)) {
-            return Action.OPEN
+            return if (flag) Action.OPEN else Action.TURN_ON
         }
         if (isMatch(Keywords.OPT_CLOSES, operation)) {
-            return Action.CLOSE
+            return if (flag) Action.CLOSE else Action.TURN_OFF
         }
         return Action.VOID
     }
@@ -217,6 +230,15 @@ class AccessCommandProducer : ICommandProducer {
         return Pair(action, value)
     }
 
+    private fun obtainDirection(value: String?): Int {
+        if ("left" == value) {
+            return IPart.L_F
+        }
+        if ("right" == value) {
+            return IPart.R_F
+        }
+        return IPart.VOID
+    }
 
     private fun checkoutPart(name: String, flag: Boolean = false): Int {
         var part = IPart.VOID
@@ -229,6 +251,8 @@ class AccessCommandProducer : ICommandProducer {
                 part = IPart.L_F or IPart.R_F
             } else if (isMatch(Keywords.B_WINDOW, name)) {
                 part = IPart.L_B or IPart.R_B
+            } else {
+                part = IPart.L_F or IPart.L_B or IPart.R_F or IPart.R_B or IPart.VAGUE
             }
         } else {
             if (isContains(name, Keywords.L_F)) {
@@ -247,6 +271,8 @@ class AccessCommandProducer : ICommandProducer {
                 part = part or IPart.L_F or IPart.R_F
             } else if (isContains(name, Keywords.B_R)) {
                 part = part or IPart.L_B or IPart.R_B
+            } else {
+                part = IPart.L_F or IPart.L_B or IPart.R_F or IPart.R_B or IPart.VAGUE
             }
         }
         return part

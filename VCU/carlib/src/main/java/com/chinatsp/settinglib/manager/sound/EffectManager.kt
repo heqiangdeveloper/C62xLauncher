@@ -304,11 +304,11 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    override fun doGetVolume(type: Progress): Volume? {
+    override fun doGetVolume(progress: Progress): Volume? {
         return null
     }
 
-    override fun doSetVolume(type: Progress, position: Int): Boolean {
+    override fun doSetVolume(progress: Progress, position: Int): Boolean {
         return false
     }
 

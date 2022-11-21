@@ -5,7 +5,6 @@ import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.power.CarPowerManager
 import android.os.SystemThirdScreenBA
 import com.chinatsp.settinglib.*
-import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.manager.BaseManager
@@ -13,7 +12,6 @@ import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.optios.Area
 import com.chinatsp.settinglib.optios.Progress
-import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import timber.log.Timber
@@ -148,8 +146,8 @@ class BrightnessManager : BaseManager(), IProgressManager, ISwitchManager {
         return Volume(type, type.min, type.max, value)
     }
 
-    override fun doGetVolume(type: Progress): Volume? {
-        return when (type) {
+    override fun doGetVolume(progress: Progress): Volume? {
+        return when (progress) {
             Progress.CONDITIONER_SCREEN_BRIGHTNESS -> {
                 acVolume
             }
@@ -164,16 +162,16 @@ class BrightnessManager : BaseManager(), IProgressManager, ISwitchManager {
         }
     }
 
-    override fun doSetVolume(type: Progress, position: Int): Boolean {
-        Timber.d("doSetVolume type:$type, position:$position")
-        return when (type) {
+    override fun doSetVolume(progress: Progress, position: Int): Boolean {
+        Timber.d("doSetVolume type:$progress, position:$position")
+        return when (progress) {
             Progress.CONDITIONER_SCREEN_BRIGHTNESS -> {
-                writeProperty(type.set.signal, position, type.set.origin)
+                writeProperty(progress.set.signal, position, progress.set.origin)
             }
             Progress.HOST_SCREEN_BRIGHTNESS -> {
                 var value = position
-                if (value < type.min) value = type.min
-                if (value > type.max) value = type.max
+                if (value < progress.min) value = progress.min
+                if (value > progress.max) value = progress.max
                 manager?.brightness = value * 10
                 Timber.e("====DARK_LIGHT_MODE===doSetVolume====value=$value, actual:${manager?.brightness}")
                 //iBAMode:白天黑夜模式，现传1就好, value：亮度值
@@ -185,7 +183,7 @@ class BrightnessManager : BaseManager(), IProgressManager, ISwitchManager {
                 true
             }
             Progress.METER_SCREEN_BRIGHTNESS -> {
-                writeProperty(type.set.signal, position, type.set.origin)
+                writeProperty(progress.set.signal, position, progress.set.origin)
             }
             else -> {
                 false

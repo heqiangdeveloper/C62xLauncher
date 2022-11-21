@@ -20,7 +20,8 @@ import androidx.annotation.IntDef
     ICar.DOORS,
     ICar.CHAIR,
     ICar.WIPER,
-    ICar.LAMPS
+    ICar.LAMPS,
+    ICar.WASHING
 )
 @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
 annotation class ICar {
@@ -71,5 +72,10 @@ annotation class ICar {
          * 灯光
          */
         const val LAMPS = 0x0D
+
+        /**
+         * 洗涤
+         */
+        const val WASHING = 0x0E
     }
 }

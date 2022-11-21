@@ -32,14 +32,10 @@ class AirSetter(val manager: ACManager, private val getter: AirGetter) {
      * @param expect 期望状态 true:表示开; false:表示关
      */
     fun doSwitchConditioner(expect: Boolean): Boolean {
-//        val actual = getter.isConditioner()
-//        val result = actual xor expect
-//        if (result) {
 //            空调系统状态按钮if not set ,the value of signal is 0x0(inactive)
 //            0x0: Inactive; 0x1: ON(not used); 0x2: OFF; 0x3: Not used
-            val value = if (expect) 0x1 else 0x2
-            hvacSignal(CarHvacManager.ID_HVAC_AVN_KEY_ON_OFF, value)
-//        }
+        val value = if (expect) 0x1 else 0x2
+        hvacSignal(CarHvacManager.ID_HVAC_AVN_KEY_ON_OFF, value)
         return true
     }
 
@@ -94,19 +90,14 @@ class AirSetter(val manager: ACManager, private val getter: AirGetter) {
     fun doUpdateTemp(@IPart part: Int, expect: Int, command: BaseCmd): Boolean {
         val lfAct = IPart.L_F == part
         LogManager.d("", "doUpdateTemp part:$part, lfAct:$lfAct, expect:$expect")
-//        val actual = if (lfAct) getter.getDriverTemperature() else getter.getCopilotTemperature()
-//        val result = actual != expect
-        val result = true
-        if (result) {
-            val signal = if (lfAct) {
-                CarHvacManager.ID_HVAC_AVN_KEY_TEMP_LEFT
-            } else {
-                CarHvacManager.ID_HVAC_AVN_KEY_TEMP_RIGHT
-            }
-            hvacSignal(signal, expect)
+        val signal = if (lfAct) {
+            CarHvacManager.ID_HVAC_AVN_KEY_TEMP_LEFT
+        } else {
+            CarHvacManager.ID_HVAC_AVN_KEY_TEMP_RIGHT
         }
+        hvacSignal(signal, expect)
         command.sent(part)
-        return result
+        return true
     }
 
     fun doUpdateTemperature(left: Int, right: Int, lfAct: Boolean, rfAct: Boolean): Boolean {

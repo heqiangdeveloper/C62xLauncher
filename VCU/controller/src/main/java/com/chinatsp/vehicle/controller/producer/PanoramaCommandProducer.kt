@@ -73,15 +73,18 @@ class PanoramaCommandProducer : ICommandProducer {
         LogManager.e("", "${slots.insType}, ${slots.text}")
         var action = Action.VOID
         val direction = slots.direction
-        val part = if (!TextUtils.isEmpty(direction)) {
+        var part = if (!TextUtils.isEmpty(direction)) {
             checkoutPart(direction)
         } else {
-            parsePartInText(slots.text)
+            analysisPartInText(slots.text)
         }
         if (Keywords.OPEN == slots.operation) {
             action = Action.CHANGED
         } else if (Keywords.VIEW_TRANS == slots.operation) {
             action = Action.CHANGED
+            if (IPart.VOID == part) {
+                part = IPart.RANDOM
+            }
         } else {
             if (contains(slots.text, "打开", "切换")) {
                 action = Action.CHANGED
@@ -95,7 +98,7 @@ class PanoramaCommandProducer : ICommandProducer {
         return null
     }
 
-    private fun parsePartInText(text: String) =
+    private fun analysisPartInText(text: String) =
         if (contains(text, "前摄像头", "前视角")) {
             IPart.HEAD
         } else if (contains(text, "后摄像头", "后视角")) {
@@ -109,37 +112,52 @@ class PanoramaCommandProducer : ICommandProducer {
         }
 
     private fun attemptModeCommand(slots: Slots): CarCmd? {
-        LogManager.e("", "attemptModeCommand text:${slots.text}")
-        if ("2D模式" == slots.text || "打开2D模式" == slots.text || "关闭3D模式" == slots.text) {
-            //切换到2D模式
-            val command = CarCmd(action = Action.OPTION, model = Model.PANORAMA)
-            command.value = Action.OPTION shl 1
-            return command
+        LogManager.e("", "attemptModeCommand text:${slots.text}, mode:${slots.mode}")
+        val value: Int
+        if (!TextUtils.isEmpty(slots.mode)) {
+            value = when (slots.mode) {
+                "2D" -> Action.OPTION shl 1
+                "3D" -> Action.OPTION shl 2
+                "原图" -> Action.OPTION shl 3
+                "原始" -> Action.OPTION shl 4
+                else -> Action.VOID
+            }
+        } else {
+            value = when (slots.text) {
+                "2D模式", "打开2D模式", "关闭3D模式" -> Action.OPTION shl 1 //切换到2D模式
+                "3D模式", "打开3D模式", "关闭2D模式" -> Action.OPTION shl 2 //切换到3D模式
+                "原图模式", "打开原图模式", "关闭原图模式" -> Action.OPTION shl 3 //切换到原图模式
+                "原始模式", "打开原始模式", "关闭原始模式" -> Action.OPTION shl 4 //切换到原始模式
+                else -> Action.VOID
+            }
         }
-        if ("3D模式" == slots.text || "打开3D模式" == slots.text || "关闭2D模式" == slots.text) {
-            //切换到3D模式
+        if (Action.VOID != value) {
             val command = CarCmd(action = Action.OPTION, model = Model.PANORAMA)
-            command.value = Action.OPTION shl 2
+            command.value = value
             return command
         }
         return null
     }
 
     private fun attemptSwitchCommand(slots: Slots): CarCmd? {
+        val model = Model.PANORAMA
+        var action: Int = Action.VOID
         if (Keywords.PANORAMA == slots.mode) {
-            val model = Model.PANORAMA
-            var action = Action.VOID
-            if (Keywords.OPEN == slots.operation) {
-                action = Action.TURN_ON
+            var operation = slots.operation
+            if (TextUtils.isEmpty(operation)) {
+                operation = ""
             }
-            if (Keywords.CLOSE == slots.operation) {
+            action = when (operation) {
+                Keywords.OPEN -> Action.TURN_ON
+                Keywords.CLOSE -> Action.TURN_OFF
+                else -> Action.VOID
+            }
+        } else {
+            if (contains(slots.text, "关闭", "退出")) {
                 action = Action.TURN_OFF
             }
-            return CarCmd(action = action, model = model)
         }
-        if (contains(slots.text, "关闭", "退出")) {
-            val model = Model.PANORAMA
-            val action = Action.TURN_OFF
+        if (Action.VOID != action) {
             return CarCmd(action = action, model = model)
         }
         return null
@@ -158,31 +176,31 @@ class PanoramaCommandProducer : ICommandProducer {
         return false
     }
 
-    private fun checkoutPart(name: String): Int {
+    private fun checkoutPart(direction: String): Int {
         var part = IPart.VOID
-        if (isContains(name, Keywords.L_F)) {
+        if (isContains(direction, Keywords.L_F)) {
             part = IPart.L_F
-        } else if (isContains(name, Keywords.L_R)) {
+        } else if (isContains(direction, Keywords.L_R)) {
             part = IPart.L_B
-        } else if (isContains(name, Keywords.R_F)) {
+        } else if (isContains(direction, Keywords.R_F)) {
             part = IPart.R_F
-        } else if (isContains(name, Keywords.R_R)) {
+        } else if (isContains(direction, Keywords.R_R)) {
             part = IPart.R_B
-        } else if (isContains(name, Keywords.L_C)) {
+        } else if (isContains(direction, Keywords.L_C)) {
             part = IPart.L_F or IPart.L_B
-        } else if (isContains(name, Keywords.R_C)) {
+        } else if (isContains(direction, Keywords.R_C)) {
             part = IPart.R_F or IPart.R_B
-        } else if (isContains(name, Keywords.F_R)) {
+        } else if (isContains(direction, Keywords.F_R)) {
             part = IPart.L_F or IPart.R_F
-        } else if (isContains(name, Keywords.B_R)) {
+        } else if (isContains(direction, Keywords.B_R)) {
             part = IPart.L_B or IPart.R_B
-        } else if (name.contains("前")) {
+        } else if (direction.contains("前")) {
             part = IPart.HEAD
-        } else if (name.contains("后")) {
+        } else if (direction.contains("后")) {
             part = IPart.TAIL
-        } else if (name.contains("左")) {
+        } else if (direction.contains("左")) {
             part = IPart.L_F or IPart.L_B
-        } else if (name.contains("右")) {
+        } else if (direction.contains("右")) {
             part = IPart.R_F or IPart.R_B
         }
         return part

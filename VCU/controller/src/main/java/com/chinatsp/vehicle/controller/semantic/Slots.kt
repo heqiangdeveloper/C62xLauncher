@@ -46,6 +46,9 @@ data class Slots(val serial: String) : Parcelable {
     var operation: String = ""
     var json: String = ""
 
+    var user: String = ""
+    var presetUser: String = ""
+
     constructor(parcel: Parcel): this("") {
         device = parcel.readString().toString()
         artist = parcel.readString().toString()
@@ -86,6 +89,9 @@ data class Slots(val serial: String) : Parcelable {
         text = parcel.readString().toString()
         operation = parcel.readString().toString()
         json = parcel.readString().toString()
+
+        user = parcel.readString().toString()
+        presetUser = parcel.readString().toString()
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -128,6 +134,9 @@ data class Slots(val serial: String) : Parcelable {
         parcel.writeString(text)
         parcel.writeString(operation)
         parcel.writeString(json)
+
+        parcel.writeString(user)
+        parcel.writeString(presetUser)
     }
 
     override fun describeContents(): Int {

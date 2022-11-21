@@ -20,6 +20,7 @@ import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.annotation.*
+import com.chinatsp.vehicle.controller.bean.BaseCmd
 import com.chinatsp.vehicle.controller.bean.CarCmd
 import timber.log.Timber
 
@@ -135,8 +136,8 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         }
     }
 
-    override fun doGetVolume(type: Progress): Volume? {
-        return when (type) {
+    override fun doGetVolume(progress: Progress): Volume? {
+        return when (progress) {
             Progress.SEAT_ONSET_TEMPERATURE -> {
                 seatHeatStartTemp
             }
@@ -144,10 +145,10 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         }
     }
 
-    override fun doSetVolume(type: Progress, position: Int): Boolean {
-        return when (type) {
+    override fun doSetVolume(progress: Progress, position: Int): Boolean {
+        return when (progress) {
             Progress.SEAT_ONSET_TEMPERATURE -> {
-                val result = writeProperty(seatHeatStartTemp, position)
+                val result = writeProperty(seatHeatStartTemp, position + 1)
                 if (result) {
                     VcuUtils.putInt(key = Constant.SEAT_HEAT_TEMP, value = position)
                     seatHeatStartTemp.pos = position
@@ -195,7 +196,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         return readIntProperty(signal, Origin.CABIN)
     }
 
-    private fun obtainChairVentilateLevel(@IPart part: Int): Int {
+    private fun obtainVentilateLevel(@IPart part: Int): Int {
 //        左前座椅通风状态 0x0: OFF; 0x1: Level 1; 0x2: Level 2; 0x3: Level 3
         val signal = when (part) {
             IPart.L_F -> CarCabinManager.ID_FSV_STATUS_FL
@@ -221,22 +222,22 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         return result
     }
 
-    private fun updateChairVentilateLevel(@IPart part: Int, expectLevel: Int): Boolean {
+    private fun updateVentilateLevel(@IPart part: Int, expectLevel: Int): Boolean {
 //        int类型数据 0x0:Inactive 0x1:OFF(default)
 //        0x2:Level 1; 0x3:Level 2; 0x4:Level 3
 //        0x5 ………… 0x7:reserved
-        val actualLevel = obtainChairVentilateLevel(part)
+        val actualLevel = obtainVentilateLevel(part)
         val result = expectLevel != (actualLevel + 1)
-//        if (result) {
-        val signal = CarCabinManager.ID_HUM_SEAT_VENT_POS
-        val areaValue = obtainChairAreaSignal(part)
-        writeProperty(signal, expectLevel, Origin.CABIN, areaValue)
-//        }
+        if (result) {
+            val signal = CarCabinManager.ID_HUM_SEAT_VENT_POS
+            val areaValue = obtainChairAreaSignal(part)
+            writeProperty(signal, expectLevel, Origin.CABIN, areaValue)
+        }
         return result
     }
 
     private fun updateChairKneadLevel(@IPart part: Int, expectLevel: Int): Boolean {
-        val actualLevel = obtainChairKneadLevel(part)
+        val actualLevel = obtainKneadLevel(part)
         val result = expectLevel != (actualLevel + 1)
         if (result) {
             val setSignal = obtainChairKneadLevelSetSignal(part)
@@ -259,7 +260,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         }
     }
 
-    private fun obtainChairKneadLevel(@IPart part: Int): Int {
+    private fun obtainKneadLevel(@IPart part: Int): Int {
         val signal = when (part) {
             IPart.L_F -> CarCabinManager.ID_DRV_SEAT_LVL_SET_STS1
             IPart.R_F -> CarCabinManager.ID_PASS_SEAT_LVL_SET_STS
@@ -277,114 +278,156 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
 
     }
 
-    private fun obtainKneadLevel (
-        @IPart part: Int, minLevel: Int, maxLevel: Int, offLevel: Int, step: Int): Int {
-        val value = obtainChairKneadLevel(part) + 1
-        val expect = if (offLevel == value) {
-            minLevel
-        } else {
-            value + step
-        }
+    private fun obtainKneadLevel(
+        @IPart part: Int, minLevel: Int, maxLevel: Int, offLevel: Int, step: Int,
+    ): Int {
+        val value = obtainKneadLevel(part) + 1
+        val expect = if (offLevel == value) minLevel else value + step
         Timber.e("obtainKneadLevel--value:$value, step:${step}, expect:$expect")
         return calibrationValue(expect, minLevel, maxLevel)
+    }
+
+    private fun obtainNextMode(@IPart part: Int, min: Int, max: Int, up: Boolean = true): Int {
+        val value = obtainKneadMode(part) + 1
+        var expect = if (up) value + 1 else value - 1
+        if (expect < min) expect = max
+        if (expect > max) expect = min
+        Timber.e("obtainNextMode--value:$value, expect:$expect")
+        return expect
     }
 
     private fun doControlChairKnead(parcel: CommandParcel) {
         val minLevel = 0x2
         val maxLevel = 0x4
         val offLevel = 0x5
-        var expectLevel: Int
-        var lfLevel = Constant.INVALID
-        var lbLevel = Constant.INVALID
-        var rfLevel = Constant.INVALID
-        var rbLevel = Constant.INVALID
         val callback = parcel.callback
         val command = parcel.command as CarCmd
-        val lfAct = IPart.L_F == (IPart.L_F and command.part)
-        val lbAct = IPart.L_B == (IPart.L_B and command.part)
-        val rfAct = IPart.R_F == (IPart.R_F and command.part)
-        val rbAct = IPart.R_B == (IPart.R_B and command.part)
+        var lfAct = IPart.L_F == (IPart.L_F and command.part)
+        var lbAct = IPart.L_B == (IPart.L_B and command.part)
+        var rfAct = IPart.R_F == (IPart.R_F and command.part)
+        var rbAct = IPart.R_B == (IPart.R_B and command.part)
+        val vague = IPart.VAGUE == (IPart.VAGUE and command.part)
+        if (vague && IPart.VOID != command.soundDirection) {
+            if (IPart.L_F == command.soundDirection) {
+                rfAct = false
+                lbAct = false
+                rbAct = false
+            } else {
+                lfAct = false
+                lbAct = false
+                rbAct = false
+            }
+        }
         if (IStatus.INIT == command.status) {
+            var expect: Int
+            parcel.retryCount = 2
+            command.resetSent(IPart.L_F)
             if (Action.TURN_ON == command.action) {
-                expectLevel = maxLevel
-                if (lfAct) lfLevel = expectLevel
-                if (lbAct) lbLevel = expectLevel
-                if (rfAct) rfLevel = expectLevel
-                if (rbAct) rbLevel = expectLevel
+                expect = maxLevel
+                if (lfAct) command.lfExpect = expect
+                if (lbAct) command.lbExpect = expect
+                if (rfAct) command.rfExpect = expect
+                if (rbAct) command.rbExpect = expect
             }
             if (Action.TURN_OFF == command.action) {
-                expectLevel = offLevel
-                if (lfAct) lfLevel = expectLevel
-                if (lbAct) lbLevel = expectLevel
-                if (rfAct) rfLevel = expectLevel
-                if (rbAct) rbLevel = expectLevel
+                expect = offLevel
+                if (lfAct) command.lfExpect = expect
+                if (lbAct) command.lbExpect = expect
+                if (rfAct) command.rfExpect = expect
+                if (rbAct) command.rbExpect = expect
             }
             if (Action.PLUS == command.action) {
                 val step = command.step
                 if (lfAct) {
-                    lfLevel = obtainKneadLevel(IPart.L_F, minLevel, maxLevel, offLevel, step)
+                    command.lfExpect =
+                        obtainKneadLevel(IPart.L_F, minLevel, maxLevel, offLevel, step)
                 }
                 if (lbAct) {
-                    lbLevel = obtainKneadLevel(IPart.L_B, minLevel, maxLevel, offLevel, step)
+                    command.lbExpect =
+                        obtainKneadLevel(IPart.L_B, minLevel, maxLevel, offLevel, step)
                 }
                 if (rfAct) {
-                    rfLevel = obtainKneadLevel(IPart.R_F, minLevel, maxLevel, offLevel, step)
+                    command.rfExpect =
+                        obtainKneadLevel(IPart.R_F, minLevel, maxLevel, offLevel, step)
                 }
                 if (rbAct) {
-                    rbLevel = obtainKneadLevel(IPart.R_B, minLevel, maxLevel, offLevel, step)
+                    command.rbExpect =
+                        obtainKneadLevel(IPart.R_B, minLevel, maxLevel, offLevel, step)
                 }
             }
             if (Action.MINUS == command.action) {
                 val step = command.step * -1
                 if (lfAct) {
-                    lfLevel = obtainKneadLevel(IPart.L_F, minLevel, maxLevel, offLevel, step)
+                    command.lfExpect =
+                        obtainKneadLevel(IPart.L_F, minLevel, maxLevel, offLevel, step)
                 }
                 if (lbAct) {
-                    lbLevel = obtainKneadLevel(IPart.L_B, minLevel, maxLevel, offLevel, step)
+                    command.lbExpect =
+                        obtainKneadLevel(IPart.L_B, minLevel, maxLevel, offLevel, step)
                 }
                 if (rfAct) {
-                    rfLevel = obtainKneadLevel(IPart.R_F, minLevel, maxLevel, offLevel, step)
+                    command.rfExpect =
+                        obtainKneadLevel(IPart.R_F, minLevel, maxLevel, offLevel, step)
                 }
                 if (rbAct) {
-                    rbLevel = obtainKneadLevel(IPart.R_B, minLevel, maxLevel, offLevel, step)
+                    command.rbExpect =
+                        obtainKneadLevel(IPart.R_B, minLevel, maxLevel, offLevel, step)
                 }
             }
             if (Action.MIN == command.action) {
-                expectLevel = minLevel
-                if (lfAct) lfLevel = expectLevel
-                if (lbAct) lbLevel = expectLevel
-                if (rfAct) rfLevel = expectLevel
-                if (rbAct) rbLevel = expectLevel
+                expect = minLevel
+                if (lfAct) command.lfExpect = expect
+                if (lbAct) command.lbExpect = expect
+                if (rfAct) command.rfExpect = expect
+                if (rbAct) command.rbExpect = expect
             }
             if (Action.MAX == command.action) {
-                expectLevel = maxLevel
-                if (lfAct) lfLevel = expectLevel
-                if (lbAct) lbLevel = expectLevel
-                if (rfAct) rfLevel = expectLevel
-                if (rbAct) rbLevel = expectLevel
+                expect = maxLevel
+                if (lfAct) command.lfExpect = expect
+                if (lbAct) command.lbExpect = expect
+                if (rfAct) command.rfExpect = expect
+                if (rbAct) command.rbExpect = expect
             }
             if (Action.FIXED == command.action) {
-                expectLevel = calibrationValue(command.value, minLevel, maxLevel)
-                if (lfAct) lfLevel = expectLevel
-                if (lbAct) lbLevel = expectLevel
-                if (rfAct) rfLevel = expectLevel
-                if (rbAct) rbLevel = expectLevel
+                expect = calibrationValue(command.value, minLevel, maxLevel)
+                if (lfAct) command.lfExpect = expect
+                if (lbAct) command.lbExpect = expect
+                if (rfAct) command.rfExpect = expect
+                if (rbAct) command.rbExpect = expect
             }
-            command.lfExpect = lfLevel
-            command.rfExpect = rfLevel
-            command.lbExpect = lbLevel
-            command.rbExpect = rbLevel
         }
-        lfLevel = command.lfExpect
-        rfLevel = command.rfExpect
-        lbLevel = command.lbExpect
-        rbLevel = command.rbExpect
-        val lfSend = if (lfAct) updateChairKneadLevel(IPart.L_F, lfLevel) else false
-        val lbSend = if (lbAct) updateChairKneadLevel(IPart.L_B, lbLevel) else false
-        val rfSend = if (rfAct) updateChairKneadLevel(IPart.R_F, rfLevel) else false
-        val rbSend = if (rbAct) updateChairKneadLevel(IPart.R_B, rbLevel) else false
+        val lfLevel = command.lfExpect
+        val rfLevel = command.rfExpect
+        val lbLevel = command.lbExpect
+        val rbLevel = command.rbExpect
+        val lfActual = if (lfAct) obtainKneadLevel(IPart.L_F) + 1 else lfLevel
+        val lBActual = if (lbAct) obtainKneadLevel(IPart.L_B) + 1 else lbLevel
+        val rfActual = if (rfAct) obtainKneadLevel(IPart.R_F) + 1 else rfLevel
+        val rbActual = if (rbAct) obtainKneadLevel(IPart.R_B) + 1 else rbLevel
+        val values = mutableListOf(0x1, 0x1, 0x1, 0x1)
+        var isSend = false
+        if (lfAct && lfLevel != lfActual) {
+            values[0] = lfLevel
+            isSend = true
+        }
+        if (rfAct && rfLevel != rfActual) {
+            values[1] = rfLevel
+            isSend = true
+        }
+        if (lbAct && lbLevel != lBActual) {
+            values[2] = lbLevel
+            isSend = true
+        }
+        if (rbAct && rbLevel != rbActual) {
+            values[3] = rbLevel
+            isSend = true
+        }
+        if (isSend && !command.isSent()) {
+            val signal = CarCabinManager.ID_HUM_SEATMASSLVL_RL_RR
+            writeProperty(signal, values.toIntArray(), Origin.CABIN)
+            command.sent()
+        }
         command.status = IStatus.RUNNING
-        val isSend = lfSend || lbSend || rfSend || rbSend
         if (!parcel.isRetry() || !isSend) {
             hint(lfAct, lbAct, rfAct, rbAct, lfLevel, rfLevel, lbLevel, rbLevel,
                 offLevel, minLevel, maxLevel, command, isSend, "按摩")
@@ -394,7 +437,128 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         }
     }
 
-//        驾驶员座椅按摩模式设置[0x1,-1,0x0,0xF] 0x0: Inactive; 0x1: No Action
+//    private fun doControlChairKnead(parcel: CommandParcel) {
+//        val minLevel = 0x2
+//        val maxLevel = 0x4
+//        val offLevel = 0x5
+//        var expectLevel: Int
+//        var lfLevel = Constant.INVALID
+//        var lbLevel = Constant.INVALID
+//        var rfLevel = Constant.INVALID
+//        var rbLevel = Constant.INVALID
+//        val callback = parcel.callback
+//        val command = parcel.command as CarCmd
+//        val lfAct = IPart.L_F == (IPart.L_F and command.part)
+//        val lbAct = IPart.L_B == (IPart.L_B and command.part)
+//        val rfAct = IPart.R_F == (IPart.R_F and command.part)
+//        val rbAct = IPart.R_B == (IPart.R_B and command.part)
+//        if (IStatus.INIT == command.status) {
+//            command.resetSent(IPart.L_F, sendCount = 2)
+//            command.resetSent(IPart.L_B, sendCount = 2)
+//            command.resetSent(IPart.R_F, sendCount = 2)
+//            command.resetSent(IPart.R_B, sendCount = 2)
+//            if (Action.TURN_ON == command.action) {
+//                expectLevel = maxLevel
+//                if (lfAct) lfLevel = expectLevel
+//                if (lbAct) lbLevel = expectLevel
+//                if (rfAct) rfLevel = expectLevel
+//                if (rbAct) rbLevel = expectLevel
+//            }
+//            if (Action.TURN_OFF == command.action) {
+//                expectLevel = offLevel
+//                if (lfAct) lfLevel = expectLevel
+//                if (lbAct) lbLevel = expectLevel
+//                if (rfAct) rfLevel = expectLevel
+//                if (rbAct) rbLevel = expectLevel
+//            }
+//            if (Action.PLUS == command.action) {
+//                val step = command.step
+//                if (lfAct) {
+//                    lfLevel = obtainKneadLevel(IPart.L_F, minLevel, maxLevel, offLevel, step)
+//                }
+//                if (lbAct) {
+//                    lbLevel = obtainKneadLevel(IPart.L_B, minLevel, maxLevel, offLevel, step)
+//                }
+//                if (rfAct) {
+//                    rfLevel = obtainKneadLevel(IPart.R_F, minLevel, maxLevel, offLevel, step)
+//                }
+//                if (rbAct) {
+//                    rbLevel = obtainKneadLevel(IPart.R_B, minLevel, maxLevel, offLevel, step)
+//                }
+//            }
+//            if (Action.MINUS == command.action) {
+//                val step = command.step * -1
+//                if (lfAct) {
+//                    lfLevel = obtainKneadLevel(IPart.L_F, minLevel, maxLevel, offLevel, step)
+//                }
+//                if (lbAct) {
+//                    lbLevel = obtainKneadLevel(IPart.L_B, minLevel, maxLevel, offLevel, step)
+//                }
+//                if (rfAct) {
+//                    rfLevel = obtainKneadLevel(IPart.R_F, minLevel, maxLevel, offLevel, step)
+//                }
+//                if (rbAct) {
+//                    rbLevel = obtainKneadLevel(IPart.R_B, minLevel, maxLevel, offLevel, step)
+//                }
+//            }
+//            if (Action.MIN == command.action) {
+//                expectLevel = minLevel
+//                if (lfAct) lfLevel = expectLevel
+//                if (lbAct) lbLevel = expectLevel
+//                if (rfAct) rfLevel = expectLevel
+//                if (rbAct) rbLevel = expectLevel
+//            }
+//            if (Action.MAX == command.action) {
+//                expectLevel = maxLevel
+//                if (lfAct) lfLevel = expectLevel
+//                if (lbAct) lbLevel = expectLevel
+//                if (rfAct) rfLevel = expectLevel
+//                if (rbAct) rbLevel = expectLevel
+//            }
+//            if (Action.FIXED == command.action) {
+//                expectLevel = calibrationValue(command.value, minLevel, maxLevel)
+//                if (lfAct) lfLevel = expectLevel
+//                if (lbAct) lbLevel = expectLevel
+//                if (rfAct) rfLevel = expectLevel
+//                if (rbAct) rbLevel = expectLevel
+//            }
+//            command.lfExpect = lfLevel
+//            command.rfExpect = rfLevel
+//            command.lbExpect = lbLevel
+//            command.rbExpect = rbLevel
+//        }
+//        lfLevel = command.lfExpect
+//        rfLevel = command.rfExpect
+//        lbLevel = command.lbExpect
+//        rbLevel = command.rbExpect
+//        val lfSend = if (lfAct && !command.isSent(IPart.L_F)) {
+//            command.sent(IPart.L_F)
+//            updateChairKneadLevel(IPart.L_F, lfLevel)
+//        } else false
+//        val lbSend = if (lbAct && !command.isSent(IPart.L_B)) {
+//            command.sent(IPart.L_B)
+//            updateChairKneadLevel(IPart.L_B, lbLevel)
+//        } else false
+//        val rfSend = if (rfAct && !command.isSent(IPart.R_F)) {
+//            command.sent(IPart.R_F)
+//            updateChairKneadLevel(IPart.R_F, rfLevel)
+//        } else false
+//        val rbSend = if (rbAct && !command.isSent(IPart.R_B)) {
+//            command.sent(IPart.R_B)
+//            updateChairKneadLevel(IPart.R_B, rbLevel)
+//        } else false
+//        command.status = IStatus.RUNNING
+//        val isSend = lfSend || lbSend || rfSend || rbSend
+//        if (!parcel.isRetry() || !isSend) {
+//            hint(lfAct, lbAct, rfAct, rbAct, lfLevel, rfLevel, lbLevel, rbLevel,
+//                offLevel, minLevel, maxLevel, command, isSend, "按摩")
+//            callback?.onCmdHandleResult(command)
+//        } else {
+//            ShareHandler.loopParcel(parcel, delayed = ShareHandler.MID_DELAY)
+//        }
+//    }
+
+    //        驾驶员座椅按摩模式设置[0x1,-1,0x0,0xF] 0x0: Inactive; 0x1: No Action
 //        0x2: Wave Mode; 0x3: Serpentine Mode; 0x4: Catwalk Mode;  0x5~0xF: Reserved
     private fun updateKneadMode(@IPart part: Int, expect: Int): Boolean {
         val actual = obtainKneadMode(part)
@@ -412,7 +576,13 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         return result
     }
 
-    private fun obtainKneadMode(@IPart part: Int): Int{
+    //    驾驶员座椅按摩模式状态
+//    0x0: No Action
+//    0x1: Wave Mode
+//    0x2: Serpentine Mode
+//    0x3: Catwalk Mode
+//    0x4~0xF: Reserved
+    private fun obtainKneadMode(@IPart part: Int): Int {
         val signal = when (part) {
             IPart.L_F -> CarCabinManager.ID_DRV_SEAT_MODE_STS1
             IPart.L_B -> CarCabinManager.ID_RLSSM_SEAT_MODE_STS
@@ -425,15 +595,16 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         return readIntProperty(signal, Origin.CABIN)
     }
 
+    //    int[0]
+//    驾驶员座椅按摩模式设置[0x1,-1,0x0,0xF]
+//    0x0: Inactive
+//    0x1: No Action
+//    0x2: Wave Mode
+//    0x3: Serpentine Mode
+//    0x4: Catwalk Mode
     private fun doControlKneadMode(parcel: CommandParcel) {
         val minLevel = 0x2
         val maxLevel = 0x4
-        val offLevel = 0x5
-        var expectLevel: Int
-        var lfLevel = Constant.INVALID
-        var lbLevel = Constant.INVALID
-        var rfLevel = Constant.INVALID
-        var rbLevel = Constant.INVALID
         val callback = parcel.callback
         val command = parcel.command as CarCmd
         val lfAct = IPart.L_F == (IPart.L_F and command.part)
@@ -441,108 +612,102 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         val rfAct = IPart.R_F == (IPart.R_F and command.part)
         val rbAct = IPart.R_B == (IPart.R_B and command.part)
         if (IStatus.INIT == command.status) {
+            val expect: Int
+            parcel.retryCount = 2
+            command.resetSent(IPart.L_F)
             if (Action.TURN_ON == command.action) {
-                expectLevel = maxLevel
-                if (lfAct) lfLevel = expectLevel
-                if (lbAct) lbLevel = expectLevel
-                if (rfAct) rfLevel = expectLevel
-                if (rbAct) rbLevel = expectLevel
-            }
-            if (Action.TURN_OFF == command.action) {
-                expectLevel = offLevel
-                if (lfAct) lfLevel = expectLevel
-                if (lbAct) lbLevel = expectLevel
-                if (rfAct) rfLevel = expectLevel
-                if (rbAct) rbLevel = expectLevel
-            }
-            if (Action.PLUS == command.action) {
-                val step = command.step
+                expect = command.value
+                if (lfAct) command.lfExpect = expect
+                if (lbAct) command.lbExpect = expect
+                if (rfAct) command.rfExpect = expect
+                if (rbAct) command.rbExpect = expect
+            } else if (Action.TURN_OFF == command.action) {
+                expect = command.value
+                if (lfAct) command.lfExpect = expect
+                if (lbAct) command.lbExpect = expect
+                if (rfAct) command.rfExpect = expect
+                if (rbAct) command.rbExpect = expect
+            } else if (Action.PLUS == command.action) {
                 if (lfAct) {
-                    lfLevel = obtainKneadLevel(IPart.L_F, minLevel, maxLevel, offLevel, step)
+                    command.lfExpect = obtainNextMode(IPart.L_F, minLevel, maxLevel)
                 }
                 if (lbAct) {
-                    lbLevel = obtainKneadLevel(IPart.L_B, minLevel, maxLevel, offLevel, step)
+                    command.lbExpect = obtainNextMode(IPart.L_B, minLevel, maxLevel)
                 }
                 if (rfAct) {
-                    rfLevel = obtainKneadLevel(IPart.R_F, minLevel, maxLevel, offLevel, step)
+                    command.rfExpect = obtainNextMode(IPart.R_F, minLevel, maxLevel)
                 }
                 if (rbAct) {
-                    rbLevel = obtainKneadLevel(IPart.R_B, minLevel, maxLevel, offLevel, step)
+                    command.rbExpect = obtainNextMode(IPart.R_B, minLevel, maxLevel)
                 }
-            }
-            if (Action.MINUS == command.action) {
-                val step = command.step * -1
+            } else if (Action.MINUS == command.action) {
                 if (lfAct) {
-                    lfLevel = obtainKneadLevel(IPart.L_F, minLevel, maxLevel, offLevel, step)
+                    command.lfExpect = obtainNextMode(IPart.L_F, minLevel, maxLevel, up = false)
                 }
                 if (lbAct) {
-                    lbLevel = obtainKneadLevel(IPart.L_B, minLevel, maxLevel, offLevel, step)
+                    command.lbExpect = obtainNextMode(IPart.L_B, minLevel, maxLevel, up = false)
                 }
                 if (rfAct) {
-                    rfLevel = obtainKneadLevel(IPart.R_F, minLevel, maxLevel, offLevel, step)
+                    command.rfExpect = obtainNextMode(IPart.R_F, minLevel, maxLevel, up = false)
                 }
                 if (rbAct) {
-                    rbLevel = obtainKneadLevel(IPart.R_B, minLevel, maxLevel, offLevel, step)
+                    command.rbExpect = obtainNextMode(IPart.R_B, minLevel, maxLevel, up = false)
                 }
+            } else if (Action.CHANGED == command.action) {
+
             }
-            if (Action.MIN == command.action) {
-                expectLevel = minLevel
-                if (lfAct) lfLevel = expectLevel
-                if (lbAct) lbLevel = expectLevel
-                if (rfAct) rfLevel = expectLevel
-                if (rbAct) rbLevel = expectLevel
-            }
-            if (Action.MAX == command.action) {
-                expectLevel = maxLevel
-                if (lfAct) lfLevel = expectLevel
-                if (lbAct) lbLevel = expectLevel
-                if (rfAct) rfLevel = expectLevel
-                if (rbAct) rbLevel = expectLevel
-            }
-            if (Action.FIXED == command.action) {
-                expectLevel = calibrationValue(command.value, minLevel, maxLevel)
-                if (lfAct) lfLevel = expectLevel
-                if (lbAct) lbLevel = expectLevel
-                if (rfAct) rfLevel = expectLevel
-                if (rbAct) rbLevel = expectLevel
-            }
-            command.lfExpect = lfLevel
-            command.rfExpect = rfLevel
-            command.lbExpect = lbLevel
-            command.rbExpect = rbLevel
         }
-        lfLevel = command.lfExpect
-        rfLevel = command.rfExpect
-        lbLevel = command.lbExpect
-        rbLevel = command.rbExpect
-        val lfSend = if (lfAct) updateChairKneadLevel(IPart.L_F, lfLevel) else false
-        val lbSend = if (lbAct) updateChairKneadLevel(IPart.L_B, lbLevel) else false
-        val rfSend = if (rfAct) updateChairKneadLevel(IPart.R_F, rfLevel) else false
-        val rbSend = if (rbAct) updateChairKneadLevel(IPart.R_B, rbLevel) else false
+        val lfLevel = command.lfExpect
+        val rfLevel = command.rfExpect
+        val lbLevel = command.lbExpect
+        val rbLevel = command.rbExpect
+        val lfActual = if (lfAct) obtainKneadMode(IPart.L_F) + 1 else lfLevel
+        val lBActual = if (lfAct) obtainKneadMode(IPart.L_B) + 1 else lbLevel
+        val rfActual = if (lfAct) obtainKneadMode(IPart.R_F) + 1 else rfLevel
+        val rbActual = if (lfAct) obtainKneadMode(IPart.R_B) + 1 else rbLevel
+        val values = mutableListOf(0x1, 0x1, 0x1, 0x1)
+        var isSend = false
+        if (lfLevel != lfActual) {
+            values[0] = lfLevel
+            isSend = true
+        }
+        if (rfLevel != rfActual) {
+            values[1] = rfLevel
+            isSend = true
+        }
+        if (lbLevel != lBActual) {
+            values[2] = lbLevel
+            isSend = true
+        }
+        if (rbLevel != rbActual) {
+            values[3] = rbLevel
+            isSend = true
+        }
+
+        if (isSend && !command.isSent()) {
+            val signal = CarCabinManager.ID_HUM_SEATMASSLVL_RL_RR
+            writeProperty(signal, values.toIntArray(), Origin.CABIN)
+            command.sent()
+        }
         command.status = IStatus.RUNNING
-        val isSend = lfSend || lbSend || rfSend || rbSend
         if (!parcel.isRetry() || !isSend) {
-            hint(lfAct, lbAct, rfAct, rbAct, lfLevel, rfLevel, lbLevel, rbLevel,
-                offLevel, minLevel, maxLevel, command, isSend, "按摩")
             callback?.onCmdHandleResult(command)
         } else {
             ShareHandler.loopParcel(parcel, delayed = ShareHandler.MID_DELAY)
         }
     }
 
-    private fun obtainVentilateLevel (
-        @IPart part: Int, minLevel: Int, maxLevel: Int, offLevel: Int, step: Int): Int {
-        val value = obtainChairVentilateLevel(part) + 0x1
-        val expect = if (offLevel == value) {
-            minLevel
-        } else {
-            value + step
-        }
-        Timber.e("obtainVentilateLevel--value:$value, step:${step}, expect:$expect")
+    private fun obtainVentilateLevel(
+        @IPart part: Int, minLevel: Int, maxLevel: Int, offLevel: Int, step: Int,
+    ): Int {
+        val value = obtainVentilateLevel(part) + 0x1
+        val expect = if (offLevel == value) minLevel else value + step
+        Timber.e("obtainVentilateLevel value:$value, step:${step}, expect:$expect")
         return calibrationValue(expect, minLevel, maxLevel)
     }
 
-    private fun doControlChairVentilate(parcel: CommandParcel) {
+
+    private fun doControlVentilateLevel(parcel: CommandParcel) {
         val offLevel = 0x1
         val minLevel = 0x2
         val maxLevel = 0x4
@@ -551,13 +716,27 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         var lbLevel = Constant.INVALID
         var rfLevel = Constant.INVALID
         var rbLevel = Constant.INVALID
-        val callback = parcel.callback
         val command = parcel.command as CarCmd
-        val lfAct = IPart.L_F == (IPart.L_F and command.part)
-        val lbAct = false //IPart.L_B == (IPart.L_B and command.part)
-        val rfAct = IPart.R_F == (IPart.R_F and command.part)
-        val rbAct = false//IPart.R_B == (IPart.R_B and command.part)
+        var lfAct = IPart.L_F == (IPart.L_F and command.part)
+        var lbAct = false //IPart.L_B == (IPart.L_B and command.part)
+        var rfAct = IPart.R_F == (IPart.R_F and command.part)
+        var rbAct = false//IPart.R_B == (IPart.R_B and command.part)
+        val vague = IPart.VAGUE == (IPart.VAGUE and command.part)
+        Timber.d("doControlVentilateLevel vague:${vague}, soundDirection：${command.soundDirection}")
+        if (vague && IPart.VOID != command.soundDirection) {
+            if (IPart.L_F == command.soundDirection) {
+                rfAct = false
+                lbAct = false
+                rbAct = false
+            } else {
+                lfAct = false
+                lbAct = false
+                rbAct = false
+            }
+        }
         if (IStatus.INIT == command.status) {
+            parcel.retryCount = 2
+            resetCommandSent(command)
             if (Action.TURN_ON == command.action) {
                 expectLevel = maxLevel
                 if (lfAct) lfLevel = expectLevel
@@ -627,30 +806,47 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         rfLevel = command.rfExpect
         lbLevel = command.lbExpect
         rbLevel = command.rbExpect
-        val lfSend = if (lfAct) updateChairVentilateLevel(IPart.L_F, lfLevel) else false
-        val lbSend = if (lbAct) updateChairVentilateLevel(IPart.L_B, lbLevel) else false
-        val rfSend = if (rfAct) updateChairVentilateLevel(IPart.R_F, rfLevel) else false
-        val rbSend = if (rbAct) updateChairVentilateLevel(IPart.R_B, rbLevel) else false
+        val lfSend = if (lfAct && !command.isSent(IPart.L_F)) {
+            command.sent(IPart.L_F)
+            updateVentilateLevel(IPart.L_F, lfLevel)
+        } else false
+        val lbSend = if (lbAct && !command.isSent(IPart.L_B)) {
+            command.sent(IPart.L_B)
+            updateVentilateLevel(IPart.L_B, lbLevel)
+        } else false
+        val rfSend = if (rfAct && !command.isSent(IPart.R_F)) {
+            command.sent(IPart.R_F)
+            updateVentilateLevel(IPart.R_F, rfLevel)
+        } else false
+        val rbSend = if (rbAct && !command.isSent(IPart.R_B)) {
+            command.sent(IPart.R_B)
+            updateVentilateLevel(IPart.R_B, rbLevel)
+        } else false
         command.status = IStatus.RUNNING
 
         val isSend = lfSend || lbSend || rfSend || rbSend
+
         if (!parcel.isRetry() || !isSend) {
             hint(lfAct, lbAct, rfAct, rbAct, lfLevel, rfLevel, lbLevel, rbLevel,
                 offLevel, minLevel, maxLevel, command, isSend, "通风")
-            callback?.onCmdHandleResult(command)
+            parcel.callback?.onCmdHandleResult(command)
         } else {
             ShareHandler.loopParcel(parcel, delayed = ShareHandler.MID_DELAY)
         }
     }
 
-    private fun obtainHeatLevel (
-        @IPart part: Int, minLevel: Int, maxLevel: Int, offLevel: Int, step: Int): Int {
+    private fun resetCommandSent(command: BaseCmd, sentCount: Int = 1) {
+        command.resetSent(IPart.L_F, sendCount = sentCount)
+        command.resetSent(IPart.L_B, sendCount = sentCount)
+        command.resetSent(IPart.R_F, sendCount = sentCount)
+        command.resetSent(IPart.R_B, sendCount = sentCount)
+    }
+
+    private fun obtainHeatLevel(
+        @IPart part: Int, minLevel: Int, maxLevel: Int, offLevel: Int, step: Int,
+    ): Int {
         val value = obtainChairHeatLevel(part) + 0x1
-        val expect = if (offLevel == value) {
-            minLevel
-        } else {
-            value + step
-        }
+        val expect = if (offLevel == value) minLevel else value + step
         Timber.e("obtainHeatLevel--value:$value, step:${step}, expect:$expect")
         return calibrationValue(expect, minLevel, maxLevel)
     }
@@ -665,10 +861,22 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         var rbLevel = Constant.INVALID
         val callback = parcel.callback
         val command = parcel.command as CarCmd
-        val lfAct = IPart.L_F == (IPart.L_F and command.part)
-        val lbAct = false//IPart.L_B == (IPart.L_B and command.part)
-        val rfAct = IPart.R_F == (IPart.R_F and command.part)
-        val rbAct = false//IPart.R_B == (IPart.R_B and command.part)
+        var lfAct = IPart.L_F == (IPart.L_F and command.part)
+        var lbAct = false//IPart.L_B == (IPart.L_B and command.part)
+        var rfAct = IPart.R_F == (IPart.R_F and command.part)
+        var rbAct = false//IPart.R_B == (IPart.R_B and command.part)
+        val vague = IPart.VAGUE == (IPart.VAGUE and command.part)
+        if (vague && IPart.VOID != command.soundDirection) {
+            if (IPart.L_F == command.soundDirection) {
+                rfAct = false
+                lbAct = false
+                rbAct = false
+            } else {
+                lfAct = false
+                lbAct = false
+                rbAct = false
+            }
+        }
         if (command.status == IStatus.INIT) {
             val expectLevel: Int
             if (Action.TURN_ON == command.action) {
@@ -774,7 +982,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         offLevel: Int, minLevel: Int, maxLevel: Int,
         command: CarCmd, isSend: Boolean, notion: String,
     ) {
-        var append: String
+        val append: String
         val option = "座椅${notion}"
         if (lfAct && lrAct && rfAct && rbAct) {
             val isFEquals = lfLevel == rfLevel
@@ -785,235 +993,191 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
                 append = hint(lfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
                 command.message = "好的，${option}${append}"
             } else if (!isFEquals && !isBEquals && !isLEquals && !isREquals) {
-                val lfAppend =
-                    "前排左${option}${
-                        hint(lfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
-                val lrAppend =
-                    "后排左${option}${
-                        hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
-                val rfAppend =
-                    "前排右${option}${
-                        hint(rfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
-                val rrAppend =
-                    "后排右${option}${
-                        hint(rbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
+                val lfAppend = "前排左${option}${
+                    hint(lfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
+                val lrAppend = "后排左${option}${
+                    hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
+                val rfAppend = "前排右${option}${
+                    hint(rfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
+                val rrAppend = "后排右${option}${
+                    hint(rbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
                 command.message = "好的，${lfAppend}, ${lrAppend}, ${rfAppend}, $rrAppend"
             } else if (isFEquals && isBEquals && !isLEquals) {
-                val fAppend =
-                    "前排${option}${
-                        hint(lfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
-                val bAppend =
-                    "后排${option}${
-                        hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
+                val fAppend = "前排${option}${
+                    hint(lfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
+                val bAppend = "后排${option}${
+                    hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
                 command.message = "好的，${fAppend}, $bAppend"
             } else if (isLEquals && isREquals && !isFEquals) {
-                val lAppend =
-                    "左边${option}${
-                        hint(lfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
-                val rAppend =
-                    "右边${option}${
-                        hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
+                val lAppend = "左边${option}${
+                    hint(lfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
+                val rAppend = "右边${option}${
+                    hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
                 command.message = "好的，${lAppend}, $rAppend"
             } else if (isFEquals && !isBEquals) {
-                val fAppend =
-                    "前排${option}${
-                        hint(lfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
-                val lrAppend =
-                    "后排左${option}${
-                        hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
-                val rrAppend =
-                    "后排右${option}${
-                        hint(rbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
+                val fAppend = "前排${option}${
+                    hint(lfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
+                val lrAppend = "后排左${option}${
+                    hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
+                val rrAppend = "后排右${option}${
+                    hint(rbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
                 command.message = "好的，${fAppend}, ${lrAppend}, ${rrAppend}"
             } else if (isBEquals && !isFEquals) {
-                val bAppend =
-                    "前排${option}${
-                        hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
-                val lfAppend =
-                    "前排左${option}${
-                        hint(lfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
-                val rfAppend =
-                    "前排右${option}${
-                        hint(rfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
+                val bAppend = "前排${option}${
+                    hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
+                val lfAppend = "前排左${option}${
+                    hint(lfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
+                val rfAppend = "前排右${option}${
+                    hint(rfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
                 command.message = "好的，${bAppend}, ${lfAppend}, ${rfAppend}"
             } else if (isLEquals && !isREquals) {
-                val fAppend =
-                    "左排${option}${
-                        hint(lfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
-                val rfAppend =
-                    "前排右${option}${
-                        hint(rfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
-                val rrAppend =
-                    "后排右${option}${
-                        hint(rbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
+                val fAppend = "左排${option}${
+                    hint(lfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
+                val rfAppend = "前排右${option}${
+                    hint(rfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
+                val rrAppend = "后排右${option}${
+                    hint(rbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
                 command.message = "好的，${fAppend}, ${rfAppend}, ${rrAppend}"
             } else if (isREquals && !isLEquals) {
-                val rAppend =
-                    "右排${option}${
-                        hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
-                val lfAppend =
-                    "前排左${option}${
-                        hint(lfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
-                val lrAppend =
-                    "后排左${option}${
-                        hint(rfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
+                val rAppend = "右排${option}${
+                    hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
+                val lfAppend = "前排左${option}${
+                    hint(lfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
+                val lrAppend = "后排左${option}${
+                    hint(rfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
                 command.message = "好的，${rAppend}, ${lfAppend}, ${lrAppend}"
             }
         } else if (lrAct && rfAct && rbAct && !lfAct) {
             val isBEquals = lbLevel == rbLevel
             val isREquals = rfLevel == rbLevel
             if (isBEquals && isREquals) {
-                val append =
-                    "乘客${option}${
-                        hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
+                val append = "乘客${option}${
+                    hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
                 command.message = "好的，${append}"
             } else if (isBEquals) {
-                val rrAppend =
-                    "后排${option}${
-                        hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
-                val rfAppend =
-                    "前排右${option}${
-                        hint(rfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
+                val rrAppend = "后排${option}${
+                    hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
+                val rfAppend = "前排右${option}${
+                    hint(rfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
                 command.message = "好的，${rrAppend}, ${rfAppend}"
             } else if (isREquals) {
-                val rAppend =
-                    "右排${option}${
-                        hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
-                val rbAppend =
-                    "后排右${option}${
-                        hint(rfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
+                val rAppend = "右排${option}${
+                    hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
+                val rbAppend = "后排右${option}${
+                    hint(rfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
                 command.message = "好的，${rAppend}, ${rbAppend}"
             } else {
-                val lrAppend =
-                    "后排左${option}${
-                        hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
-                val rfAppend =
-                    "前排右${option}${
-                        hint(rfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
-                val rrAppend =
-                    "后排右${option}${
-                        hint(rbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
+                val lrAppend = "后排左${option}${
+                    hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
+                val rfAppend = "前排右${option}${
+                    hint(rfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
+                val rrAppend = "后排右${option}${
+                    hint(rbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
                 command.message = "好的，${lrAppend}, ${rfAppend}, $rrAppend"
             }
         } else if (lfAct && rfAct && !rbAct && !lrAct) {
             val isFEquals = lfLevel == rfLevel
             if (isFEquals) {
-                val fAppend =
-                    "前排${option}${
-                        hint(lfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
+                val fAppend = "前排${option}${
+                    hint(lfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
                 command.message = "好的，${fAppend}"
             } else {
-                val lfAppend =
-                    "前排左${option}${
-                        hint(lfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
-                val rfAppend =
-                    "前排右${option}${
-                        hint(rfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
+                val lfAppend = "前排左${option}${
+                    hint(lfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
+                val rfAppend = "前排右${option}${
+                    hint(rfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
                 command.message = "好的，${lfAppend}, ${rfAppend}"
             }
         } else if (lrAct && rbAct && !lfAct && !rfAct) {
             val isBEquals = lbLevel == rbLevel
             if (isBEquals) {
-                val bAppend =
-                    "后排${option}${
-                        hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
+                val bAppend = "后排${option}${
+                    hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
                 command.message = "好的，${bAppend}"
             } else {
-                val lrAppend =
-                    "后排左${option}${
-                        hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
-                val rrAppend =
-                    "后排右${option}${
-                        hint(rbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
+                val lrAppend = "后排左${option}${
+                    hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
+                val rrAppend = "后排右${option}${
+                    hint(rbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
                 command.message = "好的，${lrAppend}, ${rrAppend}"
             }
         } else if (lfAct && lrAct && !rfAct && !rbAct) {
             val isLEquals = lfLevel == lbLevel
             if (isLEquals) {
-                val lAppend =
-                    "左排${option}${
-                        hint(lfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
+                val lAppend = "左排${option}${
+                    hint(lfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
                 command.message = "好的，${lAppend}"
             } else {
-                val lfAppend =
-                    "前排左${option}${
-                        hint(lfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
-                val lrAppend =
-                    "后排右${option}${
-                        hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
+                val lfAppend = "前排左${option}${
+                    hint(lfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
+                val lrAppend = "后排右${option}${
+                    hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
                 command.message = "好的，${lfAppend}, ${lrAppend}"
             }
         } else if (rfAct && rbAct && !lfAct && !lrAct) {
             val isREquals = rfLevel == rbLevel
             if (isREquals) {
-                val rAppend =
-                    "右排${option}${
-                        hint(rfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
+                val rAppend = "右排${option}${
+                    hint(rfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
                 command.message = "好的，${rAppend}"
             } else {
-                val rfAppend =
-                    "前排右${option}${
-                        hint(rfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
-                val rbAppend =
-                    "后排右${option}${
-                        hint(rbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-                    }"
+                val rfAppend = "前排右${option}${
+                    hint(rfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
+                val rbAppend = "后排右${option}${
+                    hint(rbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+                }"
                 command.message = "好的，${rfAppend}, ${rbAppend}"
             }
         } else if (lfAct) {
-            append =
-                hint(lfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+            append = hint(lfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
             command.message = "好的，${command.slots?.name}${notion}${append}了"
         } else if (lrAct) {
-            append =
-                hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+            append = hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
             command.message = "好的，${command.slots?.name}${notion}${append}了"
         } else if (rfAct) {
-            append =
-                hint(rfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+            append = hint(rfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
             command.message = "好的，${command.slots?.name}${notion}${append}了"
         } else if (rbAct) {
-            append =
-                hint(rbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
+            append = hint(rbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
             command.message = "好的，${command.slots?.name}${notion}${append}了"
         }
     }
@@ -1029,14 +1193,12 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         return level
     }
 
-    private fun hint(
-        level: Int, offLevel: Int, minLevel: Int, maxLevel: Int, action: Int, isSend: Boolean,
-    ): String {
+    private fun hint(level: Int, off: Int, min: Int, max: Int, action: Int, send: Boolean): String {
         return when (level) {
-            offLevel -> "${if (isSend) "已经" else ""}关闭了"
-            minLevel -> "${if (isSend) "已经" else ""}调整到最低了"
-            maxLevel -> if (Action.TURN_ON == action) "${if (isSend) "已经" else ""}打开了" else "${if (isSend) "已经" else ""}调整到最高了"
-            else -> "${if (isSend) "已经" else ""}调整为${level - 1}档"
+            off -> "${if (send) "已经" else ""}关闭了"
+            min -> "${if (send) "已经" else ""}调整到最低了"
+            max -> if (Action.TURN_ON == action) "${if (send) "已经" else ""}打开了" else "${if (send) "已经" else ""}调整到最高了"
+            else -> "${if (send) "已经" else ""}调整为${level - 1}档"
         }
     }
 
@@ -1100,7 +1262,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
             }
         } else if (IAct.COLD == command.act) {
             if (!interruptCommand(parcel, coreEngine = true)) {
-                doControlChairVentilate(parcel)
+                doControlVentilateLevel(parcel)
             }
         } else if (IAct.TILT == command.act) {
             if (!interruptCommand(parcel, coreEngine = true)) {

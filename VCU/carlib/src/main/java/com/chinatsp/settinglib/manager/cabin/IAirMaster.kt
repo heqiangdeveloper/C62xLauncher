@@ -21,10 +21,10 @@ interface IAirMaster {
      * @param parcel
      */
     fun doCeaseConditioner(parcel: CommandParcel)
-    /**
-     * 调节空调的吹风方向（例：吹头，吹脚，吹身体）
-     */
-    fun doAdjustAirDirection(parcel: CommandParcel)
+//    /**
+//     * 调节空调的吹风方向（例：吹头，吹脚，吹身体）
+//     */
+//    fun doAdjustAirDirection(parcel: CommandParcel)
 //    /**
 //     * 调节空调风速
 //     */

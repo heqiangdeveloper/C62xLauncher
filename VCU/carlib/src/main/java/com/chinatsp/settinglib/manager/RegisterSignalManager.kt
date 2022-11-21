@@ -66,6 +66,21 @@ class RegisterSignalManager private constructor() {
                     add(CarCabinManager.ID_BCM_ROLLO_BTN_STS)
                     add(CarCabinManager.ID_BCM_SUNROOF_BTN_STS)
 
+                    //================增加车窗位置信号监听 开始================
+                    add(CarCabinManager.ID_BCM_POS_VIT_FL)
+                    add(CarCabinManager.ID_BCM_POS_VIT_FR)
+                    add(CarCabinManager.ID_BCM_POS_VIT_RL)
+                    add(CarCabinManager.ID_BCM_POS_VIT_RR)
+                    //================增加车窗位置信号监听 结束================
+
+                    //================增加灯光 开始================
+                    add(CarCabinManager.ID_HIGH_BEAM_INDICATOR)
+                    add(CarCabinManager.ID_LOW_BEAM_INDICATOR)
+                    add(CarCabinManager.ID_TELLTALE_REAR_FOG_LIGHT)
+                    //================增加灯光 结束================
+
+
+
                     this.remove(Constant.INVALID)
                 }
             }

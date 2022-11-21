@@ -4,7 +4,7 @@ import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
-import com.chinatsp.settinglib.listener.IAccessListener
+import com.chinatsp.settinglib.listener.ISignalListener
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.IAccessManager
@@ -18,7 +18,6 @@ import com.chinatsp.vehicle.controller.annotation.Action
 import com.chinatsp.vehicle.controller.annotation.IPart
 import com.chinatsp.vehicle.controller.annotation.Model
 import com.chinatsp.vehicle.controller.bean.CarCmd
-import timber.log.Timber
 import java.lang.ref.WeakReference
 
 /**
@@ -139,52 +138,48 @@ class DoorManager private constructor() : BaseManager(), IOptionManager, IAccess
         }
     }
 
-    override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
-        when (property.propertyId) {
+    override fun onCabinPropertyChanged(p: CarPropertyValue<*>) {
+        when (p.propertyId) {
             /**熄火自动解锁*/
             SwitchNode.DOOR_SMART_ENTER.get.signal -> {
-                onSwitchChanged(SwitchNode.DOOR_SMART_ENTER, smartAccess, property)
+                onSwitchChanged(SwitchNode.DOOR_SMART_ENTER, smartAccess, p)
             }
             RadioNode.DOOR_DRIVE_LOCK.get.signal -> {
-                onRadioChanged(RadioNode.DOOR_DRIVE_LOCK, driveAutoLock, property)
+                onRadioChanged(RadioNode.DOOR_DRIVE_LOCK, driveAutoLock, p)
             }
             RadioNode.DOOR_FLAMEOUT_UNLOCK.get.signal -> {
-                onRadioChanged(RadioNode.DOOR_FLAMEOUT_UNLOCK, flameoutAutoUnlock, property)
+                onRadioChanged(RadioNode.DOOR_FLAMEOUT_UNLOCK, flameoutAutoUnlock, p)
             }
             CarCabinManager.ID_DR_DOOR_OPEN -> {
-                onDoorStatusChanged(IPart.L_F, Model.ACCESS_DOOR, property.value)
+                onSignalChanged(IPart.L_F, Model.ACCESS_DOOR, p.propertyId, p.value as Int)
             }
             CarCabinManager.ID_PA_DOOR_OPEN -> {
-                onDoorStatusChanged(IPart.R_F, Model.ACCESS_DOOR, property.value)
+                onSignalChanged(IPart.R_F, Model.ACCESS_DOOR, p.propertyId, p.value as Int)
             }
             CarCabinManager.ID_REAR_LEFT_DOOR_OPEN -> {
-                onDoorStatusChanged(IPart.L_B, Model.ACCESS_DOOR, property.value)
+                onSignalChanged(IPart.L_B, Model.ACCESS_DOOR, p.propertyId, p.value as Int)
             }
             CarCabinManager.ID_REAR_RIGHT_DOOR_OPEN -> {
-                onDoorStatusChanged(IPart.R_B, Model.ACCESS_DOOR, property.value)
+                onSignalChanged(IPart.R_B, Model.ACCESS_DOOR, p.propertyId, p.value as Int)
             }
             else -> {}
         }
     }
 
-    private fun onDoorStatusChanged(@IPart part: Int, @Model model: Int, value: Any?) {
-        if (value is Int) {
-            val readLock = readWriteLock.readLock()
-            try {
-                readLock.lock()
-                listenerStore.forEach { (_, ref) ->
-                    val listener = ref.get()
-                    if (null != listener && listener is IAccessListener) {
-                        listener.onAccessChanged(part, model, value)
-                        Timber.d("onDoorStatusChanged part:$part, model:$model, value:$value, listener:${listener::class.java.simpleName}")
-                    }
+    private fun onSignalChanged(@IPart part: Int, @Model model: Int, signal: Int, value: Int) {
+        val readLock = readWriteLock.readLock()
+        try {
+            readLock.lock()
+            listenerStore.forEach { (_, ref) ->
+                val listener = ref.get()
+                if (null != listener && listener is ISignalListener) {
+                    listener.onSignalChanged(part, model, signal, value)
                 }
-            } finally {
-                readLock.unlock()
             }
+        } finally {
+            readLock.unlock()
         }
     }
-
 
     private fun doControlDoors(command: CarCmd, callback: ICmdCallback?) {
         if (IPart.HEAD == command.part) {
@@ -233,8 +228,7 @@ class DoorManager private constructor() : BaseManager(), IOptionManager, IAccess
             IPart.L_F -> readIntProperty(CarCabinManager.ID_DR_DOOR_OPEN, Origin.CABIN)
             IPart.R_F -> readIntProperty(CarCabinManager.ID_PA_DOOR_OPEN, Origin.CABIN)
             IPart.L_B -> readIntProperty(CarCabinManager.ID_REAR_LEFT_DOOR_OPEN, Origin.CABIN)
-            IPart.R_B -> readIntProperty(CarCabinManager.ID_REAR_RIGHT_DOOR_OPEN,
-                Origin.CABIN)
+            IPart.R_B -> readIntProperty(CarCabinManager.ID_REAR_RIGHT_DOOR_OPEN, Origin.CABIN)
             else -> null
         }
     }

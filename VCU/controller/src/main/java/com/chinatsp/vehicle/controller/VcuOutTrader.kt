@@ -210,7 +210,6 @@ class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback, 
             val convert = voiceJson!!.convert()
             convert.slots.json = data
             onSrAction(convert)
-//            }
         } catch (e: Exception) {
             e.printStackTrace()
             LogManager.e("ReceiveVoice", "parse error:${e.message}")

@@ -295,6 +295,7 @@ class SettingManager private constructor() {
             false
         } else when (origin) {
             Origin.MCU -> doSetMcuProperty(id, value, area.id)
+            Origin.CABIN -> doSetCabinProperty(id, value, area.id)
             else -> false
         }
     }
@@ -342,7 +343,7 @@ class SettingManager private constructor() {
                 try {
                     val hasManager = null != mCarMcuManager
                     Timber.tag(Constant.VehicleSignal)
-                        .d("doActionSignal-mcu send-mcu hex-id:${Integer.toHexString(id)}, dec-id:$id, value:$value, has:$hasManager, V_N:${VcuUtils.V_N}")
+                        .d("doActionSignal send-mcu hex-id:${Integer.toHexString(id)}, dec-id:$id, value:${convert(value)}, has:$hasManager, V_N:${VcuUtils.V_N}")
                     mCarMcuManager?.setIntArrayProperty(id, areaValue, value)
                 } catch (e: Exception) {
                     Timber.e(e)
@@ -351,6 +352,29 @@ class SettingManager private constructor() {
             return true
         }
         return false
+    }
+
+    private fun doSetCabinProperty(id: Int, value: IntArray, areaValue: Int): Boolean {
+        if (null != mCarCabinManager) {
+            AppExecutors.get()?.networkIO()?.execute {
+                try {
+                    val hasManager = null != mCarCabinManager
+                    Timber.tag(Constant.VehicleSignal)
+                        .d("doActionSignal send-cabin hex-id:${Integer.toHexString(id)}, dec-id:$id, value:${convert(value)}, has:$hasManager, V_N:${VcuUtils.V_N}")
+                    mCarCabinManager?.setIntArrayProperty(id, areaValue, value)
+                } catch (e: Exception) {
+                    Timber.e(e)
+                }
+            }
+            return true
+        }
+        return false
+    }
+
+    private fun convert(value: IntArray): String {
+        val builder = StringBuilder()
+        value.forEach { builder.append(it).append(",") }
+        return builder.toString()
     }
 
     private fun doSetHvacProperty(id: Int, value: Int, areaValue: Int): Boolean {

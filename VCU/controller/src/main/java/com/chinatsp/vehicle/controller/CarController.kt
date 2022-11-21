@@ -73,68 +73,10 @@ object CarController : IController {
             controller.doCarControlCommand(command, callback)
         }
         return null != command
-//
-//        if (isMatch(Keywords.DRIVER_WINDOW, name)
-//            || isMatch(Keywords.PASSENGER_WINDOW, name)
-//        ) {
-//            result = open || close
-//        } else if (isMatch(Keywords.OIL_SHROUDS, name)) {
-//            result = open || close
-//        } else if (isMatch(Keywords.SKYLIGHTS, name)) {
-//
-//        } else if (isMatch(Keywords.HOODS, name)) {
-//            //引擎盖 操作
-//            result = open || close
-//        } else if (isMatch(Keywords.TRUNKS, name)) {
-//            //后备厢 操作
-//            result = open || close
-//        } else if (isMatch(Keywords.WIPERS, name)) {
-//            //前雨刮 操作
-//            result = open || close
-//        } else if (isMatch(Keywords.REAR_WIPERS, name)) {
-//            //后雨刮 操作
-//            result = open || close
-//        }
-////
-////        else if (isMatch(Keywords.TIRE_PRESSURE_MONITORS, name)) {
-////            result = open || close
-////        } else if (isMatch(Keywords.SMOKES, slots.mode)) {
-////            result = open || close
-////        } else if (TextUtils.equals(Keywords.WIRELESS_CHARGING, name)) {
-////            result = open || close
-////        } else if (isMatch(Keywords.IDLE_START_AND_STOP, name)) {
-////            result = open || close
-////        }
-//
-//        else if (isMatch(Keywords.AUTO_HEAD_LIGHTS, name)) {
-//            result = open || close
-//        } else if (isMatch(Keywords.LIGHTS, name)) {
-//            result = open || close
-//        } else if (isMatch(Keywords.FOG_LIGHTS, name)) {
-//            result = open || close
-//        } else if (TextUtils.equals(Keywords.MODE_DRIVE, slots.mode)) {
-//            result = open || close
-//        } else if (isMatch(Keywords.WHEELS, slots.name)) {
-//            var action = Action.VOID
-//            if (open) action = Action.TURN_ON
-//            if (close) action = Action.TURN_OFF
-//            val command = CarCmd(action = action, model = Model.CABIN_WHEEL)
-//            command.slots = slots
-//            if ("方向盘加热" == slots.mode) {
-//                command.car = ICar.WHEEL_HOT
-//            }
-//            controller.doCarControlCommand(command, callback)
-//            return true
-//        } else if (isMatch(Keywords.AMBIENTS, slots.name)) {
-//            doAmbientCommand(slots, controller, callback)
-//            return true
-//        }
-//        return result
     }
 
     private fun attemptAutoParkCommand(slots: Slots): CarCmd? {
         if ("自动泊车" == slots.name) {
-            LogManager.e("------attemptAutoParkCommand--------")
             val command = CarCmd(action = Action.VOID, model = Model.AUTO_PARK)
             command.slots = slots
             return command
