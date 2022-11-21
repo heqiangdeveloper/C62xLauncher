@@ -88,8 +88,9 @@ public class IqutingBindService {
             @Override
             public void onServiceConnected() {
                 Log.d(TAG,"onServiceConnected");
-                //设置重启后，断点续播
-                LaunchConfig launchConfig = new LaunchConfig(true, false,true);
+                //采用系统音频策略，当重启前爱趣听在播放，重启后音乐会发送启动爱趣听播放的广播 "com.aiquting.play"
+                //LaunchConfig launchConfig = new LaunchConfig(true, false,true);
+                LaunchConfig launchConfig = new LaunchConfig(false,false);
                 FlowPlayControl.getInstance().launchPlayService(mContext, launchConfig);
                 //EventBus.getDefault().post(new PlayConnectEvent(PlayConnectEvent.CONNECTED));
                 addPlayStateListener();

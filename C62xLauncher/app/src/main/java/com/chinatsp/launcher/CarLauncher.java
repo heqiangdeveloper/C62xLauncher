@@ -27,6 +27,7 @@ import com.chinatsp.apppanel.service.AppStoreService;
 import com.chinatsp.apppanel.service.LauncherService;
 import com.chinatsp.iquting.receiver.BootBroadcastReceiver;
 
+import launcher.base.applists.AppLists;
 import launcher.base.utils.EasyLog;
 
 public class CarLauncher extends AppCompatActivity implements OnGestureAction {
@@ -62,7 +63,9 @@ public class CarLauncher extends AppCompatActivity implements OnGestureAction {
 
     private void sendLauncherBroadcast() {
         Intent intent = new Intent();
+        intent.setPackage(AppLists.media);
         intent.setAction("com.chinatsp.launcher.bootCompleted");
+        intent.addFlags(0x01000000);
         sendBroadcast(intent);
     }
 

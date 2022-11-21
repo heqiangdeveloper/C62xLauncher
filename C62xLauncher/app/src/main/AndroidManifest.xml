@@ -39,6 +39,13 @@
                 <category android:name="android.intent.category.HOME" />
             </intent-filter>
         </activity>
+        <receiver android:name=".ChangeSourceReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.aiquting.play"/>
+                <action android:name="com.coagent.intent.action.KEY_CHANGED"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
