@@ -63,6 +63,9 @@ public class LauncherSearchActivity extends AppCompatActivity implements SearchA
         //mEdittextSearchWord.setText(mEdittextSearchWord.getText().toString().charAt(mEdittextSearchWord.getText().length()-1));
         FileUtils.hideSoftInput(this);
         int index = mEdittextSearchWord.getSelectionStart();   //获取Edittext光标所在位置
+        if (index <= 0) {
+            return;
+        }
         String str = mEdittextSearchWord.getText().toString();
         if (!str.equals("")) {//判断输入框不为空，执行删除
             mEdittextSearchWord.getText().delete(index - 1, index);
@@ -138,10 +141,16 @@ public class LauncherSearchActivity extends AppCompatActivity implements SearchA
             FileUtils.launchApp(this, bean.getIntentAction());
         } else {
             //打开某个应用某个模块
-            Intent intent = new Intent(bean.getIntentAction());
-            intent.putExtra("type", bean.getIntentInterface());
-            intent.putExtra("INTENT_PATH", "LAUNCHER_SEARCH");
-            startActivity(intent);
+            try {
+                String intentAction = bean.getIntentAction();
+                EasyLog.i("XXXXXX", "intentAction:"+intentAction);
+                Intent intent = new Intent(intentAction);
+                intent.putExtra("type", bean.getIntentInterface());
+                intent.putExtra("INTENT_PATH", "LAUNCHER_SEARCH");
+                startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         }
         mEdittextSearchWord.setText("");
