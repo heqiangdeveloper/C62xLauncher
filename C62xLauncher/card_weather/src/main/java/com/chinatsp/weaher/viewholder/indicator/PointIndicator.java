@@ -16,6 +16,10 @@ public class PointIndicator implements ISelectIndicator {
     private View[] mViews;
     private ViewGroup mContainer;
 
+
+
+    private boolean mHideOnSinglePoint = true;
+
     public PointIndicator(ViewGroup container) {
         mContainer = container;
     }
@@ -31,6 +35,7 @@ public class PointIndicator implements ISelectIndicator {
         }
         resetUIState();
         select(0);
+
     }
 
     @Override
@@ -88,6 +93,13 @@ public class PointIndicator implements ISelectIndicator {
                 view.setSelected(false);
             }
         }
+        if (mViews.length <= 1) {
+            mContainer.setVisibility(View.INVISIBLE);
+        } else {
+            mContainer.setVisibility(View.VISIBLE);
+        }
     }
-
+    public void setHideOnSinglePoint(boolean hideOnSinglePoint) {
+        mHideOnSinglePoint = hideOnSinglePoint;
+    }
 }

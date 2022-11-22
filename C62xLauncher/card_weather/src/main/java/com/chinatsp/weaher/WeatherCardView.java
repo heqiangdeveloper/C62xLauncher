@@ -121,6 +121,7 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
         mLargeCardView.setVisibility(GONE);
         removeView(mLargeCardView);
         LayoutParamUtil.setWidth(mSmallWidth, this);
+        mController.requestCityList();
         mSmallCardHolder.scrollToPosition(currentCityIndex);
     }
 

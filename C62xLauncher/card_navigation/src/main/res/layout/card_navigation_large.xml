@@ -90,7 +90,9 @@
                 />
             <TextView
                 android:id="@+id/tvCardNaviTurnRoadName"
-                android:layout_width="wrap_content"
+                android:layout_width="240px"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:layout_height="48px"
                 style="@style/CardLv1TextView"
                 app:layout_constraintStart_toStartOf="@id/tvCardNaviTBTDirectDistance"
