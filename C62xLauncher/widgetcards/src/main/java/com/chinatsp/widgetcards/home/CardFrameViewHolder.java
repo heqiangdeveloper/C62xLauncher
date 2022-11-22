@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,13 +33,11 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import card.service.ICardStyleChange;
 import card.base.LauncherCard;
 import launcher.base.routine.ActivityBus;
 import launcher.base.utils.EasyLog;
-import launcher.base.utils.flowcontrol.StableOnClickListener;
 
 public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     private static final String TAG = "CardFrameViewHolder";
@@ -243,11 +240,25 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
 
     private View.OnClickListener mOnClickListener;
 
+    private static long mLastValidClickExpandTime;
+    private static long mLastClickExpandTime;
     private View.OnClickListener createListener(LauncherCard cardEntity) {
-        return new StableOnClickListener(MIN_CLICK_INTERVAL, new Consumer<View>() {
+
+        return new View.OnClickListener(){
             @Override
-            public void accept(View view) {
-                EasyLog.d(TAG, "click expand or collapse view :" + cardEntity.getName());
+            public void onClick(View view) {
+                long now = System.currentTimeMillis();
+                long diffToValid = now - mLastValidClickExpandTime;
+                long diffToInvalid = now - mLastClickExpandTime;
+                mLastClickExpandTime = now;
+                if (diffToValid < MIN_CLICK_INTERVAL && diffToInvalid < MIN_CLICK_INTERVAL) {
+                    EasyLog.w(TAG, "click expand or collapse view fail: touch too fast."
+                            + cardEntity.getName()+" , diff:"+diffToValid +" , diffToInvalid:"+diffToInvalid);
+                    return;
+                }
+                mLastValidClickExpandTime = now;
+                EasyLog.d(TAG, "click expand or collapse view :" + cardEntity.getName()
+                        +" , diff:"+diffToValid +" , diffToInvalid:"+diffToInvalid);
                 if (!cardEntity.isCanExpand()) {
                     return;
                 }
@@ -256,7 +267,20 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
                 }
                 ExpandStateManager.getInstance().setExpand(mExpandState);
             }
-        });
+        };
+//        return new StableOnClickListener(MIN_CLICK_INTERVAL, new Consumer<View>() {
+//            @Override
+//            public void accept(View view) {
+//                EasyLog.d(TAG, "click expand or collapse view :" + cardEntity.getName());
+//                if (!cardEntity.isCanExpand()) {
+//                    return;
+//                }
+//                if (view == mIvCardZoom || view == mTvCardName || view == ivCardTopSpace) {
+//                    changeExpandState(false);
+//                }
+//                ExpandStateManager.getInstance().setExpand(mExpandState);
+//            }
+//        });
     }
 
     private void changeExpandState(boolean exchangeBigAndSmall) {

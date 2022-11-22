@@ -24,9 +24,11 @@
 
     <TextView
         android:id="@+id/tvCardWeatherCity"
-        android:layout_width="wrap_content"
+        android:layout_width="237px"
         android:layout_height="wrap_content"
         android:text=""
+        android:maxLines="1"
+        android:ellipsize="end"
         android:textColor="@color/card_weather_location"
         android:textSize="@dimen/card_text_size_lv3"
         app:layout_constraintBottom_toBottomOf="@id/ivCardWeatherLocation"
