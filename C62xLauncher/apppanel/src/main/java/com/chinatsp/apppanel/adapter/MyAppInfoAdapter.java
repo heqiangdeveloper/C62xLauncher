@@ -583,7 +583,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
     public View getView(ViewGroup parent, int mainPosition, int subPosition) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_inner,parent,false);
         ImageView iconIv = (ImageView) view.findViewById(R.id.icon_iv);
-        iconIv.setScaleType(ImageView.ScaleType.FIT_XY);
+        //iconIv.setScaleType(ImageView.ScaleType.FIT_XY);
         if(mainPosition < mData.size() && subPosition < mData.get(mainPosition).size()){
             if(mData.get(mainPosition).get(subPosition) == null){
                 iconIv.setImageResource(R.drawable.add_app_icon_new);
