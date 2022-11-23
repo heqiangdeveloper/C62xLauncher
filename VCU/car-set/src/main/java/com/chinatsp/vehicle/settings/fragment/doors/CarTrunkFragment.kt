@@ -111,6 +111,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         updateSwitchEnable(SwitchNode.STERN_LIGHT_ALARM)
         updateSwitchEnable(SwitchNode.STERN_AUDIO_ALARM)
         updateRadioEnable(RadioNode.STERN_SMART_ENTER)
+        updateSeekBarEnable()
     }
 
     private fun initRouteListener() {
@@ -140,6 +141,14 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
             //binding.ivCarTrunk.setImageResource(trunkAnimationResource[location])
         }
     }
+
+    private fun updateSeekBarEnable() {
+        val isPark = isPark()
+        val alpha = if (isPark) 1.0f else 0.6f
+        binding.arcSeekBar.alpha = alpha
+        binding.arcSeekBar.isEnabled = isPark
+    }
+
 
     private fun initLocation(progress: Int) {
         val size = trunkAnimationResource.size
@@ -204,13 +213,14 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
             doUpdateRadio(RadioNode.STERN_SMART_ENTER, it, false)
         }
         viewModel.gearsFunction.observe(this) {
-            if (0x1 != it.get()) {
-                binding.sternElectricSwitch.setCheckedImmediately(false)
-                updateOptionActive()
-                doElectricTrunkFollowing(false)
-                updateRadioEnable(RadioNode.GEARS)
-            }
+            updateOptionActive()
+            doElectricTrunkFollowing(false)
+            updateRadioEnable(RadioNode.GEARS)
         }
+    }
+
+    private fun isPark(): Boolean {
+        return 0x1 == viewModel.gearsFunction.value?.get()
     }
 
     private fun setRadioListener() {
@@ -447,9 +457,9 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
 
     override fun obtainDependByNode(node: SwitchNode): Boolean {
         return when (node) {
-            SwitchNode.AS_STERN_ELECTRIC -> true
-            SwitchNode.STERN_LIGHT_ALARM -> binding.sternElectricSwitch.isChecked
-            SwitchNode.STERN_AUDIO_ALARM -> binding.sternElectricSwitch.isChecked
+            SwitchNode.AS_STERN_ELECTRIC -> isPark()
+            SwitchNode.STERN_LIGHT_ALARM -> isPark() && binding.sternElectricSwitch.isChecked
+            SwitchNode.STERN_AUDIO_ALARM -> isPark() && binding.sternElectricSwitch.isChecked
             else -> false
         }
     }
@@ -463,7 +473,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
 
     override fun obtainDependByNode(node: RadioNode): Boolean {
         return when (node) {
-            RadioNode.STERN_SMART_ENTER -> binding.sternElectricSwitch.isChecked
+            RadioNode.STERN_SMART_ENTER -> isPark() && binding.sternElectricSwitch.isChecked
             else -> false
         }
     }

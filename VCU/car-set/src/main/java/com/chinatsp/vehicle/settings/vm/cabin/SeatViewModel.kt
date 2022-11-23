@@ -61,7 +61,7 @@ class SeatViewModel @Inject constructor(app: Application, model: BaseModel) :
     private val _sillTemp: MutableLiveData<Volume> by lazy {
         val type = Progress.SEAT_ONSET_TEMPERATURE
         MutableLiveData<Volume>().apply {
-            value = manager.doGetVolume(type)?.copy()
+            value = manager.doGetVolume(type)?.deepCopy()
         }
     }
 

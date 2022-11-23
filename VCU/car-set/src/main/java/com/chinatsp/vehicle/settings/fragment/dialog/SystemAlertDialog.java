@@ -40,6 +40,7 @@ public class SystemAlertDialog extends AlertDialog {
         layoutParams.gravity = Gravity.CENTER;
         mLayoutView.setLayoutParams(layoutParams);
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,13 +57,29 @@ public class SystemAlertDialog extends AlertDialog {
             detailsContent.setText(stringId);
         }
     }
+
     public void setIsConform(boolean cancelable) {
         this.cancelable = cancelable;
-        if(cancelable){
+        if (cancelable) {
             hintConform.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             hintConform.setVisibility(View.INVISIBLE);
         }
+    }
 
+    public void setTag(int tag) {
+        if (null != mLayoutView) {
+            mLayoutView.setTag(tag);
+        }
+    }
+
+    public int getTag() {
+        if (null != mLayoutView) {
+            Object tag = mLayoutView.getTag();
+            if (tag instanceof Integer) {
+                return (Integer) tag;
+            }
+        }
+        return -1;
     }
 }

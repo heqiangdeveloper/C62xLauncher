@@ -132,8 +132,8 @@ class SafeManager private constructor() : BaseManager(), ISwitchManager {
 
     override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.DRIVE_SAFE_FORTIFY_SOUND -> fortifyToneFunction.copy()
-            SwitchNode.DRIVE_SAFE_VIDEO_PLAYING -> videoModeFunction.copy()
+            SwitchNode.DRIVE_SAFE_FORTIFY_SOUND -> fortifyToneFunction.deepCopy()
+            SwitchNode.DRIVE_SAFE_VIDEO_PLAYING -> videoModeFunction.deepCopy()
             else -> null
         }
     }

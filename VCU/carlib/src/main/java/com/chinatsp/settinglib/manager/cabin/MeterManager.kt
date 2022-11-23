@@ -70,7 +70,7 @@ class MeterManager private constructor() : BaseManager(), IRadioManager {
 
     override fun doGetRadioOption(node: RadioNode): RadioState? {
         return when (node) {
-            RadioNode.DRIVE_METER_SYSTEM -> meterSystemRadioOption.copy()
+            RadioNode.DRIVE_METER_SYSTEM -> meterSystemRadioOption.deepCopy()
             else -> null
         }
     }

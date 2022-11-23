@@ -246,8 +246,8 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
 
     override fun doGetRadioOption(node: RadioNode): RadioState? {
         return when (node) {
-            RadioNode.SYSTEM_SOUND_EFFECT -> eqMode.copy()
-            RadioNode.AUDIO_ENVI_AUDIO -> audioEffectOption.copy()
+            RadioNode.SYSTEM_SOUND_EFFECT -> eqMode.deepCopy()
+            RadioNode.AUDIO_ENVI_AUDIO -> audioEffectOption.deepCopy()
             else -> null
         }
     }
@@ -274,11 +274,11 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
 
     override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.AUDIO_SOUND_TONE -> toneAtomic.copy()
-            SwitchNode.AUDIO_SOUND_HUAWEI -> huaweiAtomic.copy()
-            SwitchNode.SPEED_VOLUME_OFFSET -> offsetAtomic.copy()
-            SwitchNode.AUDIO_SOUND_LOUDNESS -> loudnessAtomic.copy()
-            SwitchNode.AUDIO_ENVI_AUDIO -> audioEffectStatus.copy()
+            SwitchNode.AUDIO_SOUND_TONE -> toneAtomic.deepCopy()
+            SwitchNode.AUDIO_SOUND_HUAWEI -> huaweiAtomic.deepCopy()
+            SwitchNode.SPEED_VOLUME_OFFSET -> offsetAtomic.deepCopy()
+            SwitchNode.AUDIO_SOUND_LOUDNESS -> loudnessAtomic.deepCopy()
+            SwitchNode.AUDIO_ENVI_AUDIO -> audioEffectStatus.deepCopy()
             else -> null
         }
     }

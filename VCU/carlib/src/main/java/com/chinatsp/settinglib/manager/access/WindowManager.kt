@@ -133,10 +133,10 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager,
 
     override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.WIN_CLOSE_WHILE_RAIN -> autoCloseWinInRain.copy()
-            SwitchNode.WIN_CLOSE_FOLLOW_LOCK -> autoCloseWinAtLock.copy()
-            SwitchNode.WIN_REMOTE_CONTROL -> winRemoteControl.copy()
-            SwitchNode.RAIN_WIPER_REPAIR -> rainWiperRepair.copy()
+            SwitchNode.WIN_CLOSE_WHILE_RAIN -> autoCloseWinInRain.deepCopy()
+            SwitchNode.WIN_CLOSE_FOLLOW_LOCK -> autoCloseWinAtLock.deepCopy()
+            SwitchNode.WIN_REMOTE_CONTROL -> winRemoteControl.deepCopy()
+            SwitchNode.RAIN_WIPER_REPAIR -> rainWiperRepair.deepCopy()
             else -> null
         }
     }

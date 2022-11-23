@@ -337,6 +337,8 @@ IACC会优先通过识别车道两侧清晰的车道线进行横向辅助控制�
 需注意，该系统是辅助功能，当雷达探测到栏杆、树木、斜坡，或外界存在与雷达工作频段接近的噪音时，系统可能会误
 触发。当雷达表面脏污时，系统可能会误触发或不触发。</string>
 
+    <string name="hint_low_voltage">蓄电池电量低，将关闭部分舒适性功能</string>
+    <string name="hint_low_voltage_close_screen">蓄电池电量低，中控屏即将关闭</string>
     <string name="global_txt_close">5分钟后您的爱车将自动关闭</string>
     <string name="global_txt_engine">请启动发动机，避免蓄电池亏电</string>
     <string name="global_txt_power_supply">蓄电池电量过低，将关闭部分\n舒适性功能和娱乐功能</string>

@@ -229,7 +229,7 @@ class BrightnessManager : BaseManager(), IProgressManager, ISwitchManager {
 
     override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.LIGHT_AUTO_MODE -> lightAutoMode.copy()
+            SwitchNode.LIGHT_AUTO_MODE -> lightAutoMode.deepCopy()
             else -> null
         }
     }

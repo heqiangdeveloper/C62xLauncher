@@ -135,7 +135,7 @@ class SideBackManager : BaseManager(), IOptionManager {
     override fun doGetRadioOption(node: RadioNode): RadioState? {
         return when (node) {
             RadioNode.ADAS_SIDE_BACK_SHOW_AREA -> {
-                showAreaValue.copy()
+                showAreaValue.deepCopy()
             }
             else -> null
         }
@@ -180,11 +180,11 @@ class SideBackManager : BaseManager(), IOptionManager {
 
     override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.ADAS_DOW -> dowValue.copy()
-            SwitchNode.ADAS_BSD -> bsdValue.copy()
-            SwitchNode.ADAS_BSC -> bscValue.copy()
-            SwitchNode.ADAS_MEB -> mebValue.copy()
-            SwitchNode.ADAS_GUIDES -> guidesValue.copy()
+            SwitchNode.ADAS_DOW -> dowValue.deepCopy()
+            SwitchNode.ADAS_BSD -> bsdValue.deepCopy()
+            SwitchNode.ADAS_BSC -> bscValue.deepCopy()
+            SwitchNode.ADAS_MEB -> mebValue.deepCopy()
+            SwitchNode.ADAS_GUIDES -> guidesValue.deepCopy()
             else -> null
         }
     }

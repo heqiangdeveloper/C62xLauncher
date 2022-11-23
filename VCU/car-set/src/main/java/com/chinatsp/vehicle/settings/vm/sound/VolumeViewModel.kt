@@ -30,31 +30,31 @@ class VolumeViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     val naviVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            value = manager.doGetVolume(Progress.NAVI)?.copy()
+            value = manager.doGetVolume(Progress.NAVI)?.deepCopy()
         }
     }
 
     val mediaVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            value = manager.doGetVolume(Progress.MEDIA)?.copy()
+            value = manager.doGetVolume(Progress.MEDIA)?.deepCopy()
         }
     }
 
     val phoneVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            value = manager.doGetVolume(Progress.PHONE)?.copy()
+            value = manager.doGetVolume(Progress.PHONE)?.deepCopy()
         }
     }
 
     val voiceVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            value = manager.doGetVolume(Progress.VOICE)?.copy()
+            value = manager.doGetVolume(Progress.VOICE)?.deepCopy()
         }
     }
 
     val systemVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            value = manager.doGetVolume(Progress.SYSTEM)?.copy()
+            value = manager.doGetVolume(Progress.SYSTEM)?.deepCopy()
         }
     }
 

@@ -13,6 +13,7 @@ import com.chinatsp.vehicle.controller.annotation.Model
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.common.library.frame.base.BaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -84,28 +85,52 @@ class KanziViewModel @Inject constructor(app: Application, model: BaseModel) :
         get() = _lfWindow
 
     private val _lfWindow: MutableLiveData<Int> by lazy {
-        MutableLiveData(windowManager.obtainAccessState(IPart.L_F, Model.ACCESS_WINDOW))
+        var degree = windowManager.obtainAccessState(IPart.L_F, Model.ACCESS_WINDOW)!!
+        if (degree < 0 || degree > 100) {
+            degree = 0
+        }
+        val value = ((degree * -40).toFloat() / 100).toInt()
+        Timber.d("WindowDegree _lfWindow degree:$degree, value:$value")
+        MutableLiveData(value)
     }
 
     val lrWindow: LiveData<Int>
         get() = _lrWindow
 
     private val _lrWindow: MutableLiveData<Int> by lazy {
-        MutableLiveData(windowManager.obtainAccessState(IPart.L_B, Model.ACCESS_WINDOW))
+        var degree = windowManager.obtainAccessState(IPart.L_B, Model.ACCESS_WINDOW)!!
+        if (degree < 0 || degree > 100) {
+            degree = 0
+        }
+        val value = ((degree * -40).toFloat() / 100).toInt()
+        Timber.d("WindowDegree _lrWindow degree:$degree, value:$value")
+        MutableLiveData(value)
     }
 
     val rfWindow: LiveData<Int>
         get() = _rfWindow
 
     private val _rfWindow: MutableLiveData<Int> by lazy {
-        MutableLiveData(windowManager.obtainAccessState(IPart.R_F, Model.ACCESS_WINDOW))
+        var degree = windowManager.obtainAccessState(IPart.R_F, Model.ACCESS_WINDOW)!!
+        if (degree < 0 || degree > 100) {
+            degree = 0
+        }
+        val value = ((degree * -40).toFloat() / 100).toInt()
+        Timber.d("WindowDegree _rfWindow degree:$degree, value:$value")
+        MutableLiveData(value)
     }
 
     val rrWindow: LiveData<Int>
         get() = _rrWindow
 
     private val _rrWindow: MutableLiveData<Int> by lazy {
-        MutableLiveData(windowManager.obtainAccessState(IPart.R_B, Model.ACCESS_WINDOW))
+        var degree = windowManager.obtainAccessState(IPart.R_B, Model.ACCESS_WINDOW)!!
+        if (degree < 0 || degree > 100) {
+            degree = 0
+        }
+        val value = ((degree * -40).toFloat() / 100).toInt()
+        Timber.d("WindowDegree _rrWindow degree:$degree, value:$value")
+        MutableLiveData(value)
     }
 
     val fWiper: LiveData<Int>
@@ -255,7 +280,6 @@ class KanziViewModel @Inject constructor(app: Application, model: BaseModel) :
     }
 
 
-
     private fun onInclusiveSignalChanged(part: Int, value: Int) {
         when (part) {
             IPart.HEAD -> doUpdate(_headDoor, value)
@@ -265,7 +289,9 @@ class KanziViewModel @Inject constructor(app: Application, model: BaseModel) :
     }
 
     private fun onWindowSignalChanged(part: Int, degree: Int) {
-        val value = ((degree * -40).toFloat() / 100).toInt()
+        val newDegree = if (degree < 0 || degree > 100) 0 else degree
+        val value = ((newDegree * -40).toFloat() / 100).toInt()
+        Timber.d("WindowDegree onWindowSignalChanged part:$part, degree:$degree, newDegree:$newDegree, value:$value")
         when (part) {
             IPart.L_F -> doUpdate(_lfWindow, value)
             IPart.R_F -> doUpdate(_rfWindow, value)

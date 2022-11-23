@@ -44,19 +44,19 @@ class BrightnessViewModel @Inject constructor(app: Application, model: BaseModel
 
     val acScreenVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            value = manager.doGetVolume(Progress.CONDITIONER_SCREEN_BRIGHTNESS)?.copy()
+            value = manager.doGetVolume(Progress.CONDITIONER_SCREEN_BRIGHTNESS)?.deepCopy()
         }
     }
 
     val hostScreenVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            value = manager.doGetVolume(Progress.HOST_SCREEN_BRIGHTNESS)?.copy()
+            value = manager.doGetVolume(Progress.HOST_SCREEN_BRIGHTNESS)?.deepCopy()
         }
     }
 
     val meterScreenVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            value = manager.doGetVolume(Progress.METER_SCREEN_BRIGHTNESS)?.copy()
+            value = manager.doGetVolume(Progress.METER_SCREEN_BRIGHTNESS)?.deepCopy()
         }
     }
 

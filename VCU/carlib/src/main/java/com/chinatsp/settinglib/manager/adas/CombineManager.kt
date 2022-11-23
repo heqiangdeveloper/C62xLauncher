@@ -82,8 +82,8 @@ class CombineManager : BaseManager(), ISwitchManager {
 
     override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.ADAS_HMA -> hmaValue.copy()
-            SwitchNode.ADAS_TSR -> slaValue.copy()
+            SwitchNode.ADAS_HMA -> hmaValue.deepCopy()
+            SwitchNode.ADAS_TSR -> slaValue.deepCopy()
             else -> null
         }
     }

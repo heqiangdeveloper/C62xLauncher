@@ -51,18 +51,17 @@ object VcuUtils {
 //        0x0: OFF 0x1: ACC 0x2: IGN ON 0x3: CRANK
         val signal = CarCabinManager.ID_POWER_MODE_BCM
         val value = manager.readIntProperty(signal, Origin.CABIN)
-        val result = value == 0x2
+        val result = value == Constant.POWER_ON
         Timber.d("isPowerLaunch invoke value:$value, result:$result")
         return result
     }
 
-    private fun isPowerValid(manager: BaseManager = GlobalManager.instance): Boolean {
-//        0x0:  reserved  0x1:  Invaild  0x2:  Vaild  0x3:  reserved
+    fun isPowerValid(manager: BaseManager = GlobalManager.instance): Boolean {
+//        0x0:  reserved  0x1:  Invalid  0x2:  Valid  0x3:  reserved
         val signal = CarCabinManager.ID_POWER_MODE_VALID_BCM
         val value = manager.readIntProperty(signal, Origin.CABIN)
-        val result = value == 0x2
-        Timber.d("isPowerValid invoke value:$value, result:$result")
-        return result
+//        Timber.d("isPowerValid invoke value:$value, result:$result")
+        return value == 0x2
     }
 
     fun isParking(manager: BaseManager = GlobalManager.instance): Boolean {
@@ -93,17 +92,17 @@ object VcuUtils {
     }
 
     fun isCareLevel(@Level vararg levels: Int, expect: Boolean = true): Boolean {
-        val value = getLevelValue()
+        val value = VEHICLE_LEVEL
         val actual = levels.contains(value)
         val result = !(actual xor expect)
         Timber.d("isCareLevel value: $value, actual:$actual, result:$result")
         return result
     }
 
-    fun getLevelValue(): Int {
+    val VEHICLE_LEVEL: Int by lazy {
         val value = SystemProperties.getInt(OffLine.LEVEL, Level.LEVEL3)
         Timber.d("getLevelValue value: $value")
-        return value
+        return@lazy value
     }
 
     val isAmplifier: Boolean by lazy {

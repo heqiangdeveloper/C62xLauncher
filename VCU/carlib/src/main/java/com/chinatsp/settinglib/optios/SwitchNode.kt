@@ -190,7 +190,7 @@ enum class SwitchNode(
     /**
      * 座舱--其它--蓄电池优化
      * set -> 整车低压能量管理开关[0x1,0,0x0,0x3] 0x0: Inactive 0x1: ON 0x2: OFF 0x3: Invalid
-     * get -> 0x0:LVPM Enable; 0x1:IBS Error; 0x2:IBS dismatch; 0x3:Invald(no ibs);
+     * get -> 0x0:LVPM Enable; 0x1:IBS Error; 0x2:IBS dismatch; 0x3:Invalid(no ibs);
      *        0x4:LVPM Disenabled by HUM/APP; 0x05：LVPM disabled by OTA
      */
     DRIVE_BATTERY_OPTIMIZE(
@@ -246,10 +246,8 @@ enum class SwitchNode(
     ),
 
     SPEED_VOLUME_OFFSET_INSERT(
-        get = Norm(
-            on = 0x01, off = 0x02, origin = Origin.MCU,
-            signal = CarMcuManager.ID_MCU_RET_AUDIO_INFO
-        ),
+        get = Norm(on = 0x01, off = 0x02, origin = Origin.MCU,
+            signal = CarMcuManager.ID_MCU_RET_AUDIO_INFO),
         set = Norm(on = 0x01, off = 0x02, signal = CarCabinManager.ID_SETVOLUMESPEED),
         default = false
     ),

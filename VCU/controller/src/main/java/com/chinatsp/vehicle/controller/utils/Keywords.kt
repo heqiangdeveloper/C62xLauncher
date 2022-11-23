@@ -197,6 +197,8 @@ interface Keywords {
 
         const val COMMAND_FAILED = "操作没有成功，等一下再试吧"
 
+        const val NEED_START_POWER = "操作没有成功，请先确保车辆处于ON档"
+
         const val NEED_START_ENGINE = "操作没有成功，请先启动发动机"
 
 

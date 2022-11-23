@@ -52,6 +52,8 @@ object AirController : IController {
     // 升高两度参数
     private const val REF_CUR = "CUR"
     private const val REF_ZERO = "ZERO"
+
+    private const val AIR_FLOW_BODY = "身上"
     //面
     private const val AIR_FLOW_FACE = "面"
     //脚
@@ -173,19 +175,19 @@ object AirController : IController {
         }
         var action = Action.VOID
         var orien = IOrien.VOID
-        if (AIR_FLOW_FACE == slots.airflowDirection) {
+        if (slots.airflowDirection.contains(AIR_FLOW_FACE)) {
             action = Action.OPTION
             orien = orien or IOrien.FACE
         }
-        if (AIR_FLOW_FOOT == slots.airflowDirection) {
+        if (slots.airflowDirection.contains(AIR_FLOW_FOOT)) {
             action = Action.OPTION
             orien = orien or IOrien.FOOT
         }
-        if (AIR_FLOW_FACE_FOOT == slots.airflowDirection) {
+        if (slots.airflowDirection.contains(AIR_FLOW_BODY)) {
             action = Action.OPTION
-            orien = orien or IOrien.FACE
-            orien = orien or IOrien.FOOT
+            orien = orien or IOrien.FACE or IOrien.FOOT
         }
+
         if (isMatch(DOUBLE_DEFROST, slots.mode)) {
             orien = orien or IOrien.MIDDLE
         }

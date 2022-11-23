@@ -57,12 +57,8 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
     }
 
     private fun initViewsDisplay() {
-        if (VcuUtils.isCareLevel(
-                Level.LEVEL3,
-                Level.LEVEL4,
-                Level.LEVEL5
-            )
-        ) {//lv4跟lv5智能钥匙版本有车门智能进入功能
+        if (VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4, Level.LEVEL5)) {
+            //lv4跟lv5智能钥匙版本有车门智能进入功能
             binding.wheelAutomaticHeating.visibility = View.VISIBLE
             binding.line3.visibility = View.VISIBLE
         }
@@ -84,11 +80,11 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
     private fun addRadioLiveDataListener() {
         viewModel.automaticDoorLock.observe(this) {
             doUpdateRadio(RadioNode.DOOR_DRIVE_LOCK, it, false)
-            updateOptionActive()
+//            updateOptionActive()
         }
         viewModel.automaticDoorUnlock.observe(this) {
             doUpdateRadio(RadioNode.DOOR_FLAMEOUT_UNLOCK, it, false)
-            updateOptionActive()
+//            updateOptionActive()
             setAnimation(it.data.toString())
         }
     }
@@ -116,7 +112,7 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
     private fun addSwitchLiveDataListener() {
         viewModel.smartDoorAccess.observe(this) {
             doUpdateSwitch(SwitchNode.DOOR_SMART_ENTER, it)
-            updateOptionActive()
+//            updateOptionActive()
         }
     }
 
@@ -143,14 +139,14 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
         return when (node) {
             RadioNode.DOOR_DRIVE_LOCK -> viewModel.automaticDoorLock.value?.enable() ?: false
             RadioNode.DOOR_FLAMEOUT_UNLOCK -> viewModel.automaticDoorUnlock.value?.enable() ?: false
-            else -> false
+            else -> super.obtainActiveByNode(node)
         }
     }
 
     override fun obtainActiveByNode(node: SwitchNode): Boolean {
         return when (node) {
             SwitchNode.DOOR_SMART_ENTER -> viewModel.smartDoorAccess.value?.enable() ?: false
-            else -> false
+            else -> super.obtainActiveByNode(node)
         }
     }
 

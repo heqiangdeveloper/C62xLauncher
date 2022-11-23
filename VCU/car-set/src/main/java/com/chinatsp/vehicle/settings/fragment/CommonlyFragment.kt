@@ -49,24 +49,9 @@ class CommonlyFragment : BaseTabFragment<KanziViewModel, AccessFragmentBinding>(
     private fun setClickListener() {
         binding.closeWindow.setOnClickListener {
             GlobalManager.instance.doSwitchWindow(false)
-            mDataFeeder?.kanziController?.let {
-                val value = 0
-                sendDoubleValue(it, KanZiKeys.LFWindowUpDown, value)
-                sendDoubleValue(it, KanZiKeys.LRWindowUpDown, value)
-                sendDoubleValue(it, KanZiKeys.RFWindowUpDown, value)
-                sendDoubleValue(it, KanZiKeys.RRWindowUpDown, value)
-            }
-
         }
         binding.openWindow.setOnClickListener {
             GlobalManager.instance.doSwitchWindow(true)
-            mDataFeeder?.kanziController?.let {
-                val value = -40
-                sendDoubleValue(it, KanZiKeys.LFWindowUpDown, value)
-                sendDoubleValue(it, KanZiKeys.LRWindowUpDown, value)
-                sendDoubleValue(it, KanZiKeys.RFWindowUpDown, value)
-                sendDoubleValue(it, KanZiKeys.RRWindowUpDown, value)
-            }
         }
         binding.refreshWindow.setOnClickListener {
             GlobalManager.instance.resetSwitchWindow()
@@ -168,6 +153,7 @@ class CommonlyFragment : BaseTabFragment<KanziViewModel, AccessFragmentBinding>(
 
     private fun observeAccessState() {
         if (null != context && null != viewModel) {
+            initVehicleStatus()
             viewModel.headDoor.observe(this) {
                 sendIntValue(KanZiKeys.Hood, it)
             }

@@ -116,9 +116,9 @@ class LaneManager : BaseManager(), IOptionManager {
 
     override fun doGetRadioOption(node: RadioNode): RadioState? {
         return when (node) {
-            RadioNode.ADAS_LANE_ASSIST_MODE -> laneAssistMode.copy()
-            RadioNode.ADAS_LDW_STYLE -> ldwWarningStyle.copy()
-            RadioNode.ADAS_LDW_SENSITIVITY -> ldwWarningSensitivity.copy()
+            RadioNode.ADAS_LANE_ASSIST_MODE -> laneAssistMode.deepCopy()
+            RadioNode.ADAS_LDW_STYLE -> ldwWarningStyle.deepCopy()
+            RadioNode.ADAS_LDW_SENSITIVITY -> ldwWarningSensitivity.deepCopy()
             else -> null
         }
     }
@@ -193,7 +193,7 @@ class LaneManager : BaseManager(), IOptionManager {
 
     override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.ADAS_LANE_ASSIST -> laneAssistFunction.copy()
+            SwitchNode.ADAS_LANE_ASSIST -> laneAssistFunction.deepCopy()
             else -> null
         }
     }

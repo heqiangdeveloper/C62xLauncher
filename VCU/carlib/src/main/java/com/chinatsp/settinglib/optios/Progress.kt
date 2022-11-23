@@ -51,7 +51,7 @@ enum class Progress(
     HOST_SCREEN_BRIGHTNESS(
         min = 0x01,
         max = 0x0A,
-        def = 0x05,
+        def = 0x04,
         get = CanLocate(signal = -1),
         set = CanLocate(signal = -1)
     ),

@@ -16,6 +16,11 @@ object Constant {
 
     var ENGINE_STATUS = true
 
+
+    const val POWER_ON = 0x2
+
+    const val POWER_OFF = 0x0
+
     const val ANGLE_SAVE = 0x11
 
     const val ANGLE_ADJUST = 0x12
@@ -27,6 +32,12 @@ object Constant {
     const val VIEW_ENABLE = -100
 
     /**
+     * 电源状态
+     */
+    var POWER_STATE = INVALID
+
+
+        /**
      * 浅色主题（白天模式）
      */
     const val LIGHT_TOPIC: Int = 0x01

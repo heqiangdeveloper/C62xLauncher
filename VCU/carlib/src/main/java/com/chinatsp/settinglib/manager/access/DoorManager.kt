@@ -93,7 +93,7 @@ class DoorManager private constructor() : BaseManager(), IOptionManager, IAccess
 
     override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.DOOR_SMART_ENTER -> smartAccess.copy()
+            SwitchNode.DOOR_SMART_ENTER -> smartAccess.deepCopy()
             else -> null
         }
     }
@@ -110,10 +110,10 @@ class DoorManager private constructor() : BaseManager(), IOptionManager, IAccess
     override fun doGetRadioOption(node: RadioNode): RadioState? {
         return when (node) {
             RadioNode.DOOR_DRIVE_LOCK -> {
-                driveAutoLock.copy()
+                driveAutoLock.deepCopy()
             }
             RadioNode.DOOR_FLAMEOUT_UNLOCK -> {
-                flameoutAutoUnlock.copy()
+                flameoutAutoUnlock.deepCopy()
             }
             else -> null
         }

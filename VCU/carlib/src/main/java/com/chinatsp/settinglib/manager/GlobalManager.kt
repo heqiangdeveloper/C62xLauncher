@@ -6,6 +6,7 @@ import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import com.chinatsp.settinglib.BaseApp
+import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.access.AccessManager
 import com.chinatsp.settinglib.manager.adas.AdasManager
@@ -68,110 +69,21 @@ class GlobalManager private constructor() : BaseManager() {
         get() = EnumMap(Origin::class.java)
 
     override fun onDispatchSignal(property: CarPropertyValue<*>, origin: Origin): Boolean {
-        if (Origin.CABIN == origin && CarCabinManager.ID_BDC_VEHICLE_MODE == property.propertyId) {
-            val value = property.value
-            if (value !is Int) {
+        if (Origin.CABIN == origin) {
+            if (CarCabinManager.ID_BDC_VEHICLE_MODE == property.propertyId) {
+                onVehicleModeChanged(property.value)
                 return true
             }
-//            BDC Vehicle mode,used for 62 F06
-//            0x0: Normal Mode（default） 0x1: Transport Mode  0x2: Exhibition Mode
-//            0x3: Factory Mode（reserved）  0x4: Crash Mode（reserved）
-//            0x5: Test Mode（reserved）  0x6: Reserved  0x7: Rerserved
-            when (value) {
-                0x0 -> {
-                    /**正常模式*/
-                    startDialogService("default")
-                }
-                0x1 -> {
-                    /**运输模式*/
-                    startDialogService("transportMode")
-                }
-                0x2 -> {
-                    /**展车模式*/
-                    startDialogService("exhibitionMode")
-                }
-            }/*else if(0x4 == value){
-                */
-            /**展车模式切换失败*//*
-                startDialogService("exhibitionModeError")
-            }*/
-
-            return true
-        }
-        /**开关机状态*/
-        if (origin == Origin.CABIN && CarCabinManager.ID_POWER_MODE_BCM == property.propertyId) {
-            val value = property.value as Int
-
-            /**电源管理是否有效  0x0*/
-            val loUPwrStatMngtVldValue =
-                readIntProperty(CarCabinManager.ID_LOUPWRSTATMNGTVLD, Origin.CABIN)
-
-            /**电源等级*/
-            val loUPwrMngtStatlvl =
-                readIntProperty(CarCabinManager.ID_LOUPWRMNGTSTATLVL, Origin.CABIN)
-
-            /**发动机状态*/
-            //0x0:Engine NOT running 0x1:Cranking 0x2:Engine running 0x3:Fault
-            //val engineRunning = readIntProperty(CarCabinManager.ID_ENGINE_RUNNING, Origin.CABIN)
-            val status = VcuUtils.isEngineRunning()
-            Timber.d("CABIN status:$status")
-            Timber.d("CABIN loUPwrStatMngtVldValue:$loUPwrStatMngtVldValue")
-            Timber.d("CABIN value:$value")
-            Timber.d("CABIN loUPwrMngtStatlvl:$loUPwrMngtStatlvl")
-            if (value == 0x0) {
-                //0ff 电源等级LV0时，延迟五分钟弹《五分钟即将关闭》
-                if (loUPwrMngtStatlvl == 0x0) {
-                    startDialogService("ON")
-                }
-            } else if (value == 0x2) {
-                //ON 发动机未打火 电源等级LV1的时候延迟15分钟弹“5分钟即将关闭”弹框，
-                // 电源等级LV2的时候OFF——>ON马上弹
-                if (loUPwrStatMngtVldValue == 0x0 && !status) {
-                    if (loUPwrMngtStatlvl == 0x1) {
-                        //level1延迟15分钟弹出提示
-                        startDialogService("leve1")
-                    } else if (loUPwrMngtStatlvl == 0x2) {
-                        //leve2的时候立马弹出
-                        startDialogService("leve2")
-                    }
-
-                }
-            }
-
-            return true
-        }
-
-        /**电源等级状态*/
-        if (origin == Origin.CABIN && CarCabinManager.ID_LOUPWRMNGTSTATLVL == property.propertyId) {
-            /**电源管理是否有效  0x0*/
-            val loUPwrStatMngtVldValue =
-                readIntProperty(CarCabinManager.ID_LOUPWRSTATMNGTVLD, Origin.CABIN)
-
-            /**发动机状态*/
-            //0x0:Engine NOT running 0x1:Cranking 0x2:Engine running 0x3:Fault
-            val engineRunning =
-                readIntProperty(CarCabinManager.ID_ENGINE_RUNNING, Origin.CABIN)
-
             /**开关机状态*/
-            val powerValue = readIntProperty(CarCabinManager.ID_POWER_MODE_BCM, Origin.CABIN)
-            val value = property.value
-            Timber.d("CABIN powerValue:$powerValue")
-            Timber.d("CABIN loUPwrStatMngtVldValue:$loUPwrStatMngtVldValue")
-            Timber.d("CABIN value:$value")
-            val status = VcuUtils.isPower() && !VcuUtils.isEngineRunning()
-            Timber.d("CABIN powerValue:$powerValue. status:$status")
-
-//            if(powerValue == 0x2 && engineRunning == 0x0){
-            if (status) {
-                //点火但没有启动发动机
-                /**LoUPwrStatMngtVld=0x0 且LoUPwrMngtStatLvl=0x1或0x2时*/
-                if (loUPwrStatMngtVldValue == 0x0 && value == 0x1 || value == 0x2) {
-                    /**弹出储电量过低*/
-                    startDialogService("powerSupply")
-                    return true
-                }
+            if (CarCabinManager.ID_POWER_MODE_BCM == property.propertyId) {
+                onPowerModeChanged(property.value)
+                return true
             }
-
+            /**电源等级状态*/
+            if (CarCabinManager.ID_LOUPWRMNGTSTATLVL == property.propertyId) {
+                onPowerLevelChanged(property.value)
+                return true
+            }
         }
         managers.forEach {
             it.onDispatchSignal(property, origin)
@@ -179,12 +91,117 @@ class GlobalManager private constructor() : BaseManager() {
         return true
     }
 
-    private fun startDialogService(type: String) {
-        val intent = Intent("com.chinatsp.vehicle.settings.service.SystemService")
+    private fun onPowerLevelChanged(voltageLevel: Any?) {
+        if (voltageLevel !is Int) {
+            Timber.e("onPowerLevelChanged but property value is not Int!")
+            return
+        }
+        if (VcuUtils.isEngineRunning()) {
+            Timber.d("onPowerLevelChanged break by isEngine == true")
+            startDialogService(Hint.ALL_HINT, Hint.HIDE)
+            return
+        }
+
+        val isPower = VcuUtils.isPower()
+        if (!isPower) {
+            Timber.d("onPowerLevelChanged break by power is off")
+            return
+        }
+        /**电源管理是否有效 LoUPwrStatMngtVld  0x0*/
+        val staticPower = readIntProperty(CarCabinManager.ID_LOUPWRSTATMNGTVLD, Origin.CABIN)
+        if (0x0 != staticPower) {
+            Timber.d("onPowerLevelChanged break by STATIC_POWER_VALID is invalid")
+            return
+        }
+        Timber.d("onPowerLevelChanged voltageLevel:$voltageLevel")
+        //点火但没有启动发动机
+        /**LoUPwrStatMngtVld=0x0 且LoUPwrMngtStatLvl=0x1或0x2时*/
+        if (voltageLevel == 0x1 || voltageLevel == 0x2) {
+            /**弹出储电量过低*/
+            startDialogService(Hint.powerSupply)
+        }
+    }
+
+    /**
+     * 电源模式状态改变
+     * @param mode 当前的电源模式--0x0: OFF 0x1: ACC 0x2: IGN ON 0x3: CRANK
+     */
+    private fun onPowerModeChanged(mode: Any?) {
+        if (mode !is Int) {
+            Timber.e("onPowerModeChanged but property value is not Int!")
+            return
+        }
+        /**发动机状态*/
+        val isEngine = VcuUtils.isEngineRunning()
+        if (isEngine) {
+            Timber.d("onPowerModeChanged break by isEngine == true")
+            startDialogService(Hint.ALL_HINT, Hint.HIDE)
+            return
+        }
+        Constant.POWER_STATE = mode
+        if (Constant.POWER_ON != mode) {
+            Timber.d("onPowerModeChanged break by mode != POWER_ON")
+            return
+        }
+        if (!VcuUtils.isPowerValid()) {
+            Timber.d("onPowerModeChanged break by POWER_MODE is invalid")
+            return
+        }
+        /**电源管理是否有效  0x0*/
+//      【反馈】Low voltage Power Static Management valid  0x0:valid; 0x1:invalid; 0x2~0x3:Reserved
+        val staticPower = readIntProperty(CarCabinManager.ID_LOUPWRSTATMNGTVLD, Origin.CABIN)
+        if (0x0 != staticPower) {
+            Timber.d("onPowerModeChanged break by STATIC_POWER_VALID is invalid")
+            return
+        }
+        /**电源等级*/
+//      Low voltage Power Management static Level
+//      0x0:IGON level 0………… 0x5:IGON level 5; 0x8:IGOFF level 0; 0x9:IGOFF level 1; 0x6-0x7,0xA-0xF:reserved
+        val powerLevel = readIntProperty(CarCabinManager.ID_LOUPWRMNGTSTATLVL, Origin.CABIN)
+        Timber.d("onPowerModeChanged execute powerLevel:$powerLevel")
+        //ON 发动机未打火 电源等级LV1的时候延迟15分钟弹“5分钟即将关闭”弹框，
+        //电源等级LV2的时候OFF——>ON马上弹
+        if (0x1 == powerLevel) {
+            startDialogService(Hint.leve1)//level1延迟15分钟弹出提示
+            return
+        }
+        if (0x2 == powerLevel) {
+            startDialogService(Hint.leve2) //leve2的时候立马弹出
+            return
+        }
+    }
+
+    /**
+     * 车辆模式状态改变
+     * @param vehicleMode
+     * BDC Vehicle mode,used for 62 F06
+     * 0x0: Normal Mode（default） 0x1: Transport Mode  0x2: Exhibition Mode
+     * 0x3: Factory Mode（reserved）  0x4: Crash Mode（reserved）
+     * 0x5: Test Mode（reserved）  0x6: Reserved  0x7: Rerserved
+     */
+    private fun onVehicleModeChanged(vehicleMode: Any?) {
+        if (vehicleMode !is Int) {
+            return
+        }
+        when (vehicleMode) {
+            0x0 -> startDialogService(Hint.default)
+            /**正常模式*/
+            0x1 -> startDialogService(Hint.transportMode)
+            /**运输模式*/
+            0x2 -> startDialogService(Hint.exhibitionMode)
+            /**展车模式*/
+//            0x4 -> startDialogService(HintType.exhibitionModeError)/**展车模式切换失败*/
+        }
+    }
+
+    private fun startDialogService(signal: Int, action: Int = Hint.SHOW) {
+        val intent = Intent()
         intent.setPackage("com.chinatsp.vehicle.settings")
-        val bundleSimple = Bundle()
-        bundleSimple.putString("type", type)
-        intent.putExtras(bundleSimple)
+        intent.action = "com.chinatsp.vehicle.settings.service.SystemService"
+        val bundle = Bundle()
+        bundle.putInt(Hint.type, signal)
+        bundle.putInt(Hint.action, action)
+        intent.putExtras(bundle)
         BaseApp.instance.startService(intent)
     }
 

@@ -88,8 +88,8 @@ class ForwardManager : BaseManager(), ISwitchManager {
 
     override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.ADAS_FCW -> fcwStatus.copy()
-            SwitchNode.ADAS_AEB -> aebStatus.copy()
+            SwitchNode.ADAS_FCW -> fcwStatus.deepCopy()
+            SwitchNode.ADAS_AEB -> aebStatus.deepCopy()
             else -> null
         }
     }
