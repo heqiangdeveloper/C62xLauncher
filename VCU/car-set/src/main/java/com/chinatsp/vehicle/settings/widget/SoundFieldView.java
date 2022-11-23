@@ -83,6 +83,8 @@ public class SoundFieldView extends LinearLayout {
     }
 
 
+    float beforeX = 0;
+    float beforeY = 0;
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -94,10 +96,13 @@ public class SoundFieldView extends LinearLayout {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 mLastTime = mCurTime;
                 mCurTime = System.currentTimeMillis();
-
-                if (mCurTime - mLastTime < 500) {
+                float xx = event.getX()-beforeX;
+                float yy = event.getY()-beforeY;
+                beforeX = event.getX();
+                beforeY = event.getY();
+                if ((mCurTime - mLastTime < 500) && Math.abs(xx)<=5.0f && Math.abs(yy)<=5.0f) {
                     mDoubleClick = true;
-                    Log.d(TAG, "这就是传说中的双击事件 mDoubleClick=" + mDoubleClick);
+                    Log.d(TAG, "这就是传说中的双击事件 mDoubleClick=" + mDoubleClick+" xx="+xx+" yy="+yy);
                     if (mOnValueChangedListener != null) {
                         mOnValueChangedListener.onDoubleClickChange(mBalanceValue, mFadeValue, mPosX, mPosY);
                     }

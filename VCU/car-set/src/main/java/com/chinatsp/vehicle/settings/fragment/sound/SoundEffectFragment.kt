@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import com.chinatsp.settinglib.Constant
+import com.chinatsp.settinglib.SettingManager
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.ISwitchManager
@@ -22,6 +23,7 @@ import com.chinatsp.vehicle.settings.databinding.SoundEffectFragmentBinding
 import com.chinatsp.vehicle.settings.fragment.doors.dialog.EqualizerDialogFragment
 import com.chinatsp.vehicle.settings.fragment.doors.dialog.VolumeDialogFragment
 import com.chinatsp.vehicle.settings.vm.sound.SoundEffectViewModel
+import com.chinatsp.vehicle.settings.widget.SoundFieldView
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.popupwindow.PopWindow
@@ -121,6 +123,7 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
             binding.line1.visibility = View.GONE
             binding.LV3Layout.visibility = View.VISIBLE
             binding.lv5Layout.visibility = View.GONE
+            initDataBalance()
         } else {
             binding.soundLoudnessControlCompensation.visibility = View.VISIBLE
             binding.line3.visibility = View.VISIBLE
@@ -436,4 +439,65 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
             }
         }
     }
+//    ========= 音效平衡 start =============
+    private var OFFSET = 1
+    private var DEFALUT_BALANCE = 0
+    private var DEFALUT_FADE = 0
+    private fun initDataBalance() {
+
+        Timber.d("SoundEffectFragment getAmpType type=${SettingManager.getAmpType()}")
+        if (SettingManager.getAmpType() == 0) {// 1 外置 1-11  ||  0 内置 ——》1-19
+            SoundFieldView.BALANCE_MAX = 18.0;
+            SoundFieldView.FADE_MAX = 18.0;
+        }else{
+            SoundFieldView.BALANCE_MAX = 10.0;
+            SoundFieldView.FADE_MAX = 10.0;
+        }
+        Timber.d("SoundEffectFragment getAmpType OFFSET=${OFFSET} BALANCE_MAX= ${SoundFieldView.BALANCE_MAX}   FADE_MAX =${SoundFieldView.FADE_MAX}")
+        DEFALUT_BALANCE = (SoundFieldView.BALANCE_MAX / 2).toInt();
+        DEFALUT_FADE = (SoundFieldView.FADE_MAX / 2).toInt();
+
+        binding?.apply {
+            soundField.onValueChangedListener = object : SoundFieldView.OnValueChangedListener {
+                override fun onValueChange(balance: Int, fade: Int, x: Float, y: Float) {
+                    Timber.d("SoundEffectFragment onValueChange balance:$balance fade:$fade")
+                    viewModel?.setAudioBalance(balance + OFFSET, fade + OFFSET)
+                }
+
+                override fun onDoubleClickChange(balance: Int, fade: Int, x: Float, y: Float) {
+                    soundField.reset()
+                    Timber.d(" SoundEffectFragmentonDoubleClickChange reset balance:${DEFALUT_BALANCE + OFFSET} fade:${DEFALUT_FADE + OFFSET}")
+                    viewModel?.setAudioBalance(DEFALUT_BALANCE + OFFSET, DEFALUT_FADE + OFFSET)
+                }
+            }
+            refreshDialog.setOnClickListener {
+                soundField.reset()
+                Timber.d("SoundEffectFragment onValueChange reset balance:${DEFALUT_BALANCE + OFFSET} fade:${DEFALUT_FADE + OFFSET}")
+                viewModel?.setAudioBalance(DEFALUT_BALANCE + OFFSET, DEFALUT_FADE + OFFSET)
+            }
+            initBlance()
+        }
+    }
+
+    private fun initBlance() {
+        try {
+            val balance: Int? = viewModel?.getAudioBalance()
+            val fade: Int? = viewModel?.getAudioFade()
+            Timber.d("SoundEffectFragment before getAudioBalFadInfo balance:$balance fade:$fade")
+            binding?.apply {
+                if (balance != null) {
+                    // soundField?.balanceValue = balance + OFFSET
+                    soundField?.balanceValue = balance - OFFSET
+                }
+                if (fade != null) {
+                    //  soundField.fadeValue = -fade + OFFSET
+                    soundField.fadeValue = fade - OFFSET
+                }
+                Timber.d("SoundEffectFragment after getAudioBalFadInfo balance:${soundField?.balanceValue} fade:${soundField.fadeValue}")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+//    ========= 音效平衡 end =============
 }
