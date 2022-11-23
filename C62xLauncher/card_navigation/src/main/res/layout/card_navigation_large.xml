@@ -1,341 +1,326 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="@dimen/card_width_large"
-    android:layout_height="@dimen/card_height_large"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="@dimen/card_height_large">
 
     <ImageView
         android:id="@+id/ivCardNaviBigDefaultMap"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/card_navi_default_map_large"
-        android:visibility="invisible"
-        />
+        android:visibility="visible" />
+
 
     <com.autonavi.autoaidlwidget.AutoAidlWidgetView
         android:id="@+id/surfaceViewNavi"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:visibility="visible"
-        android:layout_marginTop="13px"
         android:layout_marginStart="10px"
-        android:layout_marginBottom="15px"
+        android:layout_marginTop="13px"
         android:layout_marginEnd="26px"
-        />
+        android:layout_marginBottom="15px"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/card_navi_map_foreground"
-        />
+        android:src="@drawable/card_navi_map_foreground" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutCardNaviStatus"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="496px"
             android:layout_height="255px"
-            android:background="@drawable/card_navi_top_message"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="12px"
-            >
+            android:background="@drawable/card_navi_top_message"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
             <ImageView
                 android:id="@+id/ivCardNaviTBTDirectIcon"
                 android:layout_width="120px"
                 android:layout_height="120px"
-                android:src="@drawable/card_navi_tbt_direct_right"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="55px"
                 android:layout_marginTop="26px"
-                />
+                android:src="@drawable/card_navi_tbt_direct_right"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tvCardNaviTBTDirectDistance"
+                style="@style/CardLv3TextView"
                 android:layout_width="84px"
                 android:layout_height="58px"
-                style="@style/CardLv3TextView"
+                android:layout_marginLeft="29px"
+                android:layout_marginTop="40px"
                 android:textSize="50px"
                 app:layout_constraintStart_toEndOf="@id/ivCardNaviTBTDirectIcon"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="40px"
-                android:layout_marginLeft="29px"
-                />
+                app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
                 android:id="@+id/tvCardNaviTBTDirectDistanceUnit"
+                style="@style/CardLv3TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="42px"
-                android:text="米"
-                style="@style/CardLv3TextView"
-                android:textColor="@color/card_grey_default"
-                app:layout_constraintStart_toEndOf="@id/tvCardNaviTBTDirectDistance"
-                app:layout_constraintBottom_toBottomOf="@id/tvCardNaviTBTDirectDistance"
                 android:layout_marginLeft="6px"
-                />
+                android:text="米"
+                android:textColor="@color/card_grey_default"
+                app:layout_constraintBottom_toBottomOf="@id/tvCardNaviTBTDirectDistance"
+                app:layout_constraintStart_toEndOf="@id/tvCardNaviTBTDirectDistance" />
+
             <TextView
+                style="@style/CardLv3TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="42px"
-                android:text="进入"
-                style="@style/CardLv3TextView"
-                android:textColor="@color/card_grey_default"
-                app:layout_constraintStart_toEndOf="@id/tvCardNaviTBTDirectDistanceUnit"
-                app:layout_constraintBottom_toBottomOf="@id/tvCardNaviTBTDirectDistanceUnit"
                 android:layout_marginLeft="5px"
-                />
+                android:text="进入"
+                android:textColor="@color/card_grey_default"
+                app:layout_constraintBottom_toBottomOf="@id/tvCardNaviTBTDirectDistanceUnit"
+                app:layout_constraintStart_toEndOf="@id/tvCardNaviTBTDirectDistanceUnit" />
+
             <TextView
                 android:id="@+id/tvCardNaviTurnRoadName"
-                android:layout_width="240px"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:layout_height="48px"
                 style="@style/CardLv1TextView"
-                app:layout_constraintStart_toStartOf="@id/tvCardNaviTBTDirectDistance"
-                app:layout_constraintTop_toBottomOf="@id/tvCardNaviTBTDirectDistance"
+                android:layout_width="240px"
+                android:layout_height="48px"
                 android:layout_marginLeft="2px"
-                />
+                android:ellipsize="end"
+                android:maxLines="1"
+                app:layout_constraintStart_toStartOf="@id/tvCardNaviTBTDirectDistance"
+                app:layout_constraintTop_toBottomOf="@id/tvCardNaviTBTDirectDistance" />
 
             <ImageView
                 android:id="@+id/ivCardNaviInstructionIconTurnLeft"
-                android:src="@drawable/tbt_lane_1"
                 android:layout_width="@dimen/card_icon_size_navi_tip"
                 android:layout_height="@dimen/card_icon_size_navi_tip"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginStart="48px"
                 android:layout_marginBottom="26px"
+                android:src="@drawable/tbt_lane_1"
                 android:visibility="invisible"
-                />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <ImageView
                 android:id="@+id/ivCardNaviInstructionIconStraight1"
-                android:src="@drawable/tbt_lane_0"
                 android:layout_width="@dimen/card_icon_size_navi_tip"
                 android:layout_height="@dimen/card_icon_size_navi_tip"
-                app:layout_constraintStart_toEndOf="@id/ivCardNaviInstructionIconTurnLeft"
-                app:layout_constraintTop_toTopOf="@id/ivCardNaviInstructionIconTurnLeft"
                 android:layout_marginStart="59px"
+                android:src="@drawable/tbt_lane_0"
                 android:visibility="invisible"
-                />
+                app:layout_constraintStart_toEndOf="@id/ivCardNaviInstructionIconTurnLeft"
+                app:layout_constraintTop_toTopOf="@id/ivCardNaviInstructionIconTurnLeft" />
 
             <ImageView
                 android:id="@+id/ivCardNaviInstructionIconStraight2"
-                android:src="@drawable/tbt_lane_0"
                 android:layout_width="@dimen/card_icon_size_navi_tip"
                 android:layout_height="@dimen/card_icon_size_navi_tip"
-                app:layout_constraintEnd_toStartOf="@id/ivCardNaviInstructionIconTurnRight"
-                app:layout_constraintTop_toTopOf="@id/ivCardNaviInstructionIconTurnRight"
                 android:layout_marginEnd="59px"
+                android:src="@drawable/tbt_lane_0"
                 android:visibility="invisible"
-                />
+                app:layout_constraintEnd_toStartOf="@id/ivCardNaviInstructionIconTurnRight"
+                app:layout_constraintTop_toTopOf="@id/ivCardNaviInstructionIconTurnRight" />
+
             <ImageView
                 android:id="@+id/ivCardNaviInstructionIconTurnRight"
-                android:src="@drawable/tbt_lane_3"
                 android:layout_width="@dimen/card_icon_size_navi_tip"
                 android:layout_height="@dimen/card_icon_size_navi_tip"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginEnd="48px"
                 android:layout_marginBottom="26px"
+                android:src="@drawable/tbt_lane_3"
                 android:visibility="invisible"
-                />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcvLaneInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="58px"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginBottom="25px"
-                />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="72px"
-            android:orientation="horizontal"
-            android:paddingRight="22px"
-            android:paddingLeft="14px"
-            android:background="@drawable/card_navi_tbt_bottom_bg"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginBottom="34px"
+            android:background="@drawable/card_navi_tbt_bottom_bg"
+            android:orientation="horizontal"
+            android:paddingLeft="14px"
+            android:paddingRight="22px"
             android:visibility="visible"
-            >
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
             <ImageView
                 android:id="@+id/ivCardNaviTBTRemainDistance"
                 android:layout_width="@dimen/card_icon_size_lv3"
                 android:layout_height="@dimen/card_icon_size_lv3"
                 android:src="@drawable/card_navi_tbt_distance"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tvCardNaviTBTRemainDistance"
+                style="@style/CardLv3TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="42px"
-                android:maxLines="1"
-                style="@style/CardLv3TextView"
-                android:gravity="center_vertical"
-                app:layout_constraintStart_toEndOf="@id/ivCardNaviTBTRemainDistance"
-                app:layout_constraintTop_toTopOf="@id/ivCardNaviTBTRemainDistance"
-                app:layout_constraintBottom_toBottomOf="@id/ivCardNaviTBTRemainDistance"
                 android:layout_marginStart="5px"
-                />
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                app:layout_constraintBottom_toBottomOf="@id/ivCardNaviTBTRemainDistance"
+                app:layout_constraintStart_toEndOf="@id/ivCardNaviTBTRemainDistance"
+                app:layout_constraintTop_toTopOf="@id/ivCardNaviTBTRemainDistance" />
 
             <ImageView
                 android:id="@+id/ivCardNaviTBTRemainTime"
                 android:layout_width="@dimen/card_icon_size_lv3"
                 android:layout_height="@dimen/card_icon_size_lv3"
+                android:layout_marginLeft="16px"
                 android:src="@drawable/card_navi_tbt_cost_time"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tvCardNaviTBTRemainDistance"
-                android:layout_marginLeft="16px"
-                />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tvCardNaviTBTRemainTime"
+                style="@style/CardLv3TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="42px"
-                android:maxLines="1"
-                style="@style/CardLv3TextView"
-                android:gravity="center_vertical"
-                app:layout_constraintStart_toEndOf="@id/ivCardNaviTBTRemainTime"
-                app:layout_constraintTop_toTopOf="@id/ivCardNaviTBTRemainTime"
-                app:layout_constraintBottom_toBottomOf="@id/ivCardNaviTBTRemainTime"
                 android:layout_marginStart="7px"
-                />
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                app:layout_constraintBottom_toBottomOf="@id/ivCardNaviTBTRemainTime"
+                app:layout_constraintStart_toEndOf="@id/ivCardNaviTBTRemainTime"
+                app:layout_constraintTop_toTopOf="@id/ivCardNaviTBTRemainTime" />
 
             <ImageView
                 android:id="@+id/ivCardNaviTBTArriveTime"
                 android:layout_width="@dimen/card_icon_size_lv3"
                 android:layout_height="@dimen/card_icon_size_lv3"
+                android:layout_marginLeft="16px"
                 android:src="@drawable/card_navi_tbt_arrive_time"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tvCardNaviTBTRemainTime"
-                android:layout_marginLeft="16px"
-                />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tvCardNaviTBTArriveTime"
+                style="@style/CardLv3TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="42px"
-                android:maxLines="1"
-                style="@style/CardLv3TextView"
-                android:gravity="center_vertical"
-                app:layout_constraintStart_toEndOf="@id/ivCardNaviTBTArriveTime"
-                app:layout_constraintTop_toTopOf="@id/ivCardNaviTBTArriveTime"
-                app:layout_constraintBottom_toBottomOf="@id/ivCardNaviTBTArriveTime"
                 android:layout_marginStart="7px"
-                />
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                app:layout_constraintBottom_toBottomOf="@id/ivCardNaviTBTArriveTime"
+                app:layout_constraintStart_toEndOf="@id/ivCardNaviTBTArriveTime"
+                app:layout_constraintTop_toTopOf="@id/ivCardNaviTBTArriveTime" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageView
             android:id="@+id/ivCardNaviExit"
-            android:src="@drawable/card_common_button_close"
             android:layout_width="@dimen/card_icon_size_lv1"
             android:layout_height="@dimen/card_icon_size_lv1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="56px"
             android:layout_marginBottom="35px"
-            />
+            android:src="@drawable/card_common_button_close"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutCardNaviNoLocation"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/ivCardNaviArrow"
-        android:src="@drawable/card_navi_icon_arrow"
-        android:layout_width="@dimen/card_icon_size_lv0"
-        android:layout_height="@dimen/card_icon_size_lv0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginStart="541px"
-        android:layout_marginTop="153px"
-        android:visibility="invisible"
-        />
-    <TextView
-        android:text="未知位置"
-        android:layout_width="127px"
-        android:layout_height="46px"
-        style="@style/CardLv2TextView"
-        app:layout_constraintTop_toBottomOf="@id/ivCardNaviArrow"
-        app:layout_constraintStart_toStartOf="@id/ivCardNaviArrow"
-        app:layout_constraintEnd_toEndOf="@id/ivCardNaviArrow"
-        android:layout_marginTop="47px"
-        android:visibility="invisible"
-        />
+
+        <ImageView
+            android:id="@+id/ivCardNaviArrow"
+            android:layout_width="@dimen/card_icon_size_lv0"
+            android:layout_height="@dimen/card_icon_size_lv0"
+            android:layout_marginStart="541px"
+            android:layout_marginTop="153px"
+            android:src="@drawable/card_navi_icon_arrow"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            style="@style/CardLv2TextView"
+            android:layout_width="127px"
+            android:layout_height="46px"
+            android:layout_marginTop="47px"
+            android:text="未知位置"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="@id/ivCardNaviArrow"
+            app:layout_constraintStart_toStartOf="@id/ivCardNaviArrow"
+            app:layout_constraintTop_toBottomOf="@id/ivCardNaviArrow" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutCardNaviCruiseStatus"
         android:layout_width="456px"
         android:layout_height="112px"
-        android:orientation="horizontal"
-        android:background="@drawable/card_navi_bottom_group_bg"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="14px"
+        android:background="@drawable/card_navi_bottom_group_bg"
+        android:orientation="horizontal"
         android:visibility="visible"
-        >
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
             android:id="@+id/ivCardNaviSearch"
-            android:src="@drawable/card_navi_btn_search"
             android:layout_width="@dimen/card_icon_size_lv1"
             android:layout_height="@dimen/card_icon_size_lv1"
-            app:layout_constraintEnd_toStartOf="@id/ivCardNaviHome"
-            app:layout_constraintTop_toTopOf="@id/ivCardNaviHome"
-            app:layout_constraintBottom_toBottomOf="@id/ivCardNaviHome"
             android:layout_marginEnd="64px"
-            />
+            android:src="@drawable/card_navi_btn_search"
+            app:layout_constraintBottom_toBottomOf="@id/ivCardNaviHome"
+            app:layout_constraintEnd_toStartOf="@id/ivCardNaviHome"
+            app:layout_constraintTop_toTopOf="@id/ivCardNaviHome" />
 
         <ImageView
             android:id="@+id/ivCardNaviHome"
-            android:src="@drawable/card_navi_btn_home"
             android:layout_width="@dimen/card_icon_size_lv1"
             android:layout_height="@dimen/card_icon_size_lv1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="11px"
-            />
+            android:src="@drawable/card_navi_btn_home"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ImageView
             android:id="@+id/ivCardNaviCompany"
-            android:src="@drawable/card_navi_btn_company"
             android:layout_width="@dimen/card_icon_size_lv1"
             android:layout_height="@dimen/card_icon_size_lv1"
-            app:layout_constraintStart_toEndOf="@id/ivCardNaviHome"
-            app:layout_constraintTop_toTopOf="@id/ivCardNaviHome"
-            app:layout_constraintBottom_toBottomOf="@id/ivCardNaviHome"
             android:layout_marginStart="64px"
-            />
-
+            android:src="@drawable/card_navi_btn_company"
+            app:layout_constraintBottom_toBottomOf="@id/ivCardNaviHome"
+            app:layout_constraintStart_toEndOf="@id/ivCardNaviHome"
+            app:layout_constraintTop_toTopOf="@id/ivCardNaviHome" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutCardNetworkError"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
+        android:visibility="invisible"
         >
 
         <ImageView
@@ -344,10 +329,9 @@
             android:layout_height="@dimen/card_icon_size_lv0"
             android:layout_marginTop="152px"
             android:src="@drawable/card_icon_wifi_disconnect"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvCardNetworkErr"
@@ -361,7 +345,6 @@
             android:text="@string/card_network_err"
             app:layout_constraintEnd_toEndOf="@id/ivCardNetworkErr"
             app:layout_constraintStart_toStartOf="@id/ivCardNetworkErr"
-            app:layout_constraintTop_toBottomOf="@id/ivCardNetworkErr"
-            />
+            app:layout_constraintTop_toBottomOf="@id/ivCardNetworkErr" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

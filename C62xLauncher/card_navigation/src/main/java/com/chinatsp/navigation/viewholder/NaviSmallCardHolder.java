@@ -13,8 +13,6 @@ import com.chinatsp.navigation.gaode.bean.GuideInfo;
 import com.chinatsp.navigation.gaode.bean.TrafficLaneModel;
 import com.chinatsp.navigation.repository.DriveDirection;
 
-import launcher.base.utils.recent.RecentAppHelper;
-
 public class NaviSmallCardHolder extends NaviCardHolder {
     private ImageView ivCardNaviSearch;
     private ImageView ivCardNaviHome;

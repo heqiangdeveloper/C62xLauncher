@@ -62,12 +62,6 @@ public class NaviCardView extends ConstraintLayout implements ICardStyleChange {
         mController = new NaviController(this);
         mSmallCardHolder = new NaviSmallCardHolder(mSmallCardView,mController);
         mController.refreshInitView();
-//        setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mController.toApp(getContext());
-//            }
-//        });
     }
 
     @Override
