@@ -77,6 +77,7 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
             mLargeCardView = LayoutInflater.from(getContext()).inflate(R.layout.card_volcano_large, this, false);
             mBigCardViewHolder = new BigCardViewHolder(mLargeCardView, this);
         }
+        mController.refreshPageState();
     }
 
     @Override
