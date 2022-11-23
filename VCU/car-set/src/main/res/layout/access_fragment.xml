@@ -22,7 +22,7 @@
             android:id="@+id/close_window"
             android:layout_width="@dimen/x94"
             android:layout_height="@dimen/x94"
-            android:layout_marginStart="@dimen/x62"
+            android:layout_marginStart="@dimen/x76"
             android:layout_marginTop="@dimen/x83"
             android:background="@drawable/ac_tab_bg_selector"
             android:orientation="vertical"
@@ -75,7 +75,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/refresh_window"
             android:layout_width="@dimen/x94"
             android:layout_height="@dimen/x94"
             android:layout_marginStart="@dimen/x20"
@@ -83,7 +82,8 @@
             android:background="@drawable/ac_tab_bg_selector"
             android:orientation="vertical"
             app:layout_constraintLeft_toRightOf="@+id/open_window"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -112,11 +112,11 @@
             app:layout_constraintLeft_toRightOf="@+id/refresh_window" />
 
         <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/refresh_window"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/x71"
             android:background="@drawable/hou_refresh_selector"
-            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

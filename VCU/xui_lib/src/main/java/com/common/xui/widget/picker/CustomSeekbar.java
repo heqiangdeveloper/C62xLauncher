@@ -92,6 +92,10 @@ public class CustomSeekbar extends SeekBar {
         int offset = 17;
         int progress = getProgress();
         int max = getMax();
+
+        max =  max < 1 ? 1 : max;// max 不能为0
+        progress = progress < 0 ? 0 : progress;// progress 不能小于0
+        // 当最大进度小于10，刻度变化太大，放大10倍
         if (max < 10) {
             max = max * 10;
             progress = progress * 10;

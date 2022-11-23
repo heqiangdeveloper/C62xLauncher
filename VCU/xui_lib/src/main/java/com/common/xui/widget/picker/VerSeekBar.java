@@ -93,10 +93,15 @@ public class VerSeekBar extends SeekBar {
         int offset = 17;
         int progress = getProgress();
         int max = getMax();
+
+        max =  max < 1 ? 1 : max;// max 不能为0
+        progress = progress < 0 ? 0 : progress;// progress 不能小于0
+        // 当最大进度小于10，刻度变化太大，放大10倍
         if (max < 10) {
             max = max * 10;
             progress = progress * 10;
         }
+        // a 误差偏移量，两端的偏移量最大，中间偏移量为0。取值范围 -offset ~ +offset
         int max2 = max / 2;
         int a = (max2 - progress) * offset / max2;
         float topProgress = mHeight * progress / max + a;

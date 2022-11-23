@@ -182,7 +182,7 @@
     <string name="drive_tab_rear_assist">Side-rear Assist</string>
     <string name="drive_tab_lighting_assist">Light Assist</string>
     <string name="drive_tab_traffic">交通标志</string>
-    <string name="drive_intelligent_cruise_assistant">Intelligent cruise assist ACC</string>
+    <string name="drive_intelligent_cruise_assistant">Intelligent cruise assist IACC</string>
     <string name="drive_full_speed_range">Full speed range to provide the driver with vehicle control assistance</string>
     <string name="drive_open">已开启</string>
     <string name="drive_close">已关闭</string>
