@@ -303,8 +303,8 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
                     viewBg.setVisibility(View.VISIBLE);
                     layoutDrawerIqutingError.setVisibility(View.VISIBLE);
                     rcvDrawerIqutingLogin.setVisibility(View.GONE);
-                    ivDrawerIqutingLogin.setImageResource(R.drawable.card_icon_wifi_disconnect);
-                    ivDrawerIqutingLogin.setVisibility(View.VISIBLE);
+                    //ivDrawerIqutingLogin.setImageResource(R.drawable.card_icon_wifi_disconnect);
+                    ivDrawerIqutingLogin.setVisibility(View.GONE);
                     tvDrawerIqutingLogin.setText(com.chinatsp.iquting.R.string.iquting_disconnect_tip);
                 } else if (type == TYPE_NO_LOGIN) {
                     viewBg.setVisibility(View.VISIBLE);
@@ -316,8 +316,8 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
                     viewBg.setVisibility(View.VISIBLE);
                     layoutDrawerIqutingError.setVisibility(View.VISIBLE);
                     rcvDrawerIqutingLogin.setVisibility(View.GONE);
-                    ivDrawerIqutingLogin.setVisibility(View.VISIBLE);
-                    ivDrawerIqutingLogin.setImageResource(R.drawable.card_icon_wifi_disconnect);
+                    ivDrawerIqutingLogin.setVisibility(View.GONE);
+                    //ivDrawerIqutingLogin.setImageResource(R.drawable.card_icon_wifi_disconnect);
                     tvDrawerIqutingLogin.setText(com.chinatsp.iquting.R.string.iquting_get_data_error);
                 } else {//正常登陆了
                     layoutDrawerIqutingError.setVisibility(View.GONE);

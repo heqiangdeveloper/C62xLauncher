@@ -13,23 +13,23 @@ public class AppStoreNormalState implements AppStoreState {
     public void updateSmallCardState(View view) {
         view.findViewById(R.id.layoutAppStoreNormalSmall).setVisibility(View.VISIBLE);
 
-        ImageView ivCardIQuTingLogo = view.findViewById(R.id.ivAppStoreLogo);
-        TextView tvCardIQuTingTip = view.findViewById(R.id.tvAppStoreTip);
-        ImageView ivCardIQuTingButton = view.findViewById(R.id.ivAppStoreButton);
+        ImageView ivAppStoreLogo = view.findViewById(R.id.ivAppStoreLogo);
+        TextView tvAppStoreTip = view.findViewById(R.id.tvAppStoreTip);
+        ImageView ivAppStoreRefresh = view.findViewById(R.id.ivAppStoreRefresh);
 
-        ivCardIQuTingLogo.setVisibility(View.GONE);
-        tvCardIQuTingTip.setVisibility(View.GONE);
-        ivCardIQuTingButton.setVisibility(View.GONE);
-
-
+        ivAppStoreLogo.setVisibility(View.GONE);
+        tvAppStoreTip.setVisibility(View.GONE);
+        ivAppStoreRefresh.setVisibility(View.GONE);
     }
 
     public void updateBigCardState(View view) {
         View tvCardIQuTingLoginTipBig = view.findViewById(R.id.tvAppStoreTipBig);
+        ImageView ivAppStoreRefreshBig = view.findViewById(R.id.ivAppStoreRefreshBig);
         tvCardIQuTingLoginTipBig.setVisibility(View.GONE);
 
         RecyclerView rcvCardIQuTingSongList = view.findViewById(R.id.rcvAppStoreAppsList);
         rcvCardIQuTingSongList.setVisibility(View.VISIBLE);
+        if(ivAppStoreRefreshBig != null) ivAppStoreRefreshBig.setVisibility(View.GONE);
     }
 
 }

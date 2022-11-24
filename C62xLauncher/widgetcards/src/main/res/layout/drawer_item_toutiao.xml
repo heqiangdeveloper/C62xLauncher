@@ -32,15 +32,15 @@
         android:src="@drawable/drawer_bg_volcano"
         />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:id="@+id/layoutDrawerVolcanoError"
         android:layout_width="match_parent"
         android:layout_height="264px"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="56px"
         android:visibility="invisible"
-        android:src="@drawable/drawer_bg_volcano"
-        android:foreground="@drawable/drawer_app_fg_selector"
+        android:orientation="vertical"
+        android:gravity="center"
         >
         <ImageView
             android:id="@+id/ivErrorIcon"
@@ -56,7 +56,7 @@
             android:id="@+id/tvErrorTip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40px"
+            android:layout_marginTop="0px"
             app:layout_constraintTop_toBottomOf="@id/ivErrorIcon"
             app:layout_constraintStart_toStartOf="@id/ivErrorIcon"
             app:layout_constraintEnd_toEndOf="@id/ivErrorIcon"
@@ -64,7 +64,7 @@
             style="@style/CardLv4TextView"
             />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcvDrawerVolcanoVideos"

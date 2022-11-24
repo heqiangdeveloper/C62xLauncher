@@ -6,16 +6,13 @@ import android.widget.TextView;
 
 import com.chinatsp.appstore.R;
 
-public class AppStoreErrorNetWorkState implements AppStoreState {
+public class AppStoreDataErrorState implements AppStoreState {
     @Override
     public void updateSmallCardState(View view) {
         view.findViewById(R.id.layoutAppStoreNormalSmall).setVisibility(View.GONE);
 
-        TextView tvAppStoreTip = view.findViewById(R.id.tvAppStoreTip);
-        ImageView ivAppStoreRefresh = view.findViewById(R.id.ivAppStoreRefresh);
-        tvAppStoreTip.setText(R.string.appstore_wifi_disconnect);
-        tvAppStoreTip.setVisibility(View.VISIBLE);
-        ivAppStoreRefresh.setVisibility(View.VISIBLE);
+        TextView tvCardIQuTingTip = view.findViewById(R.id.tvAppStoreTip);
+        tvCardIQuTingTip.setText(R.string.appstore_get_data_error);
     }
 
     @Override
@@ -24,7 +21,7 @@ public class AppStoreErrorNetWorkState implements AppStoreState {
         ImageView ivAppStoreRefreshBig = view.findViewById(R.id.ivAppStoreRefreshBig);
         if(tvAppStoreTipBig != null){
             tvAppStoreTipBig.setVisibility(View.VISIBLE);
-            tvAppStoreTipBig.setText(R.string.appstore_wifi_disconnect);
+            tvAppStoreTipBig.setText(R.string.appstore_get_data_error);
         }
 
         if(view.findViewById(R.id.rcvAppStoreAppsList) != null){

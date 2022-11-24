@@ -1,5 +1,7 @@
 package com.chinatsp.volcano.viewholder;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -9,14 +11,11 @@ import android.widget.TextView;
 
 import com.chinatsp.volcano.R;
 import com.chinatsp.volcano.api.response.VideoListData;
-import com.chinatsp.volcano.repository.VolcanoRepository;
 import com.chinatsp.volcano.videos.VolcanoSource;
 import com.chinatsp.volcano.videos.VolcanoVideo;
 
-import java.util.IllegalFormatCodePointException;
 import java.util.List;
 
-import launcher.base.routine.ActivityBus;
 import launcher.base.utils.glide.GlideHelper;
 import launcher.base.utils.recent.RecentAppHelper;
 
@@ -34,6 +33,8 @@ public class SmallCardViewHolder extends VolcanoViewHolder {
     private View layoutCardVolcanoNormal;
     private Resources mResources;
     private int mCoverWidth, mCoverHeight;
+    private ObjectAnimator mRefreshAnimator;
+    private final int MIN_LOADING_ANIM_TIME = 1000;
 
     public SmallCardViewHolder(View rootView) {
         super(rootView);
@@ -60,7 +61,9 @@ public class SmallCardViewHolder extends VolcanoViewHolder {
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (volcanoVideo != null) {
+            if(v.getId() == R.id.ivCardVolcanoNetworkErrCloseBtn){
+                showRefreshAnimation();
+            } else if (volcanoVideo != null) {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(volcanoVideo.getSchema()));
                 v.getContext().startActivity(intent);
             } else {
@@ -68,6 +71,22 @@ public class SmallCardViewHolder extends VolcanoViewHolder {
             }
         }
     };
+
+    private void showRefreshAnimation(){
+        if (mRefreshAnimator == null) {
+            mRefreshAnimator = createRefreshBigAnimator();
+        } else {
+            mRefreshAnimator.cancel();
+        }
+        mRefreshAnimator.start();
+    }
+
+    private ObjectAnimator createRefreshBigAnimator() {
+        ObjectAnimator animator = ObjectAnimator.ofFloat(ivCardVolcanoNetworkErrCloseBtn, "rotation", 0f, 360f).setDuration(MIN_LOADING_ANIM_TIME);
+        animator.setRepeatMode(ValueAnimator.RESTART);
+        animator.setRepeatCount(1);
+        return animator;
+    }
 
     @Override
     public void showNormal() {
@@ -121,8 +140,9 @@ public class SmallCardViewHolder extends VolcanoViewHolder {
 
     @Override
     public void showNetworkError() {
-        ivCardVolcanoNetworkErr.setImageResource(R.drawable.card_icon_wifi_disconnect);
+        //ivCardVolcanoNetworkErr.setImageResource(R.drawable.card_icon_wifi_disconnect);
         tvCardVolcanoNetworkErr.setText(R.string.card_network_err);
+        ivCardVolcanoNetworkErrCloseBtn.setVisibility(View.VISIBLE);
         layoutCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
         layoutCardVolcanoNormal.setVisibility(View.INVISIBLE);
 
@@ -136,8 +156,9 @@ public class SmallCardViewHolder extends VolcanoViewHolder {
 
     @Override
     public void showDataError() {
-        ivCardVolcanoNetworkErr.setImageResource(R.drawable.card_icon_date_error);
+        //ivCardVolcanoNetworkErr.setImageResource(R.drawable.card_icon_date_error);
         tvCardVolcanoNetworkErr.setText(R.string.card_data_err);
+        ivCardVolcanoNetworkErrCloseBtn.setVisibility(View.VISIBLE);
         layoutCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
         layoutCardVolcanoNormal.setVisibility(View.INVISIBLE);
     }

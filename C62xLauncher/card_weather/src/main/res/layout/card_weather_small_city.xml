@@ -68,10 +68,10 @@
 
     <ImageView
         android:id="@+id/ivCardWeatherRefresh"
-        android:layout_width="@dimen/card_icon_size_lv0"
-        android:layout_height="@dimen/card_icon_size_lv0"
-        android:layout_marginTop="43px"
-        android:src="@drawable/card_weather_icon_refresh"
+        android:layout_width="@dimen/card_icon_size_lv1"
+        android:layout_height="@dimen/card_icon_size_lv1"
+        android:layout_marginTop="60px"
+        android:src="@drawable/icon_refresh_selector"
         app:layout_constraintEnd_toEndOf="@id/tvCardWeatherDate"
         app:layout_constraintStart_toStartOf="@id/tvCardWeatherDate"
         app:layout_constraintTop_toBottomOf="@id/tvCardWeatherDate" />

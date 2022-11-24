@@ -15,8 +15,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="180px"
+        android:layout_marginTop="220px"
         />
+
+    <!--底部刷新按钮-->
+    <ImageView
+        android:id="@+id/ivCardIQuTingRefreshBig"
+        android:layout_width="@dimen/card_icon_size_lv1"
+        android:layout_height="@dimen/card_icon_size_lv1"
+        android:layout_marginTop="120px"
+        android:src="@drawable/icon_refresh_selector"
+        app:layout_constraintEnd_toEndOf="@id/tvCardIQuTingLoginTipBig"
+        app:layout_constraintStart_toStartOf="@id/tvCardIQuTingLoginTipBig"
+        app:layout_constraintTop_toBottomOf="@+id/tvCardIQuTingLoginTipBig" />
 
     <TextView
         android:id="@+id/tvIQuTingDailySongs"
