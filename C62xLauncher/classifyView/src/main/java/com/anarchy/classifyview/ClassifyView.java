@@ -425,6 +425,7 @@ public class ClassifyView extends FrameLayout {
         addViewInLayout(mDragView, -1, generateDefaultLayoutParams());
         setUpTouchListener(context);
         setTopBarIvTouchListener(context);//设置topbar下拉事件
+        setMainRecyclerViewScrollListener();//设置MainRecyclerView滑动事件,以决定topbar显示与否
         //初始化CountTimer，设置倒计时为10s。
         countTimerView = new CountTimer(10000L,1000L,getMainRecyclerView(),editor);
     }
@@ -656,12 +657,12 @@ public class ClassifyView extends FrameLayout {
                 *  mMainRecyclerView滑动至顶部后，空白区域下滑超过200px，跳转至卡片页
                  */
                 if(mMainRecyclerView!= null && !mMainRecyclerView.canScrollVertically(-1)){//mMainRecyclerView已经到达顶部
-                    topBarIv.setVisibility(View.VISIBLE);
+                    //topBarIv.setVisibility(View.VISIBLE);
                     if(isNeedJumpCard(e1,e2)){
                         EventBus.getDefault().post(new JumpToCardEvent());
                     }
                 }else {
-                    topBarIv.setVisibility(View.GONE);
+                    //topBarIv.setVisibility(View.GONE);
                 }
                 return super.onScroll(e1, e2, distanceX, distanceY);
             }
@@ -898,6 +899,20 @@ public class ClassifyView extends FrameLayout {
             @Override
             public void onClick(View view) {
                 EventBus.getDefault().post(new JumpToCardEvent());
+            }
+        });
+    }
+
+    private void setMainRecyclerViewScrollListener(){
+        mMainRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if(!recyclerView.canScrollVertically(-1)){//滑动到顶部
+                    topBarIv.setVisibility(View.VISIBLE);
+                }else {
+                    topBarIv.setVisibility(View.GONE);
+                }
             }
         });
     }
