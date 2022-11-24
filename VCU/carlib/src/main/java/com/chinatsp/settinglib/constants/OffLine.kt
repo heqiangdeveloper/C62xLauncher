@@ -127,4 +127,8 @@ object OffLine {
      * 盲区摄像头显示区域
      */
     const val AREA = "persist.sys.blind.location"
+    /**
+     * 语音车窗控制配置
+     */
+    const val VOICE_CONTROL_WIN_SUPPORT = "persist.vendor.vehicle.speechwin"
 }

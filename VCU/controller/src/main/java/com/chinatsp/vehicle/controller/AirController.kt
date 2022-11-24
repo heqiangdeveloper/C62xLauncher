@@ -372,9 +372,9 @@ object AirController : IController {
         if (TextUtils.isEmpty(value)) {
             return null
         }
+        var step = 1
         var action = Action.VOID
         var command: AirCmd? = null
-        var step = 1
         if (!isLikeJson(value)) {
             if ((PLUS == value) || (PLUS_MORE == value) || (PLUS_LITTLE == value)) {
                 action = Action.PLUS
@@ -441,7 +441,7 @@ object AirController : IController {
             if (COPILOT == value) {
                 return IPart.R_F
             }
-            return IPart.L_F or IPart.R_F
+            return IPart.L_F or IPart.R_F or IPart.VAGUE
         } else {
             if ("left" == value) {
                 return IPart.L_F

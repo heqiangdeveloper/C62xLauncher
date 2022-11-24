@@ -2,6 +2,7 @@ package com.chinatsp.settinglib
 
 import android.car.hardware.cabin.CarCabinManager
 import android.graphics.Color
+import com.chinatsp.settinglib.constants.OffLine
 import com.chinatsp.settinglib.manager.cabin.WheelManager
 import com.chinatsp.settinglib.sign.Origin
 import timber.log.Timber
@@ -27,6 +28,14 @@ object Applet {
         )
         Timber.d("Applet speed value:$speed")
         return (speed * 0.1).toFloat()
+    }
+
+//    语音控制车窗
+//    0:不支持(default)
+//    1:仅主驾
+//    2:四门
+    val VOICE_CONTROL_WIN_SUPPORT: Int by lazy {
+        VcuUtils.getConfigParameters(OffLine.VOICE_CONTROL_WIN_SUPPORT, 0x0)
     }
 
     fun isCanSwitchEps(consult: Float): Boolean {

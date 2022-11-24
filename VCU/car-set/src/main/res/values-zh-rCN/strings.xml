@@ -116,15 +116,15 @@
     <string name="car_window_lock_car">锁车自动关窗</string>
     <string name="car_window_rainy_day">雨天自动关窗</string>
     <string name="car_window_wiper">雨刮维修</string>
-    <string name="car_window_lock_content">功能开启后，可通过钥匙遥\n
+    <string name="car_window_lock_content">&#160;功能开启后，可通过钥匙遥\n
         控关闭/开启四门车窗</string>
-    <string name="car_window_rainy_content">功能开启后，车速首次大于\n
+    <string name="car_window_rainy_content">&#160;功能开启后，车速首次大于\n
         120km/h时，天窗自动关\n
         闭，此时向后拨动天窗开关\n
         可再次开启天窗。</string>
-    <string name="car_window_lock_car_content">功能开启后，锁门时，四门车\n
+    <string name="car_window_lock_car_content">&#160;功能开启后，锁门时，四门车\n
         窗、天窗和遮阳帘自动关闭</string>
-    <string name="car_window_wiper_content">对⻛挡玻璃⾬刮器进⾏维护\n
+    <string name="car_window_wiper_content">&#160;对⻛挡玻璃⾬刮器进⾏维护\n
         操作时，务必打开⾬刮维修\n
         模式。打开⾬刮维修，⾬刮\n
         将⾃动运⾏⾄维修位置。</string>
@@ -141,7 +141,7 @@
     <string name="car_trunk_buzzer_close">蜂鸣器报警已关闭</string>
     <string name="car_trunk_light_open">灯光闪烁报警已开启</string>
     <string name="car_trunk_light_close">灯光闪烁报警已关闭</string>
-    <string name="car_trunk_content">往返式：携带合法智能钥匙\n
+    <string name="car_trunk_content">&#160;往返式：携带合法智能钥匙\n
         进⼊后备箱感应区域内，然\n
         后退出此区域，再次进⼊感\n
         应区域，电动尾⻔⾃动开\n
@@ -150,7 +150,7 @@
         进⼊后备箱感应区域内，原\n
         地站⽴6s以上，电动尾⻔⾃\n
         动开启。</string>
-    <string name="car_trunk_height_content">电动尾⻔⾼度调节建议：\n
+    <string name="car_trunk_height_content">&#160;电动尾⻔⾼度调节建议：\n
        身⾼1.6⽶以下的⽤户使⽤，建议开启⾼度为80%；\n
        身⾼1.6-1.7⽶的⽤户使⽤，建议开启⾼度为90%；\n
        身⾼1.7⽶以上的⽤户使⽤，建议开启⾼度为100%。\n
