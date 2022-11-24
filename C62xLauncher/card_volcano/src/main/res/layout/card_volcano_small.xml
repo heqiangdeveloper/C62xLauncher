@@ -95,31 +95,31 @@
             android:layout_marginTop="155px"
             android:src="@drawable/card_icon_wifi_disconnect"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/tvCardVolcanoNetworkErr"
             style="@style/CardLv2TextView"
             android:layout_width="wrap_content"
-            android:layout_height="92px"
-            android:layout_marginTop="35px"
-            android:gravity="bottom|center"
+            android:layout_height="wrap_content"
             android:letterSpacing="0.01"
             android:lineSpacingMultiplier="1.5"
             android:text="@string/card_network_err"
-            app:layout_constraintEnd_toEndOf="@id/ivCardVolcanoNetworkErr"
-            app:layout_constraintStart_toStartOf="@id/ivCardVolcanoNetworkErr"
-            app:layout_constraintTop_toBottomOf="@id/ivCardVolcanoNetworkErr" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <ImageView
             android:id="@+id/ivCardVolcanoNetworkErrCloseBtn"
             android:layout_width="80px"
             android:layout_height="80px"
-            android:layout_marginBottom="35px"
-            android:src="@drawable/card_common_left_in_selector"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/ivCardVolcanoNetworkErr"
-            app:layout_constraintStart_toStartOf="@id/ivCardVolcanoNetworkErr" />
+            android:layout_marginTop="153px"
+            android:src="@drawable/icon_refresh_selector"
+            app:layout_constraintTop_toBottomOf="@id/tvCardVolcanoNetworkErr"
+            app:layout_constraintEnd_toEndOf="@id/tvCardVolcanoNetworkErr"
+            app:layout_constraintStart_toStartOf="@id/tvCardVolcanoNetworkErr" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

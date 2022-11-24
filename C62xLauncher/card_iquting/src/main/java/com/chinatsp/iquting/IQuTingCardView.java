@@ -1,6 +1,7 @@
 package com.chinatsp.iquting;
 
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -35,6 +36,7 @@ import com.chinatsp.iquting.ipc.IqutingMediaChangeListener;
 import com.chinatsp.iquting.ipc.IqutingPlayStateListener;
 import com.chinatsp.iquting.service.IqutingBindService;
 import com.chinatsp.iquting.songs.IQuTingSongsAdapter;
+import com.chinatsp.iquting.state.DataErrorState;
 import com.chinatsp.iquting.state.NetWorkDisconnectState;
 import com.chinatsp.iquting.state.NormalState;
 import com.chinatsp.iquting.state.IQuTingState;
@@ -63,6 +65,7 @@ import launcher.base.network.NetworkObserver;
 import launcher.base.network.NetworkStateReceiver;
 import launcher.base.network.NetworkUtils;
 import launcher.base.recyclerview.SimpleRcvDecoration;
+import launcher.base.utils.EasyLog;
 import launcher.base.utils.flowcontrol.PollingTask;
 import launcher.base.utils.glide.GlideHelper;
 import launcher.base.utils.recent.RecentAppHelper;
@@ -127,6 +130,9 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
     private ImageView mIvIQuTingLikeBtnBig;
     private ImageView mIvCardIQuTingButton;
     private TextView mTvIQuTingDailySongs;
+    private TextView mTvCardIQuTingNetTip;
+    private ImageView mIvCardIQuTingRefresh;
+    private ImageView mIvCardIQuTingRefreshBig;
     private TextView mTvIQuTingRankSongs;
     private TextView mTvIQuTingPlayPosition;
     private TextView mTvIQuTingPlayDuration;
@@ -156,6 +162,11 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
 
     private boolean isServiceConnected = false;
     private volatile boolean mExecuteTask = false;
+    private ObjectAnimator mRefreshAnimator;
+    private ObjectAnimator mRefreshBigAnimator;
+    private final int MIN_LOADING_ANIM_TIME = 1000;
+    private boolean isDataError = false;
+
     private PollingTask mServiceConnectTask = new PollingTask(0, 2000, TAG) {
         @Override
         protected void executeTask() {
@@ -195,6 +206,8 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
         mIvCardIQuTingButton = (ImageView) findViewById(R.id.ivCardIQuTingButton);
         mTvIQuTingPlayPosition = (TextView) findViewById(R.id.tvIQuTingPlayPosition);
         mTvIQuTingPlayDuration = (TextView) findViewById(R.id.tvIQuTingPlayDuration);
+        mTvCardIQuTingNetTip = (TextView) findViewById(R.id.tvCardIQuTingNetTip);
+        mIvCardIQuTingRefresh = (ImageView) findViewById(R.id.ivCardIQuTingRefresh);
         mNormalSmallCardViewHolder = new NormalSmallCardViewHolder();
 //        mNormalSmallCardViewHolder.updateMediaInfo();
         mController = new IQuTingController(this);
@@ -204,6 +217,7 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
         mIvIQuTingNextBtn.setOnClickListener(this);
         mIvIQuTingLike.setOnClickListener(this);
         mIvCardIQuTingButton.setOnClickListener(this);
+        mIvCardIQuTingRefresh.setOnClickListener(this);
         //点击空白处跳转至爱趣听
 //        setOnClickListener(this);
 
@@ -575,6 +589,7 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                 Log.d(TAG_CONTENT,"getAreaContentData success");
                 List<BaseSongItemBean> songLists = areaContentResponseBean.getSonglist();
                 if(songLists != null){
+                    isDataError = false;
                     int currentTab = sp.getInt(IqutingConfigs.CURRENTTAB,1);
                     if(contentId == TYPE_DAILYSONGS){
                         Log.d(TAG_CONTENT,"getAreaContentData dailySongLists");
@@ -597,12 +612,30 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
 //                    }
                 }else {
                     Log.d(TAG_CONTENT,"getAreaContentData songLists is null");
+                    isDataError = true;
+                    //显示获取数据失败页面
+                    ((Activity)getContext()).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mState = new DataErrorState();
+                            mState.updateViewState(IQuTingCardView.this, mExpand);
+                        }
+                    });
                 }
             }
 
             @Override
             public void onFail(int failCode) {
                 Log.d(TAG_CONTENT,"getAreaContentData onFail: " + failCode);
+                isDataError = true;
+                //显示获取数据失败页面
+                ((Activity)getContext()).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mState = new DataErrorState();
+                        mState.updateViewState(IQuTingCardView.this, mExpand);
+                    }
+                });
             }
         });
     }
@@ -628,9 +661,17 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
 //                }
                 isPlaying = aBoolean;
                 if(isPlaying){
-                    mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.play_card_iquting_selector);
+                    if(mExpand){
+                        mIvIQuTingPlayPauseBtnBig.setImageResource(R.drawable.play_card_iquting_selector);
+                    }else {
+                        mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.play_card_iquting_selector);
+                    }
                 }else {
-                    mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.pause_card_iquting_selector);
+                    if(mExpand){
+                        mIvIQuTingPlayPauseBtnBig.setImageResource(R.drawable.pause_card_iquting_selector);
+                    }else {
+                        mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.pause_card_iquting_selector);
+                    }
                 }
                 getCurrentMediaInfo();
             }
@@ -806,10 +847,56 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
             editor.putInt(IqutingConfigs.CURRENTTAB,TYPE_RANKSONGS);
             editor.commit();
             IqutingBindService.getInstance().setTabClickEvent(TYPE_RANKSONGS);
+        }else if(v.getId() == R.id.ivCardIQuTingRefreshBig){
+            Log.d(TAG,"onClick ivCardIQuTingRefreshBig");
+            showRefreshBigAnimation();
+            if(isDataError){
+                addPlayContentListener(IQuTingCardView.this);
+            }
+        }else if(v.getId() == R.id.ivCardIQuTingRefresh){
+            Log.d(TAG,"onClick ivCardIQuTingRefresh");
+            showRefreshAnimation();
+            if(isDataError){
+                addPlayContentListener(IQuTingCardView.this);
+            }
         }else {
             //打开爱趣听界面
             FlowPlayControl.getInstance().startPlayActivity(context);
         }
+    }
+
+    private void showRefreshAnimation(){
+        if (mRefreshAnimator == null) {
+            mRefreshAnimator = createRefreshAnimator();
+        } else {
+            mRefreshAnimator.cancel();
+        }
+        mRefreshAnimator.start();
+    }
+
+    private ObjectAnimator createRefreshAnimator() {
+        EasyLog.d(TAG, "createRefreshAnimator");
+        ObjectAnimator animator = ObjectAnimator.ofFloat(mIvCardIQuTingRefresh, "rotation", 0f, 360f).setDuration(MIN_LOADING_ANIM_TIME);
+        animator.setRepeatMode(ValueAnimator.RESTART);
+        animator.setRepeatCount(1);
+        return animator;
+    }
+
+    private void showRefreshBigAnimation(){
+        if (mRefreshBigAnimator == null) {
+            mRefreshBigAnimator = createRefreshBigAnimator();
+        } else {
+            mRefreshBigAnimator.cancel();
+        }
+        mRefreshBigAnimator.start();
+    }
+
+    private ObjectAnimator createRefreshBigAnimator() {
+        EasyLog.d(TAG, "createRefreshBigAnimator");
+        ObjectAnimator animator = ObjectAnimator.ofFloat(mIvCardIQuTingRefreshBig, "rotation", 0f, 360f).setDuration(MIN_LOADING_ANIM_TIME);
+        animator.setRepeatMode(ValueAnimator.RESTART);
+        animator.setRepeatCount(1);
+        return animator;
     }
 
     private void checkHasMediaPlay(){
@@ -839,41 +926,43 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
     @Override
     public void expand() {
         mExpand = true;
-        addPlayContentListener(IQuTingCardView.this);
+        if(!isDataError) addPlayContentListener(IQuTingCardView.this);
         int currentTab = sp.getInt(IqutingConfigs.CURRENTTAB,1);
         if (mLargeCardView == null) {
             mLargeCardView = LayoutInflater.from(getContext()).inflate(R.layout.card_iquting_large, this, false);
             initBigCardView(mLargeCardView);
             mNormalBigCardViewHolder.updateSongs(currentTab == 1 ? dailySongLists : rankSongLists);
         }
-        if(currentTab == TYPE_DAILYSONGS){
-            mTvIQuTingDailySongs.setTextColor(getResources().getColor(R.color.card_main_theme));
-            mTvIQuTingRankSongs.setTextColor(getResources().getColor(R.color.card_blue_default));
-        }else {
-            mTvIQuTingDailySongs.setTextColor(getResources().getColor(R.color.card_blue_default));
-            mTvIQuTingRankSongs.setTextColor(getResources().getColor(R.color.card_main_theme));
-        }
+        if(!isDataError){
+            if(currentTab == TYPE_DAILYSONGS){
+                mTvIQuTingDailySongs.setTextColor(getResources().getColor(R.color.card_main_theme));
+                mTvIQuTingRankSongs.setTextColor(getResources().getColor(R.color.card_blue_default));
+            }else {
+                mTvIQuTingDailySongs.setTextColor(getResources().getColor(R.color.card_blue_default));
+                mTvIQuTingRankSongs.setTextColor(getResources().getColor(R.color.card_main_theme));
+            }
 
-        mContentId = currentTab;
-        mTvIQuTingMediaNameBig.setText(name);
-        mTvIQuTingArtistBig.setText(artist);
-        if(!TextUtils.isEmpty(iconUrl)){
-            GlideHelper.loadUrlImage(getContext(),mIvIQuTingCoverBig,iconUrl);
-        }else {
-            GlideHelper.loadLocalCircleImage(getContext(),mIvIQuTingCoverBig,R.drawable.test_cover2);
-        }
+            mContentId = currentTab;
+            mTvIQuTingMediaNameBig.setText(name);
+            mTvIQuTingArtistBig.setText(artist);
+            if(!TextUtils.isEmpty(iconUrl)){
+                GlideHelper.loadUrlImage(getContext(),mIvIQuTingCoverBig,iconUrl);
+            }else {
+                GlideHelper.loadLocalCircleImage(getContext(),mIvIQuTingCoverBig,R.drawable.test_cover2);
+            }
 
-        if(isPlaying){
-            mIvIQuTingPlayPauseBtnBig.setImageResource(R.drawable.play_card_iquting_selector);
-        }else {
-            mIvIQuTingPlayPauseBtnBig.setImageResource(R.drawable.pause_card_iquting_selector);
-        }
-        if("like".equals(mIvIQuTingLike.getTag())){
-            mIvIQuTingLikeBtnBig.setImageResource(R.drawable.card_iquting_icon_like);
-            mIvIQuTingLikeBtnBig.setTag("like");
-        }else {
-            mIvIQuTingLikeBtnBig.setImageResource(R.drawable.card_iquting_icon_unlike);
-            mIvIQuTingLikeBtnBig.setTag("unlike");
+            if(isPlaying){
+                mIvIQuTingPlayPauseBtnBig.setImageResource(R.drawable.play_card_iquting_selector);
+            }else {
+                mIvIQuTingPlayPauseBtnBig.setImageResource(R.drawable.pause_card_iquting_selector);
+            }
+            if("like".equals(mIvIQuTingLike.getTag())){
+                mIvIQuTingLikeBtnBig.setImageResource(R.drawable.card_iquting_icon_like);
+                mIvIQuTingLikeBtnBig.setTag("like");
+            }else {
+                mIvIQuTingLikeBtnBig.setImageResource(R.drawable.card_iquting_icon_unlike);
+                mIvIQuTingLikeBtnBig.setTag("unlike");
+            }
         }
         addView(mLargeCardView);
         if(mState != null) mState.updateViewState(this, mExpand);
@@ -899,31 +988,37 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
     @Override
     public void collapse() {
         mExpand = false;
-        addPlayContentListener(IQuTingCardView.this);
-        if(!TextUtils.isEmpty(iconUrl)){
-            GlideHelper.loadUrlAlbumCoverRadius(getContext(),mIvCover,iconUrl,RADIUS);
+        if(isDataError){
+            //显示获取数据失败页面
+            mState = new DataErrorState();
+            mState.updateViewState(IQuTingCardView.this, mExpand);
         }else {
-            if(!isDestroy((Activity) getContext())){
-                GlideHelper.loadLocalAlbumCoverRadius(getContext(),mIvCover,R.drawable.test_cover2,RADIUS);
+            addPlayContentListener(IQuTingCardView.this);
+            if(!TextUtils.isEmpty(iconUrl)){
+                GlideHelper.loadUrlAlbumCoverRadius(getContext(),mIvCover,iconUrl,RADIUS);
+            }else {
+                if(!isDestroy((Activity) getContext())){
+                    GlideHelper.loadLocalAlbumCoverRadius(getContext(),mIvCover,R.drawable.test_cover2,RADIUS);
+                }
             }
+            mTvIQuTingMediaName.setText(name + "-" + artist);
+            if(isPlaying){
+                mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.play_card_iquting_selector);
+            }else {
+                mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.pause_card_iquting_selector);
+            }
+            if("like".equals(mIvIQuTingLikeBtnBig.getTag())){
+                mIvIQuTingLike.setImageResource(R.drawable.card_iquting_icon_like);
+                mIvIQuTingLike.setTag("like");
+            }else {
+                mIvIQuTingLike.setImageResource(R.drawable.card_iquting_icon_unlike);
+                mIvIQuTingLike.setTag("unlike");
+            }
+            mTvIQuTingPlayPosition.setText(ToolUtils.formatTime(currentDuration / 1000));
+            mTvIQuTingPlayDuration.setText(ToolUtils.formatTime(totalDuration / 1000));
+            mProgressHorizontalIQuTing.setMaxValue(totalDuration);
+            mProgressHorizontalIQuTing.updateProgress(currentDuration);
         }
-        mTvIQuTingMediaName.setText(name + "-" + artist);
-        if(isPlaying){
-            mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.play_card_iquting_selector);
-        }else {
-            mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.pause_card_iquting_selector);
-        }
-        if("like".equals(mIvIQuTingLikeBtnBig.getTag())){
-            mIvIQuTingLike.setImageResource(R.drawable.card_iquting_icon_like);
-            mIvIQuTingLike.setTag("like");
-        }else {
-            mIvIQuTingLike.setImageResource(R.drawable.card_iquting_icon_unlike);
-            mIvIQuTingLike.setTag("unlike");
-        }
-        mTvIQuTingPlayPosition.setText(ToolUtils.formatTime(currentDuration / 1000));
-        mTvIQuTingPlayDuration.setText(ToolUtils.formatTime(totalDuration / 1000));
-        mProgressHorizontalIQuTing.setMaxValue(totalDuration);
-        mProgressHorizontalIQuTing.updateProgress(currentDuration);
 
         //addPlayContentListener(IQuTingCardView.this);
         mSmallCardView.setVisibility(VISIBLE);
@@ -943,6 +1038,7 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
         mTvIQuTingDailySongs = (TextView) largeCardView.findViewById(R.id.tvIQuTingDailySongs);
         mTvIQuTingRankSongs = (TextView) largeCardView.findViewById(R.id.tvIQuTingRankSongs);
         mCircleProgressView = (CircleProgressView) largeCardView.findViewById(R.id.circleProgressView);
+        mIvCardIQuTingRefreshBig = (ImageView) largeCardView.findViewById(R.id.ivCardIQuTingRefreshBig);
 
         mTvIQuTingDailySongs.setOnClickListener(this);
         mTvIQuTingRankSongs.setOnClickListener(this);
@@ -950,6 +1046,7 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
         mIvIQuTingPreBtnBig.setOnClickListener(this);
         mIvIQuTingNextBtnBig.setOnClickListener(this);
         mIvIQuTingLikeBtnBig.setOnClickListener(this);
+        mIvCardIQuTingRefreshBig.setOnClickListener(this);
 
         RecyclerView rcvCardIQuTingSongList = largeCardView.findViewById(R.id.rcvCardIQuTingSongList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());

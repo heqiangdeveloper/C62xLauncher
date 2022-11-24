@@ -5,39 +5,80 @@
     android:layout_height="@dimen/card_height">
 
 
-    <ImageView
-        android:id="@+id/ivCardIQuTingLogo"
-        android:layout_width="@dimen/card_icon_size_lv0"
-        android:layout_height="@dimen/card_icon_size_lv0"
-        android:layout_marginStart="194px"
-        android:layout_marginTop="155px"
-        android:src="@drawable/card_iquting_icon_logo"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <!--未登录的布局-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutIQuTingLogin"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        >
+        <ImageView
+            android:id="@+id/ivCardIQuTingLogo"
+            android:layout_width="@dimen/card_icon_size_lv0"
+            android:layout_height="@dimen/card_icon_size_lv0"
+            android:layout_marginStart="194px"
+            android:layout_marginTop="155px"
+            android:src="@drawable/card_iquting_icon_logo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tvCardIQuTingLoginTip"
-        style="@style/CardLv2TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="92px"
-        android:layout_marginTop="35px"
-        android:gravity="bottom|center"
-        android:letterSpacing="0.01"
-        android:lineSpacingMultiplier="1.5"
-        android:text="@string/iquting_unlogin_slogan"
-        app:layout_constraintEnd_toEndOf="@id/ivCardIQuTingLogo"
-        app:layout_constraintStart_toStartOf="@id/ivCardIQuTingLogo"
-        app:layout_constraintTop_toBottomOf="@id/ivCardIQuTingLogo" />
+        <TextView
+            android:id="@+id/tvCardIQuTingLoginTip"
+            style="@style/CardLv2TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="92px"
+            android:layout_marginTop="35px"
+            android:gravity="bottom|center"
+            android:letterSpacing="0.01"
+            android:lineSpacingMultiplier="1.5"
+            android:text="@string/iquting_unlogin_slogan"
+            app:layout_constraintEnd_toEndOf="@id/ivCardIQuTingLogo"
+            app:layout_constraintStart_toStartOf="@id/ivCardIQuTingLogo"
+            app:layout_constraintTop_toBottomOf="@id/ivCardIQuTingLogo" />
 
-    <ImageView
-        android:id="@+id/ivCardIQuTingButton"
-        android:layout_width="@dimen/card_icon_size_lv1"
-        android:layout_height="@dimen/card_icon_size_lv1"
-        android:layout_marginTop="43px"
-        android:src="@drawable/card_common_left_in_selector"
-        app:layout_constraintEnd_toEndOf="@id/ivCardIQuTingLogo"
-        app:layout_constraintStart_toStartOf="@id/ivCardIQuTingLogo"
-        app:layout_constraintTop_toBottomOf="@+id/tvCardIQuTingLoginTip" />
+        <ImageView
+            android:id="@+id/ivCardIQuTingButton"
+            android:layout_width="@dimen/card_icon_size_lv1"
+            android:layout_height="@dimen/card_icon_size_lv1"
+            android:layout_marginTop="43px"
+            android:src="@drawable/card_common_left_in_selector"
+            app:layout_constraintEnd_toEndOf="@id/ivCardIQuTingLogo"
+            app:layout_constraintStart_toStartOf="@id/ivCardIQuTingLogo"
+            app:layout_constraintTop_toBottomOf="@+id/tvCardIQuTingLoginTip" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--网络异常，获取数据异常的布局-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutIQuTingErrorNet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:id="@+id/tvCardIQuTingNetTip"
+            style="@style/CardLv2TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:letterSpacing="0.01"
+            android:lineSpacingMultiplier="1.5"
+            android:text="@string/iquting_unlogin_slogan"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageView
+            android:id="@+id/ivCardIQuTingRefresh"
+            android:layout_width="@dimen/card_icon_size_lv1"
+            android:layout_height="@dimen/card_icon_size_lv1"
+            android:layout_marginTop="153px"
+            android:src="@drawable/icon_refresh_selector"
+            app:layout_constraintEnd_toEndOf="@id/tvCardIQuTingNetTip"
+            app:layout_constraintStart_toStartOf="@id/tvCardIQuTingNetTip"
+            app:layout_constraintTop_toBottomOf="@+id/tvCardIQuTingNetTip" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!--==========================  正常模式UI  ===========================================-->
 

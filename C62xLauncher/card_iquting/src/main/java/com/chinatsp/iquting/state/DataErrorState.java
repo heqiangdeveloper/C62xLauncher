@@ -4,11 +4,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import com.chinatsp.iquting.R;
 
-public class NetWorkDisconnectState implements IQuTingState {
+public class DataErrorState implements IQuTingState {
     @Override
     public void updateSmallCardState(View view) {
         view.findViewById(R.id.layoutIQuTingNormalSmall).setVisibility(View.GONE);
@@ -16,7 +14,7 @@ public class NetWorkDisconnectState implements IQuTingState {
         view.findViewById(R.id.layoutIQuTingErrorNet).setVisibility(View.VISIBLE);
 
         TextView tvCardIQuTingNetTip = view.findViewById(R.id.tvCardIQuTingNetTip);
-        tvCardIQuTingNetTip.setText(R.string.iquting_disconnect_tip);
+        tvCardIQuTingNetTip.setText(R.string.iquting_get_data_error);
     }
 
     @Override
@@ -26,10 +24,9 @@ public class NetWorkDisconnectState implements IQuTingState {
         TextView tvIQuTingRankSongs = view.findViewById(R.id.tvIQuTingRankSongs);
         View widgetView = view.findViewById(R.id.layoutIQuTingPlayWidget);
         ImageView ivCardIQuTingRefreshBig = view.findViewById(R.id.ivCardIQuTingRefreshBig);
-
         if(tvCardIQuTingLoginTipBig != null){
             tvCardIQuTingLoginTipBig.setVisibility(View.VISIBLE);
-            tvCardIQuTingLoginTipBig.setText(R.string.iquting_disconnect_tip);
+            tvCardIQuTingLoginTipBig.setText(R.string.iquting_get_data_error);
         }
         if(tvIQuTingDailySongs != null) tvIQuTingDailySongs.setVisibility(View.GONE);
         if(tvIQuTingRankSongs != null) tvIQuTingRankSongs.setVisibility(View.GONE);

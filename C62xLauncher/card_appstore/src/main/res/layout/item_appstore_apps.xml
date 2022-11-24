@@ -36,6 +36,7 @@
         android:ellipsize="end"
         android:singleLine="true"
         style="@style/CardLv4TextView"
+        android:textColor="@color/card_blue_default"
         android:gravity="center_vertical"
         app:layout_constraintBottom_toBottomOf="@id/ivAppItemIcon"
         app:layout_constraintStart_toEndOf="@id/ivAppItemIcon"

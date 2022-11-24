@@ -1,6 +1,8 @@
 package com.chinatsp.appstore;
 
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.Settings;
@@ -30,6 +32,7 @@ import com.chinatsp.appstore.event.RefreshUIEvent;
 import com.chinatsp.appstore.request.AdsBody;
 import com.chinatsp.appstore.request.TokenBody;
 import com.chinatsp.appstore.request.TokenResponse;
+import com.chinatsp.appstore.state.AppStoreDataErrorState;
 import com.chinatsp.appstore.state.AppStoreErrorNetWorkState;
 import com.chinatsp.appstore.state.AppStoreNormalState;
 import com.chinatsp.appstore.state.AppStoreState;
@@ -48,6 +51,7 @@ import card.service.ICardStyleChange;
 import launcher.base.network.NetworkObserver;
 import launcher.base.network.NetworkStateReceiver;
 import launcher.base.network.NetworkUtils;
+import launcher.base.utils.EasyLog;
 import launcher.base.utils.glide.GlideHelper;
 import launcher.base.utils.property.PropertyUtils;
 import launcher.base.utils.recent.RecentAppHelper;
@@ -88,7 +92,8 @@ public class AppStoreCardView extends ConstraintLayout implements ICardStyleChan
     private View mSmallCardView;
     private NormalSmallCardViewHolder mNormalSmallCardViewHolder;
     private NormalBigCardViewHolder mNormalBigCardViewHolder;
-    private ImageView mIvAppStoreButton;
+    private ImageView mIvAppStoreRefresh;
+    private ImageView mIvAppStoreRefreshBig;
     private ImageView mIvAppIconTop;
     private ImageView mIvAppIconBottom;
     private TextView mTvAppNameTop;
@@ -102,6 +107,9 @@ public class AppStoreCardView extends ConstraintLayout implements ICardStyleChan
     private int mLargeWidth;
     private SharedPreferences sp;
     private SharedPreferences.Editor editor;
+    private ObjectAnimator mRefreshAnimator;
+    private ObjectAnimator mRefreshBigAnimator;
+    private final int MIN_LOADING_ANIM_TIME = 1000;
 
     private void init() {
         Log.d(TAG, "init");
@@ -110,7 +118,7 @@ public class AppStoreCardView extends ConstraintLayout implements ICardStyleChan
         editor = sp.edit();
         mLargeWidth = (int) getResources().getDimension(R.dimen.card_width_large);
         mSmallCardView = findViewById(R.id.layoutSmallCardView);
-        mIvAppStoreButton = (ImageView) findViewById(R.id.ivAppStoreButton);
+        mIvAppStoreRefresh = (ImageView) findViewById(R.id.ivAppStoreRefresh);
         mIvAppIconTop = (ImageView) findViewById(R.id.ivAppIconTop);
         mIvAppIconBottom = (ImageView) findViewById(R.id.ivAppIconBottom);
         mTvAppNameTop = (TextView) findViewById(R.id.tvAppNameTop);
@@ -120,7 +128,7 @@ public class AppStoreCardView extends ConstraintLayout implements ICardStyleChan
 
         mSmallWidth = (int) getResources().getDimension(R.dimen.card_width);
         mLargeWidth = (int) getResources().getDimension(R.dimen.card_width_large);
-        mIvAppStoreButton.setOnClickListener(this);
+        mIvAppStoreRefresh.setOnClickListener(this);
         mIvAppIconTop.setOnClickListener(this);
         mIvAppIconBottom.setOnClickListener(this);
         //点击空白处跳转至应用商城
@@ -137,12 +145,6 @@ public class AppStoreCardView extends ConstraintLayout implements ICardStyleChan
             loadData();
         }
     };
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(RefreshUIEvent event) {
-        Log.d(TAG,"onMessageEvent refreshUI");
-        refreshUI();
-    }
 
     private void loadData(){
         boolean isConnected = NetworkUtils.isNetworkAvailable(getContext());
@@ -181,9 +183,49 @@ public class AppStoreCardView extends ConstraintLayout implements ICardStyleChan
             }else {
                 AppStoreJump.jumpAppMarket(pkgName, v.getContext());
             }
-        }else{
+        }else if(v.getId() == R.id.ivAppStoreRefresh){
+            Log.d(TAG,"onClick ivAppStoreRefresh");
+            showRefreshAnimation();
+        }else if(v.getId() == R.id.ivAppStoreRefreshBig){
+            Log.d(TAG,"onClick ivAppStoreRefreshBig");
+            showRefreshBigAnimation();
+        }else {
             RecentAppHelper.launchApp(getContext(),APPSTOREPKG);
         }
+    }
+
+    private void showRefreshAnimation(){
+        if (mRefreshAnimator == null) {
+            mRefreshAnimator = createRefreshAnimator();
+        } else {
+            mRefreshAnimator.cancel();
+        }
+        mRefreshAnimator.start();
+    }
+
+    private ObjectAnimator createRefreshAnimator() {
+        EasyLog.d(TAG, "createRefreshAnimator");
+        ObjectAnimator animator = ObjectAnimator.ofFloat(mIvAppStoreRefresh, "rotation", 0f, 360f).setDuration(MIN_LOADING_ANIM_TIME);
+        animator.setRepeatMode(ValueAnimator.RESTART);
+        animator.setRepeatCount(1);
+        return animator;
+    }
+
+    private void showRefreshBigAnimation(){
+        if (mRefreshBigAnimator == null) {
+            mRefreshBigAnimator = createRefreshBigAnimator();
+        } else {
+            mRefreshBigAnimator.cancel();
+        }
+        mRefreshBigAnimator.start();
+    }
+
+    private ObjectAnimator createRefreshBigAnimator() {
+        EasyLog.d(TAG, "createRefreshBigAnimator");
+        ObjectAnimator animator = ObjectAnimator.ofFloat(mIvAppStoreRefreshBig, "rotation", 0f, 360f).setDuration(MIN_LOADING_ANIM_TIME);
+        animator.setRepeatMode(ValueAnimator.RESTART);
+        animator.setRepeatCount(1);
+        return animator;
     }
 
     @NonNull
@@ -254,6 +296,14 @@ public class AppStoreCardView extends ConstraintLayout implements ICardStyleChan
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Log.d(TAG,"getToken onFailure: " + e);
+                //显示获取数据失败页面
+                ((Activity)getContext()).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mState = new AppStoreDataErrorState();
+                        mState.updateViewState(AppStoreCardView.this, mExpand);
+                    }
+                });
             }
 
             @Override
@@ -268,6 +318,15 @@ public class AppStoreCardView extends ConstraintLayout implements ICardStyleChan
                     editor.putLong(AppStoreConfigs.GETTOKENTIME,System.currentTimeMillis());
                     editor.commit();
                     getAds();
+                }else {
+                    //显示获取数据失败页面
+                    ((Activity)getContext()).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mState = new AppStoreDataErrorState();
+                            mState.updateViewState(AppStoreCardView.this, mExpand);
+                        }
+                    });
                 }
             }
         });
@@ -291,6 +350,14 @@ public class AppStoreCardView extends ConstraintLayout implements ICardStyleChan
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Log.d(TAG,"getAds onFailure: " + e);
+                //显示获取数据失败页面
+                ((Activity)getContext()).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mState = new AppStoreDataErrorState();
+                        mState.updateViewState(AppStoreCardView.this, mExpand);
+                    }
+                });
             }
 
             @Override
@@ -308,30 +375,43 @@ public class AppStoreCardView extends ConstraintLayout implements ICardStyleChan
                         }
 
                         //通知更新UI
-                        addEventBus();
-                        EventBus.getDefault().post(new RefreshUIEvent());
+                        refreshUI();
                     }
+                }else {
+                    //显示获取数据失败页面
+                    ((Activity)getContext()).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mState = new AppStoreDataErrorState();
+                            mState.updateViewState(AppStoreCardView.this, mExpand);
+                        }
+                    });
                 }
             }
         });
     }
 
     private void refreshUI(){
-        GlideHelper.loadUrlAlbumCoverRadius(getContext(),mIvAppIconTop,infos.get(0).getIcon(),0);
-        String desTop = infos.get(0).getDescription();
-        if(desTop.length() > 10){
-            desTop = desTop.substring(0,10) + "...";
-        }
-        mTvAppNameTop.setText(infos.get(0).getAppName());
-        mTvAppDescTop.setText(desTop);
+        ((Activity)getContext()).runOnUiThread(new Runnable() {
+           @Override
+           public void run() {
+               GlideHelper.loadUrlAlbumCoverRadius(getContext(),mIvAppIconTop,infos.get(0).getIcon(),0);
+               String desTop = infos.get(0).getDescription();
+               if(desTop.length() > 10){
+                   desTop = desTop.substring(0,10) + "...";
+               }
+               mTvAppNameTop.setText(infos.get(0).getAppName());
+               mTvAppDescTop.setText(desTop);
 
-        GlideHelper.loadUrlAlbumCoverRadius(getContext(),mIvAppIconBottom,infos.get(1).getIcon(),0);
-        String desBottom = infos.get(1).getDescription();
-        if(desBottom.length() > 10){
-            desBottom = desBottom.substring(0,10) + "...";
-        }
-        mTvAppNameBottom.setText(infos.get(1).getAppName());
-        mTvAppDescBottom.setText(desBottom);
+               GlideHelper.loadUrlAlbumCoverRadius(getContext(),mIvAppIconBottom,infos.get(1).getIcon(),0);
+               String desBottom = infos.get(1).getDescription();
+               if(desBottom.length() > 10){
+                   desBottom = desBottom.substring(0,10) + "...";
+               }
+               mTvAppNameBottom.setText(infos.get(1).getAppName());
+               mTvAppDescBottom.setText(desBottom);
+           }
+        });
     }
 
     private AdsBody getAdsBody(){
@@ -387,6 +467,8 @@ public class AppStoreCardView extends ConstraintLayout implements ICardStyleChan
 
     private void initBigCardView(View largeCardView) {
         mNormalBigCardViewHolder = new NormalBigCardViewHolder(mLargeCardView);
+        mIvAppStoreRefreshBig = largeCardView.findViewById(R.id.ivAppStoreRefreshBig);
+        mIvAppStoreRefreshBig.setOnClickListener(this);
         RecyclerView rcvCardIQuTingSongList = largeCardView.findViewById(R.id.rcvAppStoreAppsList);
         //rcvCardIQuTingSongList.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 3);
@@ -450,22 +532,5 @@ public class AppStoreCardView extends ConstraintLayout implements ICardStyleChan
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
         super.onWindowVisibilityChanged(visibility);
-        if(visibility == VISIBLE){
-            addEventBus();
-        }else if (visibility == GONE || visibility == INVISIBLE) {
-            removeEventBus();
-        }
-    }
-
-    private void addEventBus(){
-        if(!EventBus.getDefault().isRegistered(this)){
-            EventBus.getDefault().register(this);
-        }
-    }
-
-    private void removeEventBus(){
-        if(EventBus.getDefault().isRegistered(this)){
-            EventBus.getDefault().unregister(this);
-        }
     }
 }
