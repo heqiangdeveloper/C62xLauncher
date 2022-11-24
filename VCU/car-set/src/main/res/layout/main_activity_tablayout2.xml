@@ -37,7 +37,7 @@
                 app:tabIndicatorGravity="center"
                 app:tabMaxWidth="@dimen/main_tab_width"
                 app:tabMinWidth="@dimen/main_tab_width"
-                app:tabRippleColor="@color/transparent"/>
+                app:tabRippleColor="@color/transparent" />
 
             <com.common.xui.widget.alpha.XUIAlphaTextView
                 android:id="@+id/device_upgrade"
@@ -53,6 +53,16 @@
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
+        <View
+            android:id="@+id/red_version"
+            android:layout_width="@dimen/x4"
+            android:layout_height="@dimen/x4"
+            android:background="@drawable/red_shape"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="@dimen/x80"
+            android:layout_marginTop="@dimen/x14"
+            android:visibility="gone"/>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/vcu_main_split_line"

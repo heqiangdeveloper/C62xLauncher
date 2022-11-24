@@ -102,7 +102,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    private val eqMode: RadioState by lazy {
+     val eqMode: RadioState by lazy {
         val node = RadioNode.SYSTEM_SOUND_EFFECT
         RadioState(node.def).apply {
             val eqId = getDefaultEqSerial()
@@ -111,7 +111,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    private fun getDefaultEqSerial(): Int {
+    public fun getDefaultEqSerial(): Int {
         val eqId = SettingManager.instance.getEQ()
         var index: Int
         val eqIdArray = getEqIdArray()
@@ -153,7 +153,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         )
     }
 
-    private fun getEqIdArray(): IntArray {
+     fun getEqIdArray(): IntArray {
         val amplifier = VcuUtils.isAmplifier
         return if (amplifier) insetArray else outsetArray
     }

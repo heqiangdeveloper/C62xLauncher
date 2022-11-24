@@ -15,6 +15,8 @@ import com.chinatsp.settinglib.manager.sound.EffectManager
 import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
+import com.chinatsp.vehicle.controller.CollapseController
+import com.chinatsp.vehicle.controller.ICollapseListener
 import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.IOptionAction
 import com.chinatsp.vehicle.settings.IRoute
@@ -41,6 +43,7 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
     private lateinit var xValue: List<String>
     private lateinit var vList: List<Float>
     private var value by Delegates.notNull<Int>()
+    private var mCollapseController: CollapseController? = null
     private val offset: Float by lazy {
         if (VcuUtils.isAmplifier) 9f else 5f
     }
@@ -54,6 +57,7 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
         initSmoothLineData()
         setCheckedChangeListener()
         initViewsDisplay()
+        registerController()
 
         initSwitchOption()
         addSwitchLiveDataListener()
@@ -384,8 +388,12 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
         }
     }
 
-    private fun initView() {
+    private fun registerController() {
+        mCollapseController = CollapseController(activity, mDrawerCollapseListener)
+        mCollapseController!!.register()
+    }
 
+    private fun initView() {
         binding.smoothChartView.setInterval(-1 * offset, offset)
         binding.smoothChartView.isCustomBorder = true
         binding.smoothChartView.setTagDrawable(R.drawable.ac_blue_52)
@@ -439,7 +447,8 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
             }
         }
     }
-//    ========= 音效平衡 start =============
+
+    //    ========= 音效平衡 start =============
     private var OFFSET = 1
     private var DEFALUT_BALANCE = 0
     private var DEFALUT_FADE = 0
@@ -449,7 +458,7 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
         if (SettingManager.getAmpType() == 0) {// 1 外置 1-11  ||  0 内置 ——》1-19
             SoundFieldView.BALANCE_MAX = 18.0;
             SoundFieldView.FADE_MAX = 18.0;
-        }else{
+        } else {
             SoundFieldView.BALANCE_MAX = 10.0;
             SoundFieldView.FADE_MAX = 10.0;
         }
@@ -499,5 +508,25 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
             e.printStackTrace()
         }
     }
-//    ========= 音效平衡 end =============
+
+    //    ========= 音效平衡 end =============
+
+    private var mDrawerCollapseListener: ICollapseListener? = object : ICollapseListener {
+        override fun onCollapse(key: Int) {
+            initEQ()
+        }
+    }
+
+    private fun initEQ() {
+        EffectManager.instance.onRadioChanged(
+            RadioNode.SYSTEM_SOUND_EFFECT,
+            EffectManager.instance.eqMode,
+            EffectManager.instance.getDefaultEqSerial()
+        )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mCollapseController!!.unRegister()
+    }
 }

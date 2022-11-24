@@ -10,6 +10,8 @@ import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.navigation.RouterSerial
+import com.chinatsp.vehicle.controller.ICollapseListener
+import com.chinatsp.vehicle.controller.VersionController
 import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.bean.TabPage
 import com.chinatsp.vehicle.settings.databinding.MainActivityTablayout2Binding
@@ -43,7 +45,7 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
 
     private val popupLiveData: MutableLiveData<String> by lazy { MutableLiveData("") }
 
-
+    private var versionController: VersionController? = null
     override fun getLayoutId(): Int {
         return R.layout.main_activity_tablayout2
     }
@@ -55,15 +57,16 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
         Timber.e("initData-------")
         checkOutRoute(intent)
         observeLocation()
+        registerController()
         binding.deviceUpgrade.setOnClickListener {
             doRouteToDeviceUpgrade()
         }
     }
 
-  /*  override fun onResume() {
-        super.onResume()
-        initTabLayout()
-    }*/
+    /*  override fun onResume() {
+          super.onResume()
+          initTabLayout()
+      }*/
 
 //    override fun onCreate(savedInstanceState: Bundle?) {
 //        window.setBackgroundDrawableResource(R.color.transparent);
@@ -78,6 +81,11 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
                 tabLayout.selectTab(tabLayout.getTabAt(position), true)
             }
         }
+    }
+
+    private fun registerController() {
+        versionController = VersionController(this, mDrawerCollapseListener)
+        versionController!!.register()
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -270,10 +278,6 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
         manager.setTabSerial(tabLocation.value!!)
     }
 
-    override fun onDestroy() {
-//        manager.setTabSerial(tabLocation.value!!)
-        super.onDestroy()
-    }
 
     override fun obtainLevelLiveData(): LiveData<Node> {
         return level1
@@ -310,6 +314,21 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
 
     fun homeBack(view: View) {
         finish()
+    }
+
+    private var mDrawerCollapseListener: ICollapseListener? = object : ICollapseListener {
+        override fun onCollapse(key: Int) {
+            if (key == 0) {
+                binding.redVersion.visibility = View.VISIBLE
+            } else {
+                binding.redVersion.visibility = View.GONE
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        versionController!!.unRegister()
     }
 
 }

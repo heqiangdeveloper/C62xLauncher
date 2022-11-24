@@ -8,6 +8,8 @@ import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.sound.EffectManager
 import com.chinatsp.settinglib.optios.RadioNode
+import com.chinatsp.vehicle.controller.CollapseController
+import com.chinatsp.vehicle.controller.ICollapseListener
 import com.chinatsp.vehicle.settings.IRadioAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.EqualizerDialogFragmetBinding
@@ -33,7 +35,7 @@ class EqualizerDialogFragment :
     }
     private lateinit var vList: List<Float>
     private var value by Delegates.notNull<Int>()
-
+    private var mCollapseController: CollapseController? = null
     override fun getLayoutId(): Int {
         return R.layout.equalizer_dialog_fragmet
     }
@@ -45,7 +47,7 @@ class EqualizerDialogFragment :
         setRadioListener()
 
         initView()
-
+        registerController()
         initViewDisplay()
         binding.closeDialog.setOnClickListener {
             this.dismiss()
@@ -74,6 +76,10 @@ class EqualizerDialogFragment :
            ) as List<String>
        }
    }
+    private fun registerController(){
+        mCollapseController = CollapseController(activity, mDrawerCollapseListener)
+        mCollapseController!!.register()
+    }
 
     private fun initViewDisplay() {
         val eqRadio = binding.soundEffectRadio
@@ -176,7 +182,20 @@ class EqualizerDialogFragment :
             960f / 1920f
         }
     }
+    private var mDrawerCollapseListener: ICollapseListener? = object : ICollapseListener {
+        override fun onCollapse(key: Int) {
+            initEQ()
+        }
+    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mCollapseController!!.unRegister()
+    }
+
+    private fun initEQ(){
+        EffectManager.instance.onRadioChanged(RadioNode.SYSTEM_SOUND_EFFECT, EffectManager.instance.eqMode, EffectManager.instance.getDefaultEqSerial())
+    }
 }
 
 

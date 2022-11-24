@@ -186,7 +186,6 @@
             android:layout_marginTop="@dimen/x12"
             android:layout_marginEnd="@dimen/x161"
             android:text="@string/car_trunk_door_height"
-            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:drawableEnd="@drawable/information_selector"

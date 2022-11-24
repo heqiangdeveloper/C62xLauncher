@@ -202,4 +202,49 @@ object Constant {
         intArrayOf(0x19, 0x33, 0x4C, 0x66, 0x7F, 0x99, 0xB2, 0xCC, 0xE5, 0xFF)
     }
 
+    /**
+     * 提醒是否有版本需要安装
+     */
+    val VERSION_LEVEL: String
+        get() = "com.chinatsp.systemui.key_update"
+
+    /**
+     * 不显示图标
+     */
+    const val STATUS_HIDE = -1
+
+    /**
+     * 有新版本可更新
+     */
+    const val STATUS_AVAILABLE = 0
+
+    /**
+     * 有预约安装
+     */
+    const val STATUS_AVAILABLE1 = 1
+
+    /**
+     * 有下载提醒
+     */
+    const val STATUS_DOWNLOADING_NOTICE = 2
+
+    /**
+     * 下载中
+     */
+    const val STATUS_DOWNLOADING = 3
+
+    /**
+     * 下载暂停
+     */
+    const val STATUS_DOWNLOADING_PAUSE = 4
+
+    /**
+     * 下载异常
+     */
+    const val STATUS_DOWNLOADING_ERROR = 5
+
+    /**
+     * 下载完成
+     */
+    const val STATUS_DOWNLOADING_FINISH = 6
 }

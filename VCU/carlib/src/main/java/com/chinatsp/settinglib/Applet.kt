@@ -1,6 +1,10 @@
 package com.chinatsp.settinglib
 
+import android.car.hardware.cabin.CarCabinManager
 import android.graphics.Color
+import com.chinatsp.settinglib.manager.cabin.WheelManager
+import com.chinatsp.settinglib.sign.Origin
+import timber.log.Timber
 
 
 /**
@@ -12,10 +16,21 @@ import android.graphics.Color
  */
 object Applet {
 
-    var speed: Float = 0.0f
+    private fun speedValue(): Float {
+        /***
+         * 获取车速
+         * Vehicle speed calculated by EMS according to the message WHEEL SPEED from ESP.km/h 系数 0.1
+         */
+        val speed: Float = WheelManager.instance.readFloatProperty(
+            CarCabinManager.ID_VEHICLE_SPEED_VALUE,
+            Origin.CABIN
+        )
+        Timber.d("Applet speed value:$speed")
+        return (speed * 0.1).toFloat()
+    }
 
     fun isCanSwitchEps(consult: Float): Boolean {
-        return speed < consult
+        return speedValue() < consult
     }
 
     fun getLampSupportColor(): List<Color> {
