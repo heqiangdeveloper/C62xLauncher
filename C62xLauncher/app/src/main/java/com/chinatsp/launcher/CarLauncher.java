@@ -54,19 +54,10 @@ public class CarLauncher extends AppCompatActivity implements OnGestureAction {
         //绑定应用市场服务
         registerAppStoreService(getApplicationContext());
         initVersionInfo();
-        // 发出本应用启动前台的广播
-        sendLauncherBroadcast();
+
         mGestureDetector = new GestureDetector(new SlideGestureListener(this, this));
 
         EasyLog.d(TAG, "onCreate ... Hashcode:"+hashCode());
-    }
-
-    private void sendLauncherBroadcast() {
-        Intent intent = new Intent();
-        intent.setPackage(AppLists.media);
-        intent.setAction("com.chinatsp.launcher.bootCompleted");
-        intent.addFlags(0x01000000);
-        sendBroadcast(intent);
     }
 
     @Override
