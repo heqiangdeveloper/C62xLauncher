@@ -53,7 +53,8 @@
     <string name="cabin_ac_auto_comfort">自动空调舒适性</string>
 
     <string name="cabin_safe_fortify_tone">设防提示音</string>
-    <string name="cabin_safe_lock_car">锁车提示音</string>
+    <string name="cabin_safe_lock_car">锁车成功提示音</string>
+    <string name="cabin_safe_lock_car_error">锁车失败提示音</string>
     <string name="cabin_safe_fortify_success_tone">设防成功提示音</string>
     <string name="cabin_safe_fortify_failure_tone">设防失败提示音</string>
     <string name="cabin_safe_video_safe_mode">视频安全模式</string>
@@ -131,6 +132,7 @@
 
     <string name="car_trunk_electric_function">电动尾门电动功能</string>
     <string name="car_trunk_intelligence_into">电动尾门智能进入</string>
+    <string name="car_trunk_intelligence_into_explain">车门智能进入开关需打开</string>
     <string name="car_trunk_height_adjustment">尾门高度调节</string>
     <string name="car_trunk_light_flashing">灯光闪烁报警</string>
     <string name="car_trunk_buzzer_alarms">蜂鸣器报警开关</string>
@@ -229,7 +231,7 @@
     <string name="lighting_atmosphere_lamp">氛围灯</string>
     <string name="lighting_screen">屏幕亮度</string>
     <string name="lighting_go_home_title">伴我回家</string>
-    <string name="lighting_go_home_content">在锁车后,近光灯会点亮一段时间再熄灭,为你照亮回家的路</string>
+    <string name="lighting_go_home_content">在下电后，近光灯会点亮一段\n时间再熄灭，为你照亮前方回\n家的路。</string>
     <string name="lighting_turn_signal_title">转向灯变道闪烁次数</string>
     <string name="lighting_turn_external_lighting">外部灯光仪式感</string>
     <string name="lighting_physical_switch_title">物理开关背光亮度</string>

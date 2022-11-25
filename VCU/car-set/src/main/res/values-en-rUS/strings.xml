@@ -53,7 +53,8 @@
     <string name="cabin_ac_auto_comfort">Automatic AC Comfort</string>
 
     <string name="cabin_safe_fortify_tone">Set defense prompt</string>
-    <string name="cabin_safe_lock_car">锁车提示音</string>
+    <string name="cabin_safe_lock_car">锁车成功提示音</string>
+    <string name="cabin_safe_lock_car_error">锁车失败提示音</string>
     <string name="cabin_safe_fortify_success_tone">设防成功提示音</string>
     <string name="cabin_safe_fortify_failure_tone">设防失败提示音</string>
     <string name="cabin_safe_video_safe_mode">Video safe mode</string>
@@ -131,6 +132,7 @@
 
     <string name="car_trunk_electric_function">Power tailgate electric function</string>
     <string name="car_trunk_intelligence_into">Electric tail door intelligent entry</string>
+    <string name="car_trunk_intelligence_into_explain">车门智能进入开关需打开</string>
     <string name="car_trunk_height_adjustment">尾门高度调节</string>
     <string name="car_trunk_light_flashing">Light flashing alarm</string>
     <string name="car_trunk_buzzer_alarms">Buzzer alarm switch</string>
@@ -229,7 +231,7 @@
     <string name="lighting_atmosphere_lamp">Ambient light</string>
     <string name="lighting_screen">Screen brightness</string>
     <string name="lighting_go_home_title">Follow me home</string>
-    <string name="lighting_go_home_content">After locked your car, the dipped headlight will be on for a while and then off to Light up the way home for you</string>
+    <string name="lighting_go_home_content">在下电后，近光灯会点亮一段\n时间再熄灭，为你照亮前方回\n家的路。</string>
     <string name="lighting_turn_signal_title">Number of turn signal flashing when lane change</string>
     <string name="lighting_turn_external_lighting">External lighting ritual sense</string>
     <string name="lighting_physical_switch_title">Turn on or off backlight brightness</string>
