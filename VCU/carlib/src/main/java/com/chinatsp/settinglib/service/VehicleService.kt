@@ -92,7 +92,8 @@ class VehicleService : Service() {
                         value = value.substring(0, value.length - 1)
                         value = value.substring(1, value.length)
                         val stringValue = value.split(",")
-                        val map =
+                        Timber.d("value:$value,stringValue:$stringValue")
+                        /*val map =
                             if (!VcuUtils.isAmplifier && stringValue.size != 9 && stringValue.size == 5) {
                                 IntArray(9)
                             } else {
@@ -101,13 +102,15 @@ class VehicleService : Service() {
                         for (i in stringValue.indices) {
                             val y = stringValue[i].toFloat()
                             map[i] = y.toInt()
-                        }
+                        }*/
+                        val map = stringValue.map { it.toFloat().toInt() }.toIntArray()
                         if (!VcuUtils.isAmplifier && stringValue.size != 9 && stringValue.size == 5) {
                             map[5] = 0
                             map[6] = 0
                             map[7] = 0
                             map[8] = 0
                         }
+                        Timber.d("equalizerValue   map:${arrayOf(map).contentDeepToString()}")
                         effectManager.doSetEQ(
                             6,
                             map
