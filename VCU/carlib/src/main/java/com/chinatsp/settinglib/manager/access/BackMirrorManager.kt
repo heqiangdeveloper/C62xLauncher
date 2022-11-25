@@ -61,8 +61,8 @@ class BackMirrorManager private constructor() : BaseManager(), ISwitchManager {
 
     override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.BACK_MIRROR_FOLD -> backMirrorFold.copy()
-            SwitchNode.BACK_MIRROR_DOWN -> backMirrorDown.copy()
+            SwitchNode.BACK_MIRROR_FOLD -> backMirrorFold.deepCopy()
+            SwitchNode.BACK_MIRROR_DOWN -> backMirrorDown.deepCopy()
             else -> null
         }
     }

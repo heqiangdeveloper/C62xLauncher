@@ -111,7 +111,11 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
             !VcuUtils.isPower()
         }
         if (result) {
-            command.message = "操作没有成功，请先启动发动机"
+            command.message = if (coreEngine) {
+                Keywords.NEED_START_ENGINE
+            } else {
+                Keywords.NEED_START_POWER
+            }
             callback?.onCmdHandleResult(command)
         }
         return result
@@ -120,7 +124,7 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
 
     override fun doCommandExpress(parcel: CommandParcel, fromUser: Boolean) {
         val command = parcel.command as AirCmd
-        if (interruptCommand(command, parcel.callback)) {
+        if (interruptCommand(command, parcel.callback, coreEngine = true)) {
             return
         }
         when (command.action) {
@@ -744,11 +748,11 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
             parcel.retryCount = 3
             if (lfAct) {
                 command.lfExpect = opnTempLevel(command, min, max, IPart.L_F)
-                command.lfCount = 1
+                command.resetSent(IPart.L_F)
             }
             if (rfAct) {
                 command.rfExpect = opnTempLevel(command, min, max, IPart.R_F)
-                command.rfCount = 1
+                command.resetSent(IPart.R_F)
             }
         }
         val lfExpect = command.lfExpect

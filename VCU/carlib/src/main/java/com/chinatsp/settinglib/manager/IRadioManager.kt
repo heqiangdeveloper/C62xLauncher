@@ -70,7 +70,7 @@ interface IRadioManager : IManager {
         }
         val inactive = node.isInactive(value)
         if (inactive xor atomic.enable()) {
-            atomic.enable = if (inactive) 0x2 else Constant.VIEW_ENABLE
+            atomic.enable = if (inactive) value else Constant.VIEW_ENABLE
             block?.let { it(node, atomic) }
             return atomic
         }

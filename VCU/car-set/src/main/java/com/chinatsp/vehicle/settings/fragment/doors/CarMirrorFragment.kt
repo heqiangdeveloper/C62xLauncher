@@ -124,11 +124,6 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
 //                takeUnless { result }?.recoverSwitch(buttonView as SwitchButton, !isChecked, false)
                 doUpdateSwitchOption(SwitchNode.BACK_MIRROR_FOLD, buttonView, isChecked)
 
-                if (buttonView.isChecked) {
-                    binding.rearviewMirror.setText(R.string.car_mirror_automatic_folding_open)
-                } else {
-                    binding.rearviewMirror.setText(R.string.car_mirror_automatic_folding_close)
-                }
 //                updateOptionActive()
                 updateSwitchEnable(SwitchNode.BACK_MIRROR_FOLD)
             }
@@ -193,9 +188,6 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
     override fun initSwitchOption(node: SwitchNode, liveData: LiveData<SwitchState>) {
         val status = liveData.value?.get() ?: false
         if (node == SwitchNode.BACK_MIRROR_FOLD) {
-            val resId = if (status) R.string.car_mirror_automatic_folding_open
-            else R.string.car_mirror_automatic_folding_close
-            binding.rearviewMirror.setText(resId)
 //            checkDisableOtherDiv(binding.accessMirrorMirrorFoldSw, status)
         }
 //        checkDisableOtherDiv(binding.backMirrorDownSwitch, status)

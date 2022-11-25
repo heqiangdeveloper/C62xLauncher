@@ -1,5 +1,9 @@
 package com.chinatsp.volcano.viewholder;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +21,7 @@ import com.chinatsp.volcano.videos.VolcanoVideoAdapter;
 import java.util.List;
 
 import launcher.base.utils.EasyLog;
+import launcher.base.utils.recent.RecentAppHelper;
 import launcher.base.utils.selector.OnViewSelected;
 import launcher.base.utils.selector.StatefulViewHolder;
 import launcher.base.utils.selector.ViewStateSelector;
@@ -34,11 +39,14 @@ public class BigCardViewHolder extends VolcanoViewHolder{
     private ImageView ivCardVolcanoLogoToutiao;
     private TextView tvCardVolcanoNetworkErr;
     private ImageView ivCardVolcanoNetworkErr;
+    private ImageView ivCardVolcanoRefreshBig;
     private View viewLoading;
 
     private boolean mInitialed;
 
     private VolcanoCardView mCardView;
+    private ObjectAnimator mRefreshBigAnimator;
+    private final int MIN_LOADING_ANIM_TIME = 1000;
     public BigCardViewHolder(View rootView, VolcanoCardView cardView) {
         super(rootView);
         ivCardVolcanoLogin = rootView.findViewById(R.id.ivCardVolcanoLogin);
@@ -50,9 +58,36 @@ public class BigCardViewHolder extends VolcanoViewHolder{
         viewLoading = rootView.findViewById(R.id.viewLoading);
         tvCardVolcanoNetworkErr = rootView.findViewById(R.id.tvCardVolcanoNetworkErr);
         ivCardVolcanoNetworkErr = rootView.findViewById(R.id.ivCardVolcanoNetworkErr);
+        ivCardVolcanoRefreshBig = rootView.findViewById(R.id.ivCardVolcanoRefreshBig);
+        ivCardVolcanoRefreshBig.setOnClickListener(mOnClickListener);
         mCardView = cardView;
         initBigCardView(rootView);
         initTypeSelector();
+    }
+
+    private View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if(v.getId() == R.id.ivCardVolcanoRefreshBig){
+                showRefreshAnimation();
+            }
+        }
+    };
+
+    private void showRefreshAnimation(){
+        if (mRefreshBigAnimator == null) {
+            mRefreshBigAnimator = createRefreshBigAnimator();
+        } else {
+            mRefreshBigAnimator.cancel();
+        }
+        mRefreshBigAnimator.start();
+    }
+
+    private ObjectAnimator createRefreshBigAnimator() {
+        ObjectAnimator animator = ObjectAnimator.ofFloat(ivCardVolcanoRefreshBig, "rotation", 0f, 360f).setDuration(MIN_LOADING_ANIM_TIME);
+        animator.setRepeatMode(ValueAnimator.RESTART);
+        animator.setRepeatCount(1);
+        return animator;
     }
 
     private void initTypeSelector() {
@@ -130,10 +165,10 @@ public class BigCardViewHolder extends VolcanoViewHolder{
         rcvCardVolcanoVideoList.setVisibility(View.INVISIBLE);
         setSourceTabsVisible(false);
         viewLoading.setVisibility(View.INVISIBLE);
-        ivCardVolcanoNetworkErr.setImageResource(R.drawable.card_icon_wifi_disconnect);
-        ivCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
+        ivCardVolcanoNetworkErr.setVisibility(View.GONE);
         tvCardVolcanoNetworkErr.setText(R.string.card_network_err);
         tvCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
+        ivCardVolcanoRefreshBig.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -141,6 +176,7 @@ public class BigCardViewHolder extends VolcanoViewHolder{
         setSourceTabsVisible(true);
         ivCardVolcanoNetworkErr.setVisibility(View.INVISIBLE);
         tvCardVolcanoNetworkErr.setVisibility(View.INVISIBLE);
+        ivCardVolcanoRefreshBig.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -148,10 +184,10 @@ public class BigCardViewHolder extends VolcanoViewHolder{
         rcvCardVolcanoVideoList.setVisibility(View.INVISIBLE);
         setSourceTabsVisible(false);
         viewLoading.setVisibility(View.INVISIBLE);
-        ivCardVolcanoNetworkErr.setImageResource(R.drawable.card_icon_date_error);
-        ivCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
+        ivCardVolcanoNetworkErr.setVisibility(View.GONE);
         tvCardVolcanoNetworkErr.setText(R.string.card_data_err);
         tvCardVolcanoNetworkErr.setVisibility(View.VISIBLE);
+        ivCardVolcanoRefreshBig.setVisibility(View.VISIBLE);
     }
 
     private void setSourceTabsVisible(boolean show) {

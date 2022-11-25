@@ -11,28 +11,24 @@ import com.chinatsp.iquting.R;
 
 public class NormalState implements IQuTingState {
     public void updateSmallCardState(View view) {
+        view.findViewById(R.id.layoutIQuTingErrorNet).setVisibility(View.GONE);
+        view.findViewById(R.id.layoutIQuTingLogin).setVisibility(View.GONE);
         view.findViewById(R.id.layoutIQuTingNormalSmall).setVisibility(View.VISIBLE);
-
-        ImageView ivCardIQuTingLogo = view.findViewById(R.id.ivCardIQuTingLogo);
-        TextView tvCardIQuTingTip = view.findViewById(R.id.tvCardIQuTingLoginTip);
-        ImageView ivCardIQuTingButton = view.findViewById(R.id.ivCardIQuTingButton);
-
-        ivCardIQuTingLogo.setVisibility(View.GONE);
-        tvCardIQuTingTip.setVisibility(View.GONE);
-        ivCardIQuTingButton.setVisibility(View.GONE);
-
-
     }
 
     public void updateBigCardState(View view) {
         View tvCardIQuTingLoginTipBig = view.findViewById(R.id.tvCardIQuTingLoginTipBig);
         TextView tvIQuTingDailySongs = view.findViewById(R.id.tvIQuTingDailySongs);
         TextView tvIQuTingRankSongs = view.findViewById(R.id.tvIQuTingRankSongs);
-        ConstraintLayout cl = view.findViewById(R.id.rootLayout);
-        if(cl != null) cl.setVisibility(View.VISIBLE);
+        ImageView ivCardIQuTingRefreshBig = view.findViewById(R.id.ivCardIQuTingRefreshBig);
+//        ConstraintLayout cl = view.findViewById(R.id.rootLayout);
+//        if(cl != null) cl.setVisibility(View.VISIBLE);
+        View widgetView = view.findViewById(R.id.layoutIQuTingPlayWidget);
+        if(widgetView != null) widgetView.setVisibility(View.VISIBLE);
         tvCardIQuTingLoginTipBig.setVisibility(View.GONE);
         if(tvIQuTingDailySongs != null) tvIQuTingDailySongs.setVisibility(View.VISIBLE);
         if(tvIQuTingRankSongs != null) tvIQuTingRankSongs.setVisibility(View.VISIBLE);
+        if(ivCardIQuTingRefreshBig != null) ivCardIQuTingRefreshBig.setVisibility(View.GONE);
 
         RecyclerView rcvCardIQuTingSongList = view.findViewById(R.id.rcvCardIQuTingSongList);
         rcvCardIQuTingSongList.setVisibility(View.VISIBLE);

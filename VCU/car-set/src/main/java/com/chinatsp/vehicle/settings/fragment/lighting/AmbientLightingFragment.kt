@@ -113,8 +113,11 @@ class AmbientLightingFragment :
             ?: false)
 
     private val isBack: Boolean
-        get() = binding.ambientBackLightingSwitch.isChecked && (viewModel.backLighting.value?.enable()
+        get() = (!hasNotBackLamp) && binding.ambientBackLightingSwitch.isChecked && (viewModel.backLighting.value?.enable()
             ?: false)
+
+    private val hasNotBackLamp: Boolean =
+        VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4, expect = true)
 
     private fun updateOptionActive() {
         updateSwitchEnable(SwitchNode.FRONT_AMBIENT_LIGHTING)
@@ -124,13 +127,8 @@ class AmbientLightingFragment :
     }
 
     private fun initViewsDisplay() {
-        if (VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4, expect = true)) {
-            binding.lightingFrontLayout.visibility = View.VISIBLE
-            binding.lightingBackLayout.visibility = View.GONE
-        } else {
-            binding.lightingFrontLayout.visibility = View.VISIBLE
-            binding.lightingBackLayout.visibility = View.VISIBLE
-        }
+        binding.lightingFrontLayout.visibility = View.VISIBLE
+        binding.lightingBackLayout.visibility = if (hasNotBackLamp) View.GONE else View.VISIBLE
     }
 
     private fun initViewLight() {
@@ -138,10 +136,7 @@ class AmbientLightingFragment :
         val colorId = Color.rgb(color.red().toInt(), color.green().toInt(), color.blue().toInt())
         if (VcuUtils.isCareLevel(Level.LEVEL3, expect = true)) {
             binding.lightingImage.setImageDrawable(activity?.let {
-                ContextCompat.getDrawable(
-                    it,
-                    R.drawable.img_light_lv3
-                )
+                ContextCompat.getDrawable(it, R.drawable.img_light_lv3)
             })
             if (isFront) {
                 binding.lightingView.setBackgroundColor(colorId)
@@ -150,10 +145,7 @@ class AmbientLightingFragment :
             }
         } else if (VcuUtils.isCareLevel(Level.LEVEL4, expect = true)) {
             binding.lightingImage.setImageDrawable(activity?.let {
-                ContextCompat.getDrawable(
-                    it,
-                    R.drawable.img_light_lv4
-                )
+                ContextCompat.getDrawable(it, R.drawable.img_light_lv4)
             })
             if (isFront) {
                 binding.lightingView.setBackgroundColor(colorId)
@@ -162,27 +154,24 @@ class AmbientLightingFragment :
             }
         } else if (VcuUtils.isCareLevel(Level.LEVEL5, expect = true)) {
             binding.lightingImage.setImageDrawable(activity?.let {
-                ContextCompat.getDrawable(
-                    it,
-                    R.drawable.img_light_lv5
-                )
+                ContextCompat.getDrawable(it, R.drawable.img_light_lv5)
             })
             if (isFront && isBack) {
                 binding.lightingView.setBackgroundColor(colorId)
                 binding.lightingViewBack1.visibility = View.GONE
                 binding.lightingViewBack2.visibility = View.GONE
                 binding.lightingViewBack3.visibility = View.GONE
-            }else if(!isFront && isBack){
+            } else if (!isFront && isBack) {
                 binding.lightingView.setBackgroundColor(colorId)
                 binding.lightingViewBack1.visibility = View.VISIBLE
                 binding.lightingViewBack2.visibility = View.GONE
                 binding.lightingViewBack3.visibility = View.GONE
-            }else if(isFront && !isBack){
+            } else if (isFront && !isBack) {
                 binding.lightingView.setBackgroundColor(colorId)
                 binding.lightingViewBack1.visibility = View.GONE
                 binding.lightingViewBack2.visibility = View.VISIBLE
                 binding.lightingViewBack3.visibility = View.VISIBLE
-            }else if(!isFront && !isBack){
+            } else if (!isFront && !isBack) {
                 activity?.let { binding.lightingView.setBackgroundColor(it.getColor(R.color.lighting_bg)) }
                 binding.lightingViewBack1.visibility = View.GONE
                 binding.lightingViewBack2.visibility = View.GONE

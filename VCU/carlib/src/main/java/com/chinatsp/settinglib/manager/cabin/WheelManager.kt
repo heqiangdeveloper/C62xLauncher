@@ -95,7 +95,7 @@ class WheelManager private constructor() : BaseManager(), ISoundManager, ICmdExp
 
     override fun doGetRadioOption(node: RadioNode): RadioState? {
         return when (node) {
-            RadioNode.DRIVE_EPS_MODE -> epsMode.copy()
+            RadioNode.DRIVE_EPS_MODE -> epsMode.deepCopy()
             else -> null
         }
     }
@@ -112,7 +112,7 @@ class WheelManager private constructor() : BaseManager(), ISoundManager, ICmdExp
 
     override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.DRIVE_WHEEL_AUTO_HEAT -> swhFunction.copy()
+            SwitchNode.DRIVE_WHEEL_AUTO_HEAT -> swhFunction.deepCopy()
             else -> null
         }
     }
@@ -144,7 +144,7 @@ class WheelManager private constructor() : BaseManager(), ISoundManager, ICmdExp
     override fun doSetVolume(progress: Progress, position: Int): Boolean {
         return when (progress) {
             Progress.STEERING_ONSET_TEMPERATURE -> {
-                val result = writeProperty(steeringSillTemp, position)
+                val result = writeProperty(steeringSillTemp, position + 1)
                 if (result) {
                     VcuUtils.putInt(key = Constant.STEERING_HEAT_TEMP, value = position)
                     steeringSillTemp.pos = position
@@ -227,13 +227,7 @@ class WheelManager private constructor() : BaseManager(), ISoundManager, ICmdExp
     }
 
     private fun writeProperty(volume: Volume, value: Int): Boolean {
-        val success =
-            volume.isValid(value) && writeProperty(volume.type.set.signal, value, Origin.CABIN)
-        if (success && develop) {
-            volume.pos = value
-//            doRangeChanged(volume)
-        }
-        return success
+        return volume.isValid(value) && writeProperty(volume.type.set.signal, value, Origin.CABIN)
     }
 
     private fun writeProperty(node: SwitchNode, status: Boolean, atomic: SwitchState): Boolean {

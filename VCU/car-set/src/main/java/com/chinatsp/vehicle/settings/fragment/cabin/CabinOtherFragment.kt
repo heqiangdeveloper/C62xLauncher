@@ -46,7 +46,7 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
     }
 
     private fun initViewsDisplay() {
-        val levelValue = VcuUtils.getLevelValue()
+        val levelValue = VcuUtils.VEHICLE_LEVEL
         //level3, level4 配置无手机无线充电
         if (Level.LEVEL3 == levelValue || Level.LEVEL4 == levelValue) {
             binding.cabinOtherWirelessCharging.visibility = View.GONE

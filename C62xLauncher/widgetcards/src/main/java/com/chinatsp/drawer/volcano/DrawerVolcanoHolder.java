@@ -59,7 +59,8 @@ public class DrawerVolcanoHolder extends BaseViewHolder<DrawerEntity> {
     void refreshFail(String msg) {
         EasyLog.d(TAG, "refreshFail: " + msg+" , hashCode:"+hashCode());
         layoutDrawerVolcanoError.setVisibility(View.VISIBLE);
-        ivErrorIcon.setImageResource(R.drawable.card_icon_wifi_disconnect);
+        //ivErrorIcon.setImageResource(R.drawable.card_icon_wifi_disconnect);
+        ivErrorIcon.setVisibility(View.GONE);
         tvErrorTip.setText(R.string.card_data_err);
         rcvDrawerVolcanoVideos.setVisibility(View.INVISIBLE);
     }
@@ -67,7 +68,8 @@ public class DrawerVolcanoHolder extends BaseViewHolder<DrawerEntity> {
     void showNetworkError() {
         EasyLog.d(TAG, "showNetworkError hashCode:" + hashCode());
         layoutDrawerVolcanoError.setVisibility(View.VISIBLE);
-        ivErrorIcon.setImageResource(com.chinatsp.volcano.R.drawable.card_icon_wifi_disconnect);
+        //ivErrorIcon.setImageResource(com.chinatsp.volcano.R.drawable.card_icon_wifi_disconnect);
+        ivErrorIcon.setVisibility(View.GONE);
         tvErrorTip.setText(R.string.card_network_err);
         rcvDrawerVolcanoVideos.setVisibility(View.INVISIBLE);
     }

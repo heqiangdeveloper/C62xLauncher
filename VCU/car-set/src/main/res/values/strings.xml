@@ -141,12 +141,12 @@
     <string name="car_trunk_buzzer_close">蜂鸣器报警已关闭</string>
     <string name="car_trunk_light_open">灯光闪烁报警已开启</string>
     <string name="car_trunk_light_close">灯光闪烁报警已关闭</string>
-    <string name="car_trunk_content">模式⼀：携带合法智能钥匙\n
+    <string name="car_trunk_content">往返式：携带合法智能钥匙\n
         进⼊后备箱感应区域内，然\n
         后退出此区域，再次进⼊感\n
         应区域，电动尾⻔⾃动开\n
         启；\n
-        模式⼆：携带合法智能钥匙\n
+        停留式：携带合法智能钥匙\n
         进⼊后备箱感应区域内，原\n
         地站⽴6s以上，电动尾⻔⾃\n
         动开启。</string>
@@ -334,6 +334,9 @@ IACC会优先通过识别车道两侧清晰的车道线进行横向辅助控制�
 控制车辆紧急刹停。
 需注意，该系统是辅助功能，当雷达探测到栏杆、树木、斜坡，或外界存在与雷达工作频段接近的噪音时，系统可能会误
 触发。当雷达表面脏污时，系统可能会误触发或不触发。</string>
+
+    <string name="hint_low_voltage">蓄电池电量低，将关闭部分舒适性功能</string>
+    <string name="hint_low_voltage_close_screen">蓄电池电量低，中控屏即将关闭</string>
 
     <string name="global_txt_close">5分钟后您的爱车将自动关闭</string>
     <string name="global_txt_engine">请启动发动机，避免蓄电池亏电</string>

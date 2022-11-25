@@ -215,17 +215,17 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
 
     override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.ALC_DOOR_HINT -> alcDoorHint.copy()
-            SwitchNode.ALC_LOCK_HINT -> alcLockHint.copy()
-            SwitchNode.ALC_BREATHE_HINT -> alcBreatheHint.copy()
-            SwitchNode.ALC_COMING_HINT -> alcComingHint.copy()
-            SwitchNode.ALC_RELATED_TOPICS -> alcRelatedTopics.copy()
-            SwitchNode.FRONT_AMBIENT_LIGHTING -> frontLighting.copy()
-            SwitchNode.BACK_AMBIENT_LIGHTING -> backLighting.copy()
-            SwitchNode.ALC_SMART_MODE -> alcSmartMode.copy()
-            SwitchNode.SPEED_RHYTHM -> speedRhythm.copy()
-            SwitchNode.MUSIC_RHYTHM -> musicRhythm.copy()
-            SwitchNode.COLOUR_BREATHE -> colourBreathe.copy()
+            SwitchNode.ALC_DOOR_HINT -> alcDoorHint.deepCopy()
+            SwitchNode.ALC_LOCK_HINT -> alcLockHint.deepCopy()
+            SwitchNode.ALC_BREATHE_HINT -> alcBreatheHint.deepCopy()
+            SwitchNode.ALC_COMING_HINT -> alcComingHint.deepCopy()
+            SwitchNode.ALC_RELATED_TOPICS -> alcRelatedTopics.deepCopy()
+            SwitchNode.FRONT_AMBIENT_LIGHTING -> frontLighting.deepCopy()
+            SwitchNode.BACK_AMBIENT_LIGHTING -> backLighting.deepCopy()
+            SwitchNode.ALC_SMART_MODE -> alcSmartMode.deepCopy()
+            SwitchNode.SPEED_RHYTHM -> speedRhythm.deepCopy()
+            SwitchNode.MUSIC_RHYTHM -> musicRhythm.deepCopy()
+            SwitchNode.COLOUR_BREATHE -> colourBreathe.deepCopy()
             else -> null
         }
     }

@@ -53,7 +53,6 @@ enum class RadioNode(
             values = intArrayOf(0x1, 0x2, 0x3, 0x4, 0x5),
             signal = CarCabinManager.ID_VSPEED_LOCK
         ),
-        inactive = intArrayOf(0x0),
         def = 0x4
     ),
 
@@ -72,7 +71,7 @@ enum class RadioNode(
             values = intArrayOf(0x1, 0x2),
             signal = CarCabinManager.ID_CUT_OFF_UNLOCK_DOORS
         ),
-        inactive = intArrayOf(0x0, 0x3),
+        inactive = intArrayOf(0x3),
         def = 0x1
     ),
 
@@ -425,7 +424,7 @@ enum class RadioNode(
     GEARS(
         get = RNorm(values = intArrayOf(0x1, 0x2, 0x3, 0x4), signal = CarCabinManager.ID_TCU_SELECTED_GEAR),
         set = RNorm(values = intArrayOf(0x1, 0x2, 0x3, 0x4), signal = -1),
-        inactive = intArrayOf(0x1),
+//        inactive = intArrayOf(0x1),
         def = 0x1
     ),
 

@@ -156,9 +156,9 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
 
     override fun doGetRadioOption(node: RadioNode): RadioState? {
         return when (node) {
-            RadioNode.LIGHT_DELAYED_OUT -> lightDelayOut.copy()
-            RadioNode.LIGHT_FLICKER -> lightFlicker.copy()
-            RadioNode.LIGHT_CEREMONY_SENSE -> lightCeremonySense.copy()
+            RadioNode.LIGHT_DELAYED_OUT -> lightDelayOut.deepCopy()
+            RadioNode.LIGHT_FLICKER -> lightFlicker.deepCopy()
+            RadioNode.LIGHT_CEREMONY_SENSE -> lightCeremonySense.deepCopy()
             else -> null
         }
     }
@@ -219,9 +219,9 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
 
     override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.LIGHT_INSIDE_MEET -> insideMeetLight.copy()
-            SwitchNode.LIGHT_OUTSIDE_MEET -> outsideMeetLight.copy()
-            SwitchNode.LIGHT_CEREMONY_SENSE -> lightCeremonySenseSwitch.copy()
+            SwitchNode.LIGHT_INSIDE_MEET -> insideMeetLight.deepCopy()
+            SwitchNode.LIGHT_OUTSIDE_MEET -> outsideMeetLight.deepCopy()
+            SwitchNode.LIGHT_CEREMONY_SENSE -> lightCeremonySenseSwitch.deepCopy()
             else -> null
         }
     }

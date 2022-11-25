@@ -198,19 +198,21 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
         binding.wheelCustomKeys.setOnClickListener(this::onViewClick)
         binding.wheelAutomaticHeating.setOnClickListener(this::onViewClick)
     }
-
+    var fragment: DialogFragment? = null
     private fun showDialogFragment(serial: String) {
-        var fragment: DialogFragment? = null
+        if (fragment?.isVisible == true) {
+            return
+        }
         if (Constant.STEERING_CUSTOM_KEYPAD == serial) {
             cleanPopupSerial(serial)
             fragment = SteeringKeysDialogFragment()
-            fragment.onSetClickDialogListener(this)
+            (fragment as SteeringKeysDialogFragment).onSetClickDialogListener(this)
         } else if (Constant.STEERING_HEATING_SETTING == serial) {
             cleanPopupSerial(serial)
             fragment = SteeringHeatDialogFragment()
         }
         activity?.supportFragmentManager?.let {
-            fragment?.show(it, fragment::javaClass.name)
+            fragment?.show(it, (fragment as SteeringKeysDialogFragment)::javaClass.name)
         }
     }
 

@@ -108,9 +108,9 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
 
     override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.SEAT_MAIN_DRIVE_MEET -> mainMeetFunction.copy()
-            SwitchNode.SEAT_FORK_DRIVE_MEET -> forkMeetFunction.copy()
-            SwitchNode.SEAT_HEAT_ALL -> seatHeatFunction.copy()
+            SwitchNode.SEAT_MAIN_DRIVE_MEET -> mainMeetFunction.deepCopy()
+            SwitchNode.SEAT_FORK_DRIVE_MEET -> forkMeetFunction.deepCopy()
+            SwitchNode.SEAT_HEAT_ALL -> seatHeatFunction.deepCopy()
             else -> null
         }
     }
@@ -165,13 +165,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
     }
 
     private fun writeProperty(volume: Volume, value: Int): Boolean {
-        val success =
-            volume.isValid(value) && writeProperty(volume.type.set.signal, value, Origin.CABIN)
-        if (success && develop) {
-            volume.pos = value
-//            doRangeChanged(volume)
-        }
-        return success
+        return volume.isValid(value) && writeProperty(volume.type.set.signal, value, Origin.CABIN)
     }
 
     private fun writeProperty(node: SwitchNode, status: Boolean, atomic: SwitchState): Boolean {

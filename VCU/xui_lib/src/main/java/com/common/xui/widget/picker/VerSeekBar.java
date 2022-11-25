@@ -94,7 +94,7 @@ public class VerSeekBar extends SeekBar {
         int progress = getProgress();
         int max = getMax();
 
-        max =  max < 1 ? 1 : max;// max 不能为0
+        max = max < 1 ? 1 : max;// max 不能为0
         progress = progress < 0 ? 0 : progress;// progress 不能小于0
         // 当最大进度小于10，刻度变化太大，放大10倍
         if (max < 10) {
@@ -119,12 +119,12 @@ public class VerSeekBar extends SeekBar {
         } else {
             path.moveTo(bottom + radius, left);
             path.quadTo(bottom + error + 4, left + error, bottom + 1, left + radius);
-            path.lineTo(bottom - 1, right - radius);
+            path.lineTo(bottom - 1, right - radius - 2);
             path.quadTo(bottom + error + 5, right - error, bottom + radius - 2, right - 1);
 
             path.lineTo(top - radius, right);
-            path.quadTo(top - error - 3, right - error-2, top-1, right - radius - 2);
-            path.lineTo(top - 10, left + radius);
+            path.quadTo(top - error - 3, right - error - 2, top - 1, right - radius - 2);
+            path.lineTo(top - 10, left + radius+1);
             path.quadTo(top - error - 6, left + error, top - radius, left);
             path.close();
 

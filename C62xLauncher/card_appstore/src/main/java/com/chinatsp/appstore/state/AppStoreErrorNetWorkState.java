@@ -11,30 +11,25 @@ public class AppStoreErrorNetWorkState implements AppStoreState {
     public void updateSmallCardState(View view) {
         view.findViewById(R.id.layoutAppStoreNormalSmall).setVisibility(View.GONE);
 
-        ImageView ivCardIQuTingLogo = view.findViewById(R.id.ivAppStoreLogo);
-        TextView tvCardIQuTingTip = view.findViewById(R.id.tvAppStoreTip);
-        ImageView ivCardIQuTingButton = view.findViewById(R.id.ivAppStoreButton);
-
-        ivCardIQuTingLogo.setImageResource(R.drawable.card_icon_wifi_disconnect);
-        tvCardIQuTingTip.setText(R.string.appstore_wifi_disconnect);
-        ivCardIQuTingButton.setImageResource(R.drawable.card_icon_left_in_normal);
-
-        ivCardIQuTingLogo.setVisibility(View.VISIBLE);
-        tvCardIQuTingTip.setVisibility(View.VISIBLE);
-        ivCardIQuTingButton.setVisibility(View.VISIBLE);
-
+        TextView tvAppStoreTip = view.findViewById(R.id.tvAppStoreTip);
+        ImageView ivAppStoreRefresh = view.findViewById(R.id.ivAppStoreRefresh);
+        tvAppStoreTip.setText(R.string.appstore_wifi_disconnect);
+        tvAppStoreTip.setVisibility(View.VISIBLE);
+        ivAppStoreRefresh.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void updateBigCardState(View view) {
-        TextView tvCardIQuTingLoginTipBig = view.findViewById(R.id.tvAppStoreTipBig);
-        if(tvCardIQuTingLoginTipBig != null){
-            tvCardIQuTingLoginTipBig.setVisibility(View.VISIBLE);
-            tvCardIQuTingLoginTipBig.setText(R.string.appstore_wifi_disconnect);
+        TextView tvAppStoreTipBig = view.findViewById(R.id.tvAppStoreTipBig);
+        ImageView ivAppStoreRefreshBig = view.findViewById(R.id.ivAppStoreRefreshBig);
+        if(tvAppStoreTipBig != null){
+            tvAppStoreTipBig.setVisibility(View.VISIBLE);
+            tvAppStoreTipBig.setText(R.string.appstore_wifi_disconnect);
         }
 
         if(view.findViewById(R.id.rcvAppStoreAppsList) != null){
             view.findViewById(R.id.rcvAppStoreAppsList).setVisibility(View.GONE);
         }
+        if(ivAppStoreRefreshBig != null) ivAppStoreRefreshBig.setVisibility(View.VISIBLE);
     }
 }

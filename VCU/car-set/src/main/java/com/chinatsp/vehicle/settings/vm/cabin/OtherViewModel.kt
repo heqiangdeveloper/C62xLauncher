@@ -73,8 +73,8 @@ class OtherViewModel @Inject constructor(app: Application, model: BaseModel) :
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         manager.unRegisterVcuListener(keySerial, keySerial)
+        super.onDestroy()
     }
 
 

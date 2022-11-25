@@ -92,7 +92,7 @@ class CruiseManager : BaseManager(), IOptionManager {
 
     override fun doGetRadioOption(node: RadioNode): RadioState? {
         return when (node) {
-            RadioNode.ADAS_LIMBER_LEAVE -> limberLeaveRadio.copy()
+            RadioNode.ADAS_LIMBER_LEAVE -> limberLeaveRadio.deepCopy()
             else -> null
         }
     }
@@ -126,8 +126,8 @@ class CruiseManager : BaseManager(), IOptionManager {
 
     override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.ADAS_IACC -> iaccFunction.copy()
-            SwitchNode.ADAS_LIMBER_LEAVE -> limberLeaveFunction.copy()
+            SwitchNode.ADAS_IACC -> iaccFunction.deepCopy()
+            SwitchNode.ADAS_LIMBER_LEAVE -> limberLeaveFunction.deepCopy()
             else -> null
         }
     }

@@ -357,9 +357,9 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
 
     override fun doGetRadioOption(node: RadioNode): RadioState? {
         return when (node) {
-            RadioNode.ICM_VOLUME_LEVEL -> icmVolumeLevel.copy()
-            RadioNode.NAVI_AUDIO_MIXING -> naviAudioMixing.copy()
-            RadioNode.SPEED_VOLUME_OFFSET -> speedVolumeOffset.copy()
+            RadioNode.ICM_VOLUME_LEVEL -> icmVolumeLevel.deepCopy()
+            RadioNode.NAVI_AUDIO_MIXING -> naviAudioMixing.deepCopy()
+            RadioNode.SPEED_VOLUME_OFFSET -> speedVolumeOffset.deepCopy()
             else -> null
         }
     }
@@ -382,11 +382,11 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
 
     override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.AUDIO_SOUND_TONE -> toneAtomic.copy()
-            SwitchNode.AUDIO_SOUND_HUAWEI -> huaweiAtomic.copy()
-            SwitchNode.AUDIO_SOUND_LOUDNESS -> loudnessAtomic.copy()
-            SwitchNode.TOUCH_PROMPT_TONE -> touchTone.copy()
-            SwitchNode.SPEED_VOLUME_OFFSET_INSERT, SwitchNode.SPEED_VOLUME_OFFSET -> offsetAtomic.copy()
+            SwitchNode.AUDIO_SOUND_TONE -> toneAtomic.deepCopy()
+            SwitchNode.AUDIO_SOUND_HUAWEI -> huaweiAtomic.deepCopy()
+            SwitchNode.AUDIO_SOUND_LOUDNESS -> loudnessAtomic.deepCopy()
+            SwitchNode.TOUCH_PROMPT_TONE -> touchTone.deepCopy()
+            SwitchNode.SPEED_VOLUME_OFFSET_INSERT, SwitchNode.SPEED_VOLUME_OFFSET -> offsetAtomic.deepCopy()
             else -> null
         }
     }

@@ -114,8 +114,8 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
 
     override fun doGetRadioOption(node: RadioNode): RadioState? {
         return when (node) {
-            RadioNode.STERN_SMART_ENTER -> sternSmartEnter.copy()
-            RadioNode.GEARS -> gearsState.copy()
+            RadioNode.STERN_SMART_ENTER -> sternSmartEnter.deepCopy()
+            RadioNode.GEARS -> gearsState.deepCopy()
             else -> null
         }
     }
@@ -162,9 +162,9 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
 
     override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.AS_STERN_ELECTRIC -> electricSwitchState.copy()
-            SwitchNode.STERN_LIGHT_ALARM -> lightAlarmSwitchState.copy()
-            SwitchNode.STERN_AUDIO_ALARM -> audioAlarmSwitchState.copy()
+            SwitchNode.AS_STERN_ELECTRIC -> electricSwitchState.deepCopy()
+            SwitchNode.STERN_LIGHT_ALARM -> lightAlarmSwitchState.deepCopy()
+            SwitchNode.STERN_AUDIO_ALARM -> audioAlarmSwitchState.deepCopy()
             else -> null
         }
     }
@@ -376,16 +376,16 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
     fun getGearsValue(node: SwitchNode): SwitchState? {
         val signal = CarCabinManager.ID_TCU_TARGETGEAR
         // return when (node) {
-        //            SwitchNode.AS_STERN_ELECTRIC -> electricSwitchState.copy()
-        //            SwitchNode.STERN_LIGHT_ALARM -> lightAlarmSwitchState.copy()
-        //            SwitchNode.STERN_AUDIO_ALARM -> audioAlarmSwitchState.copy()
+        //            SwitchNode.AS_STERN_ELECTRIC -> electricSwitchState.deepCopy()
+        //            SwitchNode.STERN_LIGHT_ALARM -> lightAlarmSwitchState.deepCopy()
+        //            SwitchNode.STERN_AUDIO_ALARM -> audioAlarmSwitchState.deepCopy()
         //            else -> null
         //        }
         //return readIntProperty(signal, Origin.CABIN, VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL)
         return when (node) {
-//            SwitchNode.GEARS -> electricSwitchState.copy()
-            SwitchNode.STERN_LIGHT_ALARM -> lightAlarmSwitchState.copy()
-            SwitchNode.STERN_AUDIO_ALARM -> audioAlarmSwitchState.copy()
+//            SwitchNode.GEARS -> electricSwitchState.deepCopy()
+            SwitchNode.STERN_LIGHT_ALARM -> lightAlarmSwitchState.deepCopy()
+            SwitchNode.STERN_AUDIO_ALARM -> audioAlarmSwitchState.deepCopy()
             else -> null
         }
     }

@@ -267,19 +267,12 @@ class AirSetter(val manager: ACManager, private val getter: AirGetter) {
     fun doUpdateAirFlowing(@IOrien orien: Int, @IPart part: Int): String {
 //        模式 if not set ,the value of signal is 0x0(inactive)
 //        0x0: Inactive
-//        0x1: Face
-//        0x2: Face+Foot
-//        0x3: Foot
-//        0x4: Foot+Defrost
-//        0x5: Defrost（Reserved）
-//        0x6: Reserved
-//        0x7: Error
-        var mask =  IOrien.FACE
-        val isFace = mask == (mask and orien)
-        mask =  IOrien.FOOT
-        val isFoot = mask == (mask and orien)
-        mask =  IOrien.MIDDLE //吹中间表示除霜
-        val isMiddle = mask == (mask and orien)
+//        0x1: Face; 0x2: Face+Foot; 0x3: Foot;  0x4: Foot+Defrost
+//        0x5: Defrost（Reserved）; 0x6: Reserved; 0x7: Error
+        val isFace = IOrien.FACE == (IOrien.FACE and orien)
+        val isFoot = IOrien.FOOT == (IOrien.FOOT and orien)
+        //吹中间表示除霜
+        val isMiddle = IOrien.MIDDLE == (IOrien.MIDDLE and orien)
         var value = Constant.INVALID
         var result = "小北还不会这个操作"
         do {

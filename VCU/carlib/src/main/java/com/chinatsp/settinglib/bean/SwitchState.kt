@@ -29,4 +29,12 @@ data class SwitchState(var data: Boolean) {
         return actual xor expect
     }
 
+    fun deepCopy(): SwitchState {
+        val copy = this.copy()
+        copy.data = data
+        copy.enableStatus = enableStatus
+        return copy
+    }
+
 }
+

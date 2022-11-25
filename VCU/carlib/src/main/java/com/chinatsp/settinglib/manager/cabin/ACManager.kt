@@ -81,7 +81,7 @@ class ACManager private constructor() : BaseManager(), IOptionManager {
 
     override fun doGetRadioOption(node: RadioNode): RadioState? {
         return when (node) {
-            RadioNode.AC_COMFORT -> comfortOption.copy()
+            RadioNode.AC_COMFORT -> comfortOption.deepCopy()
             else -> null
         }
     }
@@ -111,9 +111,9 @@ class ACManager private constructor() : BaseManager(), IOptionManager {
 
     override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.AC_AUTO_ARID -> aridStatus.copy()
-            SwitchNode.AC_ADVANCE_WIND -> windStatus.copy()
-            SwitchNode.AC_AUTO_DEMIST -> demistStatus.copy()
+            SwitchNode.AC_AUTO_ARID -> aridStatus.deepCopy()
+            SwitchNode.AC_ADVANCE_WIND -> windStatus.deepCopy()
+            SwitchNode.AC_AUTO_DEMIST -> demistStatus.deepCopy()
             else -> null
         }
     }

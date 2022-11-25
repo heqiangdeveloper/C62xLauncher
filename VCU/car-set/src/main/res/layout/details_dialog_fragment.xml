@@ -44,7 +44,7 @@
             android:id="@+id/hint_conform"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/lighting_dialog_txt_bg"
+            android:background="@drawable/lighting_dialog_txt"
             android:gravity="center"
             android:text="@string/drive_agree"
             android:textColor="@color/xui_config_color_white"

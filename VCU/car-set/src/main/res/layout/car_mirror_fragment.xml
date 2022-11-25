@@ -137,6 +137,7 @@
             android:layout_marginTop="@dimen/x16"
             android:text="@string/car_mirror_automatic_folding_close"
             app:layout_constraintLeft_toRightOf="@+id/constraint"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

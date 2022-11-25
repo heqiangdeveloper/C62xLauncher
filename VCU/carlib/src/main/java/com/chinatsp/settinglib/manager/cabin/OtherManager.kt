@@ -119,10 +119,10 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
 
     override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.DRIVE_TRAILER_REMIND -> trailerRemind.copy()
-            SwitchNode.DRIVE_BATTERY_OPTIMIZE -> batteryOptimize.copy()
-            SwitchNode.DRIVE_WIRELESS_CHARGING -> wirelessCharging.copy()
-            SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP -> wirelessChargingLamp.copy()
+            SwitchNode.DRIVE_TRAILER_REMIND -> trailerRemind.deepCopy()
+            SwitchNode.DRIVE_BATTERY_OPTIMIZE -> batteryOptimize.deepCopy()
+            SwitchNode.DRIVE_WIRELESS_CHARGING -> wirelessCharging.deepCopy()
+            SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP -> wirelessChargingLamp.deepCopy()
             else -> null
         }
     }
@@ -154,8 +154,8 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
 
     override fun doGetRadioOption(node: RadioNode): RadioState? {
         return when (node) {
-            RadioNode.DEVICE_TRAILER_DISTANCE -> distance.copy()
-            RadioNode.DEVICE_TRAILER_SENSITIVITY -> sensitivity.copy()
+            RadioNode.DEVICE_TRAILER_DISTANCE -> distance.deepCopy()
+            RadioNode.DEVICE_TRAILER_SENSITIVITY -> sensitivity.deepCopy()
             else -> null
         }
     }

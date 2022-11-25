@@ -1,5 +1,7 @@
 package com.chinatsp.settinglib.bean
 
+import com.chinatsp.settinglib.Constant
+
 /**
  * @author : luohong
  * @e-mail : luohong1@bdstar.com
@@ -9,7 +11,7 @@ package com.chinatsp.settinglib.bean
  */
 data class RadioState(var data: Int) {
 
-    var enable: Int = 0x1
+    var enable: Int = Constant.VIEW_ENABLE
 
     fun get() = data
 
@@ -17,6 +19,13 @@ data class RadioState(var data: Int) {
         data = value
     }
 
-    fun enable() = enable == 0x1
+    fun enable() = enable == Constant.VIEW_ENABLE
+
+    fun deepCopy(): RadioState {
+        val copy = this.copy()
+        copy.data = data
+        copy.enable = enable
+        return copy
+    }
 
 }
