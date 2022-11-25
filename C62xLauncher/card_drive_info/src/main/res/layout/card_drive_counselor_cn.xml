@@ -161,7 +161,7 @@
 
     <TextView
         android:id="@+id/tvCardDriveTimeUnit"
-        android:text="分钟"
+        android:text="min"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/CardLv3TextView"
@@ -199,7 +199,7 @@
         android:id="@+id/ivCardDriveReturn"
         android:layout_width="@dimen/card_icon_size_lv1"
         android:layout_height="@dimen/card_icon_size_lv1"
-        android:src="@drawable/card_icon_return"
+        android:src="@drawable/card_common_left_in_selector"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginStart="204px"

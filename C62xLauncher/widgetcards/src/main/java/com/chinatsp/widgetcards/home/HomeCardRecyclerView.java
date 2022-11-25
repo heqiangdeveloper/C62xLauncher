@@ -94,6 +94,7 @@ public class HomeCardRecyclerView extends RecyclerView {
         int action = event.getAction();
         switch (action) {
             case MotionEvent.ACTION_DOWN: {
+                EasyLog.d("FrameRecyclerView", "dispatchTouchEvent ACTION_DOWN");
                 if (!isShowingControlViews()) {
                     scheduleLongPress();
                 }
@@ -114,7 +115,11 @@ public class HomeCardRecyclerView extends RecyclerView {
                 break;
             }
             case MotionEvent.ACTION_CANCEL:
+                EasyLog.d("FrameRecyclerView", "dispatchTouchEvent ACTION_CANCEL");
+                removeLongPress();
+                break;
             case MotionEvent.ACTION_UP: {
+                EasyLog.d("FrameRecyclerView", "dispatchTouchEvent ACTION_UP");
                 removeLongPress();
                 break;
             }
@@ -137,7 +142,7 @@ public class HomeCardRecyclerView extends RecyclerView {
         public void run() {
             mLongPressTriggered = true;
             CardIntentService.start(getContext(), CardIntentService.OP_VALUE_START_CARD_EDIT);
-            Log.d("FrameRecyclerView", "run() called : " + mLongPressTriggered);
+            Log.d("FrameRecyclerView", "longClickRunnable  called : " + mLongPressTriggered);
         }
     };
 
@@ -155,6 +160,9 @@ public class HomeCardRecyclerView extends RecyclerView {
      * @return true: 正在显示控件组
      */
     private boolean isShowingControlViews() {
+        if (ExpandStateManager.getInstance().getExpandState()) {
+            return false;
+        }
         return !canScrollHorizontally(-1);
     }
 }

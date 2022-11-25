@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/card_width"
+    android:layout_height="@dimen/card_height"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="@dimen/card_icon_size_lv3"
+        android:layout_height="@dimen/card_icon_size_lv3"
+        app:srcCompat="@drawable/card_icon_clock"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="89px"
+        android:paddingLeft="8px"
+        android:paddingRight="10px"
+        android:paddingTop="9px"
+        android:paddingBottom="9px"
+        />
+
+    <TextView
+        android:text="@string/card_drive_info_today"
+        android:layout_width="wrap_content"
+        android:layout_height="42px"
+        style="@style/CardLv3TextView"
+        android:textColor="@color/card_blue_default"
+        app:layout_constraintTop_toTopOf="@id/imageView"
+        app:layout_constraintBottom_toBottomOf="@id/imageView"
+        app:layout_constraintStart_toEndOf="@id/imageView"
+        />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineContentTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="189px"
+        />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineContentLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="52px"
+        />
+    <ImageView
+        android:id="@+id/ivCardDriveOilIcon"
+        android:src="@drawable/card_drive_icon_oil"
+        android:layout_width="@dimen/card_icon_size_lv5"
+        android:layout_height="@dimen/card_icon_size_lv5"
+        app:layout_constraintStart_toStartOf="@id/guidelineContentLeft"
+        app:layout_constraintTop_toTopOf="@id/guidelineContentTop"
+        />
+
+    <TextView
+        android:text="@string/card_drive_info_oil_consumption"
+        android:layout_width="208px"
+        android:layout_height="67px"
+        style="@style/CardLv3TextView"
+        android:gravity="center_vertical"
+        android:textColor="@color/card_grey_default"
+        app:layout_constraintTop_toTopOf="@id/ivCardDriveOilIcon"
+        app:layout_constraintBottom_toBottomOf="@id/ivCardDriveOilIcon"
+        app:layout_constraintStart_toEndOf="@id/ivCardDriveOilIcon"
+        android:layout_marginStart="15px"
+
+
+        />
+
+    <ImageView
+        android:id="@+id/ivCardDriveTimeIcon"
+        android:src="@drawable/card_drive_icon_time"
+        android:layout_width="@dimen/card_icon_size_lv5"
+        android:layout_height="@dimen/card_icon_size_lv5"
+        app:layout_constraintStart_toStartOf="@id/guidelineContentLeft"
+        app:layout_constraintTop_toBottomOf="@id/ivCardDriveOilIcon"
+        android:layout_marginTop="44px"
+        />
+
+    <TextView
+        android:text="@string/card_drive_info_driving_time"
+        android:layout_width="208px"
+        android:layout_height="67px"
+        style="@style/CardLv3TextView"
+        android:gravity="center_vertical"
+        android:textColor="@color/card_grey_default"
+        app:layout_constraintTop_toTopOf="@id/ivCardDriveTimeIcon"
+        app:layout_constraintBottom_toBottomOf="@id/ivCardDriveTimeIcon"
+        app:layout_constraintStart_toEndOf="@id/ivCardDriveTimeIcon"
+        android:layout_marginStart="15px"
+
+
+        />
+
+    <ImageView
+        android:id="@+id/ivCardDriveDistanceIcon"
+        android:src="@drawable/card_drive_icon_distance"
+        android:layout_width="@dimen/card_icon_size_lv5"
+        android:layout_height="@dimen/card_icon_size_lv5"
+        app:layout_constraintStart_toStartOf="@id/guidelineContentLeft"
+        app:layout_constraintTop_toBottomOf="@id/ivCardDriveTimeIcon"
+        android:layout_marginTop="44px"
+        />
+
+    <TextView
+        android:text="@string/card_drive_info_driving_distance"
+        android:layout_width="208px"
+        android:layout_height="67px"
+        style="@style/CardLv3TextView"
+        android:gravity="center_vertical"
+        android:textColor="@color/card_grey_default"
+        app:layout_constraintTop_toTopOf="@id/ivCardDriveDistanceIcon"
+        app:layout_constraintBottom_toBottomOf="@id/ivCardDriveDistanceIcon"
+        app:layout_constraintStart_toEndOf="@id/ivCardDriveDistanceIcon"
+        android:layout_marginStart="15px"
+
+
+        />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineDriveInfoValueLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="328px"
+        />
+
+    <TextView
+        android:id="@+id/tvCardDriveOilValue"
+        android:text="---"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/CardLv3TextView"
+        app:layout_constraintTop_toTopOf="@id/ivCardDriveOilIcon"
+        app:layout_constraintBottom_toBottomOf="@id/ivCardDriveOilIcon"
+        app:layout_constraintStart_toStartOf="@id/guidelineDriveInfoValueLeft"
+        />
+    <TextView
+        android:id="@+id/tvCardDriveOilUnit"
+        android:text="L"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/CardLv3TextView"
+        android:textColor="@color/card_grey_default"
+        app:layout_constraintTop_toTopOf="@id/tvCardDriveOilValue"
+        app:layout_constraintBottom_toBottomOf="@id/tvCardDriveOilValue"
+        app:layout_constraintStart_toEndOf="@id/tvCardDriveOilValue"
+        android:layout_marginStart="10px"
+        />
+
+    <TextView
+        android:id="@+id/tvCardDriveTimeValue"
+        android:text="---"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/CardLv3TextView"
+        app:layout_constraintTop_toTopOf="@id/ivCardDriveTimeIcon"
+        app:layout_constraintBottom_toBottomOf="@id/ivCardDriveTimeIcon"
+        app:layout_constraintStart_toStartOf="@id/guidelineDriveInfoValueLeft"
+        />
+
+    <TextView
+        android:id="@+id/tvCardDriveTimeUnit"
+        android:text="min"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/CardLv3TextView"
+        android:textColor="@color/card_grey_default"
+        app:layout_constraintTop_toTopOf="@id/tvCardDriveTimeValue"
+        app:layout_constraintBottom_toBottomOf="@id/tvCardDriveTimeValue"
+        app:layout_constraintStart_toEndOf="@id/tvCardDriveTimeValue"
+        android:layout_marginStart="10px"
+        />
+
+    <TextView
+        android:id="@+id/tvCardDriveDistanceValue"
+        android:text="---"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/CardLv3TextView"
+        app:layout_constraintTop_toTopOf="@id/ivCardDriveDistanceIcon"
+        app:layout_constraintBottom_toBottomOf="@id/ivCardDriveDistanceIcon"
+        app:layout_constraintStart_toStartOf="@id/guidelineDriveInfoValueLeft"
+        />
+    <TextView
+        android:id="@+id/tvCardDriveDistanceUnit"
+        android:text="km"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/CardLv3TextView"
+        android:textColor="@color/card_grey_default"
+        app:layout_constraintTop_toTopOf="@id/tvCardDriveDistanceValue"
+        app:layout_constraintBottom_toBottomOf="@id/tvCardDriveDistanceValue"
+        app:layout_constraintStart_toEndOf="@id/tvCardDriveDistanceValue"
+        android:layout_marginStart="10px"
+        />
+
+    <ImageView
+        android:id="@+id/ivCardDriveReturn"
+        android:layout_width="@dimen/card_icon_size_lv1"
+        android:layout_height="@dimen/card_icon_size_lv1"
+        android:src="@drawable/card_common_left_in_selector"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="204px"
+        android:layout_marginBottom="35px"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

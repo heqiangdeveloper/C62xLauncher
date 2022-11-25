@@ -17,7 +17,7 @@
     <ImageView
         android:layout_width="@dimen/card_icon_size_lv1"
         android:layout_height="@dimen/card_icon_size_lv1"
-        android:src="@drawable/card_icon_return"
+        android:src="@drawable/card_common_left_in_selector"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginStart="204px"
