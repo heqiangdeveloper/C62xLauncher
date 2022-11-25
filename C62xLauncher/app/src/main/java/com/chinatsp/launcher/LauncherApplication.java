@@ -2,6 +2,7 @@ package com.chinatsp.launcher;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.util.Log;
@@ -15,6 +16,7 @@ import com.chinatsp.iquting.service.TencentSdkService;
 import com.chinatsp.widgetcards.manager.CardManager;
 
 import card.theme.ThemeService;
+import launcher.base.applists.AppLists;
 import launcher.base.network.NetworkStateReceiver;
 import launcher.base.service.AppServiceManager;
 import launcher.base.service.platform.PlatformService;
@@ -29,6 +31,8 @@ public class LauncherApplication extends Application {
         mContext = this.getApplicationContext();
         initLog();
         initServices();
+        // 发出本应用启动前台的广播
+        sendLauncherBroadcast();
     }
 
     private void initServices() {
@@ -72,6 +76,14 @@ public class LauncherApplication extends Application {
             e.printStackTrace();
         }
         return versionName;
+    }
+
+    private void sendLauncherBroadcast() {
+        Intent intent = new Intent();
+        intent.setPackage(AppLists.media);
+        intent.setAction("com.chinatsp.launcher.bootCompleted");
+        intent.addFlags(0x01000000);
+        sendBroadcast(intent);
     }
 
     private void registChangeSourceBroadcast(){
