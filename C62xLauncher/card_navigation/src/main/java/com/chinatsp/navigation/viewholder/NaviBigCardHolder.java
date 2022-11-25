@@ -30,6 +30,7 @@ public class NaviBigCardHolder extends NaviCardHolder {
     private final ImageView ivCardNaviHome;
     private final ImageView ivCardNaviCompany;
     private final ImageView ivCardNaviBigDefaultMap;
+    private final View layoutCardNaviNoLocation;
     private final View layoutCardNetworkError;
     private final View layoutCardNaviStatus;
     private final View layoutCardNaviCruise;
@@ -45,6 +46,7 @@ public class NaviBigCardHolder extends NaviCardHolder {
     private final RecyclerView rcvLaneInfo;
     private LaneListAdapter mLaneListAdapter;
     private final boolean enableTotalLaneShow = false;
+    private boolean mNoLocation = true;
 
     public NaviBigCardHolder(@NonNull View rootView, NaviController controller) {
         this(rootView);
@@ -77,6 +79,7 @@ public class NaviBigCardHolder extends NaviCardHolder {
         tvCardNaviTBTRemainTime = rootView.findViewById(R.id.tvCardNaviTBTRemainTime);
         tvCardNaviTBTArriveTime = rootView.findViewById(R.id.tvCardNaviTBTArriveTime);
         ivCardNaviExit = rootView.findViewById(R.id.ivCardNaviExit);
+        layoutCardNaviNoLocation = rootView.findViewById(R.id.layoutCardNaviNoLocation);
 
         rcvLaneInfo = rootView.findViewById(R.id.rcvLaneInfo);
         initLaneRcv();
@@ -111,21 +114,31 @@ public class NaviBigCardHolder extends NaviCardHolder {
     @Override
     public void refreshNavigation() {
         surfaceViewNavi.setVisibility(View.VISIBLE);
+        ivCardNaviBigDefaultMap.setVisibility(View.INVISIBLE);
         layoutCardNaviStatus.setVisibility(View.VISIBLE);
         layoutCardNaviCruise.setVisibility(View.INVISIBLE);
+        layoutCardNaviNoLocation.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void refreshFreeMode() {
-        surfaceViewNavi.setVisibility(View.VISIBLE);
         layoutCardNaviStatus.setVisibility(View.INVISIBLE);
         layoutCardNaviCruise.setVisibility(View.VISIBLE);
+        if (mNoLocation) {
+            surfaceViewNavi.setVisibility(View.INVISIBLE);
+            layoutCardNaviNoLocation.setVisibility(View.VISIBLE);
+        } else {
+            surfaceViewNavi.setVisibility(View.VISIBLE);
+            layoutCardNaviNoLocation.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
     public void setLocation(String myLocationName) {
+        mNoLocation = false;
         ivCardNaviBigDefaultMap.setVisibility(View.INVISIBLE);
         surfaceViewNavi.setVisibility(View.VISIBLE);
+        layoutCardNaviNoLocation.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -141,8 +154,7 @@ public class NaviBigCardHolder extends NaviCardHolder {
 
     @Override
     public void hideNetworkError() {
-        layoutCardNetworkError.setVisibility(View.GONE);
-        ivCardNaviBigDefaultMap.setVisibility(View.GONE);
+        layoutCardNetworkError.setVisibility(View.INVISIBLE);
     }
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -278,5 +290,7 @@ public class NaviBigCardHolder extends NaviCardHolder {
     public void showUnknownLocationUI() {
         ivCardNaviBigDefaultMap.setVisibility(View.VISIBLE);
         surfaceViewNavi.setVisibility(View.INVISIBLE);
+        layoutCardNaviNoLocation.setVisibility(View.VISIBLE);
+        mNoLocation = true;
     }
 }

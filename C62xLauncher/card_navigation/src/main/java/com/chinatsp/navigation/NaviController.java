@@ -26,9 +26,7 @@ import com.chinatsp.navigation.repository.ResponseParser;
 import launcher.base.ipc.IConnectListener;
 import launcher.base.ipc.IRemoteDataCallback;
 import launcher.base.network.NetworkObserver;
-import launcher.base.network.NetworkStateReceiver;
 import launcher.base.network.NetworkUtils;
-import launcher.base.utils.EasyLog;
 import launcher.base.utils.recent.RecentAppHelper;
 
 public class NaviController implements INaviCallback {
@@ -50,7 +48,7 @@ public class NaviController implements INaviCallback {
         initAidlWidgetManager(context);
         mNaviRepository.registerDataCallback(mIRemoteDataCallback);
         mNaviRepository.registerConnectListener(mConnectListener);
-        NetworkStateReceiver.getInstance().registerObserver(mNetworkObserver);
+//        NetworkStateReceiver.getInstance().registerObserver(mNetworkObserver);
 
     }
 
@@ -73,7 +71,7 @@ public class NaviController implements INaviCallback {
     public void refreshInitView() {
         mState = STATE_CRUISE;
         mView.refreshState(mState);
-        checkNetwork();
+//        checkNetwork();
     }
 
     IRemoteDataCallback<String> mIRemoteDataCallback = new IRemoteDataCallback<String>() {
@@ -108,11 +106,11 @@ public class NaviController implements INaviCallback {
     private NetworkObserver mNetworkObserver = new NetworkObserver() {
         @Override
         public void onNetworkChanged(boolean isConnected) {
-            if (isConnected) {
-                hideNetWorkError();
-            } else {
-                mView.showNetWorkError();
-            }
+//            if (isConnected) {
+//                hideNetWorkError();
+//            } else {
+//                mView.showNetWorkError();
+//            }
         }
     };
 
@@ -243,7 +241,7 @@ public class NaviController implements INaviCallback {
                 mView.refreshGuideInfo(tempGuideInfoGaoDeResponse.getData(), DriveDirection.parseFromType(guideInfo.getIcon()));
             }
         }
-        checkNetwork();
+//        checkNetwork();
     }
 
     /**
