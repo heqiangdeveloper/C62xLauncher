@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,6 +18,9 @@ import com.chinatsp.drawer.ICollapseListener;
 import com.chinatsp.widgetcards.home.CardIndicator;
 import com.chinatsp.widgetcards.home.CardScrollUtil;
 import com.chinatsp.widgetcards.home.ExpandStateManager;
+import com.chinatsp.widgetcards.home.smallcard2.HomeCardRcvManager;
+import com.chinatsp.widgetcards.home.smallcard2.SmallCardsAdapter2;
+import com.chinatsp.widgetcards.home.smallcard2.SmallCardRcvManager;
 import com.chinatsp.widgetcards.manager.CardManager;
 import com.chinatsp.widgetcards.home.HomeCardsAdapter;
 import com.chinatsp.widgetcards.manager.Events;
@@ -37,6 +41,7 @@ public class CardHomeFragment extends BaseFragment {
 
     private static final String TAG = "CardHomeFragment";
     private HomeCardsAdapter mCardsAdapter;
+    private SmallCardsAdapter2 mSmallCardsAdapter;
     private RecyclerView mRcvCards;
     private CardIndicator mCardIndicator;
     private PagerSnapHelper mSnapHelper;
@@ -44,6 +49,8 @@ public class CardHomeFragment extends BaseFragment {
     private int mCardDividerWidth;
     private boolean mInitialed = false;
     private CollapseController mCollapseController;
+
+    private RecyclerView rcvSmallCards;
 
 
     @Override
@@ -53,6 +60,7 @@ public class CardHomeFragment extends BaseFragment {
         CardScrollUtil.setDivider(mCardDividerWidth);
         initObservers();
         initCardsRcv(rootView);
+        initSmallCardsRcv(rootView);
         mCardIndicator = rootView.findViewById(R.id.cardIndicator);
         mCardIndicator.setIndex(0);
 
@@ -140,18 +148,18 @@ public class CardHomeFragment extends BaseFragment {
         }
     };
 
-    private void onChangeExpandState(Boolean expand) {
-        int smallCardPosition = ExpandStateManager.getInstance().getSmallCardPosition();
-        EasyLog.d(TAG, "onChangeExpandState: " + expand + ", smallCardPosition:" + smallCardPosition);
-        int firstCardIndex = mCardsAdapter.isIncludeDrawer() ? 1 : 0;
-        if (smallCardPosition >= firstCardIndex && smallCardPosition < mCardsAdapter.getItemCount()) {
-            EasyLog.d(TAG, "onChangeExpandState: notifyItemChanged , smallCardPosition: " + smallCardPosition);
-            mCardsAdapter.notifyItemChanged(smallCardPosition);
-        }
-        if (!expand) {
-            ExpandStateManager.getInstance().clearSmallCardPosInExpandState();
-        }
-    }
+//    private void onChangeExpandState(Boolean expand) {
+//        int smallCardPosition = ExpandStateManager.getInstance().getSmallCardPosition();
+//        EasyLog.d(TAG, "onChangeExpandState: " + expand + ", smallCardPosition:" + smallCardPosition);
+//        int firstCardIndex = mCardsAdapter.isIncludeDrawer() ? 1 : 0;
+//        if (smallCardPosition >= firstCardIndex && smallCardPosition < mCardsAdapter.getItemCount()) {
+//            EasyLog.d(TAG, "onChangeExpandState: notifyItemChanged , smallCardPosition: " + smallCardPosition);
+//            mCardsAdapter.notifyItemChanged(smallCardPosition);
+//        }
+//        if (!expand) {
+//            ExpandStateManager.getInstance().clearSmallCardPosInExpandState();
+//        }
+//    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void swipeCard(Events.SwipeEvent swipeEvent) {
@@ -172,7 +180,7 @@ public class CardHomeFragment extends BaseFragment {
         int index = homeList.indexOf(bigCard);
         int index2 = homeList.indexOf(smallCard);
         ListKit.swipeElement(homeList, index, index2);
-        ExpandStateManager.getInstance().setSmallCardPosInExpandState(index);
+//        ExpandStateManager.getInstance().setSmallCardPosInExpandState(index);
         mCardsAdapter.notifyDataSetChanged();
     }
 
@@ -182,8 +190,10 @@ public class CardHomeFragment extends BaseFragment {
         public void onChanged(List<LauncherCard> baseCardEntities) {
             EasyLog.d(TAG, "mHomeCardsOb  onChanged : " + baseCardEntities);
             mCardsAdapter.setCardEntityList(baseCardEntities);
+            mSmallCardsAdapter.setCardEntityList(baseCardEntities);
             ExpandStateManager.getInstance().setExpand(false);
             mCardsAdapter.notifyDataSetChanged();
+            mSmallCardsAdapter.notifyDataSetChanged();
             if (mCardsAdapter.isIncludeDrawer()) {
                 scrollToFirstCard();
             }
@@ -228,7 +238,6 @@ public class CardHomeFragment extends BaseFragment {
                 // 展开时, 禁止滑动
                 return !ExpandStateManager.getInstance().getExpandState();
             }
-
         };
         mSnapHelper = new PagerSnapHelper();
         mSnapHelper.attachToRecyclerView(mRcvCards);
@@ -270,6 +279,20 @@ public class CardHomeFragment extends BaseFragment {
         });
     }
 
+
+    private void initSmallCardsRcv(View rootView) {
+        rcvSmallCards = rootView.findViewById(R.id.rcvSmallCards);
+        Context context = getContext();
+        mSmallCardsAdapter = new SmallCardsAdapter2(getContext(), rcvSmallCards);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        rcvSmallCards.setLayoutManager(layoutManager);
+        rcvSmallCards.setAdapter(mSmallCardsAdapter);
+        mSnapHelper = new PagerSnapHelper();
+        mSnapHelper.attachToRecyclerView(rcvSmallCards);
+        SmallCardRcvManager.getInstance().setRecyclerView(rcvSmallCards);
+        HomeCardRcvManager.getInstance().setHomeRecyclerView(mRcvCards, mCardsAdapter);
+    }
     /**
      * 是否已滑动到最左边
      *

@@ -93,17 +93,6 @@ public class CardInnerListHelper {
         }
     }
 
-
-    public void hideInnerList() {
-        if (mRecyclerView == null) {
-            return;
-        }
-        smallCardsAdapter.clear();
-        mRecyclerView.setLayoutManager(null);
-        mRecyclerView.setAdapter(null);
-        mRecyclerView.setVisibility(View.GONE);
-    }
-
     /**
      * 获取剩余的小卡列表. 需要剔除大卡,  以及将列表位置定位到当前小卡
      */

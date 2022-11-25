@@ -3,13 +3,10 @@ package com.chinatsp.volcano;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.widget.Toast;
 
 import com.chinatsp.volcano.api.response.VideoListData;
 import com.chinatsp.volcano.repository.IVolcanoLoadListener;
 import com.chinatsp.volcano.repository.VolcanoRepository;
-
-import java.util.PrimitiveIterator;
 
 import launcher.base.network.NetworkObserver;
 import launcher.base.network.NetworkStateReceiver;
@@ -26,6 +23,7 @@ public class VolcanoController {
         EasyLog.d(TAG, "VolcanoController init " + hashCode());
         this.mView = view;
         mRepository = VolcanoRepository.getInstance();
+
 
         Context context = mView.getContext();
 //        mHandler.post(new Runnable() {
@@ -51,17 +49,17 @@ public class VolcanoController {
         EasyLog.d(TAG, "loadSourceData " + hashCode() + " ,  source:" + source);
         VideoListData videoListData = mRepository.getVideoList(source);
         if (videoListData != null) {
-            mView.updateList(videoListData);
+            mView.updateList(videoListData, source);
         } else {
             mView.showLoading();
-            mRepository.loadFromServer(source, loadListener);
+            mRepository.loadFromServer(source);
         }
     }
 
     IVolcanoLoadListener loadListener = new IVolcanoLoadListener() {
         @Override
-        public void onSuccess(VideoListData videoListData) {
-            mView.updateList(videoListData);
+        public void onSuccess(VideoListData videoListData,String source) {
+            mView.updateList(videoListData, source);
             if (mView != null) {
                 mView.hideLoading();
             }
@@ -112,12 +110,14 @@ public class VolcanoController {
 
     public void attach() {
         EasyLog.i(TAG, "attach " + hashCode());
+        mRepository.registerCallbacks(loadListener);
         NetworkStateReceiver.getInstance().registerObserver(mNetworkObserver);
         refreshPageState();
     }
 
     public void detach() {
         EasyLog.w(TAG, "detach " + hashCode());
+        mRepository.unregisterCallbacks(loadListener);
         NetworkStateReceiver.getInstance().unRegisterObserver(mNetworkObserver);
     }
 }

@@ -18,6 +18,8 @@ import androidx.lifecycle.LifecycleRegistry;
 import com.chinatsp.weaher.viewholder.OnPageChangedListener;
 import com.chinatsp.weaher.viewholder.WeatherBigCardHolder;
 import com.chinatsp.weaher.viewholder.WeatherSmallCardHolder;
+import com.chinatsp.weaher.viewstate.CardViewState;
+import com.chinatsp.weaher.viewstate.IOnChangeState;
 import com.iflytek.autofly.weather.entity.WeatherInfo;
 
 import java.util.List;
@@ -30,8 +32,6 @@ import launcher.base.utils.view.LayoutParamUtil;
 public class WeatherCardView extends ConstraintLayout implements ICardStyleChange, LifecycleOwner, IWeatherCardView, OnPageChangedListener {
 
     private static final String TAG = "WeatherCardView";
-
-
     public WeatherCardView(@NonNull Context context) {
         super(context);
         init();
@@ -64,8 +64,7 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
     private boolean mExpand;
     private LifecycleRegistry mLifecycleRegistry = new LifecycleRegistry(this);
     private ImageView ivCardWeatherRefresh;
-    private int currentCityIndex;
-
+    private CardViewState mCardViewState = CardViewState.getInstance();
 
     private void init() {
         WeatherUtil.logI("WeatherCard init:"+hashCode());
@@ -110,9 +109,9 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
         LayoutParamUtil.setWidth(mLargeWidth, this);
         runExpandAnim();
         mController.requestCityList();
+        int currentCityIndex = mCardViewState.getPageIndex();
         mBigCardHolder.scrollToPosition(currentCityIndex);
     }
-
 
     @Override
     public void collapse() {
@@ -122,6 +121,7 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
         removeView(mLargeCardView);
         LayoutParamUtil.setWidth(mSmallWidth, this);
         mController.requestCityList();
+        int currentCityIndex = mCardViewState.getPageIndex();
         mSmallCardHolder.scrollToPosition(currentCityIndex);
     }
 
@@ -138,6 +138,8 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+        mCardViewState.addListener(mOnChangeState);
+        WeatherUtil.logI(TAG+" onAttachedToWindow "+hashCode());
         mLifecycleRegistry.setCurrentState(Lifecycle.State.CREATED);
         mController.addDataCallback();
     }
@@ -145,9 +147,22 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        mCardViewState.removeListener(mOnChangeState);
         mLifecycleRegistry.setCurrentState(Lifecycle.State.DESTROYED);
         mController.removeDataCallback();
     }
+
+    private IOnChangeState mOnChangeState = new IOnChangeState() {
+        @Override
+        public void onPageChange(int index) {
+            if (mExpand) {
+                mBigCardHolder.scrollToPosition(index);
+            } else {
+                mSmallCardHolder.scrollToPosition(index);
+
+            }
+        }
+    };
 
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
@@ -184,6 +199,7 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
         post(new Runnable() {
             @Override
             public void run() {
+                int currentCityIndex = mCardViewState.getPageIndex();
                 if (mExpand) {
                     mBigCardHolder.updateCityList(cityList);
                     mBigCardHolder.scrollToPosition(currentCityIndex);
@@ -232,6 +248,7 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
 
     @Override
     public void onSelected(int position) {
-        currentCityIndex = Math.max(position, 0);
+        int currentCityIndex = Math.max(position, 0);
+        mCardViewState.setPageIndex(currentCityIndex);
     }
 }

@@ -6,8 +6,6 @@ import com.chinatsp.volcano.api.response.VideoListData;
 import com.chinatsp.volcano.repository.IVolcanoLoadListener;
 import com.chinatsp.volcano.repository.VolcanoRepository;
 
-import java.util.ConcurrentModificationException;
-
 import launcher.base.network.NetworkObserver;
 import launcher.base.network.NetworkStateReceiver;
 import launcher.base.network.NetworkUtils;
@@ -25,6 +23,29 @@ public class VolcanoDrawerController {
         EasyLog.i(TAG, "init hashCode:" + hashCode());
     }
 
+    public void registerListener() {
+        IVolcanoLoadListener l = new IVolcanoLoadListener() {
+            @Override
+            public void onSuccess(VideoListData videoListData, String source) {
+                mView.refreshData(videoListData);
+            }
+
+            @Override
+            public void onFail(String msg) {
+                if (mView == null) {
+                    return;
+                }
+                Context context = mView.itemView.getContext();
+                if (NetworkUtils.isNetworkAvailable(context)) {
+                    mView.refreshFail(msg);
+                } else {
+                    mView.showNetworkError();
+                }
+            }
+        };
+        VolcanoRepository.getInstance().registerDrawerCallbacks(TAG, l);
+    }
+
     void loadVideoList() {
         EasyLog.d(TAG, "loadVideoList");
         VolcanoRepository volcanoRepository = VolcanoRepository.getInstance();
@@ -35,25 +56,7 @@ public class VolcanoDrawerController {
             mView.refreshData(videoList);
         } else {
             EasyLog.d(TAG, "loadVideoList from server. hashCode:" + hashCode());
-            volcanoRepository.loadFromServer(source, new IVolcanoLoadListener() {
-                @Override
-                public void onSuccess(VideoListData videoListData) {
-                    mView.refreshData(videoListData);
-                }
-
-                @Override
-                public void onFail(String msg) {
-                    if (mView == null) {
-                        return;
-                    }
-                    Context context = mView.itemView.getContext();
-                    if (NetworkUtils.isNetworkAvailable(context)) {
-                        mView.refreshFail(msg);
-                    } else {
-                        mView.showNetworkError();
-                    }
-                }
-            });
+            volcanoRepository.loadFromServer(source);
         }
     }
 
@@ -61,7 +64,7 @@ public class VolcanoDrawerController {
         @Override
         public void onNetworkChanged(boolean s) {
             boolean isConnected = NetworkUtils.isNetworkAvailable(mContext);
-            EasyLog.d(TAG, "onNetworkChanged , isConnected:" + isConnected+" , hashCode:" + VolcanoDrawerController.this.hashCode());
+            EasyLog.d(TAG, "onNetworkChanged , isConnected:" + isConnected + " , hashCode:" + VolcanoDrawerController.this.hashCode());
             if (isConnected) {
                 loadVideoList();
             } else {

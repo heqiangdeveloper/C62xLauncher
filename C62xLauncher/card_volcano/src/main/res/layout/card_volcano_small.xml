@@ -18,7 +18,6 @@
             android:layout_height="@dimen/card_icon_size_lv3"
             android:layout_marginStart="65px"
             android:layout_marginTop="89px"
-            android:src="@drawable/card_volcano_type_toutiao"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

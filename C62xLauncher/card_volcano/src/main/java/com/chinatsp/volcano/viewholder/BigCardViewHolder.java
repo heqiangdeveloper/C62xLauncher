@@ -2,8 +2,6 @@ package com.chinatsp.volcano.viewholder;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.content.Intent;
-import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,7 +19,6 @@ import com.chinatsp.volcano.videos.VolcanoVideoAdapter;
 import java.util.List;
 
 import launcher.base.utils.EasyLog;
-import launcher.base.utils.recent.RecentAppHelper;
 import launcher.base.utils.selector.OnViewSelected;
 import launcher.base.utils.selector.StatefulViewHolder;
 import launcher.base.utils.selector.ViewStateSelector;
@@ -117,7 +114,7 @@ public class BigCardViewHolder extends VolcanoViewHolder{
     }
 
     @Override
-    public void updateList(VideoListData videoListData) {
+    public void updateList(VideoListData videoListData, String source) {
         EasyLog.d(TAG, "updateList "+videoListData);
         List<VolcanoVideo> list = videoListData.getList();
         if (list != null) {

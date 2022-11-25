@@ -20,6 +20,8 @@ import java.util.Map;
 
 import card.base.LauncherCard;
 import launcher.base.utils.EasyLog;
+import launcher.base.utils.collection.IndexCheck;
+import launcher.base.utils.collection.ListKit;
 
 public class HomeCardsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -155,5 +157,16 @@ public class HomeCardsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             position++;
         }
         return position;
+    }
+
+    public LauncherCard getCardByPosition(int position) {
+        int cardPos = position;
+        if (isIncludeDrawer()) {
+            cardPos = position - 1;
+        }
+        if (!IndexCheck.indexOutOfArray(mCardEntityList, cardPos)) {
+            return mCardEntityList.get(cardPos);
+        }
+        return null;
     }
 }

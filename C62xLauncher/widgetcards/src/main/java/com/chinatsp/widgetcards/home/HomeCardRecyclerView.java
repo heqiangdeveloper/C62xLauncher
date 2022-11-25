@@ -37,7 +37,7 @@ public class HomeCardRecyclerView extends RecyclerView {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
         boolean enableScroll = enableScrollHorizontal();
-        EasyLog.d("FrameRecyclerView", "onInterceptTouchEvent enableScroll " + enableScroll);
+        EasyLog.d("HomeCardRecyclerView", "onInterceptTouchEvent enableScroll " + enableScroll);
         if (!enableScroll) {
             return super.onInterceptTouchEvent(event);
         }
@@ -61,12 +61,12 @@ public class HomeCardRecyclerView extends RecyclerView {
                 case MotionEvent.ACTION_MOVE: {
                     int deltaX = Math.abs(x - mLastX);
                     int deltaY = Math.abs(y - mLastY);
-                    EasyLog.d("FrameRecyclerView", "onInterceptTouchEvent ACTION_MOVE " + deltaX + " , " + deltaY);
+                    EasyLog.d("HomeCardRecyclerView", "onInterceptTouchEvent ACTION_MOVE " + deltaX + " , " + deltaY);
                     if (deltaX > deltaY) {
-                        EasyLog.d("FrameRecyclerView", "onInterceptTouchEvent ACTION_MOVE OK");
+                        EasyLog.d("HomeCardRecyclerView", "onInterceptTouchEvent ACTION_MOVE OK");
                         intercepted = true;
                     } else {
-                        EasyLog.w("FrameRecyclerView", "onInterceptTouchEvent ACTION_MOVE FAIL");
+                        EasyLog.w("HomeCardRecyclerView", "onInterceptTouchEvent ACTION_MOVE FAIL");
                     }
                     break;
                 }
@@ -94,7 +94,6 @@ public class HomeCardRecyclerView extends RecyclerView {
         int action = event.getAction();
         switch (action) {
             case MotionEvent.ACTION_DOWN: {
-                EasyLog.d("FrameRecyclerView", "dispatchTouchEvent ACTION_DOWN");
                 if (!isShowingControlViews()) {
                     scheduleLongPress();
                 }
@@ -108,18 +107,14 @@ public class HomeCardRecyclerView extends RecyclerView {
                 float deltaY = moveY - downY;
                 float deltaX = moveX - downX;
                 boolean moveTooFar = checkTouchMoveTooFar(deltaY, deltaX);
-                EasyLog.d("FrameRecyclerView", "dispatchTouchEvent ACTION_MOVE, deltaY:" + deltaY + ", deltaX:" + deltaX+" , moveTooFar:"+moveTooFar);
+                EasyLog.d("HomeCardRecyclerView", "dispatchTouchEvent ACTION_MOVE, deltaY:" + deltaY + ", deltaX:" + deltaX+" , moveTooFar:"+moveTooFar);
                 if (moveTooFar) {
                     removeLongPress();
                 }
                 break;
             }
             case MotionEvent.ACTION_CANCEL:
-                EasyLog.d("FrameRecyclerView", "dispatchTouchEvent ACTION_CANCEL");
-                removeLongPress();
-                break;
             case MotionEvent.ACTION_UP: {
-                EasyLog.d("FrameRecyclerView", "dispatchTouchEvent ACTION_UP");
                 removeLongPress();
                 break;
             }
@@ -131,7 +126,7 @@ public class HomeCardRecyclerView extends RecyclerView {
     private Handler mLongPressHandler = new Handler(Looper.getMainLooper());
 
     private void scheduleLongPress() {
-        EasyLog.d("FrameRecyclerView", "scheduleLongPress");
+        EasyLog.d("HomeCardRecyclerView", "scheduleLongPress");
 //        postDelayed(longClickRunnable, ViewConfiguration.getLongPressTimeout());
 
         mLongPressHandler.postDelayed(longClickRunnable, 600);
@@ -142,12 +137,12 @@ public class HomeCardRecyclerView extends RecyclerView {
         public void run() {
             mLongPressTriggered = true;
             CardIntentService.start(getContext(), CardIntentService.OP_VALUE_START_CARD_EDIT);
-            Log.d("FrameRecyclerView", "longClickRunnable  called : " + mLongPressTriggered);
+            Log.d("HomeCardRecyclerView", "run() called : " + mLongPressTriggered);
         }
     };
 
     private void removeLongPress() {
-        EasyLog.w("FrameRecyclerView", "removeLongPress");
+        EasyLog.w("HomeCardRecyclerView", "removeLongPress");
         mLongPressHandler.removeCallbacks(longClickRunnable);
     }
 
@@ -160,9 +155,12 @@ public class HomeCardRecyclerView extends RecyclerView {
      * @return true: 正在显示控件组
      */
     private boolean isShowingControlViews() {
-        if (ExpandStateManager.getInstance().getExpandState()) {
-            return false;
-        }
         return !canScrollHorizontally(-1);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        EasyLog.w("HomeCardRecyclerView", "onAttachedToWindow "+hashCode());
     }
 }
