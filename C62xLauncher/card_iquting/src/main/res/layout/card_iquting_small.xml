@@ -124,9 +124,9 @@
 
         <ImageView
             android:id="@+id/ivIQuTingPlayPauseBtn"
-            android:layout_width="@dimen/card_icon_size_lv0"
-            android:layout_height="@dimen/card_icon_size_lv0"
-            android:src="@drawable/pause_card_iquting_selector"
+            android:layout_width="110px"
+            android:layout_height="110px"
+            android:src="@drawable/pause_card_iquting_selector_small"
             app:layout_constraintTop_toTopOf="@id/ivIQuTingCover"
             app:layout_constraintStart_toStartOf="@id/ivIQuTingCover"
             app:layout_constraintBottom_toBottomOf="@id/ivIQuTingCover"
@@ -202,7 +202,7 @@
             android:layout_height="30px"
 
             app:progressBgColor="#999999"
-            app:progressColor="@color/card_main_theme"
+            app:progressColor="@color/card_blue_default"
             app:progressHeight="7px"
             app:progressBgHeight="3px"
             app:layout_constraintStart_toEndOf="@id/tvIQuTingPlayPosition"

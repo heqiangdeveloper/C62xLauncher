@@ -509,7 +509,7 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                 mIvIQuTingPlayPauseBtnBig.setImageResource(R.drawable.play_card_iquting_selector);
                 checkStatusInList();
             }else {
-                mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.play_card_iquting_selector);
+                mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.play_card_iquting_selector_small);
             }
         }
 
@@ -520,7 +520,7 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                 mIvIQuTingPlayPauseBtnBig.setImageResource(R.drawable.pause_card_iquting_selector);
                 checkStatusInList();
             }else {
-                mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.pause_card_iquting_selector);
+                mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.pause_card_iquting_selector_small);
             }
         }
 
@@ -531,7 +531,7 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                 mIvIQuTingPlayPauseBtnBig.setImageResource(R.drawable.pause_card_iquting_selector);
                 checkStatusInList();
             }else {
-                mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.pause_card_iquting_selector);
+                mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.pause_card_iquting_selector_small);
             }
         }
 
@@ -664,13 +664,13 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                     if(mExpand){
                         mIvIQuTingPlayPauseBtnBig.setImageResource(R.drawable.play_card_iquting_selector);
                     }else {
-                        mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.play_card_iquting_selector);
+                        mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.play_card_iquting_selector_small);
                     }
                 }else {
                     if(mExpand){
                         mIvIQuTingPlayPauseBtnBig.setImageResource(R.drawable.pause_card_iquting_selector);
                     }else {
-                        mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.pause_card_iquting_selector);
+                        mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.pause_card_iquting_selector_small);
                     }
                 }
                 getCurrentMediaInfo();
@@ -1003,9 +1003,9 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
             }
             mTvIQuTingMediaName.setText(name + "-" + artist);
             if(isPlaying){
-                mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.play_card_iquting_selector);
+                mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.play_card_iquting_selector_small);
             }else {
-                mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.pause_card_iquting_selector);
+                mIvIQuTingPlayPauseBtn.setImageResource(R.drawable.pause_card_iquting_selector_small);
             }
             if("like".equals(mIvIQuTingLikeBtnBig.getTag())){
                 mIvIQuTingLike.setImageResource(R.drawable.card_iquting_icon_like);
