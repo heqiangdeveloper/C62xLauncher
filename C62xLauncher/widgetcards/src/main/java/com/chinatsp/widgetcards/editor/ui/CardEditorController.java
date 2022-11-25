@@ -59,10 +59,8 @@ public class CardEditorController {
     boolean checkChanged() {
         CardManager cardManager = CardManager.getInstance();
         List<LauncherCard> originHomeList = cardManager.getHomeList();
-        List<LauncherCard> originUnselectCardList = cardManager.getUnselectCardList();
         boolean equalHome = ListKit.equal(mHomeList, originHomeList);
-        boolean equalUnselect = ListKit.equal(mUnselectList, originUnselectCardList);
-        return !equalHome || !equalUnselect;
+        return !equalHome;
     }
     /**
      * 提交编辑, 使编辑生效.

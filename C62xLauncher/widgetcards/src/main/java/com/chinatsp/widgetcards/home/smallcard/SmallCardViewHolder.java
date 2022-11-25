@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chinatsp.widgetcards.R;
+import com.chinatsp.widgetcards.home.AppLauncherUtil;
 import com.chinatsp.widgetcards.manager.CardNameRes;
 
 import card.base.LauncherCard;
@@ -26,6 +27,8 @@ class SmallCardViewHolder extends RecyclerView.ViewHolder {
         mIvCardZoom = itemView.findViewById(R.id.ivCardZoom);
         mCardInner = cardInner;
         mOnExpandCardInCard = onExpandCardInCard;
+
+
     }
 
     public void bind(int position, LauncherCard card) {
@@ -35,6 +38,12 @@ class SmallCardViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 expand(card);
+            }
+        });
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppLauncherUtil.start(v.getContext(), card.getType());
             }
         });
     }
