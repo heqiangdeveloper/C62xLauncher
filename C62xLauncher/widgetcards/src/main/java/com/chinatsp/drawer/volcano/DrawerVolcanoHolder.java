@@ -40,7 +40,7 @@ public class DrawerVolcanoHolder extends BaseViewHolder<DrawerEntity> {
             }
         });
         mController = new VolcanoDrawerController(this);
-        mController.loadVideoList();
+        mController.checkUIState(itemView.getContext());
         EasyLog.d(TAG, "init hashCode:" + hashCode());
     }
 
@@ -82,5 +82,13 @@ public class DrawerVolcanoHolder extends BaseViewHolder<DrawerEntity> {
         layoutDrawerVolcanoError.setVisibility(View.INVISIBLE);
         rcvDrawerVolcanoVideos.setVisibility(View.VISIBLE);
         adapter.setData(videoListData.getList());
+    }
+
+    @Override
+    public void bind(int position, DrawerEntity drawerEntity) {
+        super.bind(position, drawerEntity);
+        if (mController != null) {
+            mController.checkUIState(itemView.getContext());
+        }
     }
 }

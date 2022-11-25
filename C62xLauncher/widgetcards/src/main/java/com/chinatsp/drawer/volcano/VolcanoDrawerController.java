@@ -69,4 +69,13 @@ public class VolcanoDrawerController {
             }
         }
     };
+
+    public void checkUIState(Context context) {
+        boolean isConnected = NetworkUtils.isNetworkAvailable(context);
+        if (!isConnected) {
+            mView.showNetworkError();
+        } else {
+            loadVideoList();
+        }
+    }
 }
