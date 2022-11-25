@@ -305,12 +305,12 @@ public class VSeekBar extends View {
     }
 
     private void drawIcon(Canvas canvas) {
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.img_light_icon_56);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.luminance);
         float xOffset = ((normalRectF.height() - bitmap.getWidth()) / 2);
         float yOffset = ((normalRectF.height() - bitmap.getHeight()) / 2);
         float left = normalRectF.left + xOffset;
         float top = normalRectF.top + yOffset;
-        canvas.drawBitmap(bitmap, left, top, null);
+       // canvas.drawBitmap(bitmap, left, top, null);
         left = normalRectF.right - xOffset - bitmap.getWidth();
         canvas.drawBitmap(bitmap, left, top, null);
 
