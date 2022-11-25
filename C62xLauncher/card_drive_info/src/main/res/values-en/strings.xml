@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="card_drive_info_oil_consumption">Oil consumption</string>
-    <string name="card_drive_info_driving_time">Driving time</string>
-    <string name="card_drive_info_driving_distance">Driving distance</string>
+    <string name="card_drive_info_oil_consumption">Oil\nconsumption</string>
+    <string name="card_drive_info_driving_time">Driving\ntime</string>
+    <string name="card_drive_info_driving_distance">Driving\ndistance</string>
     <string name="card_drive_info_today">Current date</string>
 </resources>

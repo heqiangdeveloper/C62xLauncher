@@ -1,8 +1,8 @@
 package com.chinatsp.driveinfo;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -10,9 +10,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.os.ConfigurationCompat;
+import androidx.core.os.LocaleListCompat;
+
+import java.util.Locale;
 
 import launcher.base.utils.EasyLog;
-import launcher.base.utils.recent.RecentAppHelper;
 
 
 public class DriveCounselorCardView extends ConstraintLayout {
@@ -47,10 +50,19 @@ public class DriveCounselorCardView extends ConstraintLayout {
     private void init() {
         EasyLog.i(TAG, "init , hashcode:" + this.hashCode());
 //        printStack();
-        LayoutInflater.from(getContext()).inflate(R.layout.card_drive_counselor, this);
+        initLayoutByLanguage();
         mViewHolder = new ViewHolder(this);
         mController = new DriveCounselorController(this);
         initViews();
+    }
+
+    private void initLayoutByLanguage() {
+        Locale locale = getResources().getConfiguration().getLocales().get(0);
+        if (locale.getLanguage().equals(Locale.CHINESE.getLanguage())) {
+            LayoutInflater.from(getContext()).inflate(R.layout.card_drive_counselor_cn, this);
+        } else {
+            LayoutInflater.from(getContext()).inflate(R.layout.card_drive_counselor_en, this);
+        }
     }
 
     private void printStack() {
