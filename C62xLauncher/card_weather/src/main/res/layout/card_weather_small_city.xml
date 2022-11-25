@@ -14,9 +14,9 @@
 
     <ImageView
         android:id="@+id/ivCardWeatherLocation"
-        android:layout_width="@dimen/card_icon_size_lv2"
-        android:layout_height="@dimen/card_icon_size_lv2"
-        android:layout_marginStart="62px"
+        android:layout_width="@dimen/card_icon_size_lv3"
+        android:layout_height="@dimen/card_icon_size_lv3"
+        android:layout_marginStart="69px"
         android:layout_marginTop="89px"
         android:src="@drawable/card_weather_icon_location"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,7 +29,7 @@
         android:text=""
         android:maxLines="1"
         android:ellipsize="end"
-        android:textColor="@color/card_weather_location"
+        android:textColor="@color/card_blue_default"
         android:textSize="@dimen/card_text_size_lv3"
         app:layout_constraintBottom_toBottomOf="@id/ivCardWeatherLocation"
         app:layout_constraintStart_toEndOf="@id/ivCardWeatherLocation"
