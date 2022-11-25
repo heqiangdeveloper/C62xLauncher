@@ -12,7 +12,6 @@ import android.view.MotionEvent;
 import android.widget.SeekBar;
 
 import com.common.xui.R;
-import com.common.xui.utils.ThreadUtil;
 
 @SuppressLint("AppCompatCustomView")
 public class VerSeekBar extends SeekBar {
@@ -22,6 +21,7 @@ public class VerSeekBar extends SeekBar {
     private float mBorderWidth = 2.6f;       // 描边宽度
     private float mShadowRadius = 10f;
     private float radius = 70;
+    private int slidingMin = 0;//最小滑动的值
 
     public VerSeekBar(Context context) {
         super(context);
@@ -124,7 +124,7 @@ public class VerSeekBar extends SeekBar {
 
             path.lineTo(top - radius, right);
             path.quadTo(top - error - 3, right - error - 2, top - 1, right - radius - 2);
-            path.lineTo(top - 10, left + radius+1);
+            path.lineTo(top - 10, left + radius + 1);
             path.quadTo(top - error - 6, left + error, top - radius, left);
             path.close();
 
@@ -166,14 +166,17 @@ public class VerSeekBar extends SeekBar {
         if (!isEnabled()) {
             return false;
         }
-
+        int slidingValue = getMax() - (int) (getMax() * event.getY() / getHeight());
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                isTouched = true;
-                invalidate();
-                if (onSeekBarChangeListener != null)
-                    onSeekBarChangeListener.onStartTrackingTouch(this);
-                setProgress(getMax() - (int) (getMax() * event.getY() / getHeight()));
+                if (slidingValue >= slidingMin) {
+                    isTouched = true;
+                    invalidate();
+                    if (onSeekBarChangeListener != null)
+                        onSeekBarChangeListener.onStartTrackingTouch(this);
+                    setProgress(getMax() - (int) (getMax() * event.getY() / getHeight()));
+                }
+
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
@@ -181,11 +184,17 @@ public class VerSeekBar extends SeekBar {
                 invalidate();
                 if (onSeekBarChangeListener != null)
                     onSeekBarChangeListener.onStopTrackingTouch(this);
-                setProgress(getMax() - (int) (getMax() * event.getY() / getHeight()));
+                if (slidingValue >= slidingMin) {
+                    setProgress(getMax() - (int) (getMax() * event.getY() / getHeight()));
+                } else {
+                    setProgress(slidingMin);
+                }
                 break;
             case MotionEvent.ACTION_MOVE:
-                isTouched = true;
-                setProgress(getMax() - (int) (getMax() * event.getY() / getHeight()));
+                if (slidingValue >= slidingMin) {
+                    isTouched = true;
+                    setProgress(getMax() - (int) (getMax() * event.getY() / getHeight()));
+                }
                 break;
         }
         return true;
@@ -203,5 +212,14 @@ public class VerSeekBar extends SeekBar {
     public void setProgressDrawableTiled(Drawable d) {
         super.setProgressDrawableTiled(d);
         onSizeChanged(getWidth(), getHeight(), 0, 0);
+    }
+
+    /**
+     * 最小下滑指数
+     *
+     * @param value 指数
+     */
+    public void setValueMin(int value) {
+        this.slidingMin = value;
     }
 }
