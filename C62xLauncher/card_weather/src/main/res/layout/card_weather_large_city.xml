@@ -44,9 +44,11 @@
         app:layout_constraintTop_toTopOf="@id/ivCardWeatherIcon" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="272px"
+        android:layout_width="wrap_content"
         android:layout_height="90px"
         android:layout_marginStart="36px"
+        android:paddingLeft="18px"
+        android:paddingRight="18px"
         android:background="@drawable/rect_round_12"
         app:layout_constraintBottom_toBottomOf="@id/ivCardWeatherIcon"
         app:layout_constraintStart_toEndOf="@id/ivCardWeatherIcon">
@@ -55,7 +57,6 @@
             android:id="@+id/tvCardWeatherAirValue"
             android:layout_width="wrap_content"
             android:layout_height="39px"
-            android:layout_marginLeft="18px"
             android:layout_marginTop="6px"
             android:includeFontPadding="false"
             android:text=""

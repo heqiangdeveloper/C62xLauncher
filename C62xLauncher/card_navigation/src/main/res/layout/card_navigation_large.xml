@@ -56,7 +56,7 @@
             <TextView
                 android:id="@+id/tvCardNaviTBTDirectDistance"
                 style="@style/CardLv3TextView"
-                android:layout_width="84px"
+                android:layout_width="wrap_content"
                 android:layout_height="58px"
                 android:layout_marginLeft="29px"
                 android:layout_marginTop="40px"
@@ -91,6 +91,7 @@
                 android:layout_width="240px"
                 android:layout_height="48px"
                 android:layout_marginLeft="2px"
+                android:gravity="center_vertical"
                 android:ellipsize="end"
                 android:maxLines="1"
                 app:layout_constraintStart_toStartOf="@id/tvCardNaviTBTDirectDistance"
