@@ -93,6 +93,12 @@ open class BaseCmd(
             IPart.R_F -> rfCount = sendCount
             IPart.L_B -> lbCount = sendCount
             IPart.R_B -> rbCount = sendCount
+            IPart.VAGUE -> {
+                lfCount = sendCount
+                rfCount = sendCount
+                lbCount = sendCount
+                rbCount = sendCount
+            }
             else -> {}
         }
     }

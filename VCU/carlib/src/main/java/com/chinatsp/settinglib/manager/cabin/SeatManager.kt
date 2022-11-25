@@ -178,7 +178,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         return success
     }
 
-    private fun obtainChairHeatLevel(@IPart part: Int): Int {
+    private fun obtainHeatLevel(@IPart part: Int): Int {
         val signal = when (part) {
             IPart.L_F -> CarCabinManager.ID_FSH_STATUS_FL
             IPart.L_B -> Constant.INVALID
@@ -206,7 +206,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
 //        int类型数据 0x0:Inactive 0x1:OFF(default)
 //        0x2:Level 1; 0x3:Level 2; 0x4:Level 3
 //        0x5 ………… 0x7:reserved
-        val actualLevel = obtainChairHeatLevel(part)
+        val actualLevel = obtainHeatLevel(part)
         val result = expectLevel != (actualLevel + 1)
         if (result) {
             val signal = CarCabinManager.ID_HUM_SEAT_HEAT_POS
@@ -290,28 +290,18 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         return expect
     }
 
-    private fun doControlChairKnead(parcel: CommandParcel) {
+    private fun doControlKneadLevel(parcel: CommandParcel) {
         val minLevel = 0x2
         val maxLevel = 0x4
         val offLevel = 0x5
         val callback = parcel.callback
         val command = parcel.command as CarCmd
-        var lfAct = IPart.L_F == (IPart.L_F and command.part)
-        var lbAct = IPart.L_B == (IPart.L_B and command.part)
-        var rfAct = IPart.R_F == (IPart.R_F and command.part)
-        var rbAct = IPart.R_B == (IPart.R_B and command.part)
-        val vague = IPart.VAGUE == (IPart.VAGUE and command.part)
-        if (vague && IPart.VOID != command.soundDirection) {
-            if (IPart.L_F == command.soundDirection) {
-                rfAct = false
-                lbAct = false
-                rbAct = false
-            } else {
-                lfAct = false
-                lbAct = false
-                rbAct = false
-            }
-        }
+        val array = analyseActive(command, this::isKneadRunning, offLevel - 1, mark = false)
+        val lfAct = array[0]
+        val lbAct = array[1]
+        val rfAct = array[2]
+        val rbAct = array[3]
+        Timber.d("doControlKneadLevel lfAct:$lfAct, lbAct:$lbAct, rfAct:$rfAct, rbAct:$rbAct")
         if (IStatus.INIT == command.status) {
             var expect: Int
             parcel.retryCount = 2
@@ -429,6 +419,11 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         } else {
             ShareHandler.loopParcel(parcel, delayed = ShareHandler.MID_DELAY)
         }
+    }
+
+    private fun isAdjustAction(action: Int): Boolean {
+        return Action.PLUS == action || Action.MINUS == action
+                || Action.FIXED == action || Action.MAX == action || Action.MAX == action
     }
 
 //    private fun doControlChairKnead(parcel: CommandParcel) {
@@ -700,6 +695,62 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         return calibrationValue(expect, minLevel, maxLevel)
     }
 
+    private fun isHeatRunning(@IPart part: Int, offLevel: Int = 0x0): Boolean {
+        val value = obtainHeatLevel(part)
+        return offLevel != value
+    }
+
+    private fun isKneadRunning(@IPart part: Int, offLevel: Int = 0x0): Boolean {
+        val value = obtainKneadLevel(part)
+        return 0x1 == value || 0x2 == value || 0x3 == value
+    }
+
+    private fun isVentilateRunning(@IPart part: Int, offLevel: Int = 0x0): Boolean {
+        val value = obtainVentilateLevel(part)
+        return offLevel != value
+    }
+
+    private fun analyseActive(
+        command: BaseCmd, block: (Int, Int) -> Boolean, off: Int, mark: Boolean = true,
+    ): Array<Boolean> {
+        var lfAct = IPart.L_F == (IPart.L_F and command.part)
+        var rfAct = IPart.R_F == (IPart.R_F and command.part)
+        var lbAct = if (mark) false else IPart.L_B == (IPart.L_B and command.part)
+        var rbAct = if (mark) false else IPart.R_B == (IPart.R_B and command.part)
+        val vague = IPart.VAGUE == (IPart.VAGUE and command.part)
+        val direction = command.soundDirection
+        Timber.d("analyseActive vague:$vague, direction：$direction, lfAct:$lfAct, lbAct:$lbAct, rfAct:$rfAct, rbAct:$rbAct")
+        do {
+            if (!vague) {
+                break
+            }
+            if (IPart.VOID != direction) {
+                if (IPart.L_F == direction) {
+                    rfAct = false
+                    lbAct = false
+                    rbAct = false
+                } else {
+                    lfAct = false
+                    lbAct = false
+                    rbAct = false
+                }
+                break
+            }
+            if (isAdjustAction(command.action)) {
+                val newLfAct = lfAct && block(IPart.L_F, off)
+                val newLbAct = lbAct && block(IPart.L_B, off)
+                val newRfAct = rfAct && block(IPart.R_F, off)
+                val newRbAct = rbAct && block(IPart.R_B, off)
+                if (newLfAct || newLbAct || newRfAct || newRbAct) {
+                    lfAct = newLfAct
+                    lbAct = newLbAct
+                    rfAct = newRfAct
+                    rbAct = newRbAct
+                }
+            }
+        } while (false)
+        return arrayOf(lfAct, lbAct, rfAct, rbAct)
+    }
 
     private fun doControlVentilateLevel(parcel: CommandParcel) {
         val offLevel = 0x1
@@ -711,23 +762,12 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         var rfLevel = Constant.INVALID
         var rbLevel = Constant.INVALID
         val command = parcel.command as CarCmd
-        var lfAct = IPart.L_F == (IPart.L_F and command.part)
-        var lbAct = false //IPart.L_B == (IPart.L_B and command.part)
-        var rfAct = IPart.R_F == (IPart.R_F and command.part)
-        var rbAct = false//IPart.R_B == (IPart.R_B and command.part)
-        val vague = IPart.VAGUE == (IPart.VAGUE and command.part)
-        Timber.d("doControlVentilateLevel vague:${vague}, soundDirection：${command.soundDirection}")
-        if (vague && IPart.VOID != command.soundDirection) {
-            if (IPart.L_F == command.soundDirection) {
-                rfAct = false
-                lbAct = false
-                rbAct = false
-            } else {
-                lfAct = false
-                lbAct = false
-                rbAct = false
-            }
-        }
+        val array = analyseActive(command, this::isVentilateRunning, offLevel - 1)
+        val lfAct = array[0]
+        val lbAct = array[1]
+        val rfAct = array[2]
+        val rbAct = array[3]
+        Timber.d("doControlVentilateLevel lfAct:$lfAct, lbAct:$lbAct, rfAct:$rfAct, rbAct:$rbAct")
         if (IStatus.INIT == command.status) {
             parcel.retryCount = 2
             resetCommandSent(command)
@@ -839,13 +879,13 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
     private fun obtainHeatLevel(
         @IPart part: Int, minLevel: Int, maxLevel: Int, offLevel: Int, step: Int,
     ): Int {
-        val value = obtainChairHeatLevel(part) + 0x1
+        val value = obtainHeatLevel(part) + 0x1
         val expect = if (offLevel == value) minLevel else value + step
         Timber.e("obtainHeatLevel--value:$value, step:${step}, expect:$expect")
         return calibrationValue(expect, minLevel, maxLevel)
     }
 
-    private fun doControlChairHeat(parcel: CommandParcel) {
+    private fun doControlHeatLevel(parcel: CommandParcel) {
         val offLevel = 0x1
         val minLevel = 0x2
         val maxLevel = 0x4
@@ -855,22 +895,12 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         var rbLevel = Constant.INVALID
         val callback = parcel.callback
         val command = parcel.command as CarCmd
-        var lfAct = IPart.L_F == (IPart.L_F and command.part)
-        var lbAct = false//IPart.L_B == (IPart.L_B and command.part)
-        var rfAct = IPart.R_F == (IPart.R_F and command.part)
-        var rbAct = false//IPart.R_B == (IPart.R_B and command.part)
-        val vague = IPart.VAGUE == (IPart.VAGUE and command.part)
-        if (vague && IPart.VOID != command.soundDirection) {
-            if (IPart.L_F == command.soundDirection) {
-                rfAct = false
-                lbAct = false
-                rbAct = false
-            } else {
-                lfAct = false
-                lbAct = false
-                rbAct = false
-            }
-        }
+        val array = analyseActive(command, this::isHeatRunning, offLevel - 1)
+        val lfAct = array[0]
+        val lbAct = array[1]
+        val rfAct = array[2]
+        val rbAct = array[3]
+        Timber.d("doControlHeatLevel lfAct:$lfAct, lbAct:$lbAct, rfAct:$rfAct, rbAct:$rbAct")
         if (command.status == IStatus.INIT) {
             val expectLevel: Int
             if (Action.TURN_ON == command.action) {
@@ -1252,7 +1282,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         }
         if (IAct.HEAT == command.act) {
             if (!interruptCommand(parcel, coreEngine = true)) {
-                doControlChairHeat(parcel)
+                doControlHeatLevel(parcel)
             }
         } else if (IAct.COLD == command.act) {
             if (!interruptCommand(parcel, coreEngine = true)) {
@@ -1264,7 +1294,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
             }
         } else if (IAct.KNEAD == command.act) {
             if (!interruptCommand(parcel)) {
-                doControlChairKnead(parcel)
+                doControlKneadLevel(parcel)
             }
         }
     }

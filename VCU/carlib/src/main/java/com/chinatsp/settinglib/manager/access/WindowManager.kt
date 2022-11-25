@@ -6,16 +6,17 @@ import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.CommandParcel
 import com.chinatsp.settinglib.bean.SwitchState
+import com.chinatsp.settinglib.bean.ValueBean
 import com.chinatsp.settinglib.bean.Volume
-import com.chinatsp.settinglib.listener.ISignalListener
 import com.chinatsp.settinglib.listener.IBaseListener
-import com.chinatsp.settinglib.listener.ISwitchListener
+import com.chinatsp.settinglib.listener.ISignalListener
 import com.chinatsp.settinglib.manager.*
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.annotation.*
+import com.chinatsp.vehicle.controller.bean.BaseCmd
 import com.chinatsp.vehicle.controller.bean.CarCmd
 import com.chinatsp.vehicle.controller.utils.Keywords
 import timber.log.Timber
@@ -39,6 +40,8 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager,
     private var lucyReference: WeakReference<CommandParcel>? = null
 
     private var louverReference: WeakReference<CommandParcel>? = null
+
+    private var windowParcel: CommandParcel? = null;
 
     private fun getCabinSignalValue(signal: Int): Int {
         return readIntProperty(signal, Origin.CABIN)
@@ -72,21 +75,34 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager,
         }
     }
 
-    private val lfWindowDegree: Volume by lazy {
-        initProgress(Progress.WIN_L_F_DEGREE)
+    private val lfWindow: ValueBean by lazy {
+        val valueBean = ValueBean()
+        val value = obtainWindowDegree(IPart.L_F)
+        valueBean.setValue(value) { if (it < 0 || it > 100) 0 else it }
+        valueBean
     }
 
-    private val lbWindowDegree: Volume by lazy {
-        initProgress(Progress.WIN_L_B_DEGREE)
+    private val lbWindow: ValueBean by lazy {
+        val valueBean = ValueBean()
+        val value = obtainWindowDegree(IPart.L_B)
+        valueBean.setValue(value) { if (it < 0 || it > 100) 0 else it }
+        valueBean
     }
 
-    private val rfWindowDegree: Volume by lazy {
-        initProgress(Progress.WIN_R_F_DEGREE)
+    private val rfWindow: ValueBean by lazy {
+        val valueBean = ValueBean()
+        val value = obtainWindowDegree(IPart.R_F)
+        valueBean.setValue(value) { if (it < 0 || it > 100) 0 else it }
+        valueBean
     }
 
-    private val rbWindowDegree: Volume by lazy {
-        initProgress(Progress.WIN_R_B_DEGREE)
+    private val rbWindow: ValueBean by lazy {
+        val valueBean = ValueBean()
+        val value = obtainWindowDegree(IPart.R_B)
+        valueBean.setValue(value) { if (it < 0 || it > 100) 0 else it }
+        valueBean
     }
+
 
     private fun initProgress(progress: Progress): Volume {
         val result = readIntProperty(progress.get.signal, progress.get.origin)
@@ -193,30 +209,25 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager,
             }
             //================增加车窗位置信号监听 开始================
             CarCabinManager.ID_BCM_POS_VIT_FL -> {
-                onSignalChanged(IPart.L_F, Model.ACCESS_WINDOW, p.propertyId, p.value as Int)
+                val value = p.value as Int
+                lfWindow.setValue(value) { if (it < 0 || it > 100) 0 else it }
+                onSignalChanged(IPart.L_F, Model.ACCESS_WINDOW, p.propertyId, lfWindow.getValue())
             }
             CarCabinManager.ID_BCM_POS_VIT_FR -> {
-                onSignalChanged(IPart.R_F, Model.ACCESS_WINDOW, p.propertyId, p.value as Int)
+                val value = p.value as Int
+                rfWindow.setValue(value) { if (it < 0 || it > 100) 0 else it }
+                onSignalChanged(IPart.R_F, Model.ACCESS_WINDOW, p.propertyId, rfWindow.getValue())
             }
             CarCabinManager.ID_BCM_POS_VIT_RL -> {
-                onSignalChanged(IPart.L_B, Model.ACCESS_WINDOW, p.propertyId, p.value as Int)
+                val value = p.value as Int
+                lbWindow.setValue(value) { if (it < 0 || it > 100) 0 else it }
+                onSignalChanged(IPart.L_B, Model.ACCESS_WINDOW, p.propertyId, lbWindow.getValue())
             }
             CarCabinManager.ID_BCM_POS_VIT_RR -> {
-                onSignalChanged(IPart.R_B, Model.ACCESS_WINDOW, p.propertyId, p.value as Int)
+                val value = p.value as Int
+                rbWindow.setValue(value) { if (it < 0 || it > 100) 0 else it }
+                onSignalChanged(IPart.R_B, Model.ACCESS_WINDOW, p.propertyId, rbWindow.getValue())
             }
-            //================增加车窗位置信号监听 结束================
-//            Progress.WIN_L_F_DEGREE.get.signal -> {
-//                doUpdateProgress(lfWindowDegree, property.value as Int, true, this::doProgressChanged)
-//            }
-//            Progress.WIN_L_B_DEGREE.get.signal -> {
-//                doUpdateProgress(lbWindowDegree, property.value as Int, true, this::doProgressChanged)
-//            }
-//            Progress.WIN_R_F_DEGREE.get.signal -> {
-//                doUpdateProgress(rfWindowDegree, property.value as Int, true, this::doProgressChanged)
-//            }
-//            Progress.WIN_R_B_DEGREE.get.signal -> {
-//                doUpdateProgress(rbWindowDegree, property.value as Int, true, this::doProgressChanged)
-//            }
             else -> {}
         }
     }
@@ -289,17 +300,18 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager,
     }
 
     private fun doControlSwitchWindow(parcel: CommandParcel, status: Boolean) {
-        val pair = updateWindowSwitch(parcel, status)
-        val name = parcel.command.slots?.name ?: Keywords.WINDOW
-        val append: String = if (status) "打开" else "关闭"
-        if (pair.first) {
-            parcel.command.status = IStatus.RUNNING
-            parcel.command.message = "好的，${name}${append}了, ${pair.second}"
-        } else {
-            parcel.command.status = IStatus.SUCCESS
-            parcel.command.message = "${name}已经${append}了, ${pair.second}"
-        }
-        parcel.callback?.onCmdHandleResult(parcel.command)
+        updateWindowSwitch(parcel, status)
+
+//        val name = parcel.command.slots?.name ?: Keywords.WINDOW
+//        val append: String = if (status) "打开" else "关闭"
+//        if (pair.first) {
+//            parcel.command.status = IStatus.RUNNING
+//            parcel.command.message = "好的，${name}${append}了, ${pair.second}"
+//        } else {
+//            parcel.command.status = IStatus.SUCCESS
+//            parcel.command.message = "${name}已经${append}了, ${pair.second}"
+//        }
+//        parcel.callback?.onCmdHandleResult(parcel.command)
     }
 
     private fun doControlWindowLevel(command: CarCmd, callback: ICmdCallback?) {
@@ -448,7 +460,7 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager,
         } else if (IPart.BOTTOM == part) {
             val name = command.slots?.name ?: "遮阳帘"
             val action = if (status) "打开" else "关闭"
-            val isStandard = if (status) lucyStandard  else louverStandard && lucyStandard
+            val isStandard = if (status) lucyStandard else louverStandard && lucyStandard
             if (isStandard) {
                 command.message = "${name}已经${action}了"
                 parcel.callback?.onCmdHandleResult(command)
@@ -704,8 +716,7 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager,
     /**
      * 设置车窗开度
      */
-    private fun updateWindowSwitch(parcel: CommandParcel, status: Boolean): Pair<Boolean, String> {
-        var result = false
+    private fun updateWindowSwitch(parcel: CommandParcel, status: Boolean){
         val command = parcel.command
         val part = command.part
         var lfAct = IPart.L_F == (IPart.L_F and part)
@@ -724,36 +735,63 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager,
                 rbAct = false
             }
         }
-        val builder = StringBuilder()
-        if (lfAct) {
-            val pair = doWindowSwitch(IPart.L_F, lfAct, status)
-            result = result || pair.first
-            if (!pair.second) {
-                builder.append("前排左车窗异常,")
-            }
+        if (IStatus.INIT == command.status) {
+            ShareHandler.dumpParcel(windowParcel)
+            parcel.retryCount = 20
+            command.resetSent(IPart.VAGUE)
+            val expect = if (status) 100 else 0
+            command.lfExpect = if (lfAct) expect else lfWindow.getValue()
+            command.lbExpect = if (lbAct) expect else lbWindow.getValue()
+            command.rfExpect = if (rfAct) expect else rfWindow.getValue()
+            command.rbExpect = if (rbAct) expect else rbWindow.getValue()
+            windowParcel = parcel
         }
-        if (rfAct) {
-            val pair = doWindowSwitch(IPart.R_F, rfAct, status)
-            result = result || pair.first
-            if (!pair.second) {
-                builder.append("前排右车窗异常,")
-            }
+        val lfLevel = command.lfExpect
+        val rfLevel = command.rfExpect
+        val lbLevel = command.lbExpect
+        val rbLevel = command.rbExpect
+        val lfReach = if (lfAct) lfWindow.getValue() == lfLevel else true
+        val lbReach = if (lbAct) lbWindow.getValue() == lbLevel else true
+        val rfReach = if (rfAct) rfWindow.getValue() == rfLevel else true
+        val rbReach = if (rbAct) rbWindow.getValue() == rbLevel else true
+        val lfWait = if (lfAct && !lfReach && !command.isSent(IPart.L_F)) {
+            command.sent(IPart.L_F)
+            doSwitchWindow(IPart.L_F, status, lfReach)
+        } else !lfReach
+        val lbWait = if (lbAct && !lbReach && !command.isSent(IPart.L_B)) {
+            command.sent(IPart.L_B)
+            doSwitchWindow(IPart.L_B, status, lbReach)
+        } else !lbReach
+        val rfWait = if (rfAct && !rfReach && !command.isSent(IPart.R_F)) {
+            command.sent(IPart.R_F)
+            doSwitchWindow(IPart.R_F, status, rfReach)
+        } else !rfReach
+        val rbWait = if (rbAct && !rbReach && !command.isSent(IPart.R_B)) {
+            command.sent(IPart.R_B)
+            doSwitchWindow(IPart.R_B, status, rbReach)
+        } else !rbReach
+
+        command.status = IStatus.RUNNING
+        val retry = parcel.isRetry()
+        val isWait = lfWait || lbWait || rfWait || rbWait
+//        Timber.e("controlWindow lfReach:$lfReach, lbReach:$lbReach, rfReach:$rfReach, rbReach:$rbReach, lfWait:$lfWait, lbWait:$lbWait, rfWait:$rfWait, rbWait:$rbWait, isWait:$isWait, retry:$retry")
+        if (!retry || !isWait) {
+            hint(lfAct, lbAct, rfAct, rbAct, lfReach, rfReach, lbReach, rbReach,
+                command, if (status) "打开" else "关闭")
+            parcel.callback?.onCmdHandleResult(command)
+            windowParcel = null
+        } else {
+            ShareHandler.loopParcel(parcel, delayed = ShareHandler.MID_DELAY)
         }
-        if (lbAct) {
-            val pair = doWindowSwitch(IPart.L_B, lbAct, status)
-            result = result || pair.first
-            if (!pair.second) {
-                builder.append("后排左车窗异常,")
-            }
+    }
+
+    private fun doSwitchWindow(part: Int, status: Boolean, complete: Boolean): Boolean {
+        val result = !complete
+        if (result) {
+            val signal = obtainWindowSignal(part)
+            writeProperty(signal, if (status) 0x6 else 0x5, Origin.CABIN)
         }
-        if (rbAct) {
-            val pair = doWindowSwitch(IPart.R_B, rbAct, status)
-            result = result || pair.first
-            if (!pair.second) {
-                builder.append("后排右车窗异常")
-            }
-        }
-        return Pair(result, builder.toString())
+        return result
     }
 
     private fun doWindowSwitch(
@@ -920,7 +958,11 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager,
             parcel.retryCount = 4
         }
         val level = obtainSkylightLevel()
-        val isStandard = if (status) { level in 0x5..0xF } else { level == 0x1 }
+        val isStandard = if (status) {
+            level in 0x5..0xF
+        } else {
+            level == 0x1
+        }
         val isRetry = parcel.isRetry()
         if (IPart.TOP == part) {
             val action = if (status) "翘起" else "合拢"
@@ -951,7 +993,7 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager,
     private fun isWiperStatus(isHead: Boolean): Boolean {
         val signal = if (isHead) {
             CarCabinManager.ID_FRONT_WIPER_OUTPUT_STATUS
-        } else{
+        } else {
             CarCabinManager.ID_REAR_WIPER_OUTPUT_STATUS
         }
         val value = readIntProperty(signal, Origin.CABIN)
@@ -961,7 +1003,7 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager,
     private fun isWashingStatus(isHead: Boolean): Boolean {
         val signal = if (isHead) {
             CarCabinManager.ID_FRONT_WASH_OUTPUT_STATUS
-        } else{
+        } else {
             CarCabinManager.ID_REAR_WASH_OUTPUT_STATUS
         }
         val value = readIntProperty(signal, Origin.CABIN)
@@ -988,12 +1030,134 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager,
             return null
         }
         return when (part) {
-            IPart.L_F -> readIntProperty(CarCabinManager.ID_BCM_POS_VIT_FL, Origin.CABIN)
-            IPart.R_F -> readIntProperty(CarCabinManager.ID_BCM_POS_VIT_FR, Origin.CABIN)
-            IPart.L_B -> readIntProperty(CarCabinManager.ID_BCM_POS_VIT_RL, Origin.CABIN)
-            IPart.R_B -> readIntProperty(CarCabinManager.ID_BCM_POS_VIT_RR, Origin.CABIN)
+            IPart.L_F -> lfWindow.getValue()
+            IPart.R_F -> rfWindow.getValue()
+            IPart.L_B -> lbWindow.getValue()
+            IPart.R_B -> rbWindow.getValue()
             else -> null
         }
     }
 
+    private fun hint(
+        lfAct: Boolean, lbAct: Boolean, rfAct: Boolean, rbAct: Boolean,
+        lfComplete: Boolean, rfComplete: Boolean, lbComplete: Boolean, rbComplete: Boolean,
+        command: BaseCmd, notion: String,
+    ) {
+        if (lfAct && lbAct && rfAct && rbAct) {
+            if (lfComplete && rfComplete && lbComplete && rbComplete) {
+                command.message = "车窗已经${notion}了"
+            } else if (!lfComplete && !rfComplete && !lbComplete && !rbComplete) {
+                command.message = Keywords.COMMAND_FAILED
+            } else if (!lfComplete && rfComplete && lbComplete && rbComplete) {
+                command.message = "后排车窗${notion}了, 副驾车窗${notion}了， 主驾车窗操作没有成功"
+            } else if (lfComplete && !rfComplete && lbComplete && rbComplete) {
+                command.message = "后排车窗${notion}了, 主驾车窗${notion}了， 副驾车窗操作没有成功"
+            } else if (lfComplete && rfComplete && !lbComplete && rbComplete) {
+                command.message = "前排车窗${notion}了, 后排右车窗${notion}了， 后排左车窗操作没有成功"
+            } else if (lfComplete && rfComplete && lbComplete && !rbComplete) {
+                command.message = "前排车窗${notion}了, 后排左车窗${notion}了， 后排右车窗操作没有成功"
+            } else if (lfComplete && rfComplete && !lbComplete && !rbComplete) {
+                command.message = "前排车窗已经${notion}了， 后排车窗${notion}没有成功"
+            } else if (lfComplete && !rfComplete && lbComplete && !rbComplete) {
+                command.message = "左边车窗已经${notion}了， 右边车窗${notion}没有成功"
+            } else if (lfComplete && !rfComplete && !lbComplete && rbComplete) {
+                command.message = "后排右车窗、主驾车窗、已经${notion}了， 后排左车窗、副驾车窗、${notion}没有成功"
+            } else if (!lfComplete && rfComplete && lbComplete && !rbComplete) {
+                command.message = "后排左车窗、副驾车窗、已经${notion}了， 后排右车窗、主驾车窗、${notion}没有成功"
+            } else if (!lfComplete && rfComplete && !lbComplete && rbComplete) {
+                command.message = "右边车窗已经${notion}了， 左边车窗${notion}没有成功"
+            } else if (!lfComplete && !rfComplete && lbComplete && rbComplete) {
+                command.message = "后排车窗已经${notion}了， 前排车窗${notion}没有成功"
+            } else {
+                command.message = if (lfComplete) {
+                    "主驾车窗已经${notion}了， 其它车窗操作没有成功"
+                } else if (rfComplete) {
+                    "副驾车窗已经${notion}了， 其它车窗操作没有成功"
+                } else if (lbComplete) {
+                    "后排左车窗已经${notion}了， 其它车窗操作没有成功"
+                } else if (rbComplete) {
+                    "后排右车窗已经${notion}了， 其它车窗操作没有成功"
+                } else {
+                    Keywords.COMMAND_FAILED
+                }
+            }
+
+        } else if (lbAct && rfAct && rbAct && !lfAct) {
+
+            if (rfComplete && lbComplete && rbComplete) {
+                command.message = "乘客车窗已经${notion}了"
+            } else if (!rfComplete && !lbComplete && !rbComplete) {
+                command.message = Keywords.COMMAND_FAILED
+            } else if (rfComplete && lbComplete && !rbComplete) {
+                command.message = "后排左车窗、副驾车窗、${notion}了, 后排右车窗操作没有成功"
+            } else if (rfComplete && !lbComplete && rbComplete) {
+                command.message = "后排右车窗、副驾车窗、${notion}了, 后排左车窗操作没有成功"
+            } else if (!rfComplete && lbComplete && rbComplete) {
+                command.message = "后排车窗${notion}了， 副驾车窗操作没有成功"
+            } else {
+                command.message = if (rfComplete) {
+                    "副驾车窗已经${notion}了， 其它车窗操作没有成功"
+                } else if (lbComplete) {
+                    "后排左车窗已经${notion}了， 其它车窗操作没有成功"
+                } else if (rbComplete) {
+                    "后排右车窗已经${notion}了， 其它车窗操作没有成功"
+                } else {
+                    Keywords.COMMAND_FAILED
+                }
+            }
+
+        } else if (lfAct && rfAct && !rbAct && !lbAct) {
+            if (lfComplete && rfComplete) {
+                command.message = "前排车窗已经${notion}了"
+            } else if (!lfComplete && !rfComplete) {
+                command.message = Keywords.COMMAND_FAILED
+            } else if (lfComplete && !rfComplete) {
+                command.message = "主驾车窗已经${notion}了，副驾车窗操作没有成功"
+            } else if (!lfComplete && rfComplete) {
+                command.message = "副驾车窗已经${notion}了，主驾车窗操作没有成功"
+            }
+        } else if (lbAct && rbAct && !lfAct && !rfAct) {
+            if (lbComplete && rbComplete) {
+                command.message = "后排车窗已经${notion}了"
+            } else if (!lbComplete && !rbComplete) {
+                command.message = Keywords.COMMAND_FAILED
+            } else if (lbComplete && !rbComplete) {
+                command.message = "后排左车窗已经${notion}了，后排右车窗操作没有成功"
+            } else if (!lbComplete && rbComplete) {
+                command.message = "后排右车窗已经${notion}了，后排左车窗操作没有成功"
+            }
+        } else if (lfAct && lbAct && !rfAct && !rbAct) {
+            if (lfComplete && lbComplete) {
+                command.message = "左排车窗已经${notion}了"
+            } else if (!lfComplete && !lbComplete) {
+                command.message = Keywords.COMMAND_FAILED
+            } else if (lfComplete && !lbComplete) {
+                command.message = "主驾车窗已经${notion}了，后排左车窗操作没有成功"
+            } else if (!lfComplete && lbComplete) {
+                command.message = "后排左车窗已经${notion}了，主驾车窗操作没有成功"
+            }
+        } else if (rfAct && rbAct && !lfAct && !lbAct) {
+            if (rfComplete && rbComplete) {
+                command.message = "右排车窗已经${notion}了"
+            } else if (!rfComplete && !rbComplete) {
+                command.message = Keywords.COMMAND_FAILED
+            } else if (rfComplete && !rbComplete) {
+                command.message = "副驾车窗已经${notion}了，后排右车窗操作没有成功"
+            } else if (!rfComplete && rbComplete) {
+                command.message = "后排右车窗已经${notion}了，副驾车窗操作没有成功"
+            }
+        } else if (lfAct) {
+            command.message =
+                if (lfComplete) "${command.slots?.name}已经${notion}了" else Keywords.COMMAND_FAILED
+        } else if (lbAct) {
+            command.message =
+                if (lbComplete) "${command.slots?.name}已经${notion}了" else Keywords.COMMAND_FAILED
+        } else if (rfAct) {
+            command.message =
+                if (rfAct) "${command.slots?.name}已经${notion}了" else Keywords.COMMAND_FAILED
+        } else if (rbAct) {
+            command.message =
+                if (rbAct) "${command.slots?.name}已经${notion}了" else Keywords.COMMAND_FAILED
+        }
+    }
 }

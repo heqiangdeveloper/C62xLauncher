@@ -53,7 +53,8 @@
     <string name="cabin_ac_auto_comfort">自动空调舒适性</string>
 
     <string name="cabin_safe_fortify_tone">设防提示音</string>
-    <string name="cabin_safe_lock_car">锁车提示音</string>
+    <string name="cabin_safe_lock_car">锁车成功提示音</string>
+    <string name="cabin_safe_lock_car_error">锁车失败提示音</string>
     <string name="cabin_safe_fortify_success_tone">设防成功提示音</string>
     <string name="cabin_safe_fortify_failure_tone">设防失败提示音</string>
     <string name="cabin_safe_video_safe_mode">视频安全模式</string>
@@ -116,21 +117,22 @@
     <string name="car_window_lock_car">锁车自动关窗</string>
     <string name="car_window_rainy_day">雨天自动关窗</string>
     <string name="car_window_wiper">雨刮维修</string>
-    <string name="car_window_lock_content">功能开启后，可通过钥匙遥\n
+    <string name="car_window_lock_content">&#160;功能开启后，可通过钥匙遥\n
         控关闭/开启四门车窗</string>
-    <string name="car_window_rainy_content">功能开启后，车速首次大于\n
+    <string name="car_window_rainy_content">&#160;功能开启后，车速首次大于\n
         120km/h时，天窗自动关\n
         闭，此时向后拨动天窗开关\n
         可再次开启天窗。</string>
-    <string name="car_window_lock_car_content">功能开启后，锁门时，四门车\n
+    <string name="car_window_lock_car_content">&#160;功能开启后，锁门时，四门车\n
         窗、天窗和遮阳帘自动关闭</string>
-    <string name="car_window_wiper_content">对⻛挡玻璃⾬刮器进⾏维护\n
+    <string name="car_window_wiper_content">&#160;对⻛挡玻璃⾬刮器进⾏维护\n
         操作时，务必打开⾬刮维修\n
         模式。打开⾬刮维修，⾬刮\n
         将⾃动运⾏⾄维修位置。</string>
 
     <string name="car_trunk_electric_function">电动尾门电动功能</string>
     <string name="car_trunk_intelligence_into">电动尾门智能进入</string>
+    <string name="car_trunk_intelligence_into_explain">车门智能进入开关需打开</string>
     <string name="car_trunk_height_adjustment">尾门高度调节</string>
     <string name="car_trunk_light_flashing">灯光闪烁报警</string>
     <string name="car_trunk_buzzer_alarms">蜂鸣器报警开关</string>
@@ -141,7 +143,7 @@
     <string name="car_trunk_buzzer_close">蜂鸣器报警已关闭</string>
     <string name="car_trunk_light_open">灯光闪烁报警已开启</string>
     <string name="car_trunk_light_close">灯光闪烁报警已关闭</string>
-    <string name="car_trunk_content">往返式：携带合法智能钥匙\n
+    <string name="car_trunk_content">&#160;往返式：携带合法智能钥匙\n
         进⼊后备箱感应区域内，然\n
         后退出此区域，再次进⼊感\n
         应区域，电动尾⻔⾃动开\n
@@ -150,7 +152,7 @@
         进⼊后备箱感应区域内，原\n
         地站⽴6s以上，电动尾⻔⾃\n
         动开启。</string>
-    <string name="car_trunk_height_content">电动尾⻔⾼度调节建议：\n
+    <string name="car_trunk_height_content">&#160;电动尾⻔⾼度调节建议：\n
        身⾼1.6⽶以下的⽤户使⽤，建议开启⾼度为80%；\n
        身⾼1.6-1.7⽶的⽤户使⽤，建议开启⾼度为90%；\n
        身⾼1.7⽶以上的⽤户使⽤，建议开启⾼度为100%。\n
@@ -229,7 +231,7 @@
     <string name="lighting_atmosphere_lamp">氛围灯</string>
     <string name="lighting_screen">屏幕亮度</string>
     <string name="lighting_go_home_title">伴我回家</string>
-    <string name="lighting_go_home_content">在锁车后,近光灯会点亮一段时间再熄灭,为你照亮回家的路</string>
+    <string name="lighting_go_home_content">在下电后，近光灯会点亮一段\n时间再熄灭，为你照亮前方回\n家的路。</string>
     <string name="lighting_turn_signal_title">转向灯变道闪烁次数</string>
     <string name="lighting_turn_external_lighting">外部灯光仪式感</string>
     <string name="lighting_physical_switch_title">物理开关背光亮度</string>

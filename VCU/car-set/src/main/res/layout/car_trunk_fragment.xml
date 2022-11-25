@@ -49,7 +49,7 @@
             <LinearLayout
                 android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/x95"
+                android:layout_height="@dimen/x99"
                 android:orientation="vertical"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/line1">
@@ -70,7 +70,7 @@
                         android:id="@+id/electric_tail_details"
                         style="@style/image_prompt"
                         android:layout_marginStart="@dimen/x10"
-                        android:tag="dialogImage"/>
+                        android:tag="dialogImage" />
                 </LinearLayout>
 
 
@@ -81,6 +81,14 @@
                     app:tcv_defaultSelection="1"
                     app:tcv_items="@array/electric_stern_door_option_titles"
                     app:tcv_values="@array/electric_stern_door_option_values" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/x7"
+                    android:text="@string/car_trunk_intelligence_into_explain"
+                    android:textColor="@color/text_prompt_color"
+                    android:textSize="@dimen/x10" />
             </LinearLayout>
 
             <View
@@ -185,11 +193,11 @@
             style="@style/label_txt"
             android:layout_marginTop="@dimen/x12"
             android:layout_marginEnd="@dimen/x161"
+            android:drawableEnd="@drawable/information_selector"
+            android:drawablePadding="@dimen/x2"
             android:text="@string/car_trunk_door_height"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:drawableEnd="@drawable/information_selector"
-            android:drawablePadding="@dimen/x2"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/intelligence_into"
@@ -206,7 +214,9 @@
             android:id="@+id/arcSeekBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/x70"
             android:layout_marginBottom="@dimen/x90"
+            android:visibility="gone"
             app:arcLabelPaddingBottom="10dp"
             app:arcNormalColor="@color/acr_seek_line_color"
             app:arcShowLabel="false"
@@ -215,9 +225,7 @@
             app:arcSweepAngle="60"
             app:arcTickOffsetAngle="1"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="@dimen/x70"
-            android:visibility="gone" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

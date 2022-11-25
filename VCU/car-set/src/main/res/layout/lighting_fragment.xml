@@ -43,11 +43,21 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/lighting_go_home_details"
+                            style="@style/image_prompt"
+                            android:layout_marginStart="@dimen/x6"
+                            android:layout_marginTop="@dimen/x15"
+                            android:tag="dialogImage"
+                            app:layout_constraintLeft_toRightOf="@+id/textView"
+                            app:layout_constraintTop_toTopOf="parent" />
+
                         <TextView
                             style="@style/txt_content_style"
                             android:layout_marginStart="@dimen/x9"
                             android:layout_marginTop="@dimen/x22"
                             android:text="@string/lighting_go_home_content"
+                            android:visibility="gone"
                             app:layout_constraintLeft_toRightOf="@+id/textView"
                             app:layout_constraintTop_toTopOf="parent" />
 
@@ -183,9 +193,9 @@
                     <View
                         android:id="@+id/line4"
                         style="@style/line"
+                        android:visibility="gone"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/lighting_turn_external"
-                        android:visibility="gone" />
+                        app:layout_constraintTop_toBottomOf="@id/lighting_turn_external" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/lighting_car_screen"
@@ -230,9 +240,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/switch_item_option_height"
                         android:orientation="horizontal"
+                        android:visibility="gone"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/line4"
-                        android:visibility="gone">
+                        app:layout_constraintTop_toBottomOf="@id/line4">
 
                         <TextView
                             style="@style/switch_row_option_style"
@@ -260,9 +270,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/switch_item_option_height"
                         android:orientation="horizontal"
+                        android:visibility="gone"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/line6"
-                        android:visibility="gone">
+                        app:layout_constraintTop_toBottomOf="@id/line6">
 
                         <TextView
                             style="@style/switch_row_option_style"
@@ -282,9 +292,9 @@
                     <View
                         android:id="@+id/line7"
                         style="@style/line"
+                        android:visibility="gone"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/lighting_car_inside"
-                        android:visibility="gone"/>
+                        app:layout_constraintTop_toBottomOf="@id/lighting_car_inside" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
         </com.common.xui.widget.XUIWrapContentScrollView>

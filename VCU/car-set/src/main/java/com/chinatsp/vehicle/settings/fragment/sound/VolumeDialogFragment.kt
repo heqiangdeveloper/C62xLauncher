@@ -16,7 +16,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class VolumeDialogFragment : BaseDialogFragment<VolumeViewModel, AudioSoundVolumeDialogBinding>(),
     View.OnClickListener, SeekBar.OnSeekBarChangeListener {
-    private var index = 0
     val manager: VoiceManager by lazy {
         VoiceManager.instance
     }
@@ -36,56 +35,37 @@ class VolumeDialogFragment : BaseDialogFragment<VolumeViewModel, AudioSoundVolum
 
     private fun updateVolumeValue(volume: Volume?) {
         volume?.let {
-            val seekBar: SeekBar?
-            val textView: AppCompatTextView?
+            var seekBar: SeekBar? = null
+            var textView: AppCompatTextView? = null
             when (it.type) {
                 Progress.NAVI -> {
                     seekBar = binding.soundAudioNaviVoVolume
                     textView = binding.naviVolumeTxt
-                    seekBar.max = it.max
-                    seekBar.min = it.min
-                    textView.text = it.pos.toString()
-                    seekBar.progress = it.pos
                 }
                 Progress.VOICE -> {
                     seekBar = binding.soundAudioVoiceVolume
                     textView = binding.voiceVolumeTxt
-                    seekBar.max = it.max
-                    seekBar.min = it.min
-                    textView.text = it.pos.toString()
-                    seekBar.progress = it.pos
                 }
                 Progress.MEDIA -> {
                     seekBar = binding.soundAudioMediaVolume
                     textView = binding.mediaVolumeTxt
-                    seekBar.max = it.max
-                    seekBar.min = it.min
-                    textView.text = it.pos.toString()
-                    seekBar.progress = it.pos
                 }
                 Progress.PHONE -> {
                     seekBar = binding.soundAudioPhoneVolume
                     textView = binding.phoneVolumeTxt
-                    if(index == 0){
-                        index++
-                        seekBar.max = 25
-                        seekBar.min = 0
-                        textView.text = it.pos.toString()
-                        seekBar.progress = it.pos
-                    }
+                    seekBar.setValueMin(5)
                 }
                 Progress.SYSTEM -> {
                     seekBar = binding.soundAudioSystemVolume
                     textView = binding.systemVolumeTxt
-                    seekBar.max = it.max
-                    seekBar.min = it.min
-                    textView.text = it.pos.toString()
-                    seekBar.progress = it.pos
                 }
                 else -> {
                 }
             }
-
+            seekBar?.max = it.max
+            //seekBar?.min = it.min
+            seekBar?.progress = it.pos
+            textView?.text = it.pos.toString()
         }
     }
 
@@ -143,9 +123,8 @@ class VolumeDialogFragment : BaseDialogFragment<VolumeViewModel, AudioSoundVolum
                 manager.doSetVolume(Progress.MEDIA, progress)
             }
             binding.soundAudioPhoneVolume.id -> {
-                val value = progress + 5
-                binding.phoneVolumeTxt.text = value.toString()
-                manager.doSetVolume(Progress.PHONE, value)
+                binding.phoneVolumeTxt.text = progress.toString()
+                manager.doSetVolume(Progress.PHONE, progress)
             }
             binding.soundAudioSystemVolume.id -> {
                 binding.systemVolumeTxt.text = progress.toString()
