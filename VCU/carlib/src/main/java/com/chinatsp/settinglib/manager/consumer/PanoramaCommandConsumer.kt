@@ -1,7 +1,9 @@
 package com.chinatsp.settinglib.manager.consumer
 
 import android.car.hardware.cabin.CarCabinManager
+import com.chinatsp.settinglib.Applet
 import com.chinatsp.settinglib.Constant
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.CommandParcel
 import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.ICmdExpress
@@ -296,9 +298,12 @@ class PanoramaCommandConsumer(val manager: GlobalManager) : ICmdExpress {
 //        0x5: Request to display EVM view for fault and reduction of speed  reminding  请求开启EVM故障降速提示界面
 //        0x6: Request to display single  Left side view 请求单独显示左侧影像界面
 //        0x7: Request to display single Right side view 请求单独显示右侧影像界面
-        val signal = CarCabinManager.ID_AVM_AVM_DISP_REQ
-        val value = manager.readIntProperty(signal, Origin.CABIN)
-        return value == 0x1 || value == 0x4 || value == 0x5 || value == 0x6 || value == 0x7
+//        val signal = CarCabinManager.ID_AVM_AVM_DISP_REQ
+//        val value = manager.readIntProperty(signal, Origin.CABIN)
+        val value = Applet.avmValueBean.getValue()
+        val status = VcuUtils.isAvmEngine(value)
+        Timber.e("isAvmEngine ----------value:$value, status:$status")
+        return status
     }
 
     override fun doCommandExpress(parcel: CommandParcel, fromUser: Boolean) {

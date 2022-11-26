@@ -130,8 +130,7 @@ enum class Progress(
         min = 0x00,
         max = 0x1E,
         def = 0x0C,
-        get = CanLocate(
-            origin = Origin.ATTR,
+        get = CanLocate(origin = Origin.ATTR,
             signal = AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE)
     ),
 
@@ -166,7 +165,7 @@ enum class Progress(
     TRUNK_STOP_POSITION(
         min = 50,
         max = 100,
-        def = 75,
+        def = 95,
         get = CanLocate(signal = CarCabinManager.ID_PTM_POSITION_STATUS),
         set = CanLocate(signal = CarCabinManager.ID_PTM_STP_POSN_SET)
     ),
@@ -201,11 +200,6 @@ enum class Progress(
         def = 0x00,
         get = CanLocate(signal = CarCabinManager.ID_BCM_POS_VIT_RR),
         set = CanLocate(signal = -1)
-    )
-
-    ;
-
-
+    );
     fun isValid(value: Int): Boolean = value in min..max
-
 }

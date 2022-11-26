@@ -1,11 +1,20 @@
 package com.chinatsp.settinglib
 
 import android.car.hardware.cabin.CarCabinManager
+import android.content.Intent
 import android.graphics.Color
+import com.chinatsp.settinglib.SettingManager.Companion.context
+import com.chinatsp.settinglib.bean.AppState
+import com.chinatsp.settinglib.bean.ValueBean
 import com.chinatsp.settinglib.constants.OffLine
+import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.cabin.WheelManager
 import com.chinatsp.settinglib.sign.Origin
+import com.chinatsp.vehicle.controller.semantic.GsonUtil
 import timber.log.Timber
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 /**
@@ -16,6 +25,40 @@ import timber.log.Timber
  * @version: 1.0
  */
 object Applet {
+
+    val avmValueBean: ValueBean by lazy {
+        val signal = CarCabinManager.ID_AVM_AVM_DISP_REQ
+//        val signal = CarCabinManager.ID_VCS_KEY_AVM
+        val value = GlobalManager.instance.readIntProperty(signal, Origin.CABIN)
+        val valueBean = ValueBean()
+        updateAvmDisplay(value, valueBean)
+        valueBean
+    }
+
+    fun updateAvmDisplay(value: Int, valueBean: ValueBean = avmValueBean) {
+        val last = VcuUtils.isAvmEngine(valueBean.getValue())
+        val next = VcuUtils.isAvmEngine(value)
+        valueBean.setValue(value);
+        if (last xor next) {
+            AppExecutors.get()?.networkIO()?.execute {
+//                val map = HashMap<String, String>()
+//                map["activeStatus"] = if (next) "fg" else "bg"
+//                map["default"] = "360"
+//                map["scene"] = "carControl"
+//                map["service"] = "carControl"
+//                map["sceneStatus"] = "default"
+//                val data = GsonUtil.objectToString(map)
+                val appState = AppState(activeStatus = if (next) "fg" else "bg")
+                val data = GsonUtil.objectToString(appState)
+                Timber.d("uploadStatus send 360 state json:$data")
+                val intent: Intent = Intent()
+                    .setAction("com.iflytek.autofly.business.response")
+                    .setPackage("com.iflytek.autofly.voicecoreservice")
+                intent.putExtra("data", data)
+                context.startService(intent)
+            }
+        }
+    }
 
     private fun speedValue(): Float {
         /***

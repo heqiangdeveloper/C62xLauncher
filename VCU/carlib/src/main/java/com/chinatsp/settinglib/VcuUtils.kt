@@ -84,11 +84,11 @@ object VcuUtils {
      * @param keySerial: 下线配置项 key
      * @return 是否支持
      */
-    fun isSupport(keySerial: String): Boolean {
+    fun <T> isSupport(keySerial: String, expect: T): Boolean {
         //0 无 1有
         val value = getConfigParameters(keySerial, Constant.INVALID)
-        Timber.d("isSupport keySerial: $keySerial, value: $value")
-        return value == 1
+        Timber.d("isSupport keySerial: $keySerial, expect: $expect, value: $value")
+        return value == expect
     }
 
     fun isCareLevel(@Level vararg levels: Int, expect: Boolean = true): Boolean {
@@ -195,6 +195,20 @@ object VcuUtils {
         }
         Timber.d("getConfigParam key:%s, def:%s, result:%s", keySerial, default, result)
         return result
+    }
+
+    fun isAvmEngine(value: Int): Boolean {
+//        Indicate the current display requirement of AVM
+//        0x0: Initial
+//        0x1: Request to display normal view
+//        0x2: Request to display off view
+//        0x3: Request to display error view
+//        0x4: Request to display EVM view
+//        0x5: Request to display EVM view for fault and reduction of speed  reminding  请求开启EVM故障降速提示界面
+//        0x6: Request to display single  Left side view 请求单独显示左侧影像界面
+//        0x7: Request to display single Right side view 请求单独显示右侧影像界面
+//        return value == 0x1 || value == 0x2 || value == 0x3 || value == 0x4 || value == 0x5 || value == 0x6 || value == 0x7
+        return value == 0x1 || value == 0x4 || value == 0x5 || value == 0x6 || value == 0x7
     }
 
 //    ID_TCU_SELECTED_GEAR 挡位

@@ -23,9 +23,7 @@ class CommonlyFragment : BaseTabFragment<KanziViewModel, AccessFragmentBinding>(
 
 
     companion object {
-        init {
-            System.loadLibrary("kanzi")
-        }
+        init { System.loadLibrary("kanzi") }
     }
 
     override fun getLayoutId(): Int {
@@ -142,11 +140,7 @@ class CommonlyFragment : BaseTabFragment<KanziViewModel, AccessFragmentBinding>(
             super.notifyDataChanged(name, type, value)
             Timber.d("notifyDataChanged() name:$name type:$type value:$value")
             if (name == "KanziInitFinish") {
-                Timber.d("Set isKanziInitFinish = true")
-                binding.kanZiContent.post {
-                    observeAccessState()
-//                    initVehicleStatus()
-                }
+                binding.kanZiContent.post { observeAccessState() }
             }
         }
     }

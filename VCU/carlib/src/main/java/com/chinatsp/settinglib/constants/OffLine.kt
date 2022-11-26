@@ -131,4 +131,6 @@ object OffLine {
      * 语音车窗控制配置
      */
     const val VOICE_CONTROL_WIN_SUPPORT = "persist.vendor.vehicle.speechwin"
+
+    const val WHEEL_HEAT = "persist.vendor.vehicle.swhot"
 }

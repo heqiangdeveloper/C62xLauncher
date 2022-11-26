@@ -542,6 +542,18 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
         return value == 0x0
     }
 
+    fun obtainLightState(model: Int, serial: Int): Int? {
+        if (Model.LIGHT_COMMON != model){
+            return null
+        }
+        return when (serial) {
+            Constant.LOW_LAMP-> readIntProperty(CarCabinManager.ID_LOW_BEAM_INDICATOR, Origin.CABIN)
+            Constant.HIGH_LAMP -> readIntProperty(CarCabinManager.ID_HIGH_BEAM_AND_FLASH_SWITCH, Origin.CABIN)
+            Constant.B_FOG_LAMP-> readIntProperty(CarCabinManager.ID_TELLTALE_REAR_FOG_LIGHT, Origin.CABIN)
+            else -> null
+        }
+    }
+
 
     override fun doCommandExpress(parcel: CommandParcel, fromUser: Boolean) {
         val command = parcel.command as CarCmd

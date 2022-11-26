@@ -11,10 +11,12 @@ import com.chinatsp.settinglib.bean.CommandParcel
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
+import com.chinatsp.settinglib.constants.OffLine
 import com.chinatsp.settinglib.listener.sound.ISoundManager
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.ICmdExpress
 import com.chinatsp.settinglib.manager.ISignal
+import com.chinatsp.settinglib.manager.ShareHandler
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -22,7 +24,10 @@ import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.annotation.Action
 import com.chinatsp.vehicle.controller.annotation.ICar
+import com.chinatsp.vehicle.controller.annotation.IPart
+import com.chinatsp.vehicle.controller.annotation.IStatus
 import com.chinatsp.vehicle.controller.bean.CarCmd
+import com.chinatsp.vehicle.controller.utils.Keywords
 import timber.log.Timber
 
 /**
@@ -227,7 +232,7 @@ class WheelManager private constructor() : BaseManager(), ISoundManager, ICmdExp
     }
 
     private fun writeProperty(volume: Volume, value: Int): Boolean {
-        return volume.isValid(value) && writeProperty(volume.type.set.signal, value, Origin.CABIN)
+        return writeProperty(volume.type.set.signal, value, Origin.CABIN)
     }
 
     private fun writeProperty(node: SwitchNode, status: Boolean, atomic: SwitchState): Boolean {
@@ -258,22 +263,40 @@ class WheelManager private constructor() : BaseManager(), ISoundManager, ICmdExp
     }
 
     override fun doCommandExpress(parcel: CommandParcel, fromUser: Boolean) {
-
         val command = parcel.command as CarCmd
         val callback = parcel.callback
         if (ICar.WHEEL == command.car) {
-            val status = if (Action.TURN_ON == command.action) {
-                true
-            } else if (Action.TURN_OFF == command.action) {
-                false
-            } else {
-                false
+            if (IStatus.INIT == command.status) {
+                if (!VcuUtils.isSupport(OffLine.WHEEL_HEAT, 0x1)) {
+                    command.message = "您的爱车暂时不支持方向盘加热功能"
+                    callback?.onCmdHandleResult(command)
+                    return
+                }
+                parcel.retryCount = 3
+                command.resetSent(IPart.L_F)
             }
-            val result = doSetSwitchOption(SwitchNode.DRIVE_WHEEL_AUTO_HEAT, status)
-            if (result) {
-                command.message = "方向盘加热已${if (status) "打开" else "关闭"}"
+            val expect = Action.TURN_ON == command.action
+            val heating = readIntProperty(CarCabinManager.ID_SWH_STATUS_KEY, Origin.CABIN)
+//            0x0:not heating 0x1:heating
+            val actual = 0x1 == heating
+            val isNeedSendSignal = expect xor actual
+            if (isNeedSendSignal && !command.isSent(IPart.L_F)) {
+//                方向盘加热设置: 0x0: Inactive;  0x1: On;  0x2: Off; 0x3: Reserved
+                val value = if (expect) 0x1 else 0x2
+                writeProperty(CarCabinManager.ID_SWS_HEAT_SWT, value, Origin.CABIN)
+                command.sent(IPart.L_F)
+                command.status = IStatus.RUNNING
+            }
+            val isFinish = !isNeedSendSignal || !parcel.isRetry()
+            if (!isFinish) {
+                ShareHandler.loopParcel(parcel, ShareHandler.MID_DELAY)
+                return
+            }
+            if (isNeedSendSignal) {
+                command.message = Keywords.COMMAND_FAILED
             } else {
-                command.message = "方向盘加热${if (status) "打开" else "关闭"}失败了"
+                val isSend = command.isSent(IPart.L_F)
+                command.message = "方向盘加热${if (isSend) "" else "已经"}${if (expect) "打开" else "关闭"}了"
             }
             callback?.onCmdHandleResult(command)
         }

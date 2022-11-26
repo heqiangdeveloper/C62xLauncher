@@ -61,18 +61,19 @@ interface Keywords {
         const val LAMPLIGHTPLUS_1 = "高"
         const val LAMPLIGHTPLUS_2 = "低"
         const val ALL = "所有"
+        const val WINDOW = "车窗"
+        const val PASSENGER = "乘客"
         val WINDOWS = arrayOf("车窗", "窗户")
-//        val WINDOW_ALL = arrayOf("所有窗户", "所有车窗")
-        val L_F = arrayOf("主驾", "左前", "前左")
-        val L_R = arrayOf("左后", "后左")
-        val R_F = arrayOf("副驾", "右前", "前右")
-        val R_R = arrayOf("右后", "后右")
+        val L_F = arrayOf("主驾", "前排左", "左前", "前左", "前边左", "左边前", "左排前")
+        val R_F = arrayOf("副驾", "前排右", "右前", "前右", "前边右", "右边前", "右排前")
+        val L_R = arrayOf("后排左", "左后", "后左", "右边左", "左边后", "左排后")
+        val R_R = arrayOf("后排右", "右后", "后右", "后边右", "右边后", "右排后")
 
-        val L_C = arrayOf("左边", "左排")
-        val R_C = arrayOf("右边", "右排")
+        val L_C = arrayOf("左排", "左边")
+        val R_C = arrayOf("右排", "右边")
 
-        val F_R = arrayOf("前边", "前排")
-        val B_R = arrayOf("后边", "后排", "乘客")
+        val F_R = arrayOf("前排", "前边")
+        val B_R = arrayOf("后排", "后边")
 
         const val WINDOW_LEFT_FRONT = "左前车窗"
         const val WINDOW_RIGHT_FRONT = "右前车窗"
@@ -81,7 +82,6 @@ interface Keywords {
         const val WINDOW_LEFT_BACK = "左后车窗"
         const val WINDOW_RIGHT_BACK = "右后车窗"
         const val WINDOW_BACK = "后车窗"
-        const val WINDOW = "车窗"
         const val WINDOW_VENTILATE = "车窗透气"
         const val WINDOW_FRONT = "前车窗"
         const val WINDOW_FRONT2 = "前排"

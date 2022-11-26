@@ -5,6 +5,7 @@ import android.car.hardware.cabin.CarCabinManager
 import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
+import com.chinatsp.settinglib.Applet
 import com.chinatsp.settinglib.BaseApp
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
@@ -82,6 +83,11 @@ class GlobalManager private constructor() : BaseManager() {
             /**电源等级状态*/
             if (CarCabinManager.ID_LOUPWRMNGTSTATLVL == property.propertyId) {
                 onPowerLevelChanged(property.value)
+                return true
+            }
+            if (CarCabinManager.ID_AVM_AVM_DISP_REQ == property.propertyId) {
+                val value = if (property.value is Int) property.value as Int else 0
+                Applet.updateAvmDisplay(value = value)
                 return true
             }
         }

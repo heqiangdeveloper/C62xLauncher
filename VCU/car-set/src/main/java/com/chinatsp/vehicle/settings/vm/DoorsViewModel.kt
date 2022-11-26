@@ -45,6 +45,22 @@ class DoorsViewModel @Inject constructor(app: Application, model: BaseModel) :
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
+    val nfcInner: LiveData<SwitchState>
+        get() = _nfcInner
+
+    private val _nfcInner: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.INNER_NFC
+        MutableLiveData(manager.doGetSwitchOption(node))
+    }
+
+    val nfcOuter: LiveData<SwitchState>
+        get() = _nfcOuter
+
+    private val _nfcOuter: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.OUTER_NFC
+        MutableLiveData(manager.doGetSwitchOption(node))
+    }
+
     override fun onCreate() {
         super.onCreate()
         keySerial = manager.onRegisterVcuListener(listener = this)

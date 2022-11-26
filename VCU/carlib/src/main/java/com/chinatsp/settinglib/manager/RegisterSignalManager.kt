@@ -79,6 +79,9 @@ class RegisterSignalManager private constructor() {
                     add(CarCabinManager.ID_TELLTALE_REAR_FOG_LIGHT)
                     //================增加灯光 结束================
 
+//                    add(CarCabinManager.ID_VCS_KEY_AVM)
+                    add(CarCabinManager.ID_AVM_AVM_DISP_REQ)
+
 
 
                     this.remove(Constant.INVALID)

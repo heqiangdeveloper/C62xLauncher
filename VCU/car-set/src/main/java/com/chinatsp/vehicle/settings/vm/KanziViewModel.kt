@@ -8,6 +8,7 @@ import com.chinatsp.settinglib.listener.ISignalListener
 import com.chinatsp.settinglib.manager.access.DoorManager
 import com.chinatsp.settinglib.manager.access.SternDoorManager
 import com.chinatsp.settinglib.manager.access.WindowManager
+import com.chinatsp.settinglib.manager.lamp.LightManager
 import com.chinatsp.vehicle.controller.annotation.IPart
 import com.chinatsp.vehicle.controller.annotation.Model
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
@@ -19,6 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class KanziViewModel @Inject constructor(app: Application, model: BaseModel) :
     BaseViewModel(app, model), ISignalListener {
+
+    private val lightManager: LightManager get() = LightManager.instance
 
     private val doorManager: DoorManager get() = DoorManager.instance
 
@@ -164,12 +167,13 @@ class KanziViewModel @Inject constructor(app: Application, model: BaseModel) :
     val headLamps: LiveData<Int>
         get() = _headLamps
 
-    //前大灯状态
-    //0 关闭
-    //1 近光
-    //2 远光
+    //前大灯状态: 0 关闭; 1 近光; 2 远光
     private val _headLamps: MutableLiveData<Int> by lazy {
-        MutableLiveData(0)
+        lowLamp = lightManager.obtainLightState(Model.LIGHT_COMMON, Constant.LOW_LAMP) ?: lowLamp
+        highLamp = lightManager.obtainLightState(Model.LIGHT_COMMON, Constant.HIGH_LAMP) ?: highLamp
+//        val expect = mergeHeadLampValue()
+        val expect = if (highLamp == ON) 0x2 else if (ON == lowLamp) 0x1 else 0x0
+        MutableLiveData(expect)
     }
 
     val brakeLamps: LiveData<Int>
@@ -190,7 +194,8 @@ class KanziViewModel @Inject constructor(app: Application, model: BaseModel) :
         get() = _rearFogLamps
 
     private val _rearFogLamps: MutableLiveData<Int> by lazy {
-        MutableLiveData(0)
+        val value = lightManager.obtainLightState(Model.LIGHT_COMMON, Constant.B_FOG_LAMP)
+        MutableLiveData(value)
     }
 
 
@@ -199,12 +204,14 @@ class KanziViewModel @Inject constructor(app: Application, model: BaseModel) :
         keySerial = doorManager.onRegisterVcuListener(listener = this)
         windowManager.onRegisterVcuListener(listener = this)
         sternDoorManager.onRegisterVcuListener(listener = this)
+        lightManager.onRegisterVcuListener(listener = this)
     }
 
     override fun onDestroy() {
         doorManager.unRegisterVcuListener(serial = keySerial)
         windowManager.unRegisterVcuListener(serial = keySerial)
         sternDoorManager.unRegisterVcuListener(serial = keySerial)
+        lightManager.unRegisterVcuListener(serial = keySerial)
         super.onDestroy()
     }
 
@@ -220,27 +227,28 @@ class KanziViewModel @Inject constructor(app: Application, model: BaseModel) :
         }
     }
 
-    private fun onHeadLampChanged() {
+    private fun mergeHeadLampValue(): Int {
         val actual = headLamps.value!!
         val isLow = ON == lowLamp
         val isHigh = ON == highLamp
+        var result = actual
         do {
             if (0x0 == actual) {
                 if (isHigh) {
-                    doUpdate(_headLamps, HIGH_ON)
+                    result = HIGH_ON
                     break
                 }
                 if (isLow) {
-                    doUpdate(_headLamps, LOW_ON)
+                    result = LOW_ON
                     break
                 }
             } else if (0x1 == actual) {
                 if (isHigh) {
-                    doUpdate(_headLamps, HIGH_ON)
+                    result = HIGH_ON
                     break
                 }
                 if (!isLow) {
-                    doUpdate(_headLamps, OFF)
+                    result = OFF
                     break
                 }
             } else if (0x2 == actual) {
@@ -248,23 +256,26 @@ class KanziViewModel @Inject constructor(app: Application, model: BaseModel) :
                     break
                 }
                 if (isLow) {
-                    doUpdate(_headLamps, LOW_ON)
+                    result = LOW_ON
                     break
                 }
-                doUpdate(_headLamps, OFF)
+                result = OFF
             }
         } while (false)
+        return result
     }
 
     private fun onLightSignalChanged(part: Int, signal: Int, value: Int) {
         when (signal) {
             Constant.LOW_LAMP -> {
                 lowLamp = value
-                onHeadLampChanged()
+                val expect = mergeHeadLampValue()
+                doUpdate(_headLamps, expect)
             }
             Constant.HIGH_LAMP -> {
                 highLamp = value
-                onHeadLampChanged()
+                val expect = mergeHeadLampValue()
+                doUpdate(_headLamps, expect)
             }
             Constant.F_FOG_LAMP -> {}
             Constant.B_FOG_LAMP -> {
@@ -310,6 +321,5 @@ class KanziViewModel @Inject constructor(app: Application, model: BaseModel) :
             else -> {}
         }
     }
-
 
 }

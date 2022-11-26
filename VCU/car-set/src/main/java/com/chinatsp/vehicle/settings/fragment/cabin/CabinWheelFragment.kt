@@ -199,6 +199,7 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
         binding.wheelAutomaticHeating.setOnClickListener(this::onViewClick)
     }
     var fragment: DialogFragment? = null
+
     private fun showDialogFragment(serial: String) {
         if (fragment?.isVisible == true) {
             return
@@ -212,7 +213,7 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
             fragment = SteeringHeatDialogFragment()
         }
         activity?.supportFragmentManager?.let {
-            fragment?.show(it, (fragment as SteeringKeysDialogFragment)::javaClass.name)
+            fragment?.show(it, fragment!!.javaClass.name)
         }
     }
 

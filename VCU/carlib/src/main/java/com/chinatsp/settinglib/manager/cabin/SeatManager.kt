@@ -165,7 +165,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
     }
 
     private fun writeProperty(volume: Volume, value: Int): Boolean {
-        return volume.isValid(value) && writeProperty(volume.type.set.signal, value, Origin.CABIN)
+        return writeProperty(volume.type.set.signal, value, Origin.CABIN)
     }
 
     private fun writeProperty(node: SwitchNode, status: Boolean, atomic: SwitchState): Boolean {
@@ -423,7 +423,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
 
     private fun isAdjustAction(action: Int): Boolean {
         return Action.PLUS == action || Action.MINUS == action
-                || Action.FIXED == action || Action.MAX == action || Action.MAX == action
+                || Action.FIXED == action || Action.MIN == action || Action.MAX == action
     }
 
 //    private fun doControlChairKnead(parcel: CommandParcel) {

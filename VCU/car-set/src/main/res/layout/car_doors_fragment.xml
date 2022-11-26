@@ -136,6 +136,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <com.common.xui.widget.button.switchbutton.SwitchButton
+                            android:id="@+id/nfc_switch"
                             style="@style/switch_button_style"
                             android:checked="true"
                             app:layout_constraintBottom_toBottomOf="parent"

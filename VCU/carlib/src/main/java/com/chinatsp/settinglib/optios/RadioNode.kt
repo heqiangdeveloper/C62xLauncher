@@ -4,7 +4,6 @@ import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.hvac.CarHvacManager
 import android.car.hardware.mcu.CarMcuManager
 import com.chinatsp.settinglib.VcuUtils
-import com.chinatsp.settinglib.bean.Norm
 import com.chinatsp.settinglib.bean.RNorm
 import com.chinatsp.settinglib.sign.Origin
 import timber.log.Timber
@@ -25,15 +24,9 @@ enum class RadioNode(
 ) {
 
     AC_COMFORT(
-        get = RNorm(
-            values = intArrayOf(0x1, 0x2, 0x3),
-            signal = CarCabinManager.ID_ACCMFTSTSDISP
-        ),
-        set = RNorm(
-            values = intArrayOf(0x1, 0x2, 0x3),
-            origin = Origin.HVAC,
-            signal = CarHvacManager.ID_HVAC_AVN_AC_AUTO_CMFT_SWT
-        ),
+        get = RNorm(values = intArrayOf(0x1, 0x2, 0x3), signal = CarCabinManager.ID_ACCMFTSTSDISP),
+        set = RNorm(values = intArrayOf(0x1, 0x2, 0x3), origin = Origin.HVAC,
+            signal = CarHvacManager.ID_HVAC_AVN_AC_AUTO_CMFT_SWT),
         def = 0x1
     ),
 
@@ -45,14 +38,10 @@ enum class RadioNode(
      * UE 黑夜关闭
      */
     DOOR_DRIVE_LOCK(
-        get = RNorm(
-            values = intArrayOf(0x1, 0x2, 0x3, 0x4, 0x5),
-            signal = CarCabinManager.ID_VSPEED_LOCKING_STATUE
-        ),
-        set = RNorm(
-            values = intArrayOf(0x1, 0x2, 0x3, 0x4, 0x5),
-            signal = CarCabinManager.ID_VSPEED_LOCK
-        ),
+        get = RNorm(values = intArrayOf(0x1, 0x2, 0x3, 0x4, 0x5),
+            signal = CarCabinManager.ID_VSPEED_LOCKING_STATUE),
+        set = RNorm(values = intArrayOf(0x1, 0x2, 0x3, 0x4, 0x5),
+            signal = CarCabinManager.ID_VSPEED_LOCK),
         def = 0x4
     ),
 
@@ -63,14 +52,10 @@ enum class RadioNode(
      * UE 默认关闭
      */
     DOOR_FLAMEOUT_UNLOCK(
-        get = RNorm(
-            values = intArrayOf(0x1, 0x2),
-            signal = CarCabinManager.ID_CUTOFF_UNLOCK_DOORS_STATUE
-        ),
-        set = RNorm(
-            values = intArrayOf(0x1, 0x2),
-            signal = CarCabinManager.ID_CUT_OFF_UNLOCK_DOORS
-        ),
+        get = RNorm(values = intArrayOf(0x1, 0x2),
+            signal = CarCabinManager.ID_CUTOFF_UNLOCK_DOORS_STATUE),
+        set = RNorm(values = intArrayOf(0x1, 0x2),
+            signal = CarCabinManager.ID_CUT_OFF_UNLOCK_DOORS),
         inactive = intArrayOf(0x3),
         def = 0x1
     ),
@@ -81,15 +66,12 @@ enum class RadioNode(
      * get -> 0x0:Reserved; 0x1:OFF; 0x2:On Mode 1; 0x3:On Mode 2; 0x4~0x6:Reserved; 0x7:Invalid
      */
     STERN_SMART_ENTER(
-        get = RNorm(
-            values = intArrayOf(0x1, 0x2, 0x3),
-            signal = CarCabinManager.ID_PTM_SMART_ENTRY_PTM_STS
-        ),
-        set = RNorm(
-            values = intArrayOf(0x1, 0x2, 0x3),
-            signal = CarCabinManager.ID_PTM_SMT_ENTRY_SET
-        ),
-        inactive = intArrayOf(0x0, 0x4, 0x5, 0x6, 0x7),
+        get = RNorm(values = intArrayOf(0x1, 0x2, 0x3),
+            signal = CarCabinManager.ID_PTM_SMART_ENTRY_PTM_STS),
+        set = RNorm(values = intArrayOf(0x1, 0x2, 0x3),
+            signal = CarCabinManager.ID_PTM_SMT_ENTRY_SET),
+//        inactive = intArrayOf(0x0, 0x4, 0x5, 0x6, 0x7),
+        inactive = intArrayOf(0x7),
         def = 0x1
     ),
     //-------------------车门车窗--结束-------------------
@@ -111,14 +93,14 @@ enum class RadioNode(
      */
     ADAS_LIMBER_LEAVE(
         get = RNorm(
-            values = intArrayOf(0x4,0x1, 0x2, 0x3),
+            values = intArrayOf(0x4, 0x1, 0x2, 0x3),
             signal = CarCabinManager.ID_OBJ_DETECTION_RES
         ),
         set = RNorm(
-            values = intArrayOf(0x4,0x1, 0x2, 0x3),
+            values = intArrayOf(0x4, 0x1, 0x2, 0x3),
             signal = CarCabinManager.ID_OBJ_DETECTION_SWT
         ),
-        inactive = intArrayOf(0x0, 0x4, 0x5, 0x6, 0x7),
+//        inactive = intArrayOf(0x0, 0x4, 0x5, 0x6, 0x7),
         def = 0x1
     ),
 
@@ -165,7 +147,7 @@ enum class RadioNode(
             values = intArrayOf(0x1, 0x2),
             signal = CarCabinManager.ID_LDW_LKS_TJAICA_SWT
         ),
-        inactive = intArrayOf(0x0, 0x3),
+//        inactive = intArrayOf(0x0, 0x3),
         def = 0x2
     ),
 
@@ -186,7 +168,7 @@ enum class RadioNode(
             values = intArrayOf(0x2, 0x1),
             signal = CarCabinManager.ID_LDW_LKS_SENSITIVITY_SWT
         ),
-        inactive = intArrayOf(0x2, 0x3),
+        inactive = intArrayOf(0x2),
         def = 0x1
     ),
 
@@ -242,7 +224,7 @@ enum class RadioNode(
     DRIVE_EPS_MODE(
         get = RNorm(values = intArrayOf(0x1, 0x3), signal = CarCabinManager.ID_STEERING_FEEL_STATE),
         set = RNorm(values = intArrayOf(0x1, 0x3), signal = CarCabinManager.ID_STEERING_FEEL_SET),
-        inactive = intArrayOf(0x0, 0x4, 0x5, 0x6, 0x7),
+//        inactive = intArrayOf(0x0, 0x4, 0x5, 0x6, 0x7),
         def = 0x1
     ),
 
@@ -262,7 +244,7 @@ enum class RadioNode(
             values = intArrayOf(0x1, 0x2, 0x3, 0x4, 0x5, 0x6),
             signal = CarCabinManager.ID_FOLLOW_ME_HOME_SET
         ),
-        inactive = intArrayOf(0x0, 0x7),
+//        inactive = intArrayOf(0x0, 0x7),
         def = 0x1
     ),
 
@@ -280,7 +262,7 @@ enum class RadioNode(
             values = intArrayOf(0x2, 0x3, 0x4),
             signal = CarCabinManager.ID_TURNLIGHT_FOR_LANE_CHANGE_SET
         ),
-        inactive = intArrayOf(0x0, 0x1),
+//        inactive = intArrayOf(0x0, 0x1),
         def = 0x2
     ),
 
@@ -298,7 +280,7 @@ enum class RadioNode(
             values = intArrayOf(0x1, 0x2, 0x3),
             signal = CarCabinManager.ID_HUM_CERE_SENSE_SW_SET
         ),
-        inactive = intArrayOf(0x0),
+//        inactive = intArrayOf(0x0),
         def = 0x1
     ),
     //-------------------灯光设置--结束-------------------
@@ -400,7 +382,7 @@ enum class RadioNode(
             values = intArrayOf(0x1, 0x2, 0x3, 0x4),
             signal = CarCabinManager.ID_HUM_ATMOS_MOD_TYPE
         ),
-        inactive = intArrayOf(0x0, 0x5, 0x6, 0x7),
+//        inactive = intArrayOf(0x0, 0x5, 0x6, 0x7),
         def = 0x1
     ),
 
@@ -422,7 +404,8 @@ enum class RadioNode(
      *        0x3: N (Neutral) 0x4: D (Drive) 0xB: M(Manual) 0xC: L (Reserved) 0xD: S
      */
     GEARS(
-        get = RNorm(values = intArrayOf(0x1, 0x2, 0x3, 0x4), signal = CarCabinManager.ID_TCU_SELECTED_GEAR),
+        get = RNorm(values = intArrayOf(0x1, 0x2, 0x3, 0x4),
+            signal = CarCabinManager.ID_TCU_SELECTED_GEAR),
         set = RNorm(values = intArrayOf(0x1, 0x2, 0x3, 0x4), signal = -1),
 //        inactive = intArrayOf(0x1),
         def = 0x1

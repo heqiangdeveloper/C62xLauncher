@@ -160,6 +160,9 @@ class OtherCommandProducer : ICommandProducer {
     }
 
     private fun attemptWheelCommand(slots: Slots): CarCmd? {
+        if (TextUtils.isEmpty(slots.name) || TextUtils.isEmpty(slots.mode)) {
+            return null
+        }
         if (isMatch(WHEELS, slots.name)) {
             val action = obtainSwitchAction(slots.operation)
             if ((Action.VOID != action) && slots.mode.contains(HEAT)) {

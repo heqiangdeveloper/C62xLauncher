@@ -38,6 +38,20 @@ class DoorManager private constructor() : BaseManager(), IOptionManager, IAccess
         }
     }
 
+    private val innerNfc: SwitchState by lazy {
+        val node = SwitchNode.INNER_NFC
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+        }
+    }
+
+    private val outerNfc: SwitchState by lazy {
+        val node = SwitchNode.OUTER_NFC
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+        }
+    }
+
     private val driveAutoLock: RadioState by lazy {
         val node = RadioNode.DOOR_DRIVE_LOCK
         return@lazy createAtomicInteger(node) { result, value ->
@@ -62,12 +76,11 @@ class DoorManager private constructor() : BaseManager(), IOptionManager, IAccess
     override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int>().apply {
-                add(RadioNode.DOOR_DRIVE_LOCK.get.signal)
-                /**行车自动落锁*/
-                add(RadioNode.DOOR_FLAMEOUT_UNLOCK.get.signal)
-                /**熄火自动解锁*/
-                add(SwitchNode.DOOR_SMART_ENTER.get.signal)
-                /**车门智能进入*/
+                add(RadioNode.DOOR_DRIVE_LOCK.get.signal) /**行车自动落锁*/
+                add(RadioNode.DOOR_FLAMEOUT_UNLOCK.get.signal) /**熄火自动解锁*/
+                add(SwitchNode.DOOR_SMART_ENTER.get.signal) /**车门智能进入*/
+                add(SwitchNode.INNER_NFC.get.signal)
+                add(SwitchNode.OUTER_NFC.get.signal)
 
                 add(CarCabinManager.ID_DR_DOOR_OPEN)
                 add(CarCabinManager.ID_PA_DOOR_OPEN)
@@ -94,6 +107,8 @@ class DoorManager private constructor() : BaseManager(), IOptionManager, IAccess
     override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
             SwitchNode.DOOR_SMART_ENTER -> smartAccess.deepCopy()
+            SwitchNode.INNER_NFC -> innerNfc.deepCopy()
+            SwitchNode.OUTER_NFC -> outerNfc.deepCopy()
             else -> null
         }
     }
@@ -101,6 +116,12 @@ class DoorManager private constructor() : BaseManager(), IOptionManager, IAccess
     override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
         return when (node) {
             SwitchNode.DOOR_SMART_ENTER -> {
+                writeProperty(node.set.signal, node.value(status), node.set.origin)
+            }
+            SwitchNode.INNER_NFC -> {
+                writeProperty(node.set.signal, node.value(status), node.set.origin)
+            }
+            SwitchNode.OUTER_NFC -> {
                 writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
             else -> false
@@ -161,6 +182,12 @@ class DoorManager private constructor() : BaseManager(), IOptionManager, IAccess
             }
             CarCabinManager.ID_REAR_RIGHT_DOOR_OPEN -> {
                 onSignalChanged(IPart.R_B, Model.ACCESS_DOOR, p.propertyId, p.value as Int)
+            }
+            SwitchNode.INNER_NFC.get.signal -> {
+                onSwitchChanged(SwitchNode.INNER_NFC, innerNfc, p)
+            }
+            SwitchNode.OUTER_NFC.get.signal -> {
+                onSwitchChanged(SwitchNode.OUTER_NFC, outerNfc, p)
             }
             else -> {}
         }

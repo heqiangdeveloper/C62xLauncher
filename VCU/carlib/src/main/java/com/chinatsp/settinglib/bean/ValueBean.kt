@@ -10,8 +10,8 @@ package com.chinatsp.settinglib.bean
 class ValueBean {
     private var value: Int = 0
 
-    fun setValue(input: Int, block: (Int) -> Int) {
-        value = block(input)
+    fun setValue(input: Int, block: ((Int) -> Int)? = null) {
+        value = if (null != block) block(input) else input
     }
 
     fun getValue(): Int {

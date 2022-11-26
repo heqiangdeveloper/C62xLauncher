@@ -207,8 +207,7 @@ class BrightnessManager : BaseManager(), IProgressManager, ISwitchManager {
                 onSwitchChanged(SwitchNode.DARK_LIGHT_MODE, darkLightMode, property)
                 val actual = darkLightMode.get()
                 Timber.e("====DARK_LIGHT_MODE=======last=$last, actual:$actual")
-//                if (last xor actual)
-                    doSwitchLightDarkMode(darkLightMode.get())
+                if (last xor actual) doSwitchLightDarkMode(darkLightMode.get())
             }
             else -> {}
         }

@@ -1,6 +1,7 @@
 package com.chinatsp.vehicle.controller.producer
 
 import android.text.TextUtils
+import com.chinatsp.vehicle.controller.LogManager
 import com.chinatsp.vehicle.controller.annotation.*
 import com.chinatsp.vehicle.controller.bean.CarCmd
 import com.chinatsp.vehicle.controller.semantic.Slots
@@ -74,6 +75,7 @@ class SeatCommandProducer : ICommandProducer {
         command.value = value
         command.car = ICar.CHAIR
         command.act = IAct.KNEAD
+        command.step = if (-1 != value) value else 1
         command.part = checkoutPart(slots)
         command.soundDirection = obtainDirection(slots.user)
         return command
@@ -113,6 +115,7 @@ class SeatCommandProducer : ICommandProducer {
         command.value = value
         command.act = IAct.COLD
         command.car = ICar.CHAIR
+        command.step = if (-1 != value) value else 1
         command.part = checkoutPart(slots)
         command.soundDirection = obtainDirection(slots.user)
         return command
@@ -167,6 +170,7 @@ class SeatCommandProducer : ICommandProducer {
         command.value = value
         command.act = IAct.HEAT
         command.car = ICar.CHAIR
+        command.step = if (-1 != value) value else 1
         command.part = checkoutPart(slots)
         command.soundDirection = obtainDirection(slots.user)
         return command
@@ -244,7 +248,11 @@ class SeatCommandProducer : ICommandProducer {
 
     private fun checkoutPart(slots: Slots): Int {
         var part = IPart.VOID
-        if (isContains(slots.name, Keywords.L_F)) {
+        if (slots.name.contains(Keywords.ALL)) {
+            part = IPart.L_F or IPart.L_B or IPart.R_F or IPart.R_B
+        } else if (slots.name.contains(Keywords.PASSENGER)) {
+            part = IPart.L_B or IPart.R_F or IPart.R_B
+        } else if (isContains(slots.name, Keywords.L_F)) {
             part = part or IPart.L_F
         } else if (isContains(slots.name, Keywords.L_R)) {
             part = part or IPart.L_B
@@ -260,8 +268,6 @@ class SeatCommandProducer : ICommandProducer {
             part = part or IPart.L_F or IPart.R_F
         } else if (isContains(slots.name, Keywords.B_R)) {
             part = part or IPart.L_B or IPart.R_B
-        } else if (slots.name.contains(Keywords.ALL)) {
-            part = IPart.L_F or IPart.L_B or IPart.R_F or IPart.R_B
         } else {
             part = IPart.L_F or IPart.L_B or IPart.R_F or IPart.R_B or IPart.VAGUE
         }

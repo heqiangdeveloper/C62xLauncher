@@ -43,7 +43,6 @@ enum class SwitchNode(
     DRIVE_SAFE_FORTIFY_SOUND(
         get = Norm(on = 0x2, off = 0x1, signal = CarCabinManager.ID_LOCK_SUCCESS_SOUND_STATUE),
         set = Norm(on = 0x2, off = 0x1, signal = CarCabinManager.ID_LOCK_SUCCESS_SOUND_SET),
-        inactive = intArrayOf(0x0),
         default = false
     ),
 
@@ -64,10 +63,8 @@ enum class SwitchNode(
      */
     AC_AUTO_ARID(
         get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ACSELFSTSDISP),
-        set = Norm(
-            on = 0x1, off = 0x2, origin = Origin.HVAC,
-            signal = CarHvacManager.ID_HVAC_AVN_SELF_DESICAA_SWT
-        ),
+        set = Norm(on = 0x1, off = 0x2, origin = Origin.HVAC,
+            signal = CarHvacManager.ID_HVAC_AVN_SELF_DESICAA_SWT),
         default = true
     ),
 
@@ -78,14 +75,10 @@ enum class SwitchNode(
      * get -> 前除霜显示图标 0x0: Not display; 0x1: Display; 0x2: Reserved; 0x3: Error
      */
     AC_AUTO_DEMIST(
-        get = Norm(
-            on = 0x1, off = 0x0, origin = Origin.HVAC,
-            signal = CarHvacManager.ID_HAVC_AC_DIS_DEFROST
-        ),
-        set = Norm(
-            on = 0x1, off = 0x2, origin = Origin.HVAC,
-            signal = CarHvacManager.ID_HVAC_AVN_KEY_DEFROST
-        ),
+        get = Norm(on = 0x1, off = 0x0, origin = Origin.HVAC,
+            signal = CarHvacManager.ID_HAVC_AC_DIS_DEFROST),
+        set = Norm(on = 0x1, off = 0x2, origin = Origin.HVAC,
+            signal = CarHvacManager.ID_HVAC_AVN_KEY_DEFROST),
         inactive = intArrayOf(0x3),
         default = false
     ),
@@ -97,10 +90,8 @@ enum class SwitchNode(
      */
     AC_ADVANCE_WIND(
         get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ACPREVENTNDISP),
-        set = Norm(
-            on = 0x1, off = 0x2, origin = Origin.HVAC,
-            signal = CarHvacManager.ID_HVAC_AVN_UNLOCK_BREATHABLE_ENABLE
-        ),
+        set = Norm(on = 0x1, off = 0x2, origin = Origin.HVAC,
+            signal = CarHvacManager.ID_HVAC_AVN_UNLOCK_BREATHABLE_ENABLE),
         default = true
     ),
 
@@ -135,7 +126,6 @@ enum class SwitchNode(
     SEAT_HEAT_ALL(
         get = Norm(on = 0x2, off = 0x1, signal = -1),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_DSM_AUTO_HEAT_SW),
-        inactive = intArrayOf(0x0),
         default = true,
         careOn = false
     ),
@@ -219,7 +209,6 @@ enum class SwitchNode(
     DRIVE_WIRELESS_CHARGING_LAMP(
         get = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_BDC_ALC_CONSLAMPSWT_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HUM_ALC_CONSLAMP_SWT),
-        inactive = intArrayOf(0x0),
         default = true
     ),
     //-------------------座舱--结束-------------------
@@ -288,17 +277,12 @@ enum class SwitchNode(
      * 车辆音效--声音--触摸提示音
      */
     TOUCH_PROMPT_TONE(
-        get = Norm(
-            on = CarAudioManager.BEEP_VOLUME_LEVEL_MIDDLE,
-            off = CarAudioManager.BEEP_VOLUME_LEVEL_CLOSE, origin = Origin.SPECIAL
-        ),
-        set = Norm(
-            on = CarAudioManager.BEEP_VOLUME_LEVEL_MIDDLE,
-            off = CarAudioManager.BEEP_VOLUME_LEVEL_CLOSE, origin = Origin.SPECIAL
-        ),
+        get = Norm(on = CarAudioManager.BEEP_VOLUME_LEVEL_MIDDLE,
+            off = CarAudioManager.BEEP_VOLUME_LEVEL_CLOSE, origin = Origin.SPECIAL),
+        set = Norm(on = CarAudioManager.BEEP_VOLUME_LEVEL_MIDDLE,
+            off = CarAudioManager.BEEP_VOLUME_LEVEL_CLOSE, origin = Origin.SPECIAL),
         inactive = intArrayOf(
-            CarAudioManager.BEEP_VOLUME_LEVEL_LOW, CarAudioManager.BEEP_VOLUME_LEVEL_HIGH
-        ),
+            CarAudioManager.BEEP_VOLUME_LEVEL_LOW, CarAudioManager.BEEP_VOLUME_LEVEL_HIGH),
         default = false,
         careOn = false
     ),
@@ -325,10 +309,7 @@ enum class SwitchNode(
      * set -> 遥控升降窗软开关 0x0: Inactive; 0x1: Enabled; 0x2: Disabled; 0x3: Reserved
      */
     WIN_REMOTE_CONTROL(
-        get = Norm(
-            on = 0x1, off = 0x2,
-            signal = CarCabinManager.ID_REMOTE_WINDOW_RISE_FALL_STATES
-        ),
+        get = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_REMOTE_WINDOW_RISE_FALL_STATES),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_REMOTE_WINDOW_RISE_FALL_SW),
         inactive = intArrayOf(0x3),
         default = false
@@ -364,12 +345,11 @@ enum class SwitchNode(
      *
      */
     RAIN_WIPER_REPAIR(
-        get = Norm(
-            on = 0x1, off = 0x2,
-            signal = CarCabinManager.ID_FRONT_WIPER_MAINTENNANCE_STATES
-        ),
+        get = Norm(on = 0x1, off = 0x2,
+            signal = CarCabinManager.ID_FRONT_WIPER_MAINTENNANCE_STATES),
         set = Norm(on = 0x2, off = 0x3, signal = CarCabinManager.ID_FRONT_WIPER_MAINTENNANCE_SW),
-        inactive = intArrayOf(0x1, 0x4, 0x3),
+//        inactive = intArrayOf(0x1, 0x4, 0x3),
+        inactive = intArrayOf(0x0, 0x3),
         default = false
     ),
 
@@ -426,7 +406,7 @@ enum class SwitchNode(
     BACK_MIRROR_FOLD(
         get = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_MIRROR_FADE_IN_OUT_STATUE),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_MIRROR_FADE_IN_OUT_SET),
-        inactive = intArrayOf(0x0),
+//        inactive = intArrayOf(0x0),
         default = true
     ),
 
@@ -485,7 +465,7 @@ enum class SwitchNode(
     ADAS_LIMBER_LEAVE(
         get = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_FRONT_VEHICLE_DRIVE_AWAY_RES),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_FRONT_VEHICLE_DRIVE_AWAY_SWT),
-        inactive = intArrayOf(0x0),
+//        inactive = intArrayOf(0x0),
         default = true
     ),
 
@@ -592,7 +572,7 @@ enum class SwitchNode(
     ADAS_DOW(
         get = Norm(on = 0x3, off = 0x1, signal = CarCabinManager.ID_AVM_DOW_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_APA_AVM_DOW_SWT),
-        inactive = intArrayOf(0x0, 0x2, 0x4, 0x5, 0x6, 0x7),
+        inactive = intArrayOf(0x0, 0x2, 0x4, 0x5),
         default = true,
         careOn = false
     ) {
@@ -614,7 +594,7 @@ enum class SwitchNode(
     ADAS_BSD(
         get = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_AVM_BSD_SWT_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_APA_BSD_SWT),
-        inactive = intArrayOf(0x0),
+        inactive = intArrayOf(0x3),
         default = true
     ),
 
@@ -626,7 +606,7 @@ enum class SwitchNode(
     ADAS_BSC(
         get = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_AVM_BSD_DISP_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_APA_BSD_DISP_SWT),
-        inactive = intArrayOf(0x0, 0x3),
+        inactive = intArrayOf(0x3),
         default = true
     ),
 
@@ -638,7 +618,7 @@ enum class SwitchNode(
     ADAS_MEB(
         get = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_MEB_SWT_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_APA_MEB_SWT),
-        inactive = intArrayOf(0x0, 0x3),
+        inactive = intArrayOf(0x3),
         default = true
     ),
 
@@ -680,15 +660,9 @@ enum class SwitchNode(
      *        0x0:Disabled; 0x1:low Varient(reserved); 0x2:Middle Varient(reserved); 0x3:Hign Varient
      */
     LIGHT_CEREMONY_SENSE(
-        get = Norm(
-            on = 0x3, off = 0x0,
-            signal = CarCabinManager.ID_BCM_EL_CERE_SENSE_STATUS
-        ),
-        set = Norm(
-            on = 0x4, off = 0x1,
-            signal = CarCabinManager.ID_HMI_EL_CERE_SENSE_TYPE_SET
-        ),
-        inactive = intArrayOf(0x1, 0x2),
+        get = Norm(on = 0x3, off = 0x0, signal = CarCabinManager.ID_BCM_EL_CERE_SENSE_STATUS),
+        set = Norm(on = 0x4, off = 0x1, signal = CarCabinManager.ID_HMI_EL_CERE_SENSE_TYPE_SET),
+//        inactive = intArrayOf(0x1, 0x2),
         default = false
     ),
 
@@ -733,8 +707,7 @@ enum class SwitchNode(
     ALC_LOCK_HINT(
         get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ALC_HUM_LUCK_SW_RESPONSE),
         set = Norm(
-            on = 0x1, off = 0x2, signal = CarCabinManager.ID_ALC_HUM_ALC_SW_LOCK_REMIND_ENABLE
-        ),
+            on = 0x1, off = 0x2, signal = CarCabinManager.ID_ALC_HUM_ALC_SW_LOCK_REMIND_ENABLE),
         default = false
     ),
 
@@ -779,8 +752,7 @@ enum class SwitchNode(
     ALC_SMART_MODE(
         get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_ALC_INTE_MODE_SW_RESPONSE),
         set = Norm(
-            on = 0x1, off = 0x2, signal = CarCabinManager.ID_ALC_HUM_ALC_INTELLIGENT_MODE_SW
-        ),
+            on = 0x1, off = 0x2, signal = CarCabinManager.ID_ALC_HUM_ALC_INTELLIGENT_MODE_SW),
         area = Area.AREA_TYPE_GLOBAL,
         default = true
     ),
@@ -861,7 +833,8 @@ enum class SwitchNode(
         default = false
     ) {
         override fun isActive(value: Int): Boolean {
-            return value in 0..3
+//            return value in 0..3
+            return value == 0x0 || value == 0x2 || value == 0x3
         }
 
         override fun isOn(value: Int): Boolean {
@@ -869,6 +842,29 @@ enum class SwitchNode(
             return 0x2 == value || 0x3 == value
         }
     },
+
+    /**
+     * get -> 0x0: Not forbidden; 0x1: Forbidden
+     * set -> 【设置】NFC读卡器禁用设置（高配HUM发送，低配HUM不发送此信号） [0x1,-1,0x0,0x4]
+     * 0x0: Invalid; 0x1: defaule; 0x2: Forbidden; 0x3: Active; 0x4: Reverse
+     */
+    INNER_NFC(
+        get = Norm(on = 0x0, off = 0x1, signal = -1),
+//        get = Norm(on = 0x0, off = 0x1, signal = CarCabinManager.ID_INNER_NFC_READER_FORBIDDEN),
+        set = Norm(on = 0x3, off = 0x2, signal = CarCabinManager.ID_HUM_NFC_FORBIDDEN_CMD),
+        default = false
+    ),
+    /**
+     * get -> 0x0: Not forbidden; 0x1: Forbidden
+     * set -> 【设置】NFC读卡器禁用设置（高配HUM发送，低配HUM不发送此信号） [0x1,-1,0x0,0x4]
+     * 0x0: Invalid; 0x1: defaule; 0x2: Forbidden; 0x3: Active; 0x4: Reverse
+     */
+    OUTER_NFC(
+//        get = Norm(on = 0x0, off = 0x1, signal = CarCabinManager.ID_EXT_NFC_READER_FORBIDDEN),
+        get = Norm(on = 0x0, off = 0x1, signal = -1),
+        set = Norm(on = 0x3, off = 0x2, signal = CarCabinManager.ID_HUM_NFC_FORBIDDEN_CMD),
+        default = false
+    ),
 
     INVALID(
         get = Norm(on = 0x1, off = 0x0, signal = -1),

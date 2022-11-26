@@ -107,12 +107,28 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
 
     private fun initSwitchOption() {
         initSwitchOption(SwitchNode.DOOR_SMART_ENTER, viewModel.smartDoorAccess)
+        syncNfcDisplay(timely = true)
+    }
+
+    private fun syncNfcDisplay(timely: Boolean = true){
+        val inner = viewModel.nfcInner.value?.get() ?: false
+        val outer = viewModel.nfcOuter.value?.get() ?: false
+        if (!timely) {
+            binding.nfcSwitch.setCheckedNoEvent(inner && outer)
+        } else {
+            binding.nfcSwitch.setCheckedImmediatelyNoEvent(inner && outer)
+        }
     }
 
     private fun addSwitchLiveDataListener() {
         viewModel.smartDoorAccess.observe(this) {
             doUpdateSwitch(SwitchNode.DOOR_SMART_ENTER, it)
-//            updateOptionActive()
+        }
+        viewModel.nfcInner.observe(this){
+            syncNfcDisplay(timely = true)
+        }
+        viewModel.nfcOuter.observe(this){
+            syncNfcDisplay(timely = true)
         }
     }
 
