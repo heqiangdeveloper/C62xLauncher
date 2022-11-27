@@ -42,10 +42,6 @@ class WheelManager private constructor() : BaseManager(), ISoundManager, ICmdExp
 
     private val swhFunction: SwitchState by lazy {
         val node = SwitchNode.DRIVE_WHEEL_AUTO_HEAT
-//        AtomicBoolean(node.default).apply {
-//            val result = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateSwitchValue(node, this, result)
-//        }
         return@lazy createAtomicBoolean(node, Constant.STEERING_HEAT_SWITCH) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
@@ -53,10 +49,6 @@ class WheelManager private constructor() : BaseManager(), ISoundManager, ICmdExp
 
     private val epsMode: RadioState by lazy {
         val node = RadioNode.DRIVE_EPS_MODE
-//        AtomicInteger(node.default).apply {
-//            val result = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateRadioValue(node, this, result)
-//        }
         return@lazy createAtomicInteger(node) { result, value ->
             doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
@@ -280,6 +272,7 @@ class WheelManager private constructor() : BaseManager(), ISoundManager, ICmdExp
 //            0x0:not heating 0x1:heating
             val actual = 0x1 == heating
             val isNeedSendSignal = expect xor actual
+            Timber.d("control wheel heat heating:$heating, actual:$actual, expect:$expect, isNeedSendSignal:$isNeedSendSignal")
             if (isNeedSendSignal && !command.isSent(IPart.L_F)) {
 //                方向盘加热设置: 0x0: Inactive;  0x1: On;  0x2: Off; 0x3: Reserved
                 val value = if (expect) 0x1 else 0x2

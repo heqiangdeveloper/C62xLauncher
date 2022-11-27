@@ -273,8 +273,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
     }
 
     private fun obtainKneadLevel(
-        @IPart part: Int, minLevel: Int, maxLevel: Int, offLevel: Int, step: Int,
-    ): Int {
+        @IPart part: Int, minLevel: Int, maxLevel: Int, offLevel: Int, step: Int): Int {
         val value = obtainKneadLevel(part) + 1
         val expect = if (offLevel == value) minLevel else value + step
         Timber.e("obtainKneadLevel--value:$value, step:${step}, expect:$expect")
@@ -373,7 +372,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
                 if (rbAct) command.rbExpect = expect
             }
             if (Action.FIXED == command.action) {
-                expect = calibrationValue(command.value, minLevel, maxLevel)
+                expect = calibrationValue(command.value + 1, minLevel, maxLevel)
                 if (lfAct) command.lfExpect = expect
                 if (lbAct) command.lbExpect = expect
                 if (rfAct) command.rfExpect = expect
@@ -1193,16 +1192,16 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
             }
         } else if (lfAct) {
             append = hint(lfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-            command.message = "好的，${command.slots?.name}${notion}${append}了"
+            command.message = "好的，${command.slots?.name}${notion}${append}"
         } else if (lrAct) {
             append = hint(lbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-            command.message = "好的，${command.slots?.name}${notion}${append}了"
+            command.message = "好的，${command.slots?.name}${notion}${append}"
         } else if (rfAct) {
             append = hint(rfLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-            command.message = "好的，${command.slots?.name}${notion}${append}了"
+            command.message = "好的，${command.slots?.name}${notion}${append}"
         } else if (rbAct) {
             append = hint(rbLevel, offLevel, minLevel, maxLevel, command.action, isSend)
-            command.message = "好的，${command.slots?.name}${notion}${append}了"
+            command.message = "好的，${command.slots?.name}${notion}${append}"
         }
     }
 
@@ -1221,7 +1220,11 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         return when (level) {
             off -> "${if (send) "已经" else ""}关闭了"
             min -> "${if (send) "已经" else ""}调整到最低了"
-            max -> if (Action.TURN_ON == action) "${if (send) "已经" else ""}打开了" else "${if (send) "已经" else ""}调整到最高了"
+            max -> if (Action.TURN_ON == action) {
+                "${if (send) "已经" else ""}打开了"
+            } else{
+                "${if (send) "已经" else ""}调整到最高了"
+            }
             else -> "${if (send) "已经" else ""}调整为${level - 1}档"
         }
     }

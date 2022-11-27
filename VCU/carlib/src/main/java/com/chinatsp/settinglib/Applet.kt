@@ -48,8 +48,9 @@ object Applet {
 //                map["service"] = "carControl"
 //                map["sceneStatus"] = "default"
 //                val data = GsonUtil.objectToString(map)
-                val appState = AppState(activeStatus = if (next) "fg" else "bg")
-                val data = GsonUtil.objectToString(appState)
+//                val appState = AppState(activeStatus = if (next) "fg" else "bg")
+//                val data = GsonUtil.objectToString(appState)
+                val data = "{\"data\": {},\"activeStatus\": \"${if (next) "fg" else "bg"}\",\"sceneStatus\":\"default\",\"service\": \"carControl\",\"scene\": \"carControl\",\"default\": \"360\"}"
                 Timber.d("uploadStatus send 360 state json:$data")
                 val intent: Intent = Intent()
                     .setAction("com.iflytek.autofly.business.response")

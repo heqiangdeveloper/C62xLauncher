@@ -31,7 +31,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.common.xui.widget.button.switchbutton.SwitchButton
-                    android:id="@+id/cabin_safe_fortify_switch"
+                    android:id="@+id/lock_success_hint_switch"
                     style="@style/switch_button_style"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -60,7 +60,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.common.xui.widget.button.switchbutton.SwitchButton
-                    android:id="@+id/cabin_safe_fortify_switch_error"
+                    android:id="@+id/lock_failed_hint_switch"
                     style="@style/switch_button_style"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

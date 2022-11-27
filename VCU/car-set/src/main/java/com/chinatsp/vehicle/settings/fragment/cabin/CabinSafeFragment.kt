@@ -77,15 +77,22 @@ class CabinSafeFragment : BaseFragment<SafeViewModel, CabinSafeFragmentBinding>(
 
     private fun onViewClick(it: View) {
         when (it) {
-            binding.cabinAcAutoWindsDetails -> showPopWindow(R.string.cabin_safe_video_safe_mode_content,
-                it)
+            binding.cabinAcAutoWindsDetails -> {
+                showPopWindow(R.string.cabin_safe_video_safe_mode_content, it)
+            }
         }
     }
 
     private fun addSwitchLiveDataListener() {
-        viewModel.fortifyToneFunction.observe(this) {
-            doUpdateSwitch(SwitchNode.DRIVE_SAFE_FORTIFY_SOUND, it)
-            updateSwitchEnable(SwitchNode.DRIVE_SAFE_FORTIFY_SOUND)
+//        viewModel.fortifyHint.observe(this) {
+//            doUpdateSwitch(SwitchNode.DRIVE_SAFE_FORTIFY_SOUND, it)
+//            updateSwitchEnable(SwitchNode.DRIVE_SAFE_FORTIFY_SOUND)
+//        }
+        viewModel.lockFailedHint.observe(this) {
+            doUpdateSwitch(SwitchNode.LOCK_FAILED_AUDIO_HINT, it)
+        }
+        viewModel.lockSuccessHint.observe(this) {
+            doUpdateSwitch(SwitchNode.LOCK_SUCCESS_AUDIO_HINT, it)
         }
         viewModel.videoModeFunction.observe(this) {
             doUpdateSwitch(SwitchNode.DRIVE_SAFE_VIDEO_PLAYING, it)
@@ -97,24 +104,31 @@ class CabinSafeFragment : BaseFragment<SafeViewModel, CabinSafeFragmentBinding>(
     }
 
     private fun initSwitchOption() {
-        initSwitchOption(SwitchNode.DRIVE_SAFE_FORTIFY_SOUND, viewModel.fortifyToneFunction)
+//        initSwitchOption(SwitchNode.DRIVE_SAFE_FORTIFY_SOUND, viewModel.fortifyToneFunction)
         initSwitchOption(SwitchNode.DRIVE_SAFE_VIDEO_PLAYING, viewModel.videoModeFunction)
+        initSwitchOption(SwitchNode.LOCK_FAILED_AUDIO_HINT, viewModel.lockFailedHint)
+        initSwitchOption(SwitchNode.LOCK_SUCCESS_AUDIO_HINT, viewModel.lockSuccessHint)
 
-        updateSwitchEnable(SwitchNode.DRIVE_SAFE_FORTIFY_SOUND)
+//        updateSwitchEnable(SwitchNode.DRIVE_SAFE_FORTIFY_SOUND)
+        updateSwitchEnable(SwitchNode.LOCK_FAILED_AUDIO_HINT)
+        updateSwitchEnable(SwitchNode.LOCK_SUCCESS_AUDIO_HINT)
     }
 
     override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
         return when (node) {
-            SwitchNode.DRIVE_SAFE_FORTIFY_SOUND -> binding.cabinSafeFortifySwitch
+//            SwitchNode.DRIVE_SAFE_FORTIFY_SOUND -> binding.cabinSafeFortifySwitch
             SwitchNode.DRIVE_SAFE_VIDEO_PLAYING -> binding.cabinSafeMovieSwitch
+            SwitchNode.LOCK_FAILED_AUDIO_HINT -> binding.lockFailedHintSwitch
+            SwitchNode.LOCK_SUCCESS_AUDIO_HINT -> binding.lockSuccessHintSwitch
             else -> null
         }
     }
 
     override fun obtainActiveByNode(node: SwitchNode): Boolean {
         return when (node) {
-            SwitchNode.DRIVE_SAFE_FORTIFY_SOUND -> viewModel.fortifyToneFunction.value?.enable()
-                ?: false
+//            SwitchNode.DRIVE_SAFE_FORTIFY_SOUND -> viewModel.fortifyHint.value?.enable() ?: false
+            SwitchNode.LOCK_FAILED_AUDIO_HINT -> viewModel.lockFailedHint.value?.enable() ?: false
+            SwitchNode.LOCK_SUCCESS_AUDIO_HINT -> viewModel.lockSuccessHint.value?.enable() ?: false
             SwitchNode.DRIVE_SAFE_VIDEO_PLAYING -> true
             else -> super.obtainActiveByNode(node)
         }
@@ -125,9 +139,17 @@ class CabinSafeFragment : BaseFragment<SafeViewModel, CabinSafeFragmentBinding>(
     }
 
     private fun setSwitchListener() {
-        binding.cabinSafeFortifySwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            doUpdateSwitchOption(SwitchNode.DRIVE_SAFE_FORTIFY_SOUND, buttonView, isChecked)
-            updateSwitchEnable(SwitchNode.DRIVE_SAFE_FORTIFY_SOUND)
+//        binding.cabinSafeFortifySwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+//            doUpdateSwitchOption(SwitchNode.DRIVE_SAFE_FORTIFY_SOUND, buttonView, isChecked)
+//            updateSwitchEnable(SwitchNode.DRIVE_SAFE_FORTIFY_SOUND)
+//        }
+        binding.lockFailedHintSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            doUpdateSwitchOption(SwitchNode.LOCK_FAILED_AUDIO_HINT, buttonView, isChecked)
+            updateSwitchEnable(SwitchNode.LOCK_FAILED_AUDIO_HINT)
+        }
+        binding.lockSuccessHintSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            doUpdateSwitchOption(SwitchNode.LOCK_SUCCESS_AUDIO_HINT, buttonView, isChecked)
+            updateSwitchEnable(SwitchNode.LOCK_SUCCESS_AUDIO_HINT)
         }
         binding.cabinSafeMovieSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.DRIVE_SAFE_VIDEO_PLAYING, buttonView, isChecked)

@@ -33,13 +33,29 @@ class SafeViewModel @Inject constructor(app: Application, model: BaseModel) :
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val fortifyToneFunction: LiveData<SwitchState>
-        get() = _fortifyToneFunction
+    val lockFailedHint: LiveData<SwitchState>
+        get() = _lockFailedHint
 
-    private val _fortifyToneFunction: MutableLiveData<SwitchState> by lazy {
-        val node = SwitchNode.DRIVE_SAFE_FORTIFY_SOUND
+    private val _lockFailedHint: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.LOCK_FAILED_AUDIO_HINT
         MutableLiveData(manager.doGetSwitchOption(node))
     }
+
+    val lockSuccessHint: LiveData<SwitchState>
+        get() = _lockSuccessHint
+
+    private val _lockSuccessHint: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.LOCK_SUCCESS_AUDIO_HINT
+        MutableLiveData(manager.doGetSwitchOption(node))
+    }
+
+//    val fortifyHint: LiveData<SwitchState>
+//        get() = _fortifyHint
+//
+//    private val _fortifyHint: MutableLiveData<SwitchState> by lazy {
+//        val node = SwitchNode.DRIVE_SAFE_FORTIFY_SOUND
+//        MutableLiveData(manager.doGetSwitchOption(node))
+//    }
 
 
     val videoModeFunction: LiveData<SwitchState>
@@ -56,19 +72,17 @@ class SafeViewModel @Inject constructor(app: Application, model: BaseModel) :
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         manager.unRegisterVcuListener(keySerial, keySerial)
+        super.onDestroy()
     }
 
 
     override fun onSwitchOptionChanged(status: SwitchState, node: SwitchNode) {
         when (node) {
-            SwitchNode.DRIVE_SAFE_FORTIFY_SOUND -> {
-                doUpdate(_fortifyToneFunction, status)
-            }
-            SwitchNode.DRIVE_SAFE_VIDEO_PLAYING -> {
-                doUpdate(_videoModeFunction, status)
-            }
+//            SwitchNode.DRIVE_SAFE_FORTIFY_SOUND -> doUpdate(_fortifyHint, status)
+            SwitchNode.DRIVE_SAFE_VIDEO_PLAYING -> doUpdate(_videoModeFunction, status)
+            SwitchNode.LOCK_FAILED_AUDIO_HINT -> doUpdate(_lockFailedHint, status)
+            SwitchNode.LOCK_SUCCESS_AUDIO_HINT -> doUpdate(_lockSuccessHint, status)
             else -> {}
         }
     }

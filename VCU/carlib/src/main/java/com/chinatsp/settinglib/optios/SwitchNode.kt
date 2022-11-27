@@ -35,16 +35,16 @@ enum class SwitchNode(
         default = true
     ),
 
-    /**
-     * 座舱--安全--设防提示音/锁车提示音
-     * set -> 0x1: No sound(default)   0x2: Sound
-     * get -> 0x0: Inactive 0x1: No sound(default) 0x2: Sound
-     */
-    DRIVE_SAFE_FORTIFY_SOUND(
-        get = Norm(on = 0x2, off = 0x1, signal = CarCabinManager.ID_LOCK_SUCCESS_SOUND_STATUE),
-        set = Norm(on = 0x2, off = 0x1, signal = CarCabinManager.ID_LOCK_SUCCESS_SOUND_SET),
-        default = false
-    ),
+//    /**
+//     * 座舱--安全--设防提示音/锁车提示音
+//     * set -> 0x1: No sound(default)   0x2: Sound
+//     * get -> 0x0: Inactive 0x1: No sound(default) 0x2: Sound
+//     */
+//    DRIVE_SAFE_FORTIFY_SOUND(
+//        get = Norm(on = 0x2, off = 0x1, signal = CarCabinManager.ID_LOCK_SUCCESS_SOUND_STATUE),
+//        set = Norm(on = 0x2, off = 0x1, signal = CarCabinManager.ID_LOCK_SUCCESS_SOUND_SET),
+//        default = false
+//    ),
 
     /**
      * 座舱--安全--视频安全模式(此开关应用自行控制，不走CAN信号)
@@ -866,6 +866,36 @@ enum class SwitchNode(
         default = false
     ),
 
+    /**
+     * 锁车成功提示音
+     * set -> 0x1: No sound(default)   0x2: Sound
+     * get -> 0x0: Inactive 0x1: No sound(default) 0x2: Sound; 0x3:invalid
+     */
+    LOCK_SUCCESS_AUDIO_HINT(
+        get = Norm(on = 0x2, off = 0x1, signal = CarCabinManager.ID_LOCK_SUCCESS_SOUND_STATUE),//LOCK_SUCCESS_SOUND_STATUE
+        set = Norm(on = 0x2, off = 0x1, signal = CarCabinManager.ID_LOCK_SUCCESS_SOUND_SET),//LOCK_SUCCESS_SOUND
+        default = true
+    ){
+        override fun isInactive(value: Int): Boolean {
+            return value == 0x3
+        }
+    },
+
+    /**
+     * 锁车失败提示音
+     * set -> 0x1: No sound(default)   0x2: Sound
+     * get -> 0x0: Inactive 0x1: No sound(default) 0x2: Sound; 0x3:invalid
+     */
+    LOCK_FAILED_AUDIO_HINT(
+        get = Norm(on = 0x2, off = 0x1, signal = CarCabinManager.ID_LOCK_FAILED_SOUND_STATUE),//LOCK_FAILED_SOUND_STATUE
+        set = Norm(on = 0x2, off = 0x1, signal = CarCabinManager.ID_LOCK_FAILED_SOUND_SET),//LOCK_FAILED_SOUND
+        default = true
+    ){
+        override fun isInactive(value: Int): Boolean {
+            return value == 0x3
+        }
+     },
+
     INVALID(
         get = Norm(on = 0x1, off = 0x0, signal = -1),
         set = Norm(on = 0x1, off = 0x2, signal = -1),
@@ -884,7 +914,7 @@ enum class SwitchNode(
 
     open fun isActive(value: Int) = (get.on == value) or (get.off == value)
 
-    fun isInactive(value: Int) = inactive?.contains(value) ?: false
+    open fun isInactive(value: Int) = inactive?.contains(value) ?: false
 
     open fun isOn(value: Int) = if (careOn) get.on == value else get.off != value
 

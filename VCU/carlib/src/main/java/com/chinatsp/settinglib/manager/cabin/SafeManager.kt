@@ -25,23 +25,23 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class SafeManager private constructor() : BaseManager(), ISwitchManager {
 
-    private val fortifyToneFunction: SwitchState by lazy {
-        val node = SwitchNode.DRIVE_SAFE_FORTIFY_SOUND
-//        AtomicBoolean(node.default).apply {
-//            val result = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateSwitchValue(node, this, result)
-//        }
+
+    private val alcLockHint: SwitchState by lazy {
+        val node = SwitchNode.ALC_LOCK_HINT
         return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
     }
 
-    private val alcLockHint: SwitchState by lazy {
-        val node = SwitchNode.ALC_LOCK_HINT
-//        AtomicBoolean(node.default).apply {
-//            val value = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateSwitchValue(node, this, value)
-//        }
+    private val lockFailedHint: SwitchState by lazy {
+        val node = SwitchNode.LOCK_FAILED_AUDIO_HINT
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+        }
+    }
+
+    private val lockSuccessHint: SwitchState by lazy {
+        val node = SwitchNode.LOCK_SUCCESS_AUDIO_HINT
         return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
@@ -70,7 +70,8 @@ class SafeManager private constructor() : BaseManager(), ISwitchManager {
                         value = node.value(node.default))
                     Timber.d("observer onChange node:$node value:$value")
                     doUpdateSwitchValue(node,
-                        videoModeFunction, node.isOn(value), instance::doSwitchChanged)}
+                        videoModeFunction, node.isOn(value), instance::doSwitchChanged)
+                }
             })
     }
 
@@ -78,8 +79,9 @@ class SafeManager private constructor() : BaseManager(), ISwitchManager {
         HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int>().apply {
                 /**设防提示音 开关*/
-                add(SwitchNode.DRIVE_SAFE_FORTIFY_SOUND.get.signal)
                 add(SwitchNode.DRIVE_SAFE_VIDEO_PLAYING.get.signal)
+                add(SwitchNode.LOCK_FAILED_AUDIO_HINT.get.signal)
+                add(SwitchNode.LOCK_SUCCESS_AUDIO_HINT.get.signal)
             }
             put(Origin.CABIN, cabinSet)
         }
@@ -108,12 +110,14 @@ class SafeManager private constructor() : BaseManager(), ISwitchManager {
 
     override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
-            //设防提示音
-            SwitchNode.DRIVE_SAFE_FORTIFY_SOUND.get.signal -> {
-                onSwitchChanged(SwitchNode.DRIVE_SAFE_FORTIFY_SOUND, fortifyToneFunction, property)
-            }
             SwitchNode.DRIVE_SAFE_VIDEO_PLAYING.get.signal -> {
                 onSwitchChanged(SwitchNode.DRIVE_SAFE_VIDEO_PLAYING, videoModeFunction, property)
+            }
+            SwitchNode.LOCK_FAILED_AUDIO_HINT.get.signal -> {
+                onSwitchChanged(SwitchNode.LOCK_FAILED_AUDIO_HINT, lockFailedHint, property)
+            }
+            SwitchNode.LOCK_SUCCESS_AUDIO_HINT.get.signal -> {
+                onSwitchChanged(SwitchNode.LOCK_SUCCESS_AUDIO_HINT, lockSuccessHint, property)
             }
             SwitchNode.ALC_LOCK_HINT.get.signal -> {
                 onSwitchChanged(SwitchNode.ALC_LOCK_HINT, alcLockHint, property)
@@ -132,15 +136,19 @@ class SafeManager private constructor() : BaseManager(), ISwitchManager {
 
     override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.DRIVE_SAFE_FORTIFY_SOUND -> fortifyToneFunction.deepCopy()
             SwitchNode.DRIVE_SAFE_VIDEO_PLAYING -> videoModeFunction.deepCopy()
+            SwitchNode.LOCK_FAILED_AUDIO_HINT -> lockFailedHint.deepCopy()
+            SwitchNode.LOCK_SUCCESS_AUDIO_HINT -> lockSuccessHint.deepCopy()
             else -> null
         }
     }
 
     override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
         return when (node) {
-            SwitchNode.DRIVE_SAFE_FORTIFY_SOUND -> {
+            SwitchNode.LOCK_FAILED_AUDIO_HINT -> {
+                writeProperty(node.set.signal, node.value(status), node.set.origin)
+            }
+            SwitchNode.LOCK_SUCCESS_AUDIO_HINT -> {
                 writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
             SwitchNode.DRIVE_SAFE_VIDEO_PLAYING -> {
