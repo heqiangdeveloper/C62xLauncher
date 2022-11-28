@@ -33,8 +33,6 @@ interface Keywords {
         const val VIEW_TRANS = "VIEW_TRANS"
 
 
-
-
         /**
          * 操作指令，表示为打开的操作数组
          */
@@ -103,7 +101,8 @@ interface Keywords {
         val HOODS = arrayOf("前罩", "前罩盖", "前舱盖", "引擎盖", "电动前罩")
         val TRUNKS = arrayOf("电动后备厢", "后背门", "电动后背门", "电动尾门", "尾门",
             "后备箱", "电动后备箱", "尾箱", "电动尾箱", "背门", "电动背门")
-//        val WIPERS = arrayOf("雨刮", "雨刷", "前雨刮", "前雨刮器", "雨刮器", "前雨刷", "前雨刷器", "雨刷器")
+
+        //        val WIPERS = arrayOf("雨刮", "雨刷", "前雨刮", "前雨刮器", "雨刮器", "前雨刷", "前雨刷器", "雨刷器")
         val WIPERS = arrayOf("雨刮", "雨刷", "雨刮器", "雨刷器")
         val WASHING = arrayOf("洗涤")
         val REAR_WIPERS = arrayOf("后雨刮", "后雨刮器", "后雨刷器", "后雨刷")

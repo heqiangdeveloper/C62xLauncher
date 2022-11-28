@@ -2,12 +2,24 @@
 <animation-list xmlns:android="http://schemas.android.com/apk/res/android"
     android:oneshot="true">
 
-    <item android:drawable="@drawable/animation_volume_point_hide0" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point_hide1" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point_hide2" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point_hide3" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point_hide4" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point_hide5" android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point_hide0"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point_hide1"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point_hide2"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point_hide3"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point_hide4"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point_hide5"
+        android:duration="50"></item>
 
 
 </animation-list>

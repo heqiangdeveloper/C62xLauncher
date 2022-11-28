@@ -9,7 +9,10 @@ import androidx.core.content.ContextCompat
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.adas.ForwardManager
 import com.chinatsp.settinglib.optios.SwitchNode
-import com.chinatsp.vehicle.settings.*
+import com.chinatsp.vehicle.settings.HintHold
+import com.chinatsp.vehicle.settings.IRoute
+import com.chinatsp.vehicle.settings.ISwitchAction
+import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.DriveForwardFragmentBinding
 import com.chinatsp.vehicle.settings.fragment.drive.dialog.CloseBrakeDialogFragment
 import com.chinatsp.vehicle.settings.fragment.drive.dialog.DetailsDialogFragment
@@ -76,8 +79,10 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
 
     private fun onViewClick(it: View) {
         when (it) {
-            binding.driveWarningFcwDetails ->  updateHintMessage(R.string.drive_warning_fcw, R.string.fcw_details)
-            binding.driveAebDetails -> updateHintMessage(R.string.drive_aeb_title, R.string.aeb_details)
+            binding.driveWarningFcwDetails -> updateHintMessage(R.string.drive_warning_fcw,
+                R.string.fcw_details)
+            binding.driveAebDetails -> updateHintMessage(R.string.drive_aeb_title,
+                R.string.aeb_details)
         }
     }
 

@@ -454,8 +454,7 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
     private var DEFALUT_FADE = 0
     private fun initDataBalance() {
 
-        Timber.d("SoundEffectFragment getAmpType type=${SettingManager.getAmpType()}")
-        if (SettingManager.getAmpType() == 0) {// 1 外置 1-11  ||  0 内置 ——》1-19
+        if (VcuUtils.isAmplifier) {// 1 外置 1-11  ||  0 内置 ——》1-19
             SoundFieldView.BALANCE_MAX = 18.0;
             SoundFieldView.FADE_MAX = 18.0;
         } else {

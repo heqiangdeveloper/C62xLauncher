@@ -7,7 +7,7 @@ public final class Semantic implements Parcelable {
 
     public Slots slots;
 
-    public static class Slots implements Parcelable{
+    public static class Slots implements Parcelable {
 
         public String temperature = "";
         public String fanSpeed = "";

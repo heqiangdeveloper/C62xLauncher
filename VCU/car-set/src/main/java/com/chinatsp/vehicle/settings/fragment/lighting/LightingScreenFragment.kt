@@ -2,7 +2,6 @@ package com.chinatsp.vehicle.settings.fragment.lighting
 
 import android.os.Bundle
 import com.chinatsp.settinglib.Constant
-import com.chinatsp.settinglib.IProgressManager
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.manager.lamp.BrightnessManager
@@ -40,7 +39,7 @@ class LightingScreenFragment : BaseFragment<BrightnessViewModel, LightingScreenF
     }
 
     private fun initSwitchStatusListener() {
-        viewModel.lightAutoMode.observe(this){
+        viewModel.lightAutoMode.observe(this) {
             updateBrightnessEnable(!it.get())
         }
     }

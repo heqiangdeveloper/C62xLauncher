@@ -88,7 +88,8 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
     private fun onViewClick(it: View) {
         when (it) {
             binding.soundVolumeAdjustment -> showVolumeFragment()
-            binding.soundLoudnessDetails -> showPopWindow(R.string.sound_loudness_control_content, it)
+            binding.soundLoudnessDetails -> showPopWindow(R.string.sound_loudness_control_content,
+                it)
         }
     }
 
@@ -257,6 +258,7 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
         text.text = resources.getString(id)
         popWindow.showDownLift(view, 30, -160)
     }
+
     override fun onPause() {
         super.onPause()
         val values = viewModel.getEffectValues(6).toList()
@@ -270,25 +272,30 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
             value
         }.toList()
         val intent = Intent("com.chinatsp.vehiclenetwork.usercenter")
-        val systemHint = getSwitchManager().doGetSwitchOption(SwitchNode.TOUCH_PROMPT_TONE)?.data//系统提示音
-        val speedVolumeCompensation = getSwitchManager().doGetSwitchOption(VoiceManager.instance.volumeSpeedSwitch)?.data//速度音量补偿
-        val loudnessControl = getSwitchManager().doGetSwitchOption(SwitchNode.AUDIO_SOUND_LOUDNESS)?.data//响度控制
-        val navigationMixing = getRadioManager().doGetRadioOption(RadioNode.NAVI_AUDIO_MIXING)?.data//导航混音
+        val systemHint =
+            getSwitchManager().doGetSwitchOption(SwitchNode.TOUCH_PROMPT_TONE)?.data//系统提示音
+        val speedVolumeCompensation =
+            getSwitchManager().doGetSwitchOption(VoiceManager.instance.volumeSpeedSwitch)?.data//速度音量补偿
+        val loudnessControl =
+            getSwitchManager().doGetSwitchOption(SwitchNode.AUDIO_SOUND_LOUDNESS)?.data//响度控制
+        val navigationMixing =
+            getRadioManager().doGetRadioOption(RadioNode.NAVI_AUDIO_MIXING)?.data//导航混音
         val fadeValue = EffectManager.instance.audioFade()//音量补偿-逐渐消失值
         val balanceValue = EffectManager.instance.getAudioBalance()//音量补偿-平衡音量
-        val json = "{\"systemHint\":\""+systemHint+"\",\"speedVolumeCompensation\":\""+
-                speedVolumeCompensation+"\",\"loudnessControl\":\""+
-                loudnessControl+"\",\"navigationMixing\":\""+
-                navigationMixing+"\",\"fadeValue\":\""+
-                fadeValue+"\",\"balanceValue\":\""+
-                balanceValue+"\",\"equalizerValue\":\""+
-                toList+"\"}"
+        val json = "{\"systemHint\":\"" + systemHint + "\",\"speedVolumeCompensation\":\"" +
+                speedVolumeCompensation + "\",\"loudnessControl\":\"" +
+                loudnessControl + "\",\"navigationMixing\":\"" +
+                navigationMixing + "\",\"fadeValue\":\"" +
+                fadeValue + "\",\"balanceValue\":\"" +
+                balanceValue + "\",\"equalizerValue\":\"" +
+                toList + "\"}"
         intent.putExtra("app", "com.chinatsp.vehicle.settings")
-        intent.putExtra("soundEffects",json)
+        intent.putExtra("soundEffects", json)
         intent.setPackage("com.chinatsp.usercenter")
         activity?.startService(intent)
         Timber.d("soundEffects intent json:$json")
     }
+
     private val offset: Float by lazy {
         if (VcuUtils.isAmplifier) 9f else 5f
     }

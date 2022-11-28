@@ -12,10 +12,11 @@ public class SystemDialogHelper {
 
     /**
      * 启动计时器
-     * @param time 规定的时间
+     *
+     * @param time     规定的时间
      * @param listener 回调
      */
-    public void timeSchedule(Long time,OnCountDownListener listener) {
+    public void timeSchedule(Long time, OnCountDownListener listener) {
         timer.schedule(task, time);
         this.mListener = listener;
     }
@@ -23,10 +24,12 @@ public class SystemDialogHelper {
     Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             if (msg.what == 1) {
-              mListener.onFinished();
+                mListener.onFinished();
             }
             super.handleMessage(msg);
-        };
+        }
+
+        ;
     };
 
     TimerTask task = new TimerTask() {

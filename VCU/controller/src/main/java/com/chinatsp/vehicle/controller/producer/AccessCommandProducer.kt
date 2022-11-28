@@ -1,7 +1,6 @@
 package com.chinatsp.vehicle.controller.producer
 
 import android.text.TextUtils
-import com.chinatsp.vehicle.controller.AirController
 import com.chinatsp.vehicle.controller.LogManager
 import com.chinatsp.vehicle.controller.annotation.Action
 import com.chinatsp.vehicle.controller.annotation.ICar
@@ -10,7 +9,6 @@ import com.chinatsp.vehicle.controller.annotation.Model
 import com.chinatsp.vehicle.controller.bean.CarCmd
 import com.chinatsp.vehicle.controller.semantic.Slots
 import com.chinatsp.vehicle.controller.utils.Keywords
-import java.util.*
 import java.util.regex.Pattern
 
 /**
@@ -143,7 +141,7 @@ class AccessCommandProducer : ICommandProducer {
         var value = -1
         var action = Action.VOID
         val nameValue = slots.nameValue?.toString() ?: ""
-        if (Keywords.SKYLIGHT_UP == slots.name){
+        if (Keywords.SKYLIGHT_UP == slots.name) {
             action = obtainSwitchAction(slots.operation, flag = false)
         }
         if (Action.VOID == action) {

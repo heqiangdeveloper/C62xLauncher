@@ -36,7 +36,7 @@ class PanoramaCommandConsumer(val manager: GlobalManager) : ICmdExpress {
         doCommandExpress(parcel)
     }
 
-//    AVM view set request signal 切换全景视图命令，Reserved
+    //    AVM view set request signal 切换全景视图命令，Reserved
 //    0x0: Inactive
 //    0x1: Front view
 //    0x2: Rear view
@@ -70,7 +70,7 @@ class PanoramaCommandConsumer(val manager: GlobalManager) : ICmdExpress {
         val isInit = IStatus.INIT == command.status
         if (isInit) {
             command.resetSent()
-            parcel.retryCount = if (isAvm) 0x1 else 0x2
+            parcel.retryCount = if (isAvm) 0x3 else 0x4
         }
         if (!isAvm) {
             attemptLaunchPanorama(isInit, isRetry, parcel)
@@ -81,7 +81,7 @@ class PanoramaCommandConsumer(val manager: GlobalManager) : ICmdExpress {
         val actual = obtainCameraView()
         if (IPart.HEAD == command.part) {
             expect = if (mode3D) 0x9 else 0x1
-        } else if (IPart.TAIL ==  command.part) {
+        } else if (IPart.TAIL == command.part) {
             expect = if (mode3D) 0xA else 0x2
         } else if (IPart.L_F == command.part) {
             expect = if (mode3D) 0xD else 0x3
@@ -94,13 +94,15 @@ class PanoramaCommandConsumer(val manager: GlobalManager) : ICmdExpress {
         } else if ((IPart.L_F or IPart.L_B) == command.part) {
             expect = if (mode3D) 0xB else 0x5
         } else if ((IPart.R_F or IPart.R_B) == command.part) {
-            expect = if (mode3D) 0xC else 6
+            expect = if (mode3D) 0xC else 0x6
         } else if (IPart.RANDOM == command.part) {
             expect = randomCameraView(mode3D)
         } else if (IPart.TOP == command.part) {
             expect = 0x14
         }
         val areaName = command.slots?.direction ?: analysisAreaName(expect)
+        val isSend = command.isSent()
+        Timber.d("ViewCut mode3D:$mode3D, areaName:$areaName, isSent:$isSend, actual:$actual, expect:$expect")
         if (actual == expect) {
             command.message = if (!command.isSent()) {
                 "不用再切了，目前是${areaName}视角了"
@@ -134,15 +136,15 @@ class PanoramaCommandConsumer(val manager: GlobalManager) : ICmdExpress {
 
     private fun analysisAreaName(areaId: Int): String {
         return when (areaId) {
-             0x1, 0x9 -> "前"
-             0x2, 0xA -> "后"
-             0xB, 0x7 -> "左"
-             0xC, 0x8 -> "右"
-             0x3, 0xD -> "左前"
-             0x5, 0xF -> "左后"
-             0x4, 0xE -> "右前"
-             0x6, 0x10 -> "右后"
-             0x14 -> "顶部"
+            0x1, 0x9 -> "前"
+            0x2, 0xA -> "后"
+            0xB, 0x7 -> "左"
+            0xC, 0x8 -> "右"
+            0x3, 0xD -> "左前"
+            0x5, 0xF -> "左后"
+            0x4, 0xE -> "右前"
+            0x6, 0x10 -> "右后"
+            0x14 -> "顶部"
             else -> "该"
         }
     }
@@ -250,7 +252,7 @@ class PanoramaCommandConsumer(val manager: GlobalManager) : ICmdExpress {
         return consume
     }
 
-//    The view state of AVM mode.通过车机坐标识别。在车机上切换的360视角
+    //    The view state of AVM mode.通过车机坐标识别。在车机上切换的360视角
 //    0x0: Inactive
 //    0x1: Front view
 //    0x2: Rear view

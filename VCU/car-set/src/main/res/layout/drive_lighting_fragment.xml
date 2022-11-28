@@ -38,7 +38,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="@+id/drive_hma_title"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:tag="dialogImage"/>
+                    android:tag="dialogImage" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/txt_prompt"

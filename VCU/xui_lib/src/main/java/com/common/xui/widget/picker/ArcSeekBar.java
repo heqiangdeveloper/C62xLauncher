@@ -715,7 +715,7 @@ public class ArcSeekBar extends View {
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
                     if (mOnChangeListener != null) {
-                        mOnChangeListener.onStopTrackingTouch(isCanDrag,lastValue);
+                        mOnChangeListener.onStopTrackingTouch(isCanDrag, lastValue);
                     }
                     getParent().requestDisallowInterceptTouchEvent(false);
                     isCanDrag = false;
@@ -1290,7 +1290,7 @@ public class ArcSeekBar extends View {
         /**
          * 跟踪触摸事件停止时回调此方法 {@link MotionEvent#ACTION_UP}
          */
-        void onStopTrackingTouch(boolean isCanDrag,float lastValue);
+        void onStopTrackingTouch(boolean isCanDrag, float lastValue);
 
         /**
          * 通过点击事件改变进度后回调此方法 {@link GestureDetector#GestureDetector#onSingleTapUp()}
@@ -1305,7 +1305,7 @@ public class ArcSeekBar extends View {
         }
 
         @Override
-        public void onStopTrackingTouch(boolean isCanDrag,float lastValue) {
+        public void onStopTrackingTouch(boolean isCanDrag, float lastValue) {
 
         }
 

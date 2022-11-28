@@ -133,7 +133,7 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
         routeValue: Int,
         route: String,
         intentPath: String,
-        general: Boolean = false
+        general: Boolean = false,
     ) {
         if (general) {
             val list = route.split("_")

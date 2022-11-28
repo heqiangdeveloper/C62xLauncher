@@ -66,11 +66,12 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
             val liveData = router.obtainLevelLiveData()
             liveData.observe(this) {
                 it.takeIf { it.valid && it.uid == pid }?.let { level1 ->
-                    level1.cnode?.takeIf { child -> child.valid && child.uid == uid }.let { level2 ->
-                        level2?.cnode?.let { lv3Node ->
-                            map[lv3Node.uid]?.run { onViewClick(this, lv3Node.uid, true) }
+                    level1.cnode?.takeIf { child -> child.valid && child.uid == uid }
+                        .let { level2 ->
+                            level2?.cnode?.let { lv3Node ->
+                                map[lv3Node.uid]?.run { onViewClick(this, lv3Node.uid, true) }
+                            }
                         }
-                    }
                 }
             }
         }
@@ -119,7 +120,7 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
             binding.remoteRoseWindowDetails -> {
                 showPopWindow(R.string.car_window_lock_content, it)
             }
-            binding.carWindowRainyDetails-> {
+            binding.carWindowRainyDetails -> {
                 showPopWindow(R.string.car_window_rainy_content, it)
             }
         }
@@ -229,7 +230,7 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
                         R.drawable.popup_bg_qipao172_2)
                 })
             popWindow.showDownLift(view, 30, -80)
-        }else if (view.id == binding.carWindowRainyDetails.id) {
+        } else if (view.id == binding.carWindowRainyDetails.id) {
             popWindow = PopWindow(activity, R.layout.pop_window,
                 activity?.let {
                     AppCompatResources.getDrawable(it,

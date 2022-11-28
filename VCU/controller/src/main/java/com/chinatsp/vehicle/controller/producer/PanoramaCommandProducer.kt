@@ -116,8 +116,8 @@ class PanoramaCommandProducer : ICommandProducer {
         val value: Int
         if (!TextUtils.isEmpty(slots.mode)) {
             value = when (slots.mode) {
-                "2D" -> Action.OPTION shl 1
-                "3D" -> Action.OPTION shl 2
+                "2d", "2D" -> Action.OPTION shl 1
+                "3d", "3D" -> Action.OPTION shl 2
                 "原图" -> Action.OPTION shl 3
                 "原始" -> Action.OPTION shl 4
                 else -> Action.VOID

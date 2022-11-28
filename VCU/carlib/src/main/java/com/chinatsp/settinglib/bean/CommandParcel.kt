@@ -2,7 +2,6 @@ package com.chinatsp.settinglib.bean
 
 import com.chinatsp.settinglib.manager.ICmdExpress
 import com.chinatsp.vehicle.controller.ICmdCallback
-import com.chinatsp.vehicle.controller.bean.AirCmd
 import com.chinatsp.vehicle.controller.bean.BaseCmd
 
 /**

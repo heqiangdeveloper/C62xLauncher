@@ -138,6 +138,6 @@
             android:text="@string/car_mirror_automatic_folding_close"
             app:layout_constraintLeft_toRightOf="@+id/constraint"
             app:layout_constraintTop_toTopOf="parent"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

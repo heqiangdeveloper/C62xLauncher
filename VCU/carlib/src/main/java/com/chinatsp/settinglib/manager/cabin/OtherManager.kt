@@ -32,7 +32,7 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
     private val trailerRemind: SwitchState by lazy {
         val node = SwitchNode.DRIVE_TRAILER_REMIND
         SwitchState(node.default).apply {
-            val value = SettingManager.instance.getTrailerRemindSwitch()
+            val value = SettingManager.instance.getTrailerSwitch()
             val result = if (null != value) node.isOn(value) else node.default
             doUpdateSwitchValue(node, this, result)
         }
@@ -40,10 +40,6 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
 
     private val batteryOptimize: SwitchState by lazy {
         val node = SwitchNode.DRIVE_BATTERY_OPTIMIZE
-//        AtomicBoolean(node.default).apply {
-//            val result = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateSwitchValue(node, this, result)
-//        }
         return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
@@ -51,10 +47,6 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
 
     private val wirelessCharging: SwitchState by lazy {
         val node = SwitchNode.DRIVE_WIRELESS_CHARGING
-//        AtomicBoolean(node.default).apply {
-//            val result = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateSwitchValue(node, this, result)
-//        }
         return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
@@ -62,10 +54,6 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
 
     private val wirelessChargingLamp: SwitchState by lazy {
         val node = SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP
-//        AtomicBoolean(node.default).apply {
-//            val result = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateSwitchValue(node, this, result)
-//        }
         return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
         }
@@ -74,7 +62,7 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
     private val sensitivity: RadioState by lazy {
         val node = RadioNode.DEVICE_TRAILER_SENSITIVITY
         RadioState(node.def).apply {
-            val value = SettingManager.instance.getTrailerSensitivity()
+            val value = SettingManager.instance.getTrailerLevel()
             val result = value ?: node.def
             doUpdateRadioValue(node, this, result)
         }
@@ -83,7 +71,7 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
     private val distance: RadioState by lazy {
         val node = RadioNode.DEVICE_TRAILER_DISTANCE
         RadioState(node.def).apply {
-            val value = SettingManager.instance.getTrailerDistance()
+            val value = SettingManager.instance.getTrailerDist()
             val result = value ?: node.def
             doUpdateRadioValue(node, this, result)
         }
@@ -224,9 +212,8 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
                 onSwitchChanged(SwitchNode.DRIVE_WIRELESS_CHARGING, wirelessCharging, property)
             }
             SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP.get.signal -> {
-                onSwitchChanged(SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP,
-                    wirelessChargingLamp,
-                    property)
+                onSwitchChanged(
+                    SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP, wirelessChargingLamp, property)
             }
             else -> {}
         }
@@ -235,18 +222,11 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
     fun onTrailerRemindChanged(onOff: Int, level: Int, dist: Int) {
         Timber.d("onTrailerRemindChanged statusValue:%s, level:%s, distance:%s", onOff, level, dist)
         doUpdateSwitchValue(
-            SwitchNode.DRIVE_TRAILER_REMIND,
-            trailerRemind,
-            onOff,
-            this::doSwitchChanged
-        )
+            SwitchNode.DRIVE_TRAILER_REMIND, trailerRemind, onOff, this::doSwitchChanged)
         doUpdateRadioValue(
-            RadioNode.DEVICE_TRAILER_SENSITIVITY,
-            sensitivity,
-            level,
-            this::doOptionChanged
-        )
-        doUpdateRadioValue(RadioNode.DEVICE_TRAILER_DISTANCE, distance, dist, this::doOptionChanged)
+            RadioNode.DEVICE_TRAILER_SENSITIVITY, sensitivity, level, this::doOptionChanged)
+        doUpdateRadioValue(
+            RadioNode.DEVICE_TRAILER_DISTANCE, distance, dist, this::doOptionChanged)
     }
 
 

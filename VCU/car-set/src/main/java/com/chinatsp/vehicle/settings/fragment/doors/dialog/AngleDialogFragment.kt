@@ -15,7 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AngleDialogFragment : BaseDialogFragment<SoundEffectViewModel, AngleDialogFragmentBinding>(),
-    CountDownButtonHelper.OnCountDownListener{
+    CountDownButtonHelper.OnCountDownListener {
 
     lateinit var angleInvoke: IAngleInvoke
 
@@ -60,7 +60,6 @@ class AngleDialogFragment : BaseDialogFragment<SoundEffectViewModel, AngleDialog
         manager.doBackMirrorAction(action)
         angleInvoke.onAngleUpdate(action)
     }
-
 
 
     interface IAngleInvoke {

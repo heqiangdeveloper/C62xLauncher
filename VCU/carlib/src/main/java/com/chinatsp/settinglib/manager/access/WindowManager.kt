@@ -716,7 +716,7 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager,
     /**
      * 设置车窗开度
      */
-    private fun updateWindowSwitch(parcel: CommandParcel, status: Boolean){
+    private fun updateWindowSwitch(parcel: CommandParcel, status: Boolean) {
         val command = parcel.command
         val part = command.part
         var lfAct = IPart.L_F == (IPart.L_F and part)

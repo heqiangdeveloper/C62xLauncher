@@ -13,7 +13,7 @@ data class AppState(
     val default: String = "360",
     val scene: String = "carControl",
     val sceneStatus: String = "default",
-    val service: String = "carControl"
+    val service: String = "carControl",
 )
 
 class Data

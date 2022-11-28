@@ -3,6 +3,7 @@ package com.chinatsp.vehicle.settings.fragment
 import android.graphics.PixelFormat
 import android.os.Bundle
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.BaseApp
 import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.vcu.kanzi.KanZiKeys
 import com.chinatsp.vehicle.settings.R
@@ -24,7 +25,10 @@ class CommonlyFragment : BaseTabFragment<KanziViewModel, AccessFragmentBinding>(
     private var kanziLoadFinish: Boolean = false
 
     companion object {
-        init { System.loadLibrary("kanzi") }
+        init {
+//            System.loadLibrary("kanzi")
+            BaseApp.instance.loadLibraries
+        }
     }
 
     override fun getLayoutId(): Int {
@@ -214,6 +218,7 @@ class CommonlyFragment : BaseTabFragment<KanziViewModel, AccessFragmentBinding>(
 
     override fun onDestroy() {
         kanziLoadFinish = false
+        mSharedData?.removeManager()
         super.onDestroy()
     }
 

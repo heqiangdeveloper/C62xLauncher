@@ -101,8 +101,10 @@ class SteeringHeatDialogFragment :
                 doUpdateSwitchOption(SwitchNode.DRIVE_WHEEL_AUTO_HEAT, buttonView, isChecked)
 //                checkDisableOtherDiv(it.isChecked, binding.container)
                 updateEnable(binding.steeringHeatingStartTemperatureSeekBar, true, it.isChecked)
-                if(!isChecked){
-                    Toast.showToast(context, getString(R.string.cabin_wheel_automatic_heating_close), true)
+                if (!isChecked) {
+                    Toast.showToast(context,
+                        getString(R.string.cabin_wheel_automatic_heating_close),
+                        true)
                 }
             }
         }

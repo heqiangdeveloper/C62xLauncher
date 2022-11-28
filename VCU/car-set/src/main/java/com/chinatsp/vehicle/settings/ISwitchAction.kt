@@ -95,8 +95,8 @@ interface ISwitchAction : IAction {
         }
     }
 
-    fun startWidowServer(value:Boolean,content:Int){
-        if(value){
+    fun startWidowServer(value: Boolean, content: Int) {
+        if (value) {
             val intent = Intent("com.chinatsp.vehicle.settings.service.GrayPopoverService")
             intent.setPackage("com.chinatsp.vehicle.settings")
             val bundleSimple = Bundle()

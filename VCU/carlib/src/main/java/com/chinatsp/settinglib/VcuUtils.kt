@@ -111,7 +111,12 @@ object VcuUtils {
         0 == value
     }
 
-    fun putInt(context: Context = BaseApp.instance, key: String, value: Int, system: Boolean = false): Boolean {
+    fun putInt(
+        context: Context = BaseApp.instance,
+        key: String,
+        value: Int,
+        system: Boolean = false,
+    ): Boolean {
         try {
             Timber.d("putInt key:%s, value:%s, system:%s", key, value, system)
             return if (system) {
@@ -126,7 +131,12 @@ object VcuUtils {
         return false
     }
 
-    fun getInt(context: Context = BaseApp.instance, key: String, value: Int, system: Boolean = false): Int {
+    fun getInt(
+        context: Context = BaseApp.instance,
+        key: String,
+        value: Int,
+        system: Boolean = false,
+    ): Int {
         try {
             return if (system) {
                 Settings.System.getInt(context.contentResolver, key, value)

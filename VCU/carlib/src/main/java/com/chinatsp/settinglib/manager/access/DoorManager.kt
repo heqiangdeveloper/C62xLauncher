@@ -4,8 +4,8 @@ import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
-import com.chinatsp.settinglib.listener.ISignalListener
 import com.chinatsp.settinglib.listener.IBaseListener
+import com.chinatsp.settinglib.listener.ISignalListener
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.IAccessManager
 import com.chinatsp.settinglib.manager.IOptionManager
@@ -76,9 +76,12 @@ class DoorManager private constructor() : BaseManager(), IOptionManager, IAccess
     override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int>().apply {
-                add(RadioNode.DOOR_DRIVE_LOCK.get.signal) /**行车自动落锁*/
-                add(RadioNode.DOOR_FLAMEOUT_UNLOCK.get.signal) /**熄火自动解锁*/
-                add(SwitchNode.DOOR_SMART_ENTER.get.signal) /**车门智能进入*/
+                add(RadioNode.DOOR_DRIVE_LOCK.get.signal)
+                /**行车自动落锁*/
+                add(RadioNode.DOOR_FLAMEOUT_UNLOCK.get.signal)
+                /**熄火自动解锁*/
+                add(SwitchNode.DOOR_SMART_ENTER.get.signal)
+                /**车门智能进入*/
                 add(SwitchNode.INNER_NFC.get.signal)
                 add(SwitchNode.OUTER_NFC.get.signal)
 
@@ -248,7 +251,7 @@ class DoorManager private constructor() : BaseManager(), IOptionManager, IAccess
     }
 
     override fun obtainAccessState(part: Int, model: Int): Int? {
-        if (Model.ACCESS_DOOR != model){
+        if (Model.ACCESS_DOOR != model) {
             return null
         }
         return when (part) {

@@ -24,6 +24,7 @@ open class BaseCmd(
     var part: Int = IPart.VOID
 
     var soundDirection = IPart.VOID
+
     /**
      * 增加 或 减少的步长
      * 当且仅池 action 为 Action.PLUS 或 Action.MINUS 时有效
@@ -165,7 +166,6 @@ open class BaseCmd(
 //    override fun hashCode(): Int {
 //        return action
 //    }
-
 
 
     override fun toString(): String {

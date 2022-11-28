@@ -35,7 +35,6 @@ import android.view.KeyEvent
 import com.android.internal.app.LocalePicker
 import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.RegisterSignalManager.Companion.cabinSignal
-import com.chinatsp.settinglib.manager.RegisterSignalManager.Companion.hvacSignal
 import com.chinatsp.settinglib.manager.RegisterSignalManager.Companion.mcuSignal
 import com.chinatsp.settinglib.manager.cabin.OtherManager
 import com.chinatsp.settinglib.manager.lamp.BrightnessManager
@@ -129,7 +128,8 @@ class SettingManager private constructor() {
             }
             if (null != mCarMcuManager) {
                 val signals =
-                    mcuSignal.stream().filter { it != Constant.INVALID }.mapToInt { obj: Int -> obj }
+                    mcuSignal.stream().filter { it != Constant.INVALID }
+                        .mapToInt { obj: Int -> obj }
                         .toArray()
                 Arrays.stream(signals).forEach {
                     Timber.d("register MCU: hex propertyId:${Integer.toHexString(it)},  dec propertyId:$it, ${VcuUtils.V_N}")
@@ -343,7 +343,9 @@ class SettingManager private constructor() {
                 try {
                     val hasManager = null != mCarMcuManager
                     Timber.tag(Constant.VehicleSignal)
-                        .d("doActionSignal send-mcu hex-id:${Integer.toHexString(id)}, dec-id:$id, value:${convert(value)}, has:$hasManager, V_N:${VcuUtils.V_N}")
+                        .d("doActionSignal send-mcu hex-id:${Integer.toHexString(id)}, dec-id:$id, value:${
+                            convert(value)
+                        }, has:$hasManager, V_N:${VcuUtils.V_N}")
                     mCarMcuManager?.setIntArrayProperty(id, areaValue, value)
                 } catch (e: Exception) {
                     Timber.e(e)
@@ -360,7 +362,9 @@ class SettingManager private constructor() {
                 try {
                     val hasManager = null != mCarCabinManager
                     Timber.tag(Constant.VehicleSignal)
-                        .d("doActionSignal send-cabin hex-id:${Integer.toHexString(id)}, dec-id:$id, value:${convert(value)}, has:$hasManager, V_N:${VcuUtils.V_N}")
+                        .d("doActionSignal send-cabin hex-id:${Integer.toHexString(id)}, dec-id:$id, value:${
+                            convert(value)
+                        }, has:$hasManager, V_N:${VcuUtils.V_N}")
                     mCarCabinManager?.setIntArrayProperty(id, areaValue, value)
                 } catch (e: Exception) {
                     Timber.e(e)
@@ -536,7 +540,6 @@ class SettingManager private constructor() {
     }
 
 
-
     //0 zh;1 en
     var language: Int
         get() {
@@ -627,15 +630,15 @@ class SettingManager private constructor() {
      */
     fun setAudioBalance(uiBalanceLevelValue: Int, uiFadeLevelValue: Int) {
         try {
-            var muiBalanceLevelValue = uiBalanceLevelValue;
-            var muiFadeLevelValue = uiFadeLevelValue;
-            if (getAmpType() == 0) { //内置
+            val muiBalanceLevelValue = uiBalanceLevelValue;
+            val muiFadeLevelValue = uiFadeLevelValue;
+//            if (VcuUtils.isAmplifier) { //内置
                 //    muiBalanceLevelValue = uiBalanceLevelValue + 10;
                 //   muiFadeLevelValue = uiFadeLevelValue + 10;
-            } else {
+//            } else {
                 //     muiBalanceLevelValue = uiBalanceLevelValue + 6;
                 //      muiFadeLevelValue = uiFadeLevelValue + 6;
-            }
+//            }
             Timber.d(
                 "setAudioBalance muiBalanceLevelValue=${muiBalanceLevelValue}  " +
                         " muiFadeLevelValue=${muiFadeLevelValue}"
@@ -809,9 +812,11 @@ class SettingManager private constructor() {
                 val manager = mCarApi!!.getCarManager(Car.TBOX_SERVICE)
                 if (manager is TboxManager) {
                     mBoxManager = manager
+                    Timber.d("TBOX --- obtain boxManager from carApi mBoxManager:$mBoxManager")
                 }
                 if (null == mBoxManager) {
                     mBoxManager = TboxManager.getInstance()
+                    Timber.d("TBOX --- obtain boxManager from getInstance:$mBoxManager")
                 }
                 mBoxManager!!.addTBoxChangedListener(boxChangedListener)
             }
@@ -838,37 +843,48 @@ class SettingManager private constructor() {
         }
     }
 
-    fun getTrailerRemindSwitch(): Int? {
+    fun getTrailerSwitch(): Int? {
         try {
-            val result = mBoxManager?.truckInformation?.onOff
-            Timber.d("getTrailerRemindSwitch result:${result}")
-            return result
+            return obtainTrailer(serial = "getSwitch")?.onOff
         } catch (e: Throwable) {
-            Timber.e("getTrailerRemindSwitch exception:${e.message}")
+            e.printStackTrace()
+            Timber.e("getTrailerSwitch exception:${e.message}")
         }
         return null
     }
 
-    fun getTrailerSensitivity(): Int? {
+    fun getTrailerLevel(): Int? {
         try {
-            val result = mBoxManager?.truckInformation?.level
-            Timber.d("getTrailerSensitivity result:${result}")
-            return result
+            return obtainTrailer(serial = "getLevel")?.level
         } catch (e: Throwable) {
-            Timber.e("getTrailerSensitivity exception:${e.message}")
+            e.printStackTrace()
+            Timber.e("getTrailerLevel exception:${e.message}")
         }
         return null
     }
 
-    fun getTrailerDistance(): Int? {
+    fun getTrailerDist(): Int? {
         try {
-            val result = mBoxManager?.truckInformation?.dist
-            Timber.d("getTrailerDistance result:${result}")
-            return result
+            return obtainTrailer(serial = "getDist")?.dist
         } catch (e: Throwable) {
-            Timber.e("getTrailerDistance exception:${e.message}")
+            e.printStackTrace()
+            Timber.e("getTrailerDist exception:${e.message}")
         }
         return null
+    }
+
+    private fun obtainTrailer(serial: String): TruckInformation? {
+        if (null == mBoxManager) {
+            Timber.e("obtainTrailer but manager is null!! serial:$serial")
+            return null
+        }
+        val trailer = mBoxManager!!.truckInformation
+        if (null == trailer) {
+            Timber.e("obtainTrailer but trailer is null!! serial:$serial")
+            return null
+        }
+        Timber.e("obtainTrailer switch:${trailer.onOff}, level:${trailer.level}, dist:${trailer.dist}! serial:$serial")
+        return trailer
     }
 
     fun setTrailerRemind(value: Int): Boolean {
@@ -932,14 +948,9 @@ class SettingManager private constructor() {
         }
 
         override fun onTruckInfoChanged(truckInformation: TruckInformation?) {
-            try {
-                truckInformation?.let {
-                    OtherManager.instance.onTrailerRemindChanged(it.onOff, it.level, it.dist)
-                }
-            } catch (e: Error) {
-                e.printStackTrace()
+            truckInformation?.let {
+                OtherManager.instance.onTrailerRemindChanged(it.onOff, it.level, it.dist)
             }
-
         }
 
         override fun onRemoteVedioInfoChanged(p0: RemoteVedioInformation?) {
@@ -959,9 +970,9 @@ class SettingManager private constructor() {
             SettingManager()
         }
 
-        fun getAmpType(): Int {
-            return VcuUtils.getConfigParameters("persist.vendor.vehicle.amp", 0)
-        }
+//        fun getAmpType(): Int {
+//            return VcuUtils.getConfigParameters("persist.vendor.vehicle.amp", 0)
+//        }
 
     }
 

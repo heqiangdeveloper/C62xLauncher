@@ -19,17 +19,17 @@ class HomeBackDialogFragment :
         setBackListener()
     }
 
-   /* override fun getWidthRatio(): Float {
-        return 650f / 1920f
-    }*/
+    /* override fun getWidthRatio(): Float {
+         return 650f / 1920f
+     }*/
 
     private fun setBackListener() {
-    /*    binding.driveAgree.setOnClickListener {
-            ForwardManager.instance.doSetSwitchOption(SwitchNode.ADAS_AEB, false)
-            this.dismiss()
-        }
-        binding.driveCancel.setOnClickListener {
-            this.dismiss()
-        }*/
+        /*    binding.driveAgree.setOnClickListener {
+                ForwardManager.instance.doSetSwitchOption(SwitchNode.ADAS_AEB, false)
+                this.dismiss()
+            }
+            binding.driveCancel.setOnClickListener {
+                this.dismiss()
+            }*/
     }
 }

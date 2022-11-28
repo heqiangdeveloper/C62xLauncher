@@ -118,8 +118,8 @@ class RegisterSignalManager private constructor() {
 //                    add(CarMcuManager.ID_REVERSE_SIGNAL)
 //                    add(CarMcuManager.ID_MCU_LOST_CANID)
 //                    add(CarMcuManager.ID_MCU_ACC_STATE)
-                      /**注册OFF ON车机指令*/
-                      add(CarMcuManager.ID_VENDOR_MCU_POWER_MODE)
+                    /**注册OFF ON车机指令*/
+                    add(CarMcuManager.ID_VENDOR_MCU_POWER_MODE)
 //                    add(CarMcuManager.ID_VENDOR_LIGHT_NIGHT_MODE_STATE)
 //                    add(CarMcuManager.ID_NIGHT_MODE)
 //                    add(CarMcuManager.ID_VENDOR_PHOTO_REQ)

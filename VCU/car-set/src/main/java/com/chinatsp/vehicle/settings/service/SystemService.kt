@@ -82,7 +82,8 @@ class SystemService : Service(), SystemDialogHelper.OnCountDownListener, Handler
     }
 
     private fun updateHintContent(
-        signal: Int, content: Int, cancelable: Boolean, careEngine: Boolean = false) {
+        signal: Int, content: Int, cancelable: Boolean, careEngine: Boolean = false,
+    ) {
         if (!careEngine || !VcuUtils.isEngineRunning()) {
             if (null == dialog) {
                 val master = DialogMaster.create(applicationContext, { }, { }, 740, 488)

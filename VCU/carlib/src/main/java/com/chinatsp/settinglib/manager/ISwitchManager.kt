@@ -114,8 +114,8 @@ interface ISwitchManager : IManager {
         val isEnableChanged = atomic.isEnableChanged(value)
 //        Timber.e("updateSwitchValue -------- isEnableChanged:$isEnableChanged, node:$node oEnable:${atomic.enableStatus}, value:$value, oldEnable:${atomic.enable()}")
 //        if (isEnableChanged) {
-            atomic.enableStatus = value
-            block?.let { it(node, atomic) }
+        atomic.enableStatus = value
+        block?.let { it(node, atomic) }
 //        } else {
 //            Timber.e("updateSwitchValue 222 but isEnableChanged:$isEnableChanged, node:$node oEnable:${atomic.enableStatus}, value:$value, oldEnable:${atomic.enable()}")
 //        }

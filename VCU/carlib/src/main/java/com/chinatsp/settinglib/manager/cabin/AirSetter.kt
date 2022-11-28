@@ -137,7 +137,8 @@ class AirSetter(val manager: ACManager, private val getter: AirGetter) {
             return result
         }
         if (getter.isDoubleMode()) {
-            val result = left != getter.getDriverTemperature() //|| left != getter.getCopilotTemperature()
+            val result =
+                left != getter.getDriverTemperature() //|| left != getter.getCopilotTemperature()
             if (result) {
                 hvacSignal(CarHvacManager.ID_HVAC_AVN_KEY_TEMP_LEFT, left)
             }

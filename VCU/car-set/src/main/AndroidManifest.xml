@@ -31,7 +31,7 @@
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:name="com.chinatsp.vehicle.settings.App"
@@ -69,20 +69,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
-        <!--        <activity android:name=".KanziActivity" android:exported="true">-->
-        <!--            <intent-filter>-->
-        <!--                <action android:name="android.intent.action.MAIN" />-->
-
-        <!--                <category android:name="android.intent.category.LAUNCHER" />-->
-        <!--            </intent-filter>-->
-        <!--        </activity>-->
-
-        <activity
-            android:name="com.chinatsp.vehicle.settings.app.oil.OilPriceActivity"
-            android:exported="true"
-            android:screenOrientation="portrait" />
-
         <service
             android:name="com.chinatsp.vehicle.settings.service.SystemService"
             android:exported="true">

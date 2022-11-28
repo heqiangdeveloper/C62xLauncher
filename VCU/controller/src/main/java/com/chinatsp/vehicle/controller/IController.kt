@@ -12,7 +12,7 @@ import com.chinatsp.vehicle.controller.utils.Keywords
  * @desc   :
  * @version: 1.0
  */
-interface IController: ICommandProducer, Keywords {
+interface IController : ICommandProducer, Keywords {
 
     val tag: String
         get() = this::class.java.simpleName
@@ -25,9 +25,17 @@ interface IController: ICommandProducer, Keywords {
         }
     }
 
-    fun doVoiceController(controller: IOuterController, callback: ICmdCallback, model: NlpVoiceModel): Boolean
+    fun doVoiceController(
+        controller: IOuterController,
+        callback: ICmdCallback,
+        model: NlpVoiceModel,
+    ): Boolean
 
-    fun doVoiceVehicleQuery(controller: IOuterController, callback: ICmdCallback, model: NlpVoiceModel): Boolean {
+    fun doVoiceVehicleQuery(
+        controller: IOuterController,
+        callback: ICmdCallback,
+        model: NlpVoiceModel,
+    ): Boolean {
         return true
     }
 

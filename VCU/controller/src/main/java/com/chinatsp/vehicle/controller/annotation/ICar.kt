@@ -27,6 +27,7 @@ import androidx.annotation.IntDef
 annotation class ICar {
     companion object {
         const val VOID = 0x0
+
         /**
          * 方向盘
          */
@@ -36,38 +37,47 @@ annotation class ICar {
          * 氛围灯
          */
         const val AMBIENT = 0x02
+
         /**
          * 亮度
          */
         const val BRIGHTNESS = 0x03
+
         /**
          * 亮度
          */
         const val COLOR = 0x04
+
         /**
          * 亮度
          */
         const val RHYTHM_MODE = 0x05
+
         /**
          * 车窗
          */
         const val WINDOWS = 0x08
+
         /**
          * 天窗（包括遮阳帘）
          */
         const val LOUVER = 0x09
+
         /**
          * 车门
          */
         const val DOORS = 0x0A
+
         /**
          * 座椅
          */
         const val CHAIR = 0x0B
+
         /**
          * 雨刮
          */
         const val WIPER = 0x0C
+
         /**
          * 灯光
          */

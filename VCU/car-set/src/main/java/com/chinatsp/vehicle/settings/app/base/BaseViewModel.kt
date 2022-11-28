@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
-import com.chinatsp.vehicle.settings.api.ApiService
 import com.chinatsp.vehicle.settings.bean.Result
 import com.common.library.frame.base.BaseModel
 import com.common.library.frame.base.DataViewModel
@@ -23,9 +22,9 @@ open class BaseViewModel @Inject constructor(application: Application, model: Ba
 
     var keySerial: Int = 0
 
-    val apiService: ApiService by lazy {
-        getRetrofitService(ApiService::class.java)
-    }
+//    val apiService: ApiService by lazy {
+//        getRetrofitService(ApiService::class.java)
+//    }
 
     fun isSuccess(result: Result<*>?, showError: Boolean = true): Boolean {
         if (result?.isSuccess == true) {

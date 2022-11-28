@@ -33,9 +33,9 @@ abstract class BaseTabFragment<VM : BaseViewModel<*>, VDB : ViewDataBinding> :
     abstract val tabLocation: MutableLiveData<Int>
 
     protected fun syncRouterLocation(node: Node) {
-        node.takeIf { it.valid && it.uid == uid}?.let {
+        node.takeIf { it.valid && it.uid == uid }?.let {
             val child = it.cnode
-            child?.takeIf { c -> c.valid && c.uid in tabOptions.indices}?.let { c ->
+            child?.takeIf { c -> c.valid && c.uid in tabOptions.indices }?.let { c ->
                 val location = tabOptions[c.uid].id
                 if (tabLocation.value != location) {
                     tabLocation.postValue(location)

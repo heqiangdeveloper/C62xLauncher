@@ -8,7 +8,8 @@ import com.common.library.frame.base.BaseDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ForeignMatterDialogFragment : BaseDialogFragment<SeatViewModel, ForeignMatterDialogFragmentBinding>(){
+class ForeignMatterDialogFragment :
+    BaseDialogFragment<SeatViewModel, ForeignMatterDialogFragmentBinding>() {
     override fun getLayoutId(): Int {
         return R.layout.foreign_matter_dialog_fragment
     }

@@ -11,7 +11,8 @@ data class Slots(val serial: String) : Parcelable {
     var moreArtist: String = ""
     var band: String = ""
     var gender: String = ""
-//    var source: Any? = null
+
+    //    var source: Any? = null
     var sourceType: String = ""
     var genre: String = ""
     var area: String = ""
@@ -49,7 +50,7 @@ data class Slots(val serial: String) : Parcelable {
     var user: String = ""
     var presetUser: String = ""
 
-    constructor(parcel: Parcel): this("") {
+    constructor(parcel: Parcel) : this("") {
         device = parcel.readString().toString()
         artist = parcel.readString().toString()
         song = parcel.readString().toString()
@@ -156,7 +157,6 @@ data class Slots(val serial: String) : Parcelable {
             return arrayOfNulls(size)
         }
     }
-
 
 
 }

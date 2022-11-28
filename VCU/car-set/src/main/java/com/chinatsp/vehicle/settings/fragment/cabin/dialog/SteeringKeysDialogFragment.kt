@@ -27,7 +27,7 @@ class SteeringKeysDialogFragment :
 
     private lateinit var mSetOnClickListener: SetOnClickDialogListener
 
-     fun onSetClickDialogListener(listener: SetOnClickDialogListener) {
+    fun onSetClickDialogListener(listener: SetOnClickDialogListener) {
         this.mSetOnClickListener = listener;
     }
 

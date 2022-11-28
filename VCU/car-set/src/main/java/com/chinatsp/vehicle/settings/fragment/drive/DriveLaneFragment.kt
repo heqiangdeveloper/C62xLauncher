@@ -83,7 +83,8 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
 
     private fun onViewClick(it: View) {
         when (it) {
-            binding.laneAssistSystemDetails ->  updateHintMessage(R.string.drive_Lane_assist_system, R.string.lane_assist_details)
+            binding.laneAssistSystemDetails -> updateHintMessage(R.string.drive_Lane_assist_system,
+                R.string.lane_assist_details)
         }
     }
 
@@ -255,7 +256,8 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
             })
         }
     }
-    private fun startVideo(){
+
+    private fun startVideo() {
         val uri =
             "android.resource://" + activity?.packageName + "/" + R.raw.video_auxiliary_system
         binding.video.setVideoURI(Uri.parse(uri));

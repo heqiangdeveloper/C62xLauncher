@@ -16,6 +16,7 @@ interface IAirMaster {
      * @return 返回当前空调状态（是否打开）
      */
     fun doLaunchConditioner(parcel: CommandParcel): Boolean
+
     /**
      * 关闭空调
      * @param parcel

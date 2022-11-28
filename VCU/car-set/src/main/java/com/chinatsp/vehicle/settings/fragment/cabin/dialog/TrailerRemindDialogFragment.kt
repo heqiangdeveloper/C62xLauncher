@@ -54,8 +54,8 @@ class TrailerRemindDialogFragment :
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         service.removeListener("TrailerRemindDialog")
+        super.onDestroy()
     }
 
     override fun onChange(night: Boolean) {

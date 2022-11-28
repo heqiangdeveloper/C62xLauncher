@@ -10,8 +10,8 @@ import com.chinatsp.settinglib.bean.CommandParcel
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
-import com.chinatsp.settinglib.listener.ISignalListener
 import com.chinatsp.settinglib.listener.IBaseListener
+import com.chinatsp.settinglib.listener.ISignalListener
 import com.chinatsp.settinglib.manager.*
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
@@ -206,10 +206,10 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
                 doUpdateProgress(stopPosition, p.value as Int, true, this::doProgressChanged)
             }
             CarCabinManager.ID_HOOD_LID_OPEN -> {
-                onSignalChanged(IPart.HEAD, Model.ACCESS_STERN, p.propertyId,  p.value as Int)
+                onSignalChanged(IPart.HEAD, Model.ACCESS_STERN, p.propertyId, p.value as Int)
             }
             CarCabinManager.ID_TRUNK_LID_OPEN -> {
-                onSignalChanged(IPart.TAIL, Model.ACCESS_STERN, p.propertyId,  p.value as Int)
+                onSignalChanged(IPart.TAIL, Model.ACCESS_STERN, p.propertyId, p.value as Int)
             }
             else -> {}
         }

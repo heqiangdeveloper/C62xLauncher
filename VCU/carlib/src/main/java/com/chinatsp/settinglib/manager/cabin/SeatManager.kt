@@ -273,7 +273,8 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
     }
 
     private fun obtainKneadLevel(
-        @IPart part: Int, minLevel: Int, maxLevel: Int, offLevel: Int, step: Int): Int {
+        @IPart part: Int, minLevel: Int, maxLevel: Int, offLevel: Int, step: Int,
+    ): Int {
         val value = obtainKneadLevel(part) + 1
         val expect = if (offLevel == value) minLevel else value + step
         Timber.e("obtainKneadLevel--value:$value, step:${step}, expect:$expect")
@@ -1222,7 +1223,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
             min -> "${if (send) "已经" else ""}调整到最低了"
             max -> if (Action.TURN_ON == action) {
                 "${if (send) "已经" else ""}打开了"
-            } else{
+            } else {
                 "${if (send) "已经" else ""}调整到最高了"
             }
             else -> "${if (send) "已经" else ""}调整为${level - 1}档"

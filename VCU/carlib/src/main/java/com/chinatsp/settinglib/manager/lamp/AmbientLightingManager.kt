@@ -415,7 +415,7 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
             Action.PLUS, Action.MINUS, Action.MIN, Action.MAX, Action.FIXED -> {
                 attemptUpdateAmbientColor(parcel)
             }
-            else ->{}
+            else -> {}
         }
     }
 
@@ -479,7 +479,8 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
             command.message = "${modelName}不支持该颜色"
         } else {
             val result = writeProperty(node.set.signal, colorIndex, node.set.origin)
-            command.message = if (!result) Keywords.COMMAND_FAILED else "${modelName}颜色已设置为${colorName}了"
+            command.message =
+                if (!result) Keywords.COMMAND_FAILED else "${modelName}颜色已设置为${colorName}了"
         }
         callback?.onCmdHandleResult(command)
     }

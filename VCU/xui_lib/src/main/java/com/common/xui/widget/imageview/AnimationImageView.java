@@ -44,6 +44,7 @@ public class AnimationImageView extends androidx.appcompat.widget.AppCompatImage
     }
 
     private Drawable origilDrawable;
+
     public void startAnimation(int animationRes, long duration) {
         clearAnimation();
         origilDrawable = getDrawable();

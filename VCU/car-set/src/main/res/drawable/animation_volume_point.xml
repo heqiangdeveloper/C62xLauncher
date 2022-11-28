@@ -2,46 +2,126 @@
 <animation-list xmlns:android="http://schemas.android.com/apk/res/android"
     android:oneshot="true">
 
-    <item android:drawable="@drawable/animation_volume_point0" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point1" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point2" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point3" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point4" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point5" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point6" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point7" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point8" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point9" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point10" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point11" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point12" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point13" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point14" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point15" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point16" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point17" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point18" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point19" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point20" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point21" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point22" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point23" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point24" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point25" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point26" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point27" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point28" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point29" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point30" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point31" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point32" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point33" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point34" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point35" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point36" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point37" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point38" android:duration="50"></item>
-    <item android:drawable="@drawable/animation_volume_point39" android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point0"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point1"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point2"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point3"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point4"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point5"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point6"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point7"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point8"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point9"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point10"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point11"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point12"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point13"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point14"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point15"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point16"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point17"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point18"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point19"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point20"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point21"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point22"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point23"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point24"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point25"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point26"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point27"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point28"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point29"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point30"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point31"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point32"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point33"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point34"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point35"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point36"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point37"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point38"
+        android:duration="50"></item>
+    <item
+        android:drawable="@drawable/animation_volume_point39"
+        android:duration="50"></item>
 
 
 </animation-list>

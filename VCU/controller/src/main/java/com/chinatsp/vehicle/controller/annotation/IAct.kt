@@ -60,7 +60,6 @@ annotation class IAct {
         const val ENDURANCE_MILEAGE = 0x05
 
 
-
         /**
          * 保养里程
          */
@@ -105,6 +104,7 @@ annotation class IAct {
          * 雾灯
          */
         const val FOG_LIGHT = 0x0B
+
         /**
          * 位置灯
          */

@@ -19,7 +19,7 @@
 
     </style>
 
-    <style name="vcu_main"  parent="Theme.AppCompat.NoActionBar">
+    <style name="vcu_main" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@color/transparent</item>
     </style>
 

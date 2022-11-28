@@ -12,7 +12,9 @@ import kotlin.properties.Delegates
  * @desc   :
  * @version: 1.0
  */
-open class BaseApp : Application() {
+abstract class BaseApp : Application() {
+
+    abstract val loadLibraries: Byte
 
     val mainHandler: Handler by lazy {
         Handler(mainLooper)

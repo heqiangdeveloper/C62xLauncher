@@ -267,9 +267,9 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
         super.onDestroy()
         //外后视镜位置
         val intent = Intent("com.chinatsp.vehiclenetwork.usercenter")
-        val json = "{\"externalMirrorPosition\":\""+1024+"\"}"
+        val json = "{\"externalMirrorPosition\":\"" + 1024 + "\"}"
         intent.putExtra("app", "com.chinatsp.vehicle.settings")
-        intent.putExtra("rearviewMirror",json)
+        intent.putExtra("rearviewMirror", json)
         intent.setPackage("com.chinatsp.usercenter")
         activity?.startService(intent)
     }

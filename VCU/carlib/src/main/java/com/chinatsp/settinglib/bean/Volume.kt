@@ -9,7 +9,8 @@ import com.chinatsp.settinglib.optios.Progress
  * @desc   :
  * @version: 1.0
  */
-data class Volume(val type: Progress, var min: Int, var max: Int, var pos: Int) : Comparable<Volume> {
+data class Volume(val type: Progress, var min: Int, var max: Int, var pos: Int) :
+    Comparable<Volume> {
 
     override fun equals(other: Any?): Boolean {
         return super.equals(other)

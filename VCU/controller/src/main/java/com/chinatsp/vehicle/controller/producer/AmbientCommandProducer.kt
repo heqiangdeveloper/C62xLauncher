@@ -2,7 +2,6 @@ package com.chinatsp.vehicle.controller.producer
 
 import android.text.TextUtils
 import com.chinatsp.vehicle.controller.CarController
-import com.chinatsp.vehicle.controller.LogManager
 import com.chinatsp.vehicle.controller.annotation.Action
 import com.chinatsp.vehicle.controller.annotation.ICar
 import com.chinatsp.vehicle.controller.annotation.IPart

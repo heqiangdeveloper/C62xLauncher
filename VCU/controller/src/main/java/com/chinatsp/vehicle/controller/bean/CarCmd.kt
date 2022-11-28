@@ -2,7 +2,10 @@ package com.chinatsp.vehicle.controller.bean
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.chinatsp.vehicle.controller.annotation.*
+import com.chinatsp.vehicle.controller.annotation.Action
+import com.chinatsp.vehicle.controller.annotation.IAct
+import com.chinatsp.vehicle.controller.annotation.ICar
+import com.chinatsp.vehicle.controller.annotation.Model
 
 /**
  * @author : luohong

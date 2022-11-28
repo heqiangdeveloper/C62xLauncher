@@ -79,7 +79,8 @@ class DriveLightingFragment : BaseFragment<CombineViewModel, DriveLightingFragme
 
     private fun onViewClick(it: View) {
         when (it) {
-            binding.driveHmaDetails -> updateHintMessage(R.string.drive_hma_title, R.string.hma_details)
+            binding.driveHmaDetails -> updateHintMessage(R.string.drive_hma_title,
+                R.string.hma_details)
         }
     }
 

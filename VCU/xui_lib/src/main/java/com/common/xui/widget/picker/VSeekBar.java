@@ -310,7 +310,7 @@ public class VSeekBar extends View {
         float yOffset = ((normalRectF.height() - bitmap.getHeight()) / 2);
         float left = normalRectF.left + xOffset;
         float top = normalRectF.top + yOffset;
-       // canvas.drawBitmap(bitmap, left, top, null);
+        // canvas.drawBitmap(bitmap, left, top, null);
         left = normalRectF.right - xOffset - bitmap.getWidth();
         canvas.drawBitmap(bitmap, left, top, null);
 

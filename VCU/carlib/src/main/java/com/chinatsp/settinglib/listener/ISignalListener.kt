@@ -10,7 +10,7 @@ import com.chinatsp.vehicle.controller.annotation.Model
  * @desc   :
  * @version: 1.0
  */
-interface ISignalListener: IBaseListener {
+interface ISignalListener : IBaseListener {
 
     fun onSignalChanged(@IPart part: Int, @Model model: Int, signal: Int, value: Int)
 }

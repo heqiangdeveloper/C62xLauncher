@@ -12,15 +12,16 @@ import com.chinatsp.vehicle.settings.R;
 public class DialogMaster {
     private SystemAlertDialog dialog;
 
-    public static DialogMaster create(Context activity, OnPressOk onPressOk, OnPressCancel onPressCancel,int width,int height) {
+    public static DialogMaster create(Context activity, OnPressOk onPressOk, OnPressCancel onPressCancel, int width, int height) {
         return create(activity, onPressOk, onPressCancel, R.layout.global_dialog_fragment, width, height);
     }
+
     public static DialogMaster create(Context activity, OnPressOk onPressOk, OnPressCancel onPressCancel, int layoutResId,
                                       int width, int height) {
         DialogMaster dialogMaster = new DialogMaster();
-        dialogMaster.dialog = new SystemAlertDialog(activity,layoutResId);
+        dialogMaster.dialog = new SystemAlertDialog(activity, layoutResId);
         dialogMaster.dialog.setLayout(width, height);
-        dialogMaster.insertListener(onPressOk,onPressCancel);
+        dialogMaster.insertListener(onPressOk, onPressCancel);
         // 设置背景透明
         Window window = dialogMaster.dialog.getWindow();
         if (window != null) {
@@ -28,7 +29,8 @@ public class DialogMaster {
         }
         return dialogMaster;
     }
-    public SystemAlertDialog getDialog(){
+
+    public SystemAlertDialog getDialog() {
         return dialog;
     }
 
@@ -71,10 +73,11 @@ public class DialogMaster {
         }*/
     }
 
-    public interface OnPressOk{
+    public interface OnPressOk {
         void onPress(View v);
     }
-    public interface OnPressCancel{
+
+    public interface OnPressCancel {
         void onPress(View v);
     }
 

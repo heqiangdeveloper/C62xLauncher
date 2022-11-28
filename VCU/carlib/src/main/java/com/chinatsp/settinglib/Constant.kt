@@ -37,7 +37,7 @@ object Constant {
     var POWER_STATE = INVALID
 
 
-        /**
+    /**
      * 浅色主题（白天模式）
      */
     const val LIGHT_TOPIC: Int = 0x01
@@ -156,6 +156,7 @@ object Constant {
      */
     val DARK_BRIGHTNESS_LEVEL: String
         get() = "DARK_BRIGHTNESS_LEVEL"
+
     /**
      * 白天模式
      */

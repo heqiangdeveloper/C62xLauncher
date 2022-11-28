@@ -31,7 +31,7 @@ object CarController : IController {
     override fun doVoiceVehicleQuery(
         controller: IOuterController,
         callback: ICmdCallback,
-        model: NlpVoiceModel
+        model: NlpVoiceModel,
     ): Boolean {
         val slots: Slots = model.slots
         val command: CarCmd? = otherProducer.attemptVehicleInfoCommand(slots)
@@ -85,7 +85,8 @@ object CarController : IController {
             || slots.text.contains("自动倒车")
             || slots.text.contains("车位页面")
             || slots.text.contains("停车位置")
-            || slots.text.contains("倒车")) {
+            || slots.text.contains("倒车")
+        ) {
             val command = CarCmd(action = Action.VOID, model = Model.AUTO_PARK)
             command.slots = slots
             return command

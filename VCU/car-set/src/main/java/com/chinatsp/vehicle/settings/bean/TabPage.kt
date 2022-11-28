@@ -1,6 +1,5 @@
 package com.chinatsp.vehicle.settings.bean
 
-import com.chinatsp.settinglib.BaseApp
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.fragment.CommonlyFragment
 import com.chinatsp.vehicle.settings.fragment.cabin.CabinManagerFragment

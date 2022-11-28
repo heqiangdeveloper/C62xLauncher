@@ -12,8 +12,8 @@ import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.chinatsp.vehicle.settings.databinding.DoorsManageFragmentBinding
-import com.common.library.frame.base.BaseFragment
 import com.chinatsp.vehicle.settings.fragment.BaseTabFragment
+import com.common.library.frame.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

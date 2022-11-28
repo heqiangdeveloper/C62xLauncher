@@ -51,7 +51,7 @@ class BrightnessManager : BaseManager(), IProgressManager, ISwitchManager {
     }
 
     private val hostScreenLevel: IntArray by lazy {
-        intArrayOf(0x19, 0x33, 0x4C,0x66, 0x7F, 0x99, 0xB2, 0xCC, 0xE5, 0xFF)
+        intArrayOf(0x19, 0x33, 0x4C, 0x66, 0x7F, 0x99, 0xB2, 0xCC, 0xE5, 0xFF)
     }
 
     private val thirdScreenBrightness: IntArray
@@ -253,10 +253,12 @@ class BrightnessManager : BaseManager(), IProgressManager, ISwitchManager {
         val screenLevel: Int
         if (dark) {
             action = "net.easyconn.navi.night"
-            screenLevel = VcuUtils.getInt(key = Constant.DARK_BRIGHTNESS_LEVEL, value = progress.min)
+            screenLevel =
+                VcuUtils.getInt(key = Constant.DARK_BRIGHTNESS_LEVEL, value = progress.min)
         } else {
             action = "net.easyconn.navi.daytime"
-            screenLevel = VcuUtils.getInt(key = Constant.LIGHT_BRIGHTNESS_LEVEL, value = progress.def)
+            screenLevel =
+                VcuUtils.getInt(key = Constant.LIGHT_BRIGHTNESS_LEVEL, value = progress.def)
         }
         Timber.e("DARK_LIGHT_MODE doSwitchLightDarkMode dark:$dark, screenLevel:$screenLevel")
         doSetVolume(progress, screenLevel)

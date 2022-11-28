@@ -104,7 +104,8 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
     }
 
     private fun interruptCommand(
-        command: AirCmd, callback: ICmdCallback?, coreEngine: Boolean = false): Boolean {
+        command: AirCmd, callback: ICmdCallback?, coreEngine: Boolean = false,
+    ): Boolean {
         val result = if (coreEngine) {
             !VcuUtils.isPower() || !VcuUtils.isEngineRunning()
         } else {

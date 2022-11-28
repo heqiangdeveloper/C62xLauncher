@@ -27,7 +27,6 @@ import com.common.xui.utils.ResUtils
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlin.collections.HashMap
 
 /**
  * @author : luohong
@@ -38,7 +37,7 @@ import kotlin.collections.HashMap
  */
 @AndroidEntryPoint
 class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBinding>(),
-    IOptionAction,SteeringKeysDialogFragment.SetOnClickDialogListener {
+    IOptionAction, SteeringKeysDialogFragment.SetOnClickDialogListener {
     val PRIVACY_MODE = 0x11
     val TURN_OFF_SCREEN = 0x21
     val NAVIGATION = 0x31
@@ -198,6 +197,7 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
         binding.wheelCustomKeys.setOnClickListener(this::onViewClick)
         binding.wheelAutomaticHeating.setOnClickListener(this::onViewClick)
     }
+
     var fragment: DialogFragment? = null
 
     private fun showDialogFragment(serial: String) {
@@ -239,7 +239,7 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
 //        }
 //    }
 
-    private fun heelCustomKeys(){
+    private fun heelCustomKeys() {
         val viewId = when (VcuUtils.getInt(key = Constant.CUSTOM_KEYPAD, value = PRIVACY_MODE)) {
             NAVIGATION -> R.string.cabin_wheel_navigation
             PRIVACY_MODE -> R.string.cabin_wheel_press_key_tv

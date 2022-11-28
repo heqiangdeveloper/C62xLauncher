@@ -53,30 +53,32 @@ class EqualizerDialogFragment :
             this.dismiss()
         }
     }
-   private fun initData(){
-       if (VcuUtils.isAmplifier) {
-           xValue = listOf(
-               activity?.resources?.getString(R.string.bass),
-               activity?.resources?.getString(R.string.medium_bass),
-               activity?.resources?.getString(R.string.medium),
-               activity?.resources?.getString(R.string.medium_treble),
-               activity?.resources?.getString(R.string.treble)
-           ) as List<String>
-       } else {
-           xValue = listOf(
-               activity?.resources?.getString(R.string.sixty_five),
-               activity?.resources?.getString(R.string.two_hundred_fifty),
-               activity?.resources?.getString(R.string.seven_hundred_fifty),
-               activity?.resources?.getString(R.string.one_thousand_three_hundred),
-               activity?.resources?.getString(R.string.two_thousand_three_hundred),
-               activity?.resources?.getString(R.string.three_thousand_five_hundred),
-               activity?.resources?.getString(R.string.six_thousand_five_hundred),
-               activity?.resources?.getString(R.string.eight_thousand_five_hundred),
-               activity?.resources?.getString(R.string.eighteen_thousand)
-           ) as List<String>
-       }
-   }
-    private fun registerController(){
+
+    private fun initData() {
+        if (VcuUtils.isAmplifier) {
+            xValue = listOf(
+                activity?.resources?.getString(R.string.bass),
+                activity?.resources?.getString(R.string.medium_bass),
+                activity?.resources?.getString(R.string.medium),
+                activity?.resources?.getString(R.string.medium_treble),
+                activity?.resources?.getString(R.string.treble)
+            ) as List<String>
+        } else {
+            xValue = listOf(
+                activity?.resources?.getString(R.string.sixty_five),
+                activity?.resources?.getString(R.string.two_hundred_fifty),
+                activity?.resources?.getString(R.string.seven_hundred_fifty),
+                activity?.resources?.getString(R.string.one_thousand_three_hundred),
+                activity?.resources?.getString(R.string.two_thousand_three_hundred),
+                activity?.resources?.getString(R.string.three_thousand_five_hundred),
+                activity?.resources?.getString(R.string.six_thousand_five_hundred),
+                activity?.resources?.getString(R.string.eight_thousand_five_hundred),
+                activity?.resources?.getString(R.string.eighteen_thousand)
+            ) as List<String>
+        }
+    }
+
+    private fun registerController() {
         mCollapseController = CollapseController(activity, mDrawerCollapseListener)
         mCollapseController!!.register()
     }
@@ -178,10 +180,11 @@ class EqualizerDialogFragment :
     override fun getWidthRatio(): Float {
         return if (VcuUtils.isAmplifier) {
             1000f / 1920f
-        }else{
+        } else {
             960f / 1920f
         }
     }
+
     private var mDrawerCollapseListener: ICollapseListener? = object : ICollapseListener {
         override fun onCollapse(key: Int) {
             initEQ()
@@ -193,8 +196,10 @@ class EqualizerDialogFragment :
         mCollapseController!!.unRegister()
     }
 
-    private fun initEQ(){
-        EffectManager.instance.onRadioChanged(RadioNode.SYSTEM_SOUND_EFFECT, EffectManager.instance.eqMode, EffectManager.instance.getDefaultEqSerial())
+    private fun initEQ() {
+        EffectManager.instance.onRadioChanged(RadioNode.SYSTEM_SOUND_EFFECT,
+            EffectManager.instance.eqMode,
+            EffectManager.instance.getDefaultEqSerial())
     }
 }
 

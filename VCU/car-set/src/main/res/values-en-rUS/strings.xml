@@ -34,7 +34,7 @@
     <string name="car_trunk">Power tailgate</string>
     <string name="car_mirror">外后视镜</string>
     <string name="car_door_smart">Intelligent entry</string>
-    <string name="car_nfc_disable">nfc卡禁用</string>
+    <string name="car_nfc_disable">NFC卡禁用</string>
     <string name="acc_off_auto_unlock">Fame-out automatic locked</string>
     <string name="drive_auto_lock">Driving automatic locked</string>
     <string name="unlock_fron">Unlock front door only</string>
@@ -132,7 +132,7 @@
         操作时，务必打开⾬刮维修\n
         模式。打开⾬刮维修，⾬刮\n
         将⾃动运⾏⾄维修位置。</string>
-    <string name="wheel_automatic_heating_content">携带智能钥匙靠近或离开车\n
+    <string name="wheel_automatic_heating_content">&#160;携带智能钥匙靠近或离开车\n
         辆一定距离时，车门将自动\n
         解锁或闭锁。</string>
 

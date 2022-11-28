@@ -13,7 +13,7 @@ public class NlpVoiceModel implements Parcelable {
     public int direction;
     public int isOuting;
 
-    public NlpVoiceModel(){
+    public NlpVoiceModel() {
 
     }
 

@@ -3,8 +3,6 @@ package com.chinatsp.settinglib.manager.cabin
 import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.hvac.CarHvacManager
 import com.chinatsp.settinglib.sign.Origin
-import timber.log.Timber
-import kotlin.math.roundToInt
 
 /**
  * @author : luohong
@@ -159,7 +157,6 @@ class AirGetter(val manager: ACManager) {
     }
 
 
-
     /**
      * 前除霜状态
      */
@@ -167,6 +164,7 @@ class AirGetter(val manager: ACManager) {
         val value = hvacValue(CarHvacManager.ID_HAVC_AC_DIS_DEFROST)
         return 0x1 == value
     }
+
     /**
      * 后除霜状态
      * 0x0:Off; 0x1:On

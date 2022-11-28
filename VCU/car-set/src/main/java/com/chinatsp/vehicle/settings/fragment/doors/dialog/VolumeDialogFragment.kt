@@ -1,8 +1,7 @@
 package com.chinatsp.vehicle.settings.fragment.doors.dialog
 
-import android.content.Intent
 import android.os.Bundle
-import com.chinatsp.settinglib.SettingManager
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.VolumeDialogFragmentBinding
 import com.chinatsp.vehicle.settings.vm.sound.SoundEffectViewModel
@@ -18,8 +17,8 @@ class VolumeDialogFragment :
     private var OFFSET = 1
     private var DEFALUT_BALANCE = 0
     private var DEFALUT_FADE = 0
-
-    private val TAG = "VolumeDialogFragment"
+//
+//    private val TAG = "VolumeDialogFragment"
 
     override fun getLayoutId(): Int {
 
@@ -31,15 +30,14 @@ class VolumeDialogFragment :
         binding.closeDialog.setOnClickListener {
             this.dismiss()
         }
-        Timber.d("getAmpType type=${SettingManager.getAmpType()}")
-        if (SettingManager.getAmpType() == 0) {// 1 外置 1-11  ||  0 内置 ——》1-19
-            SoundFieldView.BALANCE_MAX = 18.0;
-            SoundFieldView.FADE_MAX = 18.0;
+        if (VcuUtils.isAmplifier) {// 1 外置 1-11  ||  0 内置 ——》1-19
+            SoundFieldView.BALANCE_MAX = 18.0
+            SoundFieldView.FADE_MAX = 18.0
             Timber.d("getAmpType OFFSET=${OFFSET} BALANCE_MAX= ${SoundFieldView.BALANCE_MAX}   FADE_MAX =${SoundFieldView.FADE_MAX}")
         }
 
-        DEFALUT_BALANCE = (SoundFieldView.BALANCE_MAX / 2).toInt();
-        DEFALUT_FADE = (SoundFieldView.FADE_MAX / 2).toInt();
+        DEFALUT_BALANCE = (SoundFieldView.BALANCE_MAX / 2).toInt()
+        DEFALUT_FADE = (SoundFieldView.FADE_MAX / 2).toInt()
 
 
 
@@ -81,13 +79,13 @@ class VolumeDialogFragment :
             binding?.apply {
                 if (balance != null) {
                     // soundField?.balanceValue = balance + OFFSET
-                    soundField?.balanceValue = balance - OFFSET
+                    soundField.balanceValue = balance - OFFSET
                 }
                 if (fade != null) {
                     //  soundField.fadeValue = -fade + OFFSET
                     soundField.fadeValue = fade - OFFSET
                 }
-                Timber.d("after getAudioBalFadInfo balance:${soundField?.balanceValue} fade:${soundField.fadeValue}")
+                Timber.d("after getAudioBalFadInfo balance:${soundField.balanceValue} fade:${soundField.fadeValue}")
             }
         } catch (e: Exception) {
             e.printStackTrace()

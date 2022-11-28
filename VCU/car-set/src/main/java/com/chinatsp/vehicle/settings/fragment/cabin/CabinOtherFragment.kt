@@ -146,7 +146,9 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
         }
         binding.otherWirelessChargingSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.DRIVE_WIRELESS_CHARGING, buttonView, isChecked)
-            if (isChecked){ abnormalCharge()}
+            if (isChecked) {
+                abnormalCharge()
+            }
         }
         binding.otherWirelessChargingLampSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked){
@@ -222,7 +224,9 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
 
         if (triggerElectrical && wcmSwitch && peps && wcmStr && receiving) {
             //充电成功
-            showToast(context, context?.resources?.getString(R.string.cabin_other_wireless_charging_working_properly), true)
+            showToast(context,
+                context?.resources?.getString(R.string.cabin_other_wireless_charging_working_properly),
+                true)
             return
         } else if (triggerElectrical && wcmSwitch && peps && wcm) {
             //检测到异物

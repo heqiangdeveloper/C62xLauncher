@@ -4,17 +4,12 @@ import android.car.hardware.cabin.CarCabinManager
 import android.content.Intent
 import android.graphics.Color
 import com.chinatsp.settinglib.SettingManager.Companion.context
-import com.chinatsp.settinglib.bean.AppState
 import com.chinatsp.settinglib.bean.ValueBean
 import com.chinatsp.settinglib.constants.OffLine
 import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.cabin.WheelManager
 import com.chinatsp.settinglib.sign.Origin
-import com.chinatsp.vehicle.controller.semantic.GsonUtil
 import timber.log.Timber
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 
 /**
@@ -50,7 +45,8 @@ object Applet {
 //                val data = GsonUtil.objectToString(map)
 //                val appState = AppState(activeStatus = if (next) "fg" else "bg")
 //                val data = GsonUtil.objectToString(appState)
-                val data = "{\"data\": {},\"activeStatus\": \"${if (next) "fg" else "bg"}\",\"sceneStatus\":\"default\",\"service\": \"carControl\",\"scene\": \"carControl\",\"default\": \"360\"}"
+                val data =
+                    "{\"data\": {},\"activeStatus\": \"${if (next) "fg" else "bg"}\",\"sceneStatus\":\"default\",\"service\": \"carControl\",\"scene\": \"carControl\",\"default\": \"360\"}"
                 Timber.d("uploadStatus send 360 state json:$data")
                 val intent: Intent = Intent()
                     .setAction("com.iflytek.autofly.business.response")
@@ -74,7 +70,7 @@ object Applet {
         return (speed * 0.1).toFloat()
     }
 
-//    语音控制车窗
+    //    语音控制车窗
 //    0:不支持(default)
 //    1:仅主驾
 //    2:四门

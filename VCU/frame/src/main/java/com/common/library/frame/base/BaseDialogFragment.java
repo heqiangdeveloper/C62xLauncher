@@ -125,7 +125,7 @@ public abstract class BaseDialogFragment<VM extends BaseViewModel, VDB extends V
             window.getAttributes().windowAnimations = R.style.common_frame_dialog_animation;
             //setWindow(window, Gravity.NO_GRAVITY, getWidthRatio(), 0, 0, 0, 0, 0, 0);
             int barHeight = Utils.getStatusBarHeight(getActivity());
-            setWindow(window, Gravity.NO_GRAVITY, getWidthRatio(), 0, -barHeight+20, 0, 0, 0, 0);
+            setWindow(window, Gravity.NO_GRAVITY, getWidthRatio(), 0, -barHeight + 20, 0, 0, 0, 0);
         }
     }
 

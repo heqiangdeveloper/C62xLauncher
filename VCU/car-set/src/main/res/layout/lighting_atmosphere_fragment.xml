@@ -36,7 +36,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-         <View
+            <View
                 android:id="@+id/lighting_view_back_2"
                 android:layout_width="@dimen/x100"
                 android:layout_height="@dimen/x100"
@@ -54,7 +54,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginTop="@dimen/x100"
-                android:layout_marginStart="@dimen/x130"/>
+                android:layout_marginStart="@dimen/x130" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/lighting_image"

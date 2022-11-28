@@ -84,7 +84,7 @@ class CabinSeatFragment : BaseFragment<SeatViewModel, CabinSeatFragmentBinding>(
 
     private fun onViewClick(it: View) {
         when (it) {
-            binding.cabinSeatCopilotGuests ->  {
+            binding.cabinSeatCopilotGuests -> {
                 activity?.supportFragmentManager?.let {
                     showDialogFragment(CopilotGuestsDialogFragment())
                 }
@@ -139,7 +139,7 @@ class CabinSeatFragment : BaseFragment<SeatViewModel, CabinSeatFragmentBinding>(
     private fun setSwitchListener() {
         binding.seatMainMeetSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.SEAT_MAIN_DRIVE_MEET, buttonView, isChecked)
-            if(!isChecked){
+            if (!isChecked) {
                 Toast.showToast(context, getString(R.string.cabin_seat_welcomes_guests_close), true)
             }
         }
@@ -154,9 +154,9 @@ class CabinSeatFragment : BaseFragment<SeatViewModel, CabinSeatFragmentBinding>(
         super.onDestroy()
         //主副驾座椅位置
         val intent = Intent("com.chinatsp.vehiclenetwork.usercenter")
-        val json = "{\"mainPassengerSeatPosition\":\""+132.125+"\"}"
+        val json = "{\"mainPassengerSeatPosition\":\"" + 132.125 + "\"}"
         intent.putExtra("app", "com.chinatsp.vehicle.settings")
-        intent.putExtra("seat",json)
+        intent.putExtra("seat", json)
         intent.setPackage("com.chinatsp.usercenter")
         activity?.startService(intent)
     }

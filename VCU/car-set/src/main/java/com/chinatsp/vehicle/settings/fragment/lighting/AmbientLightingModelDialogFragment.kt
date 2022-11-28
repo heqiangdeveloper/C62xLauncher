@@ -32,6 +32,7 @@ class AmbientLightingModelDialogFragment :
     override fun getLayoutId(): Int {
         return R.layout.lighting_model_dialog_fragment
     }
+
     override fun initData(savedInstanceState: Bundle?) {
         binding.closeDialog.setOnClickListener { dismiss() }
         initViewsDisplay()

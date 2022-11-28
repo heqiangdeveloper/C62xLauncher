@@ -78,7 +78,8 @@ class DriveTrafficFragment : BaseFragment<CombineViewModel, DriveTrafficFragment
 
     private fun onViewClick(it: View) {
         when (it) {
-            binding.driveSlaDetails -> updateHintMessage(R.string.drive_sla_title, R.string.tsr_details)
+            binding.driveSlaDetails -> updateHintMessage(R.string.drive_sla_title,
+                R.string.tsr_details)
         }
     }
 

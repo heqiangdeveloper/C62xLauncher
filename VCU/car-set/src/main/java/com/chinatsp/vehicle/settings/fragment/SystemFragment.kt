@@ -10,7 +10,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SystemFragment : BaseTabFragment<BaseViewModel, FragmentSimpleTabBinding>() {
-    
+
 
     override val tabLocation: MutableLiveData<Int> by lazy { MutableLiveData(0) }
 

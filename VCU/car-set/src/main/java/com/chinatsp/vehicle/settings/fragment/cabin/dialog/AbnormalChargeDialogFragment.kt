@@ -8,7 +8,8 @@ import com.common.library.frame.base.BaseDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AbnormalChargeDialogFragment : BaseDialogFragment<SeatViewModel, AbnormalChargeDialogFragmentBinding>() {
+class AbnormalChargeDialogFragment :
+    BaseDialogFragment<SeatViewModel, AbnormalChargeDialogFragmentBinding>() {
     override fun getLayoutId(): Int {
         return R.layout.abnormal_charge_dialog_fragment
     }

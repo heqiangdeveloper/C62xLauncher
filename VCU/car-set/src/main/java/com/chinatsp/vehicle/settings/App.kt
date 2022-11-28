@@ -70,6 +70,11 @@ class App : BaseApp() {
         startControlService()
     }
 
+    override val loadLibraries: Byte by lazy {
+        System.loadLibrary("kanzi")
+        return@lazy 1
+    }
+
     private fun startControlService() {
         val intent = Intent(applicationContext, VehicleService::class.java)
         startService(intent)

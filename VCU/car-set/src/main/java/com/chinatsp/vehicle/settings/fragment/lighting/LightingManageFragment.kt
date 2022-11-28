@@ -14,8 +14,8 @@ import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.chinatsp.vehicle.settings.databinding.LightingManageFragmentBinding
-import com.common.library.frame.base.BaseFragment
 import com.chinatsp.vehicle.settings.fragment.BaseTabFragment
+import com.common.library.frame.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -101,7 +101,7 @@ class LightingManageFragment : BaseTabFragment<BaseViewModel, LightingManageFrag
             R.id.lighting_atmosphere -> {
                 if (VcuUtils.isCareLevel(Level.LEVEL3, expect = true)) {
                     binding.lightingManagerLeftTab.setBackgroundResource(R.drawable.left_bar_lv3)
-                }else if (VcuUtils.isCareLevel(Level.LEVEL4, expect = true)) {
+                } else if (VcuUtils.isCareLevel(Level.LEVEL4, expect = true)) {
                     binding.lightingManagerLeftTab.setBackgroundResource(R.drawable.left_bar_lv4)
                 } else {
                     binding.lightingManagerLeftTab.setBackgroundResource(R.drawable.left_bar_lv5)

@@ -119,14 +119,17 @@ object OffLine {
      * 盲区摄像头开关
      */
     const val BSC = "persist.sys.blind.switch"
+
     /**
      * 盲区辅助线开关
      */
     const val GUIDES = "persist.sys.blind.line"
+
     /**
      * 盲区摄像头显示区域
      */
     const val AREA = "persist.sys.blind.location"
+
     /**
      * 语音车窗控制配置
      */

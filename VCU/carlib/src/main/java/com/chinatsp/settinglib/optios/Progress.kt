@@ -201,5 +201,6 @@ enum class Progress(
         get = CanLocate(signal = CarCabinManager.ID_BCM_POS_VIT_RR),
         set = CanLocate(signal = -1)
     );
+
     fun isValid(value: Int): Boolean = value in min..max
 }

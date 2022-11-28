@@ -14,7 +14,7 @@ public class RechargeToast {
         if (TextUtils.isEmpty(text)) {
             return;
         }
-       ToastFactory.getInstance(context).show(context, text, isCenter);
+        ToastFactory.getInstance(context).show(context, text, isCenter);
     }
 
     private static final class ToastFactory {

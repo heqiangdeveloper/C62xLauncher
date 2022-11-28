@@ -603,7 +603,6 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
     }
 
 
-
 //    private fun checkDisableOtherDiv(swb: SwitchButton, status: Boolean) {
 //        if (swb == binding.adasSideBscSwitch) {
 //            val childCount = binding.container.childCount

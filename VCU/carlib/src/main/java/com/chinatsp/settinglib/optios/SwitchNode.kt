@@ -348,7 +348,6 @@ enum class SwitchNode(
         get = Norm(on = 0x1, off = 0x2,
             signal = CarCabinManager.ID_FRONT_WIPER_MAINTENNANCE_STATES),
         set = Norm(on = 0x2, off = 0x3, signal = CarCabinManager.ID_FRONT_WIPER_MAINTENNANCE_SW),
-//        inactive = intArrayOf(0x1, 0x4, 0x3),
         inactive = intArrayOf(0x0, 0x3),
         default = false
     ),
@@ -854,6 +853,7 @@ enum class SwitchNode(
         set = Norm(on = 0x3, off = 0x2, signal = CarCabinManager.ID_HUM_NFC_FORBIDDEN_CMD),
         default = false
     ),
+
     /**
      * get -> 0x0: Not forbidden; 0x1: Forbidden
      * set -> 【设置】NFC读卡器禁用设置（高配HUM发送，低配HUM不发送此信号） [0x1,-1,0x0,0x4]
@@ -872,10 +872,14 @@ enum class SwitchNode(
      * get -> 0x0: Inactive 0x1: No sound(default) 0x2: Sound; 0x3:invalid
      */
     LOCK_SUCCESS_AUDIO_HINT(
-        get = Norm(on = 0x2, off = 0x1, signal = CarCabinManager.ID_LOCK_SUCCESS_SOUND_STATUE),//LOCK_SUCCESS_SOUND_STATUE
-        set = Norm(on = 0x2, off = 0x1, signal = CarCabinManager.ID_LOCK_SUCCESS_SOUND_SET),//LOCK_SUCCESS_SOUND
+        get = Norm(on = 0x2,
+            off = 0x1,
+            signal = CarCabinManager.ID_LOCK_SUCCESS_SOUND_STATUE),//LOCK_SUCCESS_SOUND_STATUE
+        set = Norm(on = 0x2,
+            off = 0x1,
+            signal = CarCabinManager.ID_LOCK_SUCCESS_SOUND_SET),//LOCK_SUCCESS_SOUND
         default = true
-    ){
+    ) {
         override fun isInactive(value: Int): Boolean {
             return value == 0x3
         }
@@ -887,14 +891,18 @@ enum class SwitchNode(
      * get -> 0x0: Inactive 0x1: No sound(default) 0x2: Sound; 0x3:invalid
      */
     LOCK_FAILED_AUDIO_HINT(
-        get = Norm(on = 0x2, off = 0x1, signal = CarCabinManager.ID_LOCK_FAILED_SOUND_STATUE),//LOCK_FAILED_SOUND_STATUE
-        set = Norm(on = 0x2, off = 0x1, signal = CarCabinManager.ID_LOCK_FAILED_SOUND_SET),//LOCK_FAILED_SOUND
+        get = Norm(on = 0x2,
+            off = 0x1,
+            signal = CarCabinManager.ID_LOCK_FAILED_SOUND_STATUE),//LOCK_FAILED_SOUND_STATUE
+        set = Norm(on = 0x2,
+            off = 0x1,
+            signal = CarCabinManager.ID_LOCK_FAILED_SOUND_SET),//LOCK_FAILED_SOUND
         default = true
-    ){
+    ) {
         override fun isInactive(value: Int): Boolean {
             return value == 0x3
         }
-     },
+    },
 
     INVALID(
         get = Norm(on = 0x1, off = 0x0, signal = -1),
