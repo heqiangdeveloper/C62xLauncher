@@ -2,14 +2,14 @@ package com.chinatsp.vehicle.settings.fragment.doors
 
 import android.os.Bundle
 import android.view.View
-import com.chinatsp.settinglib.VcuUtils
+import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.access.DoorManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
-import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.IOptionAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CarDoorsFragmentBinding
@@ -17,6 +17,7 @@ import com.chinatsp.vehicle.settings.vm.DoorsViewModel
 import com.chinatsp.vehicle.settings.widget.AnimationDrawable
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
+import com.common.xui.widget.popupwindow.PopWindow
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -38,6 +39,7 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
     override fun initData(savedInstanceState: Bundle?) {
         initViewsDisplay()
         initAnimation()
+        initDetailsClickListener()
 
         initSwitchOption()
         addSwitchLiveDataListener()
@@ -57,10 +59,16 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
     }
 
     private fun initViewsDisplay() {
-        if (VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4, Level.LEVEL5)) {
-            //lv4跟lv5智能钥匙版本有车门智能进入功能
-            binding.wheelAutomaticHeating.visibility = View.VISIBLE
-            binding.line3.visibility = View.VISIBLE
+        /* if (VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4, Level.LEVEL5)) {
+             //lv3\lv4\lv5智能钥匙版本有车门智能进入功能
+             binding.wheelAutomaticHeating.visibility = View.VISIBLE
+             binding.line3.visibility = View.VISIBLE
+         }*/
+    }
+
+    private fun initDetailsClickListener() {
+        binding.wheelAutomaticHeatingDetails.setOnClickListener {
+            showPopWindow(R.string.wheel_automatic_heating_content, it)
         }
     }
 
@@ -110,7 +118,7 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
         syncNfcDisplay(timely = true)
     }
 
-    private fun syncNfcDisplay(timely: Boolean = true){
+    private fun syncNfcDisplay(timely: Boolean = true) {
         val inner = viewModel.nfcInner.value?.get() ?: false
         val outer = viewModel.nfcOuter.value?.get() ?: false
         if (!timely) {
@@ -124,10 +132,10 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
         viewModel.smartDoorAccess.observe(this) {
             doUpdateSwitch(SwitchNode.DOOR_SMART_ENTER, it)
         }
-        viewModel.nfcInner.observe(this){
+        viewModel.nfcInner.observe(this) {
             syncNfcDisplay(timely = true)
         }
-        viewModel.nfcOuter.observe(this){
+        viewModel.nfcOuter.observe(this) {
             syncNfcDisplay(timely = true)
         }
     }
@@ -197,5 +205,22 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
                 animationCarDoor.start(false, 50, null)
             }
         }
+    }
+
+    private fun showPopWindow(id: Int, view: View) {
+        var popWindow: PopWindow? = null
+        if (view.id == binding.wheelAutomaticHeatingDetails.id) {
+            popWindow = PopWindow(activity, R.layout.pop_window,
+                activity?.let {
+                    AppCompatResources.getDrawable(
+                        it,
+                        R.drawable.popup_bg_qipao451_214
+                    )
+                })
+            popWindow.showDownLift(view, 30, -140)
+        }
+        val text: TextView = popWindow?.findViewById(R.id.content) as TextView
+        text.text = resources.getString(id)
+
     }
 }

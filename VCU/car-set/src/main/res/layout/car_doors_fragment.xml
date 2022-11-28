@@ -25,9 +25,9 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     style="@style/constraintLayout"
+                    android:paddingBottom="@dimen/x20"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:paddingBottom="@dimen/x20">
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <LinearLayout
                         android:id="@+id/linearLayout"
@@ -92,15 +92,23 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/switch_item_option_height"
                         android:orientation="horizontal"
-                        android:visibility="gone"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/line2">
 
                         <TextView
+                            android:id="@+id/wheel_automatic_heating_txt"
                             style="@style/switch_row_option_style"
                             android:text="@string/car_door_smart"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/wheel_automatic_heating_details"
+                            style="@style/image_prompt"
+                            android:tag="dialogImage"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toRightOf="@+id/wheel_automatic_heating_txt"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <com.common.xui.widget.button.switchbutton.SwitchButton
@@ -116,7 +124,6 @@
                     <View
                         android:id="@+id/line3"
                         style="@style/line"
-                        android:visibility="gone"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/wheel_automatic_heating" />
 
@@ -167,35 +174,35 @@
             android:layout_height="@dimen/x25"
             android:layout_marginTop="@dimen/x64"
             android:layout_marginEnd="@dimen/x58"
-            android:src="@drawable/lock_animation"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:layout_marginBottom="@dimen/x20"
-            android:visibility="gone"/>
+            android:src="@drawable/lock_animation"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/right_car_doorlock"
             android:layout_width="@dimen/x79"
             android:layout_height="@dimen/x85"
             android:layout_marginEnd="@dimen/x103"
+            android:layout_marginBottom="@dimen/x20"
             android:src="@drawable/car_door_animation"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginBottom="@dimen/x20"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/right_flameout"
             android:layout_width="@dimen/x79"
             android:layout_height="@dimen/x85"
             android:layout_marginEnd="@dimen/x105"
+            android:layout_marginBottom="@dimen/x20"
             android:src="@drawable/flameout_animation"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginBottom="@dimen/x20"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

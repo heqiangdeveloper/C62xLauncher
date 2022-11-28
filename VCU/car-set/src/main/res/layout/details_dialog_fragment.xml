@@ -24,7 +24,9 @@
         <ScrollView
             android:id="@+id/hint_content_scroll_view"
             android:layout_width="match_parent"
-            android:layout_margin="@dimen/x10"
+            android:layout_marginStart="@dimen/x100"
+            android:layout_marginTop="@dimen/x14"
+            android:layout_marginEnd="@dimen/x100"
             android:layout_height="0dp"
             android:layout_weight="1">
 
@@ -33,6 +35,8 @@
                 style="@style/txt_prompt_style"
                 android:layout_width="match_parent"
                 android:gravity="center"
+                android:layout_marginLeft="@dimen/x20"
+                android:layout_marginRight="@dimen/x20"
                 android:lineSpacingExtra="@dimen/x2"
                 android:padding="@dimen/x10"
                 android:text="@string/iacc_details"

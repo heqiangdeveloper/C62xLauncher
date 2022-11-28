@@ -25,7 +25,7 @@ class DetailsDialogFragment :
     }
 
     override fun getWidthRatio(): Float {
-        return 1000f / 1920f
+        return 1750f / 1920f
     }
 
     override fun isCanceledOnTouchOutside(): Boolean = false

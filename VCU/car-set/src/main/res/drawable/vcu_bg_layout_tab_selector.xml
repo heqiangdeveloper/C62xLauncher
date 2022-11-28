@@ -3,7 +3,7 @@
 
     <item android:drawable="@drawable/mask" android:state_enabled="false" />
     <item android:drawable="@drawable/mask" android:state_selected="true" />
-    <item android:drawable="@drawable/mask" android:state_pressed="true" />
+    <item android:drawable="@drawable/mask_press" android:state_pressed="true" />
     <item android:drawable="@drawable/mask_nomal" />
 
 </selector>

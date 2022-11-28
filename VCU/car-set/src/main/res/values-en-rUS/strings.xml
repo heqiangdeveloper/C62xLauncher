@@ -99,9 +99,12 @@
     <string name="cabin_other_sensor_sensitivity">传感器灵敏度</string>
     <string name="cabin_other_trailer_remind_distance">Trailer remind distance</string>
     <string name="cabin_other_toast_content">车辆被拖时无法收到相关提醒</string>
+    <string name="cabin_other_toast_content_open">已开启</string>
     <string name="cabin_other_wireless_charging_working_properly">无线充电工作正常</string>
     <string name="cabin_other_foreign_matter">Foreign metal object detected, please remove</string>
     <string name="cabin_other_determine">确定</string>
+    <string name="cabin_other_wireless_charging_lamp_open">储物盒灯已打开</string>
+    <string name="cabin_other_wireless_charging_lamp_close">储物盒灯已关闭</string>
 
     <string name="note_users_title">用户须知</string>
     <string name="note_users_content">为了确保安全使⽤⼿机⽆线充电功能，请您务必阅读并完全理解以下注意事项并仅可按照提示使⽤该功能：\n
@@ -129,6 +132,9 @@
         操作时，务必打开⾬刮维修\n
         模式。打开⾬刮维修，⾬刮\n
         将⾃动运⾏⾄维修位置。</string>
+    <string name="wheel_automatic_heating_content">携带智能钥匙靠近或离开车\n
+        辆一定距离时，车门将自动\n
+        解锁或闭锁。</string>
 
     <string name="car_trunk_electric_function">Power tailgate electric function</string>
     <string name="car_trunk_intelligence_into">Electric tail door intelligent entry</string>
@@ -401,4 +407,5 @@ IACC会优先通过识别车道两侧清晰的车道线进行横向辅助控制�
     <string name="lane_departure_assist">车道偏离辅助</string>
     <string name="lane_departure_warning">车道偏离预警</string>
     <string name="lane_keeping_assistance">车道保持辅助</string>
+    <string name="zero">0°</string>
 </resources>

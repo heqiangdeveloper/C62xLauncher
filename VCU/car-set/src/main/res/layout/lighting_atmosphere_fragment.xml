@@ -143,10 +143,10 @@
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="@dimen/x31"
                         android:layout_height="@dimen/x31"
-                        android:src="@drawable/icon_dayandnightmode_64" />
+                        android:src="@drawable/brightness_seletor" />
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/txt_prompt_style"
+                        style="@style/txt_lighting_style"
                         android:layout_marginTop="@dimen/x4"
                         android:text="@string/lighting_brightness" />
                 </LinearLayout>
@@ -158,10 +158,10 @@
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="@dimen/x31"
                         android:layout_height="@dimen/x31"
-                        android:src="@drawable/icon_theme_64" />
+                        android:src="@drawable/color_selector" />
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/txt_prompt_style"
+                        style="@style/txt_lighting_style"
                         android:layout_marginTop="@dimen/x4"
                         android:text="@string/lighting_color" />
                 </LinearLayout>
@@ -173,10 +173,10 @@
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="@dimen/x31"
                         android:layout_height="@dimen/x31"
-                        android:src="@drawable/icon_dayandnightmode_64" />
+                        android:src="@drawable/intelligent_selector" />
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/txt_prompt_style"
+                        style="@style/txt_lighting_style"
                         android:layout_marginTop="@dimen/x4"
                         android:text="@string/lighting_intelligent_model" />
                 </LinearLayout>
@@ -188,10 +188,10 @@
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="@dimen/x31"
                         android:layout_height="@dimen/x31"
-                        android:src="@drawable/icon_settings_64" />
+                        android:src="@drawable/lighting_install_selector" />
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/txt_prompt_style"
+                        style="@style/txt_lighting_style"
                         android:layout_marginTop="@dimen/x4"
                         android:text="@string/lighting_install" />
                 </LinearLayout>

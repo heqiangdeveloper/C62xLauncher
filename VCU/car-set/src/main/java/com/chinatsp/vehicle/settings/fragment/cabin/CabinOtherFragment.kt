@@ -14,6 +14,7 @@ import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.ISwitchAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.app.RechargeToast.showToast
+import com.chinatsp.vehicle.settings.app.Toast
 import com.chinatsp.vehicle.settings.databinding.CabinOtherFragmentBinding
 import com.chinatsp.vehicle.settings.fragment.cabin.dialog.AbnormalChargeDialogFragment
 import com.chinatsp.vehicle.settings.fragment.cabin.dialog.ForeignMatterDialogFragment
@@ -148,6 +149,11 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
             if (isChecked){ abnormalCharge()}
         }
         binding.otherWirelessChargingLampSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            if(isChecked){
+                Toast.showToast(context, getString(R.string.cabin_other_wireless_charging_lamp_open), true)
+            }else{
+                Toast.showToast(context, getString(R.string.cabin_other_wireless_charging_lamp_close), true)
+            }
             doUpdateSwitchOption(SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP, buttonView, isChecked)
         }
     }

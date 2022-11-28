@@ -65,6 +65,13 @@
         <item name="android:textColor">@color/tab_option_title_text_color</item>
     </style>
 
+    <style name="txt_lighting_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_14</item>
+        <item name="android:textColor">@color/lighting_txt_color</item>
+    </style>
+
     <style name="switch_button_style">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -170,7 +177,7 @@
     <style name="close_dialog">
         <item name="android:layout_width">@dimen/x28</item>
         <item name="android:layout_height">@dimen/x28</item>
-        <item name="android:src">@drawable/close_56_white</item>
+        <item name="android:src">@drawable/dialog_close_selector</item>
         <item name="android:layout_marginLeft">@dimen/x15</item>
     </style>
 
