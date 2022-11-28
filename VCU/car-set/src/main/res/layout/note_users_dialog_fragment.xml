@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_sound_popup_20"
         android:paddingTop="40px"
-        android:paddingBottom="40px">
+        android:paddingBottom="30px">
 
         <RelativeLayout
             android:id="@+id/pop_title"
@@ -32,7 +32,6 @@
             android:layout_marginStart="@dimen/x120"
             android:layout_marginTop="@dimen/x14"
             android:layout_marginEnd="@dimen/x120"
-            android:scrollbars="none"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/pop_title">
 
@@ -64,7 +63,7 @@
                 android:id="@+id/note_users_agree"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/lighting_dialog_txt_bg"
+                android:background="@drawable/lighting_dialog_txt"
                 android:gravity="center"
                 android:text="@string/note_users_agree"
                 android:textColor="@color/xui_config_color_white"
@@ -75,7 +74,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/x35"
-                android:background="@drawable/lighting_dialog_txt_bg"
+                android:background="@drawable/lighting_dialog_txt_cancel"
                 android:gravity="center"
                 android:text="@string/note_users_cancel"
                 android:textColor="@color/xui_config_color_white"

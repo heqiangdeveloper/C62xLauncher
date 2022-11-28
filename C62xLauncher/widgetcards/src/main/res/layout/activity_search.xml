@@ -57,7 +57,7 @@
             android:layout_height="@dimen/card_icon_size_lv3"
             android:layout_marginEnd="@dimen/search_btn_clear"
             android:onClick="clearSearchText"
-            android:src="@drawable/card_icon_close_48"
+            android:src="@drawable/search_clear_selector"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

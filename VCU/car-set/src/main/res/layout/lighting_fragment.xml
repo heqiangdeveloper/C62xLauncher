@@ -14,9 +14,9 @@
             android:id="@+id/lighting_manager_ScrollView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scrollbars="none"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            android:scrollbarSize="@dimen/x2">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -31,6 +31,7 @@
                         android:id="@+id/lighting_go_home"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/x95"
+                        android:layout_marginEnd="@dimen/x6"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
 
@@ -76,12 +77,14 @@
                         android:id="@+id/line1"
                         style="@style/line"
                         app:layout_constraintStart_toStartOf="parent"
+                        android:layout_marginEnd="@dimen/x6"
                         app:layout_constraintTop_toBottomOf="@id/lighting_go_home" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/lighting_turn_signal"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/x95"
+                        android:layout_marginEnd="@dimen/x6"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/line1">
 
@@ -110,12 +113,14 @@
                         android:id="@+id/line2"
                         style="@style/line"
                         app:layout_constraintStart_toStartOf="parent"
+                        android:layout_marginEnd="@dimen/x6"
                         app:layout_constraintTop_toBottomOf="@id/lighting_turn_signal" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/lighting_physical_switch"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/x95"
+                        android:layout_marginEnd="@dimen/x6"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/line2">
 
@@ -145,6 +150,7 @@
                     <View
                         android:id="@+id/line3"
                         style="@style/line"
+                        android:layout_marginEnd="@dimen/x6"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/lighting_physical_switch" />
 
@@ -152,6 +158,7 @@
                         android:id="@+id/lighting_turn_external"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/x95"
+                        android:layout_marginEnd="@dimen/x6"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/line3">
 
@@ -194,6 +201,7 @@
                         android:id="@+id/line4"
                         style="@style/line"
                         android:visibility="gone"
+                        android:layout_marginEnd="@dimen/x6"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/lighting_turn_external" />
 
@@ -202,6 +210,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/x95"
                         android:visibility="gone"
+                        android:layout_marginEnd="@dimen/x6"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/line3">
 
@@ -232,6 +241,7 @@
                         android:id="@+id/line5"
                         style="@style/line"
                         android:visibility="gone"
+                        android:layout_marginEnd="@dimen/x6"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/lighting_car_screen" />
 
@@ -241,6 +251,7 @@
                         android:layout_height="@dimen/switch_item_option_height"
                         android:orientation="horizontal"
                         android:visibility="gone"
+                        android:layout_marginEnd="@dimen/x6"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/line4">
 
@@ -262,6 +273,7 @@
                     <View
                         android:id="@+id/line6"
                         style="@style/line"
+                        android:layout_marginEnd="@dimen/x6"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/lighting_car_outside" />
 
@@ -271,6 +283,7 @@
                         android:layout_height="@dimen/switch_item_option_height"
                         android:orientation="horizontal"
                         android:visibility="gone"
+                        android:layout_marginEnd="@dimen/x6"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/line6">
 
@@ -293,6 +306,7 @@
                         android:id="@+id/line7"
                         style="@style/line"
                         android:visibility="gone"
+                        android:layout_marginEnd="@dimen/x6"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/lighting_car_inside" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
