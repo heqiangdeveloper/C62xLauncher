@@ -3,7 +3,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="uninstall_dialog_title">Do you want to delete“%s”？</string>
     <string name="uninstall_dialog_vice_title">Deleting this app will also delete its data.</string>
-    <string name="uninstall_dialog_positive">删除APP</string>
+    <string name="uninstall_dialog_positive">删除</string>
     <string name="uninstall_dialog_negative">取消</string>
     <string name="add_dialog_positive">确认</string>
     <string name="add_dialog_negative">取消</string>
