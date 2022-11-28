@@ -8,7 +8,7 @@ import com.chinatsp.widgetcards.R;
 public class DragItemViewHelp implements IDragItemView {
 
     private View mView;
-    private ImageView mBgView;
+    private View mBgView;
     private ImageView mEmptyBgView;
 
     public DragItemViewHelp(View view) {

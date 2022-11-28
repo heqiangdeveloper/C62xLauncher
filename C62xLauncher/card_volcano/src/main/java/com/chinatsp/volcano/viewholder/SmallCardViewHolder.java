@@ -50,7 +50,7 @@ public class SmallCardViewHolder extends VolcanoViewHolder {
         layoutCardVolcanoNormal = rootView.findViewById(R.id.layoutCardVolcanoNormal);
 
         ivCardVolcanoVideoCover.setOnClickListener(mOnClickListener);
-        layoutCardVolcanoNetworkErr.setOnClickListener(mOnClickListener);
+        ivCardVolcanoNetworkErr.setOnClickListener(mOnClickListener);
         ivCardVolcanoNetworkErrCloseBtn.setOnClickListener(mOnClickListener);
 
         mResources = rootView.getResources();

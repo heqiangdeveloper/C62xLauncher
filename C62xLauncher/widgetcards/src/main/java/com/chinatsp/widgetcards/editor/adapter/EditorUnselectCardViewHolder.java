@@ -7,6 +7,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.chinatsp.widgetcards.R;
+import com.chinatsp.widgetcards.editor.CardEditorResUtil;
 import com.chinatsp.widgetcards.manager.CardManager;
 import com.chinatsp.widgetcards.manager.CardNameRes;
 
@@ -18,7 +19,7 @@ import launcher.base.utils.EasyLog;
 public class EditorUnselectCardViewHolder extends BaseViewHolder<LauncherCard> {
     private ImageView mIcon;
     private TextView mName;
-    private ImageView mIvBg;
+    private View mIvBg;
     private ImageView mIvBgEmpty;
 
     private String Tag = "EditorUnselectCardViewHolder";
@@ -32,12 +33,16 @@ public class EditorUnselectCardViewHolder extends BaseViewHolder<LauncherCard> {
     }
 
     @Override
-    public void bind(int position, LauncherCard baseCardEntity) {
-        super.bind(position, baseCardEntity);
-        mName.setText(CardNameRes.getStringRes(baseCardEntity.getType()));
-        mIvBg.setImageResource(baseCardEntity.getUnselectBgRes());
-
-        if (baseCardEntity.getType() != CardManager.CardType.EMPTY) {
+    public void bind(int position, LauncherCard card) {
+        super.bind(position, card);
+        mName.setText(CardNameRes.getStringRes(card.getType()));
+        int iconRes = CardEditorResUtil.getIcon(card.getType());
+        if (iconRes > 0) {
+            mIcon.setImageResource(iconRes);
+        } else {
+            mIcon.setImageDrawable(null);
+        }
+        if (card.getType() != CardManager.CardType.EMPTY) {
             mIvBg.setVisibility(View.VISIBLE);
             mIvBgEmpty.setVisibility(View.GONE);
         } else {

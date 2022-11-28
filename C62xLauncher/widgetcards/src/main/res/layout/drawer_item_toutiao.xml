@@ -40,6 +40,7 @@
         android:layout_marginTop="56px"
         android:visibility="invisible"
         android:orientation="vertical"
+        android:foreground="@drawable/drawer_app_fg_selector"
         android:gravity="center"
         >
         <ImageView

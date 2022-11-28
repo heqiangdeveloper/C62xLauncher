@@ -7,6 +7,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.chinatsp.widgetcards.R;
+import com.chinatsp.widgetcards.editor.CardEditorResUtil;
 import com.chinatsp.widgetcards.manager.CardNameRes;
 
 import card.base.LauncherCard;
@@ -16,7 +17,7 @@ import launcher.base.utils.EasyLog;
 
 public class EditorHomeCardViewHolder extends BaseViewHolder<LauncherCard> {
     private ImageView mIcon;
-    private ImageView mIvBg;
+    private View mIvBg;
     private ImageView mIvBgEmpty;
     private TextView mName;
     private String Tag = "EditorHomeCardViewHolder";
@@ -30,11 +31,15 @@ public class EditorHomeCardViewHolder extends BaseViewHolder<LauncherCard> {
     }
 
     @Override
-    public void bind(int position, LauncherCard baseCardEntity) {
-        super.bind(position, baseCardEntity);
-        mName.setText(CardNameRes.getStringRes(baseCardEntity.getType()));
-        mIvBg.setImageResource(baseCardEntity.getSelectBgRes());
-        mIvBg.setVisibility(View.VISIBLE);
+    public void bind(int position, LauncherCard card) {
+        super.bind(position, card);
+        mName.setText(CardNameRes.getStringRes(card.getType()));
+        int iconRes = CardEditorResUtil.getIcon(card.getType());
+        if (iconRes > 0) {
+            mIcon.setImageResource(iconRes);
+        } else {
+            mIcon.setImageDrawable(null);
+        }
         mIvBgEmpty.setVisibility(View.GONE);
     }
 }

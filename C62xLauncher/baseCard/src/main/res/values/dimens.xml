@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="card_height_selected">214px</dimen>
+    <dimen name="card_height_selected">220px</dimen>
     <dimen name="card_width_selected">220px</dimen>
     <dimen name="card_height_unselected">220px</dimen>
     <dimen name="card_width_unselected">220px</dimen>

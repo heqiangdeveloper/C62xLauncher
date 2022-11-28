@@ -113,7 +113,7 @@
 
         <ImageView
             android:id="@+id/ivCardNaviExit"
-            android:src="@drawable/card_common_button_close"
+            android:src="@drawable/card_common_left_in_selector"
             android:layout_width="@dimen/card_icon_size_lv1"
             android:layout_height="@dimen/card_icon_size_lv1"
             app:layout_constraintStart_toStartOf="@id/ivCardNaviInstruction"
