@@ -417,6 +417,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
     private void setDownloadStatus(boolean isDir,ViewHolder holder,int installed,int status,List<String> packages){
         if(installed == 0 || installed == AppState.INSTALLED_COMPLETELY || installed == AppState.COULD_UPDATE){//完全已安装
             holder.insertAbleGridView.setAlpha(1.0f);
+            holder.tvName.setAlpha(1.0f);
             holder.loadStatusIv.setVisibility(View.GONE);
             holder.loadStatusIv.setImageDrawable(null);
             holder.loadStatusCircleProgressView.setVisibility(View.GONE);
@@ -436,6 +437,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
 //                Log.d("Animation","name = " + name);
                 //下载安装完成，显示扫光效果
                 holder.insertAbleGridView.setAlpha(1.0f);
+                holder.tvName.setAlpha(1.0f);
                 holder.loadStatusCircleProgressView.setVisibility(View.GONE);
                 holder.loadStatusIv.setVisibility(View.VISIBLE);
                 holder.loadStatusIv.setImageResource(R.drawable.sweep_anim);
@@ -468,6 +470,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
                     public void onAnimationEnd(Animation animation) {
                         AD.stop();
                         holder.insertAbleGridView.setAlpha(1.0f);
+                        holder.tvName.setAlpha(1.0f);
                         holder.loadStatusIv.setVisibility(View.GONE);
                         holder.loadStatusIv.setImageBitmap(null);
                         holder.loadStatusCircleProgressView.setVisibility(View.GONE);
@@ -492,6 +495,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
                 });
         }else if(installed == AppState.DOWNLOADING){//下载中
             holder.insertAbleGridView.setAlpha(0.5f);
+            holder.tvName.setAlpha(0.5f);
             holder.loadStatusIv.setVisibility(View.GONE);
             holder.loadStatusIv.setImageDrawable(null);
             holder.loadStatusCircleProgressView.setMax(Constant.MAXVALUE);
@@ -500,6 +504,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             holder.loadStatusCircleProgressView.setVisibility(View.VISIBLE);
         }else if(installed == AppState.DOWNLOAD_PAUSED){//下载暂停
             holder.insertAbleGridView.setAlpha(0.5f);
+            holder.tvName.setAlpha(0.5f);
             holder.loadStatusIv.setVisibility(View.GONE);
             holder.loadStatusIv.setImageDrawable(null);
             holder.loadStatusCircleProgressView.setMax(Constant.MAXVALUE);
@@ -508,11 +513,13 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             holder.loadStatusCircleProgressView.setVisibility(View.VISIBLE);
         }else if(installed == AppState.DOWNLOAD_FAIL){//下载失败
             holder.insertAbleGridView.setAlpha(0.5f);
+            holder.tvName.setAlpha(0.5f);
             holder.loadStatusCircleProgressView.setVisibility(View.GONE);
             holder.loadStatusIv.setImageResource(R.mipmap.apk_fail_load);
             holder.loadStatusIv.setVisibility(View.VISIBLE);
         }else if(installed == AppState.INSTALLING){//安装中
             holder.insertAbleGridView.setAlpha(0.5f);
+            holder.tvName.setAlpha(0.5f);
             holder.loadStatusCircleProgressView.setVisibility(View.GONE);
             holder.loadStatusIv.setVisibility(View.VISIBLE);
             holder.loadStatusIv.setImageResource(R.drawable.installing_anim);
@@ -529,6 +536,7 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             holder.loadStatusIv.startAnimation(trans);
         }else {
             holder.insertAbleGridView.setAlpha(1.0f);
+            holder.tvName.setAlpha(1.0f);
             holder.loadStatusIv.setVisibility(View.GONE);
             holder.loadStatusIv.setImageDrawable(null);
             holder.loadStatusCircleProgressView.setVisibility(View.GONE);
