@@ -17,6 +17,7 @@ import org.json.JSONObject;
 
 
 import launcher.base.async.AsyncSchedule;
+import launcher.base.utils.EasyLog;
 
 public class ResponseParser {
     private JSONObject mJSONObject;

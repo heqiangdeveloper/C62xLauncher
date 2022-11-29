@@ -40,27 +40,28 @@
             app:layout_constraintTop_toTopOf="parent" />
 
 
-        <TextView
-            android:id="@+id/tvDrawerDriveHealthy"
+        <ImageView
+            android:id="@+id/ivDrawerDriveHealthyText"
             style="@style/CardLv4TextView"
             android:layout_width="58px"
             android:layout_height="58px"
             android:layout_marginStart="17px"
             android:layout_marginTop="60px"
-            android:includeFontPadding="false"
-            android:text="-"
-            android:textSize="58px"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
 
             />
 
         <ImageView
-            android:layout_width="429px"
+            android:id="@+id/ivDrawerDriveHealthBottom"
+            android:layout_width="420px"
             android:layout_height="209px"
-            android:src="@drawable/drawer_drive_counselor_car_1"
+            android:src="@drawable/drawer_drive_health_bottom_a"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

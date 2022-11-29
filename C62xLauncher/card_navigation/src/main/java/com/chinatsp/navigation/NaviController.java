@@ -1,13 +1,11 @@
 package com.chinatsp.navigation;
 
+import android.content.ContentResolver;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.text.TextUtils;
-
-import androidx.appcompat.content.res.AppCompatResources;
 
 import com.autonavi.autoaidlwidget.AutoAidlWidgetManager;
 import com.chinatsp.navigation.gaode.bean.Address;
@@ -27,6 +25,7 @@ import launcher.base.ipc.IConnectListener;
 import launcher.base.ipc.IRemoteDataCallback;
 import launcher.base.network.NetworkObserver;
 import launcher.base.network.NetworkUtils;
+import launcher.base.utils.EasyLog;
 import launcher.base.utils.recent.RecentAppHelper;
 
 public class NaviController implements INaviCallback {
@@ -202,10 +201,19 @@ public class NaviController implements INaviCallback {
             mState = STATE_CRUISE;
         } else {
             needRefreshState = false;
+            if (autoStatus == MapStatus.MAP_STYLE_DAY || autoStatus == MapStatus.MAP_STYLE_NIGHT) {
+                dispatchDayNightModeChange(autoStatus);
+            }
         }
         if (needRefreshState) {
             mView.refreshState(mState);
         }
+    }
+
+    private void dispatchDayNightModeChange(int autoStatus) {
+        ContentResolver cr = mView.getContext().getContentResolver();
+        EasyLog.i(TAG, "dispatch map_day_night: "+autoStatus);
+        Settings.Global.putInt(cr, "map_day_night", autoStatus);
     }
 
     @Override

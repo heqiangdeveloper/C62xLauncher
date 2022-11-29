@@ -35,6 +35,7 @@
         android:layout_height="82px"
         android:layout_marginTop="30px"
         android:layout_marginEnd="84px"
+        android:scaleType="fitXY"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
@@ -44,6 +45,7 @@
         android:layout_width="82px"
         android:layout_height="82px"
         android:layout_marginEnd="26px"
+        android:scaleType="fitXY"
         android:src="@drawable/card_volcano_type_douyin_selector"
         app:layout_constraintTop_toTopOf="@id/ivCardVolcanoLogoXigua"
         app:layout_constraintEnd_toStartOf="@id/ivCardVolcanoLogoXigua"
@@ -53,6 +55,7 @@
         android:id="@+id/ivCardVolcanoLogoToutiao"
         android:layout_width="82px"
         android:layout_height="82px"
+        android:scaleType="fitXY"
         android:src="@drawable/card_volcano_type_toutiao_selector"
         android:layout_marginEnd="26px"
         app:layout_constraintTop_toTopOf="@id/ivCardVolcanoLogoDouyin"
