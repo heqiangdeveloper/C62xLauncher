@@ -137,13 +137,19 @@ public class LauncherSearchActivity extends AppCompatActivity implements SearchA
             }
         }
         if (TextUtils.isEmpty(bean.getIntentInterface())) {
+            if (bean.getIntentAction().equals("com.chinatsp.appmanagement")) {
+                Intent intent = new Intent();
+                intent.putExtra("operation", "1");
+                intent.setAction("com.chinatsp.launcher.appmanegement");
+                sendBroadcast(intent);
+            }
             //打开应用
             FileUtils.launchApp(this, bean.getIntentAction());
         } else {
             //打开某个应用某个模块
             try {
                 String intentAction = bean.getIntentAction();
-                EasyLog.i("XXXXXX", "intentAction:"+intentAction);
+                EasyLog.i("XXXXXX", "intentAction:" + intentAction);
                 Intent intent = new Intent(intentAction);
                 intent.putExtra("type", bean.getIntentInterface());
                 intent.putExtra("INTENT_PATH", "LAUNCHER_SEARCH");
@@ -192,7 +198,7 @@ public class LauncherSearchActivity extends AppCompatActivity implements SearchA
             findViewById(R.id.search_hint).setVisibility(View.GONE);
             //List<SearchBean> beans = FileUtils.fuzzySearch(s.toString(),db.getData());
             if (!db.isTableExist() || db.countLocation() == 0) {
-                Log.d(TAG,"edit search insertDB");
+                Log.d(TAG, "edit search insertDB");
                 SearchManager.getInstance().insertDB();
             }
             List<SearchBean> beans = db.getData1(searchStr);
