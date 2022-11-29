@@ -24,23 +24,24 @@
         <ScrollView
             android:id="@+id/hint_content_scroll_view"
             android:layout_width="match_parent"
-            android:layout_marginStart="@dimen/x100"
-            android:layout_marginTop="@dimen/x14"
-            android:layout_marginEnd="@dimen/x100"
             android:layout_height="0dp"
+            android:layout_marginStart="@dimen/x105"
+            android:layout_marginTop="@dimen/x14"
+            android:layout_marginEnd="@dimen/x105"
             android:layout_weight="1">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/details_content"
                 style="@style/txt_prompt_style"
                 android:layout_width="match_parent"
-                android:gravity="center"
-                android:layout_marginLeft="@dimen/x20"
-                android:layout_marginRight="@dimen/x20"
-                android:lineSpacingExtra="@dimen/x2"
+                android:layout_marginLeft="@dimen/x45"
+                android:layout_marginRight="@dimen/x45"
+                android:gravity="start"
+                android:lineSpacingExtra="@dimen/x8"
                 android:padding="@dimen/x10"
                 android:text="@string/iacc_details"
-                android:textSize="@dimen/text_15" />
+                android:textAlignment="textStart"
+                android:textSize="@dimen/text_14" />
         </ScrollView>
 
 

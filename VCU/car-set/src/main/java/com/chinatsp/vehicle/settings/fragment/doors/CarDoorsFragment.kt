@@ -210,7 +210,7 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
     private fun showPopWindow(id: Int, view: View) {
         var popWindow: PopWindow? = null
         if (view.id == binding.wheelAutomaticHeatingDetails.id) {
-            popWindow = PopWindow(activity, R.layout.pop_window,
+            popWindow = PopWindow(activity, R.layout.car_doors_pop_window,
                 activity?.let {
                     AppCompatResources.getDrawable(
                         it,
@@ -219,7 +219,7 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
                 })
             popWindow.showDownLift(view, 30, -140)
         }
-        val text: TextView = popWindow?.findViewById(R.id.content) as TextView
+        var text: TextView = popWindow?.findViewById(R.id.content) as TextView
         text.text = resources.getString(id)
 
     }

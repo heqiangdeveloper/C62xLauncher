@@ -6,11 +6,14 @@ import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.chinatsp.vehicle.settings.databinding.DetailsDialogFragmentBinding
 import com.common.library.frame.base.BaseDialogFragment
+import com.king.base.util.StringUtils
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class DetailsDialogFragment :
     BaseDialogFragment<BaseViewModel, DetailsDialogFragmentBinding>() {
+    private val str: StringBuffer = StringBuffer()
 
     override fun getLayoutId(): Int {
         return R.layout.details_dialog_fragment
@@ -19,7 +22,20 @@ class DetailsDialogFragment :
     override fun initData(savedInstanceState: Bundle?) {
         context?.let {
             binding.detailsTitle.text = HintHold.getTitle(it)
-            binding.detailsContent.text = HintHold.getContent(it)
+            val content = HintHold.getContent()
+                ?.let { it1 -> resources.getString(it1) }
+
+            val stringValue = content?.split("。")
+            if (stringValue != null) {
+                for (i in stringValue) {
+                    if (!StringUtils.isEmpty(i)) {
+                        val contentStr = "\u3000\u3000$i。\n"
+                        str.append(contentStr)
+                    }
+                }
+            }
+            Timber.d("StringBuffer() str:$str")
+            binding.detailsContent.text = str.toString()
         }
         setBackListener()
     }
