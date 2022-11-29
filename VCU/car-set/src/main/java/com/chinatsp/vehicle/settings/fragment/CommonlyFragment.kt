@@ -52,9 +52,25 @@ class CommonlyFragment : BaseTabFragment<KanziViewModel, AccessFragmentBinding>(
     private fun setClickListener() {
         binding.closeWindow.setOnClickListener {
             GlobalManager.instance.doSwitchWindow(false)
+//            val controller = mDataFeeder?.kanziController
+//            controller?.let {
+//                val value = 0
+//                sendDoubleValue(it, KanZiKeys.LFWindowUpDown, value)
+//                sendDoubleValue(it, KanZiKeys.LRWindowUpDown, value)
+//                sendDoubleValue(it, KanZiKeys.RFWindowUpDown, value)
+//                sendDoubleValue(it, KanZiKeys.RRWindowUpDown, value)
+//            }
         }
         binding.openWindow.setOnClickListener {
             GlobalManager.instance.doSwitchWindow(true)
+//            val controller = mDataFeeder?.kanziController
+//            controller?.let {
+//                val value = -40
+//                sendDoubleValue(it, KanZiKeys.LFWindowUpDown, value)
+//                sendDoubleValue(it, KanZiKeys.LRWindowUpDown, value)
+//                sendDoubleValue(it, KanZiKeys.RFWindowUpDown, value)
+//                sendDoubleValue(it, KanZiKeys.RRWindowUpDown, value)
+//            }
         }
         binding.refreshWindow.setOnClickListener {
             GlobalManager.instance.resetSwitchWindow()

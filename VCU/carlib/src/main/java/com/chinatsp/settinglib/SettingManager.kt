@@ -890,7 +890,7 @@ class SettingManager private constructor() {
     fun setTrailerRemind(value: Int): Boolean {
         AppExecutors.get()?.networkIO()?.execute {
             try {
-                val truckInformation = mBoxManager?.truckInformation
+                val truckInformation = obtainTrailer("setSwitch")
                 if (null != truckInformation) {
                     Timber.d("setTrailerRemind start $truckInformation")
                     truckInformation.onOff = value
@@ -907,7 +907,7 @@ class SettingManager private constructor() {
     fun setTrailerDistance(value: Int): Boolean {
         AppExecutors.get()?.networkIO()?.execute {
             try {
-                val truckInformation = mBoxManager?.truckInformation
+                val truckInformation = obtainTrailer("setDist")
                 if (null != truckInformation) {
                     Timber.d("setTrailerDistance start $truckInformation")
                     truckInformation.dist = value
@@ -924,7 +924,7 @@ class SettingManager private constructor() {
     fun setTrailerSensitivity(value: Int): Boolean {
         AppExecutors.get()?.networkIO()?.execute {
             try {
-                val truckInformation = mBoxManager?.truckInformation
+                val truckInformation = obtainTrailer("setLevel")
                 if (null != truckInformation) {
                     Timber.d("setTrailerSensitivity start $truckInformation")
                     truckInformation.level = value

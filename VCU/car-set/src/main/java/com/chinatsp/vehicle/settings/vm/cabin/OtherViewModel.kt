@@ -3,9 +3,12 @@ package com.chinatsp.vehicle.settings.vm.cabin
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
+import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.manager.cabin.OtherManager
+import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.common.library.frame.base.BaseModel
@@ -21,7 +24,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class OtherViewModel @Inject constructor(app: Application, model: BaseModel) :
-    BaseViewModel(app, model), ISwitchListener {
+    BaseViewModel(app, model), IOptionListener {
 
     private val manager: OtherManager by lazy { OtherManager.instance }
 
@@ -57,15 +60,12 @@ class OtherViewModel @Inject constructor(app: Application, model: BaseModel) :
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
+    val wirelessChargingState: LiveData<RadioState> get() = _wirelessChargingState
 
-//    private fun updateLiveData(
-//        liveData: MutableLiveData<Boolean>,
-//        value: Boolean,
-//    ): MutableLiveData<Boolean> {
-//        liveData.takeIf { value xor liveData.value!! }?.postValue(value)
-//        return liveData
-//    }
-
+    private val _wirelessChargingState: MutableLiveData<RadioState> by lazy {
+        val node = RadioNode.WIRELESS_CHARGING_STATE
+        MutableLiveData(manager.doGetRadioOption(node))
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -91,6 +91,15 @@ class OtherViewModel @Inject constructor(app: Application, model: BaseModel) :
             }
             SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP -> {
                 doUpdate(_wirelessChargingLamp, status)
+            }
+            else -> {}
+        }
+    }
+
+    override fun onRadioOptionChanged(node: RadioNode, value: RadioState) {
+        when (node) {
+            RadioNode.WIRELESS_CHARGING_STATE -> {
+                doUpdate(_wirelessChargingState, value)
             }
             else -> {}
         }

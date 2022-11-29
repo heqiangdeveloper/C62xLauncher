@@ -9,6 +9,7 @@ import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.cabin.OtherManager
+import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.ISwitchAction
@@ -42,8 +43,17 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
         initSwitchOption()
         addSwitchLiveDataListener()
         setSwitchListener()
+
+        addRadioLiveDataListener()
+
         initViewsDisplay()
         initDetailsClickListener()
+    }
+
+    private fun addRadioLiveDataListener() {
+        viewModel.wirelessChargingState.observe(this) {
+            abnormalCharge()
+        }
     }
 
     private fun initViewsDisplay() {
@@ -214,6 +224,10 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
     }
 
     private fun abnormalCharge() {
+        val isSwitch = binding.otherWirelessChargingSwitch.isChecked
+        if (!isSwitch) return
+        val value = viewModel.wirelessChargingState.value?.get() ?: return
+
         //模拟数据
         val wcm = true//检测到异物
         val triggerElectrical = true//触发电上电
@@ -223,14 +237,10 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
         val receiving = true;//检测到接收端(移动端)
 
         if (triggerElectrical && wcmSwitch && peps && wcmStr && receiving) {
-            //充电成功
-            showToast(context,
-                context?.resources?.getString(R.string.cabin_other_wireless_charging_working_properly),
-                true)
+            showToast(context, context?.resources?.getString(R.string.cabin_other_wireless_charging_working_properly), true) //充电成功
             return
         } else if (triggerElectrical && wcmSwitch && peps && wcm) {
-            //检测到异物
-            val fragment = ForeignMatterDialogFragment()
+            val fragment = ForeignMatterDialogFragment() //检测到异物
             activity?.supportFragmentManager?.let {
                 fragment.show(it, fragment.javaClass.simpleName)
             }
@@ -241,7 +251,5 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
                 fragment.show(it, fragment.javaClass.simpleName)
             }
         }
-
-
     }
 }

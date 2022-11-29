@@ -77,6 +77,13 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
         }
     }
 
+    private val wirelessChargingState: RadioState by lazy {
+        val node = RadioNode.WIRELESS_CHARGING_STATE
+        createAtomicInteger(node) { result, value ->
+            doUpdateRadioValue(node, result, value, this::doOptionChanged)
+        }
+    }
+
     companion object : ISignal {
         override val TAG: String = OtherManager::class.java.simpleName
         val instance: OtherManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
@@ -91,6 +98,7 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
                 add(SwitchNode.DRIVE_BATTERY_OPTIMIZE.get.signal)
                 add(SwitchNode.DRIVE_WIRELESS_CHARGING.get.signal)
                 add(SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP.get.signal)
+                add(RadioNode.WIRELESS_CHARGING_STATE.get.signal)
             }
             put(Origin.CABIN, cabinSet)
         }
@@ -117,16 +125,6 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
 
     override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
         return when (node) {
-            SwitchNode.DRIVE_TRAILER_REMIND -> {
-                Timber.d("doSetSwitchOption node:$node, status:$status start")
-                val result = SettingManager.instance.setTrailerRemind(node.value(status))
-                if (result) {
-                    trailerRemind.set(status)
-                    doSwitchChanged(node, trailerRemind)
-                }
-                Timber.d("doSetSwitchOption node:$node, status:$status, result:$result end")
-                result
-            }
             SwitchNode.DRIVE_BATTERY_OPTIMIZE -> {
                 writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
@@ -135,6 +133,14 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
             }
             SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP -> {
                 writeProperty(node.set.signal, node.value(status), node.set.origin)
+            }
+            SwitchNode.DRIVE_TRAILER_REMIND -> {
+                val result = SettingManager.instance.setTrailerRemind(node.value(status))
+                if (result) {
+                    trailerRemind.set(status)
+                    doSwitchChanged(node, trailerRemind)
+                }
+                result
             }
             else -> false
         }
@@ -149,7 +155,6 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
     }
 
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
-        Timber.d("doSetRadioOption node:$node, value:$value start")
         val result = when (node) {
             RadioNode.DEVICE_TRAILER_DISTANCE -> {
                 val result = SettingManager.instance.setTrailerDistance(value)
@@ -169,7 +174,6 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
             }
             else -> false
         }
-        Timber.d("doSetRadioOption node:$node, value:$value, result:$result end")
         return result
     }
 
@@ -199,6 +203,10 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
     override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         /**雨天自动关窗*/
         when (property.propertyId) {
+            RadioNode.WIRELESS_CHARGING_STATE.get.signal -> {
+                val node = RadioNode.WIRELESS_CHARGING_STATE
+                onRadioChanged(node = node, wirelessChargingState, 1, this::doUpdateRadioValue, this::doOptionChanged)
+            }
             SwitchNode.DRIVE_TRAILER_REMIND.get.signal -> {
                 onSwitchChanged(SwitchNode.DRIVE_TRAILER_REMIND, trailerRemind, property)
             }
