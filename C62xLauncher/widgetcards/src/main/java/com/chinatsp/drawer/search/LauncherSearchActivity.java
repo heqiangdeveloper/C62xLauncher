@@ -139,12 +139,13 @@ public class LauncherSearchActivity extends AppCompatActivity implements SearchA
         if (TextUtils.isEmpty(bean.getIntentInterface())) {
             if (bean.getIntentAction().equals("com.chinatsp.appmanagement")) {
                 Intent intent = new Intent();
-                intent.putExtra("operation", "1");
+                intent.putExtra("operation", 1);
                 intent.setAction("com.chinatsp.launcher.appmanegement");
                 sendBroadcast(intent);
+            } else {
+                //打开应用
+                FileUtils.launchApp(this, bean.getIntentAction());
             }
-            //打开应用
-            FileUtils.launchApp(this, bean.getIntentAction());
         } else {
             //打开某个应用某个模块
             try {
