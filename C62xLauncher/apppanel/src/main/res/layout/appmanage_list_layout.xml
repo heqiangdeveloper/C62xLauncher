@@ -6,13 +6,13 @@
     android:gravity="center"
     android:id="@+id/container_ll">
     <FrameLayout
-        android:layout_width="140dp"
-        android:layout_height="140dp">
+        android:layout_width="170dp"
+        android:layout_height="170dp">
         <ImageView
             android:layout_gravity="center"
             android:id="@+id/icon_iv"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
             android:src="@drawable/ic_launcher"/>
         <ImageView
             android:id="@+id/delete_iv"
@@ -26,12 +26,12 @@
         android:id="@+id/name_tv"
         android:layout_width="140dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="0dp"
         android:text="应用"
         android:gravity="center"
         android:singleLine="true"
         android:textColor="#fff"
         android:maxLines="1"
-        android:textSize="30px"/>
+        android:textSize="28px"/>
 
 </LinearLayout>

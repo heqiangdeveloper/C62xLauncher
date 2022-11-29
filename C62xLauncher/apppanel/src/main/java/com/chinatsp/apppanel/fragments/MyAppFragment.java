@@ -1128,7 +1128,7 @@ public class MyAppFragment extends Fragment {
                         locationBean.setParentIndex(i);
                         locationBean.setChildIndex(-1);
                         locationBean.setTitle("");
-                        locationBean.setName(getAppName(locationBean.getPackageName()));
+                        //locationBean.setName(getAppName(locationBean.getPackageName())); fix bug78084
 
 //                        baos = new ByteArrayOutputStream();
 //                        if(null == locationBean.getImgDrawable()){
@@ -1165,7 +1165,7 @@ public class MyAppFragment extends Fragment {
                             }
                             locationBean.setParentIndex(i);
                             locationBean.setChildIndex(j);
-                            locationBean.setName(getAppName(locationBean.getPackageName()));
+                            //locationBean.setName(getAppName(locationBean.getPackageName())); fix bug78084
 //                            locationBean.setTitle(appInfo.getTitle());
 //                            locationBean.setPackageName(appInfo.getPackageName());
 

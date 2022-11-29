@@ -8,6 +8,7 @@ import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.Debug;
 import android.provider.Settings;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -165,7 +166,7 @@ public class AppManagementWindow {
         };
         rv.addOnItemTouchListener(onItemTouchListener);
         rv.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL,false));
-        rv.addItemDecoration(new AppManageDecoration(100,0));
+        rv.addItemDecoration(new AppManageDecoration(70,0));
         clearTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
