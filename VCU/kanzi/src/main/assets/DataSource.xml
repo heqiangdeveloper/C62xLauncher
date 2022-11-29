@@ -1,31 +1,26 @@
-<KanziInitFinish type="int">0</KanziInitFinish>                        <!-- Kanzi加载完毕数据 1：加载完毕 -->
-<LFDoor type="int">0</LFDoor>                                          <!-- 左前车门开闭状态 1：开启 0：关闭 -->
-<LRDoor type="int">0</LRDoor>                                          <!-- 左后车门开闭状态 1：开启 0：关闭 -->
-<RFDoor type="int">0</RFDoor>                                          <!-- 右前车门开闭状态 1：开启 0：关闭 -->
-<RRDoor type="int">0</RRDoor>                                          <!-- 右后车门开闭状态 1：开启 0：关闭 -->
+<KanziInitFinish type="int" >0</KanziInitFinish>                        <!-- Kanzi加载完毕数据 1：加载完毕 -->
+<LFDoor type="int" >0</LFDoor>                                          <!-- 左前车门开闭状态 1：开启 0：关闭 -->
+<LRDoor type="int" >0</LRDoor>                                          <!-- 左后车门开闭状态 1：开启 0：关闭 -->
+<RFDoor type="int" >0</RFDoor>                                          <!-- 右前车门开闭状态 1：开启 0：关闭 -->
+<RRDoor type="int" >0</RRDoor>                                          <!-- 右后车门开闭状态 1：开启 0：关闭 -->
 
-<LFWindowUpDown type="float">0.0
-</LFWindowUpDown>                      <!-- 左前车窗的开闭程度 值范围为 -40~0，-43为车窗全开，0为车窗关闭 -->
-<LRWindowUpDown type="float">0.0
-</LRWindowUpDown>                      <!-- 左后车窗的开闭程度 值范围为 -40~0，-43为车窗全开，0为车窗关闭 -->
-<RFWindowUpDown type="float">0.0
-</RFWindowUpDown>                      <!-- 右前车窗的开闭程度 值范围为 -40~0，-43为车窗全开，0为车窗关闭 -->
-<RRWindowUpDown type="float">0.0
-</RRWindowUpDown>                      <!-- 右后车窗的开闭程度 值范围为 -40~0，-43为车窗全开，0为车窗关闭 -->
-<TopWindow type="float">0.0
-</TopWindow>                                <!-- 天窗的开闭程度 值范围为 0~60，0为天窗关闭，60为天窗全开 -->
+<LFWindowUpDown type="float" >0.0</LFWindowUpDown>                      <!-- 左前车窗的开闭程度 值范围为 -40~0，-43为车窗全开，0为车窗关闭 -->
+<LRWindowUpDown type="float" >0.0</LRWindowUpDown>                      <!-- 左后车窗的开闭程度 值范围为 -40~0，-43为车窗全开，0为车窗关闭 -->
+<RFWindowUpDown type="float" >0.0</RFWindowUpDown>                      <!-- 右前车窗的开闭程度 值范围为 -40~0，-43为车窗全开，0为车窗关闭 -->
+<RRWindowUpDown type="float" >0.0</RRWindowUpDown>                      <!-- 右后车窗的开闭程度 值范围为 -40~0，-43为车窗全开，0为车窗关闭 -->
+<TopWindow type="float" >0.0</TopWindow>                                <!-- 天窗的开闭程度 值范围为 0~60，0为天窗关闭，60为天窗全开 -->
 
-<Hood type="int">0</Hood>                                              <!-- 引擎盖开闭状态 1：开启 0：关闭 -->
-<Trunk type="int">0</Trunk>                                            <!-- 后备箱车门开闭状态 1：开启 0：关闭 -->
-<RearviewMirror type="int">1</RearviewMirror>                          <!-- 后视镜展开收起状态 1：展开 0：收起 -->
+<Hood type="int" >0</Hood>                                              <!-- 引擎盖开闭状态 1：开启 0：关闭 -->
+<Trunk type="int" >0</Trunk>                                            <!-- 后备箱车门开闭状态 1：开启 0：关闭 -->
+<RearviewMirror type="int" >1</RearviewMirror>                          <!-- 后视镜展开收起状态 1：展开 0：收起 -->
 
-<FWiper type="int">0</FWiper>                                        <!-- 前雨刮摆动状态 1：摆动 0：不摆动 -->
-<RWiper type="int">0</RWiper>                                        <!-- 后雨刮摆动状态 1：摆动 0：不摆动 -->
+<FWiper type="int" >0</FWiper>                          				<!-- 前雨刮摆动状态 1：摆动 0：不摆动 -->
+<RWiper type="int" >0</RWiper>                          				<!-- 后雨刮摆动状态 1：摆动 0：不摆动 -->
 
-<LeftIndicator type="int">0</LeftIndicator>                            <!-- 左转向灯状态 1：开启 0：关闭 -->
-<RightIndicator type="int">0</RightIndicator>                          <!-- 右转向灯状态 1：开启 0：关闭 -->
-<HeadLamps type="int">0</HeadLamps>                                    <!-- 前大灯状态 0：关闭 1：近光 2：远光-->
-<BrakeLights type="int">0</BrakeLights>                                <!-- 刹车灯状态 1：开启 0：关闭 -->
-<PositionLight type="int">0</PositionLight>                            <!-- 位置灯状态 1：开启 0：关闭 -->
-<RearFogLamp type="int">0</RearFogLamp>                                <!-- 后雾灯状态 1：开启 0：关闭 -->
-<Restoration type="int">0</Restoration>                                <!-- 车模视角复位按钮 1：是 0：否 -->
+<LeftIndicator type="int" >0</LeftIndicator>                          	<!-- 左转向灯状态 1：开启 0：关闭 -->
+<RightIndicator type="int" >0</RightIndicator>                          <!-- 右转向灯状态 1：开启 0：关闭 -->
+<HeadLamps type="int" >0</HeadLamps>                          			<!-- 前大灯状态 0：关闭 1：近光 2：远光-->
+<BrakeLights type="int" >0</BrakeLights>                                <!-- 刹车灯状态 1：开启 0：关闭 -->
+<PositionLight type="int" >0</PositionLight>                            <!-- 位置灯状态 1：开启 0：关闭 -->
+<RearFogLamp type="int" >0</RearFogLamp>                                <!-- 后雾灯状态 1：开启 0：关闭 -->
+<Restoration type="int" >0</Restoration>                                <!-- 车模视角复位按钮 1：是 0：否 -->

@@ -276,7 +276,7 @@ class PanoramaCommandConsumer(val manager: GlobalManager) : ICmdExpress {
 //    0x14: Top View
 //    0x15：EVM View
 //    0x16：Customer Select Slot View
-//    0x17：Single  Left side view
+//    0x17：Single Left side view
 //    0x18：Single Right side view
 //    0x19~0x1F: Reserved
     private fun obtainCameraView(): Int {
@@ -285,7 +285,7 @@ class PanoramaCommandConsumer(val manager: GlobalManager) : ICmdExpress {
     }
 
     private fun isMode3D(): Boolean {
-        val signal = Constant.INVALID
+        val signal = CarCabinManager.ID_AVM_VIEW_MOD_STS
         val value = manager.readIntProperty(signal, Origin.CABIN)
         return value == 0x2
     }

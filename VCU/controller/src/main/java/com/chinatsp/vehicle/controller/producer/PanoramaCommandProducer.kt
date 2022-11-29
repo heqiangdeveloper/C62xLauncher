@@ -194,6 +194,10 @@ class PanoramaCommandProducer : ICommandProducer {
             part = IPart.L_F or IPart.R_F
         } else if (isContains(direction, Keywords.B_R)) {
             part = IPart.L_B or IPart.R_B
+        }  else if (direction.contains("左转")) {
+            part = IPart.L_F
+        } else if (direction.contains("右转")) {
+            part = IPart.R_F
         } else if (direction.contains("前")) {
             part = IPart.HEAD
         } else if (direction.contains("后")) {

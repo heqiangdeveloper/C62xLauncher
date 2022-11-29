@@ -848,9 +848,9 @@ enum class SwitchNode(
      * 0x0: Invalid; 0x1: defaule; 0x2: Forbidden; 0x3: Active; 0x4: Reverse
      */
     INNER_NFC(
-        get = Norm(on = 0x0, off = 0x1, signal = -1),
-//        get = Norm(on = 0x0, off = 0x1, signal = CarCabinManager.ID_INNER_NFC_READER_FORBIDDEN),
-        set = Norm(on = 0x3, off = 0x2, signal = CarCabinManager.ID_HUM_NFC_FORBIDDEN_CMD),
+//        get = Norm(on = 0x0, off = 0x1, signal = -1),
+        get = Norm(on = 0x0, off = 0x1, signal = CarCabinManager.ID_INNER_NFC_READER_FORBIDDEN),
+        set = Norm(on = 0x2, off = 0x3, signal = CarCabinManager.ID_HUM_NFC_FORBIDDEN_CMD),
         default = false
     ),
 
@@ -860,9 +860,9 @@ enum class SwitchNode(
      * 0x0: Invalid; 0x1: defaule; 0x2: Forbidden; 0x3: Active; 0x4: Reverse
      */
     OUTER_NFC(
-//        get = Norm(on = 0x0, off = 0x1, signal = CarCabinManager.ID_EXT_NFC_READER_FORBIDDEN),
-        get = Norm(on = 0x0, off = 0x1, signal = -1),
-        set = Norm(on = 0x3, off = 0x2, signal = CarCabinManager.ID_HUM_NFC_FORBIDDEN_CMD),
+        get = Norm(on = 0x0, off = 0x1, signal = CarCabinManager.ID_EXT_NFC_READER_FORBIDDEN),
+//        get = Norm(on = 0x0, off = 0x1, signal = -1),
+        set = Norm(on = 0x2, off = 0x3, signal = CarCabinManager.ID_HUM_NFC_FORBIDDEN_CMD),
         default = false
     ),
 
@@ -872,11 +872,9 @@ enum class SwitchNode(
      * get -> 0x0: Inactive 0x1: No sound(default) 0x2: Sound; 0x3:invalid
      */
     LOCK_SUCCESS_AUDIO_HINT(
-        get = Norm(on = 0x2,
-            off = 0x1,
+        get = Norm(on = 0x2, off = 0x1,
             signal = CarCabinManager.ID_LOCK_SUCCESS_SOUND_STATUE),//LOCK_SUCCESS_SOUND_STATUE
-        set = Norm(on = 0x2,
-            off = 0x1,
+        set = Norm(on = 0x2, off = 0x1,
             signal = CarCabinManager.ID_LOCK_SUCCESS_SOUND_SET),//LOCK_SUCCESS_SOUND
         default = true
     ) {
@@ -891,11 +889,9 @@ enum class SwitchNode(
      * get -> 0x0: Inactive 0x1: No sound(default) 0x2: Sound; 0x3:invalid
      */
     LOCK_FAILED_AUDIO_HINT(
-        get = Norm(on = 0x2,
-            off = 0x1,
+        get = Norm(on = 0x2, off = 0x1,
             signal = CarCabinManager.ID_LOCK_FAILED_SOUND_STATUE),//LOCK_FAILED_SOUND_STATUE
-        set = Norm(on = 0x2,
-            off = 0x1,
+        set = Norm(on = 0x2, off = 0x1,
             signal = CarCabinManager.ID_LOCK_FAILED_SOUND_SET),//LOCK_FAILED_SOUND
         default = true
     ) {
