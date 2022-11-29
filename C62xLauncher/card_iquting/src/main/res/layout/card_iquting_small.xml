@@ -202,7 +202,7 @@
             android:layout_height="30px"
 
             app:progressBgColor="#999999"
-            app:progressColor="@color/card_blue_default"
+            app:progressColor="@color/card_progress_color"
             app:progressHeight="7px"
             app:progressBgHeight="3px"
             app:layout_constraintStart_toEndOf="@id/tvIQuTingPlayPosition"

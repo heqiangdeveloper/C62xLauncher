@@ -6,4 +6,5 @@
     <color name="card_title_expand">#C0B3B3</color>
     <color name="card_grey_default">#7B7B82</color>
     <color name="card_transparent_30">#32000000</color>
+    <color name="card_progress_color">#C0B3B3</color>
 </resources>
