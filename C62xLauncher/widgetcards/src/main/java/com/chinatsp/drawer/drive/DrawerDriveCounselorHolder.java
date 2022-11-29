@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,10 +20,11 @@ import launcher.base.utils.recent.RecentAppHelper;
 public class DrawerDriveCounselorHolder extends BaseViewHolder<DrawerEntity> {
     private final DriveInfoDrawerController mController;
 
-    private final TextView tvDrawerDriveHealthy;
+    private final ImageView ivDrawerDriveHealthyText;
     private final TextView tvDrawerDriveDistance;
     private final TextView tvDrawerDriveDistanceLabel;
     private final TextView tvDrawerDriveRanking;
+    private ImageView ivDrawerDriveHealthBottom;
     private final DistanceCircleProgress progressDrawerDriveDistance;
 
 
@@ -30,7 +32,8 @@ public class DrawerDriveCounselorHolder extends BaseViewHolder<DrawerEntity> {
         super(itemView);
         EasyLog.d("DrawerDriveCounselorHolder", "init "+hashCode());
         mController = new DriveInfoDrawerController(this);
-        tvDrawerDriveHealthy = itemView.findViewById(R.id.tvDrawerDriveHealthy);
+        ivDrawerDriveHealthyText = itemView.findViewById(R.id.ivDrawerDriveHealthyText);
+        ivDrawerDriveHealthBottom = itemView.findViewById(R.id.ivDrawerDriveHealthBottom);
         tvDrawerDriveDistance = itemView.findViewById(R.id.tvDrawerDriveDistance);
         tvDrawerDriveDistanceLabel = itemView.findViewById(R.id.tvDrawerDriveDistanceLabel);
         tvDrawerDriveRanking = itemView.findViewById(R.id.tvDrawerDriveRanking);
@@ -50,7 +53,9 @@ public class DrawerDriveCounselorHolder extends BaseViewHolder<DrawerEntity> {
         if (!TextUtils.isEmpty(healthLevel)) {
             health = healthLevel;
         }
-        tvDrawerDriveHealthy.setText(health);
+        HealthRes healthRes = HealthRes.getHealthRes(healthLevel, getContext());
+        ivDrawerDriveHealthyText.setImageResource(healthRes.textDrawableId);
+        ivDrawerDriveHealthBottom.setImageResource(healthRes.bottomDrawableId);
     }
 
     public void updateMaintenanceMileage(int maintenanceMile,float percent) {

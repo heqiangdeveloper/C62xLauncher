@@ -16,6 +16,9 @@ public class MapStatus {
     public static final int STOP_MOCK_NAVIGATION = 35; //结束模拟导航
     public static final int ARRIVED_NAVIGATION = 18; // 在STOP_NAVIGATION之前就会透出
 
+    public static final int MAP_STYLE_DAY = 30;
+    public static final int MAP_STYLE_NIGHT = 32;
+
 
     public int getAutoStatus() {
         return autoStatus;
