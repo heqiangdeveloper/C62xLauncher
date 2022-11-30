@@ -103,7 +103,9 @@ public class ExpandStateManager {
         EasyLog.i(TAG, "expand " + card.getName());
         HomeCardRcvManager homeCardRcvManager = HomeCardRcvManager.getInstance();
         CardFrameViewHolder viewHolder = homeCardRcvManager.findViewHoldByCard(card);
-        viewHolder.expand();
+        if (viewHolder != null) {
+            viewHolder.expand();
+        }
         setBigCard(card);
     }
 
@@ -112,7 +114,9 @@ public class ExpandStateManager {
         EasyLog.i(TAG, "collapse " + card.getName());
         HomeCardRcvManager homeCardRcvManager = HomeCardRcvManager.getInstance();
         CardFrameViewHolder viewHolder = homeCardRcvManager.findViewHoldByCard(card);
-        viewHolder.collapse();
+        if (viewHolder != null) {
+            viewHolder.collapse();
+        }
     }
 
     private void dealScroll(LauncherCard bigCard) {
@@ -214,6 +218,9 @@ public class ExpandStateManager {
 
     private void chooseAnotherSmallCard(LauncherCard card, boolean cardInLeftSide) {
         int bigCardPos = HomeCardRcvManager.getInstance().findPositionByCard(card);
+        if (bigCardPos == 0) {
+            EasyLog.w(TAG, "chooseAnotherSmallCard... sth had been wrong." );
+        }
         int smallCardPosition;
         if (cardInLeftSide) {
             // 当前卡在左边, 意味着右边是小卡.

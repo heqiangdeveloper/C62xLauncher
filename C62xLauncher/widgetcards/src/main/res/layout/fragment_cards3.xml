@@ -26,7 +26,6 @@
         android:layout_marginLeft="68px"
         android:layout_marginRight="68px"
         android:visibility="invisible"
-        android:background="#77222222"
         />
     <View
         android:id="@+id/viewRight"
