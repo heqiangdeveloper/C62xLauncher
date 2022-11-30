@@ -21,6 +21,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.DragEvent;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -447,7 +448,7 @@ public class ClassifyView extends FrameLayout {
     protected
     @NonNull
     RecyclerView getSub(Context context, AttributeSet parentAttrs) {
-        RecyclerView recyclerView = new RecyclerView(context);
+        RecyclerView recyclerView = new RecyclerView(new ContextThemeWrapper(context,R.style.ScrollbarRecyclerView));
         recyclerView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         recyclerView.setLayoutManager(new GridLayoutManager(context, mSubSpanCount));
         recyclerView.setItemAnimator(new ClassifyItemAnimator());
