@@ -93,6 +93,19 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
                 showLoading();
             }
         });
+
+
+    }
+
+    private void runInitScrollTask() {
+        post(() -> {
+            int currentCityIndex = mCardViewState.getPageIndex();
+            if (mExpand) {
+                mBigCardHolder.scrollToPosition(currentCityIndex);
+            } else {
+                mSmallCardHolder.scrollToPosition(currentCityIndex);
+            }
+        });
     }
 
     @Override
@@ -142,6 +155,8 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
         WeatherUtil.logI(TAG+" onAttachedToWindow "+hashCode());
         mLifecycleRegistry.setCurrentState(Lifecycle.State.CREATED);
         mController.addDataCallback();
+        // 初始化的时候, 即进行滑动
+        runInitScrollTask();
     }
 
     @Override

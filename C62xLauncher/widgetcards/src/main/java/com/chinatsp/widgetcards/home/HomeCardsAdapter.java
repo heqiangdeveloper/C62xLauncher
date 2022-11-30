@@ -141,7 +141,7 @@ public class HomeCardsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public RecyclerView.ViewHolder findViewHolderByPosition(int position) {
-        if (position < 0 || position >= getItemCount()) {
+        if (position <= 0 || position >= getItemCount()) {
             return null;
         }
         int realCardPosition = position;

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -130,11 +131,27 @@ public class BigCityItemViewHolder extends BaseViewHolder<String> {
         tvCardWeatherWord.setText(weatherInfo.getWeather());
         tvCardWeatherAirValue.setText(weatherInfo.getAirData());
         tvCardWeatherAirDesc.setText("空气质量 " + weatherInfo.getAirQuality());
-        tvCardWeatherTemperature.setText(weatherInfo.getTemp());
+        setTemp(tvCardWeatherTemperature, weatherInfo.getTemp());
         tvCardWeatherTemperatureRange.setText(WeatherUtil.getTemperatureRange(weatherInfo, mResources));
         WeatherTypeRes weatherTypeRes = WeatherUtil.parseType(weatherInfo.getWeather());
         ivCardWeatherIcon.setImageResource(weatherTypeRes.getIcon());
         ivWeatherBg.setImageResource(weatherTypeRes.getBigCardBg());
 
+    }
+
+    private void setTemp(TextView textView, String temp) {
+        if (textView == null) {
+            return;
+        }
+        String realTemp = "?";
+        if (!TextUtils.isEmpty(temp)) {
+            try {
+                Float floatValue = Float.valueOf(temp);
+                realTemp = ""+ floatValue.intValue();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        textView.setText(realTemp);
     }
 }
