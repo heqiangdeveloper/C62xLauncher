@@ -85,7 +85,7 @@ class EqualizerDialogFragment :
 
     private fun initViewDisplay() {
         val eqRadio = binding.soundEffectRadio
-        if (VcuUtils.isAmplifier) {
+        if (!VcuUtils.isAmplifier) {
             eqRadio.getChildAt(0).visibility = View.GONE
         }
     }

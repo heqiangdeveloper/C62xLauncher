@@ -183,6 +183,9 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
         binding.doorSmartAccessSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.DOOR_SMART_ENTER, buttonView, isChecked)
         }
+        binding.nfcSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            doUpdateSwitchOption(SwitchNode.INNER_NFC, buttonView, isChecked)
+        }
     }
 
     private fun setAnimation(value: String) {

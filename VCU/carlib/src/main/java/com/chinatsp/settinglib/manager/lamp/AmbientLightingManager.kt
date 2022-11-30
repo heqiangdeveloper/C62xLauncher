@@ -156,7 +156,7 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
         AtomicInteger(node.def).apply {
             val value = readIntProperty(node.get.signal, node.get.origin)
             Timber.d("getAmbientColor signal:%s, value:%s", node.get.signal, value)
-            doUpdateProgress(node, this, value, instance::doProgressChanged)
+            doUpdateProgress(node, this, value, null)
         }
     }
 
@@ -333,7 +333,7 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
     private fun onAmbientColorChanged(property: CarPropertyValue<*>) {
         val value = property.value
         if (value is Int) {
-            Timber.d("onAmbientBrightnessChanged value%s", value)
+            Timber.d("onAmbientColorChanged value%s", value)
             val progress = Progress.AMBIENT_LIGHT_COLOR
             doUpdateProgress(progress, ambientColor, value, this::doProgressChanged)
         }
