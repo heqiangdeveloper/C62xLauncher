@@ -18,6 +18,7 @@ import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.app.Toast
 import com.chinatsp.vehicle.settings.databinding.CabinWhellFragmentBinding
+import com.chinatsp.vehicle.settings.fragment.cabin.dialog.ConversionDialogFragment
 import com.chinatsp.vehicle.settings.fragment.cabin.dialog.SteeringHeatDialogFragment
 import com.chinatsp.vehicle.settings.fragment.cabin.dialog.SteeringKeysDialogFragment
 import com.chinatsp.vehicle.settings.fragment.drive.dialog.DetailsDialogFragment
@@ -159,7 +160,11 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
                     it.setSelection(viewModel.epsMode.value.toString(), true)
                 } else {
                     doUpdateRadio(RadioNode.DRIVE_EPS_MODE, value, viewModel.epsMode, it)
-                    Toast.showToast(context, getString(R.string.vcu_eps_action_switching), true)
+                    //Toast.showToast(context, getString(R.string.vcu_eps_action_switching), true)
+                    val fragment = ConversionDialogFragment()
+                    activity?.supportFragmentManager?.let {
+                        fragment.show(it, fragment.javaClass.simpleName)
+                    }
                 }
             }
         }

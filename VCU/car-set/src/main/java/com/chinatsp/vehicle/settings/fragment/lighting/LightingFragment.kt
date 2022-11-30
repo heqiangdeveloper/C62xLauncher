@@ -368,7 +368,7 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
         var popWindow: PopWindow? = null
         if (view.id == binding.lightingGoHomeDetails.id) {
             popWindow = PopWindow(activity,
-                R.layout.pop_window,
+                R.layout.car_doors_pop_window,
                 activity?.let {
                     AppCompatResources.getDrawable(
                         it,
