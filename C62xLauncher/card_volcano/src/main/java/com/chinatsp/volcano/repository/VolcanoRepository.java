@@ -1,8 +1,8 @@
 package com.chinatsp.volcano.repository;
 
 import android.content.Context;
-import android.os.RemoteException;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.chinatsp.volcano.api.IHomeCardApi;
 import com.chinatsp.volcano.api.VolcanoApi;
@@ -12,12 +12,12 @@ import com.chinatsp.volcano.api.response.VolcanoResponse;
 import com.oushang.radio.network.errorhandler.ExceptionHandler;
 import com.oushang.radio.network.observer.BaseObserver;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.stream.Stream;
+import java.util.Set;
 
 import launcher.base.utils.EasyLog;
-import retrofit2.http.PUT;
 
 public class VolcanoRepository {
     private final String TAG = "VolcanoRepository";
@@ -53,7 +53,75 @@ public class VolcanoRepository {
         private static VolcanoRepository repository = new VolcanoRepository();
     }
 
-    public void loadFromServer(String source, IVolcanoLoadListener listener) {
+    private Map<String, IVolcanoLoadListener> mDrawerListeners = new HashMap<>();
+    private Set<IVolcanoLoadListener> mCardListeners = new HashSet<>();
+
+    public void registerCallbacks(IVolcanoLoadListener listener) {
+        if (listener == null) {
+            return;
+        }
+        EasyLog.i(TAG, "registerCallbacks: "+listener);
+        mCardListeners.add(listener);
+    }
+    public void registerDrawerCallbacks(String tag, IVolcanoLoadListener listener) {
+        if (tag == null) {
+            return;
+        }
+        EasyLog.i(TAG, "registerCallbacks: "+tag);
+        mDrawerListeners.put(tag, listener);
+    }
+
+    public void unregisterCallbacks(IVolcanoLoadListener listener) {
+        if (listener == null) {
+            return;
+        }
+        EasyLog.i(TAG, "unregisterCallbacks: "+listener);
+        mCardListeners.remove(listener);
+    }
+
+    public void notifySuccess(VideoListData data, String source) {
+        for (IVolcanoLoadListener listener : mCardListeners) {
+            if (listener != null) {
+                Log.d(TAG, "notifySuccess : "+listener);
+                listener.onSuccess(data, source);
+            }
+        }
+        for (IVolcanoLoadListener listener : mDrawerListeners.values()) {
+            if (listener != null) {
+                Log.d(TAG, "notifySuccess : "+listener);
+                listener.onSuccess(data, source);
+            }
+        }
+    }
+
+    public void notifyFail(String msg) {
+        for (IVolcanoLoadListener listener : mCardListeners) {
+            if (listener != null) {
+                listener.onFail(msg);
+            }
+        }
+        for (IVolcanoLoadListener listener : mDrawerListeners.values()) {
+            if (listener != null) {
+                listener.onFail(msg);
+            }
+        }
+    }
+
+    private long lastLoadTime;
+    private long lastTryTime;
+    private final long MIN_INTERVAL = 1000;
+
+    private static int loadCount = 0;
+    public void loadFromServer(String source) {
+        long nowTime = System.currentTimeMillis();
+        long loadInterval = nowTime - lastLoadTime;
+        long tryInterval = nowTime - lastTryTime;
+        lastTryTime = nowTime;
+        if (loadInterval < MIN_INTERVAL && tryInterval < MIN_INTERVAL) {
+            EasyLog.w(TAG, "loadFromServer cancel, loadInterval:" + loadInterval + " , tryInterval:" + tryInterval);
+            return;
+        }
+        lastLoadTime = nowTime;
         VolcanoApi volcanoApi = new VolcanoApi();
         IHomeCardApi iHomeCardApi = volcanoApi.create(IHomeCardApi.class);
         VolcanoApiParam params = new VolcanoApiParam("GET");
@@ -62,20 +130,25 @@ public class VolcanoRepository {
 
         Map<String, String> queryParams = params.getQueryParams();
         Map<String, String> header = params.getHeader();
-        EasyLog.i(TAG, "loadFromServer "+source);
+        EasyLog.i(TAG, "loadFromServer " + source);
+        loadCount++;
         volcanoApi.ApiSubscribe(iHomeCardApi.getHomeCards(queryParams, header), new BaseObserver<VolcanoResponse>() {
             @Override
             public void onNext(VolcanoResponse volcanoResponse) {
                 EasyLog.d(TAG, "loadFromServer success :" + volcanoResponse);
+                EasyLog.d(TAG, "loadFromServer loadCount :" + loadCount);
+//                if (loadCount == 1) {
+//                    String msg = volcanoResponse.getMsg();
+//                    notifyFail(msg);
+//                    return;
+//                }
                 if (volcanoResponse.getErrno() == VolcanoResponse.CODE_SUCCESS) {
-                    saveList(volcanoResponse.getData(), source);
-                    if (listener != null) {
-                        listener.onSuccess(volcanoResponse.getData());
-                    }
+                    VideoListData data = volcanoResponse.getData();
+                    saveList(data, source);
+                    notifySuccess(data, source);
                 } else {
-                    if (listener != null) {
-                        listener.onFail(volcanoResponse.getMsg());
-                    }
+                    String msg = volcanoResponse.getMsg();
+                    notifyFail(msg);
                 }
 
             }
@@ -83,9 +156,7 @@ public class VolcanoRepository {
             @Override
             public void onError(ExceptionHandler.ResponeThrowable e) {
                 e.printStackTrace();
-                if (listener != null) {
-                    listener.onFail(e.message);
-                }
+                notifyFail(e.message);
             }
         });
     }

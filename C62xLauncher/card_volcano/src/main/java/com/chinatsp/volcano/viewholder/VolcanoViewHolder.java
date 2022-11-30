@@ -14,7 +14,7 @@ public abstract class VolcanoViewHolder {
     public abstract void showNormal();
 
 
-    public abstract void updateList(VideoListData videoListData);
+    public abstract void updateList(VideoListData videoListData, String source);
 
     public abstract void init();
 

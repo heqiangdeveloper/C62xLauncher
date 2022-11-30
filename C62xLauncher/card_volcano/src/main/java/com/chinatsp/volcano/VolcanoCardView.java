@@ -4,8 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +23,6 @@ import com.chinatsp.volcano.viewholder.VolcanoViewHolder;
 
 import card.service.ICardStyleChange;
 import launcher.base.utils.EasyLog;
-import launcher.base.utils.recent.RecentAppHelper;
 import launcher.base.utils.view.LayoutParamUtil;
 
 
@@ -68,7 +65,7 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
         LayoutInflater.from(getContext()).inflate(R.layout.card_volcano, this);
         mController = new VolcanoController(this);
         mSmallCardView = findViewById(R.id.layoutSmallCardView);
-        mSmallCardViewHolder = new SmallCardViewHolder(mSmallCardView);
+        mSmallCardViewHolder = new SmallCardViewHolder(mSmallCardView, this);
         mSmallCardViewHolder.showNormal();
         mSmallWidth = (int) getResources().getDimension(R.dimen.card_width);
         mLargeWidth = (int) getResources().getDimension(R.dimen.card_width_large);
@@ -77,7 +74,6 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
             mLargeCardView = LayoutInflater.from(getContext()).inflate(R.layout.card_volcano_large, this, false);
             mBigCardViewHolder = new BigCardViewHolder(mLargeCardView, this);
         }
-        mController.refreshPageState();
     }
 
     @Override
@@ -174,20 +170,24 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
         return null;
     }
 
-    public void updateList(VideoListData videoListData) {
-        EasyLog.i(TAG, "updateList  mExpand:"+mExpand);
+    public void refreshPage() {
+        mController.refreshPageState();
+    }
+
+    public void updateList(VideoListData videoListData, String source) {
+        EasyLog.i(TAG, "updateList  mExpand:" + mExpand);
         post(() -> {
             if (mExpand) {
-                mBigCardViewHolder.updateList(videoListData);
+                mBigCardViewHolder.updateList(videoListData, source);
             }
             hideNetWorkError();
             // 无论何种状态, 小卡封面都必须更新为Source对应列表的第一个item
-            mSmallCardViewHolder.updateList(videoListData);
+            mSmallCardViewHolder.updateList(videoListData, source);
         });
     }
 
     public void showLoading() {
-        EasyLog.i(TAG, "showLoading  mExpand:"+mExpand);
+        EasyLog.i(TAG, "showLoading  mExpand:" + mExpand);
         if (mExpand) {
             mBigCardViewHolder.showLoadingView();
         } else {
@@ -196,7 +196,7 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
     }
 
     public void hideLoading() {
-        EasyLog.i(TAG, "hideLoading  mExpand:"+mExpand);
+        EasyLog.i(TAG, "hideLoading  mExpand:" + mExpand);
         if (mExpand) {
             mBigCardViewHolder.hideLoadingView();
         } else {
@@ -205,7 +205,7 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
     }
 
     public void showNetWorkError() {
-        EasyLog.i(TAG, "showNetWorkError  mExpand:"+mExpand);
+        EasyLog.i(TAG, "showNetWorkError  mExpand:" + mExpand);
         if (mExpand) {
             mBigCardViewHolder.showNetworkError();
         } else {
@@ -214,7 +214,7 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
     }
 
     public void hideNetWorkError() {
-        EasyLog.i(TAG, "hideNetWorkError  mExpand:"+mExpand);
+        EasyLog.i(TAG, "hideNetWorkError  mExpand:" + mExpand);
         if (mExpand) {
             mBigCardViewHolder.hideNetworkError();
         } else {
@@ -223,7 +223,7 @@ public class VolcanoCardView extends ConstraintLayout implements ICardStyleChang
     }
 
     public void showDataError() {
-        EasyLog.i(TAG, "showDataError  mExpand:"+mExpand);
+        EasyLog.i(TAG, "showDataError  mExpand:" + mExpand);
         if (mExpand) {
             mBigCardViewHolder.showDataError();
         } else {

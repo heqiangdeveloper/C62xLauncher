@@ -40,6 +40,7 @@ public class DrawerVolcanoHolder extends BaseViewHolder<DrawerEntity> {
             }
         });
         mController = new VolcanoDrawerController(this);
+        mController.registerListener();
         mController.checkUIState(itemView.getContext());
         EasyLog.d(TAG, "init hashCode:" + hashCode());
     }
@@ -91,4 +92,5 @@ public class DrawerVolcanoHolder extends BaseViewHolder<DrawerEntity> {
             mController.checkUIState(itemView.getContext());
         }
     }
+
 }

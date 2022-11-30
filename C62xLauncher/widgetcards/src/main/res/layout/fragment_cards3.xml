@@ -17,6 +17,17 @@
         android:layout_marginRight="68px"
         />
 
+    <com.chinatsp.widgetcards.home.HomeCardRecyclerView
+        android:id="@+id/rcvSmallCards"
+        android:layout_width="@dimen/card_width"
+        android:layout_height="@dimen/card_height"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginLeft="68px"
+        android:layout_marginRight="68px"
+        android:visibility="invisible"
+        android:background="#77222222"
+        />
     <View
         android:id="@+id/viewRight"
         android:layout_width="1280px"

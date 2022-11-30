@@ -18,7 +18,7 @@ public class CardScrollUtil {
             return;
         }
         EasyLog.d("CardScrollUtil", "scroll...."+position);
-//        printStack();
+        printStack();
         layoutManager.scrollToPositionWithOffset(position, -divider / 2);
     }
     private static void printStack() {

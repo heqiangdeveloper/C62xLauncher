@@ -9,12 +9,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.chinatsp.widgetcards.R;
 import com.chinatsp.widgetcards.home.AppLauncherUtil;
+import com.chinatsp.widgetcards.home.CardFrameViewHolder;
+import com.chinatsp.widgetcards.home.ExpandStateManager;
+import com.chinatsp.widgetcards.home.smallcard2.HomeCardRcvManager;
+import com.chinatsp.widgetcards.home.smallcard2.SmallCardRcvManager;
 import com.chinatsp.widgetcards.manager.CardNameRes;
 
 import card.base.LauncherCard;
 import card.service.ICardStyleChange;
+import launcher.base.utils.EasyLog;
 
-class SmallCardViewHolder extends RecyclerView.ViewHolder {
+public class SmallCardViewHolder extends RecyclerView.ViewHolder {
     private TextView mTvCardName;
     private boolean mHideTitle;
     private View mCardInner;
@@ -32,12 +37,16 @@ class SmallCardViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(int position, LauncherCard card) {
+        EasyLog.d("SmallCardViewHolder", "bind card:" + card.getName());
         mHideTitle = checkNeedHideTitle();
         setTitle(card.getType());
         mIvCardZoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                expand(card);
+//                expand(card);
+                LauncherCard anchorSmallCard = ExpandStateManager.getInstance().getAnchorSmallCard();
+                CardFrameViewHolder viewHoldByCard = HomeCardRcvManager.getInstance().findViewHoldByCard(anchorSmallCard);
+                ExpandStateManager.getInstance().clickExpandButton(card, viewHoldByCard.isCardInLeftSide());
             }
         });
         itemView.setOnClickListener(new View.OnClickListener() {
