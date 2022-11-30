@@ -43,7 +43,7 @@ public class AppManageDecoration extends RecyclerView.ItemDecoration {
             if(parent.getChildAdapterPosition(view) != 0){
                 outRect.left = leftRight;
             }else {//第一项需要left
-                outRect.left = leftRight / 2 + 20;
+                outRect.left = leftRight / 2 + 30;
             }
             outRect.top = topBottom;
             outRect.bottom = topBottom;

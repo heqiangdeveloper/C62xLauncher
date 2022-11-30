@@ -166,7 +166,7 @@ public class AppManagementWindow {
         };
         rv.addOnItemTouchListener(onItemTouchListener);
         rv.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL,false));
-        rv.addItemDecoration(new AppManageDecoration(70,0));
+        rv.addItemDecoration(new AppManageDecoration(64,0));
         clearTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
