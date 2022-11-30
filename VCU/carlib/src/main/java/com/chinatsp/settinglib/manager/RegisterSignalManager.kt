@@ -32,6 +32,8 @@ class RegisterSignalManager private constructor() {
                     //***********车门信号 start***************
                     add(CarCabinManager.ID_HOOD_LID_OPEN)
                     add(CarCabinManager.ID_TRUNK_LID_OPEN)
+                    /**无线充电状态*/
+                    add(CarCabinManager.ID_WCM_WORK_STATE)
 
                     add(CarCabinManager.ID_DR_DOOR_OPEN)
                     add(CarCabinManager.ID_PA_DOOR_OPEN)

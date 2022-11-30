@@ -23,8 +23,6 @@ class ForeignMatterDialogFragment :
     }
 
     private fun setBackListener() {
-        binding.noteUsersAgree.setOnClickListener {
-            dismiss()
-        }
+
     }
 }

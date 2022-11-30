@@ -27,7 +27,7 @@ class GrayPopoverService : Service() {
         val dialogMaster: DialogMaster = DialogMaster.create(
             applicationContext,
             { },
-            { }, 740, 488
+            { }, 740, 488,0
         )
         val editDialog: SystemAlertDialog = dialogMaster.dialog
         editDialog.setDetailsContent(contentStr)

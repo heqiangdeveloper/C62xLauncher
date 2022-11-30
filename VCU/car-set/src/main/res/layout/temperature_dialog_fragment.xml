@@ -15,46 +15,34 @@
             android:id="@+id/warning"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/chongdian_off"
+            android:src="@drawable/chongdian_off_1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="@dimen/x30"/>
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/foreign_matter"
+            android:id="@+id/details_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/x4"
-            android:text="@string/cabin_other_wireless_charging_abnormal_work"
+            android:text="@string/cabin_other_temperatire"
             android:textColor="@color/tab_option_title_text_color"
             android:textSize="@dimen/x15"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/warning" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/details_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/x10"
-            android:text="@string/cabin_other_maintenance"
-            android:textColor="@color/dialog_txt_hint"
-            android:textSize="@dimen/x12"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/foreign_matter" />
+            app:layout_constraintTop_toBottomOf="@id/warning"
+            android:layout_marginTop="@dimen/x16" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/hint_conform"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/x20"
             android:background="@drawable/lighting_dialog_txt"
             android:gravity="center"
             android:text="@string/cabin_other_determine"
             android:textColor="@color/xui_config_color_white"
             android:textSize="@dimen/text_14"
+            android:layout_marginTop="@dimen/x24"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/details_content" />

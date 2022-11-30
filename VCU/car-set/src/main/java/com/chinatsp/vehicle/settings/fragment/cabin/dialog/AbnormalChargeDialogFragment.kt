@@ -23,8 +23,6 @@ class AbnormalChargeDialogFragment :
     }
 
     private fun setBackListener() {
-        binding.noteUsersAgree.setOnClickListener {
-            dismiss()
-        }
+
     }
 }

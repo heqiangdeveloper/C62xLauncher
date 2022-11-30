@@ -11,6 +11,7 @@ import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.Hint
 import com.chinatsp.vehicle.settings.R
+import com.chinatsp.vehicle.settings.app.RechargeToast
 import com.chinatsp.vehicle.settings.app.Toast
 import com.chinatsp.vehicle.settings.fragment.dialog.DialogMaster
 import com.chinatsp.vehicle.settings.fragment.dialog.SystemAlertDialog
@@ -72,6 +73,14 @@ class SystemService : Service(), SystemDialogHelper.OnCountDownListener, Handler
             } else if (type == Hint.ALL_HINT) {
                 removeMessage(Hint.ON, Hint.leve1, Hint.leve2, Hint.powerSupply)
                 handleMessageDelay(type, delay = 10)
+            } else if (type == Hint.wirelessChargingNormal) {
+                handleMessageDelay(type)
+            } else if (type == Hint.wirelessChargingAbnormal) {
+                handleMessageDelay(type)
+            } else if (type == Hint.wirelessChargingMetal) {
+                handleMessageDelay(type)
+            } else if (type == Hint.wirelessChargingTemperature) {
+                handleMessageDelay(type)
             }
         }
         return super.onStartCommand(intent, flags, startId)
@@ -85,10 +94,10 @@ class SystemService : Service(), SystemDialogHelper.OnCountDownListener, Handler
         signal: Int, content: Int, cancelable: Boolean, careEngine: Boolean = false,
     ) {
         if (!careEngine || !VcuUtils.isEngineRunning()) {
-            if (null == dialog) {
-                val master = DialogMaster.create(applicationContext, { }, { }, 740, 488)
+            //if (null == dialog) {
+                val master = DialogMaster.create(applicationContext, { }, { }, 740, 488,signal)
                 dialog = master.dialog
-            }
+            //}
             val current = dialog!!
             current.setDetailsContent(content)
             current.setCancelable(cancelable)
@@ -152,8 +161,29 @@ class SystemService : Service(), SystemDialogHelper.OnCountDownListener, Handler
                 }
             }
         } else if (signal == Hint.TOAST_HINT_CLOSE_SCREEN) {
-            Toast.showToast(BaseApp.instance.applicationContext,
-                ResUtils.getString(R.string.hint_low_voltage_close_screen), true)
+            Toast.showToast(
+                BaseApp.instance.applicationContext,
+                ResUtils.getString(R.string.hint_low_voltage_close_screen), true
+            )
+        } else if (signal == Hint.wirelessChargingNormal) {
+            /**充电正常*/
+            RechargeToast.showToast(
+                BaseApp.instance.applicationContext,
+                ResUtils.getString(R.string.cabin_other_wireless_charging_working_properly),
+                true
+            )
+        }else if (signal == Hint.wirelessChargingAbnormal) {
+            /**充电异常*/
+            content = R.string.cabin_other_maintenance
+            updateHintContent(signal, content, cancelable)
+        }else if (signal == Hint.wirelessChargingMetal) {
+            /**检测到金属异物，请移开异物*/
+            content =R.string.cabin_other_foreign_matter
+            updateHintContent(signal, content, cancelable)
+        }else if (signal == Hint.wirelessChargingTemperature) {
+            /**无线充电温度过高，请移开手机*/
+            content = R.string.cabin_other_temperatire
+            updateHintContent(signal, content, cancelable)
         }
         return true
     }

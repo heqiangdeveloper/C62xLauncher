@@ -75,6 +75,11 @@ class GlobalManager private constructor() : BaseManager() {
                 onVehicleModeChanged(property.value)
                 return true
             }
+            /**无线充电状态*/
+            if (CarCabinManager.ID_WCM_WORK_STATE == property.propertyId) {
+                onWirelessChargingModeChanged(property.value)
+                return true
+            }
             /**开关机状态*/
             if (CarCabinManager.ID_POWER_MODE_BCM == property.propertyId) {
                 onPowerModeChanged(property.value)
@@ -197,6 +202,70 @@ class GlobalManager private constructor() : BaseManager() {
             0x2 -> startDialogService(Hint.exhibitionMode)
             /**展车模式*/
 //            0x4 -> startDialogService(HintType.exhibitionModeError)/**展车模式切换失败*/
+        }
+    }
+
+    /**
+     * 无线充电状态
+     * 0x0: WCM处于关机状态及CDC或DA的显示
+    WCM关机状态需要满足以下条件：
+    1）	常电上电、触发电未上电/WCM开关处于关闭状态
+    满足以上条件， WCM进入关机状态，WCM发送“WcmWSts：OX00”信号，CDC或DA在显示屏右上角的无线充电状态标识无显示！
+     * 0x1: WCM处于待机状态及CDC或DA的显示
+    1）	常电上电、触发电上电、WCM开关处于打开状态、PEPS不在寻钥匙状态；
+    2）	WCM未检测到接收端（手机）；
+    满足以上条件， WCM进入待机状态即WCM可以进行无线充电，但此时未检测到接收端（手机）.WCM发送“WcmWSts：OX01”信号，HUM在显示屏上显示此状态；
+     * 0x2: WCM处于充电中状态及CDC或DA的显示
+    1）	常电上电、触发电上电、WCM开关处于打开状态、PEPS不在寻钥匙状态；
+    2）	WCM无故障信息；
+    3）	检测到接收端（手机）。
+    满足以上条件， WCM进入充电中状态.WCM发送“WcmWSts：OX02信号，则音响显示屏上显示此状态
+     * 0x3: WCM处于过压状态及CDC或DA的显示
+    1）	常电上电、触发电上电、WCM开关处于打开状态、PEPS不在寻钥匙状态；
+    2）	WCM检测到输入电压过高（19.2V以上）。
+    满足以上条件， WCM进入过压状态.WCM发送“WcmWSts：OX03信号，音响显示屏上显示此状态
+    同时HUM屏幕额外通过图片的文字提示故障内容。
+    HUM的警告面策略：HUM弹出的警告画面会有“无线充电异常”的文字。
+     * 0x4: WCM处于欠压状态及CDC或DA的显示
+    4）	WCM检测到输入电压过低（8.5V以下）。
+    满足以上条件， WCM进入欠压状态.WCM发送“WcmWSts：OX04信号，HUM在显示屏上显示此状态
+    HUM弹出的警告画面会有“无线充电异常”
+     * 0x5: WCM处于检测到异物（FOD）状态
+    WCM进入FOD状态.WCM发送“WcmWSts：OX05信号
+    HUM弹出的警告画面会有“检测到金属异物，请移开异物”的文字
+     * 0x6: WCM处于过流状态
+    WCM进入过流状态.WCM发送“WcmWSts：OX06信号
+    HUM弹出的警告画面会有“无线充电异常”的文字。
+     * 0x7: WCM处于过温状态
+    WCM进入过温状态.WCM发送“WcmWSts：OX07信号
+    HUM弹出的警告画面会有“无线充电温度过高，请移开手机”的文字
+     * 0x8: WCM处于过功率状态
+     * 0x9:
+     * 0xA:
+     * 0xB:
+     * @param wirelessChargingMode
+     */
+    private fun onWirelessChargingModeChanged(wirelessChargingMode: Any?) {
+        if (wirelessChargingMode !is Int) {
+            return
+        }
+        when (wirelessChargingMode) {
+            /**无线充电正常*/
+            0x2 -> {
+                startDialogService(Hint.wirelessChargingNormal)
+            }
+            /**无线充电异常*/
+            0x3, 0x4, 0x6 -> {
+                startDialogService(Hint.wirelessChargingAbnormal)
+            }
+            /**检测到金属异物，请移开异物*/
+            0x5 -> {
+                startDialogService(Hint.wirelessChargingMetal)
+            }
+            /**无线充电温度过高，请移开手机*/
+            0x7 -> {
+                startDialogService(Hint.wirelessChargingTemperature)
+            }
         }
     }
 

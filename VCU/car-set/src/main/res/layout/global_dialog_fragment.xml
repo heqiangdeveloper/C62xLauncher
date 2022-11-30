@@ -45,7 +45,7 @@
             android:layout_width="@dimen/x114"
             android:layout_height="@dimen/x37"
             android:layout_marginTop="@dimen/x45"
-            android:background="@drawable/lighting_dialog_txt_bg"
+            android:background="@drawable/lighting_dialog_txt"
             android:gravity="center"
             android:text="@string/global_txt_agree"
             android:textColor="@color/xui_config_color_white"

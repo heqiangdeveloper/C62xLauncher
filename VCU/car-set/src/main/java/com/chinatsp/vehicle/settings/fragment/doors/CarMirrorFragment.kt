@@ -112,6 +112,8 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
         if (VcuUtils.isCareLevel(Level.LEVEL3)) {
             binding.reverseAngle.visibility = View.GONE
             binding.line2.visibility = View.GONE
+            binding.modifyAngle.visibility = View.GONE
+            binding.line3.visibility = View.GONE
         }
     }
 

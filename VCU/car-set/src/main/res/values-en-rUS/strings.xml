@@ -102,6 +102,7 @@
     <string name="cabin_other_toast_content_open">已开启</string>
     <string name="cabin_other_wireless_charging_working_properly">无线充电工作正常</string>
     <string name="cabin_other_foreign_matter">Foreign metal object detected, please remove</string>
+    <string name="cabin_other_temperatire">无线充电温度过高，请移开手机</string>
     <string name="cabin_other_determine">确定</string>
     <string name="cabin_other_wireless_charging_lamp_open">储物盒灯已打开</string>
     <string name="cabin_other_wireless_charging_lamp_close">储物盒灯已关闭</string>
@@ -112,7 +113,7 @@
 2、为避免⼲扰⻋辆启动，在⻋辆认证钥匙过程中⽆线充电功能会中断，待⻋辆钥匙认证完成后⽆线充电功能即可恢复；\n
 3、请勿将⾦属物体放在或留在充电板表⾯和充电设备之间；尤其注意硬币、钥匙、戒指、⾸饰、公交卡与银⾏卡等类似物品；\n
 4、如果将不兼容Qi⽆线充电标准的设备或⾦属异物放在充电区域内，则充电可能会中断，物体会变热，进⽽可能会损坏充电板，待物体冷却后，将其移除。</string>
-    <string name="note_users_agree">同意</string>
+    <string name="note_users_agree">确定</string>
     <string name="note_users_cancel">取消</string>
 
 

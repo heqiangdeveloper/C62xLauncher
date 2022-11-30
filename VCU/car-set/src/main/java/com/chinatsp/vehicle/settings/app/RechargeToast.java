@@ -27,6 +27,9 @@ public class RechargeToast {
             // 单例持有, 创建全局Toast
             view = LayoutInflater.from(context).inflate(R.layout.recharge_toast, null);
             textView = view.findViewById(R.id.toast_content);
+          /*  LinearLayout relativeLayout = (LinearLayout)view.findViewById(R.id.toast_linear);
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams((int) 400, 400);
+            relativeLayout.setLayoutParams(layoutParams);*/
         }
 
 
@@ -58,7 +61,7 @@ public class RechargeToast {
                 toast.setView(view);
                 textView.setText(text);
                 setCusWidth(textView);//防止显示成2行
-                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.setGravity(Gravity.BOTTOM|Gravity.CENTER, 0, 120);
                 toast.show();
             }
         }

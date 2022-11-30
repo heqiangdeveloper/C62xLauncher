@@ -60,7 +60,7 @@ public final class Toast {
                 toast.setView(view);
                 textView.setText(text);
                 setCusWidth(textView);//防止显示成2行
-                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.setGravity(Gravity.BOTTOM|Gravity.CENTER, 0, 66);
                 toast.show();
             }
         }

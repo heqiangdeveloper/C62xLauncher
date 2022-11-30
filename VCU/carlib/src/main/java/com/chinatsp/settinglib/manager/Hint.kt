@@ -28,6 +28,11 @@ object Hint {
     const val exhibitionModeError = 0x43
     const val default = 0x44
 
+    const val wirelessChargingNormal = 0x51
+    const val wirelessChargingAbnormal = 0x52
+    const val wirelessChargingMetal = 0x53
+    const val wirelessChargingTemperature = 0x54
+
 
 //    const val ON = "ON"
 //    const val powerSupply = "powerSupply"

@@ -46,7 +46,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/x20"
                     android:layout_marginRight="@dimen/x20"
-                    android:lineSpacingExtra="@dimen/x2"
+                    android:lineSpacingExtra="@dimen/x8"
                     android:text="@string/note_users_content" />
 
             </LinearLayout>
@@ -80,7 +80,8 @@
                 android:gravity="center"
                 android:text="@string/note_users_cancel"
                 android:textColor="@color/xui_config_color_white"
-                android:textSize="@dimen/text_14" />
+                android:textSize="@dimen/text_14"
+                android:visibility="gone"/>
 
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
