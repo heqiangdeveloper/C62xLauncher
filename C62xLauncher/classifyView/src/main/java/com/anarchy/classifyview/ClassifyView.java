@@ -1202,14 +1202,17 @@ public class ClassifyView extends FrameLayout {
                                 @Override
                                 public void onClick(View view) {
                                     dialog.dismiss();
-                                    for(int i = 0; i < mMainRecyclerView.getChildCount(); i++){
-                                        relativeLayout = (RelativeLayout) recyclerView.getChildAt(i);
-                                        insertAbleGridView = (InsertAbleGridView) relativeLayout.getChildAt(0);
-                                        if(insertAbleGridView.getChildCount() == 1){//非文件夹
-                                            ImageView iv = (ImageView) relativeLayout.getChildAt(2);
-                                            iv.setVisibility((int)iv.getTag() == 1 ? View.VISIBLE : View.GONE);
-                                        }
-                                    }
+//                                    for(int i = 0; i < mMainRecyclerView.getChildCount(); i++){
+//                                        relativeLayout = (RelativeLayout) recyclerView.getChildAt(i);
+//                                        insertAbleGridView = (InsertAbleGridView) relativeLayout.getChildAt(0);
+//                                        if(insertAbleGridView.getChildCount() == 1){//非文件夹
+//                                            ImageView iv = (ImageView) relativeLayout.getChildAt(2);
+//                                            iv.setVisibility((int)iv.getTag() == 1 ? View.VISIBLE : View.GONE);
+//                                        }
+//                                    }
+                                    editor.putBoolean(MyConfigs.MAINSHOWDELETE,true);
+                                    editor.commit();
+                                    mMainRecyclerView.getAdapter().notifyDataSetChanged();
                                     Log.d("CountTimer","editTv start count");
                                     isCountTimer = true;
                                     countTimerView.start();
