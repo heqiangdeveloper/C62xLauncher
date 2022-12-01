@@ -38,7 +38,7 @@ public class WeatherRepository extends BaseRepository {
     }
 
 
-    private IWeatherCache mCache = new WeatherCache();
+    private final IWeatherCache mCache = new WeatherCache();
 
     @Override
     public void init(@NonNull Context context) {

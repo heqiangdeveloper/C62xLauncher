@@ -1,16 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="weather_desc_sunny">sunny</string>
-    <string name="weather_desc_cloudy">cloudy</string>
-    <string name="weather_desc_rain">rain</string>
-    <string name="weather_desc_fog">fog</string>
-    <string name="weather_desc_snow">snow</string>
-    <string name="weather_desc_thunder_shower">thundershower</string>
-    <string name="weather_desc_overcast">overcast</string>
-    <string name="weather_desc_smog">smog</string>
-    <string name="weather_desc_windy">windy</string>
-    <string name="weather_desc_unknown">unknown</string>
+
     <string name="symbol_celsius">℃</string>
+    <string name="weather_pm_outside">PM outside</string>
     <string name="weather_monday">Mon.</string>
     <string name="weather_tuesday">Tue.</string>
     <string name="weather_wednesday">Wed.</string>
@@ -18,4 +10,30 @@
     <string name="weather_friday">Fri.</string>
     <string name="weather_saturday">Sat.</string>
     <string name="weather_sunday">Sun.</string>
+    <string name="weather_air_quality">Air quality</string>
+
+
+<!--    <string name="weather_desc_sunny">Sunny</string>-->
+<!--    <string name="weather_desc_cloudy">Cloudy</string>-->
+<!--    <string name="weather_desc_rain">Rain</string>-->
+<!--    <string name="weather_desc_fog">Fog</string>-->
+<!--    <string name="weather_desc_snow">Snow</string>-->
+<!--    <string name="weather_desc_thunder_storm">Thunderstorm</string>-->
+<!--    <string name="weather_desc_overcast">Overcast</string>-->
+<!--    <string name="weather_desc_haze">Haze</string>-->
+<!--    <string name="weather_desc_windy">Windy</string>-->
+<!--    <string name="weather_desc_unknown">Unknown</string>-->
+
+
+<!--    <string name="weather_desc_light_rain">Light rain</string>-->
+<!--    <string name="weather_desc_moderate_rain">Moderate rain</string>-->
+<!--    <string name="weather_desc_heavy_rain">Heavy rain</string>-->
+<!--    <string name="weather_desc_rain_storm">Rainstorm</string>-->
+<!--    <string name="weather_desc_shower">Shower</string>-->
+<!--    <string name="weather_desc_light_snow">Light snow</string>-->
+<!--    <string name="weather_desc_moderate_snow">Moderate snow</string>-->
+<!--    <string name="weather_desc_heavy_snow">Heavy snow</string>-->
+<!--    <string name="weather_desc_blizzard">Blizzard</string>-->
+<!--    <string name="weather_desc_sleet">Sleet</string>-->
+<!--    <string name="weather_desc_hail">Hail</string>-->
 </resources>

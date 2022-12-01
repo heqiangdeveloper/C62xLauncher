@@ -1,5 +1,7 @@
 package com.chinatsp.weaher.viewholder.city;
 
+import static com.chinatsp.weaher.WeatherUtil.convertNull;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Handler;
@@ -14,8 +16,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.util.StringUtil;
 
 import com.chinatsp.weaher.R;
+import com.chinatsp.weaher.WeatherDescTranslator;
 import com.chinatsp.weaher.WeatherTypeRes;
 import com.chinatsp.weaher.WeatherUtil;
 import com.chinatsp.weaher.repository.WeatherRepository;
@@ -128,9 +132,10 @@ public class BigCityItemViewHolder extends BaseViewHolder<String> {
     }
 
     public void updateWeather(WeatherInfo weatherInfo) {
-        tvCardWeatherWord.setText(weatherInfo.getWeather());
-        tvCardWeatherAirValue.setText(weatherInfo.getAirData());
-        tvCardWeatherAirDesc.setText("空气质量 " + weatherInfo.getAirQuality());
+        WeatherUtil.setWeatherDesc(tvCardWeatherWord, weatherInfo.getWeather());
+        tvCardWeatherAirValue.setText(convertNull(weatherInfo.getPm25()));
+        String airQualityLabel = mResources.getString(R.string.weather_air_quality)+" ";
+        tvCardWeatherAirDesc.setText(String.format("%s%s", airQualityLabel, convertNull(weatherInfo.getAirQuality())));
         setTemp(tvCardWeatherTemperature, weatherInfo.getTemp());
         tvCardWeatherTemperatureRange.setText(WeatherUtil.getTemperatureRange(weatherInfo, mResources));
         WeatherTypeRes weatherTypeRes = WeatherUtil.parseType(weatherInfo.getWeather());
@@ -138,6 +143,8 @@ public class BigCityItemViewHolder extends BaseViewHolder<String> {
         ivWeatherBg.setImageResource(weatherTypeRes.getBigCardBg());
 
     }
+
+
 
     private void setTemp(TextView textView, String temp) {
         if (textView == null) {

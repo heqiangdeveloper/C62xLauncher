@@ -1,15 +1,6 @@
 <resources>
     <string name="symbol_celsius">℃</string>
-    <string name="weather_desc_sunny">晴</string>
-    <string name="weather_desc_cloudy">多云</string>
-    <string name="weather_desc_rain">雨</string>
-    <string name="weather_desc_fog">雾</string>
-    <string name="weather_desc_snow">雪</string>
-    <string name="weather_desc_thunder_shower">雷阵雨</string>
-    <string name="weather_desc_overcast">阴</string>
-    <string name="weather_desc_smog">雾霾</string>
-    <string name="weather_desc_windy">风</string>
-    <string name="weather_desc_unknown">未知</string>
+    <string name="weather_pm_outside">车外PM</string>
     <string name="weather_monday">周一</string>
     <string name="weather_tuesday">周二</string>
     <string name="weather_wednesday">周三</string>
@@ -17,4 +8,29 @@
     <string name="weather_friday">周五</string>
     <string name="weather_saturday">周六</string>
     <string name="weather_sunday">周日</string>
+    <string name="weather_air_quality">空气质量</string>
+
+
+
+    <string name="weather_desc_sunny">晴</string>
+    <string name="weather_desc_cloudy">多云</string>
+    <string name="weather_desc_rain">雨</string>
+    <string name="weather_desc_fog">雾</string>
+    <string name="weather_desc_snow">雪</string>
+    <string name="weather_desc_thunder_storm">雷阵雨</string>
+    <string name="weather_desc_overcast">阴</string>
+    <string name="weather_desc_haze">雾霾</string>
+    <string name="weather_desc_windy">风</string>
+    <string name="weather_desc_unknown">未知</string>
+    <string name="weather_desc_light_rain">小雨</string>
+    <string name="weather_desc_moderate_rain">中雨</string>
+    <string name="weather_desc_heavy_rain">大雨</string>
+    <string name="weather_desc_rain_storm">暴雨</string>
+    <string name="weather_desc_shower">阵雨</string>
+    <string name="weather_desc_light_snow">小雪</string>
+    <string name="weather_desc_moderate_snow">中雪</string>
+    <string name="weather_desc_heavy_snow">大雪</string>
+    <string name="weather_desc_blizzard">暴雪</string>
+    <string name="weather_desc_sleet">雨夹雪</string>
+    <string name="weather_desc_hail">冰雹</string>
 </resources>
