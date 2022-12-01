@@ -150,6 +150,8 @@
     <string name="car_trunk_buzzer_close">蜂鸣器报警已关闭</string>
     <string name="car_trunk_light_open">灯光闪烁报警已开启</string>
     <string name="car_trunk_light_close">灯光闪烁报警已关闭</string>
+    <string name="car_trunk_round_trip_type">往返式</string>
+    <string name="car_trunk_stay_mode">停留式</string>
     <string name="car_trunk_content">&#160;往返式：携带合法智能钥匙\n
         进⼊后备箱感应区域内，然\n
         后退出此区域，再次进⼊感\n

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Vehicle setting</string>
-    <string name="switch_turn_on">已开启</string>
-    <string name="switch_turn_off">已关闭</string>
+    <string name="switch_turn_on">Opened</string>
+    <string name="switch_turn_off">Closed</string>
 
     <string name="author_">作者：</string>
 
@@ -26,15 +26,15 @@
     <string name="table2">Light setting</string>
     <string name="table3">Sound effect</string>
     <string name="table4">Driver assistance</string>
-    <string name="table5">行车</string>
+    <string name="table5">Driving</string>
     <string name="table6">BEIJING OS</string>
-    <string name="back_navigation">返回</string>
+    <string name="back_navigation">Return</string>
     <string name="car_door">Door</string>
     <string name="car_window">Window</string>
     <string name="car_trunk">Power tailgate</string>
-    <string name="car_mirror">外后视镜</string>
+    <string name="car_mirror">Exterior rear-view mirror</string>
     <string name="car_door_smart">Intelligent entry</string>
-    <string name="car_nfc_disable">NFC卡禁用</string>
+    <string name="car_nfc_disable">Nfn card disable</string>
     <string name="acc_off_auto_unlock">Fame-out automatic locked</string>
     <string name="drive_auto_lock">Driving automatic locked</string>
     <string name="unlock_fron">Unlock front door only</string>
@@ -45,94 +45,94 @@
     <string name="vcu_cabin_safety">Safety</string>
     <string name="vcu_cabin_instrument">Instrument</string>
     <string name="vcu_cabin_other">Other</string>
-    <string name="vcu_cabin_instrument_title">仪表主题随驾驶模式联动</string>
+    <string name="vcu_cabin_instrument_title">Instrument theme is linked with driving mode</string>
 
     <string name="cabin_ac_auto_arid">Air conditioning self-drying</string>
-    <string name="cabin_ac_auto_demist">自动除雾</string>
+    <string name="cabin_ac_auto_demist">Automatic demisting</string>
     <string name="cabin_ac_auto_wind_advance">Pre-ventilation function</string>
     <string name="cabin_ac_auto_comfort">Automatic AC Comfort</string>
 
     <string name="cabin_safe_fortify_tone">Set defense prompt</string>
     <string name="cabin_safe_lock_car">锁车成功提示音</string>
     <string name="cabin_safe_lock_car_error">锁车失败提示音</string>
-    <string name="cabin_safe_fortify_success_tone">设防成功提示音</string>
-    <string name="cabin_safe_fortify_failure_tone">设防失败提示音</string>
+    <string name="cabin_safe_fortify_success_tone">Defense success prompt tone</string>
+    <string name="cabin_safe_fortify_failure_tone">Defense failure prompt tone</string>
     <string name="cabin_safe_video_safe_mode">Video safe mode</string>
-    <string name="cabin_safe_video_safe_mode_content">视频安全模式开启后，⻋速\n⼤于15km/h时，本地视频\n将⾃动关闭。</string>
+    <string name="cabin_safe_video_safe_mode_content">After the video safety mode is enabled, when the \n vehicle speed is more than 15km/h, the local video \n will be automatically closed。</string>
 
     <string name="cabin_wheel_electronic_mode">Electronic power steering mode</string>
     <string name="cabin_wheel_press_key">Steering wheel custom buttons</string>
-    <string name="cabin_wheel_custom_button">方向盘自定义按钮</string>
+    <string name="cabin_wheel_custom_button">Steering wheel customization button</string>
     <string name="cabin_wheel_press_key_tv">Privacy mode</string>
     <string name="cabin_wheel_automatic_heating">Steering wheel self heating</string>
-    <string name="cabin_wheel_automatic_heating_close">方向盘自动加热已关闭</string>
-    <string name="cabin_wheel_automatic_heating_tv">已关闭</string>
+    <string name="cabin_wheel_automatic_heating_close">Steering wheel automatic heating off</string>
+    <string name="cabin_wheel_automatic_heating_tv">Closed</string>
     <string name="cabin_wheel_turn_screen">Sleep</string>
     <string name="cabin_wheel_navigation">Navigation</string>
-    <string name="cabin_wheel_starting_temperature">自动加热起始温度</string>
+    <string name="cabin_wheel_starting_temperature">Starting temperature of automatic heating</string>
 
     <string name="cabin_seat_welcomes_guests">Driver welcome</string>
     <string name="cabin_seat_welcomes_guests_close">主驾迎宾已关闭</string>
-    <string name="cabin_seat_close">已关闭</string>
+    <string name="cabin_seat_close">Closed</string>
     <string name="cabin_seat_copilot_guests">Passenger welcome</string>
     <string name="cabin_seat_copilot_guests_position">Passenger welcome position</string>
     <string name="cabin_seat_automatic_heating">Seat self heating</string>
     <string name="cabin_seat_automatic_heating_close">座椅自动加热已关闭</string>
-    <string name="cabin_seat_set_up">请先设置副驾常用位置和迎宾位置</string>
-    <string name="cabin_seat_passenger_safety">开启后，副驾座椅移动时，请注意后排乘客安全</string>
-    <string name="cabin_seat_common_location">常用位置</string>
-    <string name="cabin_seat_welcome_location">迎宾位置</string>
-    <string name="cabin_seat_not_saved">未保存</string>
-    <string name="cabin_seat_screen_modify">去空调屏修改</string>
-    <string name="cabin_seat_copilot_lower">副驾下车</string>
-    <string name="cabin_seat_copilot_top">副驾上车</string>
+    <string name="cabin_seat_set_up">Please set the passenger\'s common position and welcome position first</string>
+    <string name="cabin_seat_passenger_safety">After opening, please pay attention to the safety of the passengers in the rear row when the front passenger seat moves</string>
+    <string name="cabin_seat_common_location">Common position</string>
+    <string name="cabin_seat_welcome_location">Welcome position</string>
+    <string name="cabin_seat_not_saved">Unsaved</string>
+    <string name="cabin_seat_screen_modify">On AC screen to modify</string>
+    <string name="cabin_seat_copilot_lower">Passenger gets off</string>
+    <string name="cabin_seat_copilot_top">Passenger gets on</string>
 
     <string name="cabin_other_trailer_remind">Trailer remind</string>
-    <string name="cabin_other_trailer_remind_content">车辆被摇曳、牵引超过设定\n的提醒距离时，将通过APP\n或短信提醒车主。</string>
-    <string name="cabin_other_close">已关闭</string>
-    <string name="cabin_other_battery_optimization">智能电源管家</string>
-    <string name="cabin_other_battery_optimization_content">监控车辆电能消耗情况，低\n电量状态下，对整车舒适性\n功能（空调、大屏等）进行\n管理。</string>
+    <string name="cabin_other_trailer_remind_content">When the vehicle is swayed or towed beyond the \n set warning distance, the owner \n will be reminded by SMS。</string>
+    <string name="cabin_other_close">Closed</string>
+    <string name="cabin_other_battery_optimization">Intelligent power manager</string>
+    <string name="cabin_other_battery_optimization_content">Monitor the vehicle electric energy consumption, and manage \n the comfort functions of the vehicle (air conditioner, large \n screen, etc.) in the low power state。</string>
     <string name="cabin_other_wireless_charging">Wireless charging</string>
     <string name="cabin_other_wireless_charging_abnormal_work">Wireless charging works abnormally</string>
     <string name="cabin_other_maintenance">Please go to the official designated maintenance as soon as possible</string>
-    <string name="cabin_other_wireless_charging_lamp">储物盒灯</string>
-    <string name="cabin_other_sensor_sensitivity">传感器灵敏度</string>
+    <string name="cabin_other_wireless_charging_lamp">Storage box lamp</string>
+    <string name="cabin_other_sensor_sensitivity">Sensor sensitivity</string>
     <string name="cabin_other_trailer_remind_distance">Trailer remind distance</string>
-    <string name="cabin_other_toast_content">车辆被拖时无法收到相关提醒</string>
-    <string name="cabin_other_toast_content_open">已开启</string>
-    <string name="cabin_other_wireless_charging_working_properly">无线充电工作正常</string>
+    <string name="cabin_other_toast_content">Unable to receive relevant reminders when the vehicle is towed</string>
+    <string name="cabin_other_toast_content_open">Opened</string>
+    <string name="cabin_other_wireless_charging_working_properly">Wireless charging works normally</string>
     <string name="cabin_other_foreign_matter">Foreign metal object detected, please remove</string>
     <string name="cabin_other_temperatire">无线充电温度过高，请移开手机</string>
-    <string name="cabin_other_determine">确定</string>
+    <string name="cabin_other_determine">OK</string>
     <string name="cabin_other_wireless_charging_lamp_open">储物盒灯已打开</string>
     <string name="cabin_other_wireless_charging_lamp_close">储物盒灯已关闭</string>
 
-    <string name="note_users_title">用户须知</string>
-    <string name="note_users_content">为了确保安全使⽤⼿机⽆线充电功能，请您务必阅读并完全理解以下注意事项并仅可按照提示使⽤该功能：\n
-1、仅可给兼容Qi⽆线充电标准的设备充电，充电设备需放置于充电槽中⼼位置即充电范围内，以免造成充电断续、充电效率下降的情况出现；\n
-2、为避免⼲扰⻋辆启动，在⻋辆认证钥匙过程中⽆线充电功能会中断，待⻋辆钥匙认证完成后⽆线充电功能即可恢复；\n
-3、请勿将⾦属物体放在或留在充电板表⾯和充电设备之间；尤其注意硬币、钥匙、戒指、⾸饰、公交卡与银⾏卡等类似物品；\n
-4、如果将不兼容Qi⽆线充电标准的设备或⾦属异物放在充电区域内，则充电可能会中断，物体会变热，进⽽可能会损坏充电板，待物体冷却后，将其移除。</string>
-    <string name="note_users_agree">确定</string>
-    <string name="note_users_cancel">取消</string>
+    <string name="note_users_title">User Notice</string>
+    <string name="note_users_content">In order to ensure the safety of the wireless charging function, you must read and fully understand the following precautions and only use the function according to the prompts：\n
+1. Only the equipment compatible with the wireless charging standard of Qi can be charged. The charging equipment must be placed the center position in the charging tank, i.e. within the charging range, to avoid intermittent charging and reduced charging efficiency; \n
+2. In order to avoid disturbing the start of the vehicle, the wireless charging function  will be interrupted during the process of vehicle key certification, and the wireless charging function can be restored after the completion of vehicle key certification; \n
+3. Do not put or leave objects between the charging board and the charging equipment; Pay special attention to coins, keys, rings, ornaments, bus cards, silver cards and other similar items; \n
+4. If the equipment  or metal foreign matters incompatible with the wireless charging standard of Qi are placed in the charging area, the charging may be interrupted, the object may become hot, and the charging board may be damaged when the object enters. After the object cools down, remove it. </string>
+    <string name="note_users_agree">OK</string>
+    <string name="note_users_cancel">Cancel</string>
 
 
     <string name="car_window_remote_control">Remote control window up/down</string>
-    <string name="car_window_lock_car">锁车自动关窗</string>
+    <string name="car_window_lock_car">Window self-closing after locking</string>
     <string name="car_window_rainy_day">The window closes automatically on rainy</string>
     <string name="car_window_wiper">Wiper maintenance</string>
-    <string name="car_window_lock_content">功能开启后，可通过钥匙遥\n
-        控关闭/开启四门车窗</string>
+    <string name="car_window_lock_content">After the function is opened, the Windows of the \n
+        four doors can be closed/opened remotely by the key</string>
     <string name="car_window_rainy_content">功能开启后，车速首次大于\n
         120km/h时，天窗自动关\n
         闭，此时向后拨动天窗开关\n
         可再次开启天窗。</string>
-    <string name="car_window_lock_car_content">功能开启后，锁门时，四门车\n
-        窗、天窗和遮阳帘自动关闭</string>
-    <string name="car_window_wiper_content">对⻛挡玻璃⾬刮器进⾏维护\n
-        操作时，务必打开⾬刮维修\n
-        模式。打开⾬刮维修，⾬刮\n
-        将⾃动运⾏⾄维修位置。</string>
+    <string name="car_window_lock_car_content">When the function is opened and the door is locked, the \n
+        four door windows, sunroof and sun blind automatically close</string>
+    <string name="car_window_wiper_content">When carrying out maintenance on the windshield wiper,  \n
+         be sure to turn on the wiper maintenance mode Open the \n
+        scraper for maintenance, and move the scraper to the \n
+        maintenance position.</string>
     <string name="wheel_automatic_heating_content">&#160;携带智能钥匙靠近或离开车\n
         辆一定距离时，车门将自动\n
         解锁或闭锁。</string>
@@ -140,61 +140,63 @@
     <string name="car_trunk_electric_function">Power tailgate electric function</string>
     <string name="car_trunk_intelligence_into">Electric tail door intelligent entry</string>
     <string name="car_trunk_intelligence_into_explain">车门智能进入开关需打开</string>
-    <string name="car_trunk_height_adjustment">尾门高度调节</string>
+    <string name="car_trunk_height_adjustment">Tailgate height adjustment</string>
     <string name="car_trunk_light_flashing">Light flashing alarm</string>
     <string name="car_trunk_buzzer_alarms">Buzzer alarm switch</string>
-    <string name="car_trunk_door_height">尾门高度调节</string>
-    <string name="car_trunk_keep_unlock">携带钥匙在解锁区域保持解锁</string>
-    <string name="car_trunk_action_unlock">携带钥匙完成退出进入动作解锁</string>
-    <string name="car_trunk_buzzer_open">蜂鸣器报警已开启</string>
-    <string name="car_trunk_buzzer_close">蜂鸣器报警已关闭</string>
-    <string name="car_trunk_light_open">灯光闪烁报警已开启</string>
-    <string name="car_trunk_light_close">灯光闪烁报警已关闭</string>
-    <string name="car_trunk_content">往返式：携带合法智能钥匙\n
-        进⼊后备箱感应区域内，然\n
-        后退出此区域，再次进⼊感\n
-        应区域，电动尾⻔⾃动开\n
-        启；\n
-        停留式：携带合法智能钥匙\n
-        进⼊后备箱感应区域内，原\n
-        地站⽴4s以上，电动尾⻔⾃\n
-        动开启。</string>
-    <string name="car_trunk_height_content">电动尾⻔⾼度调节建议：\n
-       身⾼1.6⽶以下的⽤户使⽤，建议开启⾼度为80%；\n
-       身⾼1.6-1.7⽶的⽤户使⽤，建议开启⾼度为90%；\n
-       身⾼1.7⽶以上的⽤户使⽤，建议开启⾼度为100%。\n
-       相关⾼度调节建议，仅供参考</string>
+    <string name="car_trunk_door_height">Tailgate height adjustment</string>
+    <string name="car_trunk_keep_unlock">Keep unlocking with the key in the unlocking area</string>
+    <string name="car_trunk_action_unlock">Complete the exit and entry action to unlock with the key</string>
+    <string name="car_trunk_buzzer_open">Buzzer alarm is on</string>
+    <string name="car_trunk_buzzer_close">Buzzer alarm is off</string>
+    <string name="car_trunk_light_open">Light flashing alarm is on</string>
+    <string name="car_trunk_light_close">Light flashing alarm is off</string>
+    <string name="car_trunk_round_trip_type">往返式</string>
+    <string name="car_trunk_stay_mode">停留式</string>
+    <string name="car_trunk_content">往返式：Carry a legal smart key into the \n
+        trunk sensing area, exit the area, enter the \n
+        b area again, and the electric tailgate \n
+       will be opened \n
+        automatically；\n
+        停留式：Carry a legal smart key into the \n
+        trunk sensing area, stay in place \n
+        for more than 6s, and the electric tailgate \n
+        will be opened automatically.</string>
+    <string name="car_trunk_height_content">Suggestions on electric tailgate hight adjustment：\n
+       for users with a height of less than 1.6 meters, it is recommended to open 80% of the height; \n
+       For users 1.6-1.7 meters tall, the recommended opening height is 90%; \n
+       For users with a height of more than 1.7 meters, 100% height is recommended.\n
+       Relevant height adjustment suggestions are for reference only</string>
     <string name="car_mirror_automatic_folding">Rear view mirror folds automatically</string>
-    <string name="car_mirror_automatic_folding_close">后视镜自动折叠已关闭</string>
-    <string name="car_mirror_automatic_folding_open">后视镜自动折叠已开启</string>
-    <string name="car_mirror_automatic_under_double">倒车后视镜下翻</string>
-    <string name="car_mirror_angle">修改角度</string>
-    <string name="car_mirror_cancel">取消</string>
-    <string name="car_mirror_set">开始设置</string>
-    <string name="car_mirror_save_set">保存设置</string>
-    <string name="car_mirror_cancel_set">取消保存</string>
-    <string name="car_mirror_dialog_title">倒⻋后视镜⻆度设置</string>
-    <string name="car_mirror_pop_title">请在车门物理按键上调节</string>
-    <string name="car_mirror_pop_content">2分钟倒计时结束后自动保存当前位置</string>
-    <string name="car_mirror_dialog_btn">保存设置</string>
-    <string name="car_mirror_dialog_content">请在⻋⻔的物理按键上调节\n
-        在2分钟之内完成设置，2分钟倒计时结\n
-        束后⾃动保存当前位置</string>
+    <string name="car_mirror_automatic_folding_close">Rearview mirror autofold is off</string>
+    <string name="car_mirror_automatic_folding_open">Rearview mirror autofold is on</string>
+    <string name="car_mirror_automatic_under_double">Reverse rearview mirror turns down</string>
+    <string name="car_mirror_angle">Change angle</string>
+    <string name="car_mirror_cancel">Cancel</string>
+    <string name="car_mirror_set">Start setup</string>
+    <string name="car_mirror_save_set">Save settings</string>
+    <string name="car_mirror_cancel_set">Cancel Save</string>
+    <string name="car_mirror_dialog_title">Reverse rearmirror angle settings</string>
+    <string name="car_mirror_pop_title">Please adjust physical button on the door</string>
+    <string name="car_mirror_pop_content">Automatically save the current position after the 2 minutes countdown</string>
+    <string name="car_mirror_dialog_btn">Save settings</string>
+    <string name="car_mirror_dialog_content">Please adjust the physical button on the door to complete \n
+        the setting within 2 minutes, and then save the \n
+        current position after the 2 minute countdown</string>
 
     <string name="ac_open_window">One key open window</string>
     <string name="ac_close_window">One key close window</string>
-    <string name="ac_refresh_window">一键重置</string>
+    <string name="ac_refresh_window">One button reset</string>
 
     <string name="drive_tab_intelligent_cruise">Intelligent cruise</string>
-    <string name="drive_tab_forward_assist">前向辅助</string>
+    <string name="drive_tab_forward_assist">Forward assist</string>
     <string name="drive_tab_lane_assist">Lane assist</string>
     <string name="drive_tab_rear_assist">Side-rear Assist</string>
     <string name="drive_tab_lighting_assist">Light Assist</string>
-    <string name="drive_tab_traffic">交通标志</string>
+    <string name="drive_tab_traffic">Traffic sign</string>
     <string name="drive_intelligent_cruise_assistant">Intelligent cruise assist IACC</string>
     <string name="drive_full_speed_range">Full speed range to provide the driver with vehicle control assistance</string>
-    <string name="drive_open">已开启</string>
-    <string name="drive_close">已关闭</string>
+    <string name="drive_open">Opened</string>
+    <string name="drive_close">Closed</string>
     <string name="drive_warning_fcw">Forward collision warning FCW</string>
     <string name="drive_fcw_txt_content">Warn the driver when a forward warning collision risk is detected</string>
     <string name="drive_sensitivity_setting">Sensitivity setting</string>
@@ -202,36 +204,36 @@
     <string name="drive_aeb_title">Automatic emergency braking AEB</string>
     <string name="drive_aeb_content">A short brake occurs when a dangerous condition is detected</string>
     <string name="drive_Lane_assist_system">Lane assist system</string>
-    <string name="drive_Lane_assist_system_content">车道赋值功能请到空调屏进行开启或关闭</string>
+    <string name="drive_Lane_assist_system_content">Please turn on or off the lane assignment function at the air conditioning panel</string>
     <string name="drive_bsd_title">Blind spot monitoring BSD</string>
     <string name="drive_bsd_content">Alert drivers to traffic coming behind</string>
     <string name="drive_dow_title">Open the door early warning DOW</string>
     <string name="drive_dow_content">Recognize approaching target and give warning when door is opened</string>
     <string name="drive_bsd_camera_title">Blind spot camera</string>
     <string name="drive_bsd_camera_content">Provide the driver\'s right visual blind area image information</string>
-    <string name="drive_voice_prompt">语音提示</string>
+    <string name="drive_voice_prompt">Voice prompt</string>
     <string name="drive_hma_title">Intelligent high beam auxiliary HMA</string>
     <string name="drive_hma_content">Automatic switch of near and far light</string>
-    <string name="drive_sla_title">限速标志识别TSR</string>
+    <string name="drive_sla_title">Traffic sign recognition (TSR)</string>
     <string name="drive_sla_content">Detect speed limit signs above or beside the road</string>
     <string name="drive_target_tone">Target Prompt</string>
     <string name="drive_vehicle_departure">Vehicle ahead to leave prompt</string>
     <string name="drive_alarm_way">Alarm mode</string>
     <string name="drive_auxiliary_line">Auxiliary line</string>
     <string name="drive_display_area">Display area</string>
-    <string name="drive_colour_breathing">色彩呼吸</string>
-    <string name="drive_music_rhythm">音乐律动</string>
-    <string name="drive_car_rhythm">车速律动</string>
-    <string name="drive_pm_display">PM2.5显示</string>
-    <string name="drive_temperature_rhythm">调温律动</string>
+    <string name="drive_colour_breathing">Color breathing</string>
+    <string name="drive_music_rhythm">Music rhythm</string>
+    <string name="drive_car_rhythm">Speed rhythm</string>
+    <string name="drive_pm_display">PM2.5 display</string>
+    <string name="drive_temperature_rhythm">Thermoregulation rhythm</string>
     <string name="drive_one_hundred_twenty">120</string>
-    <string name="drive_close_brake">关闭自动紧急制动</string>
-    <string name="drive_close_brake_content">关闭自动紧急制动功能将会同时关闭集\n成式巡航辅助功能，确定关闭吗？</string>
-    <string name="drive_agree">确定</string>
-    <string name="drive_cancel">取消</string>
+    <string name="drive_close_brake">Turn off automatic emergency braking</string>
+    <string name="drive_close_brake_content">Turning off the automatic emergency braking function will also turn \n off the integrated cruise assist function. Are you sure do it?</string>
+    <string name="drive_agree">OK</string>
+    <string name="drive_cancel">Cancel</string>
 
-    <string name="adas_meb_title">低速紧急制动MEB</string>
-    <string name="adas_meb_description">在低速倒⻋时探测障碍物并在必要时采取制动措施</string>
+    <string name="adas_meb_title">Low speed emergency braking (MEB)</string>
+    <string name="adas_meb_description">Detect obstacles when reversing at low speed and take braking actions if necessary</string>
 
 
     <string name="lighting_title">light</string>
@@ -245,20 +247,20 @@
     <string name="lighting_car_screen_title">Car machine screen brightness</string>
     <string name="lighting_instrument_screen_title">Instrument screen brightness </string>
     <string name="lighting_conditioner_screen_title">Air-condition screen brightness </string>
-    <string name="lighting_car_outside_title">车外迎宾灯</string>
+    <string name="lighting_car_outside_title">Exterior welcome lamp</string>
     <string name="lighting_car_inside_title">In-car welcome light</string>
-    <string name="lighting_front_atmosphere">流线式氛围灯</string>
-    <string name="lighting_rear_atmosphere">环抱式氛围灯</string>
+    <string name="lighting_front_atmosphere">Streamline ambient lamp</string>
+    <string name="lighting_rear_atmosphere">Surrounding ambient lamp</string>
     <string name="lighting_brightness">Brightness</string>
     <string name="lighting_color">Color</string>
     <string name="lighting_intelligent_model">Smart mode</string>
     <string name="lighting_install">Other Settings</string>
-    <string name="lighting_closing_reminder">开关门提醒</string>
-    <string name="lighting_shut_reminder">开关锁提醒</string>
-    <string name="lighting_brightness_breathing">亮度呼吸</string>
-    <string name="lighting_rear_reminder">开门后方来车提醒</string>
-    <string name="lighting_related_topics">关联主题</string>
-    <string name="drive_related_topics_content">将设置项保存于当前主题中，在主题切换时同步设置结果</string>
+    <string name="lighting_closing_reminder">OPen and close door reminder</string>
+    <string name="lighting_shut_reminder">Switch lock reminder</string>
+    <string name="lighting_brightness_breathing">Brightness breathing</string>
+    <string name="lighting_rear_reminder">Door open warning to behind coming car</string>
+    <string name="lighting_related_topics">Associated topics</string>
+    <string name="drive_related_topics_content">Save the setting items in the current theme, and synchronize the setting results when change theme</string>
 
     <string name="sound_title">Sound</string>
     <string name="sound_effect">sound effect</string>
@@ -269,7 +271,7 @@
     <string name="sound_system_prompt">System prompt tone</string>
     <string name="sound_touch_prompt">Touch screen prompt tone</string>
     <string name="sound_loudness_control">Loudness control</string>
-    <string name="sound_huawei_sound">华为音效</string>
+    <string name="sound_huawei_sound">Huawei sound effect</string>
     <string name="sound_navigation">Navigation</string>
     <string name="sound_call">Calls</string>
     <string name="sound_voice">language</string>
@@ -279,61 +281,89 @@
     <string name="sound_volume_balance">Volume balance</string>
     <string name="sound_environmental">Environmental sound</string>
     <string name="sound_standard">Standard</string>
-    <string name="sound_loudness_control_content">在小音量时，加强低音和高\n音；反之，大音量时，降低低\n音和高音，以让响度均衡</string>
+    <string name="sound_loudness_control_content">At low volume, enhance the bass and treble; \n Conversely, at high volume, lower the bass \n and treble to equalize the loudness</string>
 
-    <string name="vcu_action_switch_failed">切换失败</string>
+    <string name="vcu_action_switch_failed">Switch failed</string>
     <string name="vcu_eps_action_switch_check">The switching condition is not met. Please check whether the following conditions are met：
-        \n1.Engine is started\n2.At a safe speed
-        \n3.Please read the vehicle manual for other conditions</string>
+        \n 1.Engine is started
+        \n 2.At a safe speed
+        \n 3.Please read the vehicle manual for other conditions</string>
     <string name="vcu_eps_action_switching">Steering mode switching</string>
     <string name="vcu_eps_action_switching_conversion">切换中...</string>
 
-    <string name="iacc_details">&#160;智能巡航辅助系统IACC在全速范围内（0~150km/h）为驾驶员提供车辆的纵向和横向辅助。
-其中纵向辅助由自适应巡航控制系统ACC实现，控制车辆在车速0～150km/h范围内，与前方车辆进行跟车巡航，或在30
- ~150km/h 范围内，进行定速巡航，也可以设定车辆与前车的时距。
-IACC会优先通过识别车道两侧清晰的车道线进行横向辅助控制，此时ACC处于车道线控制模式，仪表IACC图标显示为绿
-色，车道线显示为蓝色。当车速低于60km/h 时，若未识别到车道线，也可跟随识别到的前车行驶，此时ACC处于跟车控
-制模式，仪表IACC图标显示为绿色，前车显示为蓝色。
-智能巡航辅助系统为驾驶辅助类功能，不允许驾驶员脱手驾驶，且该系统无法覆盖全部驾驶场景和交通、天气及道路情
-况，即使系统处于激活状态，驾驶员也必须谨慎驾驶并且需要遵守交通规则。</string>
-    <string name="fcw_details">&#160;前向碰撞预警FCW通过雷达和摄像头探测车辆、行人目标。当探测到自车与前方车辆、行人存在潜在的碰撞风险时，将发
-出声光报警提醒驾驶员。前向碰撞预警系统包含安全距离报警、预报警和紧急报警三级功能。
-在行驶过程中，若自车长时间近距离跟车行驶，系统会发出安全距离报警，仪表提示信息，提示驾驶员自车与前车距离过
-近。
-在行驶过程中，当自车与前车存在碰撞风险时，系统会进行预报警，仪表提示信息，同时发出声音报警，驾驶员需及时采
-取适当的操作，保证安全的驾驶距离。在预报警后，如果驾驶员依然没有反应，则会触发紧急报警，系统会施加一个短促
-的制动，某些紧急情况也可能跳过预报警直接触发紧急报警。
-请驾驶员不要过于依赖系统，不要故意测试或故意等待系统的触发，且出于系统固有的限制，误触发不可能完全避免。</string>
-    <string name="aeb_details">&#160;自动紧急制动AEB用于在突发情况时进行主动刹车，辅助驾驶员避免碰撞或者减轻碰撞造成的伤害。
-当系统检测到与前方车辆或行人有碰撞危险且非常紧急时，如果驾驶员已采取制动措施，但制动力不足，那么AEB系统会
-提供剩余的制动力，避免或者减轻碰撞造成的伤害；如果驾驶员未采取制动措施，系统会在能力范围内自动施加制动力，
-避免或者减轻碰撞造成的伤害。
-需注意，AEB系统对驾驶员来说是一种辅助功能，切勿冒险行驶，驾驶员必须一直保持对车辆的控制并且对车辆负有全部
-责任，且出于系统固有的限制，在一些复杂工况下，该系统可能会误识别车辆以及行人，引起不必要的刹车制动介入。</string>
-    <string name="lane_assist_details">&#160;车道辅助系统在自车速度60km/h以上时，通过摄像头检测车道线，为驾驶员提供车辆的横向辅助，包含车道偏离预警系
-统（LDW），车道保持辅助系统（LKS），道路偏离辅助系统（RDP），驾驶员可根据自身驾驶习惯选择不同的系统。
-车道偏离预警系统（LDW）当检测到车辆偏离本车道且驾驶员没有变道意图时，系统发出视觉及声音报警，警示驾驶员车辆
-正在偏离本车道，需注意该系统仅提供报警功能，不提供转向辅助。
-车道保持辅助系统（LKS）通过施加转向干预，辅助驾驶员将车辆保持在车道中央行驶。
-道路偏离辅助系统（RDP）当检测到车辆即将偏离本车道且驾驶员没有变道意图时，系统通过施加转向干预，辅助驾驶员将
-车辆保持在车道内行驶，若车辆继续偏离车道线，则同时触发车道偏离预警。
-需注意，该系统仅起辅助作用，不可替代驾驶员的控制。当摄像头被遮盖，或车辆处在逆光、炫光、夜晚等环境时，系统
-可能会短时退出，或者出现误报、漏报。道路施工、路面积水、路面裂痕或标线不清晰等情况也会导致摄像头不能检测到
-车道线，出现误报或漏报。</string>
-    <string name="hma_details">&#160;智能远光灯辅助HMA在车辆照明开启至AUTO档、自车速度40km/h以上时，通过摄像头对当前驾驶环境进行判断，控制近
-光和远光之间自动切换。系统可以识别前方是否有对向及同向的其他车辆，并且根据情况切换近光和远光模式。即使开启
-该功能后，驾驶员也可以手动转换远光灯和近光灯。
-需注意，该系统是辅助功能，不能保证适用所有驾驶情况，若摄像头被遮挡，该功能会不可用或性能下降。</string>
-    <string name="tsr_details">&#160;限速标志识别TSR利用摄像头探测行驶道路上或道路旁的限速标志，并在仪表上显示，帮助驾驶员观察道路限速标志。
-需注意，该系统是辅助功能，不能保证适用所有驾驶情况，若摄像头被遮挡，该功能会不可用或性能下降。</string>
-    <string name="dow_details">&#160;开门预警DOW在车辆静止状态下，监测自车左右侧后方其他车辆及行人，当开门时如有碰撞风险会发出声光报警，提示驾
-驶员从而避免事故。
-当用户打开门锁但车门未开启，系统检测到碰撞风险时，会触发一级报警，外后视镜的LED报警灯闪烁（一级报警仅适用
-于主驾车门）。当用户打开车门，系统检测到碰撞风险，会触发二级报警，外后视镜的LED报警灯闪烁，同时仪表发出声
-音报警。
-需注意，该系统是辅助功能，对速度低于2km/h或高于60km/h的物体无法识别，对与自车高度明显不同的车辆（如大货
-车）、对向行驶车辆、临车道较远车辆无法识别，且当摄像头被雨雪、泥浆等遮盖，或处于夜晚、雨雪、雾、阴影环境
-时，会出现漏报或误报。</string>
+    <string name="iacc_details">&#160;The intelligent cruise assist system (IACC) provides the driver with longitudinal and
+        transverse assistance of the vehicle in the full speed range (0~150km/h).The longitudinal assistance is realized by the
+        adaptive cruise control system ACC, which controls the vehicle to cruise with the front vehicle in the range of 0~150km/h,
+        or to cruise at a constant speed in the range of 30~150km/h. The time distance between vehicle and the front vehicle
+        can also be set. IACC will preferentially enter the horizontal auxiliary control by identifying the clear lane lines on both
+        sides of the lane. At this time, IACC is in the lane line control mode, and the instrument IACC icon is displayed as green,
+        while the lane line is displayed as blue. When the speed is lower than 60km/h, if the lane line is not identified, you can also
+        follow the identified front vehicle. At this time, the IACC is in the following vehicle control mode, the
+        instrument IACC icon displays green, and the front vehicle displays blue.The intelligent cruise assist system is
+        a driving assistance function, which does not allow the driver to drive off-hand. The system covers all driving scenes,
+        traffic, weather and road conditions. Even if the system is activated, the driver must drive carefully and abide by
+        traffic rules </string>
+    <string name="fcw_details">&#160;Forward collision warning FCW detects vehicle and pedestrian targets through radar and camera.
+        When a potential collision risk between the self vehicle and the vehicle, pedestrian or other
+        objects in front is detected, an audible and visual alarm will be issued to remind the driver. The forward
+        collision warning system includes safety distance alarm, pre alarm and emergency alarm functions.
+        In the process of driving, if the self vehicle follows closely for a long time, the system will send out
+        a safety distance alarm and the instrument will prompt the driver that the self vehicle is too close to the
+        vehicle in front. In the process of driving, when there is a risk of collision between the self
+        vehicle and the vehicle in front of it, the system will give an early warning in visual and auditory ways,
+        the combination instrument will prompt the information, and sound the alarm at the same time. The driver shall
+        take appropriate actions in time to ensure a safe driving distance. After the pre alarm, if the driver still does not
+        respond, the emergency alarm will be triggered, and the system will apply a short brake. In some emergencies, the pre
+        alarm may be skipped and the emergency alarm may be triggered directly. The driver should not rely too much on the
+        system, and should not deliberately test or wait for the trigger of the system. Due to the inherent limitations
+        of the system, false triggering cannot be completely avoided.</string>
+    <string name="aeb_details">&#160;The emergency brake AEB is used to enter the active brake in case of emergency,
+        to help the driver avoid collision or reduce the injury caused by collision.
+        When the system detects that there is a danger of collision with the vehicle or pedestrian in front and it is very urgent,
+        if the driver has taken braking actions, but the braking force is insufficient,
+        the AEB system will provide the remaining braking force to achieve the best target braking
+        force to avoid or reduce the injury caused by the collision; If the driver does not take braking actions,
+        the system will automatically apply the brake within its ability to avoid or reduce the injury caused by collision.
+        It should be noted that the AEB system is a kind of auxiliary function for the driver. Don\'t risk driving.
+        The driver must keep the control of the vehicle and take full responsibility for the vehicle. Moreover,
+        due to the inherent limitations of the system, under some complex conditions, the system may misidentify vehicles and pedestrians,
+        causing unnecessary braking.</string>
+    <string name="lane_assist_details">&#160; When the self driving speed is above 60 km/h, the lane assist
+        system detects the lane line through the camera to provide the driver with lateral assistance of vehicles,
+        including Lane Departure Warning System (LDW), Lane Keep Assist System (LKS), and Road Departure
+        Assist System (RDP). The driver can choose different systems according to his driving habits. Lane
+        Departure Warning System (LDW) When it detects that a vehicle is deviating from the lane and the
+        driver has no intention to change lanes, the system will give a visual and audible alarm to warn the
+        driver that the vehicle is deviating from the lane. It should be noted that the system only provides
+        alarm function and does not provide steering assistance. Lane Keeping Assist System (LKS) assists the
+        driver to keep the vehicle driving in the middle of the lane by applying steering anticipation. Road
+        Departure Assist System (RDP) When it detects that the vehicle is about to depart from the lane
+        and the driver has no intention to change lanes, the system will assist the driver to keep the
+        vehicle in the lane by applying steering intervention. If the vehicles continue to deviate from
+        the lane line, the lane departure warning will be triggered at the same time. It should be noted
+        that this system only serves as an auxiliary function and cannot replace the driver\'s control.
+        When the camera is covered, or the vehicle is in the backlight, glare, night and other environments,
+        the system may exit for a short time, or there may be false alarm or missing alarm. Road construction,
+        ponding on the road surface, cracks on the road surface or unclear markings may also lead to the camera
+        being unable to detect the lane lines, resulting in false or missing reports.</string>
+    <string name="hma_details">&#160;The intelligent high beam lamp assists(HMA) to judge the current
+        driving environment through the camera when the self driving speed is more than 40km/h. When
+        the vehicle lighting is turned on to AUTO, it controls the automatically switching between the
+        low beam and the high beam. The system can identify whether there are other vehicles in the
+        opposite direction and the same direction in the front, and switch the lower beam and high
+        beam modes according to the situation. Even after the function is turned on, the driver can
+        manually switch the high beam lamp and low beam lamp. It should be noted that this system
+        is an auxiliary function, which cannot guarantee that it can adapt to all driving conditions.
+        If the camera is blocked, this function will not work or the performance will be degraded.</string>
+    <string name="tsr_details">&#160;The speed limit reminder (TSR) camera detects the speed limit signs on or
+        near the road and displays them on the instrument to help the driver observe the speed limit signs.
+        It should be noted that this system is an auxiliary function, which cannot guarantee that it can adapt
+        to all driving conditions. If the camera is blocked, this function
+        will not work or the performance will be degraded</string>
+    <string name="dow_details">&#160;DOW, namely Door Open Warning function, which can monitor the rear side
+        of the vehicle through left and right rear three-way cameras when the vehicle is parked. Mobile
+        objects in this area are detected and tracked, and different alarm modes are triggered according
+        to the response of users, so as to avoid possible security accidents</string>
     <string name="bsd_details">&#160;官区监测BSD在自车速度30km/h以上时，通过摄像头对侧后方盲区进行监测，当有行驶车辆时，对应侧外后视镜内的盲区
 监测指示灯将长亮，如此时驾驶员打开对应侧的转向灯，指示灯将闪烁，并且仪表发出警报提示驾驶员。
 需注意，该系统仅用于补充后视镜的不足，不属于驾驶安全系统，不能保证适用所有驾驶情况，且当摄像头被雨雪、泥浆
@@ -349,13 +379,13 @@ IACC会优先通过识别车道两侧清晰的车道线进行横向辅助控制�
 
     <string name="hint_low_voltage">蓄电池电量低，将关闭部分舒适性功能</string>
     <string name="hint_low_voltage_close_screen">蓄电池电量低，中控屏即将关闭</string>
-    <string name="global_txt_close">5分钟后您的爱车将自动关闭</string>
-    <string name="global_txt_engine">请启动发动机，避免蓄电池亏电</string>
-    <string name="global_txt_power_supply">蓄电池电量过低，将关闭部分\n舒适性功能和娱乐功能</string>
-    <string name="global_txt_agree">确认</string>
-    <string name="exhibition_mode">整车处于展厅模式</string>
-    <string name="transport_mode">整车处于运输模式</string>
-    <string name="exhibition_mode_error">展厅模式切换失败</string>
+    <string name="global_txt_close">Your car will automatically shut down in 5 minutes</string>
+    <string name="global_txt_engine">Please start the engine to avoid battery loss</string>
+    <string name="global_txt_power_supply">Battery charge is too low, some comfort and entertainment functions will be turned off</string>
+    <string name="global_txt_agree">OK</string>
+    <string name="exhibition_mode">The vehicle in showroom mode</string>
+    <string name="transport_mode">The vehicle in transport mode</string>
+    <string name="exhibition_mode_error">Showroom mode switch failed</string>
 
     <string name="mixed">Mixed</string>
     <string name="resonant">resonant</string>
@@ -396,7 +426,7 @@ IACC会优先通过识别车道两侧清晰的车道线进行横向辅助控制�
     <string name="close">close</string>
     <string name="recognize_prompt">Recognize prompt</string>
     <string name="disappear_prompt">Disappear prompt</string>
-    <string name="recognize_disappear_prompt_both">recognize and disappear \nprompt both</string>
+    <string name="recognize_disappear_prompt_both">recognize and disappear \n prompt both</string>
     <string name="icon">Icon</string>
     <string name="icon_sound">Icon+sound</string>
     <string name="high">High</string>

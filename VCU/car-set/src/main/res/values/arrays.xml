@@ -49,8 +49,8 @@
 
     <string-array name="electric_stern_door_option_titles">
         <item>@string/btn_close</item>
-        <item>往返式</item>
-        <item>停留式</item>
+        <item>@string/car_trunk_round_trip_type</item>
+        <item>@string/car_trunk_stay_mode</item>
     </string-array>
     <string-array name="electric_stern_door_option_values">
         <item>1</item>
