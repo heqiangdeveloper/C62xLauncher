@@ -13,7 +13,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
+import com.chinatsp.settinglib.VcuUtils;
+import com.chinatsp.vehicle.controller.annotation.Level;
 import com.chinatsp.vehicle.settings.R;
 
 
@@ -27,13 +30,14 @@ public class SoundFieldView extends LinearLayout {
 
     public static double BALANCE_MAX = 10.0;
     public static double FADE_MAX = 10.0;
-    public static final int H_PADDING = 160; //160
-    public static final int V_PADDING = 80; //130
+    public static  int H_PADDING = 160; //160
+    public static  int V_PADDING = 80; //130
 
     long mLastTime;
     long mCurTime;
 
     private View mSFView = null;
+    private RelativeLayout rlRoot = null;
     private ImageView mImgPoint = null;
     private ImageView imgSouncPointBg = null;
     private boolean mIsMouseDown = false;
@@ -57,6 +61,25 @@ public class SoundFieldView extends LinearLayout {
         mSFView = inflate(context, R.layout.layout_sound_field, this);
 
         initViews();
+       if(VcuUtils.INSTANCE.isCareLevel(new int[]{Level.LEVEL3,Level.LEVEL4},true)){
+            H_PADDING = 120;
+            if(VcuUtils.INSTANCE.isCareLevel(new int[]{Level.LEVEL3},true)){
+                rlRoot.setBackgroundResource(R.drawable.right_car_vioce_3);
+            }else {
+                rlRoot.setBackgroundResource(R.drawable.right_car_vioce_4);
+            }
+            mImgPoint.setImageResource(R.drawable.audio_point_high);
+            imgSouncPointBg.setBackgroundResource(R.drawable.yinlinag_dian_mix_high);
+            mImgSoundLineH.setImageResource(R.drawable.line_heng_high);
+            mImgSoundLineV.setImageResource(R.drawable.line_shu_high);
+        }else {
+            H_PADDING = 160;
+            rlRoot.setBackgroundResource(R.drawable.right_car_vioce);
+            mImgPoint.setImageResource(R.drawable.audio_point);
+            imgSouncPointBg.setBackgroundResource(R.drawable.yinlinag_dian_mix);
+            mImgSoundLineH.setImageResource(R.drawable.audio_heng_line);
+            mImgSoundLineV.setImageResource(R.drawable.audio_shu_line);
+        }
         initEvents();
 
 //		mImgPoint.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
@@ -69,11 +92,14 @@ public class SoundFieldView extends LinearLayout {
      *
      */
     private void initViews() {
+        rlRoot = (RelativeLayout) mSFView.findViewById(R.id.rl_root);
         mImgPoint = (ImageView) mSFView.findViewById(R.id.imgSouncPoint);
         imgSouncPointBg = (ImageView) mSFView.findViewById(R.id.imgSouncPointBg);
         mImgSoundLineH = (ImageView) mSFView.findViewById(R.id.imgSoundLineH);
         mImgSoundLineV = (ImageView) mSFView.findViewById(R.id.imgSoundLineV);
     }
+
+
 
     /**
      *
@@ -147,6 +173,8 @@ public class SoundFieldView extends LinearLayout {
     public void reset() {
         mPosX = getWidth() / 2;
         mPosY = getHeight() / 2;
+        Log.d(TAG, "reset mPosX=" + mPosX + " mPosY=" + mPosX);
+
         if (mOnValueChangedListener != null) {
             mOnValueChangedListener.onValueChange((int) BALANCE_MAX / 2, (int) FADE_MAX / 2, mPosX, mPosY);
         }
