@@ -58,7 +58,7 @@ public class WeatherCardController {
     private final IWeatherDataCallback mWeatherDataCallback = new IWeatherDataCallback() {
         @Override
         public void onCityList(List<String> cityList) {
-            EasyLog.d(TAG, TAG + "onCityList " + cityList);
+            WeatherUtil.logI(TAG + "onCityList " + cityList +" , hashcode:"+WeatherCardController.this.hashCode());
             mWeatherRepository.saveToCache(cityList);
             mCardView.refreshCityList(cityList);
         }

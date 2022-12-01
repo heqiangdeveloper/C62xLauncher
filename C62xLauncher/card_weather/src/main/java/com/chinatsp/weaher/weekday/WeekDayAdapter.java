@@ -82,7 +82,7 @@ public class WeekDayAdapter extends RecyclerView.Adapter<WeekDayAdapter.ViewHold
 //            WeatherUtil.logD("bind WeatherInfo: "+dayWeatherBean);
             tvItemWeatherWeekDay.setText(getWeekDayRes(dayWeatherBean));
             String weather = dayWeatherBean.getWeather();
-            tvItemWeatherWord.setText(weather);
+            WeatherUtil.setWeatherDesc(tvItemWeatherWord, weather);
             tvItemWeatherTemperatureDesc.setText(WeatherUtil.getTemperatureRange(dayWeatherBean, mContext.getResources()));
             WeatherTypeRes weatherTypeRes = WeatherUtil.parseType(weather);
             ivItemWeatherType.setImageResource(weatherTypeRes.getIcon());

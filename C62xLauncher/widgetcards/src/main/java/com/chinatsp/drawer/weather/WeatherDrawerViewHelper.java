@@ -57,7 +57,7 @@ public class WeatherDrawerViewHelper {
             public void run() {
                 WeatherTypeRes weatherTypeRes = WeatherUtil.parseType(weatherInfo.getWeather());
                 ivDrawerWeatherTypeBG.setImageResource(weatherTypeRes.getDrawerBg());
-                mTvDrawerWeatherWord.setText(weatherInfo.getWeather());
+                WeatherUtil.setWeatherDesc(mTvDrawerWeatherWord, weatherInfo.getWeather());
                 mIvDrawerWeatherType.setImageResource(weatherTypeRes.getIcon());
                 mTvDrawerWeatherCity.setText(weatherInfo.getCity());
                 String temperatureDesc = WeatherUtil.fixTemperatureDesc(weatherInfo.getTemp(), mRootView.getResources());

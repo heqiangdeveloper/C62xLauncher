@@ -93,7 +93,7 @@
             android:layout_width="wrap_content"
             android:layout_height="36px"
             android:includeFontPadding="false"
-            android:text="车外PM"
+            android:text="@string/weather_pm_outside"
             android:textColor="@color/white"
             android:textSize="32px"
             app:layout_constraintStart_toStartOf="@id/tvCardWeatherAirValue"

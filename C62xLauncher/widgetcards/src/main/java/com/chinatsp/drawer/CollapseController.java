@@ -2,6 +2,7 @@ package com.chinatsp.drawer;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Handler;
@@ -18,13 +19,27 @@ public class CollapseController {
     private static final int VALUE_CLOSE = 0;
     private final String TAG = "CollapseController";
     private ICollapseListener mCollapseListener;
+    private final SystemWindowReceiver mSystemWindowReceiver;
 
     public CollapseController(Context context, ICollapseListener collapseListener) {
         mContext = context;
         mCollapseListener = collapseListener;
         mContentResolver = mContext.getContentResolver();
         this.mCollapseListener = collapseListener;
+        this.mSystemWindowReceiver = createReceiver();
     }
+
+    private SystemWindowReceiver createReceiver() {
+        return new SystemWindowReceiver() {
+            @Override
+            public void collapseDrawer() {
+                if (mCollapseListener != null) {
+                    mCollapseListener.onCollapse();
+                }
+            }
+        };
+    }
+
 
     private final ContentObserver mObserver = new ContentObserver(new Handler(Looper.getMainLooper())) {
         @Override
@@ -61,11 +76,17 @@ public class CollapseController {
         Uri uri = Settings.Global.getUriFor(KEY_QS_PANEL);
         EasyLog.d(TAG, "register " + uri);
         mContentResolver.registerContentObserver(uri, false, mObserver);
+        if (mSystemWindowReceiver != null) {
+            mContext.registerReceiver(mSystemWindowReceiver, SystemWindowReceiver.createIntentFilter());
+        }
     }
 
     public void unRegister() {
         Uri uri = Settings.Global.getUriFor(KEY_QS_PANEL);
         EasyLog.d(TAG, "unRegister " + uri);
         mContentResolver.registerContentObserver(uri, false, mObserver);
+        if (mSystemWindowReceiver != null) {
+            mContext.unregisterReceiver(mSystemWindowReceiver);
+        }
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.text.TextUtils;
+import android.widget.TextView;
 
 import com.chinatsp.weaher.repository.WeatherBean;
 import com.chinatsp.weaher.type.C62WeatherType;
@@ -113,6 +114,37 @@ public class WeatherUtil {
     public static void goApp(Context context) {
         RecentAppHelper.launchApp(context, "com.iflytek.autofly.weather");
 
+    }
+
+    public static void setWeatherDesc(TextView textView, String weather) {
+        if (textView == null) {
+            return;
+        }
+        int weatherDescriptionResId = new WeatherDescTranslator().getWeatherDescription(weather);
+        if (weatherDescriptionResId > 0) {
+            textView.setText(weatherDescriptionResId);
+        } else {
+            if (weather == null || weather.isEmpty()) {
+                textView.setText(R.string.weather_desc_unknown);
+            } else {
+                textView.setText(weather);
+
+            }
+        }
+    }
+
+    public static String convertNull(String origin) {
+        if (origin == null) {
+            return "";
+        }
+        return origin;
+    }
+
+    public static String convertNull(String origin,String placeHolder) {
+        if (origin == null) {
+            return placeHolder;
+        }
+        return origin;
     }
 
     public static void startCardEditor(Context context) {

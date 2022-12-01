@@ -155,6 +155,7 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
         WeatherUtil.logI(TAG+" onAttachedToWindow "+hashCode());
         mLifecycleRegistry.setCurrentState(Lifecycle.State.CREATED);
         mController.addDataCallback();
+        mController.requestCityList();
         // 初始化的时候, 即进行滑动
         runInitScrollTask();
     }
@@ -163,6 +164,7 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mCardViewState.removeListener(mOnChangeState);
+        WeatherUtil.logI(TAG+" onDetachedFromWindow "+hashCode());
         mLifecycleRegistry.setCurrentState(Lifecycle.State.DESTROYED);
         mController.removeDataCallback();
     }
