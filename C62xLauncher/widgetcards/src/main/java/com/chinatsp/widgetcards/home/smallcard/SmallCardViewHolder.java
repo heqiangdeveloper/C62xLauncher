@@ -45,6 +45,9 @@ public class SmallCardViewHolder extends RecyclerView.ViewHolder {
             public void onClick(View v) {
 //                expand(card);
                 LauncherCard anchorSmallCard = ExpandStateManager.getInstance().getAnchorSmallCard();
+                if (anchorSmallCard == null) {
+                    return;
+                }
                 CardFrameViewHolder viewHoldByCard = HomeCardRcvManager.getInstance().findViewHoldByCard(anchorSmallCard);
                 ExpandStateManager.getInstance().clickExpandButton(card, viewHoldByCard.isCardInLeftSide());
             }
