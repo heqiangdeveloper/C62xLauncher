@@ -36,7 +36,7 @@ class PanoramaCommandConsumer(val manager: GlobalManager) : ICmdExpress {
         doCommandExpress(parcel)
     }
 
-    //    AVM view set request signal 切换全景视图命令，Reserved
+//    AVM view set request signal 切换全景视图命令，Reserved
 //    0x0: Inactive
 //    0x1: Front view
 //    0x2: Rear view
@@ -59,6 +59,31 @@ class PanoramaCommandConsumer(val manager: GlobalManager) : ICmdExpress {
 //    0x13: EOL/Test-view
 //    0x14: Top View
 //    0x15~0x1F: Reserved
+//    0x0: 无视图
+//    0x1: 前视图-2D
+//    0x2: 后视图-2D
+//    0x3: 前左视图（左转）-2D
+//    0x4: 前右视图（右转）-2D
+//    0x5: 后左视图-2D
+//    0x6: 后右视图-2D
+//    0x7: 左转视图-3D
+//    0x8: 右转视图-3D
+//    0x9: 前视图-3D
+//    0xA: 后视图-3D
+//    0xB: 左视图-3D
+//    0xC: 右视图-3D
+//    0xD: 前左视图-3D
+//    0xE: 前右视图-3D
+//    0xF: 后左视图-3D
+//    0x10: 后右视图-3D
+//    0x11: 放大前视图-2D
+//    0x12: 放大后视图-2D
+//    0x13: 标定视图
+//    0x14: 车尾顶视图-3D
+//    0x15：EVM 视图-2D
+//    0x16：自选车位视图-2D
+//    0x17：左侧盲区影像
+//    0x18：右侧盲区影像
     private fun consumeViewCutCommand(parcel: CommandParcel): Boolean {
         val command = parcel.command as CarCmd
         val consume = Action.CHANGED == command.action
@@ -97,10 +122,19 @@ class PanoramaCommandConsumer(val manager: GlobalManager) : ICmdExpress {
             expect = if (mode3D) 0xC else 0x6
         } else if (IPart.RANDOM == command.part) {
             expect = randomCameraView(mode3D)
-        } else if (IPart.TOP == command.part) {
-            expect = 0x14
+        } else if ((IPart.TOP or IPart.BOTTOM) == command.part) {
+            expect = if (mode3D) 0x14 else Constant.INVALID
+        } else if ((IPart.TOP or IPart.HEAD) == command.part) {
+            expect = if (mode3D) Constant.INVALID else 0x11
+        } else if ((IPart.TOP or IPart.TAIL) == command.part) {
+            expect = if (mode3D) Constant.INVALID else 0x12
         }
         val areaName = command.slots?.direction ?: analysisAreaName(expect)
+        if (Constant.INVALID == expect) {
+            command.message = "操作没有成功！${if (mode3D) "3D" else "2D"}模式下，全景不支持${areaName}视角"
+            parcel.callback?.onCmdHandleResult(command)
+            return consume
+        }
         val isSend = command.isSent()
         Timber.d("ViewCut mode3D:$mode3D, areaName:$areaName, isSent:$isSend, actual:$actual, expect:$expect")
         if (actual == expect) {

@@ -110,6 +110,7 @@ class SystemService : Service(), SystemDialogHelper.OnCountDownListener, Handler
             current.tag = signal
             current.setIsConform(cancelable)
             current.window?.setLayout(740, 488)
+            BaseApp.instance.sendBroadcast("com.chinatsp.vehicle.actions.VCU_DIALOG_DISPLAY")
         }
     }
 
@@ -193,4 +194,5 @@ class SystemService : Service(), SystemDialogHelper.OnCountDownListener, Handler
                 || Hint.exhibitionMode == signal
                 || Hint.exhibitionModeError == signal
     }
+
 }

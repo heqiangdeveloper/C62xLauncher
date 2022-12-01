@@ -9,6 +9,7 @@ import com.chinatsp.vcu.kanzi.KanZiKeys
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.AccessFragmentBinding
 import com.chinatsp.vehicle.settings.vm.KanziViewModel
+import com.rightware.kanzi.KanziNativeLibrary
 import com.rightware.kanzi.androiddatasource.*
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -122,37 +123,71 @@ class CommonlyFragment : BaseTabFragment<KanziViewModel, AccessFragmentBinding>(
     }
 
     private fun sendIntValue(controller: DataSourceKanziController, key: String, value: Int?) {
-        if (null != value && kanziLoadFinish && isKanZiValid()) {
-            val keyObj = kzDataTypeInt(key)
-            controller.setDataObjectValue(keyObj, value)
-        }
-    }
+//        if (null != value && kanziLoadFinish && isKanZiValid()) {
+//            val keyObj = kzDataTypeInt(key)
+//            controller.setDataObjectValue(keyObj, value)
+//        }
 
-    private fun sendIntValue(key: String, value: Int?) {
-        if (null != value && kanziLoadFinish && isKanZiValid()) {
-            val controller = mDataFeeder?.kanziController
-            if (null != controller) {
+        KanziNativeLibrary.submitTask(Runnable {
+            if (null != value && kanziLoadFinish && isKanZiValid()) {
                 val keyObj = kzDataTypeInt(key)
                 controller.setDataObjectValue(keyObj, value)
             }
-        }
+        })
+    }
+
+    private fun sendIntValue(key: String, value: Int?) {
+//        if (null != value && kanziLoadFinish && isKanZiValid()) {
+//            val controller = mDataFeeder?.kanziController
+//            if (null != controller) {
+//                val keyObj = kzDataTypeInt(key)
+//                controller.setDataObjectValue(keyObj, value)
+//            }
+//        }
+
+        KanziNativeLibrary.submitTask(Runnable {
+            if (null != value && kanziLoadFinish && isKanZiValid()) {
+                val controller = mDataFeeder?.kanziController
+                if (null != controller) {
+                    val keyObj = kzDataTypeInt(key)
+                    controller.setDataObjectValue(keyObj, value)
+                }
+            }
+        })
     }
 
     private fun sendDoubleValue(key: String, value: Int?) {
-        if (null != value && kanziLoadFinish && isKanZiValid()) {
-            val controller = mDataFeeder?.kanziController
-            if (null != controller) {
-                val keyObj = kzDataTypeReal(key)
-                controller.setDataObjectValue(keyObj, value.toDouble())
+//        if (null != value && kanziLoadFinish && isKanZiValid()) {
+//            val controller = mDataFeeder?.kanziController
+//            if (null != controller) {
+//                val keyObj = kzDataTypeReal(key)
+//                controller.setDataObjectValue(keyObj, value.toDouble())
+//            }
+//        }
+
+        KanziNativeLibrary.submitTask(Runnable {
+            if (null != value && kanziLoadFinish && isKanZiValid()) {
+                val controller = mDataFeeder?.kanziController
+                if (null != controller) {
+                    val keyObj = kzDataTypeReal(key)
+                    controller.setDataObjectValue(keyObj, value.toDouble())
+                }
             }
-        }
+        })
     }
 
     private fun sendDoubleValue(controller: DataSourceKanziController, key: String, value: Int?) {
-        if (null != value && kanziLoadFinish && isKanZiValid()) {
-            val keyObj = kzDataTypeReal(key)
-            controller.setDataObjectValue(keyObj, value.toDouble())
-        }
+//        if (null != value && kanziLoadFinish && isKanZiValid()) {
+//            val keyObj = kzDataTypeReal(key)
+//            controller.setDataObjectValue(keyObj, value.toDouble())
+//        }
+
+        KanziNativeLibrary.submitTask(Runnable {
+            if (null != value && kanziLoadFinish && isKanZiValid()) {
+                val keyObj = kzDataTypeReal(key)
+                controller.setDataObjectValue(keyObj, value.toDouble())
+            }
+        })
     }
 
 
@@ -235,6 +270,7 @@ class CommonlyFragment : BaseTabFragment<KanziViewModel, AccessFragmentBinding>(
     override fun onDestroy() {
         kanziLoadFinish = false
         mSharedData?.removeManager()
+        mDataFeeder = null
         super.onDestroy()
     }
 

@@ -571,10 +571,17 @@ enum class SwitchNode(
     ADAS_DOW(
         get = Norm(on = 0x3, off = 0x1, signal = CarCabinManager.ID_AVM_DOW_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_APA_AVM_DOW_SWT),
-        inactive = intArrayOf(0x0, 0x2, 0x4, 0x5),
+        inactive = intArrayOf(0x0, 0x4, 0x5, 0x6),
         default = true,
         careOn = false
     ) {
+        override fun isOn(value: Int): Boolean {
+            return 0x2 == value || 0x3 == value
+        }
+
+        override fun isActive(value: Int): Boolean {
+            return 0x1 == value || 0x2 == value || 0x3 == value
+        }
         override fun isPopWindow(value: Int): Boolean {
             return 0x4 == value
         }
