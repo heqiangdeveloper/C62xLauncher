@@ -57,6 +57,7 @@ public class IqutingBindService {
     private List<IqutingMediaChangeListener> mediaChangeListenerList = new ArrayList<>();
     private volatile boolean isPlaying = false;
     private VisualizerTool visualizerTool;
+    private int currentSessionId = -1;//当前的sessonid值
     private IqutingBindService() {}
 
     private static class Holder {
@@ -245,13 +246,15 @@ public class IqutingBindService {
                 }
                 @Override
                 public void onSuccess(Integer s) {
-                    //此处为回调的sessionId
-                    Log.d(TAG,"sessionId: " + s.intValue());
-                    if(visualizerTool != null){
-                        visualizerTool.releaseVisualizer();
+                    //此处为回调的sessionId，但是在刚切歌后，这个sessionId可能还是上一个的，以onAudioSessionId()回调为准
+                    Log.d(TAG,"sessionId: " + s.intValue() + ",currentSessionId: " + currentSessionId);
+                    if(s.intValue() == currentSessionId){
+                        if(visualizerTool != null){
+                            visualizerTool.releaseVisualizer();
+                        }
+                        visualizerTool = new VisualizerTool(s.intValue());
+                        visualizerTool.setPlayStatus(true);
                     }
-                    visualizerTool = new VisualizerTool(s.intValue());
-                    visualizerTool.setPlayStatus(true);
                 }
             });
         }else {
@@ -364,6 +367,7 @@ public class IqutingBindService {
         @Override
         public void onBufferingStart() {
             Log.d(TAG,"onBufferingStart");
+            currentSessionId = -1;//重置currentSessionId，由于暂停后点击继续播放会再调用onMediaChange,因此不放在onMediaChange中
             playStateListenerList = playStateListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
             for(IqutingPlayStateListener listener : playStateListenerList){
                 listener.onBufferingStart();
@@ -391,6 +395,8 @@ public class IqutingBindService {
         @Override
         public void onAudioSessionId(int i) {
             Log.d(TAG,"onAudioSessionId: " + i);
+            currentSessionId = i;
+            doMusicRhythm();//音乐律动
             playStateListenerList = playStateListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
             for(IqutingPlayStateListener listener : playStateListenerList){
                 listener.onAudioSessionId(i);

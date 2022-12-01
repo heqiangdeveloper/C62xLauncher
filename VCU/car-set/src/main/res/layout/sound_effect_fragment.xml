@@ -59,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginEnd="@dimen/x40"
+                android:layout_marginEnd="@dimen/x32"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -68,7 +68,7 @@
                 android:id="@+id/refresh_dialog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/x20"
+                android:layout_marginEnd="@dimen/x12"
                 android:src="@drawable/volume_reset_selector"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -77,7 +77,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/switch_row_option_style"
                 android:layout_marginTop="@dimen/x16"
-                android:layout_marginEnd="@dimen/x310"
+                android:layout_marginEnd="@dimen/x326"
                 android:text="@string/sound_volume_balance"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

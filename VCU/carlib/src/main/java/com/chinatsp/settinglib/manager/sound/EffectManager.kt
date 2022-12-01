@@ -111,7 +111,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         }
     }
 
-    public fun getDefaultEqSerial(): Int {
+    fun getDefaultEqSerial(): Int {
         val eqId = SettingManager.instance.getEQ()
         var index: Int
         val eqIdArray = getEqIdArray()
@@ -119,10 +119,10 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         if (null != eqId) {
             index = eqIdArray.indexOf(eqId)
             if (index !in 0..node.get.values.size) {
-                index = if (VcuUtils.isAmplifier) 1 else 0
+                index = if (!VcuUtils.isAmplifier) 1 else 0
             }
         } else {
-            index = if (VcuUtils.isAmplifier) 1 else 0
+            index = if (!VcuUtils.isAmplifier) 1 else 0
         }
         Timber.d("getDefaultEqSerial eqId:$eqId, " +
                 "index:$index, VcuUtils.isAmplifier:${VcuUtils.isAmplifier}")

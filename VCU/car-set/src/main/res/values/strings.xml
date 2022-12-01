@@ -58,7 +58,7 @@
     <string name="cabin_safe_fortify_success_tone">设防成功提示音</string>
     <string name="cabin_safe_fortify_failure_tone">设防失败提示音</string>
     <string name="cabin_safe_video_safe_mode">视频安全模式</string>
-    <string name="cabin_safe_video_safe_mode_content">视频安全模式开启后，⻋\n速⼤于15km/h时，本地\n视频将⾃动关闭。</string>
+    <string name="cabin_safe_video_safe_mode_content">视频安全模式开启后，⻋速\n⼤于15km/h时，本地视频\n将⾃动关闭。</string>
 
     <string name="cabin_wheel_electronic_mode">电子助力转向模式</string>
     <string name="cabin_wheel_press_key">方向盘自定义按键</string>
@@ -150,6 +150,8 @@
     <string name="car_trunk_buzzer_close">蜂鸣器报警已关闭</string>
     <string name="car_trunk_light_open">灯光闪烁报警已开启</string>
     <string name="car_trunk_light_close">灯光闪烁报警已关闭</string>
+    <string name="car_trunk_round_trip_type">往返式</string>
+    <string name="car_trunk_stay_mode">停留式</string>
     <string name="car_trunk_content">&#160;往返式：携带合法智能钥匙\n
         进⼊后备箱感应区域内，然\n
         后退出此区域，再次进⼊感\n
@@ -284,6 +286,7 @@
     <string name="vcu_action_switch_failed">切换失败</string>
     <string name="vcu_eps_action_switch_check">请确认是否满⾜以下条件：\n1.发动机已启动\n2.处于安全⻋速下\n3.其他条件请阅读整⻋说明书</string>
     <string name="vcu_eps_action_switching">转向模式切换中</string>
+    <string name="vcu_eps_action_switching_conversion">切换中...</string>
 
     <string name="iacc_details">&#160;智能巡航辅助系统IACC在全速范围内（0~150km/h）为驾驶员提供车辆的纵向和横向辅助。
 其中纵向辅助由自适应巡航控制系统ACC实现，控制车辆在车速0～150km/h范围内，与前方车辆进行跟车巡航，或在30

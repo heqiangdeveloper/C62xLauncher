@@ -69,14 +69,17 @@ class SeatHeatingDialogFragment :
 
     private fun initSwitchOption() {
         initSwitchOption(SwitchNode.SEAT_HEAT_ALL, viewModel.seatHeat)
-        updateEnable(binding.seatHeatingStartTemperatureSeekBar,
-            true, binding.seatAutomaticHeatingSwitch.isChecked)
+        updateEnable(
+            binding.seatHeatingStartTemperatureSeekBar,
+            true, binding.seatAutomaticHeatingSwitch.isChecked
+        )
     }
 
     private fun addSwitchLiveDataListener() {
         viewModel.seatHeat.observe(this) {
             doUpdateSwitch(SwitchNode.SEAT_HEAT_ALL, it)
             updateEnable(binding.seatHeatingStartTemperatureSeekBar, true, it.get())
+            binding.seatHeatingStartTemperatureSeekBar.setValueNoEvent(binding.seatHeatingStartTemperatureSeekBar.selectedNumber)
         }
     }
 
@@ -94,11 +97,15 @@ class SeatHeatingDialogFragment :
     private fun setSwitchListener() {
         binding.seatAutomaticHeatingSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.SEAT_HEAT_ALL, buttonView, isChecked)
-            updateEnable(binding.seatHeatingStartTemperatureSeekBar,
-                true, binding.seatAutomaticHeatingSwitch.isChecked)
+            /*updateEnable(
+                binding.seatHeatingStartTemperatureSeekBar,
+                true, binding.seatAutomaticHeatingSwitch.isChecked
+            )*/
             if (!isChecked) {
-                Toast.showToast(context,
-                    getString(R.string.cabin_seat_automatic_heating_close), true)
+                Toast.showToast(
+                    context,
+                    getString(R.string.cabin_seat_automatic_heating_close), true
+                )
             }
         }
     }

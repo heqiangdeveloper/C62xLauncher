@@ -51,6 +51,6 @@
             android:text="@string/add_dialog_negative"
             android:gravity="center"
             android:textSize="28sp"
-            android:textColor="#ABD3E1"/>
+            android:textColor="@color/text_color_default"/>
     </LinearLayout>
 </LinearLayout>

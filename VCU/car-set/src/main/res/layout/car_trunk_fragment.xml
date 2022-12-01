@@ -58,7 +58,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/x15"
-                    android:layout_marginBottom="@dimen/x10"
+                    android:layout_marginBottom="@dimen/x5"
                     android:orientation="horizontal">
 
                     <TextView
@@ -73,6 +73,13 @@
                         android:tag="dialogImage" />
                 </LinearLayout>
 
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/x5"
+                    android:text="@string/car_trunk_intelligence_into_explain"
+                    android:textColor="@color/text_prompt_color"
+                    android:textSize="@dimen/x10" />
 
                 <com.common.xui.widget.tabbar.TabControlView
                     android:id="@+id/stern_smart_enter_radio"
@@ -82,13 +89,7 @@
                     app:tcv_items="@array/electric_stern_door_option_titles"
                     app:tcv_values="@array/electric_stern_door_option_values" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/x7"
-                    android:text="@string/car_trunk_intelligence_into_explain"
-                    android:textColor="@color/text_prompt_color"
-                    android:textSize="@dimen/x10" />
+
             </LinearLayout>
 
             <View
@@ -211,24 +212,26 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/zero_line"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:src="@drawable/xingxiang"
             android:layout_marginEnd="482.5dp"
-            android:layout_marginBottom="@dimen/x63"/>
+            android:layout_marginBottom="@dimen/x63"
+            android:src="@drawable/xingxiang"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
+            android:id="@+id/zero"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/zero"
             android:layout_marginEnd="@dimen/x241"
             android:layout_marginBottom="@dimen/x40"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/zero"
+            android:textColor="@color/acr_seek_txt_color"
             android:textSize="@dimen/text_12"
-            android:textColor="@color/acr_seek_txt_color"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <com.common.xui.widget.picker.ArcSeekBar
             android:id="@+id/arcSeekBar"

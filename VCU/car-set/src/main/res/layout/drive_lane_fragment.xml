@@ -47,26 +47,27 @@
                             android:id="@+id/lane_assist_system_details"
                             style="@style/image_prompt"
                             android:layout_marginTop="@dimen/x16"
+                            android:tag="dialogImage"
                             app:layout_constraintLeft_toRightOf="@+id/lane_assist_system"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:tag="dialogImage" />
-
-                        <com.common.xui.widget.tabbar.TabControlView
-                            android:id="@+id/adas_lane_lane_assist_radio"
-                            style="@style/tdv_common_style"
-                            android:layout_marginTop="@dimen/x10"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/lane_assist_system"
-                            app:tcv_defaultSelection="1"
-                            app:tcv_items="@array/adas_lane_assist_option_titles"
-                            app:tcv_values="@array/adas_lane_assist_option_values" />
+                            app:layout_constraintTop_toTopOf="parent" />
 
                         <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/lane_assist_system_txt"
                             style="@style/txt_prompt"
                             android:layout_marginTop="@dimen/x4"
                             android:text="@string/drive_Lane_assist_system_content"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/adas_lane_lane_assist_radio" />
+                            app:layout_constraintTop_toBottomOf="@+id/lane_assist_system" />
+
+                        <com.common.xui.widget.tabbar.TabControlView
+                            android:id="@+id/adas_lane_lane_assist_radio"
+                            style="@style/tdv_common_style"
+                            android:layout_marginTop="@dimen/x4"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/lane_assist_system_txt"
+                            app:tcv_defaultSelection="1"
+                            app:tcv_items="@array/adas_lane_assist_option_titles"
+                            app:tcv_values="@array/adas_lane_assist_option_values" />
 
 
                         <com.common.xui.widget.button.switchbutton.SwitchButton
