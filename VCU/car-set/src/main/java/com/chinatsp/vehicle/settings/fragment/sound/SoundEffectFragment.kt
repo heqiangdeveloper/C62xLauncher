@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import com.chinatsp.settinglib.Constant
-import com.chinatsp.settinglib.SettingManager
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.ISwitchManager
@@ -27,12 +26,14 @@ import com.chinatsp.vehicle.settings.fragment.doors.dialog.VolumeDialogFragment
 import com.chinatsp.vehicle.settings.vm.sound.SoundEffectViewModel
 import com.chinatsp.vehicle.settings.widget.SoundFieldView
 import com.common.library.frame.base.BaseFragment
+import com.common.xui.utils.DataUtils
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.popupwindow.PopWindow
 import com.common.xui.widget.smooth.SmoothLineChartView
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
+import java.util.*
 import kotlin.properties.Delegates
 
 @AndroidEntryPoint
@@ -367,11 +368,11 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
     private fun initSmoothLineData() {
         if (VcuUtils.isAmplifier) {
             xValue = listOf(
-                activity?.resources?.getString(R.string.bass),
-                activity?.resources?.getString(R.string.medium_bass),
-                activity?.resources?.getString(R.string.medium),
+                activity?.resources?.getString(R.string.treble),
                 activity?.resources?.getString(R.string.medium_treble),
-                activity?.resources?.getString(R.string.treble)
+                activity?.resources?.getString(R.string.medium),
+                activity?.resources?.getString(R.string.medium_bass),
+                activity?.resources?.getString(R.string.bass)
             ) as List<String>
         } else {
             xValue = listOf(
@@ -432,7 +433,8 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
         Timber.d("onPostSelected 22222222222222 tabView:$tabView, value:$value, toList:%s", toList)
         this.vList = toList
         this.value = value
-        binding.smoothChartView.setData(toList, xValue)
+        val data = toList.reversed()
+        binding.smoothChartView.setData(data, xValue)
     }
 
     private fun doSendCustomEqValue() {
@@ -442,7 +444,8 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
             if (it.value!!.data == values.last()) {
                 val progress = binding.smoothChartView.obtainProgress()
                 if (null != progress && progress.size == Constant.EQ_SIZE) {
-                    EffectManager.instance.doSetEQ(it.value!!.data, progress)
+                    val intArray: IntArray = DataUtils.dataFlashback(progress);
+                    EffectManager.instance.doSetEQ(it.value!!.data, intArray)
                 }
             }
         }

@@ -1,7 +1,11 @@
 package com.chinatsp.vehicle.settings.fragment.doors
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
+import android.view.animation.AnimationSet
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import com.chinatsp.settinglib.VcuUtils
@@ -277,14 +281,41 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
                 binding.zero.visibility = View.INVISIBLE
                 binding.zeroLine.visibility = View.INVISIBLE
                 binding.intelligenceInto.visibility = View.VISIBLE
+                setAnimation()
             }
             else -> {
                 binding.arcSeekBar.visibility = View.INVISIBLE
                 binding.zero.visibility = View.INVISIBLE
                 binding.zeroLine.visibility = View.INVISIBLE
                 binding.intelligenceInto.visibility = View.VISIBLE
+                setAnimation()
             }
         }
+    }
+
+    /**
+     * 电动尾门智能进入动画
+     */
+    private fun setAnimation() {
+        val aset = AnimationSet(true)
+        val aa = AlphaAnimation(1F, 0F)
+        aa.duration = 2000
+        aset.addAnimation(aa)
+        binding.intelligenceInto.startAnimation(aset)
+        aset.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation) {
+
+            }
+
+            override fun onAnimationEnd(animation: Animation) {
+                binding.intelligenceInto.visibility = View.INVISIBLE
+                binding.arcSeekBar.visibility = View.VISIBLE
+                binding.zero.visibility = View.VISIBLE
+                binding.zeroLine.visibility = View.VISIBLE
+            }
+
+            override fun onAnimationRepeat(animation: Animation) {}
+        })
     }
 
     private fun setSwitchListener() {
@@ -321,9 +352,6 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
                         binding.zero.visibility = View.INVISIBLE
                         binding.zeroLine.visibility = View.INVISIBLE
                     }
-                    if (isShowKey()) {
-                        binding.intelligenceInto.visibility = View.INVISIBLE
-                    }
                     binding.ivFlashAlarm.visibility = View.INVISIBLE
                     binding.ivBuzzerAlarms.visibility = View.VISIBLE
                     //binding.carTrunkDoorHeight.visibility = View.VISIBLE
@@ -336,9 +364,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
                         binding.zero.visibility = View.VISIBLE
                         binding.zeroLine.visibility = View.VISIBLE
                     }
-                    if (isShowKey()) {
-                        binding.intelligenceInto.visibility = View.VISIBLE
-                    }
+
                 }
             })
 
@@ -353,9 +379,6 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
                     binding.zero.visibility = View.INVISIBLE
                     binding.zeroLine.visibility = View.INVISIBLE
                 }
-                if (isShowKey()) {
-                    binding.intelligenceInto.visibility = View.INVISIBLE
-                }
                 binding.ivBuzzerAlarms.visibility = View.INVISIBLE
                 binding.ivFlashAlarm.visibility = View.VISIBLE
             }
@@ -367,16 +390,12 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
                     binding.zero.visibility = View.VISIBLE
                     binding.zeroLine.visibility = View.VISIBLE
                 }
-                if (isShowKey()) {
-                    binding.intelligenceInto.visibility = View.VISIBLE
-                }
             }
         })
     }
 
     private fun doElectricTrunkFollowing(status: Boolean) {
         binding.carTrunkDoorHeight.visibility = if (status) View.VISIBLE else View.INVISIBLE
-        binding.intelligenceInto.visibility = if (isShowKey()) View.VISIBLE else View.INVISIBLE
         binding.arcSeekBar.visibility = if (isShowSeek()) View.VISIBLE else View.INVISIBLE
         binding.zero.visibility = if (isShowSeek()) View.VISIBLE else View.INVISIBLE
         binding.zeroLine.visibility = if (isShowSeek()) View.VISIBLE else View.INVISIBLE
@@ -401,9 +420,6 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
                             binding.zero.visibility = View.INVISIBLE
                             binding.zeroLine.visibility = View.INVISIBLE
                         }
-                        if (isShowKey()) {
-                            binding.intelligenceInto.visibility = View.INVISIBLE
-                        }
                         binding.ivBuzzerAlarms.visibility = View.INVISIBLE
                         binding.ivFlashAlarm.visibility = View.VISIBLE
                         binding.carTrunkDoorHeight.visibility = View.VISIBLE
@@ -415,9 +431,6 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
                             binding.arcSeekBar.visibility = View.VISIBLE
                             binding.zero.visibility = View.VISIBLE
                             binding.zeroLine.visibility = View.VISIBLE
-                        }
-                        if (isShowKey()) {
-                            binding.intelligenceInto.visibility = View.VISIBLE
                         }
                     }
                 })
@@ -436,9 +449,6 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
                                 binding.zero.visibility = View.INVISIBLE
                                 binding.zeroLine.visibility = View.INVISIBLE
                             }
-                            if (isShowKey()) {
-                                binding.intelligenceInto.visibility = View.INVISIBLE
-                            }
                             binding.ivFlashAlarm.visibility = View.INVISIBLE
                             binding.ivBuzzerAlarms.visibility = View.VISIBLE
                             binding.carTrunkDoorHeight.visibility = View.VISIBLE
@@ -450,9 +460,6 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
                                 binding.arcSeekBar.visibility = View.VISIBLE
                                 binding.zero.visibility = View.VISIBLE
                                 binding.zeroLine.visibility = View.VISIBLE
-                            }
-                            if (isShowKey()) {
-                                binding.intelligenceInto.visibility = View.VISIBLE
                             }
                         }
                     })
@@ -602,18 +609,17 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
                 binding.arcSeekBar.visibility = visibility
                 binding.zero.visibility = visibility
                 binding.zeroLine.visibility = visibility
-                val keyVisibility = if (isShowKey()) View.VISIBLE else View.GONE
-                binding.intelligenceInto.visibility = keyVisibility
             }
         })
     }
 
     fun isShowSeek(): Boolean {
-        return if (isHasSmartAccessOption()) {
+       /* return if (isHasSmartAccessOption()) {
             binding.sternElectricSwitch.isChecked && (binding.sternSmartEnterRadio.checked == "1")
         } else {
             true
-        }
+        }*/
+        return true
     }
 
     fun isShowKey(): Boolean {

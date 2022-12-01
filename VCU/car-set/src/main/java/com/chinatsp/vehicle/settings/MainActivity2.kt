@@ -138,9 +138,9 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
         if (general) {
             val list = route.split("_")
             Timber.e("==================route:%s, size:%s", route, list.size)
-            if (intentPath == Constant.LAUNCHER_SEARCH) {
+            /*if (intentPath == Constant.LAUNCHER_SEARCH) {
                 binding.homeBack.visibility = View.VISIBLE
-            }
+            }*/
             if (list.size == 3) {
                 val locations = list.map { it.toInt() }
                 val node1 = Node(uid = locations[0] - 1000)

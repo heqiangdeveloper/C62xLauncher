@@ -414,7 +414,7 @@ public class VSeekBar extends View {
 //        boolean isNearEnd = mMaxPosition >= mLineEndX - 12;
 //        float rightRadius = isNearEnd ? closedRadius : 0f;
         path.reset();
-        RectF borderRectF = new RectF(normalRectF.left, normalRectF.top, normalRectF.right, normalRectF.bottom);
+        RectF borderRectF = new RectF(normalRectF.left + 2, normalRectF.top, normalRectF.right, normalRectF.bottom);
         float radius = borderRectF.height() / 2;
         path.addRoundRect(borderRectF, radius, radius, Path.Direction.CCW);
         if (selectRectF.right >= radius && selectRectF.right <= normalRectF.right - radius) {
