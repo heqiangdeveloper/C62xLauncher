@@ -76,13 +76,12 @@ public class ExpandStateManager {
         if (card == null) {
             return;
         }
-        EasyLog.i(TAG, "clickExpandButton");
         boolean isExpandState = getExpandState();
+        EasyLog.i(TAG, "clickExpandButton , current expand status: " + isExpandState);
         if (!isExpandState) {
             // 小卡状态, 这里要变大
             expand(card, cardInLeftSide);
             chooseAnotherSmallCard(card, cardInLeftSide);
-            setExpand(true);
             dealScroll(card);
         } else {
             if (mBigCard == card) {
@@ -109,6 +108,8 @@ public class ExpandStateManager {
             viewHolder.expand();
         }
         setBigCard(card);
+        setExpand(true);
+
     }
 
 
@@ -124,6 +125,9 @@ public class ExpandStateManager {
     private void dealScroll(LauncherCard bigCard) {
         HomeCardRcvManager homeCardRcvManager = HomeCardRcvManager.getInstance();
         CardFrameViewHolder viewHolder = homeCardRcvManager.findViewHoldByCard(bigCard);
+        if (viewHolder == null) {
+            return;
+        }
         viewHolder.runDelay(new Runnable() {
             @Override
             public void run() {
@@ -216,7 +220,7 @@ public class ExpandStateManager {
         }
 
         // 如果目标位置是第5个, 且大卡在右边, 那么大卡即是最后一个位置,  需要单独处理滑动
-        if (scrollTargetPosition == cardCounts-1 && !realCardInLeft) {
+        if (scrollTargetPosition == cardCounts - 1 && !realCardInLeft) {
             dealScroll(smallCard);
         }
         EasyLog.w(TAG, "expandOnExchange  scroll scrollTargetPosition: " + scrollTargetPosition);
