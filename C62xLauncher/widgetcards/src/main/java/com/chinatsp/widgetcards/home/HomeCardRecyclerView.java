@@ -155,6 +155,9 @@ public class HomeCardRecyclerView extends RecyclerView {
      * @return true: 正在显示控件组
      */
     private boolean isShowingControlViews() {
+        if (ExpandStateManager.getInstance().getExpandState()) {
+            return false;
+        }
         return !canScrollHorizontally(-1);
     }
 

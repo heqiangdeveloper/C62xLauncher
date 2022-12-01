@@ -189,11 +189,12 @@ public class CardHomeFragment extends BaseFragment {
         @Override
         public void onChanged(List<LauncherCard> baseCardEntities) {
             EasyLog.d(TAG, "mHomeCardsOb  onChanged : " + baseCardEntities);
+            ExpandStateManager.getInstance().setExpand(false);
             mCardsAdapter.setCardEntityList(baseCardEntities);
             mSmallCardsAdapter.setCardEntityList(baseCardEntities);
-            ExpandStateManager.getInstance().setExpand(false);
             mCardsAdapter.notifyDataSetChanged();
             mSmallCardsAdapter.notifyDataSetChanged();
+            rcvSmallCards.setVisibility(View.INVISIBLE);
             if (mCardsAdapter.isIncludeDrawer()) {
                 scrollToFirstCard();
             }

@@ -34,7 +34,11 @@ public class ExpandStateManager {
 
 
     public void setExpand(boolean expandState) {
-        mExpandStateLiveData.postValue(expandState);
+        if (!expandState) {
+            setBigCard(null);
+            setAnchorSmallCard(null);
+        }
+        mExpandStateLiveData.setValue(expandState);
     }
 
     /**
@@ -53,6 +57,10 @@ public class ExpandStateManager {
 
     public void unregister(Observer<? super Boolean> observer) {
         mExpandStateLiveData.removeObserver(observer);
+    }
+
+    public LauncherCard getBigCard() {
+        return mBigCard;
     }
 
     private LauncherCard mBigCard;
@@ -85,31 +93,30 @@ public class ExpandStateManager {
             dealScroll(card);
         } else {
             if (mBigCard == card) {
+                setExpand(false);
+                setBigCard(null);
                 // 说明此卡大卡状态, 这里要变小
                 collapse(card, cardInLeftSide);
                 resetAnchorSmallCard();
-                setBigCard(null);
                 setAnchorSmallCard(null);
-                setExpand(false);
                 dealScroll(card);
             } else {
                 // 此卡处于小卡状态, 但有其它卡处于大卡状态. 所以这里的操作是交换大小卡
-                expandOnExchange(card, cardInLeftSide);
                 setExpand(true);
+                expandOnExchange(card, cardInLeftSide);
             }
         }
     }
 
     private void expand(LauncherCard card, boolean cardInLeftSide) {
+        setExpand(true);
+        setBigCard(card);
         EasyLog.i(TAG, "expand " + card.getName());
         HomeCardRcvManager homeCardRcvManager = HomeCardRcvManager.getInstance();
         CardFrameViewHolder viewHolder = homeCardRcvManager.findViewHoldByCard(card);
         if (viewHolder != null) {
             viewHolder.expand();
         }
-        setBigCard(card);
-        setExpand(true);
-
     }
 
 
@@ -147,6 +154,7 @@ public class ExpandStateManager {
         EasyLog.d(TAG, "expandOnExchange,  " + mAnchorSmallCard.getName() + " , " + mBigCard.getName() + " <-> " + smallCard.getName() + " , cardInLeftSide:" + cardInLeftSide);
         LauncherCard bigCard = mBigCard;
         CardFrameViewHolder viewHolder = HomeCardRcvManager.getInstance().findViewHoldByCard(smallCard);
+        SmallCardRcvManager.getInstance().hideSmallCardList();
         if (mAnchorSmallCard == smallCard) {
             // 判断在中卡-小卡模式中, 小卡是否被滑动到了另一个位置
             // 如果小卡没有滑动位置, 可直接将小卡变大
@@ -187,8 +195,8 @@ public class ExpandStateManager {
     }
 
     private void exchangeCard(LauncherCard smallCard, LauncherCard bigCard, boolean cardInLeftSide) {
-        collapse(bigCard, cardInLeftSide);
         expand(smallCard, cardInLeftSide);
+        collapse(bigCard, cardInLeftSide);
         chooseAnotherSmallCard(smallCard, cardInLeftSide);
         List<LauncherCard> homeList = CardManager.getInstance().getHomeList();
         int cardIndex = homeList.indexOf(smallCard);
@@ -220,11 +228,18 @@ public class ExpandStateManager {
         }
 
         // 如果目标位置是第5个, 且大卡在右边, 那么大卡即是最后一个位置,  需要单独处理滑动
-        if (scrollTargetPosition == cardCounts - 1 && !realCardInLeft) {
+        if (cardIndex == cardCounts - 1 && !realCardInLeft) {
             dealScroll(smallCard);
         }
         EasyLog.w(TAG, "expandOnExchange  scroll scrollTargetPosition: " + scrollTargetPosition);
-        HomeCardRcvManager.getInstance().scrollTo(scrollTargetPosition);
+        int finalScrollTargetPosition = scrollTargetPosition;
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                HomeCardRcvManager.getInstance().scrollTo(finalScrollTargetPosition);
+            }
+            // 其实是要等待扩展或缩小动画结束(200ms),  再进行滚动.
+        }, 250);
     }
 
     /**
@@ -260,7 +275,7 @@ public class ExpandStateManager {
             smallCardPosition = bigCardPos + 1;
             realCardInLeftSide = true;
         } else {
-            if (cardInLeftSide) {
+            if (realCardInLeftSide) {
                 // 当前卡在左边, 意味着右边是小卡.
                 smallCardPosition = bigCardPos + 1;
             } else {
@@ -275,17 +290,40 @@ public class ExpandStateManager {
         setAnchorSmallCard(smallCard);
         EasyLog.d(TAG, "chooseAnotherSmallCard smallCard: " + smallCard.getName() + " , smallCardViewHolder:" + smallCardViewHolder);
 
+        boolean finalRealCardInLeftSide = realCardInLeftSide;
         if (smallCardViewHolder != null) {
-            boolean finalRealCardInLeftSide = realCardInLeftSide;
-            smallCardViewHolder.runDelay(new Runnable() {
+            locationSmallList(smallCardViewHolder, card, smallCard, finalRealCardInLeftSide);
+        } else {
+            EasyLog.e(TAG, "chooseAnotherSmallCard smallCard: " + smallCard.getName() + " , smallCardViewHolder is NULL");
+            HomeCardRcvManager.getInstance().scrollTo(smallCardPosition + 1);
+            // 显然, 这张小卡还没有create, 所以要先滚动到那里, 然后才能找到ViewHolder
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    EasyLog.d(TAG, "chooseAnotherSmallCard smallCard: " + smallCard.getName());
-                    SmallCardRcvManager.getInstance().showSmallCardList(card, smallCard, finalRealCardInLeftSide);
-                    smallCardViewHolder.hideContentView();
+                    CardFrameViewHolder smallCardInDelayFind = HomeCardRcvManager.getInstance().findViewHoldByPosition(smallCardPosition);
+                    if (smallCardInDelayFind != null) {
+                        locationSmallList(smallCardInDelayFind, card, smallCard, finalRealCardInLeftSide);
+                    } else {
+                        EasyLog.e(TAG, "chooseAnotherSmallCard smallCard: " + smallCard.getName() + " , smallCardViewHolder is NULL. Yeah, it's not funny.");
+                    }
                 }
-            });
+            }, 200);
         }
     }
 
+    private void locationSmallList(CardFrameViewHolder smallCardViewHolder,
+                                   LauncherCard bigCard, LauncherCard smallCard,
+                                   boolean realCardInLeftSide) {
+        if (smallCardViewHolder == null) {
+            return;
+        }
+        smallCardViewHolder.runDelay(new Runnable() {
+            @Override
+            public void run() {
+                EasyLog.d(TAG, "chooseAnotherSmallCard smallCard: " + smallCard.getName());
+                SmallCardRcvManager.getInstance().showSmallCardList(bigCard, smallCard, realCardInLeftSide);
+                smallCardViewHolder.hideContentView();
+            }
+        });
+    }
 }

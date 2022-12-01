@@ -49,10 +49,10 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     private ImageView mIvCardZoom;
     private View ivCardTopSpace;
     private View mCardInner;
-    private boolean mExpandState;
     private LauncherCard mLauncherCard;
     private Resources mResources;
     private boolean mHideTitle = false;
+    private boolean mExpandState = false;
 
     public CardFrameViewHolder(@NonNull View itemView, RecyclerView recyclerView, View cardInner) {
         super(itemView);
@@ -62,6 +62,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
         mIvCardZoom = itemView.findViewById(R.id.ivCardZoom);
         ivCardTopSpace = itemView.findViewById(R.id.ivCardTopSpace);
         mCardInner = cardInner;
+        EasyLog.d(TAG, "CardFrameViewHolder init");
     }
 
     public void bind(int position, LauncherCard cardEntity) {
@@ -80,10 +81,8 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
             EasyLog.d(TAG, "OnClickListener Launcher App......" + mLauncherCard.getName());
             AppLauncherUtil.start(v.getContext(), mLauncherCard.getType());
         });
-        if (mExpandState) {
-            itemView.setBackgroundResource(R.drawable.card_bg_large);
-        } else {
-            itemView.setBackgroundResource(R.drawable.card_bg_small);
+        if (!ExpandStateManager.getInstance().getExpandState() && mExpandState) {
+            collapse();
         }
     }
 
@@ -161,12 +160,12 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
 
     public void expand() {
         mExpandState = true;
-        showContentView();
         expandLayout();
+        showContentView();
     }
 
     public void collapse() {
-        mExpandState = false;
+        mExpandState = true;
         collapseLayout();
     }
 
@@ -184,6 +183,9 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void showContentView() {
+        ExpandStateManager instance = ExpandStateManager.getInstance();
+        boolean rcvExpandMode = instance.getExpandState();
+        boolean mExpandState = rcvExpandMode && (instance.getBigCard() == mLauncherCard);
         EasyLog.d(TAG, "showContentView : " + mLauncherCard.getName() + " expand :" + mExpandState);
         if (!mHideTitle) {
             mTvCardName.setVisibility(View.VISIBLE);
@@ -198,6 +200,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void hideContentView() {
+        boolean mExpandState = ExpandStateManager.getInstance().getBigCard() == mLauncherCard;
         EasyLog.d(TAG, "hideContentView : " + mLauncherCard.getName() + " expand :" + mExpandState);
         itemView.setVisibility(View.INVISIBLE);
     }
@@ -345,10 +348,12 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     View.OnTouchListener mOnTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            if (!mExpandState) {
-                EasyLog.w(TAG, "onTouch , card is in collapse");
+
+
+//            if (!mExpandState) {
+//                EasyLog.w(TAG, "onTouch , card is in collapse");
 //                return false;
-            }
+//            }
             Float[][] pointerCoordinate = new Float[1][2];
             Float[][] pointerDown;
             final int pointerIndex = event.getActionIndex();
