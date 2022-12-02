@@ -42,7 +42,6 @@ public class NaviController implements INaviCallback {
     public NaviController(NaviCardView view) {
         mView = view;
         Context context = view.getContext();
-        mNaviRepository.init(context);
 
         initAidlWidgetManager(context);
         mNaviRepository.registerDataCallback(mIRemoteDataCallback);

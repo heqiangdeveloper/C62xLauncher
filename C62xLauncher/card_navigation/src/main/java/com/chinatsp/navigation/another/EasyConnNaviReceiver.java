@@ -12,6 +12,7 @@ import launcher.base.utils.EasyLog;
 
 public class EasyConnNaviReceiver extends BroadcastReceiver {
     private static final String TAG = "EasyConnNaviReceiver";
+    public static final String ACTION_EASYCONN_START_NAVIGATION = "net.easyconn.navigation.STARTED";
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();

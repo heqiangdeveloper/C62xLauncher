@@ -81,9 +81,13 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
             EasyLog.d(TAG, "OnClickListener Launcher App......" + mLauncherCard.getName());
             AppLauncherUtil.start(v.getContext(), mLauncherCard.getType());
         });
-        if (!ExpandStateManager.getInstance().getExpandState() && mExpandState) {
-            collapse();
+        if (!ExpandStateManager.getInstance().getExpandState()) {
+            itemView.setVisibility(View.VISIBLE);
+            if (mExpandState) {
+                collapse();
+            }
         }
+
     }
 
     View.OnLongClickListener mOnLongClickListener = new View.OnLongClickListener() {

@@ -13,6 +13,7 @@ import com.chinatsp.carservice.AppCarService;
 import com.chinatsp.drawer.search.manager.SearchManager;
 import com.chinatsp.iquting.service.IqutingBindService;
 import com.chinatsp.iquting.service.TencentSdkService;
+import com.chinatsp.navigation.repository.NaviRepository;
 import com.chinatsp.widgetcards.manager.CardManager;
 
 import card.theme.ThemeService;
@@ -33,6 +34,7 @@ public class LauncherApplication extends Application {
         initServices();
         // 发出本应用启动前台的广播
         sendLauncherBroadcast();
+        initGaoDeMap();
     }
 
     private void initServices() {
@@ -91,5 +93,9 @@ public class LauncherApplication extends Application {
         intentFilter.addAction(ChangeSourceReceiver.AQT_PLAY_ACTION);
         intentFilter.addAction(ChangeSourceReceiver.HARD_KEY_ACTION);
         registerReceiver(new ChangeSourceReceiver(),intentFilter);
+    }
+
+    private void initGaoDeMap() {
+        NaviRepository.getInstance().init(this);
     }
 }
