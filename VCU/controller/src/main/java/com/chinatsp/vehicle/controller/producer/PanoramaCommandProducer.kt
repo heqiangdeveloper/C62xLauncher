@@ -93,6 +93,7 @@ class PanoramaCommandProducer : ICommandProducer {
         if (Action.VOID != action && IPart.VOID != part) {
             val command = CarCmd(action = action, model = Model.PANORAMA)
             command.part = part
+            command.slots = slots
             return command
         }
         return null
@@ -194,10 +195,14 @@ class PanoramaCommandProducer : ICommandProducer {
             part = IPart.L_F or IPart.R_F
         } else if (isContains(direction, Keywords.B_R)) {
             part = IPart.L_B or IPart.R_B
-        }  else if (direction.contains("左转")) {
+        } else if (direction.contains("左转")) {
             part = IPart.L_F
         } else if (direction.contains("右转")) {
             part = IPart.R_F
+        } else if (direction.contains("广角前")) {
+            part = IPart.TOP or IPart.HEAD
+        } else if (direction.contains("广角后")) {
+            part = IPart.TOP or IPart.TAIL
         } else if (direction.contains("前")) {
             part = IPart.HEAD
         } else if (direction.contains("后")) {
@@ -206,6 +211,8 @@ class PanoramaCommandProducer : ICommandProducer {
             part = IPart.L_F or IPart.L_B
         } else if (direction.contains("右")) {
             part = IPart.R_F or IPart.R_B
+        } else if (direction.contains("俯视")) {
+            part = IPart.TOP or IPart.BOTTOM
         }
         return part
     }

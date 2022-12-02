@@ -53,8 +53,6 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
 
 
     override fun initData(savedInstanceState: Bundle?) {
-
-
         setCheckedChangeListener()
         initSwitchOption()
         addSwitchLiveDataListener()
@@ -155,16 +153,15 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
                 if (!Applet.isCanSwitchEps(15f)) {
                     showHintDialog(
                         R.string.vcu_action_switch_failed,
-                        R.string.vcu_eps_action_switch_check
-                    )
+                        R.string.vcu_eps_action_switch_check)
                     it.setSelection(viewModel.epsMode.value.toString(), true)
                 } else {
                     doUpdateRadio(RadioNode.DRIVE_EPS_MODE, value, viewModel.epsMode, it)
-                    //Toast.showToast(context, getString(R.string.vcu_eps_action_switching), true)
                     val fragment = ConversionDialogFragment()
-                    activity?.supportFragmentManager?.let {
-                        fragment.show(it, fragment.javaClass.simpleName)
+                    activity?.supportFragmentManager?.let { manager ->
+                        fragment.show(manager, fragment.javaClass.simpleName)
                     }
+                    it.setSelection(viewModel.epsMode.value.toString(), true)
                 }
             }
         }

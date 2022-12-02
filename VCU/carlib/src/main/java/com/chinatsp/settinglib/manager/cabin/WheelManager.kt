@@ -72,7 +72,7 @@ class WheelManager private constructor() : BaseManager(), ISoundManager, ICmdExp
 
     private fun initVolume(type: Progress): Volume {
         val result = VcuUtils.getInt(key = Constant.STEERING_HEAT_TEMP, value = type.def)
-        //        AppExecutors.get()?.singleIO()?.execute {
+//        AppExecutors.get()?.singleIO()?.execute {
 //            val result = VcuUtils.getInt(key = Constant.STEERING_HEAT_TEMP, value = pos)
 //            doUpdateProgress(volume, result, true, instance::doProgressChanged)
 //        }
@@ -101,6 +101,7 @@ class WheelManager private constructor() : BaseManager(), ISoundManager, ICmdExp
         return when (node) {
             RadioNode.DRIVE_EPS_MODE -> {
                 writeProperty(node, value, epsMode)
+                false
             }
             else -> false
         }
@@ -240,12 +241,12 @@ class WheelManager private constructor() : BaseManager(), ISoundManager, ICmdExp
     private fun writeProperty(node: RadioNode, value: Int, atomic: RadioState): Boolean {
         val success = node.isValid(value, false)
                 && writeProperty(node.set.signal, value, node.set.origin)
-        if (success && develop) {
-            val newValue = node.obtainSelectValue(value, false)
-            doUpdateRadioValue(node, atomic, newValue) { _node, _value ->
-                doOptionChanged(_node, _value)
-            }
-        }
+//        if (success && develop) {
+//            val newValue = node.obtainSelectValue(value, false)
+//            doUpdateRadioValue(node, atomic, newValue) { _node, _value ->
+//                doOptionChanged(_node, _value)
+//            }
+//        }
         return success
     }
 
