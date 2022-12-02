@@ -405,7 +405,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
 
                     break;
                 case MotionEvent.ACTION_UP:
-                    if (event.getPointerCount() == 1) {
+                    if (mPointsDown.size() == 1) {
                         moveX = event.getX();
                         moveY = event.getY();
                         float deltaY = moveY - downY;
