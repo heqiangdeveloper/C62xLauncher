@@ -161,6 +161,10 @@ public class CardHomeFragment extends BaseFragment {
 //        }
 //    }
 
+    /**
+     * 三指飞屏交换卡片
+     * @param swipeEvent
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void swipeCard(Events.SwipeEvent swipeEvent) {
         if (swipeEvent == null) {
@@ -182,6 +186,8 @@ public class CardHomeFragment extends BaseFragment {
         ListKit.swipeElement(homeList, index, index2);
 //        ExpandStateManager.getInstance().setSmallCardPosInExpandState(index);
         mCardsAdapter.notifyDataSetChanged();
+        // 将小卡和大卡的位置进行翻转, 然后重新设置外部备用小卡列表的位置
+        SmallCardRcvManager.getInstance().showSmallCardList(bigCard, smallCard, !bigCardInLeft);
     }
 
     Observer<List<LauncherCard>> mHomeCardsOb = new Observer<List<LauncherCard>>() {
