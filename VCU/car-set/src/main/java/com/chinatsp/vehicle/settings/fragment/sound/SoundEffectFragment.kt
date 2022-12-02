@@ -330,16 +330,7 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
 
     override fun onPause() {
         super.onPause()
-        val values = viewModel.getEffectValues(6).toList()
-        val toList = values.map {//均衡器
-            var value = it.toFloat() - 1
-            if (value < 0f) {
-                value = 0f
-            } else if (value > 2 * offset) {
-                value = 2 * offset
-            }
-            value
-        }.toList()
+        val list = convertEqValues(6, "onPause")
         val intent = Intent("com.chinatsp.vehiclenetwork.usercenter")
         val systemHint =
             VoiceManager.instance.doGetSwitchOption(SwitchNode.TOUCH_PROMPT_TONE)?.data//系统提示音
@@ -357,7 +348,7 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
                 navigationMixing + "\",\"fadeValue\":\"" +
                 fadeValue + "\",\"balanceValue\":\"" +
                 balanceValue + "\",\"equalizerValue\":\"" +
-                toList + "\"}"
+                list + "\"}"
         intent.putExtra("app", "com.chinatsp.vehicle.settings")
         intent.putExtra("soundEffects", json)
         intent.setPackage("com.chinatsp.usercenter")
@@ -414,27 +405,32 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
             doSendCustomEqValue()
         }
 //        onPostSelected(RadioNode.SYSTEM_SOUND_EFFECT, viewModel.currentEffect.value!!)
-
     }
 
     override fun onPostSelected(tabView: TabControlView, value: Int) {
 //        val result = node.obtainSelectValue(value)
-        val values = viewModel.getEffectValues(value).toList()
-        Timber.d("onPostSelected 11111111111111 tabView:$tabView, value:$value, values:%s", values)
-        val toList = values.map {
-            var value = it.toFloat() - 1
-            if (value < 0f) {
-                value = 0f
-            } else if (value > 2 * offset) {
-                value = 2 * offset
-            }
-            value
-        }.toList()
-        Timber.d("onPostSelected 22222222222222 tabView:$tabView, value:$value, toList:%s", toList)
-        this.vList = toList
+        val list = convertEqValues(value, "onPostSelected")
+        this.vList = list
         this.value = value
-        val data = toList.reversed()
+        val data = list.reversed()
         binding.smoothChartView.setData(data, xValue)
+    }
+
+    private fun convertEqValues(serialId: Int, serial: String): List<Float> {
+        val values = viewModel.getEffectValues(serialId).toList()
+        Timber.d("convert b serial:$serial, serialId:$serialId, values:%s", values)
+        val list = values.map {
+            val value = it.toFloat() - 1
+            if (value < 0f) {
+                0f
+            } else if (value > 2 * offset) {
+                2 * offset
+            } else {
+                value
+            }
+        }.toList()
+        Timber.d("convert e serial:$serial, serialId:$serialId, values:%s", values)
+        return list
     }
 
     private fun doSendCustomEqValue() {

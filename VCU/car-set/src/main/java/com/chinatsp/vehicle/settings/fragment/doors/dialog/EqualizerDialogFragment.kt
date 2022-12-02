@@ -123,21 +123,39 @@ class EqualizerDialogFragment :
 
     override fun onPostSelected(tabView: TabControlView, value: Int) {
 //        val result = node.obtainSelectValue(value)
-        val values = viewModel.getEffectValues(value).toList()
-        Timber.d("onPostSelected 11111111111111 tabView:$tabView, value:$value, values:%s", values)
-        val toList = values.map {
-            var value = it.toFloat() - 1
-            if (value < 0f) {
-                value = 0f
-            } else if (value > 2 * offset) {
-                value = 2 * offset
-            }
-            value
-        }.toList()
-        Timber.d("onPostSelected 22222222222222 tabView:$tabView, value:$value, toList:%s", toList)
+//        val values = viewModel.getEffectValues(value).toList()
+//        Timber.d("onPostSelected 11111111111111 tabView:$tabView, value:$value, values:%s", values)
+//        val toList = values.map {
+//            var value = it.toFloat() - 1
+//            if (value < 0f) {
+//                value = 0f
+//            } else if (value > 2 * offset) {
+//                value = 2 * offset
+//            }
+//            value
+//        }.toList()
+//        Timber.d("onPostSelected 22222222222222 tabView:$tabView, value:$value, toList:%s", toList)
+        val toList = convertEqValues(value, "onPostSelected")
         this.vList = toList
         this.value = value
         binding.smoothChartView.setData(toList, xValue)
+    }
+
+    private fun convertEqValues(serialId: Int, serial: String): List<Float> {
+        val values = viewModel.getEffectValues(serialId).toList()
+        Timber.d("convert b serial:$serial, serialId:$serialId, values:%s", values)
+        val list = values.map {
+            val value = it.toFloat() - 1
+            if (value < 0f) {
+                0f
+            } else if (value > 2 * offset) {
+                2 * offset
+            } else {
+                value
+            }
+        }.toList()
+        Timber.d("convert e serial:$serial, serialId:$serialId, values:%s", values)
+        return list
     }
 
     private fun doSendCustomEqValue() {

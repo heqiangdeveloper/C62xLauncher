@@ -28,6 +28,7 @@ import com.common.xui.utils.ResUtils
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 /**
  * @author : luohong
@@ -106,10 +107,11 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
         }
     }
 
-    private fun showHintDialog(title: Int, content: Int) {
+    private fun showHintDialog(title: Int, content: Int, retract: Boolean = true) {
         HintHold.setTitle(title)
         HintHold.setContent(content)
         val fragment = DetailsDialogFragment()
+        fragment.retract = retract
         activity?.supportFragmentManager?.let {
             fragment.show(it, fragment.javaClass.simpleName)
         }
@@ -150,18 +152,20 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
     private fun setRadioListener() {
         binding.wheelEpsModeTabView.let {
             it.setOnTabSelectionChangedListener { _, value ->
+                val epsMode = viewModel.epsMode.value?.get() ?: RadioNode.DRIVE_EPS_MODE.def
+                Timber.d("EPS_MODE ------ epsMode:$epsMode")
+                it.setSelection(epsMode.toString(), true)
                 if (!Applet.isCanSwitchEps(15f)) {
                     showHintDialog(
                         R.string.vcu_action_switch_failed,
-                        R.string.vcu_eps_action_switch_check)
-                    it.setSelection(viewModel.epsMode.value.toString(), true)
+                        R.string.vcu_eps_action_switch_check, retract = false)
                 } else {
                     doUpdateRadio(RadioNode.DRIVE_EPS_MODE, value, viewModel.epsMode, it)
                     val fragment = ConversionDialogFragment()
                     activity?.supportFragmentManager?.let { manager ->
                         fragment.show(manager, fragment.javaClass.simpleName)
                     }
-                    it.setSelection(viewModel.epsMode.value.toString(), true)
+//                    it.setSelection(viewModel.epsMode.value.toString(), true)
                 }
             }
         }

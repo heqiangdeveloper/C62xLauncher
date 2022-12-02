@@ -153,7 +153,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
         )
     }
 
-    fun getEqIdArray(): IntArray {
+    private fun getEqIdArray(): IntArray {
         val amplifier = VcuUtils.isAmplifier
         return if (amplifier) insetArray else outsetArray
     }
@@ -257,7 +257,11 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
             RadioNode.SYSTEM_SOUND_EFFECT -> {
                 Timber.d("doSetRadioOption SYSTEM_SOUND_EFFECT value:$value")
                 val result = doUpdateSoundEffect(node, value)
-                if (result) doUpdateRadioValue(node, eqMode, value, this::doOptionChanged)
+                if (result) {
+                    val get = node.obtainSelectValue(value, isGet = false)
+                    eqMode.set(get)
+                    doUpdateRadioValue(node, eqMode, value, this::doOptionChanged)
+                }
                 result
             }
             RadioNode.AUDIO_ENVI_AUDIO -> {

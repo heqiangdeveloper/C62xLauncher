@@ -707,7 +707,7 @@ class SettingManager private constructor() {
 
     fun setAudioEQ(eqMode: Int) {
         try {
-            Timber.e("setAudioEQ-----------------eqMode--$eqMode")
+            Timber.d("setAudioEQ-----------------eqMode=$eqMode")
             mCarAudioManager?.eqMode = eqMode
         } catch (e: Exception) {
             e.printStackTrace()

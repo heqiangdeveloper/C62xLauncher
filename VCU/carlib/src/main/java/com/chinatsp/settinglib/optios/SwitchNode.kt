@@ -569,7 +569,8 @@ enum class SwitchNode(
      * set -> DOW开关  0x0: Inactive; 0x1: ON; 0x2: OFF; 0x3: Invalid
      */
     ADAS_DOW(
-        get = Norm(on = 0x3, off = 0x1, signal = CarCabinManager.ID_AVM_DOW_STS),
+//        get = Norm(on = 0x3, off = 0x1, signal = CarCabinManager.ID_AVM_DOW_STS),
+        get = Norm(on = 0x3, off = 0x1, signal = -1),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_APA_AVM_DOW_SWT),
         inactive = intArrayOf(0x0, 0x4, 0x5, 0x6),
         default = true,

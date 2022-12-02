@@ -14,6 +14,7 @@ import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CabinAcFragmentBinding
 import com.chinatsp.vehicle.settings.vm.CabinACViewModel
 import com.common.library.frame.base.BaseFragment
+import com.common.xui.utils.ViewUtils
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,6 +45,13 @@ class CabinACFragment : BaseFragment<CabinACViewModel, CabinAcFragmentBinding>()
         initRadioOption()
         addRadioLiveDataListener()
         setRadioListener()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        ViewUtils.expendTouchArea(binding.cabinAcAutoAridSwb, 20)
+        ViewUtils.expendTouchArea(binding.cabinAcAutoDemistSwb, 20)
+        ViewUtils.expendTouchArea(binding.cabinAcAdvanceWindSwb, 20)
     }
 
     private fun initViewsDisplay() {

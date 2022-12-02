@@ -62,12 +62,19 @@ object Applet {
          * 获取车速
          * Vehicle speed calculated by EMS according to the message WHEEL SPEED from ESP.km/h 系数 0.1
          */
-        val speed: Float = WheelManager.instance.readFloatProperty(
+        val actual: Float = WheelManager.instance.readFloatProperty(
             CarCabinManager.ID_VEHICLE_SPEED_VALUE,
             Origin.CABIN
         )
-        Timber.d("Applet speed value:$speed")
-        return (speed * 0.1).toFloat()
+        val speed = if (actual > 0 && actual <= 26f) {
+            actual * 1.15f
+        } else if (actual > 26f && actual <= 300f) {
+            actual + 4
+        } else {
+            actual
+        }
+        Timber.d("Applet speed actual:$actual, speed:$speed")
+        return speed
     }
 
     //    语音控制车窗
@@ -79,7 +86,10 @@ object Applet {
     }
 
     fun isCanSwitchEps(consult: Float): Boolean {
-        return speedValue() < consult
+        val speed = speedValue()
+        val result = speed < consult
+        Timber.d("Applet isCanSwitchEps speed:$speed, consult:$consult, result:$result")
+        return result
     }
 
     fun getLampSupportColor(): List<Color> {

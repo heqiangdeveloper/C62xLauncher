@@ -72,7 +72,7 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
                     level1.cnode?.takeIf { child -> child.valid && child.uid == uid }
                         .let { level2 ->
                             level2?.cnode?.let { lv3Node ->
-                                map[lv3Node.uid]?.run { onViewClick(this, lv3Node.uid, true) }
+                                map[lv3Node.uid]?.run { onViewClick(this, lv3Node.uid) }
                             }
                         }
                 }
@@ -80,7 +80,7 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
         }
     }
 
-    private fun onViewClick(view: View, clickUid: Int, frank: Boolean) {
+    private fun onViewClick(view: View, clickUid: Int) {
         onViewClick(view)
         obtainRouter()?.resetLevelRouter(pid, uid, clickUid)
     }
@@ -163,8 +163,6 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
             doUpdateSwitch(SwitchNode.TOUCH_PROMPT_TONE, it)
         }
         viewModel.speedVolumeOffset.observe(this) {
-            val speedSwitch = manager.volumeSpeedSwitch
-            Timber.e("==================speedSwitch===$speedSwitch, it:  $id")
             doUpdateSwitch(manager.volumeSpeedSwitch, it)
         }
     }

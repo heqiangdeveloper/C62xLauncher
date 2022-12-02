@@ -13,7 +13,10 @@ import timber.log.Timber
 @AndroidEntryPoint
 class DetailsDialogFragment :
     BaseDialogFragment<BaseViewModel, DetailsDialogFragmentBinding>() {
+
     private val str: StringBuffer = StringBuffer()
+
+    var retract = true
 
     override fun getLayoutId(): Int {
         return R.layout.details_dialog_fragment
@@ -29,7 +32,7 @@ class DetailsDialogFragment :
             if (stringValue != null) {
                 for (i in stringValue) {
                     if (!StringUtils.isEmpty(i)) {
-                        val contentStr = "\u3000\u3000$i。\n"
+                        val contentStr = if (retract) "\u3000\u3000$i。\n" else "$i。\n"
                         str.append(contentStr)
                     }
                 }
