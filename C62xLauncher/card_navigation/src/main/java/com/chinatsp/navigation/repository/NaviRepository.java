@@ -1,12 +1,14 @@
 package com.chinatsp.navigation.repository;
 
 import android.content.Context;
+import android.content.IntentFilter;
 
 import androidx.annotation.NonNull;
 
 import com.autonavi.amapauto.jsonsdk.JsonProtocolManager;
 import com.autonavi.autoaidlwidget.AutoAidlWidgetManager;
 import com.chinatsp.navigation.NaviController;
+import com.chinatsp.navigation.another.EasyConnNaviReceiver;
 import com.chinatsp.navigation.gaode.RequestParamCreator;
 
 import launcher.base.ipc.BaseRemoteConnector;
@@ -17,10 +19,6 @@ public class NaviRepository extends BaseRepository {
     private NaviRepository() {
 
     }
-
-
-
-
     private static class Holder{
         private static NaviRepository instance = new NaviRepository();
     }
@@ -30,6 +28,18 @@ public class NaviRepository extends BaseRepository {
     }
 
     private JsonProtocolManager jsonProtocolManager = JsonProtocolManager.getInstance();
+
+    @Override
+    public void init(@NonNull Context context) {
+        super.init(context);
+        registerBroadcastReceiver(context);
+    }
+
+    private void registerBroadcastReceiver(Context context) {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(EasyConnNaviReceiver.ACTION_EASYCONN_START_NAVIGATION);
+        context.registerReceiver(new EasyConnNaviReceiver(), intentFilter);
+    }
 
     @Override
     protected NaviRemoteConnector createRemoteConnector(Context context) {

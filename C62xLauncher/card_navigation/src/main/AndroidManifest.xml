@@ -1,11 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.chinatsp.navigation">
-    <application>
-        <receiver android:name=".another.EasyConnNaviReceiver" >
-            <intent-filter>
-                <action android:name="net.easyconn.navigation.STARTED"/>
-            </intent-filter>
-        </receiver>
-    </application>
 </manifest>
