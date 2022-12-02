@@ -63,7 +63,7 @@ public class CardHomeFragment extends BaseFragment {
         initSmallCardsRcv(rootView);
         mCardIndicator = rootView.findViewById(R.id.cardIndicator);
         mCardIndicator.setIndex(0);
-
+        EasyLog.d(TAG, "initViews ... Hashcode:"+hashCode());
 //        drawerCreator = new DrawerCreator(rootView.findViewById(R.id.rcvDrawerContent));
 //        drawerCreator.initDrawerRcv();
 
