@@ -471,7 +471,17 @@ public class AppStoreCardView extends ConstraintLayout implements ICardStyleChan
         mIvAppStoreRefreshBig.setOnClickListener(this);
         RecyclerView rcvCardIQuTingSongList = largeCardView.findViewById(R.id.rcvAppStoreAppsList);
         //rcvCardIQuTingSongList.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 3);
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 3){
+            @Override
+            public boolean canScrollHorizontally() {
+                return false;
+            }
+
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
         rcvCardIQuTingSongList.setLayoutManager(layoutManager);
         // 间隔24px
 //        SimpleRcvDecoration divider = new SimpleRcvDecoration(24,layoutManager );
@@ -483,15 +493,15 @@ public class AppStoreCardView extends ConstraintLayout implements ICardStyleChan
         rcvCardIQuTingSongList.getItemAnimator().setChangeDuration(0); //防止recyclerView刷新闪屏
 
         //点击RecyclerView空白区域，跳转至应用商城
-        rcvCardIQuTingSongList.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if(v.getId() != 0){
-                    RecentAppHelper.launchApp(getContext(),APPSTOREPKG);
-                }
-                return false;
-            }
-        });
+//        rcvCardIQuTingSongList.setOnTouchListener(new OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                if(v.getId() != 0){
+//                    RecentAppHelper.launchApp(getContext(),APPSTOREPKG);
+//                }
+//                return false;
+//            }
+//        });
         mNormalBigCardViewHolder.setAppsAdapter(adapter);
     }
 

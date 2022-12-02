@@ -467,7 +467,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void doSwipe() {
-        EasyLog.d(TAG, "do Swipe card.");
+        EasyLog.d(TAG, "do Swipe card." + mLauncherCard);
         EventBus.getDefault().post(createSwipeEvent(mLauncherCard));
     }
 
