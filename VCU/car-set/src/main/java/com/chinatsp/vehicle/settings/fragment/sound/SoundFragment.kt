@@ -219,8 +219,8 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
 
     private fun cleanPopupSerial(serial: String) {
         if (activity is IRoute) {
-            val iroute = activity as IRoute
-            iroute.cleanPopupLiveDate(serial)
+            val route = activity as IRoute
+            route.cleanPopupLiveDate(serial)
         }
     }
 
@@ -259,16 +259,7 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
 
     override fun onPause() {
         super.onPause()
-        val values = viewModel.getEffectValues(6).toList()
-        val toList = values.map {//均衡器
-            var value = it.toFloat() - 1
-            if (value < 0f) {
-                value = 0f
-            } else if (value > 2 * offset) {
-                value = 2 * offset
-            }
-            value
-        }.toList()
+        val toList = convertEqValues(6, "onPause")
         val intent = Intent("com.chinatsp.vehiclenetwork.usercenter")
         val systemHint =
             getSwitchManager().doGetSwitchOption(SwitchNode.TOUCH_PROMPT_TONE)?.data//系统提示音
@@ -292,6 +283,24 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
         intent.setPackage("com.chinatsp.usercenter")
         activity?.startService(intent)
         Timber.d("soundEffects intent json:$json")
+    }
+
+    private fun convertEqValues(eqId: Int, serial: String, reverse: Boolean = false): List<Float> {
+        val values = viewModel.getEffectValues(eqId).toList()
+        Timber.d("convert b serial:$serial, serialId:$eqId, values:%s", values)
+        val list = values.map {
+            val value = it.toFloat() - 1
+            if (value < 0f) {
+                0f
+            } else if (value > 2 * offset) {
+                2 * offset
+            } else {
+                value
+            }
+        }.toList()
+        val result = if (reverse) list.reversed() else list
+        Timber.d("convert e serial:$serial, serialId:$eqId, values:%s", result)
+        return result
     }
 
     private val offset: Float by lazy {

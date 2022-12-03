@@ -26,7 +26,9 @@ import com.common.xui.utils.DensityUtils;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SmoothLineChartView extends View {
     public static final int NODE_STYLE_CIRCLE = 0;
@@ -149,6 +151,13 @@ public class SmoothLineChartView extends View {
         return null;
     }
 
+    public int[] progress() {
+        if (null != mValues) {
+            return mValues.stream().mapToInt(it -> (int) (Math.round(it) + intervalMaxY)).toArray();
+        }
+        return null;
+    }
+
     /***
      * 设置路径节点
      */
@@ -215,7 +224,6 @@ public class SmoothLineChartView extends View {
                 }
             }
         }
-
     }
 
     public void removeAll() {
@@ -264,18 +272,21 @@ public class SmoothLineChartView extends View {
 
             //计算第一个控制点
             PointF pre = mPoints.get(i - 1); //上一个节点
-            float x1 = pre.x + lX;
-            float y1 = pre.y + lY;
 
-            //计算第二个控制点
-            PointF next = mPoints.get(i + 1 < size ? i + 1 : i);//下一个节点
-            lX = (next.x - pre.x) / 2 * SMOOTHNESS;        // (lX,lY) is the slope of the reference line
-            lY = (next.y - pre.y) / 2 * SMOOTHNESS;
-            float x2 = current.x - lX;
-            float y2 = current.y - lY;
-
-            // add line
-            mPath.cubicTo(x1, y1, x2, y2, current.x, current.y);
+            if (pre.y == current.y) {
+                mPath.lineTo(current.x, current.y);
+            } else {
+                float x1 = pre.x + lX;
+                float y1 = pre.y + lY;
+                //计算第二个控制点
+                PointF next = mPoints.get(i + 1 < size ? i + 1 : i);//下一个节点
+                lX = (next.x - pre.x) / 2 * SMOOTHNESS;        // (lX,lY) is the slope of the reference line
+                lY = (next.y - pre.y) / 2 * SMOOTHNESS;
+                float x2 = current.x - lX;
+                float y2 = current.y - lY;
+                // add line
+                mPath.cubicTo(x1, y1, x2, y2, current.x, current.y);
+            }
         }
 
         //绘制曲线
@@ -399,6 +410,7 @@ public class SmoothLineChartView extends View {
                 int size = mValues.size();
                 mSelectedNode = checkClicked(event.getX(), event.getY());
                 action = true;
+                mEnableShowTag = true;
                 if (mSelectedNode != -1 && mSelectedNode < size) {
                     isMoveChange = true;
                     mSelectedNode = checkClicked(event.getX(), event.getY());
@@ -418,6 +430,7 @@ public class SmoothLineChartView extends View {
             case MotionEvent.ACTION_UP://抬起
                 mSelectedNode = checkClicked(event.getX(), event.getY());
                 action = false;
+                mEnableShowTag = false;
                 if (mSelectedNode != -1) {
                     if (mChartClickListener != null) {
                         mChartClickListener.onClick(mSelectedNode, Math.round(mValues.get(mSelectedNode) + mMaxY));
@@ -425,6 +438,9 @@ public class SmoothLineChartView extends View {
                     }
                     invalidate();
                 }
+                int[] progress = progress();
+                List<Float> floats = Arrays.stream(progress).mapToObj(it -> it * 1.0f).collect(Collectors.toList());
+                setData(floats, mXData);
                 return super.onTouchEvent(event);
         }
         return super.onTouchEvent(event);

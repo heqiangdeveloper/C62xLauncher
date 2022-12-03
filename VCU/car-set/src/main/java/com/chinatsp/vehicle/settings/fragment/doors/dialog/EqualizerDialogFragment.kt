@@ -105,7 +105,7 @@ class EqualizerDialogFragment :
         binding.soundEffectRadio.let {
             it.setOnTabSelectionChangedListener { _, value ->
                 doUpdateRadio(RadioNode.SYSTEM_SOUND_EFFECT, value, viewModel.currentEffect, it)
-                onPostSelected(it, value.toInt())
+//                onPostSelected(it, value.toInt())
             }
         }
     }

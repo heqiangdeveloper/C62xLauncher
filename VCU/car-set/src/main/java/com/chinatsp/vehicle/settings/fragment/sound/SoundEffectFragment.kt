@@ -171,7 +171,7 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
         binding.soundEffectRadio.let {
             it.setOnTabSelectionChangedListener { _, value ->
                 doUpdateRadio(RadioNode.SYSTEM_SOUND_EFFECT, value, viewModel.currentEffect, it)
-                onPostSelected(it, value.toInt())
+//                onPostSelected(it, value.toInt())
             }
         }
     }
@@ -400,25 +400,22 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
         binding.smoothChartView.circleColor = resources.getColor(R.color.smooth_circle_color)
         binding.smoothChartView.innerCircleColor = Color.parseColor("#ffffff")
         binding.smoothChartView.nodeStyle = SmoothLineChartView.NODE_STYLE_RING
-        binding.smoothChartView.setOnChartClickListener { position, value ->
-//            viewModel.setAudioEQ(position)
+        binding.smoothChartView.setOnChartClickListener { _, _ ->
             doSendCustomEqValue()
         }
-//        onPostSelected(RadioNode.SYSTEM_SOUND_EFFECT, viewModel.currentEffect.value!!)
     }
 
     override fun onPostSelected(tabView: TabControlView, value: Int) {
-//        val result = node.obtainSelectValue(value)
-        val list = convertEqValues(value, "onPostSelected")
+        val list = convertEqValues(value, "onPostSelected", reverse = true)
         this.vList = list
         this.value = value
-        val data = list.reversed()
-        binding.smoothChartView.setData(data, xValue)
+        binding.smoothChartView.setData(list, xValue)
     }
 
-    private fun convertEqValues(serialId: Int, serial: String): List<Float> {
-        val values = viewModel.getEffectValues(serialId).toList()
-        Timber.d("convert b serial:$serial, serialId:$serialId, values:%s", values)
+
+    private fun convertEqValues(eqId: Int, serial: String, reverse: Boolean = false): List<Float> {
+        val values = viewModel.getEffectValues(eqId).toList()
+        Timber.d("convert b serial:$serial, serialId:$eqId, values:%s", values)
         val list = values.map {
             val value = it.toFloat() - 1
             if (value < 0f) {
@@ -429,8 +426,9 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
                 value
             }
         }.toList()
-        Timber.d("convert e serial:$serial, serialId:$serialId, values:%s", values)
-        return list
+        val result = if (reverse) list.reversed() else list
+        Timber.d("convert e serial:$serial, serialId:$eqId, values:%s", result)
+        return result
     }
 
     private fun doSendCustomEqValue() {
@@ -524,7 +522,7 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         mCollapseController!!.unRegister()
+        super.onDestroy()
     }
 }

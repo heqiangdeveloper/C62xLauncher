@@ -20,6 +20,7 @@ import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.popupwindow.PopWindow
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>(), IOptionAction {
@@ -121,6 +122,7 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
     private fun syncNfcDisplay(timely: Boolean = true) {
         val inner = viewModel.nfcInner.value?.get() ?: false
         val outer = viewModel.nfcOuter.value?.get() ?: false
+        Timber.d("doAction syncNfcDisplay -- inner:$inner, outer:$outer")
         if (!timely) {
             binding.nfcSwitch.setCheckedNoEvent(inner && outer)
         } else {
@@ -222,8 +224,8 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
                 })
             popWindow.showDownLift(view, 30, -140)
         }
-        var text: TextView = popWindow?.findViewById(R.id.content) as TextView
-        text.text = resources.getString(id)
+        val textView: TextView = popWindow?.findViewById(R.id.content) as TextView
+        textView.text = resources.getString(id)
 
     }
 }
