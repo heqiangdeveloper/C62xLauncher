@@ -15,8 +15,6 @@ import com.chinatsp.vehicle.controller.VersionController
 import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.bean.TabPage
 import com.chinatsp.vehicle.settings.databinding.MainActivityTablayout2Binding
-import com.chinatsp.vehicle.settings.fragment.CommonlyFragment
-import com.chinatsp.vehicle.settings.fragment.drive.DriveManageFragment
 import com.chinatsp.vehicle.settings.vm.MainViewModel
 import com.common.library.frame.base.BaseActivity
 import com.common.library.frame.base.BaseFragment
@@ -256,11 +254,11 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
     override fun onTabSelected(tab: TabLayout.Tab) {
         val tag = tab.tag
         if (tag is TabPage) {
-            when (tag.className) {
-                CommonlyFragment::class.java.simpleName -> {
+            when (tag) {
+                TabPage.COMMONLY -> {
                     binding.constraint.setBackgroundResource(R.drawable.bg_changyong_1920)
                 }
-                DriveManageFragment::class.java.simpleName -> {
+                TabPage.ADAS -> {
                     binding.constraint.setBackgroundResource(R.drawable.bg)
                 }
                 else -> {

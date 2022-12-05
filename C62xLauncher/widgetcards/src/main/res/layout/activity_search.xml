@@ -45,6 +45,7 @@
             android:background="@android:color/transparent"
             android:gravity="center_vertical"
             android:maxLength="29"
+            android:textCursorDrawable="@drawable/color_cursor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

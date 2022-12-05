@@ -153,29 +153,26 @@ class AmbientLightingFragment :
                 activity?.let { binding.lightingView.setBackgroundColor(it.getColor(R.color.lighting_bg)) }
             }
         } else if (VcuUtils.isCareLevel(Level.LEVEL5, expect = true)) {
-            binding.lightingImage.setImageDrawable(activity?.let {
-                ContextCompat.getDrawable(it, R.drawable.img_light_lv5)
-            })
             if (isFront && isBack) {
                 binding.lightingView.setBackgroundColor(colorId)
-                binding.lightingViewBack1.visibility = View.GONE
-                binding.lightingViewBack2.visibility = View.GONE
-                binding.lightingViewBack3.visibility = View.GONE
+                binding.lightingImage.setImageDrawable(activity?.let {
+                    ContextCompat.getDrawable(it, R.drawable.img_light_lv5)
+                })
             } else if (!isFront && isBack) {
                 binding.lightingView.setBackgroundColor(colorId)
-                binding.lightingViewBack1.visibility = View.VISIBLE
-                binding.lightingViewBack2.visibility = View.GONE
-                binding.lightingViewBack3.visibility = View.GONE
+                binding.lightingImage.setImageDrawable(activity?.let {
+                    ContextCompat.getDrawable(it, R.drawable.img_light_lv5_1)
+                })
             } else if (isFront && !isBack) {
                 binding.lightingView.setBackgroundColor(colorId)
-                binding.lightingViewBack1.visibility = View.GONE
-                binding.lightingViewBack2.visibility = View.VISIBLE
-                binding.lightingViewBack3.visibility = View.VISIBLE
+                binding.lightingImage.setImageDrawable(activity?.let {
+                    ContextCompat.getDrawable(it, R.drawable.img_light_lv4)
+                })
             } else if (!isFront && !isBack) {
+                binding.lightingImage.setImageDrawable(activity?.let {
+                    ContextCompat.getDrawable(it, R.drawable.img_light_lv5_1)
+                })
                 activity?.let { binding.lightingView.setBackgroundColor(it.getColor(R.color.lighting_bg)) }
-                binding.lightingViewBack1.visibility = View.GONE
-                binding.lightingViewBack2.visibility = View.GONE
-                binding.lightingViewBack3.visibility = View.GONE
             }
         }
 
