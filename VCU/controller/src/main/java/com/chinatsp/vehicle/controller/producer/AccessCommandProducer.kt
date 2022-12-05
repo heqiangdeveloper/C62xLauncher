@@ -49,7 +49,6 @@ class AccessCommandProducer : ICommandProducer {
             action = obtainSwitchAction(slots.operation)
         }
         if (IPart.VOID == part) {
-            LogManager.e("attemptDoorCommand================text:${slots.text}")
             if (isContains(slots.text, Keywords.HOODS)) {
                 part = part or IPart.HEAD
                 action = obtainSwitchAction(slots.operation)
@@ -81,7 +80,7 @@ class AccessCommandProducer : ICommandProducer {
             part = if (slots.name.contains(Keywords.ALL)) {
                 IPart.L_F or IPart.L_B or IPart.R_F or IPart.R_B
             } else {
-                IPart.L_F or IPart.L_B or IPart.R_F or IPart.R_B or IPart.VAGUE
+                IPart.VOID
             }
         }
         if (IPart.VOID == part) {
@@ -241,36 +240,40 @@ class AccessCommandProducer : ICommandProducer {
     private fun checkoutPart(name: String, flag: Boolean = false): Int {
         var part = IPart.VOID
         if (flag) {
-            if (isMatch(Keywords.L_WINDOW, name)) {
-                part = IPart.L_F or IPart.L_B
+            part = if (name.contains(Keywords.ALL)) {
+                IPart.L_F or IPart.L_B or IPart.R_F or IPart.R_B
+            } else if (isMatch(Keywords.L_WINDOW, name)) {
+                IPart.L_F or IPart.L_B
             } else if (isMatch(Keywords.R_WINDOW, name)) {
-                part = IPart.R_F or IPart.R_B
+                IPart.R_F or IPart.R_B
             } else if (isMatch(Keywords.F_WINDOW, name)) {
-                part = IPart.L_F or IPart.R_F
+                IPart.L_F or IPart.R_F
             } else if (isMatch(Keywords.B_WINDOW, name)) {
-                part = IPart.L_B or IPart.R_B
+                IPart.L_B or IPart.R_B
             } else {
-                part = IPart.L_F or IPart.L_B or IPart.R_F or IPart.R_B or IPart.VAGUE
+                IPart.L_F or IPart.L_B or IPart.R_F or IPart.R_B or IPart.VAGUE
             }
         } else {
-            if (isContains(name, Keywords.L_F)) {
-                part = part or IPart.L_F
+            part = if (name.contains(Keywords.ALL)) {
+               IPart.L_F or IPart.L_B or IPart.R_F or IPart.R_B
+            } else if (isContains(name, Keywords.L_F)) {
+               part or IPart.L_F
             } else if (isContains(name, Keywords.L_R)) {
-                part = part or IPart.L_B
+               part or IPart.L_B
             } else if (isContains(name, Keywords.R_F)) {
-                part = part or IPart.R_F
+               part or IPart.R_F
             } else if (isContains(name, Keywords.R_R)) {
-                part = part or IPart.R_B
+               part or IPart.R_B
             } else if (isContains(name, Keywords.L_C)) {
-                part = part or IPart.L_F or IPart.L_B
+               part or IPart.L_F or IPart.L_B
             } else if (isContains(name, Keywords.R_C)) {
-                part = part or IPart.R_F or IPart.R_B
+               part or IPart.R_F or IPart.R_B
             } else if (isContains(name, Keywords.F_R)) {
-                part = part or IPart.L_F or IPart.R_F
+               part or IPart.L_F or IPart.R_F
             } else if (isContains(name, Keywords.B_R)) {
-                part = part or IPart.L_B or IPart.R_B
+               part or IPart.L_B or IPart.R_B
             } else {
-                part = IPart.L_F or IPart.L_B or IPart.R_F or IPart.R_B or IPart.VAGUE
+               IPart.L_F or IPart.L_B or IPart.R_F or IPart.R_B or IPart.VAGUE
             }
         }
         return part

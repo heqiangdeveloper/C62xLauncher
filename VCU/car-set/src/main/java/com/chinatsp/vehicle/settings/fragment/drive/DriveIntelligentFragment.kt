@@ -1,6 +1,8 @@
 package com.chinatsp.vehicle.settings.fragment.drive
 
+import android.content.Context
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
@@ -22,7 +24,6 @@ import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
-
 /**
  * 智能巡航
  */
@@ -33,12 +34,25 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
     private val manager: CruiseManager
         get() = CruiseManager.instance
 
+    private val uri: Uri by lazy {
+        Uri.parse("android.resource://" + activity?.packageName + "/" + R.raw.video_acc)
+    }
+
     private val map: HashMap<Int, View> = HashMap()
 
     override fun getLayoutId(): Int {
         return R.layout.drive_intelligent_fragment
     }
 
+    private fun showLaneLine(): Drawable? {
+        val context = this.context ?: return null
+        return ContextCompat.getDrawable(context, R.drawable.intelligent_cruise_open)
+    }
+
+    private fun hideLaneLine(): Drawable? {
+        val context = this.context ?: return null
+        return ContextCompat.getDrawable(context, R.drawable.intelligent_cruise)
+    }
 
     override fun initData(savedInstanceState: Bundle?) {
         initSwitchOption()
@@ -54,6 +68,8 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
 
         initClickView()
         initRouteListener()
+        binding.video.setBackgroundColor(Color.TRANSPARENT)
+        updateDriveLineDisplay(false)
     }
 
     private fun initClickView() {
@@ -108,25 +124,21 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
         updateRadioEnable(RadioNode.ADAS_LIMBER_LEAVE)
     }
 
+
+
     private fun initVideoListener() {
-        val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_acc
         binding.video.setAudioFocusRequest(AudioManager.AUDIOFOCUS_NONE)
-        binding.video.setVideoURI(Uri.parse(uri));
+        binding.video.setVideoURI(uri);
         binding.video.setOnCompletionListener {
-            binding.video.pause()
             binding.video.seekTo(0)
-            dynamicEffect()
+            updateDriveLineDisplay(false)
         }
         binding.video.setOnErrorListener { _, _, _ ->
-            dynamicEffect()
+            updateDriveLineDisplay(false)
             true
         }
         binding.video.setOnPreparedListener {
-            it.setOnInfoListener { _, _, _ ->
-                binding.video.setBackgroundColor(Color.TRANSPARENT);
-                binding.intelligentCruise.visibility = View.GONE
-                true
-            }
+           if (this.isAdded && this.isResumed && !this.isDetached) it.start()
         }
     }
 
@@ -148,7 +160,6 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
     private fun initSwitchOption() {
         initSwitchOption(SwitchNode.ADAS_IACC, viewModel.cruiseAssistFunction)
         initSwitchOption(SwitchNode.ADAS_LIMBER_LEAVE, viewModel.limberLeaveFunction)
-
         updateSwitchEnable(SwitchNode.ADAS_IACC)
         updateSwitchEnable(SwitchNode.ADAS_LIMBER_LEAVE)
         updateRadioEnable(RadioNode.ADAS_LIMBER_LEAVE)
@@ -199,13 +210,12 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
     }
 
     override fun onPostChecked(button: SwitchButton, status: Boolean) {
-        dynamicEffect()
+//        updateDriveLineDisplay(true)
     }
 
     override fun findRadioByNode(node: RadioNode): TabControlView? {
         return when (node) {
             RadioNode.ADAS_LIMBER_LEAVE -> {
-//                binding.accessCruiseLimberLeaveRadio.getChildAt(0).visibility = View.GONE
                 binding.accessCruiseLimberLeaveRadio
             }
             else -> null
@@ -219,14 +229,7 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
     private fun setSwitchListener() {
         binding.accessCruiseCruiseAssist.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.ADAS_IACC, buttonView, isChecked)
-            if (buttonView.isChecked) {
-                //binding.intelligentCruise.visibility = View.GONE
-                val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_acc
-                binding.video.setVideoURI(Uri.parse(uri));
-                binding.video.start()
-            } else {
-                dynamicEffect()
-            }
+            updateDriveLineDisplay(true)
             updateSwitchEnable(SwitchNode.ADAS_IACC)
             updateSwitchEnable(SwitchNode.ADAS_LIMBER_LEAVE)
             updateRadioEnable(RadioNode.ADAS_LIMBER_LEAVE)
@@ -236,24 +239,20 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
         }
     }
 
-
-    private fun dynamicEffect() {
-        binding.intelligentCruise.visibility = View.VISIBLE
-        if (binding.accessCruiseCruiseAssist.isChecked) {
-            binding.intelligentCruise.setImageDrawable(activity?.let {
-                ContextCompat.getDrawable(it, R.drawable.intelligent_cruise_open)
-            })
-        } else {
-            binding.intelligentCruise.setImageDrawable(activity?.let {
-                ContextCompat.getDrawable(it, R.drawable.intelligent_cruise)
-            })
-        }
+    private fun updateDriveLineDisplay(anim: Boolean) {
+        val expect = binding.accessCruiseCruiseAssist.isChecked
+        val isAnimation = expect && anim
+        if (isAnimation) binding.video.setVideoURI(uri); else binding.video.suspend()
+        binding.intelligentCruise.alpha = if (isAnimation) 0f else 1f
+        val drawable = if (expect) showLaneLine() else hideLaneLine()
+        drawable?.let { binding.intelligentCruise.setImageDrawable(it) }
     }
 
     override fun onPause() {
+        updateDriveLineDisplay(false)
         super.onPause()
-        binding.video.pause()
     }
 
 }
+
 

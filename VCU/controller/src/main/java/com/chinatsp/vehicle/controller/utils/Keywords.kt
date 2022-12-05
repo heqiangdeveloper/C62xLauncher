@@ -62,6 +62,7 @@ interface Keywords {
         const val WINDOW = "车窗"
         const val PASSENGER = "乘客"
         val WINDOWS = arrayOf("车窗", "窗户")
+
         val L_F = arrayOf("主驾", "前排左", "左前", "前左", "前边左", "左边前", "左排前")
         val R_F = arrayOf("副驾", "前排右", "右前", "前右", "前边右", "右边前", "右排前")
         val L_R = arrayOf("后排左", "左后", "后左", "右边左", "左边后", "左排后")

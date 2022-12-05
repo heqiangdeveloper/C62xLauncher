@@ -3,13 +3,16 @@ package com.chinatsp.settinglib
 import android.car.VehicleAreaType
 import android.car.hardware.cabin.CarCabinManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.ContentObserver
+import android.os.Bundle
 import android.os.SystemProperties
 import android.provider.Settings
 import com.chinatsp.settinglib.constants.OffLine
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.GlobalManager
+import com.chinatsp.settinglib.manager.Hint
 import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.annotation.Level
 import timber.log.Timber
@@ -223,5 +226,16 @@ object VcuUtils {
 
 //    ID_TCU_SELECTED_GEAR 挡位
 //    ID_POWER_MODE_BCM 电源
+
+    fun startDialogService(signal: Int, action: Int = Hint.SHOW) {
+        val intent = Intent()
+        intent.setPackage("com.chinatsp.vehicle.settings")
+        intent.action = "com.chinatsp.vehicle.settings.service.SystemService"
+        val bundle = Bundle()
+        bundle.putInt(Hint.type, signal)
+        bundle.putInt(Hint.action, action)
+        intent.putExtras(bundle)
+        BaseApp.instance.startService(intent)
+    }
 
 }

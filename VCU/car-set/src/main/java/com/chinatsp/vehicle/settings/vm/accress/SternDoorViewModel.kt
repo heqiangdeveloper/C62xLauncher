@@ -59,7 +59,7 @@ class SternDoorViewModel @Inject constructor(app: Application, model: BaseModel)
         MutableLiveData(manager.doGetRadioOption(node))
     }
 
-    val trunkStopPosition: LiveData<Volume> get() = _trunkStopPosition
+    val trunkStopPoint: LiveData<Volume> get() = _trunkStopPosition
 
     private val _trunkStopPosition: MutableLiveData<Volume> by lazy {
         val node = Progress.TRUNK_STOP_POSITION

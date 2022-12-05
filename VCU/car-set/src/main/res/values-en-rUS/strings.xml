@@ -106,6 +106,8 @@
     <string name="cabin_other_determine">OK</string>
     <string name="cabin_other_wireless_charging_lamp_open">储物盒灯已打开</string>
     <string name="cabin_other_wireless_charging_lamp_close">储物盒灯已关闭</string>
+    <string name="cabin_other_wireless_charging_open">无线充电已打开</string>
+    <string name="cabin_other_wireless_charging_close">无线充电已关闭</string>
 
     <string name="note_users_title">User Notice</string>
     <string name="note_users_content">In order to ensure the safety of the wireless charging function, you must read and fully understand the following precautions and only use the function according to the prompts：\n

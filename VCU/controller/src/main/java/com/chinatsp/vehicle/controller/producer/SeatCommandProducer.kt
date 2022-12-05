@@ -250,7 +250,7 @@ class SeatCommandProducer : ICommandProducer {
         if (slots.name.contains(Keywords.ALL)) {
             part = IPart.L_F or IPart.L_B or IPart.R_F or IPart.R_B
         } else if (slots.name.contains(Keywords.PASSENGER)) {
-            part = IPart.L_B or IPart.R_F or IPart.R_B
+            part = IPart.L_B or IPart.R_B
         } else if (isContains(slots.name, Keywords.L_F)) {
             part = part or IPart.L_F
         } else if (isContains(slots.name, Keywords.L_R)) {

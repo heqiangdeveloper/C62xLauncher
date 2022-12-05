@@ -9,7 +9,6 @@ import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.cabin.OtherManager
-import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.ISwitchAction
@@ -38,6 +37,8 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
         return R.layout.cabin_other_fragment
     }
 
+    private var firstReceive = true
+
     override fun initData(savedInstanceState: Bundle?) {
         setCheckedChangeListener()
         initSwitchOption()
@@ -52,7 +53,7 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
 
     private fun addRadioLiveDataListener() {
         viewModel.wirelessChargingState.observe(this) {
-            abnormalCharge()
+
         }
     }
 
@@ -92,11 +93,7 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
 
     private fun updateSwitchTextHint(textView: TextView, liveData: LiveData<SwitchState>) {
         val static = liveData.value?.get() ?: false
-        val hintId = if (static) {
-            R.string.switch_turn_on
-        } else {
-            R.string.switch_turn_off
-        }
+        val hintId = if (static) R.string.switch_turn_on else R.string.switch_turn_off
         textView.setText(hintId)
     }
 
@@ -111,6 +108,10 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
             ld.observe(this) {
                 doUpdateSwitch(SwitchNode.DRIVE_WIRELESS_CHARGING, it)
                 updateSwitchEnable(SwitchNode.DRIVE_WIRELESS_CHARGING)
+                if (!firstReceive) {
+                    abnormalCharge()
+                }
+                firstReceive = false
             }
         }
         viewModel.wirelessChargingLamp.let { ld ->
@@ -151,22 +152,20 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
     }
 
     private fun setSwitchListener() {
-        binding.otherBatteryOptimizeSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            doUpdateSwitchOption(SwitchNode.DRIVE_BATTERY_OPTIMIZE, buttonView, isChecked)
+        binding.otherBatteryOptimizeSwitch.setOnCheckedChangeListener { buttonView, status ->
+            doUpdateSwitchOption(SwitchNode.DRIVE_BATTERY_OPTIMIZE, buttonView, status)
         }
-        binding.otherWirelessChargingSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            doUpdateSwitchOption(SwitchNode.DRIVE_WIRELESS_CHARGING, buttonView, isChecked)
-            if (isChecked) {
-                abnormalCharge()
-            }
+        binding.otherWirelessChargingSwitch.setOnCheckedChangeListener { buttonView, status ->
+            doUpdateSwitchOption(SwitchNode.DRIVE_WIRELESS_CHARGING, buttonView, status)
         }
-        binding.otherWirelessChargingLampSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            if(isChecked){
-                Toast.showToast(context, getString(R.string.cabin_other_wireless_charging_lamp_open), true)
-            }else{
-                Toast.showToast(context, getString(R.string.cabin_other_wireless_charging_lamp_close), true)
+        binding.otherWirelessChargingLampSwitch.setOnCheckedChangeListener { buttonView, status ->
+            val resId = if (status) {
+                R.string.cabin_other_wireless_charging_lamp_open
+            } else {
+                R.string.cabin_other_wireless_charging_lamp_close
             }
-            doUpdateSwitchOption(SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP, buttonView, isChecked)
+            Toast.showToast(context, getString(resId), true)
+            doUpdateSwitchOption(SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP, buttonView, status)
         }
     }
 
@@ -225,31 +224,39 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
 
     private fun abnormalCharge() {
         val isSwitch = binding.otherWirelessChargingSwitch.isChecked
-        if (!isSwitch) return
-        val value = viewModel.wirelessChargingState.value?.get() ?: return
-
-        //模拟数据
-        val wcm = true//检测到异物
-        val triggerElectrical = true//触发电上电
-        val wcmSwitch = true;//WCM开关处于打开状态，
-        val peps = true//PEPS不在寻钥匙状态
-        val wcmStr = true//WCM无故障信息
-        val receiving = true;//检测到接收端(移动端)
-
-        if (triggerElectrical && wcmSwitch && peps && wcmStr && receiving) {
-            showToast(context, context?.resources?.getString(R.string.cabin_other_wireless_charging_working_properly), true) //充电成功
-            return
-        } else if (triggerElectrical && wcmSwitch && peps && wcm) {
-            val fragment = ForeignMatterDialogFragment() //检测到异物
-            activity?.supportFragmentManager?.let {
-                fragment.show(it, fragment.javaClass.simpleName)
-            }
+        val resId = if (isSwitch) {
+            R.string.cabin_other_wireless_charging_open
         } else {
-            //无线充电异常
-            val fragment = AbnormalChargeDialogFragment()
-            activity?.supportFragmentManager?.let {
-                fragment.show(it, fragment.javaClass.simpleName)
-            }
+            R.string.cabin_other_wireless_charging_close
         }
+        showToast(context, context?.resources?.getString(resId), true)
+
+//        if (!isSwitch) return
+//        val value = viewModel.wirelessChargingState.value?.get() ?: return
+//        //模拟数据
+//        val wcm = true//检测到异物
+//        val triggerElectrical = true//触发电上电
+//        val wcmSwitch = true;//WCM开关处于打开状态，
+//        val peps = true//PEPS不在寻钥匙状态
+//        val wcmStr = true//WCM无故障信息
+//        val receiving = true;//检测到接收端(移动端)
+//
+//        if (triggerElectrical && wcmSwitch && peps && wcmStr && receiving) {
+//            showToast(context,
+//                context?.resources?.getString(R.string.cabin_other_wireless_charging_working_properly),
+//                true) //充电成功
+//            return
+//        } else if (triggerElectrical && wcmSwitch && peps && wcm) {
+//            val fragment = ForeignMatterDialogFragment() //检测到异物
+//            activity?.supportFragmentManager?.let {
+//                fragment.show(it, fragment.javaClass.simpleName)
+//            }
+//        } else {
+//            //无线充电异常
+//            val fragment = AbnormalChargeDialogFragment()
+//            activity?.supportFragmentManager?.let {
+//                fragment.show(it, fragment.javaClass.simpleName)
+//            }
+//        }
     }
 }

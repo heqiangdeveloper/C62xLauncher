@@ -155,17 +155,16 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
                 val epsMode = viewModel.epsMode.value?.get() ?: RadioNode.DRIVE_EPS_MODE.def
                 Timber.d("EPS_MODE ------ epsMode:$epsMode")
                 it.setSelection(epsMode.toString(), true)
-                if (!Applet.isCanSwitchEps(15f)) {
-                    showHintDialog(
-                        R.string.vcu_action_switch_failed,
-                        R.string.vcu_eps_action_switch_check, retract = false)
-                } else {
+                if (VcuUtils.isEngineRunning() && VcuUtils.isPower() && Applet.isCanSwitchEps(15f)) {
                     doUpdateRadio(RadioNode.DRIVE_EPS_MODE, value, viewModel.epsMode, it)
                     val fragment = ConversionDialogFragment()
                     activity?.supportFragmentManager?.let { manager ->
                         fragment.show(manager, fragment.javaClass.simpleName)
                     }
-//                    it.setSelection(viewModel.epsMode.value.toString(), true)
+                } else {
+                    showHintDialog(
+                        R.string.vcu_action_switch_failed,
+                        R.string.vcu_eps_action_switch_check, retract = false)
                 }
             }
         }

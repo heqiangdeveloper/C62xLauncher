@@ -163,7 +163,7 @@
             android:id="@+id/iv_car_trunk"
             android:layout_width="@dimen/x550"
             android:layout_height="@dimen/x270"
-            android:src="@drawable/trunk_door_animation"
+            android:src="@drawable/trunk_door_close_lv3_00"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -173,7 +173,7 @@
             android:layout_height="@dimen/x50"
             android:layout_marginEnd="@dimen/x201"
             android:layout_marginBottom="@dimen/x111"
-            android:src="@drawable/flash_alarm_animation"
+            android:src="@drawable/flash_alarm_00"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -184,7 +184,7 @@
             android:layout_height="@dimen/x75"
             android:layout_marginEnd="@dimen/x246"
             android:layout_marginBottom="@dimen/x150"
-            android:src="@drawable/buzzer_alarms_animation"
+            android:src="@drawable/buzzer_alarms_000"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
