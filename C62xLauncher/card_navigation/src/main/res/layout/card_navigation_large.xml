@@ -264,7 +264,7 @@
             android:layout_width="127px"
             android:layout_height="46px"
             android:layout_marginTop="47px"
-            android:text="未知位置"
+            android:text="@string/card_navi_msg_road_name"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="@id/ivCardNaviArrow"
             app:layout_constraintStart_toStartOf="@id/ivCardNaviArrow"

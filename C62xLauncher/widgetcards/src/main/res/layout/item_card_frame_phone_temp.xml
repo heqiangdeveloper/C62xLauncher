@@ -9,9 +9,10 @@
 
     <View
         android:id="@+id/ivCardTopSpace"
-        android:layout_width="360px"
+        android:layout_width="match_parent"
         android:layout_height="64px"
         android:layout_marginTop="31px"
+        android:layout_marginRight="144px"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />

@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.MotionEvent;
@@ -42,7 +43,7 @@ import launcher.base.utils.EasyLog;
 
 public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     private static final String TAG = "CardFrameViewHolder";
-    private static final int MIN_CLICK_INTERVAL = 700; // ms
+    private static final int MIN_CLICK_INTERVAL = 600; // ms
     private final int EXPAND_ANIM_DURATION = 200;
     private RecyclerView mRecyclerView;
     private TextView mTvCardName;
