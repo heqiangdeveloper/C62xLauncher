@@ -1,5 +1,6 @@
 package com.chinatsp.widgetcards.home.smallcard;
 
+import android.graphics.Color;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,25 +26,31 @@ public class SmallCardViewHolder extends RecyclerView.ViewHolder {
     private View mCardInner;
     private OnExpandCardInCard mOnExpandCardInCard;
     private ImageView mIvCardZoom;
+    private View ivCardTopSpace;
+
 
     public SmallCardViewHolder(@NonNull View itemView, View cardInner, OnExpandCardInCard onExpandCardInCard) {
         super(itemView);
         mTvCardName = itemView.findViewById(R.id.tvCardName);
         mIvCardZoom = itemView.findViewById(R.id.ivCardZoom);
+        ivCardTopSpace = itemView.findViewById(R.id.ivCardTopSpace);
+
         mCardInner = cardInner;
         mOnExpandCardInCard = onExpandCardInCard;
-
-
     }
 
     public void bind(int position, LauncherCard card) {
         EasyLog.d("SmallCardViewHolder", "bind card:" + card.getName());
         mHideTitle = checkNeedHideTitle();
         setTitle(card.getType());
-        mIvCardZoom.setOnClickListener(new View.OnClickListener() {
+        resetExpandIcon(card);
+        ivCardTopSpace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                expand(card);
+                if (!card.isCanExpand()) {
+                    return;
+                }
                 LauncherCard anchorSmallCard = ExpandStateManager.getInstance().getAnchorSmallCard();
                 if (anchorSmallCard == null) {
                     return;
@@ -72,6 +79,14 @@ public class SmallCardViewHolder extends RecyclerView.ViewHolder {
             hideDefault = ((ICardStyleChange) mCardInner).hideDefaultTitle();
         }
         return hideDefault;
+    }
+
+    private void resetExpandIcon(LauncherCard cardEntity) {
+        if (cardEntity.isCanExpand()) {
+            mIvCardZoom.setVisibility(View.VISIBLE);
+        } else {
+            mIvCardZoom.setVisibility(View.GONE);
+        }
     }
 
     private void setTitle(int type) {

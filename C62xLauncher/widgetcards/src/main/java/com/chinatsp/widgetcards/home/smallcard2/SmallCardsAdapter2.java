@@ -54,10 +54,10 @@ public class SmallCardsAdapter2 extends RecyclerView.Adapter<SmallCardViewHolder
     public SmallCardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LauncherCard cardEntity = CardManager.getInstance().findByType(viewType);
         ViewGroup layout;
-        if (cardEntity.isCanExpand()) {
-            layout = (ViewGroup) mLayoutInflater.inflate(R.layout.item_card_frame, parent, false);
+        if (viewType == CardManager.CardType.PHONE) {
+            layout = (ViewGroup) mLayoutInflater.inflate(R.layout.item_card_frame_phone_temp, parent, false);
         } else {
-            layout = (ViewGroup) mLayoutInflater.inflate(R.layout.item_card_frame_locked, parent, false);
+            layout = (ViewGroup) mLayoutInflater.inflate(R.layout.item_card_frame, parent, false);
         }
         View innerCard = cardEntity.getLayout(layout.getContext());
         innerCard.setTag("InnerCard");
