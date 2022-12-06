@@ -9,6 +9,16 @@ public class VolcanoSource {
     private String name;
     private int iconRes;
 
+    public int getNameRes() {
+        return nameRes;
+    }
+
+    public void setNameRes(int nameRes) {
+        this.nameRes = nameRes;
+    }
+
+    private int nameRes;
+
 
     public String getSource() {
         return source;
@@ -35,26 +45,31 @@ public class VolcanoSource {
     }
 
     public static VolcanoSource create(String  source) {
-        int res;
+        int iconRes;
+        int nameRes;
         String sourceName;
         switch (source) {
             case VolcanoRepository.SOURCE_DOUYIN:
-                res = R.drawable.card_volcano_type_douyin;
+                iconRes = R.drawable.card_volcano_type_douyin;
                 sourceName = "抖音";
+                nameRes = R.string.card_volcano_title_douyin;
                 break;
             case VolcanoRepository.SOURCE_XIGUA:
-                res = R.drawable.card_volcano_type_xigua;
+                iconRes = R.drawable.card_volcano_type_xigua;
                 sourceName = "西瓜";
+                nameRes = R.string.card_volcano_title_watermelon;
                 break;
             case VolcanoRepository.SOURCE_TOUTIAO:
             default:
-                res = R.drawable.card_volcano_type_toutiao;
+                iconRes = R.drawable.card_volcano_type_toutiao;
                 sourceName = "头条";
+                nameRes = R.string.card_volcano_title_head_line;
         }
         VolcanoSource volcanoSource = new VolcanoSource();
         volcanoSource.setSource(source);
         volcanoSource.setName(sourceName);
-        volcanoSource.setIconRes(res);
+        volcanoSource.setIconRes(iconRes);
+        volcanoSource.setNameRes(nameRes);
         return volcanoSource;
     }
 }

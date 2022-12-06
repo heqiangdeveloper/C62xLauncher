@@ -128,6 +128,7 @@ public class DragHelper {
         }
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                EasyLog.d(TAG, "ACTION_DOWN");
                 mDownX = event.getX();
                 mDownY = event.getY();
                 DragViewWrapper dragViewWrapper = findDragView(rv, event.getX(), event.getY());
@@ -140,13 +141,18 @@ public class DragHelper {
                 startDrag(dragViewWrapper);
                 break;
             case MotionEvent.ACTION_MOVE:
+                EasyLog.d(TAG, "ACTION_MOVE");
                 float dx = event.getX() - mDownX;
                 float dy = event.getY() - mDownY;
                 dealMove((int) dx, (int) dy);
                 showTargetHighlight(rv, event);
                 break;
             case MotionEvent.ACTION_UP:
+                EasyLog.d(TAG, "ACTION_UP");
+                dealEventUp(rv, event);
+                break;
             case MotionEvent.ACTION_CANCEL:
+                EasyLog.d(TAG, "ACTION_CANCEL");
                 dealEventUp(rv, event);
                 break;
         }

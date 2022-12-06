@@ -5,14 +5,14 @@ import com.chinatsp.navigation.R;
 public class DriveDirection {
     private int nameRes;
     private int iconRes;
-    private int garDeValue;
+    private int gaoDeValue;
 
     private boolean useRoundIsland;
 
     public DriveDirection(int nameRes, int iconRes, int garDeValue) {
         this.nameRes = nameRes;
         this.iconRes = iconRes;
-        this.garDeValue = garDeValue;
+        this.gaoDeValue = garDeValue;
     }
 
     public int getNameRes() {
@@ -24,7 +24,7 @@ public class DriveDirection {
     }
 
     public int getGarDeValue() {
-        return garDeValue;
+        return gaoDeValue;
     }
 
     public boolean isUseRoundIsland() {
@@ -36,7 +36,7 @@ public class DriveDirection {
         return "DriveDirection{" +
                 "nameRes=" + nameRes +
                 ", iconRes=" + iconRes +
-                ", garDeValue=" + garDeValue +
+                ", garDeValue=" + gaoDeValue +
                 '}';
     }
 

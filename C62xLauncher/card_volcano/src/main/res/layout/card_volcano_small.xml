@@ -24,10 +24,10 @@
         <TextView
             android:id="@+id/tvCardVolcanoSource"
             style="@style/CardLv3TextView"
-            android:layout_width="59px"
+            android:layout_width="wrap_content"
             android:layout_height="42px"
             android:layout_marginLeft="2px"
-            android:text="头条"
+            android:text="@string/card_volcano_title_head_line"
             android:textColor="@color/card_blue_default"
             app:layout_constraintBottom_toBottomOf="@id/ivCardVolcanoSourceLogo"
             app:layout_constraintStart_toEndOf="@id/ivCardVolcanoSourceLogo"

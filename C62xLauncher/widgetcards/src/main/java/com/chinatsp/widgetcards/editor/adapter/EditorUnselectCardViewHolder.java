@@ -49,5 +49,6 @@ public class EditorUnselectCardViewHolder extends BaseViewHolder<LauncherCard> {
             mIvBg.setVisibility(View.GONE);
             mIvBgEmpty.setVisibility(View.VISIBLE);
         }
+        itemView.setVisibility(View.VISIBLE);
     }
 }
