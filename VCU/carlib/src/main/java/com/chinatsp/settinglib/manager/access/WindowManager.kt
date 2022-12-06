@@ -202,7 +202,6 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager,
                 var convert = convert(p, node.get.on, 0x0)
                 if (null == convert) convert = p
                 onSwitchChanged(node, winRemoteControl, convert)
-//                onSwitchChanged(SwitchNode.WIN_REMOTE_CONTROL, winRemoteControl, property)
             }
             SwitchNode.RAIN_WIPER_REPAIR.get.signal -> {
                 onSwitchChanged(SwitchNode.RAIN_WIPER_REPAIR, rainWiperRepair, p)

@@ -29,10 +29,10 @@ class DoorsViewModel @Inject constructor(app: Application, model: BaseModel) :
         MutableLiveData(manager.doGetRadioOption(node))
     }
 
-    val automaticDoorUnlock: LiveData<RadioState>
-        get() = _automaticDoorUnlock
+    val autoDoorUnlock: LiveData<RadioState>
+        get() = _autoDoorUnlock
 
-    private val _automaticDoorUnlock: MutableLiveData<RadioState> by lazy {
+    private val _autoDoorUnlock: MutableLiveData<RadioState> by lazy {
         val node = RadioNode.DOOR_FLAMEOUT_UNLOCK
         MutableLiveData(manager.doGetRadioOption(node))
     }
@@ -86,7 +86,7 @@ class DoorsViewModel @Inject constructor(app: Application, model: BaseModel) :
                 doUpdate(_automaticDoorLock, value)
             }
             RadioNode.DOOR_FLAMEOUT_UNLOCK -> {
-                doUpdate(_automaticDoorUnlock, value)
+                doUpdate(_autoDoorUnlock, value)
             }
             else -> {}
         }

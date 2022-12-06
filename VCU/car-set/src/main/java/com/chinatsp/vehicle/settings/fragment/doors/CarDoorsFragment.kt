@@ -27,9 +27,16 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
 
     //private var animationOpenLock: AnimationDrawable = AnimationDrawable()
     //private var animationCloseLock: AnimationDrawable = AnimationDrawable()
-    private var animationFlameout: AnimationDrawable = AnimationDrawable()
-    private var animationCarDoor: AnimationDrawable = AnimationDrawable()
-
+    private val animationFlameout: AnimationDrawable by lazy {
+        val animDrawable = AnimationDrawable()
+        animDrawable.setAnimation(context, R.drawable.flameout_animation, binding.rightFlameout)
+        animDrawable
+    }
+    private val animationCarDoor: AnimationDrawable by lazy {
+        val animDrawable = AnimationDrawable()
+        animDrawable.setAnimation(context, R.drawable.car_door_animation, binding.rightCarDoorlock)
+        animDrawable
+    }
     private val manager: IOptionManager
         get() = DoorManager.instance
 
@@ -39,7 +46,6 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
 
     override fun initData(savedInstanceState: Bundle?) {
         initViewsDisplay()
-        initAnimation()
         initDetailsClickListener()
 
         initSwitchOption()
@@ -75,15 +81,7 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
 
     private fun initRadioOption() {
         initRadioOption(RadioNode.DOOR_DRIVE_LOCK, viewModel.automaticDoorLock)
-        initRadioOption(RadioNode.DOOR_FLAMEOUT_UNLOCK, viewModel.automaticDoorUnlock)
-    }
-
-    private fun initAnimation() {
-        val cxt = activity
-        //animationOpenLock.setAnimation(cxt, R.drawable.lock_animation, binding.lockIv)
-        //animationCloseLock.setAnimation(cxt, R.drawable.close_lock_animation, binding.lockIv)
-        animationFlameout.setAnimation(cxt, R.drawable.flameout_animation, binding.rightFlameout)
-        animationCarDoor.setAnimation(cxt, R.drawable.car_door_animation, binding.rightCarDoorlock)
+        initRadioOption(RadioNode.DOOR_FLAMEOUT_UNLOCK, viewModel.autoDoorUnlock)
     }
 
     private fun addRadioLiveDataListener() {
@@ -91,10 +89,10 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
             doUpdateRadio(RadioNode.DOOR_DRIVE_LOCK, it, false)
 //            updateOptionActive()
         }
-        viewModel.automaticDoorUnlock.observe(this) {
+        viewModel.autoDoorUnlock.observe(this) {
             doUpdateRadio(RadioNode.DOOR_FLAMEOUT_UNLOCK, it, false)
 //            updateOptionActive()
-            setAnimation(it.data.toString())
+            executeUnlockAnimation(it.data.toString())
         }
     }
 
@@ -106,10 +104,8 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
         }
         binding.doorAutomaticUnlockRadio.let {
             it.setOnTabSelectionChangedListener { _, value ->
-                doUpdateRadio(
-                    RadioNode.DOOR_FLAMEOUT_UNLOCK, value, viewModel.automaticDoorUnlock, it
-                )
-                setAnimation(value)
+                doUpdateRadio(RadioNode.DOOR_FLAMEOUT_UNLOCK, value, viewModel.autoDoorUnlock, it)
+                executeUnlockAnimation(value)
             }
         }
     }
@@ -164,7 +160,7 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
     override fun obtainActiveByNode(node: RadioNode): Boolean {
         return when (node) {
             RadioNode.DOOR_DRIVE_LOCK -> viewModel.automaticDoorLock.value?.enable() ?: false
-            RadioNode.DOOR_FLAMEOUT_UNLOCK -> viewModel.automaticDoorUnlock.value?.enable() ?: false
+            RadioNode.DOOR_FLAMEOUT_UNLOCK -> viewModel.autoDoorUnlock.value?.enable() ?: false
             else -> super.obtainActiveByNode(node)
         }
     }
@@ -190,7 +186,7 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
         }
     }
 
-    private fun setAnimation(value: String) {
+    private fun executeUnlockAnimation(value: String) {
         when (value) {
             "3" -> {
                 binding.rightCarDoorlock.visibility = View.GONE
@@ -217,15 +213,10 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
         if (view.id == binding.wheelAutomaticHeatingDetails.id) {
             popWindow = PopWindow(activity, R.layout.car_doors_pop_window,
                 activity?.let {
-                    AppCompatResources.getDrawable(
-                        it,
-                        R.drawable.popup_bg_qipao451_214
-                    )
-                })
+                    AppCompatResources.getDrawable(it, R.drawable.popup_bg_qipao451_214)})
             popWindow.showDownLift(view, 30, -140)
         }
         val textView: TextView = popWindow?.findViewById(R.id.content) as TextView
         textView.text = resources.getString(id)
-
     }
 }

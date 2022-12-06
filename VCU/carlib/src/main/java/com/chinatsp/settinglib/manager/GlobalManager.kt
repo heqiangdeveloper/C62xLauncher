@@ -106,15 +106,14 @@ class GlobalManager private constructor() : BaseManager() {
             Timber.e("onPowerLevelChanged but property value is not Int!")
             return
         }
-        if (VcuUtils.isEngineRunning()) {
-            Timber.d("onPowerLevelChanged break by isEngine == true")
-            VcuUtils.startDialogService(Hint.ALL_HINT, Hint.HIDE)
-            return
-        }
-
         val isPower = VcuUtils.isPower()
         if (!isPower) {
             Timber.d("onPowerLevelChanged break by power is off")
+            return
+        }
+        if (VcuUtils.isEngineRunning()) {
+            Timber.d("onPowerLevelChanged break by isEngine == true")
+            VcuUtils.startDialogService(Hint.ALL_HINT, Hint.HIDE)
             return
         }
         /**电源管理是否有效 LoUPwrStatMngtVld  0x0*/
@@ -126,9 +125,18 @@ class GlobalManager private constructor() : BaseManager() {
         Timber.d("onPowerLevelChanged voltageLevel:$voltageLevel")
         //点火但没有启动发动机
         /**LoUPwrStatMngtVld=0x0 且LoUPwrMngtStatLvl=0x1或0x2时*/
-        if (voltageLevel == 0x1 || voltageLevel == 0x2) {
-            /**弹出储电量过低*/
-            VcuUtils.startDialogService(Hint.powerSupply)
+//        if (voltageLevel == 0x1 || voltageLevel == 0x2) {
+//            /**弹出储电量过低*/
+//            VcuUtils.startDialogService(Hint.powerSupply)
+//        }
+
+        if (0x1 == voltageLevel) {
+            VcuUtils.startDialogService(Hint.leve1)//level1延迟15分钟弹出提示
+            return
+        }
+        if (0x2 == voltageLevel) {
+            VcuUtils.startDialogService(Hint.leve2) //leve2的时候立马弹出
+            return
         }
     }
 
@@ -141,9 +149,12 @@ class GlobalManager private constructor() : BaseManager() {
             Timber.e("onPowerModeChanged but property value is not Int!")
             return
         }
+        if (!VcuUtils.isPowerValid()) {
+            Timber.d("onPowerModeChanged break by POWER_MODE is invalid")
+            return
+        }
         /**发动机状态*/
-        val isEngine = VcuUtils.isEngineRunning()
-        if (isEngine) {
+        if (VcuUtils.isEngineRunning()) {
             Timber.d("onPowerModeChanged break by isEngine == true")
             VcuUtils.startDialogService(Hint.ALL_HINT, Hint.HIDE)
             return
@@ -151,10 +162,6 @@ class GlobalManager private constructor() : BaseManager() {
         Constant.POWER_STATE = mode
         if (Constant.POWER_ON != mode) {
             Timber.d("onPowerModeChanged break by mode != POWER_ON")
-            return
-        }
-        if (!VcuUtils.isPowerValid()) {
-            Timber.d("onPowerModeChanged break by POWER_MODE is invalid")
             return
         }
         /**电源管理是否有效  0x0*/

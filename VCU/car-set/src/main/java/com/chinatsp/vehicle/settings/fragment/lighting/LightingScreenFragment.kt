@@ -101,11 +101,7 @@ class LightingScreenFragment : BaseFragment<BrightnessViewModel, LightingScreenF
             when (this) {
                 binding.lightScreenCarSeekbar -> {
                     manager.doSetVolume(Progress.HOST_SCREEN_BRIGHTNESS, newValue)
-                    if (this.isTouching) {
-                        updateDarkLightLevel(newValue)
-                    } else {
-
-                    }
+                    if (isTouching) updateDarkLightLevel(newValue) else ""
                 }
                 binding.lightScreenAcSeekbar -> {
                     manager.doSetVolume(Progress.CONDITIONER_SCREEN_BRIGHTNESS, newValue)
