@@ -43,6 +43,7 @@ import com.chinatsp.apppanel.AppConfigs.Priorities;
 import com.chinatsp.apppanel.R;
 import com.chinatsp.apppanel.adapter.AddAppAdapter;
 import com.chinatsp.apppanel.adapter.MyAppInfoAdapter;
+import com.chinatsp.apppanel.adapter.OnItemClickCallback;
 import com.chinatsp.apppanel.db.MyAppDB;
 import com.chinatsp.apppanel.event.CancelDownloadEvent;
 import com.chinatsp.apppanel.event.DownloadEvent;
@@ -172,6 +173,7 @@ public class MyAppFragment extends Fragment {
             }
         }
 
+        getUsedApps();//剔除data中的黑名单应用
         addPushInstalledApp();//添加通过push方式安装的应用
         deleteUninstallApp();//删除掉未安装的应用，应用管理除外
         checkDVR();//检查车型DVR
@@ -184,7 +186,15 @@ public class MyAppFragment extends Fragment {
         //更新应用图标
         refreshIcon();
         loadingTv.setVisibility(View.GONE);
-        mMyAppInfoAdapter = new MyAppInfoAdapter(view.getContext(), data);
+        mMyAppInfoAdapter = new MyAppInfoAdapter(view.getContext(), data, new OnItemClickCallback() {
+            @Override
+            public void onItemClick() {
+                boolean isSubShow = appInfoClassifyView.isSubContainerShow();
+                if(isSubShow){
+                    appInfoClassifyView.hideSubContainer();
+                }
+            }
+        });
         appInfoClassifyView.setAdapter(mMyAppInfoAdapter);
 //        appInfoClassifyView.setCanUninstallNameLists(getCanUninstallLists());
         SoftKeyBoardListener.setListener(getActivity(), new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
@@ -314,6 +324,46 @@ public class MyAppFragment extends Fragment {
             if(data.get(k).size() == 0){
                 data.remove(k);
                 k--;
+            }
+        }
+    }
+
+    //剔除data中的黑名单应用,不用回复出厂设置
+    private void getUsedApps(){
+        for (String packages:AppLists.blackListApps) {
+            A:for (int i = 0; i < data.size(); i++){
+                List<LocationBean> lists = data.get(i);
+                lists.removeAll(Collections.singleton(null));//清除掉null对象
+                for(int k = 0; k < lists.size(); k++){
+                    if(packages.equals(lists.get(k).getPackageName())){
+                        lists.remove(k);
+                        k--;
+                        AsyncSchedule.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(db.isExistPackage(packages) != 0){
+                                    db.deleteLocation(packages);
+                                }
+                            }
+                        });
+                        break A;
+                    }
+                }
+            }
+        }
+
+
+        for (int i = 0; i < data.size(); i++){
+            List<LocationBean> lists = data.get(i);
+            lists.removeAll(Collections.singleton(null));//清除掉null对象
+            if(lists.size() == 0){
+                data.remove(i);
+                i--;
+            }else {
+                for(int k = 0; k < lists.size(); k++){
+                    lists.get(k).setParentIndex(i);
+                    lists.get(k).setChildIndex(k);
+                }
             }
         }
     }
@@ -483,7 +533,15 @@ public class MyAppFragment extends Fragment {
                 }
                 //更新应用图标
                 refreshIcon();
-                mMyAppInfoAdapter = new MyAppInfoAdapter(getContext(), data);
+                mMyAppInfoAdapter = new MyAppInfoAdapter(getContext(), data, new OnItemClickCallback() {
+                    @Override
+                    public void onItemClick() {
+                        boolean isSubShow = appInfoClassifyView.isSubContainerShow();
+                        if(isSubShow){
+                            appInfoClassifyView.hideSubContainer();
+                        }
+                    }
+                });
                 appInfoClassifyView.setAdapter(mMyAppInfoAdapter);
 //                appInfoClassifyView.setCanUninstallNameLists(getCanUninstallLists());
             }else {//卸载
@@ -1061,24 +1119,25 @@ public class MyAppFragment extends Fragment {
      */
     private void refreshIcon(){
         String pkgName = "";
+        List<ResolveInfo> allApps = getApps();
         for(List<LocationBean> lists:data){
             if(lists != null){
                 for(int i = 0; i < lists.size(); i++){
                     locationBean = lists.get(i);
                     if(locationBean != null){
                         pkgName = locationBean.getPackageName();
-                        if(AppLists.volcano.equals(pkgName)){//火山车娱
-                            List<ResolveInfo> allApps = getApps();
+                        drawable = AppLists.getResId(getContext(),pkgName);
+
+                        if(drawable == null){
                             A:for(int k = 0; k < allApps.size(); k++){
                                 if(pkgName.equals(allApps.get(k).activityInfo.packageName)){
                                     drawable = allApps.get(k).activityInfo.loadIcon(getContext().getPackageManager());
                                     break A;
                                 }
                             }
-                        }else {
-                            drawable = AppLists.getResId(getContext(),pkgName);
                         }
-                        if(drawable != null){//非第三方应用
+
+                        if(drawable != null){
                             locationBean.setImgDrawable(drawable);
                         }
                     }
