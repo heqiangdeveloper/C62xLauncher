@@ -185,9 +185,17 @@ public class AppStoreCardView extends ConstraintLayout implements ICardStyleChan
             }
         }else if(v.getId() == R.id.ivAppStoreRefresh){
             Log.d(TAG,"onClick ivAppStoreRefresh");
+            boolean isConnected = NetworkUtils.isNetworkAvailable(getContext());
+            if (isConnected) {
+                getData();
+            }
             showRefreshAnimation();
         }else if(v.getId() == R.id.ivAppStoreRefreshBig){
             Log.d(TAG,"onClick ivAppStoreRefreshBig");
+            boolean isConnected = NetworkUtils.isNetworkAvailable(getContext());
+            if (isConnected) {
+                getData();
+            }
             showRefreshBigAnimation();
         }else {
             RecentAppHelper.launchApp(getContext(),APPSTOREPKG);
@@ -393,24 +401,31 @@ public class AppStoreCardView extends ConstraintLayout implements ICardStyleChan
 
     private void refreshUI(){
         ((Activity)getContext()).runOnUiThread(new Runnable() {
-           @Override
-           public void run() {
-               GlideHelper.loadUrlAlbumCoverRadius(getContext(),mIvAppIconTop,infos.get(0).getIcon(),0);
-               String desTop = infos.get(0).getDescription();
-               if(desTop.length() > 10){
-                   desTop = desTop.substring(0,10) + "...";
-               }
-               mTvAppNameTop.setText(infos.get(0).getAppName());
-               mTvAppDescTop.setText(desTop);
+            @Override
+            public void run() {
+                if(!mExpand) {
+                    GlideHelper.loadUrlAlbumCoverRadius(getContext(),mIvAppIconTop,infos.get(0).getIcon(),0);
+                    String desTop = infos.get(0).getDescription();
+                    if(desTop.length() > 10){
+                        desTop = desTop.substring(0,10) + "...";
+                    }
+                    mTvAppNameTop.setText(infos.get(0).getAppName());
+                    mTvAppDescTop.setText(desTop);
 
-               GlideHelper.loadUrlAlbumCoverRadius(getContext(),mIvAppIconBottom,infos.get(1).getIcon(),0);
-               String desBottom = infos.get(1).getDescription();
-               if(desBottom.length() > 10){
-                   desBottom = desBottom.substring(0,10) + "...";
-               }
-               mTvAppNameBottom.setText(infos.get(1).getAppName());
-               mTvAppDescBottom.setText(desBottom);
-           }
+                    GlideHelper.loadUrlAlbumCoverRadius(getContext(),mIvAppIconBottom,infos.get(1).getIcon(),0);
+                    String desBottom = infos.get(1).getDescription();
+                    if(desBottom.length() > 10){
+                        desBottom = desBottom.substring(0,10) + "...";
+                    }
+                    mTvAppNameBottom.setText(infos.get(1).getAppName());
+                    mTvAppDescBottom.setText(desBottom);
+                }else {
+                    mNormalBigCardViewHolder.updateApps(infos);//更新数据
+                }
+
+                mState = new AppStoreNormalState();
+                mState.updateViewState(AppStoreCardView.this, mExpand);
+            }
         });
     }
 
