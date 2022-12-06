@@ -86,10 +86,12 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
     private static final String TAG = MyAppInfoAdapter.class.getName();
     private int subParentIndex = -1;//sub所在的主位置
     private CalcuTimer timer;
+    private OnItemClickCallback onItemClickCallback;
 
-    public MyAppInfoAdapter(Context context, List<List<LocationBean>> mData) {
+    public MyAppInfoAdapter(Context context, List<List<LocationBean>> mData,OnItemClickCallback onItemClickCallback) {
         super(mData);
         this.mData = mData;
+        this.onItemClickCallback = onItemClickCallback;
         mData.removeAll(Collections.singleton(null));//清除掉null对象
         this.context = context;
         preferences = context.getSharedPreferences(MyConfigs.APPPANELSP, Context.MODE_PRIVATE);
@@ -720,6 +722,9 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
                     editor.putBoolean(MyConfigs.MAINSHOWDELETE,false);
                     editor.commit();
                     hideDeleteIcon(relativeLayout);
+                    if(onItemClickCallback != null){
+                        onItemClickCallback.onItemClick();
+                    }
                     AppManagementWindow.getInstance(context).show();
                 }
             }else {
@@ -765,6 +770,9 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
         }else if(installed == AppState.DOWNLOADING){//下载中
             AppStoreService.getInstance(context).doCommand(CommandType.PAUSE,pkgName);
         }else if(installed == 0 || installed == AppState.INSTALLED || installed == AppState.INSTALLED_COMPLETELY){//已安装
+            if(onItemClickCallback != null){
+                onItemClickCallback.onItemClick();
+            }
             RecentAppHelper.launchApp(context,pkgName);
         }else if(installed == AppState.COULD_UPDATE){//更新
             /*
@@ -776,6 +784,9 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             String reverse2 = locationBean.getReserve2();//不再提醒的版本号
             String reverse3 = locationBean.getReserve3();//待更新的版本号
             if(TextUtils.isEmpty(reverse3)){
+                if(onItemClickCallback != null){
+                    onItemClickCallback.onItemClick();
+                }
                 RecentAppHelper.launchApp(context,pkgName);
             }else {
                 if(!TextUtils.isEmpty(reverse1)){
@@ -783,14 +794,23 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
                         //如果是 上次选择了不再提醒
                         if(!TextUtils.isEmpty(reverse2) &&
                                 Integer.parseInt(reverse3) == Integer.parseInt(reverse2)){
+                            if(onItemClickCallback != null){
+                                onItemClickCallback.onItemClick();
+                            }
                             RecentAppHelper.launchApp(context,pkgName);
                         }else {//如果是 上次未做选择
                             showUpdateDialog(name,pkgName,reverse3);
                         }
                     }else {
+                        if(onItemClickCallback != null){
+                            onItemClickCallback.onItemClick();
+                        }
                         RecentAppHelper.launchApp(context,pkgName);
                     }
                 }else {
+                    if(onItemClickCallback != null){
+                        onItemClickCallback.onItemClick();
+                    }
                     RecentAppHelper.launchApp(context,pkgName);
                 }
             }
@@ -798,6 +818,9 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             //安装中不支持打断
             Log.d("MyAppInfoAdapter","doClick INSTALLING...");
         }else {
+            if(onItemClickCallback != null){
+                onItemClickCallback.onItemClick();
+            }
             RecentAppHelper.launchApp(context,pkgName);
         }
     }
@@ -1169,6 +1192,10 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
                 dialog.dismiss();
                 if(selectIv.isSelected()){
                     EventBus.getDefault().post(new NotRemindEvent(packageName,reverse3));
+                }
+
+                if(onItemClickCallback != null){
+                    onItemClickCallback.onItemClick();
                 }
                 RecentAppHelper.launchApp(context,packageName);
             }
