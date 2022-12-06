@@ -21,7 +21,6 @@ public class CardEditorResUtil {
                 break;
             case CardManager.CardType.WEATHER:
                 res = R.drawable.card_edit_logo_weather;
-                ;
                 break;
             case CardManager.CardType.PHONE:
                 res = R.drawable.card_edit_logo_phone;

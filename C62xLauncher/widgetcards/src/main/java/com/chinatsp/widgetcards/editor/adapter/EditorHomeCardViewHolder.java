@@ -40,6 +40,7 @@ public class EditorHomeCardViewHolder extends BaseViewHolder<LauncherCard> {
         } else {
             mIcon.setImageDrawable(null);
         }
+        itemView.setVisibility(View.VISIBLE);
         mIvBgEmpty.setVisibility(View.GONE);
     }
 }

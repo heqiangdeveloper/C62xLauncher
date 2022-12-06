@@ -261,7 +261,7 @@
 
         <TextView
             style="@style/CardLv2TextView"
-            android:layout_width="127px"
+            android:layout_width="300px"
             android:layout_height="46px"
             android:layout_marginTop="47px"
             android:text="@string/card_navi_msg_road_name"

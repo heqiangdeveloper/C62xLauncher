@@ -124,7 +124,7 @@ public class SmallCardViewHolder extends VolcanoViewHolder {
     public void onChangeSource(String source) {
         VolcanoSource volcanoSource = VolcanoSource.create(source);
         ivCardVolcanoSourceLogo.setImageResource(volcanoSource.getIconRes());
-        tvCardVolcanoSource.setText(volcanoSource.getName());
+        tvCardVolcanoSource.setText(volcanoSource.getNameRes());
     }
 
     @Override

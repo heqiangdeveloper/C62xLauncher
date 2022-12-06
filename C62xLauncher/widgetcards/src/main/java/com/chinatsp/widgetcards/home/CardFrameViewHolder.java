@@ -77,6 +77,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
         }
         EasyLog.d(TAG, "bind position:" + position + ", " + cardEntity.getName());
         itemView.setOnTouchListener(mOnTouchListener);
+        mTvCardName.setOnClickListener(mOnClickListener);
         ivCardTopSpace.setOnClickListener(mOnClickListener);
         itemView.setOnClickListener(v -> {
             EasyLog.d(TAG, "OnClickListener Launcher App......" + mLauncherCard.getName());
