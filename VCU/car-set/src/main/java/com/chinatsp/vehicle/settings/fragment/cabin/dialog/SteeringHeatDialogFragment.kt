@@ -105,6 +105,7 @@ class SteeringHeatDialogFragment :
                     Toast.showToast(context,
                         getString(R.string.cabin_wheel_automatic_heating_close),
                         true)
+                    binding.steeringHeatingStartTemperatureSeekBar.setValueNoEvent(binding.steeringHeatingStartTemperatureSeekBar.selectedNumber)
                 }
             }
         }

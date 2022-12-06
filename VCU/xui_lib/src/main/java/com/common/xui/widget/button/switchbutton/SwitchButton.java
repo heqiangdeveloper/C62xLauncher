@@ -589,7 +589,7 @@ public class SwitchButton extends CompoundButton {
         mPresentThumbRectF.set(mThumbRectF);
         mPresentThumbRectF.offset(mProgress * mSafeRectF.width(), 0);
         if (mIsThumbUseDrawable) {
-            mThumbDrawable.setBounds((int) mPresentThumbRectF.left, (int) mPresentThumbRectF.top, ceil(mPresentThumbRectF.right), ceil(mPresentThumbRectF.bottom));
+            mThumbDrawable.setBounds(((int) mPresentThumbRectF.left) + 3, (int) mPresentThumbRectF.top +3, ceil(mPresentThumbRectF.right) - 3, ceil(mPresentThumbRectF.bottom) - 3);
             mThumbDrawable.draw(canvas);
         } else {
             mPaint.setColor(mCurrThumbColor);
