@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">classify</string>
-    <string name="add">Add</string>
-    <string name="item_rename">Rename</string>
-    <string name="item_edit">Edit my app</string>
-</resources>

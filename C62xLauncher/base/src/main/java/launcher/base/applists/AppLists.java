@@ -48,6 +48,9 @@ public class AppLists {
     public static final String ota = "com.hmi.beic62.pc";//BEIJING OS,OTA升级用
 
     public static final String APPMANAGEMENT = "com.chinatsp.appmanagement";//应用管理，自定义的包名，实际不存在此应用
+    public static final String WelcomeAnimate = "com.android.welcome";//WelcomeAnimate
+    public static final String NEW_PAL_SERVER = "com.tencent.tai.pal.server.app";//NEW_PAL_SERVER
+    public static final String Communication = "com.uaes.iot";//Communication
     //不显示在桌面的应用名单
     public static List<String> blackListApps = Arrays.asList(
             aospSettings,
@@ -60,7 +63,10 @@ public class AppLists {
             avmDemo,
             carcorderdemo,
             b561Radio,
-            applet
+            applet,
+            WelcomeAnimate,
+            NEW_PAL_SERVER,
+            Communication
     );
 
     //不可删除的应用名单，其他的应用根据是否是系统应用来判断
@@ -172,9 +178,9 @@ public class AppLists {
             case easyconn:
                 resId = R.drawable.ic_app_yilian;
                 break;
-            case weather:
-                resId = R.drawable.ic_app_weather;
-                break;
+//            case weather:
+//                resId = R.drawable.ic_app_weather;
+//                break;
             default:
                 break;
         }
