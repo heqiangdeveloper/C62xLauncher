@@ -354,13 +354,13 @@ public class SmoothLineChartView extends View {
         if (mEnableShowTag && mSelectedNode != -1 && mSelectedNode < size) {
             final PointF point = mPoints.get(mSelectedNode);
             final float tagOffsetY = point.y - mTagBitmap.getHeight() * 1.5f;
-            if (mTagBitmap != null) {
+           /* if (mTagBitmap != null) {
                 if (tagOffsetY > 0) {
                     canvas.drawBitmap(mTagBitmap, point.x - mTagBitmap.getWidth() / 2, tagOffsetY, mPaint);
                 } else {
                     canvas.drawBitmap(mTagBitmapReverse, point.x - mTagBitmap.getWidth() / 2, point.y + mTagBitmap.getHeight() * 0.5f, mPaint);
                 }
-            }
+            }*/
             mPaint.setTextSize(DensityUtils.sp2px(mContext, mTextSize));
             mPaint.setStrokeWidth(0);
             mPaint.setColor(mTextColor);

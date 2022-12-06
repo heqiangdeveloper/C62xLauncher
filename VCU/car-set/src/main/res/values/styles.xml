@@ -161,7 +161,7 @@
         <item name="android:layout_width">@dimen/x114</item>
         <item name="android:layout_height">@dimen/x37</item>
         <item name="android:background">@drawable/normal_dialog_bg</item>
-        <item name="android:textColor">@color/pop_txt</item>
+        <item name="android:textColor">@color/xui_config_color_white</item>
         <item name="android:textSize">@dimen/text_14</item>
         <item name="android:gravity">center</item>
     </style>
