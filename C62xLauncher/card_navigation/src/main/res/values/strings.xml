@@ -30,5 +30,9 @@
     <string name="tbt_direct_u_turn_island_on_l">绕环岛掉头</string>
     <string name="tbt_direct_keep_left">靠左</string>
     <string name="tbt_direct_keep_right">靠右</string>
-    <string name="card_navi_msg_road_name">未知位置</string>
+    <string name="card_navi_unknown_road_name">未知位置</string>
+
+    <string name="tbt_info_distance_meter">米</string>
+    <string name="tbt_info_distance_kilometer">公里</string>
+    <string name="tbt_info_enter">进入</string>
 </resources>

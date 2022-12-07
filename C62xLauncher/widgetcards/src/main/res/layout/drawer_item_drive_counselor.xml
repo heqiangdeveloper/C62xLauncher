@@ -28,18 +28,6 @@
         android:layout_marginTop="16px"
         android:background="@drawable/drawer_drive_counselor_1_bg_selector"
         app:layout_constraintTop_toBottomOf="@id/tvTitle">
-
-        <TextView
-            style="@style/CardLv4TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="42px"
-            android:layout_marginStart="18px"
-            android:layout_marginTop="18px"
-            android:text="@string/drawer_consultant_evaluation"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
         <ImageView
             android:id="@+id/ivDrawerDriveHealthyText"
             style="@style/CardLv4TextView"
@@ -49,9 +37,7 @@
             android:layout_marginTop="60px"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-
             />
-
         <ImageView
             android:id="@+id/ivDrawerDriveHealthBottom"
             android:layout_width="420px"
@@ -59,9 +45,15 @@
             android:src="@drawable/drawer_drive_health_bottom_a"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
-
-
-
+        <TextView
+            style="@style/CardLv4TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="42px"
+            android:layout_marginStart="18px"
+            android:layout_marginTop="18px"
+            android:text="@string/drawer_consultant_evaluation"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

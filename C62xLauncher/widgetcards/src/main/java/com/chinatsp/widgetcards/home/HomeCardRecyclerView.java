@@ -53,6 +53,7 @@ public class HomeCardRecyclerView extends RecyclerView {
             boolean intercepted = false;
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN: {
+                    EasyLog.d("HomeCardRecyclerView", "onInterceptTouchEvent ACTION_DOWN");
                     mLastX = (int) event.getX();
                     mLastY = (int) event.getY();
                     super.onInterceptTouchEvent(event);
@@ -71,6 +72,7 @@ public class HomeCardRecyclerView extends RecyclerView {
                     break;
                 }
                 case MotionEvent.ACTION_UP: {
+                    EasyLog.d("HomeCardRecyclerView", "onInterceptTouchEvent ACTION_UP");
                     break;
                 }
             }
@@ -94,6 +96,7 @@ public class HomeCardRecyclerView extends RecyclerView {
         int action = event.getAction();
         switch (action) {
             case MotionEvent.ACTION_DOWN: {
+                EasyLog.d("HomeCardRecyclerView", "dispatchTouchEvent ACTION_DOWN");
                 if (!isShowingControlViews()) {
                     scheduleLongPress();
                 }
@@ -114,7 +117,11 @@ public class HomeCardRecyclerView extends RecyclerView {
                 break;
             }
             case MotionEvent.ACTION_CANCEL:
+                EasyLog.d("HomeCardRecyclerView", "dispatchTouchEvent ACTION_CANCEL");
+                removeLongPress();
+                break;
             case MotionEvent.ACTION_UP: {
+                EasyLog.d("HomeCardRecyclerView", "dispatchTouchEvent ACTION_UP");
                 removeLongPress();
                 break;
             }
