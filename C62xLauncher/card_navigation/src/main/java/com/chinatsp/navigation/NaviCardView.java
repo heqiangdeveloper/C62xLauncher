@@ -185,4 +185,16 @@ public class NaviCardView extends ConstraintLayout implements ICardStyleChange {
             mSmallCardHolder.refreshNaviLaneInfo(trafficLaneModel);
         }
     }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        mController.onAttach();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mController.onDetach();
+    }
 }
