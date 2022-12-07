@@ -7,12 +7,11 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
-import com.chinatsp.apppanel.AppConfigs.Constant;
-import com.chinatsp.apppanel.receiver.AppManagementReceiver;
 import com.chinatsp.carservice.AppCarService;
 import com.chinatsp.drawer.search.manager.SearchManager;
 import com.chinatsp.iquting.service.IqutingBindService;
 import com.chinatsp.iquting.service.TencentSdkService;
+import com.chinatsp.navigation.another.EasyConnNaviController;
 import com.chinatsp.navigation.repository.NaviRepository;
 import com.chinatsp.widgetcards.manager.CardManager;
 
@@ -34,7 +33,7 @@ public class LauncherApplication extends Application {
         initServices();
         // 发出本应用启动前台的广播
         sendLauncherBroadcast();
-        initGaoDeMap();
+        initNavigation();
     }
 
     private void initServices() {
@@ -95,7 +94,8 @@ public class LauncherApplication extends Application {
         registerReceiver(new ChangeSourceReceiver(),intentFilter);
     }
 
-    private void initGaoDeMap() {
+    private void initNavigation() {
         NaviRepository.getInstance().init(this);
+        EasyConnNaviController.getInstance().init(this);
     }
 }

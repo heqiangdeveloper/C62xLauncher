@@ -8,6 +8,7 @@ import android.provider.Settings;
 import android.text.TextUtils;
 
 import com.autonavi.autoaidlwidget.AutoAidlWidgetManager;
+import com.chinatsp.navigation.another.EasyConnNaviController;
 import com.chinatsp.navigation.gaode.bean.Address;
 import com.chinatsp.navigation.gaode.bean.GaoDeResponse;
 import com.chinatsp.navigation.gaode.bean.GuideInfo;
@@ -44,10 +45,20 @@ public class NaviController implements INaviCallback {
         Context context = view.getContext();
 
         initAidlWidgetManager(context);
-        mNaviRepository.registerDataCallback(mIRemoteDataCallback);
-        mNaviRepository.registerConnectListener(mConnectListener);
+
 //        NetworkStateReceiver.getInstance().registerObserver(mNetworkObserver);
 
+    }
+
+    void onAttach() {
+        mNaviRepository.registerDataCallback(mIRemoteDataCallback);
+        mNaviRepository.registerConnectListener(mConnectListener);
+        mView.refreshState(mState);
+    }
+
+    void onDetach() {
+        mNaviRepository.unregisterDataCallback(mIRemoteDataCallback);
+        mNaviRepository.unregisterConnectListener(mConnectListener);
     }
 
     private void checkNetwork() {
@@ -188,17 +199,23 @@ public class NaviController implements INaviCallback {
             return;
         }
         int autoStatus = mapStatus.getAutoStatus();
-        NavigationUtil.logD(TAG + "receiveMapStatus autoStatus:" + autoStatus);
         boolean needRefreshState = true;
         if (autoStatus == MapStatus.START_NAVIGATION) {
             mState = STATE_IN_NAVIGATION;
+            NavigationUtil.logI(TAG + "receiveMapStatus status start navigation");
+            EasyConnNaviController.getInstance().stopNavi();
         } else if (autoStatus == MapStatus.START_MOCK_NAVIGATION) {
             mState = STATE_IN_NAVIGATION_MOCK;
+            NavigationUtil.logI(TAG + "receiveMapStatus status start navigation (mock)");
+            EasyConnNaviController.getInstance().stopNavi();
         } else if (autoStatus == MapStatus.STOP_NAVIGATION) {
             mState = STATE_CRUISE;
+            NavigationUtil.logI(TAG + "receiveMapStatus status stop navigation");
         } else if (autoStatus == MapStatus.STOP_MOCK_NAVIGATION) {
             mState = STATE_CRUISE;
+            NavigationUtil.logI(TAG + "receiveMapStatus status stop navigation (mock)");
         } else {
+            NavigationUtil.logV(TAG + "receiveMapStatus status another:"+autoStatus);
             needRefreshState = false;
             if (autoStatus == MapStatus.MAP_STYLE_DAY || autoStatus == MapStatus.MAP_STYLE_NIGHT) {
                 dispatchDayNightModeChange(autoStatus);
