@@ -70,7 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="42px"
                 android:layout_marginLeft="6px"
-                android:text="米"
+                android:text="@string/tbt_info_distance_kilometer"
                 android:textColor="@color/card_grey_default"
                 app:layout_constraintBottom_toBottomOf="@id/tvCardNaviTBTDirectDistance"
                 app:layout_constraintStart_toEndOf="@id/tvCardNaviTBTDirectDistance" />
@@ -80,7 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="42px"
                 android:layout_marginLeft="5px"
-                android:text="进入"
+                android:text="@string/tbt_info_enter"
                 android:textColor="@color/card_grey_default"
                 app:layout_constraintBottom_toBottomOf="@id/tvCardNaviTBTDirectDistanceUnit"
                 app:layout_constraintStart_toEndOf="@id/tvCardNaviTBTDirectDistanceUnit" />
@@ -264,7 +264,7 @@
             android:layout_width="300px"
             android:layout_height="46px"
             android:layout_marginTop="47px"
-            android:text="@string/card_navi_msg_road_name"
+            android:text="@string/card_navi_unknown_road_name"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="@id/ivCardNaviArrow"
             app:layout_constraintStart_toStartOf="@id/ivCardNaviArrow"

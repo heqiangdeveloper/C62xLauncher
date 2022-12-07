@@ -17,8 +17,8 @@
     <string name="search_history">History search</string>
     <string name="drawer_name_common_recommend">Common recommend</string>
     <string name="card_state_no_content">no content</string>
-    <string name="drawer_consultant_evaluation">Vehicle evaluation</string>
-    <string name="drawer_consultant_economy_rank">Economy ranking</string>
+    <string name="drawer_consultant_evaluation">Vehicle Healthy Assessment</string>
+    <string name="drawer_consultant_economy_rank">Economic ranking</string>
     <string name="drawer_consultant_maintenance_mileage">Remain maintenance mileage</string>
     <string name="drawer_consultant_service_mileage_exceed">Service mileage exceeded</string>
 </resources>

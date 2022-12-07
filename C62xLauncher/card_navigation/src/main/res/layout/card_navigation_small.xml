@@ -68,7 +68,7 @@
         <TextView
             android:id="@+id/tvCardNaviMyLocation"
             style="@style/CardLv2TextView"
-            android:text="@string/card_navi_msg_road_name"
+            android:text="@string/card_navi_unknown_road_name"
             android:layout_width="300px"
             android:layout_height="wrap_content"
             android:layout_marginTop="38px"
@@ -105,7 +105,7 @@
         <TextView
             android:id="@+id/tvCardNaviRoadTip"
             style="@style/CardLv2TextView"
-            android:text="进入沙河西路"
+            android:text=""
             android:layout_width="wrap_content"
             android:layout_height="46px"
             app:layout_constraintEnd_toEndOf="@id/ivCardNaviInstruction"

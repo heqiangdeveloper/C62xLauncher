@@ -201,7 +201,7 @@ public class NaviBigCardHolder extends NaviCardHolder {
      * 更新导航整体信息: 总里程, 总耗时, 达到时间
      */
     private void updateOverallRouteInfo(GuideInfo guideInfo) {
-        tvCardNaviTBTRemainDistance.setText(NavigationUtil.getReadableDistanceKM(guideInfo.getRouteRemainDis()));
+        tvCardNaviTBTRemainDistance.setText(NavigationUtil.getReadableDistanceKM(guideInfo.getRouteRemainDis(), mContext.getResources()));
         tvCardNaviTBTRemainTime.setText(NavigationUtil.getReadableRemainTime(guideInfo.getRouteRemainTime()));
         tvCardNaviTBTArriveTime.setText(guideInfo.getEtaText());
     }
@@ -236,9 +236,9 @@ public class NaviBigCardHolder extends NaviCardHolder {
         int distance = Math.max(segRemainDis, 0);
         if (distance < 1000) {
             tvCardNaviTBTDirectDistance.setText(String.valueOf(distance));
-            tvCardNaviTBTDirectDistanceUnit.setText("米");
+            tvCardNaviTBTDirectDistanceUnit.setText(R.string.tbt_info_distance_meter);
         } else {
-            tvCardNaviTBTDirectDistanceUnit.setText("公里");
+            tvCardNaviTBTDirectDistanceUnit.setText(R.string.tbt_info_distance_kilometer);
             float km = (float) distance / 1000f;
             if (distance > 10000) {
                 // 10 公里

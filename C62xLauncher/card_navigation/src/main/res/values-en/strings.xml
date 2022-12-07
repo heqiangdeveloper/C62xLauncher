@@ -3,12 +3,12 @@
     <string name="tbt_direct_my_auto">Own vehicle</string>
     <string name="tbt_direct_turn_left">Turn left</string>
     <string name="tbt_direct_turn_right">Turn right</string>
-    <string name="tbt_direct_left_forward">Front left</string>
-    <string name="tbt_direct_right_forward">Front right</string>
-    <string name="tbt_direct_left_backward">Left rear</string>
-    <string name="tbt_direct_right_backward">Right rear</string>
-    <string name="tbt_direct_left_u_turn">Turn left around</string>
-    <string name="tbt_direct_straight_ahead">Straight</string>
+    <string name="tbt_direct_left_forward">Front-left</string>
+    <string name="tbt_direct_right_forward">Front-right</string>
+    <string name="tbt_direct_left_backward">Rear-left</string>
+    <string name="tbt_direct_right_backward">Rear-right</string>
+    <string name="tbt_direct_left_u_turn">Turn-left and around</string>
+    <string name="tbt_direct_straight_ahead">Go straight</string>
     <string name="tbt_direct_arrive_poi">Arrival waypoint</string>
     <string name="tbt_direct_enter_island_on_r">Enter the roundabout and pass along the right side</string>
     <string name="tbt_direct_exit_island_on_r">Driving out of the roundabout</string>
@@ -18,7 +18,7 @@
     <string name="tbt_direct_enter_tunnel">Access tunnel</string>
     <string name="tbt_direct_enter_island_on_l">Enter the roundabout and pass along the left side</string>
     <string name="tbt_direct_exit_island_on_l">Driving out of the roundabout</string>
-    <string name="tbt_direct_right_u_turn">Turn right and turn around</string>
+    <string name="tbt_direct_right_u_turn">Turn right and around</string>
     <string name="tbt_direct_long_straight">Anterograde</string>
     <string name="tbt_direct_turn_left_island_on_r">Turn left around the roundabout</string>
     <string name="tbt_direct_turn_right_island_on_r">Turn right around the roundabout</string>
@@ -30,5 +30,9 @@
     <string name="tbt_direct_u_turn_island_on_l">Turn right around the roundabout</string>
     <string name="tbt_direct_keep_left">Keep left</string>
     <string name="tbt_direct_keep_right">Keep right</string>
-    <string name="card_navi_msg_road_name">The unknown way</string>
+    <string name="card_navi_unknown_road_name">The unknown way</string>
+
+    <string name="tbt_info_distance_kilometer">公里</string>
+    <string name="tbt_info_distance_meter">meters</string>
+    <string name="tbt_info_enter">enter</string>
 </resources>

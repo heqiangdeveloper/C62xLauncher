@@ -1,6 +1,6 @@
 package com.chinatsp.navigation;
 
-import java.util.Locale;
+import android.content.res.Resources;
 
 import launcher.base.utils.EasyLog;
 
@@ -29,15 +29,16 @@ public class NavigationUtil {
     /**
      * 超过1km, 用公里, 否则用米
      * @param distanceInMetres
+     * @param resource
      * @return
      */
-    public static String getReadableDistanceKM(int distanceInMetres) {
+    public static String getReadableDistanceKM(int distanceInMetres, Resources resource) {
         int distance = Math.max(distanceInMetres, 0);
         String result;
         if (distance < 1000) {
-            result = distanceInMetres + "米";
+            result = distanceInMetres + " " + resource.getString(R.string.tbt_info_distance_meter);
         } else {
-            result = distanceInMetres / 1000 + "km";
+            result = distanceInMetres / 1000 + " "+resource.getString(R.string.tbt_info_distance_kilometer);
         }
         return result;
     }

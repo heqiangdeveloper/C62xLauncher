@@ -162,12 +162,12 @@ public class NaviController implements INaviCallback {
         if (roadInfo != null) {
             roadName = roadInfo.getCurRoadName();
             if (TextUtils.isEmpty(roadName)) {
-                roadName = mView.getContext().getString(R.string.card_navi_msg_road_name);
+                roadName = mView.getContext().getString(R.string.card_navi_unknown_road_name);
             } else {
                 unknownLocation = false;
             }
         } else {
-            roadName = mView.getContext().getString(R.string.card_navi_msg_road_name);
+            roadName = mView.getContext().getString(R.string.card_navi_unknown_road_name);
         }
         mView.refreshMyLocation(roadName, unknownLocation);
     }
