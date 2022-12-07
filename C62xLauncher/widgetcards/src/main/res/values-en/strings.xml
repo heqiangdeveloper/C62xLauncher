@@ -15,7 +15,7 @@
     <string name="search_content_number">The search content cannot exceed 29 characters</string>
     <string name="search_content_not">No search result. Please re-enter the search term</string>
     <string name="search_history">History search</string>
-    <string name="drawer_name_common_recommend">Common recommend</string>
+    <string name="drawer_name_common_recommend">Common recommendations</string>
     <string name="card_state_no_content">no content</string>
     <string name="drawer_consultant_evaluation">Vehicle Healthy Assessment</string>
     <string name="drawer_consultant_economy_rank">Economic ranking</string>
