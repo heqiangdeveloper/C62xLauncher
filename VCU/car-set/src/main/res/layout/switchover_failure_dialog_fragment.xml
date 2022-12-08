@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_sound_popup_20"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/x20"
+        android:paddingBottom="@dimen/x20">
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/details_title"
+            style="@style/dialog_title"
+            android:text="@string/drive_close_brake" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/details_content"
+            style="@style/txt_prompt_style"
+            android:layout_width="match_parent"
+            android:layout_marginStart="@dimen/x44"
+            android:layout_marginEnd="@dimen/x20"
+            android:gravity="start"
+            android:lineSpacingExtra="@dimen/x8"
+            android:padding="@dimen/x10"
+            android:text="@string/iacc_details"
+            android:textAlignment="textStart"
+            android:textSize="@dimen/text_14" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/hint_conform"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/lighting_dialog_txt"
+            android:gravity="center"
+            android:text="@string/drive_agree"
+            android:textColor="@color/xui_config_color_white"
+            android:textSize="@dimen/text_14" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>

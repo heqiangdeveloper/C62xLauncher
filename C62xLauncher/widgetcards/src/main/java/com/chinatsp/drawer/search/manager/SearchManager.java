@@ -33,6 +33,9 @@ public class SearchManager {
     private static final String carcorderdemo = "com.mediatek.carcorderdemo";//Carcorder Demo
     private static final String b561Radio = "com.oushang.radio";//b561 Radio
     private static final String applet = "com.iflytek.autofly.applet";//语助业务app
+    public static final String WelcomeAnimate = "com.android.welcome";//WelcomeAnimate
+    public static final String NEW_PAL_SERVER = "com.tencent.tai.pal.server.app";//NEW_PAL_SERVER
+    public static final String Communication = "com.uaes.iot";//Communication
 
     private static class Holder {
         public static SearchManager manager = new SearchManager();
@@ -104,7 +107,10 @@ public class SearchManager {
             avmDemo,
             carcorderdemo,
             b561Radio,
-            applet
+            applet,
+            WelcomeAnimate,
+            NEW_PAL_SERVER,
+            Communication
     );
 
     /**

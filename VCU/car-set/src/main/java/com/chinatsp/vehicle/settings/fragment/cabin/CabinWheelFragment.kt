@@ -16,12 +16,11 @@ import com.chinatsp.vehicle.settings.HintHold
 import com.chinatsp.vehicle.settings.IOptionAction
 import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
-import com.chinatsp.vehicle.settings.app.Toast
 import com.chinatsp.vehicle.settings.databinding.CabinWhellFragmentBinding
 import com.chinatsp.vehicle.settings.fragment.cabin.dialog.ConversionDialogFragment
 import com.chinatsp.vehicle.settings.fragment.cabin.dialog.SteeringHeatDialogFragment
 import com.chinatsp.vehicle.settings.fragment.cabin.dialog.SteeringKeysDialogFragment
-import com.chinatsp.vehicle.settings.fragment.drive.dialog.DetailsDialogFragment
+import com.chinatsp.vehicle.settings.fragment.drive.dialog.SwitchoverFailureDialogFragment
 import com.chinatsp.vehicle.settings.vm.cabin.SteeringViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.utils.ResUtils
@@ -110,7 +109,7 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
     private fun showHintDialog(title: Int, content: Int, retract: Boolean = true) {
         HintHold.setTitle(title)
         HintHold.setContent(content)
-        val fragment = DetailsDialogFragment()
+        val fragment = SwitchoverFailureDialogFragment()
         fragment.retract = retract
         activity?.supportFragmentManager?.let {
             fragment.show(it, fragment.javaClass.simpleName)
