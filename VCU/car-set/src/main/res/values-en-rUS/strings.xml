@@ -61,7 +61,7 @@
     <string name="cabin_safe_video_safe_mode_content">After the video safety mode is enabled, when the \n vehicle speed is more than 15km/h, the local video \n will be automatically closed。</string>
 
     <string name="cabin_wheel_electronic_mode">Electronic power steering mode</string>
-    <string name="cabin_wheel_press_key">Steering wheel custom buttons</string>
+    <string name="cabin_wheel_press_key">Steering wheel customization buttons</string>
     <string name="cabin_wheel_custom_button">Steering wheel customization button</string>
     <string name="cabin_wheel_press_key_tv">Privacy mode</string>
     <string name="cabin_wheel_automatic_heating">Steering wheel self heating</string>
