@@ -198,7 +198,7 @@
 
     <!-- TabControlView-->
     <dimen name="default_tcv_text_size">14sp</dimen>
-    <dimen name="default_tcv_text_size_line">24sp</dimen>
+    <dimen name="default_tcv_text_size_line">25sp</dimen>
     <dimen name="default_tcv_stroke_width">1dp</dimen>
 
     <!--ProgressView-->

@@ -44,7 +44,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
 //            doUpdateSwitchValue(node, this, result)
 //        }
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
     private val huaweiAtomic: SwitchState by lazy {
@@ -54,7 +54,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
 //            doUpdateSwitchValue(node, this, result)
 //        }
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
@@ -65,7 +65,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
 //            doUpdateSwitchValue(node, this, result)
 //        }
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
@@ -76,7 +76,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
 //            doUpdateSwitchValue(node, this, result)
 //        }
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
@@ -87,7 +87,7 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
 //            doUpdateSwitchValue(node, this, result)
 //        }
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
@@ -255,12 +255,12 @@ class EffectManager private constructor() : BaseManager(), ISoundManager {
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
         return when (node) {
             RadioNode.SYSTEM_SOUND_EFFECT -> {
-                Timber.d("doSetRadioOption SYSTEM_SOUND_EFFECT value:$value")
                 val result = doUpdateSoundEffect(node, value)
+                Timber.d("doSetRadioOption SYSTEM_SOUND_EFFECT value:$value, result:$result")
                 if (result) {
                     val get = node.obtainSelectValue(value, isGet = false)
-                    eqMode.set(get)
-                    doUpdateRadioValue(node, eqMode, value, this::doOptionChanged)
+//                    eqMode.set(get)
+                    doUpdateRadioValue(node, eqMode, get, this::doOptionChanged)
                 }
                 result
             }

@@ -36,7 +36,7 @@ class CruiseManager : BaseManager(), IOptionManager {
 //            doUpdateSwitchValue(node, this, value)
 //        }
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
@@ -48,7 +48,7 @@ class CruiseManager : BaseManager(), IOptionManager {
 //            doUpdateSwitchValue(node, this, value)
 //        }
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 

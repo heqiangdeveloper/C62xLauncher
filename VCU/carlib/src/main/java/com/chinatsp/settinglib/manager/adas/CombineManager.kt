@@ -35,7 +35,7 @@ class CombineManager : BaseManager(), ISwitchManager {
 //            doUpdateSwitchValue(node, this, result)
 //        }
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
@@ -46,7 +46,7 @@ class CombineManager : BaseManager(), ISwitchManager {
 //            doUpdateSwitchValue(node, this, result)
 //        }
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 

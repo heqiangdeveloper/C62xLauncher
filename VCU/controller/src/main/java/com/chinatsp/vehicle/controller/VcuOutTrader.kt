@@ -14,7 +14,7 @@ import android.text.TextUtils
 import com.chinatsp.vehicle.controller.bean.BaseCmd
 import com.chinatsp.vehicle.controller.semantic.CmdVoiceModel
 import com.chinatsp.vehicle.controller.semantic.GsonUtil
-import com.chinatsp.vehicle.controller.semantic.NlpVoiceModel
+import com.chinatsp.vehicle.controller.semantic.VoiceModel
 import com.chinatsp.vehicle.controller.semantic.VoiceJson
 import com.iflytek.autofly.voicecore.tts.TtsUtil
 import org.json.JSONObject
@@ -86,7 +86,7 @@ class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback, 
         message.sendToTarget()
     }
 
-    private fun onSrAction(nlpVoiceModel: NlpVoiceModel?) {
+    private fun onSrAction(nlpVoiceModel: VoiceModel?) {
         nlpVoiceModel?.let {
             val message = handler.obtainMessage(WHAT_SR_ACTION)
             message.obj = nlpVoiceModel
@@ -164,7 +164,7 @@ class VcuOutTrader private constructor() : ServiceConnection, Handler.Callback, 
     }
 
     private fun doHandleSrAction(obj: Any?) {
-        if (obj !is NlpVoiceModel) {
+        if (obj !is VoiceModel) {
             LogManager.e("", "obj is not NlpVoiceModel")
 //            defaultHandleSpeech()
             return

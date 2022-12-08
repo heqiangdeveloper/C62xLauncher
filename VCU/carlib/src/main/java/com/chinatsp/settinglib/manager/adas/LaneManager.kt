@@ -71,7 +71,7 @@ class LaneManager : BaseManager(), IOptionManager {
 //            doUpdateSwitchValue(node, this, value)
 //        }
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
@@ -127,28 +127,19 @@ class LaneManager : BaseManager(), IOptionManager {
         return when (node) {
             RadioNode.ADAS_LANE_ASSIST_MODE -> {
                 val result = node.isValid(value, false) && writeProperty(
-                    node.set.signal,
-                    value,
-                    node.set.origin
-                )
+                    node.set.signal, value, node.set.origin)
                 takeIf { result }?.doUpdateRadioValue(node, laneAssistMode, value)
                 result
             }
             RadioNode.ADAS_LDW_STYLE -> {
                 val result = node.isValid(value, false) && writeProperty(
-                    node.set.signal,
-                    value,
-                    node.set.origin
-                )
+                    node.set.signal, value, node.set.origin)
                 takeIf { result }?.doUpdateRadioValue(node, ldwWarningStyle, value)
                 result
             }
             RadioNode.ADAS_LDW_SENSITIVITY -> {
                 val result = node.isValid(value, false) && writeProperty(
-                    node.set.signal,
-                    value,
-                    node.set.origin
-                )
+                    node.set.signal, value, node.set.origin)
                 takeIf { result }?.doUpdateRadioValue(node, ldwWarningSensitivity, value)
                 result
             }
@@ -182,7 +173,7 @@ class LaneManager : BaseManager(), IOptionManager {
             try {
                 writeLock.lock()
                 unRegisterVcuListener(serial, identity)
-                listenerStore.put(serial, WeakReference(listener))
+                listenerStore[serial] = WeakReference(listener)
             } finally {
                 writeLock.unlock()
             }

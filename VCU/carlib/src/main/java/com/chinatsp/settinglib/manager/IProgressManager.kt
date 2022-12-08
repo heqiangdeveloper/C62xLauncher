@@ -35,14 +35,12 @@ interface IProgressManager : IManager {
     ): AtomicInteger {
         val isValid = node.isValid(value)
         val isEqual = value == atomic.get()
-        if (isValid && !isEqual) {
+        val isChange = isValid && !isEqual
+        if (!isChange) {
+            Timber.e("progress node:$node, value:$value, isValid:$isValid, equal:$isEqual")
+        } else {
             atomic.set(value)
             block?.let { it(node, value) }
-        } else {
-            Timber.e(
-                "doUpdateProgress node:$node, value:$value" +
-                        " isValid:$isValid, isEqual:$isEqual"
-            )
         }
         return atomic
     }

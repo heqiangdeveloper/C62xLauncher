@@ -83,7 +83,7 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
 //            doUpdateSwitchValue(node, this, value)
 //        }
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
@@ -114,7 +114,7 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
 //            doUpdateSwitchValue(node, this, value)
 //        }
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
@@ -125,7 +125,7 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
 //            doUpdateSwitchValue(node, this, value)
 //        }
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
     private val loudnessAtomic: SwitchState by lazy {
@@ -135,7 +135,7 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
 //            doUpdateSwitchValue(node, this, value)
 //        }
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
@@ -274,20 +274,21 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
             volumeSpeedSwitch.get.signal -> {
                 val value = property.value
                 if (value is Array<*> && value.size >= 15) {
-                    onSwitchChanged(volumeSpeedSwitch, offsetAtomic, value[14])
+                    updateVolumeFollowSpeedSwitch(value[14])
                 }
             }
             else -> {}
         }
     }
 
-    fun onSwitchChanged(node: SwitchNode, atomic: SwitchState, value: Any?) {
+    private fun updateVolumeFollowSpeedSwitch(value: Any?) {
         if (value !is Int) {
-            Timber.e("onSwitchChanged but value is not Int! node:$node, value:$value")
+            Timber.e("updateVolumeFollowSpeedSwitch but value is not Int!")
             return
         }
-        Timber.d("doSwitchChanged node:$node, value:$value, status:${node.isOn(value)}")
-        onSwitchChanged(node, atomic, value, this::doUpdateSwitchValue, this::doSwitchChanged)
+        val node = volumeSpeedSwitch
+        val atomic = offsetAtomic
+        onSwitchChanged(node, atomic, value, this::doUpdateSwitch, this::doSwitchChanged)
     }
 
     private fun initVolume(type: Progress): Volume {
@@ -514,7 +515,7 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
                     val expect = if (status) node.set.on else node.set.off
                     it.beepLevel = expect
                     val actual = it.beepLevel
-                    doUpdateSwitchValue(node, touchTone, actual, null)
+                    doUpdateSwitch(node, touchTone, actual, null)
                     Timber.d("doActionSignal SET node:$node, status:$status, expect:$expect, actual:$actual")
                     return@let actual == expect
                 } ?: false

@@ -31,8 +31,8 @@ class AmbientLightingFragment :
     BaseFragment<AmbientLightingViewModel, LightingAtmosphereFragmentBinding>(),
     ColorPickerView.OnColorPickerChangeListener, ISwitchAction {
 
-    var modeFragment: DialogFragment? = null
-    var settingFragment: DialogFragment? = null
+    private var modeFragment: DialogFragment? = null
+    private var settingFragment: DialogFragment? = null
 
     private val map: HashMap<Int, View> = HashMap()
     private val colorList: List<Color> = Applet.getLampSupportColor()

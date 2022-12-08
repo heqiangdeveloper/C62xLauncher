@@ -1,9 +1,11 @@
 package com.chinatsp.settinglib.service
 
 import android.app.Service
+import android.content.ComponentName
 import android.content.Intent
 import android.os.IBinder
 import android.text.TextUtils
+import com.chinatsp.settinglib.BaseApp
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.GlobalManager
@@ -17,6 +19,7 @@ import com.chinatsp.vehicle.controller.IDataResolver
 import com.chinatsp.vehicle.controller.IOuterController
 import com.chinatsp.vehicle.controller.bean.AirCmd
 import com.chinatsp.vehicle.controller.bean.CarCmd
+import com.chinatsp.vehicle.controller.utils.Keywords
 import org.json.JSONObject
 import timber.log.Timber
 
@@ -167,16 +170,6 @@ class VehicleService : Service() {
 
             } else if ("com.chinatsp.vcu.actions.ACOUSTIC_CONTROLER" == action) {
                 controller.doParseSourceData(data)
-                try {
-                    val intent = Intent("com.chinatsp.systemui.interface")
-                    intent.setPackage("com.android.systemui")
-                    intent.putExtra("operation", "voice")
-                    intent.putExtra("semantics", data)
-                    startService(intent)
-//                    Log.i("operation", )
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
             } else {
                 Timber.d("解析失败")
             }
@@ -198,6 +191,25 @@ class VehicleService : Service() {
 
         override fun doCarControlCommand(cmd: CarCmd, callback: ICmdCallback?) {
             GlobalManager.instance.doCarControlCommand(cmd, callback)
+        }
+
+        override fun doTransmitSemantic(service: Int, semantic: String?) {
+            Timber.d("doTransmitSemantic id:$service, json:$semantic")
+            if (Keywords.APA_SERVICE == service) {
+                val intent = Intent()
+                val packageName = "com.haibing.apaparking"
+                val serviceName = "com.haibing.apaparking.service.ApaParkingService"
+                intent.component = ComponentName(packageName, serviceName)
+                intent.putExtra("data", semantic)
+                startService(intent)
+            } else if (Keywords.SCENE_SERVICE == service) {
+                val intent = Intent("com.chinatsp.systemui.interface")
+                intent.setPackage("com.android.systemui")
+                intent.putExtra("operation", "voice")
+                intent.putExtra("from", "com.chinatsp.vehicle.settings")
+                intent.putExtra("semantics", semantic)
+                startService(intent)
+            }
         }
 
         override fun isEngineStatus(packageName: String?): Boolean {

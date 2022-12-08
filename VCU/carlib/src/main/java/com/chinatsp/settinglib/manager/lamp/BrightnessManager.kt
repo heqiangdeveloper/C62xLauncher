@@ -83,14 +83,14 @@ class BrightnessManager : BaseManager(), IProgressManager, ISwitchManager {
     private val lightAutoMode: SwitchState by lazy {
         val node = SwitchNode.LIGHT_AUTO_MODE
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val darkLightMode: SwitchState by lazy {
         val node = SwitchNode.DARK_LIGHT_MODE
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 

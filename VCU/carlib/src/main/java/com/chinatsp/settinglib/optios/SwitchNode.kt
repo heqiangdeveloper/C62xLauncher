@@ -81,7 +81,11 @@ enum class SwitchNode(
             signal = CarHvacManager.ID_HVAC_AVN_KEY_DEFROST),
         inactive = intArrayOf(0x3),
         default = false
-    ),
+    ) {
+        override fun isInvalid(value: Int): Boolean {
+            return value == 0x3
+        }
+    },
 
     /**
      * 座舱--空调--预通风功能
@@ -188,7 +192,11 @@ enum class SwitchNode(
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_LOU_PWR_MNG_SWT),
         inactive = intArrayOf(0x1, 0x2, 0x3),
         default = false
-    ),
+    ) {
+        override fun isInvalid(value: Int): Boolean {
+            return value == 0x1 || value == 0x2 || value == 0x3
+        }
+    },
 
     /**
      * 座舱--其它--无线充电
@@ -285,7 +293,16 @@ enum class SwitchNode(
             CarAudioManager.BEEP_VOLUME_LEVEL_LOW, CarAudioManager.BEEP_VOLUME_LEVEL_HIGH),
         default = false,
         careOn = false
-    ),
+    ) {
+        override fun isOn(value: Int): Boolean {
+            return value != get.off
+        }
+
+        override fun isInvalid(value: Int): Boolean {
+            return value == CarAudioManager.BEEP_VOLUME_LEVEL_LOW
+                    || value == CarAudioManager.BEEP_VOLUME_LEVEL_HIGH
+        }
+    },
 
     //----------------车辆音效 结束--------------
 
@@ -313,7 +330,11 @@ enum class SwitchNode(
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_REMOTE_WINDOW_RISE_FALL_SW),
         inactive = intArrayOf(0x3),
         default = false
-    ),
+    ) {
+        override fun isInvalid(value: Int): Boolean {
+            return value == 0x3
+        }
+    },
 
     /**
      * 车门车窗--车窗--雨天自动关窗 (状态下发)
@@ -350,7 +371,11 @@ enum class SwitchNode(
         set = Norm(on = 0x2, off = 0x3, signal = CarCabinManager.ID_FRONT_WIPER_MAINTENNANCE_SW),
         inactive = intArrayOf(0x0, 0x3),
         default = false
-    ),
+    ) {
+        override fun isInvalid(value: Int): Boolean {
+            return value == 0x0 || value == 0x3
+        }
+    },
 
     /**
      * 车门车窗--电动尾门--电动尾门电动功能
@@ -535,7 +560,15 @@ enum class SwitchNode(
         inactive = intArrayOf(0x4, 0x5, 0x6, 0x7),
         default = true,
         careOn = false
-    ),
+    ) {
+        override fun isOn(value: Int): Boolean {
+            return value == 0x1 || value == 0x2 || value == 0x3
+        }
+
+        override fun isInvalid(value: Int): Boolean {
+            return value == 0x4 || value == 0x5 || value == 0x6 || value == 0x7
+        }
+    },
 
     /**
      * 驾驶辅助--灯光辅助--智能远光灯辅助 HMA
@@ -554,8 +587,17 @@ enum class SwitchNode(
         default = false,
         careOn = false
     ) {
+
+        override fun isOn(value: Int): Boolean {
+            return value == 0x1 || value == 0x2
+        }
+
         override fun isPopWindow(value: Int): Boolean {
             return 0x3 == value
+        }
+
+        override fun isInvalid(value: Int): Boolean {
+            return value == 0x3 || value == 0x4 || value == 0x5 || value == 0x6 || value == 0x7
         }
     },
 
@@ -569,8 +611,8 @@ enum class SwitchNode(
      * set -> DOW开关  0x0: Inactive; 0x1: ON; 0x2: OFF; 0x3: Invalid
      */
     ADAS_DOW(
-//        get = Norm(on = 0x3, off = 0x1, signal = CarCabinManager.ID_AVM_DOW_STS),
-        get = Norm(on = 0x3, off = 0x1, signal = -1),
+        get = Norm(on = 0x3, off = 0x1, signal = CarCabinManager.ID_AVM_DOW_STS),
+//        get = Norm(on = 0x3, off = 0x1, signal = -1),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_APA_AVM_DOW_SWT),
         inactive = intArrayOf(0x0, 0x4, 0x5, 0x6),
         default = true,
@@ -580,9 +622,14 @@ enum class SwitchNode(
             return 0x2 == value || 0x3 == value
         }
 
-        override fun isActive(value: Int): Boolean {
+        override fun isValid(value: Int): Boolean {
             return 0x1 == value || 0x2 == value || 0x3 == value
         }
+
+        override fun isInvalid(value: Int): Boolean {
+            return value == 0x0 || value == 0x4 || value == 0x5 || value == 0x6
+        }
+
         override fun isPopWindow(value: Int): Boolean {
             return 0x4 == value
         }
@@ -603,7 +650,11 @@ enum class SwitchNode(
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_APA_BSD_SWT),
         inactive = intArrayOf(0x3),
         default = true
-    ),
+    ) {
+        override fun isInvalid(value: Int): Boolean {
+            return value == 0x3
+        }
+    },
 
     /**
      * 驾驶辅助--侧后辅助--盲区摄像头
@@ -615,7 +666,11 @@ enum class SwitchNode(
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_APA_BSD_DISP_SWT),
         inactive = intArrayOf(0x3),
         default = true
-    ),
+    ) {
+        override fun isInvalid(value: Int): Boolean {
+            return value == 0x3
+        }
+    },
 
     /**
      * get -> MEB switch status 对应HUMMEB功能开关信号
@@ -627,7 +682,11 @@ enum class SwitchNode(
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_APA_MEB_SWT),
         inactive = intArrayOf(0x3),
         default = true
-    ),
+    ) {
+        override fun isInvalid(value: Int): Boolean {
+            return value == 0x3
+        }
+    },
 
     /**
      * 驾驶辅助--侧后辅助--辅助线
@@ -839,7 +898,7 @@ enum class SwitchNode(
         set = Norm(on = 0x1, off = 0x2, signal = -1),
         default = false
     ) {
-        override fun isActive(value: Int): Boolean {
+        override fun isValid(value: Int): Boolean {
 //            return value in 0..3
             return value == 0x0 || value == 0x2 || value == 0x3
         }
@@ -884,7 +943,7 @@ enum class SwitchNode(
             signal = CarCabinManager.ID_LOCK_SUCCESS_SOUND_SET),//LOCK_SUCCESS_SOUND
         default = true
     ) {
-        override fun isInactive(value: Int): Boolean {
+        override fun isInvalid(value: Int): Boolean {
             return value == 0x3
         }
     },
@@ -901,7 +960,7 @@ enum class SwitchNode(
             signal = CarCabinManager.ID_LOCK_FAILED_SOUND_SET),//LOCK_FAILED_SOUND
         default = true
     ) {
-        override fun isInactive(value: Int): Boolean {
+        override fun isInvalid(value: Int): Boolean {
             return value == 0x3
         }
     },
@@ -922,9 +981,13 @@ enum class SwitchNode(
 
 //    fun isValid(value: Int) = isActive(value) or isInactive(value)
 
-    open fun isActive(value: Int) = (get.on == value) or (get.off == value)
+    open fun isValid(value: Int) = (get.on == value) or (get.off == value)
 
-    open fun isInactive(value: Int) = inactive?.contains(value) ?: false
+    /**
+     * 判断传入值是否为需要置灰功能项
+     */
+//    open fun isInvalid(value: Int) = inactive?.contains(value) ?: false
+    open fun isInvalid(value: Int) = false
 
     open fun isOn(value: Int) = if (careOn) get.on == value else get.off != value
 

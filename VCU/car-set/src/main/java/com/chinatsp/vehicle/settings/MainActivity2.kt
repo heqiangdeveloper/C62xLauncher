@@ -52,7 +52,6 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
 
     override fun initData(savedInstanceState: Bundle?) {
         initTabLayout()
-        Timber.e("initData-------")
         checkOutRoute(intent)
         observeLocation()
         registerController()
@@ -88,7 +87,6 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        Timber.e("onNewIntent-------")
         checkOutRoute(intent)
     }
 

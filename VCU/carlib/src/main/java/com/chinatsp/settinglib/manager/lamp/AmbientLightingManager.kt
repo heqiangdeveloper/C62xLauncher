@@ -68,76 +68,76 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
     private val alcDoorHint: SwitchState by lazy {
         val node = SwitchNode.ALC_DOOR_HINT
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
     private val alcLockHint: SwitchState by lazy {
         val node = SwitchNode.ALC_LOCK_HINT
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val alcBreatheHint: SwitchState by lazy {
         val node = SwitchNode.ALC_BREATHE_HINT
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val alcComingHint: SwitchState by lazy {
         val node = SwitchNode.ALC_COMING_HINT
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val alcRelatedTopics: SwitchState by lazy {
         val node = SwitchNode.ALC_RELATED_TOPICS
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val frontLighting: SwitchState by lazy {
         val node = SwitchNode.FRONT_AMBIENT_LIGHTING
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val backLighting: SwitchState by lazy {
         val node = SwitchNode.BACK_AMBIENT_LIGHTING
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val alcSmartMode: SwitchState by lazy {
         val node = SwitchNode.ALC_SMART_MODE
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val speedRhythm: SwitchState by lazy {
         val node = SwitchNode.SPEED_RHYTHM
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val musicRhythm: SwitchState by lazy {
         val node = SwitchNode.MUSIC_RHYTHM
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val colourBreathe: SwitchState by lazy {
         val node = SwitchNode.COLOUR_BREATHE
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
@@ -342,7 +342,7 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
     private fun writeProperty(node: SwitchNode, value: Boolean, atomic: SwitchState): Boolean {
         val success = writeProperty(node.set.signal, node.value(value), node.set.origin)
         if (success && develop) {
-            doUpdateSwitchValue(node, atomic, value) { _node, _value ->
+            doUpdateSwitch(node, atomic, value) { _node, _value ->
                 doSwitchChanged(_node, _value)
             }
         }

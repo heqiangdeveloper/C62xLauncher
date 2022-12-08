@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
+import com.chinatsp.settinglib.BaseApp
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IRadioManager
@@ -33,7 +34,6 @@ import com.common.xui.widget.smooth.SmoothLineChartView
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
-import java.util.*
 import kotlin.properties.Delegates
 
 @AndroidEntryPoint
@@ -357,27 +357,24 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
     }
 
     private fun initSmoothLineData() {
-        if (VcuUtils.isAmplifier) {
-            xValue = listOf(
-                activity?.resources?.getString(R.string.treble),
-                activity?.resources?.getString(R.string.medium_treble),
-                activity?.resources?.getString(R.string.medium),
-                activity?.resources?.getString(R.string.medium_bass),
-                activity?.resources?.getString(R.string.bass)
-            ) as List<String>
-        } else {
-            xValue = listOf(
-                activity?.resources?.getString(R.string.sixty_five),
-                activity?.resources?.getString(R.string.two_hundred_fifty),
-                activity?.resources?.getString(R.string.seven_hundred_fifty),
-                activity?.resources?.getString(R.string.one_thousand_three_hundred),
-                activity?.resources?.getString(R.string.two_thousand_three_hundred),
-                activity?.resources?.getString(R.string.three_thousand_five_hundred),
-                activity?.resources?.getString(R.string.six_thousand_five_hundred),
-                activity?.resources?.getString(R.string.eight_thousand_five_hundred),
-                activity?.resources?.getString(R.string.eighteen_thousand)
-            ) as List<String>
-        }
+        val resources = BaseApp.instance.resources
+        xValue = if (VcuUtils.isAmplifier) listOf(
+            resources.getString(R.string.treble),
+            resources.getString(R.string.medium_treble),
+            resources.getString(R.string.medium),
+            resources.getString(R.string.medium_bass),
+            resources.getString(R.string.bass)
+        ) else listOf(
+            resources.getString(R.string.sixty_five),
+            resources.getString(R.string.two_hundred_fifty),
+            resources.getString(R.string.seven_hundred_fifty),
+            resources.getString(R.string.one_thousand_three_hundred),
+            resources.getString(R.string.two_thousand_three_hundred),
+            resources.getString(R.string.three_thousand_five_hundred),
+            resources.getString(R.string.six_thousand_five_hundred),
+            resources.getString(R.string.eight_thousand_five_hundred),
+            resources.getString(R.string.eighteen_thousand)
+        )
     }
 
     private fun registerController() {
@@ -450,17 +447,16 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
     private var DEFALUT_BALANCE = 0
     private var DEFALUT_FADE = 0
     private fun initDataBalance() {
-
         if (VcuUtils.isAmplifier) {// 1 外置 1-11  ||  0 内置 ——》1-19
-            SoundFieldView.BALANCE_MAX = 18.0;
-            SoundFieldView.FADE_MAX = 18.0;
+            SoundFieldView.BALANCE_MAX = 18.0
+            SoundFieldView.FADE_MAX = 18.0
         } else {
-            SoundFieldView.BALANCE_MAX = 10.0;
-            SoundFieldView.FADE_MAX = 10.0;
+            SoundFieldView.BALANCE_MAX = 10.0
+            SoundFieldView.FADE_MAX = 10.0
         }
         Timber.d("SoundEffectFragment getAmpType OFFSET=${OFFSET} BALANCE_MAX= ${SoundFieldView.BALANCE_MAX}   FADE_MAX =${SoundFieldView.FADE_MAX}")
-        DEFALUT_BALANCE = (SoundFieldView.BALANCE_MAX / 2).toInt();
-        DEFALUT_FADE = (SoundFieldView.FADE_MAX / 2).toInt();
+        DEFALUT_BALANCE = (SoundFieldView.BALANCE_MAX / 2).toInt()
+        DEFALUT_FADE = (SoundFieldView.FADE_MAX / 2).toInt()
 
         binding?.apply {
             soundField.onValueChangedListener = object : SoundFieldView.OnValueChangedListener {

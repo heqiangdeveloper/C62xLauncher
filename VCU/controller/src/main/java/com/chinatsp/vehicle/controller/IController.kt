@@ -1,9 +1,7 @@
 package com.chinatsp.vehicle.controller
 
-import com.chinatsp.vehicle.controller.bean.BaseCmd
 import com.chinatsp.vehicle.controller.producer.ICommandProducer
-import com.chinatsp.vehicle.controller.semantic.NlpVoiceModel
-import com.chinatsp.vehicle.controller.utils.Keywords
+import com.chinatsp.vehicle.controller.semantic.VoiceModel
 
 /**
  * @author : luohong
@@ -12,29 +10,21 @@ import com.chinatsp.vehicle.controller.utils.Keywords
  * @desc   :
  * @version: 1.0
  */
-interface IController : ICommandProducer, Keywords {
+interface IController : ICommandProducer {
 
     val tag: String
         get() = this::class.java.simpleName
 
-    fun doHandleUnknownHint(callback: ICmdCallback?) {
-        callback?.run {
-            val command = BaseCmd()
-            command.message = "我还不会这个操作"
-            onCmdHandleResult(command)
-        }
-    }
-
     fun doVoiceController(
         controller: IOuterController,
         callback: ICmdCallback,
-        model: NlpVoiceModel,
+        model: VoiceModel,
     ): Boolean
 
     fun doVoiceVehicleQuery(
         controller: IOuterController,
         callback: ICmdCallback,
-        model: NlpVoiceModel,
+        model: VoiceModel,
     ): Boolean {
         return true
     }

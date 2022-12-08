@@ -33,49 +33,46 @@ interface ISwitchManager : IManager {
 
     fun onSwitchChanged(node: SwitchNode, atomic: SwitchState, p: CarPropertyValue<*>) {
         val value = p.value
-        if (value is Int) {
+        if (value !is Int) {
             if (isNeedLog(node)) {
-                Timber.d("doSwitchChanged node:$node, value:$value, status:${node.isOn(value)}")
+                val append = "node:$node, id:${p.propertyId}, value:${value.javaClass.simpleName}"
+                Timber.e("onSwitchChanged but value is not Int! $append")
             }
-            onSwitchChanged(node, atomic, value, this::doUpdateSwitchValue, this::doSwitchChanged)
             return
         }
         if (isNeedLog(node)) {
-            Timber.e("onSwitchChanged but value is not Int! node:$node, id:${p.propertyId}, value:${value.javaClass.simpleName}")
+            Timber.d("doSwitchChanged node:$node, value:$value, status:${node.isOn(value)}")
         }
+        onSwitchChanged(node, atomic, value, this::doUpdateSwitch, this::doSwitchChanged)
     }
 
     fun onSwitchChanged(
-        node: SwitchNode,
-        atomic: SwitchState,
-        value: Int,
+        node: SwitchNode, atomic: SwitchState, value: Int,
         update: (SwitchNode, SwitchState, Int, ((SwitchNode, SwitchState) -> Unit)?) -> Unit,
         block: ((SwitchNode, SwitchState) -> Unit)? = null,
     ) {
         update(node, atomic, value, block)
     }
 
-    fun doUpdateSwitchValue(
-        node: SwitchNode,
-        atomic: SwitchState,
-        value: Int,
+    fun doUpdateSwitch(
+        node: SwitchNode, atomic: SwitchState, value: Int,
         block: ((SwitchNode, SwitchState) -> Unit)? = null,
     ): SwitchState {
-        val active = node.isActive(value)
-        val inactive = node.isInactive(value)
-        val isValid = active or inactive
+        val isValid = node.isValid(value)
+        val invalid = node.isInvalid(value)
+        val isCoreValue = isValid || invalid
         if (isNeedLog(node)) {
-            Timber.d("updateSwitchValue active:$active, inactive:$inactive, node:$node, value:$value, coreOn:${node.careOn}")
+            Timber.d("doUpdateSwitch isValid:$isValid, invalid:$invalid, node:$node, value:$value, coreOn:${node.careOn}")
         }
-        if (active || inactive) {
-            if (active) {
-                doUpdateSwitchValue(node, atomic, node.isOn(value), block)
+        if (!isCoreValue) {
+            Timber.e("doUpdateSwitch but isValid:$isValid, invalid:$invalid, node:$node, value:$value")
+        } else {
+            if (isValid) {
+                doUpdateSwitch(node, atomic, node.isOn(value), block)
             }
-            if (inactive) {
+            if (invalid) {
                 doUpdateSwitchEnable(node, atomic, value, block)
             }
-        } else {
-            Timber.e("updateSwitchValue but isValid:$isValid, node:$node, value:$value, coreOn:${node.careOn}")
         }
         return atomic
     }
@@ -83,9 +80,10 @@ interface ISwitchManager : IManager {
     fun isNeedLog(node: SwitchNode): Boolean {
 
         return SwitchNode.ADAS_AEB != node && SwitchNode.ADAS_FCW != node
+//        return true
     }
 
-    fun doUpdateSwitchValue(
+    fun doUpdateSwitch(
         node: SwitchNode,
         atomic: SwitchState,
         status: Boolean,
@@ -93,32 +91,29 @@ interface ISwitchManager : IManager {
     ): SwitchState {
         val isStatusChanged = atomic.get() xor status
         val isEnableChanged = !atomic.enable()
-        if (isStatusChanged or isEnableChanged) {
-            if (isStatusChanged) atomic.set(status)
-            if (isEnableChanged) atomic.enableStatus = Constant.VIEW_ENABLE
-            block?.let { it(node, atomic) }
-        } else {
+        val isChanged = isStatusChanged or isEnableChanged
+        if (!isChanged) {
             if (isNeedLog(node)) {
-                Timber.e("updateSwitchValue 111 but isStatusChanged:$isStatusChanged, isEnableChanged:$isEnableChanged, node:$node, status:$status, oldValue:${atomic.get()}")
+                Timber.e("doUpdateSwitch but isStatusChanged:$isStatusChanged, isEnableChanged:$isEnableChanged, node:$node, status:$status, oldValue:${atomic.get()}")
             }
+        } else {
+            if (isStatusChanged) atomic.set(status)
+            if (isEnableChanged) atomic.enable = Constant.VIEW_ENABLE
+            block?.let { it(node, atomic) }
         }
         return atomic
     }
 
-    fun doUpdateSwitchEnable(
-        node: SwitchNode,
-        atomic: SwitchState,
-        value: Int,
+    private fun doUpdateSwitchEnable(
+        node: SwitchNode, atomic: SwitchState, value: Int,
         block: ((SwitchNode, SwitchState) -> Unit)? = null,
     ): SwitchState {
-        val isEnableChanged = atomic.isEnableChanged(value)
-//        Timber.e("updateSwitchValue -------- isEnableChanged:$isEnableChanged, node:$node oEnable:${atomic.enableStatus}, value:$value, oldEnable:${atomic.enable()}")
-//        if (isEnableChanged) {
-        atomic.enableStatus = value
-        block?.let { it(node, atomic) }
-//        } else {
-//            Timber.e("updateSwitchValue 222 but isEnableChanged:$isEnableChanged, node:$node oEnable:${atomic.enableStatus}, value:$value, oldEnable:${atomic.enable()}")
-//        }
+        val enableSuccess = atomic.setEnable(value)
+        if (enableSuccess) {
+            block?.let { it(node, atomic) }
+        } else {
+            Timber.e("doUpdateSwitchEnable enableSuccess:$enableSuccess, node:$node, oEnable:${atomic.enable}, value:$value}")
+        }
         return atomic
     }
 

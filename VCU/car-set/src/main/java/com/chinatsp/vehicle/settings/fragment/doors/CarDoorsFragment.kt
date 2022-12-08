@@ -62,7 +62,7 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
     private fun updateOptionActive() {
         updateSwitchEnable(SwitchNode.DOOR_SMART_ENTER)
         updateRadioEnable(RadioNode.DOOR_DRIVE_LOCK)
-        updateRadioEnable(RadioNode.DOOR_FLAMEOUT_UNLOCK)
+        updateRadioEnable(RadioNode.DOOR_QUENCH_UNLOCK)
     }
 
     private fun initViewsDisplay() {
@@ -81,7 +81,7 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
 
     private fun initRadioOption() {
         initRadioOption(RadioNode.DOOR_DRIVE_LOCK, viewModel.automaticDoorLock)
-        initRadioOption(RadioNode.DOOR_FLAMEOUT_UNLOCK, viewModel.autoDoorUnlock)
+        initRadioOption(RadioNode.DOOR_QUENCH_UNLOCK, viewModel.autoDoorUnlock)
     }
 
     private fun addRadioLiveDataListener() {
@@ -90,7 +90,7 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
 //            updateOptionActive()
         }
         viewModel.autoDoorUnlock.observe(this) {
-            doUpdateRadio(RadioNode.DOOR_FLAMEOUT_UNLOCK, it, false)
+            doUpdateRadio(RadioNode.DOOR_QUENCH_UNLOCK, it, false)
 //            updateOptionActive()
             executeUnlockAnimation(it.data.toString())
         }
@@ -104,7 +104,7 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
         }
         binding.doorAutomaticUnlockRadio.let {
             it.setOnTabSelectionChangedListener { _, value ->
-                doUpdateRadio(RadioNode.DOOR_FLAMEOUT_UNLOCK, value, viewModel.autoDoorUnlock, it)
+                doUpdateRadio(RadioNode.DOOR_QUENCH_UNLOCK, value, viewModel.autoDoorUnlock, it)
                 executeUnlockAnimation(value)
             }
         }
@@ -152,7 +152,7 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
     override fun findRadioByNode(node: RadioNode): TabControlView? {
         return when (node) {
             RadioNode.DOOR_DRIVE_LOCK -> binding.doorAutomaticLockRadio
-            RadioNode.DOOR_FLAMEOUT_UNLOCK -> binding.doorAutomaticUnlockRadio
+            RadioNode.DOOR_QUENCH_UNLOCK -> binding.doorAutomaticUnlockRadio
             else -> null
         }
     }
@@ -160,7 +160,7 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
     override fun obtainActiveByNode(node: RadioNode): Boolean {
         return when (node) {
             RadioNode.DOOR_DRIVE_LOCK -> viewModel.automaticDoorLock.value?.enable() ?: false
-            RadioNode.DOOR_FLAMEOUT_UNLOCK -> viewModel.autoDoorUnlock.value?.enable() ?: false
+            RadioNode.DOOR_QUENCH_UNLOCK -> viewModel.autoDoorUnlock.value?.enable() ?: false
             else -> super.obtainActiveByNode(node)
         }
     }

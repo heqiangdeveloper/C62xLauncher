@@ -32,7 +32,6 @@ data class RNorm(
         return result
     }
 
-    fun isValid(value: Int): Boolean {
-        return values.contains(value)
-    }
+    fun isValid(value: Int) = values.contains(value)
+
 }

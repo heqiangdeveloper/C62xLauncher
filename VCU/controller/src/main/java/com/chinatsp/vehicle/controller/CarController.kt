@@ -4,8 +4,9 @@ import com.chinatsp.vehicle.controller.annotation.Action
 import com.chinatsp.vehicle.controller.annotation.Model
 import com.chinatsp.vehicle.controller.bean.CarCmd
 import com.chinatsp.vehicle.controller.producer.*
-import com.chinatsp.vehicle.controller.semantic.NlpVoiceModel
+import com.chinatsp.vehicle.controller.semantic.VoiceModel
 import com.chinatsp.vehicle.controller.semantic.Slots
+import com.chinatsp.vehicle.controller.utils.Keywords
 
 /**
  * @author : luohong
@@ -31,7 +32,7 @@ object CarController : IController {
     override fun doVoiceVehicleQuery(
         controller: IOuterController,
         callback: ICmdCallback,
-        model: NlpVoiceModel,
+        model: VoiceModel,
     ): Boolean {
         val slots: Slots = model.slots
         val command: CarCmd? = otherProducer.attemptVehicleInfoCommand(slots)
@@ -44,7 +45,7 @@ object CarController : IController {
     override fun doVoiceController(
         controller: IOuterController,
         callback: ICmdCallback,
-        model: NlpVoiceModel,
+        model: VoiceModel,
     ): Boolean {
         val slots: Slots = model.slots
         var command: CarCmd? = null
@@ -66,13 +67,41 @@ object CarController : IController {
         if (null == command) {
             command = panoramaProducer.attemptCreateCommand(slots)
         }
-        if (null == command) {
-            command = attemptAutoParkCommand(slots)
-        }
+//        if (null == command) {
+//            command = attemptAutoParkCommand(slots)
+//        }
         if (null != command) {
             controller.doCarControlCommand(command, callback)
+        } else {
+            val service = if (isApaHandle(slots)) Keywords.APA_SERVICE else Keywords.SCENE_SERVICE
+            controller.doTransmitSemantic(service, slots.json)
         }
-        return null != command
+        return true
+    }
+
+    private fun isApaHandle(slots: Slots): Boolean {
+        var result = false
+        do {
+            if ("自动泊车" == slots.name) {
+                result = true
+                break
+            }
+            if (slots.text.contains("自动停车") || slots.text.contains("自动倒车")
+                || slots.text.contains("车位页面") || slots.text.contains("停车位置")
+                || slots.text.contains("倒车")) {
+                result = true
+                break
+            }
+            if (slots.text.contains("自选车位")) {
+                result = true
+                break
+            }
+            if (slots.text.contains("选择") && slots.text.contains("车位")) {
+                result = true
+                break
+            }
+        } while (false)
+        return result
     }
 
     private fun attemptAutoParkCommand(slots: Slots): CarCmd? {
@@ -103,4 +132,5 @@ object CarController : IController {
         }
         return null
     }
+
 }

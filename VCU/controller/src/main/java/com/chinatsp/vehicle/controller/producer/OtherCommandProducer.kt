@@ -5,8 +5,8 @@ import com.chinatsp.vehicle.controller.annotation.*
 import com.chinatsp.vehicle.controller.bean.CarCmd
 import com.chinatsp.vehicle.controller.semantic.Slots
 import com.chinatsp.vehicle.controller.utils.Keywords
-import com.chinatsp.vehicle.controller.utils.Keywords.Companion.HEAT
-import com.chinatsp.vehicle.controller.utils.Keywords.Companion.WHEELS
+import com.chinatsp.vehicle.controller.utils.Keywords.HEAT
+import com.chinatsp.vehicle.controller.utils.Keywords.WHEELS
 
 /**
  * @author : luohong
@@ -136,6 +136,9 @@ class OtherCommandProducer : ICommandProducer {
     }
 
     private fun attemptWiperCommand(slots: Slots): CarCmd? {
+        if (TextUtils.isEmpty(slots.name)) {
+            return null
+        }
         var car = ICar.VOID
         var part = IPart.VOID
         var action = Action.VOID

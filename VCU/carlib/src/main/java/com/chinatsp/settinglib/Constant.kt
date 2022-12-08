@@ -16,7 +16,6 @@ object Constant {
 
     var ENGINE_STATUS = true
 
-
     const val POWER_ON = 0x2
 
     const val POWER_OFF = 0x0

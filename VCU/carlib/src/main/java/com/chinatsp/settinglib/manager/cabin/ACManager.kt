@@ -54,21 +54,21 @@ class ACManager private constructor() : BaseManager(), IOptionManager {
     private val aridStatus: SwitchState by lazy {
         val node = SwitchNode.AC_AUTO_ARID
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val demistStatus: SwitchState by lazy {
         val node = SwitchNode.AC_AUTO_DEMIST
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val windStatus: SwitchState by lazy {
         val node = SwitchNode.AC_ADVANCE_WIND
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 

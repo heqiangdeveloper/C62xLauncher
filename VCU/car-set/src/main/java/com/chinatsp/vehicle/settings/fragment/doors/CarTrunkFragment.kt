@@ -68,78 +68,33 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         get() = SternDoorManager.instance
 
     private val trunkResource: IntArray by lazy {
-        intArrayOf(
-            R.drawable.trunk_door_close_lv5_00,
-            R.drawable.trunk_door_close_lv5_01,
-            R.drawable.trunk_door_close_lv5_02,
-            R.drawable.trunk_door_close_lv5_03,
-            R.drawable.trunk_door_close_lv5_04,
-            R.drawable.trunk_door_close_lv5_05,
-            R.drawable.trunk_door_close_lv5_06,
-            R.drawable.trunk_door_close_lv5_07,
-            R.drawable.trunk_door_close_lv5_08,
-            R.drawable.trunk_door_close_lv5_09,
-            R.drawable.trunk_door_close_lv5_10
-        )
-
-//        if (VcuUtils.isCareLevel(Level.LEVEL5, expect = true)) {
-//            intArrayOf(
-//                R.drawable.trunk_door_lv5_10,
-//                R.drawable.trunk_door_lv5_09,
-//                R.drawable.trunk_door_lv5_08,
-//                R.drawable.trunk_door_lv5_07,
-//                R.drawable.trunk_door_lv5_06,
-//                R.drawable.trunk_door_lv5_05,
-//                R.drawable.trunk_door_lv5_04,
-//                R.drawable.trunk_door_lv5_03,
-//                R.drawable.trunk_door_lv5_02,
-//                R.drawable.trunk_door_lv5_01,
-//                R.drawable.trunk_door_lv5_00
-//            )
-//        } else {
-//            intArrayOf(
-//                R.drawable.trunk_door_10,
-//                R.drawable.trunk_door_09,
-//                R.drawable.trunk_door_08,
-//                R.drawable.trunk_door_07,
-//                R.drawable.trunk_door_06,
-//                R.drawable.trunk_door_05,
-//                R.drawable.trunk_door_04,
-//                R.drawable.trunk_door_03,
-//                R.drawable.trunk_door_02,
-//                R.drawable.trunk_door_01,
-//                R.drawable.trunk_door_00
-//            )
-//        }
-    }
-    private val trunkCloseAnimationResource: IntArray by lazy {
         if (VcuUtils.isCareLevel(Level.LEVEL5, expect = true)) {
             intArrayOf(
-                R.drawable.trunk_door_close_lv5_10,
-                R.drawable.trunk_door_close_lv5_09,
-                R.drawable.trunk_door_close_lv5_08,
-                R.drawable.trunk_door_close_lv5_07,
-                R.drawable.trunk_door_close_lv5_06,
-                R.drawable.trunk_door_close_lv5_05,
-                R.drawable.trunk_door_close_lv5_04,
-                R.drawable.trunk_door_close_lv5_03,
-                R.drawable.trunk_door_close_lv5_02,
+                R.drawable.trunk_door_close_lv5_00,
                 R.drawable.trunk_door_close_lv5_01,
-                R.drawable.trunk_door_close_lv5_00
+                R.drawable.trunk_door_close_lv5_02,
+                R.drawable.trunk_door_close_lv5_03,
+                R.drawable.trunk_door_close_lv5_04,
+                R.drawable.trunk_door_close_lv5_05,
+                R.drawable.trunk_door_close_lv5_06,
+                R.drawable.trunk_door_close_lv5_07,
+                R.drawable.trunk_door_close_lv5_08,
+                R.drawable.trunk_door_close_lv5_09,
+                R.drawable.trunk_door_close_lv5_10
             )
         } else {
             intArrayOf(
-                R.drawable.trunk_door_close_lv3_10,
-                R.drawable.trunk_door_close_lv3_09,
-                R.drawable.trunk_door_close_lv3_08,
-                R.drawable.trunk_door_close_lv3_07,
-                R.drawable.trunk_door_close_lv3_06,
-                R.drawable.trunk_door_close_lv3_05,
-                R.drawable.trunk_door_close_lv3_04,
-                R.drawable.trunk_door_close_lv3_03,
-                R.drawable.trunk_door_close_lv3_02,
+                R.drawable.trunk_door_close_lv3_00,
                 R.drawable.trunk_door_close_lv3_01,
-                R.drawable.trunk_door_close_lv3_00
+                R.drawable.trunk_door_close_lv3_02,
+                R.drawable.trunk_door_close_lv3_03,
+                R.drawable.trunk_door_close_lv3_04,
+                R.drawable.trunk_door_close_lv3_05,
+                R.drawable.trunk_door_close_lv3_06,
+                R.drawable.trunk_door_close_lv3_07,
+                R.drawable.trunk_door_close_lv3_08,
+                R.drawable.trunk_door_close_lv3_09,
+                R.drawable.trunk_door_close_lv3_10
             )
         }
     }
@@ -609,21 +564,13 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
             popWindow = PopWindow(activity,
                 R.layout.pop_window,
                 activity?.let {
-                    AppCompatResources.getDrawable(
-                        it,
-                        R.drawable.popup_bg_qipao172
-                    )
-                })
+                    AppCompatResources.getDrawable(it, R.drawable.popup_bg_qipao172)})
             popWindow.showDownLift(view, 30, -130)
         } else if (view.id == binding.carTrunkDoorHeight.id) {
             popWindow = PopWindow(activity,
                 R.layout.pop_window,
                 activity?.let {
-                    AppCompatResources.getDrawable(
-                        it,
-                        R.drawable.popup_bg_qipao776_298
-                    )
-                })
+                    AppCompatResources.getDrawable(it, R.drawable.popup_bg_qipao776_298) })
             popWindow.showDownLift(view, -270, -15)
         }
         val text: TextView = popWindow?.findViewById(R.id.content) as TextView

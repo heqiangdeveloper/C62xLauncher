@@ -63,6 +63,8 @@ open class BaseViewModel @Inject constructor(application: Application, model: Ba
     }
 
     fun doUpdate(liveData: MutableLiveData<SwitchState>, value: SwitchState) {
+        liveData.postValue(value)
+        if (true) return
         do {
             if (null == liveData.value) {
                 liveData.postValue(value)
@@ -73,12 +75,12 @@ open class BaseViewModel @Inject constructor(application: Application, model: Ba
             val dataSerial = System.identityHashCode(value)
             val sameObj = modelSerial == dataSerial
             val statusChanged = state.get() xor value.get()
-            val enableChanged = state.enable() xor state.enable(value.enableStatus)
+            val enableChanged = state.enable() xor state.enable(value.enable)
             if (statusChanged) {
                 state.set(value.get())
             }
             if (enableChanged) {
-                state.enableStatus = value.enableStatus
+                state.enable = value.enable
             }
             Timber.d("doUpdate switch modelSerial:$modelSerial, dataSerial:$dataSerial, " +
                     "sameObj:$sameObj statusChanged：$statusChanged, enableChanged:$enableChanged")
@@ -89,6 +91,8 @@ open class BaseViewModel @Inject constructor(application: Application, model: Ba
     }
 
     fun doUpdate(liveData: MutableLiveData<RadioState>, value: RadioState, valid: Boolean = true) {
+        liveData.postValue(value)
+        if (true) return
         if (!valid) {
             return
         }

@@ -43,7 +43,7 @@ class WheelManager private constructor() : BaseManager(), ISoundManager, ICmdExp
     private val swhFunction: SwitchState by lazy {
         val node = SwitchNode.DRIVE_WHEEL_AUTO_HEAT
         return@lazy createAtomicBoolean(node, Constant.STEERING_HEAT_SWITCH) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
@@ -100,7 +100,7 @@ class WheelManager private constructor() : BaseManager(), ISoundManager, ICmdExp
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
         return when (node) {
             RadioNode.DRIVE_EPS_MODE -> {
-                writeProperty(node, value, epsMode)
+                node.isValid(value, isGet = false) && writeProperty(node, value, epsMode)
                 false
             }
             else -> false
@@ -122,7 +122,7 @@ class WheelManager private constructor() : BaseManager(), ISoundManager, ICmdExp
                 if (result) {
                     val value = node.value(status, isGet = true)
                     VcuUtils.putInt(key = Constant.STEERING_HEAT_SWITCH, value = value)
-                    doUpdateSwitchValue(node, swhFunction, status, this::doSwitchChanged)
+                    doUpdateSwitch(node, swhFunction, status, this::doSwitchChanged)
                 }
                 return result
             }
@@ -231,7 +231,7 @@ class WheelManager private constructor() : BaseManager(), ISoundManager, ICmdExp
     private fun writeProperty(node: SwitchNode, status: Boolean, atomic: SwitchState): Boolean {
         val success = writeProperty(node.set.signal, node.value(status), node.set.origin)
         if (success && develop) {
-            doUpdateSwitchValue(node, atomic, status) { _node, _status ->
+            doUpdateSwitch(node, atomic, status) { _node, _status ->
                 doSwitchChanged(_node, _status)
             }
         }

@@ -15,17 +15,34 @@ data class RadioState(var data: Int) {
 
     fun get() = data
 
-    fun set(value: Int) {
-        data = value
+//    fun set(value: Int) {
+//        data = value
+//    }
+
+    fun set(value: Int): Boolean {
+        val result = value != data
+        if (result) {
+            data = value
+        }
+        return result
     }
 
     fun enable() = enable == Constant.VIEW_ENABLE
 
+    fun updateEnable(value: Int): Boolean {
+        val result = value != enable
+        if (result) {
+            enable = value
+        }
+        return result
+    }
+
     fun deepCopy(): RadioState {
-        val copy = this.copy()
-        copy.data = data
-        copy.enable = enable
-        return copy
+        return this
+//        val copy = this.copy()
+//        copy.data = data
+//        copy.enable = enable
+//        return copy
     }
 
 }

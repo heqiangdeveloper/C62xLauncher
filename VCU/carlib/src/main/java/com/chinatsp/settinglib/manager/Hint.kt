@@ -33,13 +33,4 @@ object Hint {
     const val wirelessChargingMetal = 0x53
     const val wirelessChargingTemperature = 0x54
 
-
-//    const val ON = "ON"
-//    const val powerSupply = "powerSupply"
-//    const val leve1 = "leve1"
-//    const val leve2 = "leve2"
-//    const val transportMode = "transportMode"
-//    const val exhibitionMode = "exhibitionMode"
-//    const val exhibitionModeError = "exhibitionModeError"
-//    const val default = "default"
 }

@@ -43,21 +43,21 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
     private val mainMeetFunction: SwitchState by lazy {
         val node = SwitchNode.SEAT_MAIN_DRIVE_MEET
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val forkMeetFunction: SwitchState by lazy {
         val node = SwitchNode.SEAT_FORK_DRIVE_MEET
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val seatHeatFunction: SwitchState by lazy {
         val node = SwitchNode.SEAT_HEAT_ALL
         return@lazy createAtomicBoolean(node, Constant.SEAT_HEAT_SWITCH) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
@@ -128,7 +128,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
                 if (result) {
                     val value = node.value(status, isGet = true)
                     VcuUtils.putInt(key = Constant.SEAT_HEAT_SWITCH, value = value)
-                    doUpdateSwitchValue(node, seatHeatFunction, status, this::doSwitchChanged)
+                    doUpdateSwitch(node, seatHeatFunction, status, this::doSwitchChanged)
                 }
                 return result
             }
@@ -171,7 +171,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
     private fun writeProperty(node: SwitchNode, status: Boolean, atomic: SwitchState): Boolean {
         val success = writeProperty(node.set.signal, node.value(status), node.set.origin)
         if (success && develop) {
-            doUpdateSwitchValue(node, atomic, status) { _node, _status ->
+            doUpdateSwitch(node, atomic, status) { _node, _status ->
                 doSwitchChanged(_node, _status)
             }
         }
