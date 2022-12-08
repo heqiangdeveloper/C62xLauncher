@@ -25,7 +25,7 @@
                 android:text="@string/note_users_title" />
         </RelativeLayout>
 
-        <com.common.xui.widget.XUIWrapContentScrollView
+        <RelativeLayout
             android:id="@+id/textview_ScrollView"
             android:layout_width="match_parent"
             android:layout_height="@dimen/x175"
@@ -35,22 +35,34 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/pop_title">
 
-            <LinearLayout
+
+            <com.common.xui.widget.XUIWrapContentScrollView
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/x175"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/txt_prompt_style"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/x20"
-                    android:layout_marginRight="@dimen/x20"
-                    android:lineSpacingExtra="@dimen/x8"
-                    android:text="@string/note_users_content" />
+                    android:layout_height="@dimen/x175"
+                    android:orientation="vertical">
 
-            </LinearLayout>
-        </com.common.xui.widget.XUIWrapContentScrollView>
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/txt_prompt_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/x20"
+                        android:layout_marginRight="@dimen/x20"
+                        android:lineSpacingExtra="@dimen/x8"
+                        android:text="@string/note_users_content" />
+
+                </LinearLayout>
+            </com.common.xui.widget.XUIWrapContentScrollView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/pop_mask" />
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -81,7 +93,7 @@
                 android:text="@string/note_users_cancel"
                 android:textColor="@color/xui_config_color_white"
                 android:textSize="@dimen/text_14"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

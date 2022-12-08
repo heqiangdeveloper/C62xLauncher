@@ -42,4 +42,7 @@
 
     <color name="dialog_txt_hint">#7B7B82</color>
     <color name="lighting_bg">#000000</color>
+
+    <color name="pop_mask_start">#00222838</color>
+    <color name="pop_mask_end">#262D3E</color>
 </resources>

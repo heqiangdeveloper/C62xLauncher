@@ -251,6 +251,7 @@ public class TabControlView extends RadioGroup implements HasTypeface {
             if (textWidth > 190) {
                 rb.setTextSize(TypedValue.COMPLEX_UNIT_PX, ResUtils.getDimensionPixelSize(R.dimen.default_tcv_text_size_line));
                 rb.setSingleLine(false);
+                rb.setPadding(mItemPaddingHorizontal, mItemPaddingVertical + 4, mItemPaddingHorizontal, 0);
             } else {
                 rb.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize);
                 rb.setSingleLine(true);

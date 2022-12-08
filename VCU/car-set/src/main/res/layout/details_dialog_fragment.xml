@@ -20,9 +20,7 @@
             style="@style/dialog_title"
             android:text="@string/drive_close_brake" />
 
-
-        <ScrollView
-            android:id="@+id/hint_content_scroll_view"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginStart="@dimen/x105"
@@ -30,20 +28,33 @@
             android:layout_marginEnd="@dimen/x105"
             android:layout_weight="1">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/details_content"
-                style="@style/txt_prompt_style"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="@dimen/x45"
-                android:layout_marginRight="@dimen/x45"
-                android:gravity="start"
-                android:lineSpacingExtra="@dimen/x8"
-                android:padding="@dimen/x10"
-                android:text="@string/iacc_details"
-                android:textAlignment="textStart"
-                android:textSize="@dimen/text_14" />
-        </ScrollView>
 
+            <ScrollView
+                android:id="@+id/hint_content_scroll_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/details_content"
+                    style="@style/txt_prompt_style"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="@dimen/x45"
+                    android:layout_marginRight="@dimen/x45"
+                    android:gravity="start"
+                    android:lineSpacingExtra="@dimen/x8"
+                    android:padding="@dimen/x10"
+                    android:text="@string/iacc_details"
+                    android:textAlignment="textStart"
+                    android:textSize="@dimen/text_14" />
+
+            </ScrollView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/pop_mask" />
+        </RelativeLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/hint_conform"

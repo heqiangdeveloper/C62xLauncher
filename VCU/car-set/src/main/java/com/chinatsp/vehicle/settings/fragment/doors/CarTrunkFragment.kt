@@ -371,13 +371,13 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         binding.accessSternLightAlarmSw.let {
             it.setOnCheckedChangeListener { buttonView, isChecked ->
                 doUpdateSwitchOption(SwitchNode.STERN_LIGHT_ALARM, buttonView, isChecked)
-                doLightBlinkFollowing(it.isChecked)
+                if(isChecked) doLightBlinkFollowing(it.isChecked)
             }
         }
         binding.accessSternAudioAlarmSw.let {
             it.setOnCheckedChangeListener { buttonView, isChecked ->
                 doUpdateSwitchOption(SwitchNode.STERN_AUDIO_ALARM, buttonView, isChecked)
-                doBuzzerFollowing(it.isChecked)
+                if(isChecked) doBuzzerFollowing(it.isChecked)
             }
         }
     }
