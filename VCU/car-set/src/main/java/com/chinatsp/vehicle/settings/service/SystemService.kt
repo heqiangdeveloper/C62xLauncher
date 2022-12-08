@@ -56,8 +56,8 @@ class SystemService : Service(), SystemDialogHelper.OnCountDownListener, Handler
                 handleMessageDelay(Hint.TOAST_HINT_CLOSE_SCREEN, 15 * minute)
             } else if (type == Hint.leve2) {
                 removeMessage(Hint.leve1)
-                removeMessage(Hint.TOAST_HINT_CLOSE_SCREEN)
                 handleMessageDelay(type)
+                handleMessageDelay(Hint.TOAST_HINT_CLOSE_SCREEN)
             } else if (type == Hint.transportMode) {
                 /**运输模式*/
                 handleMessageDelay(type)
@@ -94,10 +94,10 @@ class SystemService : Service(), SystemDialogHelper.OnCountDownListener, Handler
         signal: Int, content: Int, cancelable: Boolean, careEngine: Boolean = false,
     ) {
         if (!careEngine || !VcuUtils.isEngineRunning()) {
-            //if (null == dialog) {
-                val master = DialogMaster.create(applicationContext, { }, { }, 740, 488,signal)
+            if (null == dialog || !dialog!!.isShowing) {
+                val master = DialogMaster.create(applicationContext, { }, { }, 740, 488, signal)
                 dialog = master.dialog
-            //}
+            }
             val current = dialog!!
             current.setDetailsContent(content)
             current.setCancelable(cancelable)
@@ -153,12 +153,14 @@ class SystemService : Service(), SystemDialogHelper.OnCountDownListener, Handler
             dialog?.let {
                 if (it.isShowing && isVehicleModeHint(it.tag)) {
                     it.dismiss()
+                    dialog = null
                 }
             }
         } else if (signal == Hint.ALL_HINT) {
             dialog?.let {
                 if (it.isShowing && !isVehicleModeHint(it.tag)) {
                     it.dismiss()
+                    dialog = null
                 }
             }
         } else if (signal == Hint.TOAST_HINT_CLOSE_SCREEN) {
@@ -167,21 +169,24 @@ class SystemService : Service(), SystemDialogHelper.OnCountDownListener, Handler
                 ResUtils.getString(R.string.hint_low_voltage_close_screen), true
             )
         } else if (signal == Hint.wirelessChargingNormal) {
+            dismiss(signal, coreSame = false)
             /**充电正常*/
             RechargeToast.showToast(
                 BaseApp.instance.applicationContext,
                 ResUtils.getString(R.string.cabin_other_wireless_charging_working_properly),
-                true
-            )
-        }else if (signal == Hint.wirelessChargingAbnormal) {
+                true)
+        } else if (signal == Hint.wirelessChargingAbnormal) {
+            dismiss(signal)
             /**充电异常*/
             content = R.string.cabin_other_maintenance
             updateHintContent(signal, content, cancelable)
-        }else if (signal == Hint.wirelessChargingMetal) {
+        } else if (signal == Hint.wirelessChargingMetal) {
+            dismiss(signal)
             /**检测到金属异物，请移开异物*/
-            content =R.string.cabin_other_foreign_matter
+            content = R.string.cabin_other_foreign_matter
             updateHintContent(signal, content, cancelable)
-        }else if (signal == Hint.wirelessChargingTemperature) {
+        } else if (signal == Hint.wirelessChargingTemperature) {
+            dismiss(signal)
             /**无线充电温度过高，请移开手机*/
             content = R.string.cabin_other_temperatire
             updateHintContent(signal, content, cancelable)
@@ -189,10 +194,31 @@ class SystemService : Service(), SystemDialogHelper.OnCountDownListener, Handler
         return true
     }
 
-    private fun isVehicleModeHint(signal: Int): Boolean {
-        return Hint.transportMode == signal
-                || Hint.exhibitionMode == signal
-                || Hint.exhibitionModeError == signal
+    private fun dismiss(serial: Int, coreSame: Boolean = true) {
+        if (null != dialog && dialog!!.isShowing) {
+            val current = dialog!!
+            val isChargingHint = isChargingHint(current.tag)
+            val isFilter = if (coreSame) isSameSerial(current.tag, serial) else false
+            if (isChargingHint && !isFilter) {
+                current.dismiss()
+                dialog = null
+            }
+        }
     }
+
+    private fun isVehicleModeHint(serial: Int): Boolean {
+        return Hint.transportMode == serial
+                || Hint.exhibitionMode == serial
+                || Hint.exhibitionModeError == serial
+    }
+
+    private fun isChargingHint(serial: Int): Boolean {
+        return Hint.wirelessChargingNormal == serial
+                || Hint.wirelessChargingAbnormal == serial
+                || Hint.wirelessChargingMetal == serial
+                || Hint.wirelessChargingTemperature == serial
+    }
+
+    private fun isSameSerial(actual: Int, expect: Int) = actual == expect
 
 }

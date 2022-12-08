@@ -12,7 +12,10 @@ public class AppStoreDataErrorState implements AppStoreState {
         view.findViewById(R.id.layoutAppStoreNormalSmall).setVisibility(View.GONE);
 
         TextView tvCardIQuTingTip = view.findViewById(R.id.tvAppStoreTip);
+        ImageView ivAppStoreRefresh = view.findViewById(R.id.ivAppStoreRefresh);
         tvCardIQuTingTip.setText(R.string.appstore_get_data_error);
+        tvCardIQuTingTip.setVisibility(View.VISIBLE);
+        ivAppStoreRefresh.setVisibility(View.VISIBLE);
     }
 
     @Override

@@ -369,12 +369,9 @@ public class ColorPickerView extends View {
 
     private void createIndicatorBitmap() {
         Canvas c = new Canvas(bitmapForIndicator);
-        c.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG
-                | Paint.FILTER_BITMAP_FLAG));
         int radius = 55;
-
         paintForIndicator.setColor(Color.WHITE);
-        c.drawRoundRect(new RectF(0, 0, bitmapForIndicator.getWidth(), bitmapForIndicator.getHeight()), 35, 65, paintForIndicator);
+        c.drawRoundRect(new RectF(0, 0, bitmapForIndicator.getWidth(), bitmapForIndicator.getHeight()), 35, 66, paintForIndicator);
 
         paintForIndicator.setColor(mIndicatorColor);
         //paintForIndicator.setShadowLayer(20, 20, 20, Color.WHITE);

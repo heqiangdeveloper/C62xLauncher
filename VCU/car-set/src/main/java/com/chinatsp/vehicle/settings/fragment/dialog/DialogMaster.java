@@ -13,24 +13,24 @@ import com.chinatsp.vehicle.settings.R;
 public class DialogMaster {
     private SystemAlertDialog dialog;
 
-    public static DialogMaster create(Context activity, OnPressOk onPressOk, OnPressCancel onPressCancel, int width, int height,int signal) {
-        return create(activity, onPressOk, onPressCancel, R.layout.global_dialog_fragment, width, height,signal);
+    public static DialogMaster create(Context activity, OnPressOk onPressOk, OnPressCancel onPressCancel, int width, int height, int signal) {
+        return create(activity, onPressOk, onPressCancel, R.layout.global_dialog_fragment, width, height, signal);
     }
 
     public static DialogMaster create(Context activity, OnPressOk onPressOk, OnPressCancel onPressCancel, int layoutResId,
-                                      int width, int height ,int signal) {
+                                      int width, int height, int signal) {
 
         DialogMaster dialogMaster = new DialogMaster();
-        if(signal== Hint.wirelessChargingAbnormal){
+        if (signal == Hint.wirelessChargingAbnormal) {
             /**充电异常*/
             dialogMaster.dialog = new SystemAlertDialog(activity, R.layout.abnormal_charge_dialog_fragment);
-        }else if(signal== Hint.wirelessChargingMetal){
+        } else if (signal == Hint.wirelessChargingMetal) {
             /**检测到金属异物，请移开异物*/
             dialogMaster.dialog = new SystemAlertDialog(activity, R.layout.foreign_matter_dialog_fragment);
-        }else if(signal== Hint.wirelessChargingTemperature){
+        } else if (signal == Hint.wirelessChargingTemperature) {
             /**无线充电温度过高，请移开手机*/
             dialogMaster.dialog = new SystemAlertDialog(activity, R.layout.temperature_dialog_fragment);
-        }else{
+        } else {
             dialogMaster.dialog = new SystemAlertDialog(activity, R.layout.global_dialog_fragment);
         }
 

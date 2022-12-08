@@ -61,7 +61,7 @@
     <string name="cabin_safe_video_safe_mode_content">After the video safety mode is enabled, when the \n vehicle speed is more than 15km/h, the local video \n will be automatically closed。</string>
 
     <string name="cabin_wheel_electronic_mode">Electronic power steering mode</string>
-    <string name="cabin_wheel_press_key">Steering wheel custom buttons</string>
+    <string name="cabin_wheel_press_key">Steering wheel customization buttons</string>
     <string name="cabin_wheel_custom_button">Steering wheel customization button</string>
     <string name="cabin_wheel_press_key_tv">Privacy mode</string>
     <string name="cabin_wheel_automatic_heating">Steering wheel self heating</string>
@@ -131,10 +131,10 @@
         可再次开启天窗。</string>
     <string name="car_window_lock_car_content">When the function is opened and the door is locked, the \n
         four door windows, sunroof and sun blind automatically close</string>
-    <string name="car_window_wiper_content">When carrying out maintenance on the windshield wiper,  \n
-         be sure to turn on the wiper maintenance mode Open the \n
-        scraper for maintenance, and move the scraper to the \n
-        maintenance position.</string>
+    <string name="car_window_wiper_content">When maintaining windshield wipers, be sure to turn on the \n
+        wiper maintenance mode. Turn on the  wiper for maintenance \n
+        and the wiper will automatically \n
+        run to the maintenance position.</string>
     <string name="wheel_automatic_heating_content">&#160;携带智能钥匙靠近或离开车\n
         辆一定距离时，车门将自动\n
         解锁或闭锁。</string>

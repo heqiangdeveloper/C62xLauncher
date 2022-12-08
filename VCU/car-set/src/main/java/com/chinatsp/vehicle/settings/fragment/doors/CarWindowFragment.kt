@@ -19,13 +19,26 @@ import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.popupwindow.PopWindow
 import dagger.hilt.android.AndroidEntryPoint
-
 @AndroidEntryPoint
 class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding>(), ISwitchAction {
 
-    private var animationCarWindow: AnimationDrawable = AnimationDrawable()
+    private val animationCarWindow: AnimationDrawable by lazy {
+        val animDrawable = AnimationDrawable()
+        animDrawable.setAnimation(context, R.drawable.car_window_animation, binding.carWindowIv)
+        animDrawable
+    }
 
-    private var animationWiper: AnimationDrawable = AnimationDrawable()
+    private val animationWiper: AnimationDrawable by lazy {
+        val animDrawable = AnimationDrawable()
+        animDrawable.setAnimation(context, R.drawable.wiper_animation, binding.carWinper)
+        animDrawable
+    }
+
+    private val duration: Int get() = 50
+
+    private var firstWiperReceive = true
+
+    private var firstRemoteReceive = true
 
     private val map: HashMap<Int, View> = HashMap()
 
@@ -38,10 +51,7 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-
         initClickView()
-
-        initAnimation()
 
         initSwitchOption()
         addSwitchLiveDataListener()
@@ -130,12 +140,6 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
         return if (activity is IRoute) activity as IRoute else null
     }
 
-    private fun initAnimation() {
-        val cxt = activity
-        animationCarWindow.setAnimation(cxt, R.drawable.car_window_animation, binding.carWindowIv)
-        animationWiper.setAnimation(cxt, R.drawable.wiper_animation, binding.carWinper)
-    }
-
     private fun initSwitchOption() {
         initSwitchOption(SwitchNode.WIN_REMOTE_CONTROL, viewModel.winRemoteControl)
         initSwitchOption(SwitchNode.WIN_CLOSE_FOLLOW_LOCK, viewModel.closeWinFollowLock)
@@ -147,6 +151,7 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
         viewModel.winRemoteControl.observe(this) {
             doUpdateSwitch(SwitchNode.WIN_REMOTE_CONTROL, it)
             updateSwitchEnable(SwitchNode.WIN_REMOTE_CONTROL)
+            executeWindowAnimation(it.get())
         }
         viewModel.closeWinFollowLock.observe(this) {
             doUpdateSwitch(SwitchNode.WIN_CLOSE_FOLLOW_LOCK, it)
@@ -159,7 +164,34 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
         viewModel.rainWiperRepair.observe(this) {
             doUpdateSwitch(SwitchNode.RAIN_WIPER_REPAIR, it)
             updateSwitchEnable(SwitchNode.RAIN_WIPER_REPAIR)
+            executeWiperAnimation(it.get())
         }
+    }
+
+    private fun executeWiperAnimation(status: Boolean) {
+        if (firstWiperReceive) {
+            firstWiperReceive = false
+            binding.carWinper.visibility = if (status) View.VISIBLE else View.INVISIBLE
+            return
+        }
+        executeAnimation(binding.carWinper, animationWiper, status)
+    }
+
+    private fun executeAnimation(view: View, animation: AnimationDrawable, status: Boolean) {
+        animation.stop()
+        view.visibility = if (status) View.VISIBLE else View.INVISIBLE
+        if (status) {
+            animation.start(false, duration, null)
+        }
+    }
+
+    private fun executeWindowAnimation(status: Boolean) {
+        if (firstRemoteReceive) {
+            firstRemoteReceive = false
+            binding.carWindowIv.visibility = if (status) View.VISIBLE else View.INVISIBLE
+            return
+        }
+        executeAnimation(binding.carWindowIv, animationCarWindow, status)
     }
 
     override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
@@ -190,12 +222,7 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
     private fun setSwitchListener() {
         binding.carWindowRemoteControlSwb.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.WIN_REMOTE_CONTROL, buttonView, isChecked)
-            if (buttonView.isChecked) {
-                binding.carWindowIv.visibility = View.VISIBLE
-                animationCarWindow.start(false, 50, null)
-            } else {
-                binding.carWindowIv.visibility = View.GONE
-            }
+            executeAnimation(binding.carWindowIv, animationCarWindow, buttonView.isChecked)
         }
         binding.carWindowLockCarSwb.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.WIN_CLOSE_FOLLOW_LOCK, buttonView, isChecked)
@@ -205,12 +232,7 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
         }
         binding.carWindowWiperSwb.setOnCheckedChangeListener { buttonView, isChecked ->
             doUpdateSwitchOption(SwitchNode.RAIN_WIPER_REPAIR, buttonView, isChecked)
-            if (buttonView.isChecked) {
-                binding.carWinper.visibility = View.VISIBLE
-                animationWiper.start(false, 50, null)
-            } else {
-                binding.carWinper.visibility = View.GONE
-            }
+            executeAnimation(binding.carWinper, animationWiper, buttonView.isChecked)
         }
     }
 
@@ -250,3 +272,4 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
 
     }
 }
+

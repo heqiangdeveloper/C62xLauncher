@@ -6,6 +6,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.Applet
+import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.manager.ISwitchManager
@@ -28,7 +29,7 @@ class AmbientLightingModelDialogFragment :
     private val colorList: List<Color> = Applet.getLampSupportColor()
     private val manager: AmbientLightingManager
         get() = AmbientLightingManager.instance
-
+    var keypad: View? = null
     override fun getLayoutId(): Int {
         return R.layout.lighting_model_dialog_fragment
     }
@@ -180,6 +181,9 @@ class AmbientLightingModelDialogFragment :
 
     private fun doUpdateViewSelect(view: View, status: SwitchState, immediately: Boolean = false) {
         view.isSelected = status.get()
+        keypad?.isEnabled = true
+        view.isEnabled = false
+        keypad = view
     }
 
     private fun setSwitchListener() {

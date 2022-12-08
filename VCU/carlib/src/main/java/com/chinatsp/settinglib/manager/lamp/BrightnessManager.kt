@@ -173,7 +173,6 @@ class BrightnessManager : BaseManager(), IProgressManager, ISwitchManager {
                 if (value < progress.min) value = progress.min
                 if (value > progress.max) value = progress.max
                 manager?.brightness = value * 10
-//                Timber.e("====DARK_LIGHT_MODE===doSetVolume====value=$value, actual:${manager?.brightness}")
                 //iBAMode:白天黑夜模式，现传1就好, value：亮度值
                 thirdScreenService?.setThirdScreenBrightness(
                     if (isLight) 1 else 0,
@@ -206,7 +205,6 @@ class BrightnessManager : BaseManager(), IProgressManager, ISwitchManager {
                 val last = darkLightMode.get()
                 onSwitchChanged(SwitchNode.DARK_LIGHT_MODE, darkLightMode, property)
                 val actual = darkLightMode.get()
-//                Timber.e("====DARK_LIGHT_MODE=======last=$last, actual:$actual")
                 if (last xor actual) doSwitchLightDarkMode(darkLightMode.get())
             }
             else -> {}
