@@ -77,7 +77,6 @@
         android:id="@+id/viewLoading"
         android:layout_width="0px"
         android:layout_height="0px"
-        android:text="正在加载....."
         android:textColor="#ffffff"
         android:textSize="32px"
         android:gravity="center"

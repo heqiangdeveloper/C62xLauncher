@@ -1,6 +1,7 @@
 package com.chinatsp.launcher;
 
 import android.content.Context;
+import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -53,6 +54,11 @@ public class SlideGestureListener implements GestureDetector.OnGestureListener {
     }
 
     private boolean matchSlideUp(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        if (e1 == null || e2 == null) {
+            // InnerVerticalRecyclerView , 在dispatchTouchEvent内如果检测到多点触控, 就会返回false, 即不分发.
+            // 在这种情况下,  e1和e2会是null
+            return false;
+        }
         int moveX = (int) (e2.getX() - e1.getX());
         int moveY = (int) (e2.getY() - e1.getY());
         EasyLog.d(TAG, "matchSlideUp velocityX:" + velocityX + " , velocityY:" + velocityY + " , moveX:" + moveX + " , moveY:" + moveY);

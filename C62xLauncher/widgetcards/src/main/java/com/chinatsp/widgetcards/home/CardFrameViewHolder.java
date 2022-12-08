@@ -239,7 +239,9 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
 
     public boolean isCardInLeftSide() {
         // 3个卡片的位置: 0, 605, 1210
-        return itemView.getX() < 600;
+        boolean b = itemView.getX() < 600;
+        EasyLog.d(TAG, "isCardInLeftSide : " + b +" card:"+mLauncherCard.getName());
+        return b;
     }
 
 
@@ -331,7 +333,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-    private static final int FINGER_NUM_TRIGGER_SCREEN_SHOT = 3;
+    private static final int FINGER_NUM_TRIGGER_SCREEN_SHOT = 2;
     private boolean mShouldTriggerScreenShot = true;
     private boolean mFinalShouldTriggerScreenShot = false;
     //    private int mTouchSlop = ViewConfiguration.get().getScaledTouchSlop();
@@ -348,6 +350,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     private float moveX, moveY;
     private boolean mReadyLongPress = false;
     private long mDownTimestamp;
+    private int mPointCounts = 0;
 
     private boolean mLongPressTriggered = false;
 
@@ -370,17 +373,19 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
             pointerCoordinate[0][0] = pointX;
             pointerCoordinate[0][1] = pointY;
 
+            mPointCounts = Math.max(event.getPointerCount(), mPointCounts);
             switch (event.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
-                    EasyLog.i(TAG, "ACTION_DOWN");
+                    EasyLog.i(TAG, "ACTION_DOWN " + mLauncherCard.getName());
                     mPointsDown.put(pointerId, pointerCoordinate);
                     downX = pointX;
                     downY = pointY;
                     mReadyLongPress = true;
                     mDownTimestamp = System.currentTimeMillis();
+                    mPointCounts = 0;
                     break;
                 case MotionEvent.ACTION_POINTER_DOWN:
-                    EasyLog.i(TAG, "ACTION_POINTER_DOWN");
+                    EasyLog.i(TAG, "ACTION_POINTER_DOWN "+ mLauncherCard.getName());
                     mLatestPointerPressTime = System.currentTimeMillis();
                     // 副指针到来时，将副指针的数据记录下来，方便后续使用
                     mPointsDown.put(pointerId, pointerCoordinate);
@@ -388,13 +393,14 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
                     break;
 
                 case MotionEvent.ACTION_MOVE:
-                    EasyLog.d(TAG, "ACTION_MOVE . mShouldTriggerScreenShot:" + mShouldTriggerScreenShot + ",  pointX:" + pointX + ". Point count:" + event.getPointerCount());
+                    EasyLog.d(TAG, "ACTION_MOVE . mShouldTriggerScreenShot:" + mShouldTriggerScreenShot
+                            + ",  pointX:" + pointX + ". Point count:" + mPointCounts +"  card:"+ mLauncherCard.getName());
                     if (event.getPointerCount() == 1) {
                         moveX = event.getX();
                         moveY = event.getY();
                     }
 
-                    if (event.getPointerCount() == FINGER_NUM_TRIGGER_SCREEN_SHOT) {
+                    if (event.getPointerCount() >= FINGER_NUM_TRIGGER_SCREEN_SHOT) {
                         mPointsDistance = Math.abs(pointX - downX) + Math.abs(pointY - downY);
 //                        for (int i = 0; i < event.getPointerCount(); i++) {
 //                            pointerId = event.getPointerId(i);
@@ -407,25 +413,30 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
 
                     break;
                 case MotionEvent.ACTION_UP:
-                    if (mPointsDown.size() == 1) {
+                    if (mPointCounts == 1) {
                         moveX = event.getX();
                         moveY = event.getY();
                         float deltaY = moveY - downY;
                         float deltaX = moveX - downX;
-                        EasyLog.d(TAG, "check up deltaY:" + deltaY + " , deltaX:" + deltaX + " , mReadLongPress:" + mReadyLongPress);
+                        EasyLog.d(TAG, "check up deltaY:" + deltaY + " , deltaX:" + deltaX + " , mReadLongPress:" + mReadyLongPress+" ,  "+ mLauncherCard.getName());
 //                        boolean checkAndGoSearchActivity = checkAndGoSearchActivity(deltaY, deltaX);
 //                        if (mReadyLongPress && !checkAndGoSearchActivity) {
 //                            checkAndPerformLongPress(deltaY, deltaX);
 //                        }
                         checkAndPerformClick(deltaY, deltaX);
                         mReadyLongPress = false;
+                        resetTouchEvent();
                         return true;
                     }
                     mPointsUp.put(pointerId, pointerCoordinate);
                     // 前面的条件都满足触发截屏的条件时，还需要根据mPointersDown和mPointersUp这两个数据来计算每个手指滑动的距离是否满足TouchSlop等条件
                     long flashTime = System.currentTimeMillis() - mLatestPointerPressTime;
-                    EasyLog.d(TAG, "UPUPUP distance:" + mPointsDistance + " , flashTime: " + flashTime + ", finger count:" + mPointsDown.size());
-                    if (mPointsDistance > 100 && flashTime < 1000 && mPointsDown.size() == FINGER_NUM_TRIGGER_SCREEN_SHOT) {
+                    EasyLog.d(TAG, "UPUPUP distance:" + mPointsDistance + " , flashTime: " + flashTime
+                            + ", finger count:" + mPointCounts+" , "+ mLauncherCard.getName());
+                    if (mPointsDistance > 100
+//                            && flashTime < 1000
+                            && ExpandStateManager.getInstance().getExpandState()
+                            && mPointCounts >= FINGER_NUM_TRIGGER_SCREEN_SHOT) {
                         doSwipe();
                     }
                     resetTouchEvent();
@@ -466,6 +477,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
         downX = 0;
         downY = 0;
         mReadyLongPress = false;
+        mPointCounts = 0;
     }
 
     private void doSwipe() {
