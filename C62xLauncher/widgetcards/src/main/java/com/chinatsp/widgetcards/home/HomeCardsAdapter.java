@@ -71,8 +71,8 @@ public class HomeCardsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             layout = (ViewGroup) mLayoutInflater.inflate(R.layout.item_card_frame, parent, false);
         }
         View innerCard = cardEntity.getLayout(layout.getContext());
-        if (viewType == CardManager.CardType.I_QU_TING|| viewType == CardManager.CardType.VOLCANO) {
-            // 蓝牙卡片: 添加在第1个child之后. 因为顶部有两个TAB按钮,  不能被卡片顶部ivCardTopSpace覆盖
+        if (viewType == CardManager.CardType.I_QU_TING || viewType == CardManager.CardType.VOLCANO) {
+            // 添加在第1个child之后. 因为顶部有两个TAB按钮,  不能被卡片顶部ivCardTopSpace覆盖
             layout.addView(innerCard, 1);
         } else {
             // 普通卡片: 添加在第0个child之后

@@ -180,6 +180,7 @@ public class CardHomeFragment extends BaseFragment {
         } else {
             smallCard = ListKit.findPrev(bigCard, homeList);
         }
+        EasyLog.d(TAG, "swipeCard,  fragment hashcode: "+hashCode());
         EasyLog.d(TAG, "swipeCard, bigCard:" + bigCard.getName() + " , inLeftSide:" + swipeEvent.mBigInLeftSide + " , smallCard:" + smallCard);
         int index = homeList.indexOf(bigCard);
         int index2 = homeList.indexOf(smallCard);

@@ -5,13 +5,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/card_bg_small">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/viewPager2InSmallCard"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        />
-
     <ImageView
         android:id="@+id/ivCardZoom"
         android:layout_width="64px"
