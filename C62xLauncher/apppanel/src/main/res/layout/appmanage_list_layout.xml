@@ -19,7 +19,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="top|right"
-            android:background="@mipmap/appmanage_delete"/>
+            android:background="@drawable/appmanage_delete"/>
 
     </FrameLayout>
     <TextView

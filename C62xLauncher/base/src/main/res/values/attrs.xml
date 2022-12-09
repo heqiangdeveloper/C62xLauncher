@@ -11,5 +11,6 @@
         <attr name="circleProgressBgHeight" format="dimension" />
         <attr name="circleProgressBgColor" format="color" />
         <attr name="circleProgressColor" format="color"/>
+        <attr name="smallCircleColor" format="color"/>
     </declare-styleable>
 </resources>

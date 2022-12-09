@@ -17,7 +17,7 @@
             android:layout_height="60dp"
             android:layout_alignParentStart="true"
             android:layout_marginStart="120dp"
-            android:src="@mipmap/ic_close" />
+            android:src="@drawable/ic_close" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -64,6 +64,6 @@
             android:layout_centerInParent="true"
             android:gravity="center"
             android:textSize="28px"
-            android:textColor="#ABD3E1"/>
+            android:textColor="#FFFFFF"/>
     </RelativeLayout>
 </RelativeLayout>
