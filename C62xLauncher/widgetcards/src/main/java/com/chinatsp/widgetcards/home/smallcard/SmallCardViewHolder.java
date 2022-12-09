@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.chinatsp.widgetcards.R;
 import com.chinatsp.widgetcards.home.AppLauncherUtil;
 import com.chinatsp.widgetcards.home.CardFrameViewHolder;
+import com.chinatsp.widgetcards.home.ExpandClickDebounceTask;
 import com.chinatsp.widgetcards.home.ExpandStateManager;
 import com.chinatsp.widgetcards.home.smallcard2.HomeCardRcvManager;
 import com.chinatsp.widgetcards.home.smallcard2.SmallCardRcvManager;
@@ -57,6 +58,7 @@ public class SmallCardViewHolder extends RecyclerView.ViewHolder {
             }
         });
     }
+
     private View.OnClickListener mOnClickListener;
 
     private static long mLastValidClickExpandTime;
@@ -64,21 +66,35 @@ public class SmallCardViewHolder extends RecyclerView.ViewHolder {
     private static final int MIN_CLICK_INTERVAL = 600; // ms
 
     private View.OnClickListener createListener(LauncherCard cardEntity) {
+//        return new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                long now = System.currentTimeMillis();
+//                long diffToValid = now - mLastValidClickExpandTime;
+//                long diffToInvalid = now - mLastClickExpandTime;
+//                mLastClickExpandTime = now;
+//                if (diffToValid < MIN_CLICK_INTERVAL && diffToInvalid < MIN_CLICK_INTERVAL) {
+//                    EasyLog.w(TAG, "click expand or collapse view fail: touch too fast."
+//                            + cardEntity.getName() + " , diff:" + diffToValid + " , diffToInvalid:" + diffToInvalid);
+//                    return;
+//                }
+//                mLastValidClickExpandTime = now;
+//                EasyLog.d(TAG, "click expand or collapse view :" + cardEntity.getName()
+//                        + " , diff:" + diffToValid + " , diffToInvalid:" + diffToInvalid);
+//                if (!cardEntity.isCanExpand()) {
+//                    return;
+//                }
+//                LauncherCard anchorSmallCard = ExpandStateManager.getInstance().getAnchorSmallCard();
+//                if (anchorSmallCard == null) {
+//                    return;
+//                }
+//                CardFrameViewHolder viewHoldByCard = HomeCardRcvManager.getInstance().findViewHoldByCard(anchorSmallCard);
+//                ExpandStateManager.getInstance().clickExpandButton(cardEntity, viewHoldByCard.isCardInLeftSide());
+//            }
+//        };
         return new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                long now = System.currentTimeMillis();
-                long diffToValid = now - mLastValidClickExpandTime;
-                long diffToInvalid = now - mLastClickExpandTime;
-                mLastClickExpandTime = now;
-                if (diffToValid < MIN_CLICK_INTERVAL && diffToInvalid < MIN_CLICK_INTERVAL) {
-                    EasyLog.w(TAG, "click expand or collapse view fail: touch too fast."
-                            + cardEntity.getName() + " , diff:" + diffToValid + " , diffToInvalid:" + diffToInvalid);
-                    return;
-                }
-                mLastValidClickExpandTime = now;
-                EasyLog.d(TAG, "click expand or collapse view :" + cardEntity.getName()
-                        + " , diff:" + diffToValid + " , diffToInvalid:" + diffToInvalid);
+            public void onClick(View v) {
                 if (!cardEntity.isCanExpand()) {
                     return;
                 }
@@ -86,12 +102,12 @@ public class SmallCardViewHolder extends RecyclerView.ViewHolder {
                 if (anchorSmallCard == null) {
                     return;
                 }
+                EasyLog.d(TAG, "click ready expand " + cardEntity.getName());
                 CardFrameViewHolder viewHoldByCard = HomeCardRcvManager.getInstance().findViewHoldByCard(anchorSmallCard);
-                ExpandStateManager.getInstance().clickExpandButton(cardEntity, viewHoldByCard.isCardInLeftSide());
+                ExpandClickDebounceTask.getInstance().emit(cardEntity, viewHoldByCard.isCardInLeftSide());
             }
         };
     }
-
 
 
     private void expand(LauncherCard card) {

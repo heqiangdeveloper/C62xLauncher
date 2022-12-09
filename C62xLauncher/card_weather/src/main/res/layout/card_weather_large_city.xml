@@ -10,6 +10,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
+    <com.chinatsp.weaher.viewholder.city.WeatherVideoView
+        android:id="@+id/videoViewCardWeather"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/card_big_foreground"
+        />
 
     <ImageView
         android:id="@+id/ivCardWeatherLocation"

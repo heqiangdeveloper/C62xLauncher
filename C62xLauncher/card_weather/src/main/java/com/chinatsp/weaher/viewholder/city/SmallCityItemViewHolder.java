@@ -5,11 +5,13 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 
@@ -36,7 +38,6 @@ public class SmallCityItemViewHolder extends BaseViewHolder<String> {
     private final Resources mResources;
     private final ImageView ivCardWeatherRefresh;
     private final Handler mMainHandler = new Handler(Looper.getMainLooper());
-
 
 
     public SmallCityItemViewHolder(@NonNull View rootView) {

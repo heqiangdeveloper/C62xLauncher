@@ -3,8 +3,10 @@ package com.chinatsp.weaher;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.chinatsp.weaher.repository.WeatherBean;
 import com.chinatsp.weaher.type.C62WeatherType;
@@ -131,6 +133,20 @@ public class WeatherUtil {
 
             }
         }
+    }
+
+    public static void setDataSource(VideoView videoView, int rawId) {
+        if (videoView == null) {
+            return;
+        }
+        if (rawId <= 0) {
+            return;
+        }
+
+        String packageName = videoView.getContext().getPackageName();
+        String uri = "android.resource://" + packageName + "/" + rawId;
+        Uri parse = Uri.parse(uri);
+        videoView.setVideoURI(parse);
     }
 
     public static String convertNull(String origin) {

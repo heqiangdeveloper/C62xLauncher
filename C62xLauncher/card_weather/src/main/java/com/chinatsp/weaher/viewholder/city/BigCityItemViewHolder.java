@@ -4,26 +4,23 @@ import static com.chinatsp.weaher.WeatherUtil.convertNull;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.util.StringUtil;
 
 import com.chinatsp.weaher.R;
-import com.chinatsp.weaher.WeatherDescTranslator;
 import com.chinatsp.weaher.WeatherTypeRes;
 import com.chinatsp.weaher.WeatherUtil;
 import com.chinatsp.weaher.repository.WeatherRepository;
-import com.chinatsp.weaher.viewholder.indicator.PointIndicator;
 import com.chinatsp.weaher.weekday.WeekDayAdapter;
 import com.iflytek.autofly.weather.entity.WeatherInfo;
 
@@ -45,6 +42,8 @@ public class BigCityItemViewHolder extends BaseViewHolder<String> {
     private ImageView ivCardWeatherIcon;
     private ImageView ivWeatherBg;
     private RecyclerView mRcvCardWeatherWeek;
+    private final VideoView videoViewCardWeather;
+
     ;
     private WeekDayAdapter mWeekDayAdapter;
     private Resources mResources;
@@ -63,6 +62,7 @@ public class BigCityItemViewHolder extends BaseViewHolder<String> {
         ivCardWeatherIcon = itemView.findViewById(R.id.ivCardWeatherIcon);
         ivWeatherBg = itemView.findViewById(R.id.ivWeatherBg);
         mRcvCardWeatherWeek = itemView.findViewById(R.id.rcvCardWeatherWeek);
+        videoViewCardWeather = itemView.findViewById(R.id.videoViewCardWeather);
 
         initWeeklyWeather();
     }
@@ -141,7 +141,16 @@ public class BigCityItemViewHolder extends BaseViewHolder<String> {
         WeatherTypeRes weatherTypeRes = WeatherUtil.parseType(weatherInfo.getWeather());
         ivCardWeatherIcon.setImageResource(weatherTypeRes.getIcon());
         ivWeatherBg.setImageResource(weatherTypeRes.getBigCardBg());
-
+        videoViewCardWeather.setVisibility(View.GONE);
+//        WeatherUtil.setDataSource(videoViewCardWeather, weatherTypeRes.getVideoBigBg());
+//        videoViewCardWeather.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//            @Override
+//            public void onPrepared(MediaPlayer mp) {
+//                mp.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
+//                mp.start();
+//                mp.setLooping(true);
+//            }
+//        });
     }
 
 

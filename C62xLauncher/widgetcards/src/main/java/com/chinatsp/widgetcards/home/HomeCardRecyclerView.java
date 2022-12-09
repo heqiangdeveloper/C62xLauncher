@@ -18,6 +18,8 @@ import launcher.base.utils.EasyLog;
 
 public class HomeCardRecyclerView extends RecyclerView {
 
+    private boolean mScrolling;
+
     public HomeCardRecyclerView(@NonNull Context context) {
         super(context);
     }
@@ -40,6 +42,10 @@ public class HomeCardRecyclerView extends RecyclerView {
         EasyLog.d("HomeCardRecyclerView", "onInterceptTouchEvent enableScroll " + enableScroll);
         if (!enableScroll) {
             return super.onInterceptTouchEvent(event);
+        }
+        if (isScrolling()) {
+            EasyLog.e("HomeCardRecyclerView", "onInterceptTouchEvent isScrolling " + mScrolling);
+            return true;
         }
         if (mUserPlayB) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -172,5 +178,13 @@ public class HomeCardRecyclerView extends RecyclerView {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         EasyLog.w("HomeCardRecyclerView", "onAttachedToWindow "+hashCode());
+    }
+
+    boolean isScrolling() {
+        return mScrolling;
+    }
+
+    public void setScrolling(boolean scrolling) {
+        mScrolling = scrolling;
     }
 }

@@ -27,7 +27,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/card_navi_map_foreground" />
+        android:src="@drawable/card_big_foreground" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutCardNaviStatus"

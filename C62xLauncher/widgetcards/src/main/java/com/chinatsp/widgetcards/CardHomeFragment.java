@@ -18,6 +18,7 @@ import com.chinatsp.drawer.ICollapseListener;
 import com.chinatsp.widgetcards.home.CardIndicator;
 import com.chinatsp.widgetcards.home.CardScrollUtil;
 import com.chinatsp.widgetcards.home.ExpandStateManager;
+import com.chinatsp.widgetcards.home.HomeCardRecyclerView;
 import com.chinatsp.widgetcards.home.smallcard2.HomeCardRcvManager;
 import com.chinatsp.widgetcards.home.smallcard2.SmallCardsAdapter2;
 import com.chinatsp.widgetcards.home.smallcard2.SmallCardRcvManager;
@@ -42,7 +43,7 @@ public class CardHomeFragment extends BaseFragment {
     private static final String TAG = "CardHomeFragment";
     private HomeCardsAdapter mCardsAdapter;
     private SmallCardsAdapter2 mSmallCardsAdapter;
-    private RecyclerView mRcvCards;
+    private HomeCardRecyclerView mRcvCards;
     private CardIndicator mCardIndicator;
     private PagerSnapHelper mSnapHelper;
     private Handler mUiHandler = new Handler();
@@ -63,7 +64,7 @@ public class CardHomeFragment extends BaseFragment {
         initSmallCardsRcv(rootView);
         mCardIndicator = rootView.findViewById(R.id.cardIndicator);
         mCardIndicator.setIndex(0);
-        EasyLog.d(TAG, "initViews ... Hashcode:"+hashCode());
+        EasyLog.d(TAG, "initViews ... Hashcode:" + hashCode());
 //        drawerCreator = new DrawerCreator(rootView.findViewById(R.id.rcvDrawerContent));
 //        drawerCreator.initDrawerRcv();
 
@@ -118,7 +119,7 @@ public class CardHomeFragment extends BaseFragment {
     private void collapseControlViews() {
         // 在已初始化的情况下, 检查是否显示了控件组, 如果显示了就收起
         boolean showingControlViews = isShowingControlViews();
-        EasyLog.d(TAG, "collapseControlViews , showingControlViews:"+showingControlViews);
+        EasyLog.d(TAG, "collapseControlViews , showingControlViews:" + showingControlViews);
         if (showingControlViews) {
             scrollToFirstCardSmooth();
         }
@@ -163,6 +164,7 @@ public class CardHomeFragment extends BaseFragment {
 
     /**
      * 三指飞屏交换卡片
+     *
      * @param swipeEvent
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -180,7 +182,7 @@ public class CardHomeFragment extends BaseFragment {
         } else {
             smallCard = ListKit.findPrev(bigCard, homeList);
         }
-        EasyLog.d(TAG, "swipeCard,  fragment hashcode: "+hashCode());
+        EasyLog.d(TAG, "swipeCard,  fragment hashcode: " + hashCode());
         EasyLog.d(TAG, "swipeCard, bigCard:" + bigCard.getName() + " , inLeftSide:" + swipeEvent.mBigInLeftSide + " , smallCard:" + smallCard);
         int index = homeList.indexOf(bigCard);
         int index2 = homeList.indexOf(smallCard);
@@ -233,7 +235,7 @@ public class CardHomeFragment extends BaseFragment {
         if (mRcvCards != null) {
             // 600: recyclerView的第1项的x坐标.
             // 当列表向左滑动600时, 此处实际上的作用是收起第一项
-            mRcvCards.smoothScrollBy(600,0);
+            mRcvCards.smoothScrollBy(600, 0);
         }
     }
 
@@ -264,29 +266,34 @@ public class CardHomeFragment extends BaseFragment {
         mCardsAdapter = new HomeCardsAdapter(getActivity(), mRcvCards);
 
         mRcvCards.setAdapter(mCardsAdapter);
-        mRcvCards.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                int offset = recyclerView.computeHorizontalScrollOffset();
-                int range = recyclerView.computeHorizontalScrollRange();
-                int extent = recyclerView.computeHorizontalScrollExtent();
-                float ratio = offset * 1.0f / (range - extent);
-                mCardIndicator.setIndex(ratio);
-            }
-
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    boolean showingControlViews = isShowingControlViews();
-                    EasyLog.d(TAG, "onScrollStateChanged , showingControlViews:" + showingControlViews);
-                    onScrollLeftSide(showingControlViews);
-                }
-            }
-        });
+        mRcvCards.addOnScrollListener(mOnScrollListener);
     }
 
+    RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            int offset = recyclerView.computeHorizontalScrollOffset();
+            int range = recyclerView.computeHorizontalScrollRange();
+            int extent = recyclerView.computeHorizontalScrollExtent();
+            float ratio = offset * 1.0f / (range - extent);
+            mCardIndicator.setIndex(ratio);
+        }
+
+        @Override
+        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+            EasyLog.d(TAG, "onScrollStateChanged state:" + newState);
+            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                boolean showingControlViews = isShowingControlViews();
+                EasyLog.d(TAG, "onScrollStateChanged , showingControlViews:" + showingControlViews);
+                onScrollLeftSide(showingControlViews);
+                mRcvCards.setScrolling(false);
+            } else {
+                mRcvCards.setScrolling(true);
+            }
+        }
+    };
 
     private void initSmallCardsRcv(View rootView) {
         rcvSmallCards = rootView.findViewById(R.id.rcvSmallCards);
@@ -301,6 +308,7 @@ public class CardHomeFragment extends BaseFragment {
         SmallCardRcvManager.getInstance().setRecyclerView(rcvSmallCards);
         HomeCardRcvManager.getInstance().setHomeRecyclerView(mRcvCards, mCardsAdapter);
     }
+
     /**
      * 是否已滑动到最左边
      *
@@ -332,6 +340,7 @@ public class CardHomeFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mRcvCards.removeOnScrollListener(mOnScrollListener);
         releaseObservers();
         EventBus.getDefault().unregister(this);
     }
