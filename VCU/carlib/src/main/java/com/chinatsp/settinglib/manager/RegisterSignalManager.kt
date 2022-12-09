@@ -84,8 +84,6 @@ class RegisterSignalManager private constructor() {
 //                    add(CarCabinManager.ID_VCS_KEY_AVM)
                     add(CarCabinManager.ID_AVM_AVM_DISP_REQ)
 
-
-
                     this.remove(Constant.INVALID)
                 }
             }

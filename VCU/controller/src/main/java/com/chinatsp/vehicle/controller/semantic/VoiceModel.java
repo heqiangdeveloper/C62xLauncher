@@ -3,7 +3,7 @@ package com.chinatsp.vehicle.controller.semantic;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class NlpVoiceModel implements Parcelable {
+public class VoiceModel implements Parcelable {
     public String service = "";
     public String operation = "";
     public Slots slots;
@@ -13,11 +13,11 @@ public class NlpVoiceModel implements Parcelable {
     public int direction;
     public int isOuting;
 
-    public NlpVoiceModel() {
+    public VoiceModel() {
 
     }
 
-    protected NlpVoiceModel(Parcel in) {
+    protected VoiceModel(Parcel in) {
         service = in.readString();
         operation = in.readString();
         slots = in.readParcelable(Slots.class.getClassLoader());
@@ -45,15 +45,15 @@ public class NlpVoiceModel implements Parcelable {
         return 0;
     }
 
-    public static final Creator<NlpVoiceModel> CREATOR = new Creator<NlpVoiceModel>() {
+    public static final Creator<VoiceModel> CREATOR = new Creator<VoiceModel>() {
         @Override
-        public NlpVoiceModel createFromParcel(Parcel in) {
-            return new NlpVoiceModel(in);
+        public VoiceModel createFromParcel(Parcel in) {
+            return new VoiceModel(in);
         }
 
         @Override
-        public NlpVoiceModel[] newArray(int size) {
-            return new NlpVoiceModel[size];
+        public VoiceModel[] newArray(int size) {
+            return new VoiceModel[size];
         }
     };
 }

@@ -63,21 +63,21 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
     private val insideMeetLight: SwitchState by lazy {
         val node = SwitchNode.LIGHT_INSIDE_MEET
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val lightCeremonySenseSwitch: SwitchState by lazy {
         val node = SwitchNode.LIGHT_CEREMONY_SENSE
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val outsideMeetLight: SwitchState by lazy {
         val node = SwitchNode.LIGHT_OUTSIDE_MEET
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
@@ -166,13 +166,13 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
         return when (node) {
             RadioNode.LIGHT_DELAYED_OUT -> {
-                writeProperty(node, value, lightDelayOut)
+                node.isValid(value, isGet = false) && writeProperty(node, value, lightDelayOut)
             }
             RadioNode.LIGHT_FLICKER -> {
-                writeProperty(node, value, lightFlicker)
+                node.isValid(value, isGet = false) && writeProperty(node, value, lightFlicker)
             }
             RadioNode.LIGHT_CEREMONY_SENSE -> {
-                writeProperty(node, value, lightCeremonySense)
+                node.isValid(value, isGet = false) && writeProperty(node, value, lightCeremonySense)
             }
             else -> false
         }
@@ -314,7 +314,7 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
     private fun writeProperty(node: SwitchNode, value: Boolean, atomic: SwitchState): Boolean {
         val success = writeProperty(node.set.signal, node.value(value), node.set.origin)
         if (success && develop) {
-            doUpdateSwitchValue(node, atomic, value) { _node, _value ->
+            doUpdateSwitch(node, atomic, value) { _node, _value ->
                 doSwitchChanged(_node, _value)
             }
         }

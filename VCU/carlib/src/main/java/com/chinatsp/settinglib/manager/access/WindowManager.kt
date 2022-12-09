@@ -50,28 +50,28 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager,
     private val autoCloseWinInRain: SwitchState by lazy {
         val node = SwitchNode.WIN_CLOSE_WHILE_RAIN
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val autoCloseWinAtLock: SwitchState by lazy {
         val node = SwitchNode.WIN_CLOSE_FOLLOW_LOCK
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val winRemoteControl: SwitchState by lazy {
         val node = SwitchNode.WIN_REMOTE_CONTROL
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val rainWiperRepair: SwitchState by lazy {
         val node = SwitchNode.RAIN_WIPER_REPAIR
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 

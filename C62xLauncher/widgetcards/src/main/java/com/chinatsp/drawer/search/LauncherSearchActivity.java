@@ -68,7 +68,8 @@ public class LauncherSearchActivity extends AppCompatActivity implements SearchA
         }
         String str = mEdittextSearchWord.getText().toString();
         if (!str.equals("")) {//判断输入框不为空，执行删除
-            mEdittextSearchWord.getText().delete(index - 1, index);
+            //mEdittextSearchWord.getText().delete(index - 1, index);
+            mEdittextSearchWord.setText(null);
         }
     }
 

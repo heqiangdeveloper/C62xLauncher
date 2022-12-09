@@ -11,7 +11,7 @@ import com.chinatsp.settinglib.Constant
  */
 data class SwitchState(var data: Boolean) {
 
-    var enableStatus: Int = Constant.VIEW_ENABLE
+    var enable: Int = Constant.VIEW_ENABLE
 
     fun get() = data
 
@@ -19,21 +19,24 @@ data class SwitchState(var data: Boolean) {
         data = status
     }
 
-    fun enable() = enableStatus == Constant.VIEW_ENABLE
+    fun enable() = enable == Constant.VIEW_ENABLE
 
     fun enable(value: Int) = value == Constant.VIEW_ENABLE
 
-    fun isEnableChanged(value: Int): Boolean {
-        val actual = enable()
-        val expect = value == Constant.VIEW_ENABLE
-        return actual xor expect
+    fun setEnable(value: Int): Boolean {
+        val result = value != enable
+        if (result) {
+            enable = value
+        }
+        return result
     }
 
     fun deepCopy(): SwitchState {
-        val copy = this.copy()
-        copy.data = data
-        copy.enableStatus = enableStatus
-        return copy
+        return this
+//        val copy = this.copy()
+//        copy.data = data
+//        copy.enable = enable
+//        return copy
     }
 
 }

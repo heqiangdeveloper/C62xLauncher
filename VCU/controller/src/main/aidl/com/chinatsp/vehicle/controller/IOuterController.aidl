@@ -14,4 +14,6 @@ interface IOuterController {
     void doAirControlCommand(in AirCmd cmd, in ICmdCallback callback);
 
     void doCarControlCommand(in CarCmd cmd, in ICmdCallback callback);
+
+    void doTransmitSemantic(in int service, in String semantic);
 }

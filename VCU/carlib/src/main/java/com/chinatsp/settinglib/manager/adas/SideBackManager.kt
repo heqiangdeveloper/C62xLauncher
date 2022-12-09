@@ -62,7 +62,7 @@ class SideBackManager : BaseManager(), IOptionManager {
 //            doUpdateSwitchValue(node, this, result)
 //        }
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
@@ -73,7 +73,7 @@ class SideBackManager : BaseManager(), IOptionManager {
 //            doUpdateSwitchValue(node, this, result)
 //        }
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
@@ -84,14 +84,14 @@ class SideBackManager : BaseManager(), IOptionManager {
 //            doUpdateSwitchValue(node, this, result)
 //        }
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val mebValue: SwitchState by lazy {
         val node = SwitchNode.ADAS_MEB
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
@@ -101,7 +101,7 @@ class SideBackManager : BaseManager(), IOptionManager {
             val default = if (node.default) "ON" else "OFF"
             val value = VcuUtils.getConfigParameters(OffLine.GUIDES, default)
             val result = if ("ON" == value) node.value(true) else node.value(false)
-            doUpdateSwitchValue(node, this, result)
+            doUpdateSwitch(node, this, result)
         }
     }
 
@@ -207,7 +207,7 @@ class SideBackManager : BaseManager(), IOptionManager {
                 val value = if (status) "ON" else "OFF"
                 val result = VcuUtils.setConfigParameters(OffLine.GUIDES, value)
                 if (result) {
-                    doUpdateSwitchValue(node, guidesValue, status, this::doSwitchChanged)
+                    doUpdateSwitch(node, guidesValue, status, this::doSwitchChanged)
                 }
                 result
             }
@@ -218,7 +218,7 @@ class SideBackManager : BaseManager(), IOptionManager {
     fun doSetSwitchOption(node: SwitchNode, status: Boolean, atomic: SwitchState): Boolean {
         val success = writeProperty(node.set.signal, node.value(status), node.set.origin)
         if (success && develop) {
-            doUpdateSwitchValue(node, atomic, status) { _node, _status ->
+            doUpdateSwitch(node, atomic, status) { _node, _status ->
                 doSwitchChanged(_node, _status)
             }
         }

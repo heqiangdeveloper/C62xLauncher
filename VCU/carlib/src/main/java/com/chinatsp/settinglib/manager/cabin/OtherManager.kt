@@ -36,28 +36,28 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
         SwitchState(node.default).apply {
             val value = SettingManager.instance.getTrailerSwitch()
             val result = if (null != value) node.isOn(value) else node.default
-            doUpdateSwitchValue(node, this, result)
+            doUpdateSwitch(node, this, result)
         }
     }
 
     private val batteryOptimize: SwitchState by lazy {
         val node = SwitchNode.DRIVE_BATTERY_OPTIMIZE
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val wirelessCharging: SwitchState by lazy {
         val node = SwitchNode.DRIVE_WIRELESS_CHARGING
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val wirelessChargingLamp: SwitchState by lazy {
         val node = SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
@@ -208,9 +208,13 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
             RadioNode.WIRELESS_CHARGING_STATE.get.signal -> {
                 val node = RadioNode.WIRELESS_CHARGING_STATE
                 val value = property.value as Int
-                onRadioChanged(node, wirelessChargingState, value, this::doUpdateRadioValue) { _, state ->
+                doUpdateRadioValue(node, wirelessChargingState, value) { _, state ->
                     onWirelessChargingModeChanged(state)
                 }
+//                onRadioChanged(node, wirelessChargingState, value,
+//                    this::doUpdateRadioValue) { _, state ->
+//                    onWirelessChargingModeChanged(state)
+//                }
             }
             SwitchNode.DRIVE_TRAILER_REMIND.get.signal -> {
                 onSwitchChanged(SwitchNode.DRIVE_TRAILER_REMIND, trailerRemind, property)
@@ -287,7 +291,7 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
 
     fun onTrailerRemindChanged(onOff: Int, level: Int, dist: Int) {
         Timber.d("onTrailerRemindChanged statusValue:%s, level:%s, distance:%s", onOff, level, dist)
-        doUpdateSwitchValue(
+        doUpdateSwitch(
             SwitchNode.DRIVE_TRAILER_REMIND, trailerRemind, onOff, this::doSwitchChanged)
         doUpdateRadioValue(
             RadioNode.DEVICE_TRAILER_SENSITIVITY, sensitivity, level, this::doOptionChanged)

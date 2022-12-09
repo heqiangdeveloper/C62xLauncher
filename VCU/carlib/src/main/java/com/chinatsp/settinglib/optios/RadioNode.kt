@@ -51,14 +51,18 @@ enum class RadioNode(
      * get -> 0x0:Inactive; 0x1:unlock FL door; 0x2:unlock all doors(default); 0x3:FunctionDisable
      * UE 默认关闭
      */
-    DOOR_FLAMEOUT_UNLOCK(
+    DOOR_QUENCH_UNLOCK(
         get = RNorm(values = intArrayOf(0x1, 0x2),
             signal = CarCabinManager.ID_CUTOFF_UNLOCK_DOORS_STATUE),
         set = RNorm(values = intArrayOf(0x1, 0x2),
             signal = CarCabinManager.ID_CUT_OFF_UNLOCK_DOORS),
         inactive = intArrayOf(0x3),
         def = 0x1
-    ),
+    ) {
+        override fun isInvalid(value: Int): Boolean {
+            return value == 0x3
+        }
+    },
 
     /**
      * 车门与车窗--电动尾门--电动尾门智能进入
@@ -73,7 +77,12 @@ enum class RadioNode(
 //        inactive = intArrayOf(0x0, 0x4, 0x5, 0x6, 0x7),
         inactive = intArrayOf(0x7),
         def = 0x1
-    ),
+    ) {
+        override fun isInvalid(value: Int): Boolean {
+            return value == 0x7
+        }
+    },
+
     //-------------------车门车窗--结束-------------------
 
 
@@ -123,7 +132,7 @@ enum class RadioNode(
             values = intArrayOf(0x2, 0x1, 0x3),
             signal = CarCabinManager.ID_LDW_RDP_LKS_FUNC_EN
         ),
-        inactive = intArrayOf(0x0),
+//        inactive = intArrayOf(0x0),
         def = 0x1
     ),
 
@@ -168,7 +177,7 @@ enum class RadioNode(
             values = intArrayOf(0x2, 0x1),
             signal = CarCabinManager.ID_LDW_LKS_SENSITIVITY_SWT
         ),
-        inactive = intArrayOf(0x2),
+//        inactive = intArrayOf(0x2),
         def = 0x1
     ),
 
@@ -406,37 +415,37 @@ enum class RadioNode(
     /**
      * 无线充电状态
      * 0x0: WCM处于关机状态及CDC或DA的显示
-            WCM关机状态需要满足以下条件：
-            1）	常电上电、触发电未上电/WCM开关处于关闭状态
-            满足以上条件， WCM进入关机状态，WCM发送“WcmWSts：OX00”信号，CDC或DA在显示屏右上角的无线充电状态标识无显示！
+    WCM关机状态需要满足以下条件：
+    1）	常电上电、触发电未上电/WCM开关处于关闭状态
+    满足以上条件， WCM进入关机状态，WCM发送“WcmWSts：OX00”信号，CDC或DA在显示屏右上角的无线充电状态标识无显示！
      * 0x1: WCM处于待机状态及CDC或DA的显示
-            1）	常电上电、触发电上电、WCM开关处于打开状态、PEPS不在寻钥匙状态；
-            2）	WCM未检测到接收端（手机）；
-            满足以上条件， WCM进入待机状态即WCM可以进行无线充电，但此时未检测到接收端（手机）.WCM发送“WcmWSts：OX01”信号，HUM在显示屏上显示此状态；
+    1）	常电上电、触发电上电、WCM开关处于打开状态、PEPS不在寻钥匙状态；
+    2）	WCM未检测到接收端（手机）；
+    满足以上条件， WCM进入待机状态即WCM可以进行无线充电，但此时未检测到接收端（手机）.WCM发送“WcmWSts：OX01”信号，HUM在显示屏上显示此状态；
      * 0x2: WCM处于充电中状态及CDC或DA的显示
-            1）	常电上电、触发电上电、WCM开关处于打开状态、PEPS不在寻钥匙状态；
-            2）	WCM无故障信息；
-            3）	检测到接收端（手机）。
-            满足以上条件， WCM进入充电中状态.WCM发送“WcmWSts：OX02信号，则音响显示屏上显示此状态
+    1）	常电上电、触发电上电、WCM开关处于打开状态、PEPS不在寻钥匙状态；
+    2）	WCM无故障信息；
+    3）	检测到接收端（手机）。
+    满足以上条件， WCM进入充电中状态.WCM发送“WcmWSts：OX02信号，则音响显示屏上显示此状态
      * 0x3: WCM处于过压状态及CDC或DA的显示
-            1）	常电上电、触发电上电、WCM开关处于打开状态、PEPS不在寻钥匙状态；
-            2）	WCM检测到输入电压过高（19.2V以上）。
-            满足以上条件， WCM进入过压状态.WCM发送“WcmWSts：OX03信号，音响显示屏上显示此状态
-            同时HUM屏幕额外通过图片的文字提示故障内容。
-            HUM的警告面策略：HUM弹出的警告画面会有“无线充电异常”的文字。
+    1）	常电上电、触发电上电、WCM开关处于打开状态、PEPS不在寻钥匙状态；
+    2）	WCM检测到输入电压过高（19.2V以上）。
+    满足以上条件， WCM进入过压状态.WCM发送“WcmWSts：OX03信号，音响显示屏上显示此状态
+    同时HUM屏幕额外通过图片的文字提示故障内容。
+    HUM的警告面策略：HUM弹出的警告画面会有“无线充电异常”的文字。
      * 0x4: WCM处于欠压状态及CDC或DA的显示
-            4）	WCM检测到输入电压过低（8.5V以下）。
-            满足以上条件， WCM进入欠压状态.WCM发送“WcmWSts：OX04信号，HUM在显示屏上显示此状态
-            HUM弹出的警告画面会有“无线充电异常”
+    4）	WCM检测到输入电压过低（8.5V以下）。
+    满足以上条件， WCM进入欠压状态.WCM发送“WcmWSts：OX04信号，HUM在显示屏上显示此状态
+    HUM弹出的警告画面会有“无线充电异常”
      * 0x5: WCM处于检测到异物（FOD）状态
-            WCM进入FOD状态.WCM发送“WcmWSts：OX05信号
-            HUM弹出的警告画面会有“检测到金属异物，请移开异物”的文字
+    WCM进入FOD状态.WCM发送“WcmWSts：OX05信号
+    HUM弹出的警告画面会有“检测到金属异物，请移开异物”的文字
      * 0x6: WCM处于过流状态
-            WCM进入过流状态.WCM发送“WcmWSts：OX06信号
-            HUM弹出的警告画面会有“无线充电异常”的文字。
+    WCM进入过流状态.WCM发送“WcmWSts：OX06信号
+    HUM弹出的警告画面会有“无线充电异常”的文字。
      * 0x7: WCM处于过温状态
-            WCM进入过温状态.WCM发送“WcmWSts：OX07信号
-            HUM弹出的警告画面会有“无线充电温度过高，请移开手机”的文字
+    WCM进入过温状态.WCM发送“WcmWSts：OX07信号
+    HUM弹出的警告画面会有“无线充电温度过高，请移开手机”的文字
      * 0x8: WCM处于过功率状态
      * 0x9:
      * 0xA:
@@ -460,17 +469,20 @@ enum class RadioNode(
         def = 200
     );
 
-    open fun isValid(value: Int, isGet: Boolean = true): Boolean {
-        return if (isGet) {
-            get.isValid(value)
-        } else {
-            set.isValid(value)
-        }
-    }
+//    open fun isValid(value: Int, isGet: Boolean = true): Boolean {
+//        return if (isGet) {
+//            get.isValid(value)
+//        } else {
+//            set.isValid(value)
+//        }
+//    }
 
-    open fun isInactive(value: Int): Boolean {
-        return inactive?.contains(value) ?: false
-    }
+    open fun isValid(value: Int, isGet: Boolean = true) =
+        if (isGet) get.isValid(value) else set.isValid(value)
+
+    //    open fun isInvalid(value: Int) = inactive?.contains(value) ?: false
+    open fun isInvalid(value: Int) = false
+
 
 //    fun indexOf(value: Int, isGet: Boolean = true): Int {
 //        return if (isGet) get.values.indexOf(value) else set.values.indexOf(value)

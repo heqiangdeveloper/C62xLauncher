@@ -32,6 +32,9 @@ class DriveLightingFragment : BaseFragment<CombineViewModel, DriveLightingFragme
 
     private val map: HashMap<Int, View> = HashMap()
 
+    private val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_hma
+
+
     override fun getLayoutId(): Int {
         return R.layout.drive_lighting_fragment
     }
@@ -98,7 +101,6 @@ class DriveLightingFragment : BaseFragment<CombineViewModel, DriveLightingFragme
     }
 
     private fun initVideoListener() {
-        val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_hma
         binding.video.setAudioFocusRequest(AudioManager.AUDIOFOCUS_NONE)
         binding.video.setVideoURI(parse(uri))
         binding.video.setOnCompletionListener {
@@ -157,7 +159,6 @@ class DriveLightingFragment : BaseFragment<CombineViewModel, DriveLightingFragme
         binding.adasLightHmaSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 //binding.videoImage.visibility = View.GONE
-                val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_hma
                 binding.video.setVideoURI(parse(uri))
                 binding.video.start()
             } else {

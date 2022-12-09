@@ -191,10 +191,12 @@ public class VSeekBar extends View {
     private void initPaint() {
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         paint.setColor(Color.WHITE);
+        paint.setAntiAlias(true);
 
         mPaint.setAntiAlias(true);
         // 初始化光晕效果画笔
         mShadowPaint = new Paint();
+        mShadowPaint.setAntiAlias(true);
         mShadowPaint.setStyle(Paint.Style.FILL);
         mShadowPaint.setColor(getContext().getColor(R.color.v_seek_start_color));
         mShadowPaint.setAlpha(200);
@@ -646,12 +648,11 @@ public class VSeekBar extends View {
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
                 updateTouchStatus(false);
-
                 mTouchingMinTarget.remove(event.getPointerId(actionIndex));
                 mTouchingMaxTarget.remove(event.getPointerId(actionIndex));
                 Log.d("VSeekBar", "MotionEvent.ACTION_POINTER_UP");
-//            invalidate();
-                tryInvalidate();
+//                tryInvalidate();
+                updateValueNoEvent(getSelectedNumber());
                 break;
 
             case MotionEvent.ACTION_MOVE:
@@ -772,13 +773,15 @@ public class VSeekBar extends View {
         }
     }
 
-    private void tryInvalidate() {
+    private Boolean tryInvalidate() {
         int number = getSelectedNumber();
         if (displayValue != number) {
             mMaxPosition = Math.round(((number - mMin) / mConvertFactor) + mLineStartX);
             invalidate();
             displayValue = number;
+            return true;
         }
+        return false;
     }
 
     private boolean isChanged() {
@@ -814,8 +817,16 @@ public class VSeekBar extends View {
     public void setValueNoEvent(int value) {
         mSelectedNumber = value;
         setSelectedValue(value, false);
-//        invalidate();
         tryInvalidate();
+    }
+
+    public void updateValueNoEvent(int value) {
+        mSelectedNumber = value;
+        setSelectedValue(value, false);
+        boolean result = tryInvalidate();
+        if (!result) {
+            invalidate();
+        }
     }
 
     private void setSelectedValue(int selectedMax, boolean isCallback) {

@@ -45,14 +45,14 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
     private val electricSwitchState: SwitchState by lazy {
         val node = SwitchNode.AS_STERN_ELECTRIC
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val lightAlarmSwitchState: SwitchState by lazy {
         val node = SwitchNode.STERN_LIGHT_ALARM
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
@@ -66,7 +66,7 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
     private val audioAlarmSwitchState: SwitchState by lazy {
         val node = SwitchNode.STERN_AUDIO_ALARM
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
@@ -179,7 +179,7 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
         return result?.let {
             val success = writeProperty(node.set.signal, node.value(status), node.set.origin)
             if (success) {
-                doUpdateSwitchValue(node, result, status)
+                doUpdateSwitch(node, result, status)
             }
             return@let success
         } ?: false
@@ -433,7 +433,6 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
     override fun doCommandExpress(parcel: CommandParcel, fromUser: Boolean) {
         val command = parcel.command as CarCmd
         if (ICar.DOORS == command.car) {
-            val callback = parcel.callback
             if (IPart.HEAD == command.part) {
                 doControlHood(parcel)
                 return

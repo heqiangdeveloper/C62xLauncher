@@ -29,21 +29,21 @@ class SafeManager private constructor() : BaseManager(), ISwitchManager {
     private val alcLockHint: SwitchState by lazy {
         val node = SwitchNode.ALC_LOCK_HINT
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val lockFailedHint: SwitchState by lazy {
         val node = SwitchNode.LOCK_FAILED_AUDIO_HINT
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val lockSuccessHint: SwitchState by lazy {
         val node = SwitchNode.LOCK_SUCCESS_AUDIO_HINT
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
@@ -54,7 +54,7 @@ class SafeManager private constructor() : BaseManager(), ISwitchManager {
                 key = Constant.DRIVE_VIDEO_PLAYING,
                 value = node.value(node.default)
             )
-            doUpdateSwitchValue(node, this, result)
+            doUpdateSwitch(node, this, result)
         }
     }
 
@@ -69,7 +69,7 @@ class SafeManager private constructor() : BaseManager(), ISwitchManager {
                     val value = VcuUtils.getInt(key = Constant.DRIVE_VIDEO_PLAYING,
                         value = node.value(node.default))
                     Timber.d("observer onChange node:$node value:$value")
-                    doUpdateSwitchValue(node,
+                    doUpdateSwitch(node,
                         videoModeFunction, node.isOn(value), instance::doSwitchChanged)
                 }
             })

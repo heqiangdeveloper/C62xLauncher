@@ -6,7 +6,7 @@ import com.chinatsp.vehicle.controller.annotation.IAir
 import com.chinatsp.vehicle.controller.annotation.IOrien
 import com.chinatsp.vehicle.controller.annotation.IPart
 import com.chinatsp.vehicle.controller.bean.AirCmd
-import com.chinatsp.vehicle.controller.semantic.NlpVoiceModel
+import com.chinatsp.vehicle.controller.semantic.VoiceModel
 import com.chinatsp.vehicle.controller.semantic.Slots
 import com.chinatsp.vehicle.controller.utils.Keywords
 import org.json.JSONObject
@@ -86,7 +86,7 @@ object AirController : IController {
     override fun doVoiceController(
         controller: IOuterController,
         callback: ICmdCallback,
-        model: NlpVoiceModel,
+        model: VoiceModel,
     ): Boolean {
         val slots: Slots = model.slots
         var command: AirCmd? = null

@@ -34,21 +34,21 @@ class DoorManager private constructor() : BaseManager(), IOptionManager, IAccess
     private val smartAccess: SwitchState by lazy {
         val node = SwitchNode.DOOR_SMART_ENTER
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val innerNfc: SwitchState by lazy {
         val node = SwitchNode.INNER_NFC
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val outerNfc: SwitchState by lazy {
         val node = SwitchNode.OUTER_NFC
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
@@ -60,7 +60,7 @@ class DoorManager private constructor() : BaseManager(), IOptionManager, IAccess
     }
 
     private val flameoutAutoUnlock: RadioState by lazy {
-        val node = RadioNode.DOOR_FLAMEOUT_UNLOCK
+        val node = RadioNode.DOOR_QUENCH_UNLOCK
         return@lazy createAtomicInteger(node) { result, value ->
             doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
@@ -78,7 +78,7 @@ class DoorManager private constructor() : BaseManager(), IOptionManager, IAccess
             val cabinSet = HashSet<Int>().apply {
                 add(RadioNode.DOOR_DRIVE_LOCK.get.signal)
                 /**行车自动落锁*/
-                add(RadioNode.DOOR_FLAMEOUT_UNLOCK.get.signal)
+                add(RadioNode.DOOR_QUENCH_UNLOCK.get.signal)
                 /**熄火自动解锁*/
                 add(SwitchNode.DOOR_SMART_ENTER.get.signal)
                 /**车门智能进入*/
@@ -136,7 +136,7 @@ class DoorManager private constructor() : BaseManager(), IOptionManager, IAccess
             RadioNode.DOOR_DRIVE_LOCK -> {
                 driveAutoLock.deepCopy()
             }
-            RadioNode.DOOR_FLAMEOUT_UNLOCK -> {
+            RadioNode.DOOR_QUENCH_UNLOCK -> {
                 flameoutAutoUnlock.deepCopy()
             }
             else -> null
@@ -148,7 +148,7 @@ class DoorManager private constructor() : BaseManager(), IOptionManager, IAccess
             RadioNode.DOOR_DRIVE_LOCK -> {
                 node.isValid(value, false) && writeProperty(node.set.signal, value, node.set.origin)
             }
-            RadioNode.DOOR_FLAMEOUT_UNLOCK -> {
+            RadioNode.DOOR_QUENCH_UNLOCK -> {
                 node.isValid(value, false) && writeProperty(node.set.signal, value, node.set.origin)
             }
             else -> false
@@ -171,8 +171,8 @@ class DoorManager private constructor() : BaseManager(), IOptionManager, IAccess
             RadioNode.DOOR_DRIVE_LOCK.get.signal -> {
                 onRadioChanged(RadioNode.DOOR_DRIVE_LOCK, driveAutoLock, p)
             }
-            RadioNode.DOOR_FLAMEOUT_UNLOCK.get.signal -> {
-                onRadioChanged(RadioNode.DOOR_FLAMEOUT_UNLOCK, flameoutAutoUnlock, p)
+            RadioNode.DOOR_QUENCH_UNLOCK.get.signal -> {
+                onRadioChanged(RadioNode.DOOR_QUENCH_UNLOCK, flameoutAutoUnlock, p)
             }
             CarCabinManager.ID_DR_DOOR_OPEN -> {
                 onSignalChanged(IPart.L_F, Model.ACCESS_DOOR, p.propertyId, p.value as Int)

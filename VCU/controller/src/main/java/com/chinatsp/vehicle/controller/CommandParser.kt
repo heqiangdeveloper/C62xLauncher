@@ -1,7 +1,7 @@
 package com.chinatsp.vehicle.controller
 
 import com.chinatsp.vehicle.controller.semantic.CmdVoiceModel
-import com.chinatsp.vehicle.controller.semantic.NlpVoiceModel
+import com.chinatsp.vehicle.controller.semantic.VoiceModel
 
 /**
  * @author : luohong
@@ -15,7 +15,7 @@ class CommandParser {
     val tag: String = "CommandParser"
 
     fun doDispatchSrAction(
-        nlpVoiceModel: NlpVoiceModel,
+        nlpVoiceModel: VoiceModel,
         controller: IOuterController,
         callback: ICmdCallback,
     ): Boolean {

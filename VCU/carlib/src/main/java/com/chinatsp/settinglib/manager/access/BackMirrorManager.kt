@@ -29,14 +29,14 @@ class BackMirrorManager private constructor() : BaseManager(), ISwitchManager {
     private val backMirrorFold: SwitchState by lazy {
         val node = SwitchNode.BACK_MIRROR_FOLD
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val backMirrorDown: SwitchState by lazy {
         val node = SwitchNode.BACK_MIRROR_DOWN
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitchValue(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 

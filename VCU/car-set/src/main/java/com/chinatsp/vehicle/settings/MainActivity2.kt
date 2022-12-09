@@ -3,6 +3,7 @@ package com.chinatsp.vehicle.settings
 import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -52,7 +53,6 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
 
     override fun initData(savedInstanceState: Bundle?) {
         initTabLayout()
-        Timber.e("initData-------")
         checkOutRoute(intent)
         observeLocation()
         registerController()
@@ -86,9 +86,24 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
         versionController!!.register()
     }
 
+    override fun onStart() {
+        super.onStart()
+        val value = Settings.System.getInt(
+            context.contentResolver,
+            Constant.VERSION_LEVEL,
+            Constant.STATUS_HIDE
+        )
+        Timber.e("-------------------------Settings.System.getInt--value:$value")
+        if (value == Constant.STATUS_HIDE) {
+            binding.redVersion.visibility = View.GONE
+        } else {
+            binding.redVersion.visibility = View.VISIBLE
+        }
+    }
+
+
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        Timber.e("onNewIntent-------")
         checkOutRoute(intent)
     }
 
@@ -310,16 +325,17 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
         }
     }
 
-    fun homeBack(view: View) {
+    fun homeBack() {
         finish()
     }
 
     private var mDrawerCollapseListener: ICollapseListener? = object : ICollapseListener {
         override fun onCollapse(key: Int) {
-            if (key == 0) {
-                binding.redVersion.visibility = View.VISIBLE
-            } else {
+            Timber.e("onCollapse-------key:$key")
+            if (key == Constant.STATUS_HIDE) {
                 binding.redVersion.visibility = View.GONE
+            } else {
+                binding.redVersion.visibility = View.VISIBLE
             }
         }
     }

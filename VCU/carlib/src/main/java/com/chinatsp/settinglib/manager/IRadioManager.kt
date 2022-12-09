@@ -43,7 +43,7 @@ interface IRadioManager : IManager {
         onRadioChanged(node, atomic, value, this::doUpdateRadioValue, this::doOptionChanged)
     }
 
-    fun onRadioChanged(
+    private fun onRadioChanged(
         node: RadioNode, atomic: RadioState, value: Int,
         update: ((RadioNode, RadioState, Int, ((RadioNode, RadioState) -> Unit)) -> Unit),
         block: ((RadioNode, RadioState) -> Unit),
@@ -52,30 +52,32 @@ interface IRadioManager : IManager {
     }
 
     fun doUpdateRadioValue(
-        node: RadioNode,
-        atomic: RadioState,
-        value: Int,
+        node: RadioNode, atomic: RadioState, value: Int,
         block: ((RadioNode, RadioState) -> Unit)? = null,
     ): RadioState {
         val isValid = node.isValid(value)
+        val invalid = node.isInvalid(value)
+        val isChanged = isValid or invalid
+        if (!isChanged) {
+            Timber.e("doUpdateRadio node:$node,isValid:$isValid, invalid:$invalid," +
+                    " value:$value, old_date:${atomic.get()}, old_enable:${atomic.enable}")
+            return atomic
+        }
         if (isValid) {
-            if (value != atomic.get()) {
-                atomic.set(value)
+            val valueSuccess = atomic.set(value)
+            val enableSuccess = atomic.updateEnable(Constant.VIEW_ENABLE)
+            if (valueSuccess or enableSuccess) {
+                block?.let { it(node, atomic) }
             }
-            if (!atomic.enable()) {
-                atomic.enable = Constant.VIEW_ENABLE
-            }
-            block?.let { it(node, atomic) }
             return atomic
         }
-        val inactive = node.isInactive(value)
-        if (inactive xor atomic.enable()) {
-            atomic.enable = if (inactive) value else Constant.VIEW_ENABLE
-            block?.let { it(node, atomic) }
+        if (invalid) {
+            val enableSuccess = atomic.updateEnable(value)
+            if (enableSuccess) {
+                block?.let { it(node, atomic) }
+            }
             return atomic
         }
-        Timber.e("doUpdateRadioValue node:$node, value:$value," +
-                " isValid:$isValid, inactive:$inactive, oldValue:${atomic.get()}")
         return atomic
     }
 

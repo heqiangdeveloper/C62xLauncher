@@ -2,10 +2,7 @@ package com.chinatsp.settinglib.manager
 
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
-import android.content.ComponentName
-import android.content.Intent
 import com.chinatsp.settinglib.Applet
-import com.chinatsp.settinglib.BaseApp
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.access.AccessManager
@@ -244,9 +241,11 @@ class GlobalManager private constructor() : BaseManager() {
 //            AdasManager.instance.doCarControlCommand(command, callback, fromUser)
         } else if (Model.PANORAMA == modelSerial) {
             panoramaConsumer.consumerCommand(command, callback, fromUser)
-        } else if (Model.AUTO_PARK == modelSerial) {
-            sendAutoParkCommand(command)
-        } else if (Model.GLOBAL == modelSerial) {
+        }
+//        else if (Model.AUTO_PARK == modelSerial) {
+//            sendAutoParkCommand(command)
+//        }
+        else if (Model.GLOBAL == modelSerial) {
             doConsumerCommand(command, callback, fromUser)
         }
     }
@@ -302,15 +301,6 @@ class GlobalManager private constructor() : BaseManager() {
         }
     }
 
-    private fun sendAutoParkCommand(cmd: CarCmd) {
-        val intent = Intent()
-        val packageName = "com.haibing.apaparking"
-        val serviceName = "com.haibing.apaparking.service.ApaParkingService"
-        intent.component = ComponentName(packageName, serviceName)
-        intent.putExtra("data", cmd.slots?.json)
-        BaseApp.instance.startService(intent)
-        Timber.e("sendAutoParkCommand data: ${cmd.slots?.json}")
-    }
 
 //    fun onTrailerRemindChanged(onOff: Int, level: Int, dist: Int) {
 //        CabinManager.instance.onTrailerRemindChanged(onOff, level, dist)

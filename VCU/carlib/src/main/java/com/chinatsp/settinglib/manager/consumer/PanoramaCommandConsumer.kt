@@ -36,7 +36,7 @@ class PanoramaCommandConsumer(val manager: GlobalManager) : ICmdExpress {
         doCommandExpress(parcel)
     }
 
-//    AVM view set request signal 切换全景视图命令，Reserved
+    //    AVM view set request signal 切换全景视图命令，Reserved
 //    0x0: Inactive
 //    0x1: Front view
 //    0x2: Rear view

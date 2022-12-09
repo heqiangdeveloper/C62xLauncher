@@ -36,29 +36,4 @@ enum class TabPage(val uid: Int, val desc: Int, val className: String) {
         DriveManageFragment::class.java.name);
 //    UPGRADE(6, BaseApp.instance.resources.getString(R.string.table6), SystemFragment::class.java.name);
 
-    companion object {
-
-        @JvmStatic
-        fun getPage(position: Int): TabPage {
-            return values()[position]
-        }
-
-        @JvmStatic
-        fun size(): Int {
-            return values().size
-        }
-
-        @JvmStatic
-        fun getPageNames(): Array<String?> {
-            val pages = values()
-            val pageNames = arrayOfNulls<String>(pages.size)
-            for (i in pages.indices) {
-                pageNames[i] = pages[i].name
-            }
-            return pageNames
-        }
-
-    }
-
-
 }

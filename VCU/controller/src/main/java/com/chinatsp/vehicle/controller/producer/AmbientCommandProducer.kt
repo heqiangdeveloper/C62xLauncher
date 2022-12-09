@@ -9,14 +9,14 @@ import com.chinatsp.vehicle.controller.annotation.Model
 import com.chinatsp.vehicle.controller.bean.CarCmd
 import com.chinatsp.vehicle.controller.semantic.Slots
 import com.chinatsp.vehicle.controller.utils.Keywords
-import com.chinatsp.vehicle.controller.utils.Keywords.Companion.MAX
-import com.chinatsp.vehicle.controller.utils.Keywords.Companion.MIN
-import com.chinatsp.vehicle.controller.utils.Keywords.Companion.MINUS
-import com.chinatsp.vehicle.controller.utils.Keywords.Companion.MINUS_LITTLE
-import com.chinatsp.vehicle.controller.utils.Keywords.Companion.MINUS_MORE
-import com.chinatsp.vehicle.controller.utils.Keywords.Companion.PLUS
-import com.chinatsp.vehicle.controller.utils.Keywords.Companion.PLUS_LITTLE
-import com.chinatsp.vehicle.controller.utils.Keywords.Companion.PLUS_MORE
+import com.chinatsp.vehicle.controller.utils.Keywords.MAX
+import com.chinatsp.vehicle.controller.utils.Keywords.MIN
+import com.chinatsp.vehicle.controller.utils.Keywords.MINUS
+import com.chinatsp.vehicle.controller.utils.Keywords.MINUS_LITTLE
+import com.chinatsp.vehicle.controller.utils.Keywords.MINUS_MORE
+import com.chinatsp.vehicle.controller.utils.Keywords.PLUS
+import com.chinatsp.vehicle.controller.utils.Keywords.PLUS_LITTLE
+import com.chinatsp.vehicle.controller.utils.Keywords.PLUS_MORE
 import org.json.JSONObject
 
 /**
@@ -30,7 +30,7 @@ class AmbientCommandProducer : ICommandProducer {
 
     fun attemptCreateCommand(slots: Slots): CarCmd? {
         var command: CarCmd? = null
-        if (slots.name.contains(Keywords.LAMP)) {
+        if (!TextUtils.isEmpty(slots.name) && slots.name.contains(Keywords.LAMP)) {
             if (null == command) {
                 command = attemptCreateAmbientRhythmCommand(slots)
             }

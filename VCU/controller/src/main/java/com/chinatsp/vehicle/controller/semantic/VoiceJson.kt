@@ -27,8 +27,8 @@ data class VoiceJson(
     val user: String = ""
     val presetUser: String = ""
 
-    fun convert(): NlpVoiceModel {
-        val nlpVoiceModel = NlpVoiceModel()
+    fun convert(): VoiceModel {
+        val nlpVoiceModel = VoiceModel()
         nlpVoiceModel.service = service ?: "default"
         nlpVoiceModel.operation = operation
         nlpVoiceModel.text = text
