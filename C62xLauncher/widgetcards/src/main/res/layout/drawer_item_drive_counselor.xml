@@ -107,7 +107,7 @@
             style="@style/CardLv4TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="km"
+            android:text="@string/tbt_info_distance_kilometer"
             android:textSize="22px"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -2,6 +2,9 @@ package com.chinatsp.drawer.drive;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Shader;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -30,7 +33,7 @@ public class DrawerDriveCounselorHolder extends BaseViewHolder<DrawerEntity> {
 
     public DrawerDriveCounselorHolder(@NonNull View itemView) {
         super(itemView);
-        EasyLog.d("DrawerDriveCounselorHolder", "init "+hashCode());
+        EasyLog.d("DrawerDriveCounselorHolder", "init " + hashCode());
         mController = new DriveInfoDrawerController(this);
         ivDrawerDriveHealthyText = itemView.findViewById(R.id.ivDrawerDriveHealthyText);
         ivDrawerDriveHealthBottom = itemView.findViewById(R.id.ivDrawerDriveHealthBottom);
@@ -46,6 +49,26 @@ public class DrawerDriveCounselorHolder extends BaseViewHolder<DrawerEntity> {
                 RecentAppHelper.launchApp(getContext(), "com.uaes.adviser");
             }
         });
+        setTextLineGradient(tvDrawerDriveDistance);
+        setTextLineGradient(tvDrawerDriveDistanceLabel);
+        setTextLineGradient(tvDrawerDriveRanking);
+    }
+
+    int colorEnd = Color.parseColor("#46FCFF");
+    int  colorStart = Color.parseColor("#7D85DE");
+
+    private void setTextLineGradient(TextView textView) {
+        if (textView == null) {
+            return;
+        }
+        textView.post(new Runnable() {
+            @Override
+            public void run() {
+                Shader shader = new LinearGradient(0, 0, textView.getWidth(), 0, colorStart, colorEnd, Shader.TileMode.CLAMP);
+                textView.getPaint().setShader(shader);
+                textView.invalidate();
+            }
+        });
     }
 
     public void updateHealthyLevel(String healthLevel) {
@@ -58,7 +81,7 @@ public class DrawerDriveCounselorHolder extends BaseViewHolder<DrawerEntity> {
         ivDrawerDriveHealthBottom.setImageResource(healthRes.bottomDrawableId);
     }
 
-    public void updateMaintenanceMileage(int maintenanceMile,float percent) {
+    public void updateMaintenanceMileage(int maintenanceMile, float percent) {
         if (maintenanceMile >= 0) {
             tvDrawerDriveDistanceLabel.setText(R.string.drawer_consultant_maintenance_mileage);
             tvDrawerDriveDistance.setText(String.valueOf(maintenanceMile));
@@ -71,7 +94,8 @@ public class DrawerDriveCounselorHolder extends BaseViewHolder<DrawerEntity> {
 
     @SuppressLint("SetTextI18n")
     public void updateRank(int rank) {
-        tvDrawerDriveRanking.setText(rank +"%");
+        tvDrawerDriveRanking.setText(rank + "%");
+        setTextLineGradient(tvDrawerDriveRanking);
     }
 
     public void updateDriveInfo(DriveInfo driveInfo, float maintenancePercent) {
@@ -91,6 +115,6 @@ public class DrawerDriveCounselorHolder extends BaseViewHolder<DrawerEntity> {
     @Override
     public void bind(int position, DrawerEntity drawerEntity) {
         super.bind(position, drawerEntity);
-        EasyLog.d("DrawerDriveCounselorHolder", "bind "+hashCode());
+        EasyLog.d("DrawerDriveCounselorHolder", "bind " + hashCode());
     }
 }

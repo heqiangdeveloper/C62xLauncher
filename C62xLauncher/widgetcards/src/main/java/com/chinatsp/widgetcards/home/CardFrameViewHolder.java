@@ -45,7 +45,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     private static final String TAG = "CardFrameViewHolder";
     private static final int MIN_CLICK_INTERVAL = 600; // ms
     private final int EXPAND_ANIM_DURATION = 200;
-    private RecyclerView mRecyclerView;
+    private HomeCardRecyclerView mRecyclerView;
     private TextView mTvCardName;
     private ImageView mIvCardZoom;
     private View ivCardTopSpace;
@@ -58,7 +58,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     public CardFrameViewHolder(@NonNull View itemView, RecyclerView recyclerView, View cardInner) {
         super(itemView);
         mResources = itemView.getResources();
-        this.mRecyclerView = recyclerView;
+        this.mRecyclerView = (HomeCardRecyclerView) recyclerView;
         mTvCardName = itemView.findViewById(R.id.tvCardName);
         mIvCardZoom = itemView.findViewById(R.id.ivCardZoom);
         ivCardTopSpace = itemView.findViewById(R.id.ivCardTopSpace);
@@ -138,27 +138,39 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     private static long mLastClickExpandTime;
 
     private View.OnClickListener createListener(LauncherCard cardEntity) {
+//        return new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                long now = System.currentTimeMillis();
+//                long diffToValid = now - mLastValidClickExpandTime;
+//                long diffToInvalid = now - mLastClickExpandTime;
+//                mLastClickExpandTime = now;
+//                if (diffToValid < MIN_CLICK_INTERVAL && diffToInvalid < MIN_CLICK_INTERVAL) {
+//                    EasyLog.w(TAG, "click expand or collapse view fail: touch too fast."
+//                            + cardEntity.getName() + " , diff:" + diffToValid + " , diffToInvalid:" + diffToInvalid);
+//                    return;
+//                }
+//                mLastValidClickExpandTime = now;
+//                EasyLog.d(TAG, "click expand or collapse view :" + cardEntity.getName()
+//                        + " , diff:" + diffToValid + " , diffToInvalid:" + diffToInvalid);
+//                if (!cardEntity.isCanExpand()) {
+//                    return;
+//                }
+//                if (view == mIvCardZoom || view == mTvCardName || view == ivCardTopSpace) {
+//                    ExpandStateManager.getInstance().clickExpandButton(cardEntity, isCardInLeftSide());
+//
+//                }
+//            }
+//        };
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                long now = System.currentTimeMillis();
-                long diffToValid = now - mLastValidClickExpandTime;
-                long diffToInvalid = now - mLastClickExpandTime;
-                mLastClickExpandTime = now;
-                if (diffToValid < MIN_CLICK_INTERVAL && diffToInvalid < MIN_CLICK_INTERVAL) {
-                    EasyLog.w(TAG, "click expand or collapse view fail: touch too fast."
-                            + cardEntity.getName() + " , diff:" + diffToValid + " , diffToInvalid:" + diffToInvalid);
-                    return;
-                }
-                mLastValidClickExpandTime = now;
-                EasyLog.d(TAG, "click expand or collapse view :" + cardEntity.getName()
-                        + " , diff:" + diffToValid + " , diffToInvalid:" + diffToInvalid);
                 if (!cardEntity.isCanExpand()) {
                     return;
                 }
                 if (view == mIvCardZoom || view == mTvCardName || view == ivCardTopSpace) {
-                    ExpandStateManager.getInstance().clickExpandButton(cardEntity, isCardInLeftSide());
-
+                    EasyLog.d(TAG, "click ready expand " + cardEntity.getName());
+                    ExpandClickDebounceTask.getInstance().emit(mLauncherCard, isCardInLeftSide());
                 }
             }
         };
@@ -240,7 +252,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     public boolean isCardInLeftSide() {
         // 3个卡片的位置: 0, 605, 1210
         boolean b = itemView.getX() < 600;
-        EasyLog.d(TAG, "isCardInLeftSide : " + b +" card:"+mLauncherCard.getName());
+        EasyLog.d(TAG, "isCardInLeftSide : " + b + " card:" + mLauncherCard.getName());
         return b;
     }
 
@@ -385,7 +397,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
                     mPointCounts = 0;
                     break;
                 case MotionEvent.ACTION_POINTER_DOWN:
-                    EasyLog.i(TAG, "ACTION_POINTER_DOWN "+ mLauncherCard.getName());
+                    EasyLog.i(TAG, "ACTION_POINTER_DOWN " + mLauncherCard.getName());
                     mLatestPointerPressTime = System.currentTimeMillis();
                     // 副指针到来时，将副指针的数据记录下来，方便后续使用
                     mPointsDown.put(pointerId, pointerCoordinate);
@@ -394,7 +406,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
 
                 case MotionEvent.ACTION_MOVE:
                     EasyLog.d(TAG, "ACTION_MOVE . mShouldTriggerScreenShot:" + mShouldTriggerScreenShot
-                            + ",  pointX:" + pointX + ". Point count:" + mPointCounts +"  card:"+ mLauncherCard.getName());
+                            + ",  pointX:" + pointX + ". Point count:" + mPointCounts + "  card:" + mLauncherCard.getName());
                     if (event.getPointerCount() == 1) {
                         moveX = event.getX();
                         moveY = event.getY();
@@ -418,7 +430,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
                         moveY = event.getY();
                         float deltaY = moveY - downY;
                         float deltaX = moveX - downX;
-                        EasyLog.d(TAG, "check up deltaY:" + deltaY + " , deltaX:" + deltaX + " , mReadLongPress:" + mReadyLongPress+" ,  "+ mLauncherCard.getName());
+                        EasyLog.d(TAG, "check up deltaY:" + deltaY + " , deltaX:" + deltaX + " , mReadLongPress:" + mReadyLongPress + " ,  " + mLauncherCard.getName());
 //                        boolean checkAndGoSearchActivity = checkAndGoSearchActivity(deltaY, deltaX);
 //                        if (mReadyLongPress && !checkAndGoSearchActivity) {
 //                            checkAndPerformLongPress(deltaY, deltaX);
@@ -432,7 +444,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
                     // 前面的条件都满足触发截屏的条件时，还需要根据mPointersDown和mPointersUp这两个数据来计算每个手指滑动的距离是否满足TouchSlop等条件
                     long flashTime = System.currentTimeMillis() - mLatestPointerPressTime;
                     EasyLog.d(TAG, "UPUPUP distance:" + mPointsDistance + " , flashTime: " + flashTime
-                            + ", finger count:" + mPointCounts+" , "+ mLauncherCard.getName());
+                            + ", finger count:" + mPointCounts + " , " + mLauncherCard.getName());
                     if (mPointsDistance > 100
 //                            && flashTime < 1000
                             && ExpandStateManager.getInstance().getExpandState()
