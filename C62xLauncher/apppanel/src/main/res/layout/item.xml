@@ -31,7 +31,8 @@
             android:id="@+id/load_status_circleProgressView"
             android:layout_width="75px"
             android:layout_height="75px"
-            app:circleProgressColor="#FFFFFF" />
+            app:circleProgressColor="#FFFFFF"
+            app:smallCircleColor="#868A90"/>
     </RelativeLayout>
 
     <ImageView
@@ -43,7 +44,7 @@
         android:layout_marginEnd="30dp"
         android:scaleType="fitXY"
         android:visibility="gone"
-        android:src="@mipmap/delete" />
+        android:src="@drawable/delete" />
 
     <TextView
         android:id="@+id/app_name_tv"

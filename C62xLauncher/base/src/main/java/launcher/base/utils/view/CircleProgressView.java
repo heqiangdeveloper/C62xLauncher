@@ -25,6 +25,7 @@ public class CircleProgressView extends View {
     private float mBackgroundHeight = DEFAULT_PROGRESS_HEIGHT;
     private int mColorBackground = DEFAULT_BG_COLOR;
     private int mColorProgress = DEFAULT_PROGRESS_COLOR;
+    private int mSmallCircleColor = Color.TRANSPARENT;
     private Paint _paint;
     private RectF _rectF;
     private Rect _rect;
@@ -32,7 +33,10 @@ public class CircleProgressView extends View {
     private boolean isVisible;
     private String text = "";
     //圆弧（也可以说是圆环）的宽度
-    private float _arcWidth = 5;
+    private float _arcWidth = 4f;
+    //直线的起点坐标x
+    private final float lineStartX = 8f;
+    private final float lineYCount = 3f;
     //控件的宽度
     private float _width;
     public CircleProgressView(Context context) {
@@ -64,6 +68,7 @@ public class CircleProgressView extends View {
         mBackgroundHeight = typedArray.getDimension(R.styleable.CircleProgressView_circleProgressBgHeight, DEFAULT_BG_HEIGHT);
         mColorBackground = typedArray.getColor(R.styleable.CircleProgressView_circleProgressBgColor, DEFAULT_BG_COLOR);
         mColorProgress = typedArray.getColor(R.styleable.CircleProgressView_circleProgressColor, DEFAULT_PROGRESS_COLOR);
+        mSmallCircleColor = typedArray.getColor(R.styleable.CircleProgressView_smallCircleColor, Color.TRANSPARENT);
         typedArray.recycle();
     }
 
@@ -103,29 +108,38 @@ public class CircleProgressView extends View {
         _paint.setStyle(Paint.Style.STROKE);
         //设置圆弧的宽度（圆环的宽度）
         _paint.setStrokeWidth(_arcWidth);
-        _paint.setColor(Color.TRANSPARENT);
+        //爱趣听中卡进度没有小圆 此时透明，应用下载时有小圆，此时不透明
+        _paint.setColor(mSmallCircleColor);
         //大圆的半径
         float bigCircleRadius = _width / 2;
         //小圆的半径
         float smallCircleRadius = bigCircleRadius - _arcWidth;
-        //绘制小圆
+        //绘制最底层闭合小圆
         canvas.drawCircle(bigCircleRadius, bigCircleRadius, smallCircleRadius, _paint);
         _paint.setColor(mColorProgress);
         _rectF.set(_arcWidth, _arcWidth, _width - _arcWidth, _width - _arcWidth);
         //绘制圆弧
         canvas.drawArc(_rectF, 270, _current * 360 / _max, false, _paint);
         //计算百分比
-        String txt = text;
-        _paint.setTextSize(30);
-        _paint.setTextAlign(Paint.Align.CENTER);
-        _paint.getTextBounds(txt, 0, txt.length(), _rect);
+//        String txt = text;
+//        _paint.setTextSize(4);
+//        _paint.setTextAlign(Paint.Align.CENTER);
+//        _paint.getTextBounds(txt, 0, txt.length(), _rect);
         if(isVisible){
             _paint.setColor(mColorProgress);
         }else {
             _paint.setColor(Color.TRANSPARENT);
         }
         //绘制百分比
-        canvas.drawText(txt, bigCircleRadius - _rect.width() / 8, bigCircleRadius + _rect.height() / 4, _paint);
+        //canvas.drawText(txt, bigCircleRadius - _rect.width() / 8, bigCircleRadius + _rect.height() / 4, _paint);
+        //将画布的起点坐标移动到圆心位置
+        canvas.translate(_width/2,_width/2);
+        //设置直线的头尾是圆滑的
+        _paint.setStrokeCap(Paint.Cap.ROUND);
+        canvas.drawLine(-lineStartX, -bigCircleRadius / lineYCount,
+                        -lineStartX, bigCircleRadius / lineYCount,_paint);
+        canvas.drawLine(lineStartX, -bigCircleRadius / lineYCount,
+                        lineStartX, bigCircleRadius / lineYCount,_paint);
     }
 
     public void setTextVisible(String text,boolean isVisible){
