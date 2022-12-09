@@ -11,7 +11,7 @@ import android.util.Log;
 
 public class VersionController {
     private final ContentResolver mContentResolver;
-    private final String KEY_QS_PANEL = "com.chinatsp.systemui.key_update";
+    private final String VERSION_KEY = "com.chinatsp.systemui.key_update";
     private ICollapseListener mCollapseListener;
     /**
      * 不显示图标
@@ -63,7 +63,7 @@ public class VersionController {
         @Override
         public void onChange(boolean selfChange, Uri uri) {
             super.onChange(selfChange, uri);
-            int value = Settings.Global.getInt(mContentResolver, KEY_QS_PANEL, STATUS_HIDE);
+            int value = Settings.System.getInt(mContentResolver, VERSION_KEY, STATUS_HIDE);
             Log.i("VersionController", "value: " + value);
             if (mCollapseListener != null) {
                 mCollapseListener.onCollapse(value);
@@ -72,12 +72,13 @@ public class VersionController {
     };
 
     public void register() {
-        Uri uri = Settings.Global.getUriFor(KEY_QS_PANEL);
+        Log.i("VersionController","register: ");
+        Uri uri = Settings.System.getUriFor(VERSION_KEY);
         mContentResolver.registerContentObserver(uri, false, mObserver);
     }
 
     public void unRegister() {
-        Uri uri = Settings.Global.getUriFor(KEY_QS_PANEL);
+        Uri uri = Settings.System.getUriFor(VERSION_KEY);
         mContentResolver.registerContentObserver(uri, false, mObserver);
     }
 }
