@@ -38,10 +38,8 @@ import timber.log.Timber
  */
 @AndroidEntryPoint
 class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBinding>(),
-    IOptionAction, SteeringKeysDialogFragment.SetOnClickDialogListener {
-    val PRIVACY_MODE = 0x11
-    val TURN_OFF_SCREEN = 0x21
-    val NAVIGATION = 0x31
+    IOptionAction {
+
     private val manager: WheelManager
         get() = WheelManager.instance
 
@@ -66,6 +64,20 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
 
         initClickView()
         initRouteListener()
+
+        initSimpleSignal()
+        addSimpleLiveDataListener()
+    }
+
+    private fun addSimpleLiveDataListener() {
+        viewModel.keypadCustom.observe(this) {
+            heelCustomKeys(it)
+        }
+    }
+
+    private fun initSimpleSignal() {
+        val value = viewModel.keypadCustom.value
+        heelCustomKeys(value!!)
     }
 
     private fun initClickView() {
@@ -127,7 +139,6 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
         val hintId =
             if (viewModel.swhFunction.value?.get() == true) R.string.switch_turn_on else R.string.switch_turn_off
         binding.wheelAutomaticHeatingTv.text = ResUtils.getString(hintId)
-        heelCustomKeys()
     }
 
     private fun addSwitchLiveDataListener() {
@@ -211,7 +222,6 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
         if (Constant.STEERING_CUSTOM_KEYPAD == serial) {
             cleanPopupSerial(serial)
             fragment = SteeringKeysDialogFragment()
-            (fragment as SteeringKeysDialogFragment).onSetClickDialogListener(this)
         } else if (Constant.STEERING_HEATING_SETTING == serial) {
             cleanPopupSerial(serial)
             fragment = SteeringHeatDialogFragment()
@@ -243,17 +253,14 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
 //        }
 //    }
 
-    private fun heelCustomKeys() {
-        val viewId = when (VcuUtils.getInt(key = Constant.CUSTOM_KEYPAD, value = PRIVACY_MODE)) {
-            NAVIGATION -> R.string.cabin_wheel_navigation
-            PRIVACY_MODE -> R.string.cabin_wheel_press_key_tv
-            TURN_OFF_SCREEN -> R.string.cabin_wheel_turn_screen
+    private fun heelCustomKeys(value: Int) {
+        val viewId = when (value) {
+            Constant.NAVIGATION -> R.string.cabin_wheel_navigation
+            Constant.PRIVACY_MODE -> R.string.cabin_wheel_press_key_tv
+            Constant.TURN_OFF_SCREEN -> R.string.cabin_wheel_turn_screen
             else -> null
         }
         binding.wheelCustomKeysTv.text = viewId?.let { ResUtils.getString(it) }
     }
 
-    override fun onClickDialogListener(content: String?) {
-        heelCustomKeys()
-    }
 }

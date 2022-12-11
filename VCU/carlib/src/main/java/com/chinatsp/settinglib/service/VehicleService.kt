@@ -79,11 +79,11 @@ class VehicleService : Service() {
                         val jsonObject = JSONObject(intentAtmosphereLamp)
                         val color = jsonObject.optString("color")
                         val lighting = jsonObject.optString("lighting")
-                        ambientLightingManager.doSetProgress(
+                        ambientLightingManager.doSetVolume(
                             Progress.AMBIENT_LIGHT_BRIGHTNESS,
                             Integer.valueOf(lighting)
                         )//亮度
-                        ambientLightingManager.doSetProgress(
+                        ambientLightingManager.doSetVolume(
                             Progress.AMBIENT_LIGHT_COLOR,
                             Integer.valueOf(color)
                         )//颜色

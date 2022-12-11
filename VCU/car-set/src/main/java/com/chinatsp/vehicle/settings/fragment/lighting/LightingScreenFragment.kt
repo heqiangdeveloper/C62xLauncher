@@ -66,26 +66,28 @@ class LightingScreenFragment : BaseFragment<BrightnessViewModel, LightingScreenF
         }
     }
 
-    private fun updateSeekBarValue(bar: VSeekBar, volume: Volume) {
-        bar.min = volume.min
-        bar.max = volume.max
+    private fun updateSeekBarValue(bar: VSeekBar, volume: Volume, init: Boolean = false) {
+        if (init) {
+            bar.min = volume.min
+            bar.max = volume.max
+        }
         bar.setValueNoEvent(volume.pos)
     }
 
     private fun initSeekBar() {
         binding.lightScreenCarSeekbar.apply {
             viewModel.hostScreenVolume.value?.let {
-                updateSeekBarValue(this, it)
+                updateSeekBarValue(this, it, init = true)
             }
         }
         binding.lightScreenMeterSeekbar.apply {
             viewModel.meterScreenVolume.value?.let {
-                updateSeekBarValue(this, it)
+                updateSeekBarValue(this, it, init = true)
             }
         }
         binding.lightScreenAcSeekbar.apply {
             viewModel.acScreenVolume.value?.let {
-                updateSeekBarValue(this, it)
+                updateSeekBarValue(this, it, init = true)
             }
         }
     }

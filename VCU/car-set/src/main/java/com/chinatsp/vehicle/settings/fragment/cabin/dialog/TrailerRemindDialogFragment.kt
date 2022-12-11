@@ -30,6 +30,7 @@ class TrailerRemindDialogFragment :
     }
 
     override fun initData(savedInstanceState: Bundle?) {
+        OtherManager.instance.requestTrailer()
         setBackListener()
         initService()
 

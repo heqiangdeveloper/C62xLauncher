@@ -26,12 +26,13 @@ interface IProgressManager : IManager {
     ): Volume {
         val valid = volume.isValid(value)
         val notSame = value != volume.pos
-        status && volume.isValid(value) && value != volume.pos
+//        status && volume.isValid(value) && value != volume.pos
+        Timber.d("doUpdateProgress node : ${volume.type}, status:$status, valid:$valid, notSame:$notSame, value:$value")
         if (status && valid && notSame) {
             volume.pos = value
             block?.let { it(volume.type, value) }
         } else {
-            Timber.d("doUpdateProgress node : ${volume.type}, status:$status, valid:$valid, notSame:$notSame, value:$value")
+            Timber.e("BrightnessManager doUpdateProgress node : ${volume.type}, status:$status, valid:$valid, notSame:$notSame, value:$value")
         }
         return volume
     }
