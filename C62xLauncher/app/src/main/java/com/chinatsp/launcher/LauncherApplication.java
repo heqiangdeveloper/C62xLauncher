@@ -1,6 +1,7 @@
 package com.chinatsp.launcher;
 
 import android.app.Application;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -24,6 +25,8 @@ import launcher.base.utils.EasyLog;
 
 public class LauncherApplication extends Application {
     private static final String TAG = "Launcher_version";
+    private static final String LAUNCHER_BOOT_ACTION = "com.chinatsp.launcher.bootCompleted";
+
     private Context mContext;
     @Override
     public void onCreate() {
@@ -53,7 +56,7 @@ public class LauncherApplication extends Application {
     private void initLog() {
         int versionCode = getVersionCode(mContext);
         String versionName = getVersionName(mContext);
-        Log.d(TAG, "APP_INFO:" + "VersionCode:" + versionCode + ",VersionName:" + versionName);
+        Log.d(TAG, "APP_INFO VersionCode:" + versionCode + ",VersionName:" + versionName);
         EasyLog.appendOriginTag(versionCode+"");
     }
 
@@ -82,8 +85,13 @@ public class LauncherApplication extends Application {
     private void sendLauncherBroadcast() {
         Intent intent = new Intent();
         intent.setPackage(AppLists.media);
-        intent.setAction("com.chinatsp.launcher.bootCompleted");
-        intent.addFlags(0x01000000);
+        intent.setAction(LAUNCHER_BOOT_ACTION);
+        // 避免静态注册的监听器收不到广播
+        intent.addFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP);
+        // 设定为前台广播
+        intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+        EasyLog.i(TAG, "sendLauncherBroadcast : "+LAUNCHER_BOOT_ACTION);
+        intent.setComponent(new ComponentName(AppLists.media, "com.chinatsp.media.broadcast.RemoteKeyReceiver"));
         sendBroadcast(intent);
     }
 
