@@ -438,7 +438,15 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
 
         @Override
         public void onFavorChange(boolean b, String s) {
-
+            if(currentMediaInfo != null){
+                if(s != null && s.equals(currentMediaInfo.getItemUUID())){
+                    if(mExpand){
+                        showFavor(mIvIQuTingLikeBtnBig,currentMediaInfo.getMediaType().trim(),b);
+                    }else {
+                        showFavor(mIvIQuTingLike,currentMediaInfo.getMediaType().trim(),b);
+                    }
+                }
+            }
         }
 
         @Override
@@ -910,14 +918,15 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
     private void commandFavor(ImageView ivFavor){
         if(("like").equals((String)ivFavor.getTag())){//已收藏
             FlowPlayControl.getInstance().cancelFavor();
-            ivFavor.setImageResource(R.drawable.card_iquting_icon_unlike);
-            ivFavor.setTag("unlike");
+//            ivFavor.setImageResource(R.drawable.card_iquting_icon_unlike);
+//            ivFavor.setTag("unlike");
         }else {//未收藏
             if(currentMediaInfo.isFavorable()){//当前节目是否可以收藏
                 FlowPlayControl.getInstance().addFavor();
-                ivFavor.setImageResource(R.drawable.card_iquting_icon_like);
-                ivFavor.setTag("like");
+//                ivFavor.setImageResource(R.drawable.card_iquting_icon_like);
+//                ivFavor.setTag("like");
             }else {
+                ivFavor.setTag("unlike");
                 Toast.makeText(context,"当前节目不可以收藏",Toast.LENGTH_SHORT).show();
             }
         }
