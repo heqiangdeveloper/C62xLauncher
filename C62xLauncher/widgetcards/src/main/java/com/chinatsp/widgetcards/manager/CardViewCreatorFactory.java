@@ -6,11 +6,11 @@ import com.chinatsp.econnect.EConnectCardView;
 import com.chinatsp.iquting.IQuTingCardView;
 import com.chinatsp.musiclauncher.MediaCardView;
 import com.chinatsp.navigation.NaviCardView;
-import com.chinatsp.phone.widget.BTPhoneCardView;
 import com.chinatsp.usercenter.UserCenterCardView;
 import com.chinatsp.vehiclesetting.VehicleSettingCardView;
 import com.chinatsp.volcano.VolcanoCardView;
 import com.chinatsp.weaher.WeatherCardView;
+import com.chinatsp.widgetcards.ext.BTPhoneCardExtView2;
 
 import card.base.ICardViewCreator;
 
@@ -76,7 +76,7 @@ public class CardViewCreatorFactory {
     }
 
     private static ICardViewCreator createPhone() {
-        return BTPhoneCardView::new;
+        return BTPhoneCardExtView2::new;
     }
 
     private static ICardViewCreator createVehicleSetting() {
