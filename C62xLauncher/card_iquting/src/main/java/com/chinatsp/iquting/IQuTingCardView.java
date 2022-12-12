@@ -5,12 +5,16 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -395,7 +399,7 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
 
                     mCircleProgressView.setCurrent(0);
                     if(mediaInfo.getMediaType() != null){
-                        showFavor(mIvIQuTingLikeBtnBig,mediaInfo.getMediaType().trim(),mediaInfo.isFavored());
+                        showFavor(false,mIvIQuTingLikeBtnBig,mediaInfo.getMediaType().trim(),mediaInfo.isFavored());
                     }
                 }else {
                     mTvIQuTingMediaName.setText(name + "-" + artist);
@@ -407,7 +411,7 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                     mTvIQuTingPlayPosition.setText(ToolUtils.formatTime(0));
                     mTvIQuTingPlayDuration.setText(ToolUtils.formatTime(mediaInfo.getDuration()));
                     if(mediaInfo.getMediaType() != null){
-                        showFavor(mIvIQuTingLike,mediaInfo.getMediaType().trim(),mediaInfo.isFavored());
+                        showFavor(false,mIvIQuTingLike,mediaInfo.getMediaType().trim(),mediaInfo.isFavored());
                     }
                 }
             }else {
@@ -441,9 +445,9 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
             if(currentMediaInfo != null){
                 if(s != null && s.equals(currentMediaInfo.getItemUUID())){
                     if(mExpand){
-                        showFavor(mIvIQuTingLikeBtnBig,currentMediaInfo.getMediaType().trim(),b);
+                        showFavor(true,mIvIQuTingLikeBtnBig,currentMediaInfo.getMediaType().trim(),b);
                     }else {
-                        showFavor(mIvIQuTingLike,currentMediaInfo.getMediaType().trim(),b);
+                        showFavor(true,mIvIQuTingLike,currentMediaInfo.getMediaType().trim(),b);
                     }
                 }
             }
@@ -465,13 +469,32 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
         IqutingBindService.getInstance().registerMediaChangeListener(iqutingMediaChangeListener);
     }
 
-    private void showFavor(ImageView iv,String type,boolean isFavor){
+    private void showFavor(boolean isFavorChanged,ImageView iv,String type,boolean isFavor){
         //sdk目前收藏功能只对音乐有效
         if("song".equals(type)){
             if(isFavor){
-                iv.setImageResource(R.drawable.card_iquting_icon_like);
                 iv.setTag("like");
+                //用户主动点击的收藏需要动画，爱趣听页面点击的收藏，由于卡片此时处于后台，移除了收藏监听事件，不受影响
+                if(isFavorChanged){
+                    post(new Runnable() {
+                        @Override
+                        public void run() {
+                            iv.setImageResource(R.drawable.favor_anim);
+                            AnimationDrawable AD = (AnimationDrawable) iv.getDrawable();
+                            AD.setOneShot(true);//只播一次
+                            AD.start();
+                        }
+                    });
+                }else {
+                    iv.setImageResource(R.drawable.card_iquting_icon_like);
+                }
             }else {
+                Drawable drawable = iv.getDrawable();
+                if(drawable != null && (drawable instanceof AnimationDrawable)){
+                    AnimationDrawable AD = (AnimationDrawable) drawable;
+                    AD.stop();//停止安装中的动画
+                }
+
                 iv.setImageResource(R.drawable.card_iquting_icon_unlike);
                 iv.setTag("unlike");
             }
@@ -716,7 +739,7 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                         }else {
                             GlideHelper.loadLocalCircleImage(context,mIvIQuTingCoverBig,R.drawable.test_cover2);
                         }
-                        showFavor(mIvIQuTingLikeBtnBig,mediaInfo.getMediaType().trim(),mediaInfo.isFavored());
+                        showFavor(false,mIvIQuTingLikeBtnBig,mediaInfo.getMediaType().trim(),mediaInfo.isFavored());
                     }else {
                         mTvIQuTingMediaName.setText(name + "-" + artist);
 
@@ -732,7 +755,7 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                                 GlideHelper.loadLocalAlbumCoverRadius(context,mIvCover,R.drawable.test_cover2,10);
                             }
                         }
-                        showFavor(mIvIQuTingLike,mediaInfo.getMediaType().trim(),mediaInfo.isFavored());
+                        showFavor(false,mIvIQuTingLike,mediaInfo.getMediaType().trim(),mediaInfo.isFavored());
                     }
                 }else{
                     Log.d(TAG,"mediaInfo is null");
