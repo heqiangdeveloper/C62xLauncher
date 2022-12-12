@@ -3,9 +3,12 @@ package com.chinatsp.vehicle.settings.vm.cabin
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.chinatsp.settinglib.Constant
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
+import com.chinatsp.settinglib.listener.INotifyListener
 import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.listener.IProgressListener
 import com.chinatsp.settinglib.manager.cabin.WheelManager
@@ -27,7 +30,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class SteeringViewModel @Inject constructor(app: Application, model: BaseModel) :
-    BaseViewModel(app, model), IProgressListener, IOptionListener {
+    BaseViewModel(app, model), IProgressListener, IOptionListener, INotifyListener {
 
     private val manager: WheelManager by lazy { WheelManager.instance }
 
@@ -45,7 +48,7 @@ class SteeringViewModel @Inject constructor(app: Application, model: BaseModel) 
     private val _sillTemp: MutableLiveData<Volume> by lazy {
         val type = Progress.STEERING_ONSET_TEMPERATURE
         MutableLiveData<Volume>().apply {
-            value = manager.doGetVolume(type)?.deepCopy()
+            value = manager.doGetVolume(type)
         }
     }
 
@@ -56,6 +59,17 @@ class SteeringViewModel @Inject constructor(app: Application, model: BaseModel) 
         val node = RadioNode.DRIVE_EPS_MODE
         MutableLiveData(manager.doGetRadioOption(node))
     }
+
+
+    val keypadCustom: LiveData<Int>
+        get() = _keypadCustom
+
+
+    private val _keypadCustom: MutableLiveData<Int> by lazy {
+        val value = VcuUtils.getInt(key = Constant.CUSTOM_KEYPAD, value = Constant.PRIVACY_MODE)
+        MutableLiveData(value)
+    }
+
 
 
     override fun onCreate() {
@@ -100,6 +114,8 @@ class SteeringViewModel @Inject constructor(app: Application, model: BaseModel) 
 
     private fun updateVolumeValue(liveData: MutableLiveData<Volume>, node: Progress, value: Int) {
         liveData.value?.let {
+            liveData.postValue(it)
+            if (true) return
             val isMin = it.min == node.min
             val isMax = it.max == node.max
             val isPos = it.pos == value
@@ -126,6 +142,13 @@ class SteeringViewModel @Inject constructor(app: Application, model: BaseModel) 
                 updateVolumeValue(_sillTemp, node, value)
             }
             else -> {}
+        }
+    }
+
+    override fun onNotify(signal: Int, value: Any) {
+        if (value is Int) {
+            val value = VcuUtils.getInt(key = Constant.CUSTOM_KEYPAD, value = Constant.PRIVACY_MODE)
+            _keypadCustom.postValue(value)
         }
     }
 

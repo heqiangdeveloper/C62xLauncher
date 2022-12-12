@@ -393,8 +393,8 @@ enum class RadioNode(
      * 此信号走TBOX信号 而非走CAN信号， 所以需要特殊处理
      */
     DEVICE_TRAILER_SENSITIVITY(
-        get = RNorm(values = intArrayOf(0x1, 0x2, 0x3), signal = -1),
-        set = RNorm(values = intArrayOf(0x1, 0x2, 0x3), signal = -1),
+        get = RNorm(values = intArrayOf(0x3, 0x2, 0x1), signal = -1),
+        set = RNorm(values = intArrayOf(0x3, 0x2, 0x1), signal = -1),
         def = 0x1
     ),
 

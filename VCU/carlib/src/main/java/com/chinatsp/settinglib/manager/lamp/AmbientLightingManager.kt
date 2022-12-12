@@ -2,12 +2,17 @@ package com.chinatsp.settinglib.manager.lamp
 
 import android.car.hardware.CarPropertyValue
 import com.chinatsp.settinglib.Constant
+import com.chinatsp.settinglib.IProgressManager
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.CommandParcel
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
+import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IBaseListener
-import com.chinatsp.settinglib.manager.*
+import com.chinatsp.settinglib.manager.BaseManager
+import com.chinatsp.settinglib.manager.ICmdExpress
+import com.chinatsp.settinglib.manager.IOptionManager
+import com.chinatsp.settinglib.manager.ISignal
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -20,7 +25,6 @@ import com.chinatsp.vehicle.controller.bean.CarCmd
 import com.chinatsp.vehicle.controller.utils.Keywords
 import timber.log.Timber
 import java.lang.ref.WeakReference
-import java.util.concurrent.atomic.AtomicInteger
 import kotlin.random.Random
 
 /**
@@ -141,25 +145,53 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
         }
     }
 
-    private val ambientBrightness: AtomicInteger by lazy {
-        val node = Progress.AMBIENT_LIGHT_BRIGHTNESS
-        AtomicInteger(node.def).apply {
-            val result = readIntProperty(node.get.signal, node.get.origin)
-            val value = if (result in node.min..node.max) result else node.def
-            Timber.d("getBrightness node:$node, result:$result,, value:$value")
-            this.set(value)
-        }
+//    private val ambientBrightness: AtomicInteger by lazy {
+//        val node = Progress.AMBIENT_LIGHT_BRIGHTNESS
+//        AtomicInteger(node.def).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            val value = if (result in node.min..node.max) result else node.def
+//            Timber.d("getBrightness node:$node, result:$result,, value:$value")
+//            this.set(value)
+//        }
+//    }
+//
+//    private val ambientColor: AtomicInteger by lazy {
+//        val node = Progress.AMBIENT_LIGHT_COLOR
+//        AtomicInteger(node.def).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            Timber.d("getAmbientColor signal:%s, value:%s", node.get.signal, value)
+//            doUpdateProgress(node, this, value, null)
+//        }
+//    }
+
+
+    private val ambientBrightness: Volume by lazy {
+        initProgress(Progress.AMBIENT_LIGHT_BRIGHTNESS)
+//        val node = Progress.AMBIENT_LIGHT_BRIGHTNESS
+//        AtomicInteger(node.def).apply {
+//            val result = readIntProperty(node.get.signal, node.get.origin)
+//            val value = if (result in node.min..node.max) result else node.def
+//            Timber.d("getBrightness node:$node, result:$result,, value:$value")
+//            this.set(value)
+//        }
     }
 
-    private val ambientColor: AtomicInteger by lazy {
-        val node = Progress.AMBIENT_LIGHT_COLOR
-        AtomicInteger(node.def).apply {
-            val value = readIntProperty(node.get.signal, node.get.origin)
-            Timber.d("getAmbientColor signal:%s, value:%s", node.get.signal, value)
-            doUpdateProgress(node, this, value, null)
-        }
+    private val ambientColor: Volume by lazy {
+        initProgress(Progress.AMBIENT_LIGHT_COLOR)
+//        val node = Progress.AMBIENT_LIGHT_COLOR
+//        AtomicInteger(node.def).apply {
+//            val value = readIntProperty(node.get.signal, node.get.origin)
+//            Timber.d("getAmbientColor signal:%s, value:%s", node.get.signal, value)
+//            doUpdateProgress(node, this, value, null)
+//        }
     }
 
+    private fun initProgress(type: Progress): Volume {
+        val result = readIntProperty(type.get.signal, type.get.origin)
+        val value = if (result in type.min..type.max) result else type.def
+        Timber.d("initProgress type:$type, result:$result,, value:$value")
+        return Volume(type, type.min, type.max, value)
+    }
 
     override fun doGetRadioOption(node: RadioNode): RadioState? {
         return null
@@ -169,25 +201,21 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
         return false
     }
 
-    override fun doGetProgress(node: Progress): Int {
-        return when (node) {
-            Progress.AMBIENT_LIGHT_BRIGHTNESS -> {
-                ambientBrightness.get()
-            }
-            Progress.AMBIENT_LIGHT_COLOR -> {
-                ambientColor.get()
-            }
-            else -> -1
+    override fun doGetVolume(progress: Progress): Volume? {
+        return when (progress) {
+            Progress.AMBIENT_LIGHT_BRIGHTNESS -> ambientBrightness
+            Progress.AMBIENT_LIGHT_COLOR -> ambientColor
+            else -> null
         }
+
     }
 
-    override fun doSetProgress(node: Progress, value: Int): Boolean {
+    override fun doSetVolume(node: Progress, value: Int): Boolean {
         return when (node) {
             Progress.AMBIENT_LIGHT_BRIGHTNESS -> {
                 val set = node.set
-                val newValue = value + 1
-                val result = writeProperty(set.signal, newValue, set.origin)
-                Timber.d("setBrightness signal:${set.signal}, newValue:$newValue, result:$result")
+                val result = writeProperty(set.signal, value + 1, set.origin)
+                Timber.d("setBrightness signal:${set.signal}, value:$value, result:$result")
                 result
             }
             Progress.AMBIENT_LIGHT_COLOR -> {
@@ -301,7 +329,6 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
             SwitchNode.ALC_SMART_MODE.get.signal -> {
                 onSwitchChanged(SwitchNode.ALC_SMART_MODE, alcSmartMode, property)
             }
-
             SwitchNode.SPEED_RHYTHM.get.signal -> {
                 onSwitchChanged(SwitchNode.SPEED_RHYTHM, speedRhythm, property)
             }
@@ -324,18 +351,18 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
     private fun onAmbientBrightnessChanged(property: CarPropertyValue<*>) {
         val value = property.value
         if (value is Int) {
-            Timber.d("onAmbientBrightnessChanged value%s", value)
-            val progress = Progress.AMBIENT_LIGHT_BRIGHTNESS
-            doUpdateProgress(progress, ambientBrightness, value, this::doProgressChanged)
+            Timber.d("onAmbientBrightnessChanged value:%s", value)
+            doUpdateProgress(ambientBrightness, value, true, this::doProgressChanged)
+
         }
     }
 
     private fun onAmbientColorChanged(property: CarPropertyValue<*>) {
         val value = property.value
         if (value is Int) {
-            Timber.d("onAmbientColorChanged value%s", value)
+            Timber.d("onAmbientColorChanged value:%s", value)
             val progress = Progress.AMBIENT_LIGHT_COLOR
-            doUpdateProgress(progress, ambientColor, value, this::doProgressChanged)
+            doUpdateProgress(ambientColor, value, true, this::doProgressChanged)
         }
     }
 
@@ -488,10 +515,10 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
     private fun computeLampColor(command: CarCmd, min: Int, max: Int): Int {
         var expect = 0
         if (Action.PLUS == command.action) {
-            val current = ambientColor.get()
+            val current = ambientColor.pos
             expect = current + command.step
         } else if (Action.MINUS == command.action) {
-            val current = ambientColor.get()
+            val current = ambientColor.pos
             expect = current - command.step
         } else if (Action.FIXED == command.action) {
             expect = command.value
@@ -509,10 +536,10 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
     private fun computeLampBrightness(command: CarCmd, min: Int, max: Int): Int {
         var expect = 0
         if (Action.PLUS == command.action) {
-            val current = ambientBrightness.get()
+            val current = ambientBrightness.pos
             expect = current + command.step
         } else if (Action.MINUS == command.action) {
-            val current = ambientBrightness.get()
+            val current = ambientBrightness.pos
             expect = current - command.step
         } else if (Action.FIXED == command.action) {
             expect = command.value

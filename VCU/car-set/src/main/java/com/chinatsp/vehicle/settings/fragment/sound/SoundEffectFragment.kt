@@ -518,7 +518,8 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
     }
 
     override fun onDestroy() {
-        mCollapseController!!.unRegister()
+        mCollapseController?.unRegister()
+        mCollapseController = null
         super.onDestroy()
     }
 }

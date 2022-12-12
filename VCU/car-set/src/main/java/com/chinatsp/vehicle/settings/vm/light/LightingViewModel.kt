@@ -80,7 +80,7 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
     private val _switchBacklight: MutableLiveData<Volume> by lazy {
         val node = Progress.SWITCH_BACKLIGHT_BRIGHTNESS
         MutableLiveData<Volume>().apply {
-            value = manager.doGetVolume(node)?.deepCopy()
+            value = manager.doGetVolume(node)
         }
     }
 
@@ -152,6 +152,8 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
 
     private fun updateVolumeValue(liveData: MutableLiveData<Volume>, node: Progress, value: Int) {
         liveData.value?.let {
+            liveData.postValue(it)
+            if (true) return
             val isMin = it.min == node.min
             val isMax = it.max == node.max
             val isPos = it.pos == value

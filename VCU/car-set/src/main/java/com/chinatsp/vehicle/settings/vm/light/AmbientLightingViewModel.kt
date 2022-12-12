@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.bean.SwitchState
+import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IProgressListener
 import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.manager.lamp.AmbientLightingManager
@@ -12,6 +13,7 @@ import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.common.library.frame.base.BaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,25 +39,25 @@ class AmbientLightingViewModel @Inject constructor(app: Application, model: Base
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
-    val ambientBrightness: LiveData<Int>
+    val ambientBrightness: LiveData<Volume>
         get() = _ambientBrightness
 
-    private val _ambientBrightness: MutableLiveData<Int> by lazy {
+    private val _ambientBrightness: MutableLiveData<Volume> by lazy {
         val node = Progress.AMBIENT_LIGHT_BRIGHTNESS
-        MutableLiveData(node.min).apply {
-            val value = manager.doGetProgress(node)
-            updateLiveData(this, value)
+        MutableLiveData<Volume>().apply {
+            val value = manager.doGetVolume(node)
+            this.value = value
         }
     }
 
-    val ambientColor: LiveData<Int>
+    val ambientColor: LiveData<Volume>
         get() = _ambientColor
 
-    private val _ambientColor: MutableLiveData<Int> by lazy {
+    private val _ambientColor: MutableLiveData<Volume> by lazy {
         val node = Progress.AMBIENT_LIGHT_COLOR
-        MutableLiveData(node.min).apply {
-            val value = manager.doGetProgress(node)
-            updateLiveData(this, value)
+        MutableLiveData<Volume>().apply {
+            val value = manager.doGetVolume(node)
+            this.value = value
         }
     }
 
@@ -68,6 +70,7 @@ class AmbientLightingViewModel @Inject constructor(app: Application, model: Base
         manager.unRegisterVcuListener(keySerial)
         super.onDestroy()
     }
+
 
     private fun updateLiveData(ld: MutableLiveData<Boolean>, v: Boolean): MutableLiveData<Boolean> {
         ld.takeIf { v xor (ld.value == true) }?.value = v
@@ -94,25 +97,25 @@ class AmbientLightingViewModel @Inject constructor(app: Application, model: Base
     override fun onProgressChanged(node: Progress, value: Int) {
         when (node) {
             Progress.AMBIENT_LIGHT_BRIGHTNESS -> {
-                doUpdate(_ambientBrightness, value)
+                doUpdateProgress(_ambientBrightness, value)
             }
             Progress.AMBIENT_LIGHT_COLOR -> {
-                doUpdate(_ambientColor, value)
+                doUpdateProgress(_ambientColor, value)
             }
             else -> {}
         }
     }
 
     fun onAmbientColorChanged(value: Int) {
-        val result = manager.doSetProgress(Progress.AMBIENT_LIGHT_COLOR, value)
+//        val result = manager.doSetProgress(Progress.AMBIENT_LIGHT_COLOR, value)
 //        if (result) {
 //            doUpdate(_ambientColor, value)
 //        }
     }
 
     fun doBrightnessChanged(node: Progress, value: Int) {
-        val result = manager.doSetProgress(node, value)
-        if (result) _ambientBrightness.value = value
+        val result = manager.doSetVolume(node, value)
+        if (result) _ambientBrightness.value?.pos = value
     }
 
 }

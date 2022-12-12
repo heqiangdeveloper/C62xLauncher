@@ -25,25 +25,19 @@ class SteeringKeysDialogFragment :
         WheelManager.instance
     }
 
-    private lateinit var mSetOnClickListener: SetOnClickDialogListener
-
-    fun onSetClickDialogListener(listener: SetOnClickDialogListener) {
-        this.mSetOnClickListener = listener;
-    }
-
-
     override fun getLayoutId(): Int {
         return R.layout.steering_dialog_fragment
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-        updateKeypadStatus()
+        updateKeypadStatus(true)
         setBackListener()
     }
 
-    private fun updateKeypadStatus() {
+    private fun updateKeypadStatus(init: Boolean = false) {
         keypad?.isEnabled = true
-        val view = when (VcuUtils.getInt(key = Constant.CUSTOM_KEYPAD, value = PRIVACY_MODE)) {
+        val value = VcuUtils.getInt(key = Constant.CUSTOM_KEYPAD, value = PRIVACY_MODE)
+        val view = when (value) {
             NAVIGATION -> binding.navigation
             PRIVACY_MODE -> binding.privacyMode
             TURN_OFF_SCREEN -> binding.turnScreen
@@ -51,6 +45,7 @@ class SteeringKeysDialogFragment :
         }
         view?.isEnabled = false
         keypad = view ?: keypad
+        if (!init) WheelManager.instance.doNotify(value, value)
     }
 
     private fun setBackListener() {
@@ -75,20 +70,6 @@ class SteeringKeysDialogFragment :
         return 880f / 1920f
     }
 
-    interface SetOnClickDialogListener {
-        fun onClickDialogListener(content: String?)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        val viewId = when (VcuUtils.getInt(key = Constant.CUSTOM_KEYPAD, value = PRIVACY_MODE)) {
-            NAVIGATION -> R.string.cabin_wheel_navigation
-            PRIVACY_MODE -> R.string.cabin_wheel_press_key_tv
-            TURN_OFF_SCREEN -> R.string.cabin_wheel_turn_screen
-            else -> null
-        }
-        mSetOnClickListener.onClickDialogListener(viewId?.let { ResUtils.getString(it) })
-    }
 
 }
 

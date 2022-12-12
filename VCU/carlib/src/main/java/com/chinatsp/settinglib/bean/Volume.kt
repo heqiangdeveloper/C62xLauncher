@@ -25,8 +25,8 @@ data class Volume(val type: Progress, var min: Int, var max: Int, var pos: Int) 
         return if (type == other.type && pos == other.pos && min == other.min && max == other.max) 0 else 1
     }
 
-    fun deepCopy(): Volume {
-        return copy(type = type, min = min, max = max, pos = pos)
-    }
+//    fun deepCopy(): Volume {
+//        return copy(type = type, min = min, max = max, pos = pos)
+//    }
 
 }

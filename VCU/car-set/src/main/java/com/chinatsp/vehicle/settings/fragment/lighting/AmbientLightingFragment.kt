@@ -122,7 +122,6 @@ class AmbientLightingFragment :
     private fun updateOptionActive() {
         updateSwitchEnable(SwitchNode.FRONT_AMBIENT_LIGHTING)
         updateSwitchEnable(SwitchNode.BACK_AMBIENT_LIGHTING)
-
         updateEnable(binding.brightnessLayout, true, isLightingActive())
     }
 
@@ -195,11 +194,13 @@ class AmbientLightingFragment :
             doUpdateSwitch(SwitchNode.FRONT_AMBIENT_LIGHTING, it)
             updateEnable(binding.brightnessLayout, true, isLightingActive())
             resetDisplay()
+            initViewLight()
         }
         viewModel.backLighting.observe(this) {
             doUpdateSwitch(SwitchNode.BACK_AMBIENT_LIGHTING, it)
             updateEnable(binding.brightnessLayout, true, isLightingActive())
             resetDisplay()
+            initViewLight()
         }
     }
 
@@ -340,13 +341,15 @@ class AmbientLightingFragment :
 //    }
 
     private fun initBrightnessSeekBar() {
-        val node = Progress.AMBIENT_LIGHT_BRIGHTNESS
-        binding.ambientLightingBrightness.min = node.min
-        binding.ambientLightingBrightness.max = node.max
-        binding.ambientLightingBrightness.setValueNoEvent(viewModel.ambientBrightness.value!!)
+//        val node = Progress.AMBIENT_LIGHT_BRIGHTNESS
+//        binding.ambientLightingBrightness.min = node.min
+//        binding.ambientLightingBrightness.max = node.max
+        val volume = viewModel.ambientBrightness.value!!
+        binding.ambientLightingBrightness.updateRangeValue(volume.min, volume.max, 1)
+        binding.ambientLightingBrightness.setValueNoEvent(volume.pos)
         binding.ambientLightingBrightness.setOnSeekBarListener { _, value ->
-            viewModel.doBrightnessChanged(node, value)
-            binding.ambientLightingBrightness.setValueNoEvent(viewModel.ambientBrightness.value!!)
+            viewModel.doBrightnessChanged(Progress.AMBIENT_LIGHT_BRIGHTNESS, value)
+//            binding.ambientLightingBrightness.setValueNoEvent()
         }
     }
 
@@ -384,15 +387,18 @@ class AmbientLightingFragment :
 
     private fun addSeekBarLiveDataListener() {
         viewModel.ambientBrightness.observe(this) {
-            binding.ambientLightingBrightness.setValueNoEvent(it)
+            val value = it.pos
+            binding.ambientLightingBrightness.setValueNoEvent(value)
         }
         viewModel.ambientColor.observe(this) {
-            binding.picker.setIndicatorIndex(it)
+            val value = it.pos
+            binding.picker.setIndicatorIndex(value)
         }
     }
 
     private fun initColorSeekBar() {
-        binding.picker.setIndicatorIndex(viewModel.ambientColor.value!!)
+        val value = viewModel.ambientColor.value!!.pos
+        binding.picker.setIndicatorIndex(value)
         binding.picker.setOnColorPickerChangeListener(this)
     }
 

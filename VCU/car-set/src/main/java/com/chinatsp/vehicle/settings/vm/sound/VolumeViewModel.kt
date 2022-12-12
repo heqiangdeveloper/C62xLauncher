@@ -10,6 +10,7 @@ import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.common.library.frame.base.BaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,41 +21,41 @@ class VolumeViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     override fun onCreate() {
         super.onCreate()
-        keySerial = VoiceManager.instance.onRegisterVcuListener(0, this)
+        keySerial = manager.onRegisterVcuListener(listener = this)
     }
 
     override fun onDestroy() {
+        manager.unRegisterVcuListener(keySerial)
         super.onDestroy()
-        VoiceManager.instance.unRegisterVcuListener(keySerial)
     }
 
     val naviVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            value = manager.doGetVolume(Progress.NAVI)?.deepCopy()
+            value = manager.doGetVolume(Progress.NAVI)
         }
     }
 
     val mediaVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            value = manager.doGetVolume(Progress.MEDIA)?.deepCopy()
+            value = manager.doGetVolume(Progress.MEDIA)
         }
     }
 
     val phoneVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            value = manager.doGetVolume(Progress.PHONE)?.deepCopy()
+            value = manager.doGetVolume(Progress.PHONE)
         }
     }
 
     val voiceVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            value = manager.doGetVolume(Progress.VOICE)?.deepCopy()
+            value = manager.doGetVolume(Progress.VOICE)
         }
     }
 
     val systemVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            value = manager.doGetVolume(Progress.SYSTEM)?.deepCopy()
+            value = manager.doGetVolume(Progress.SYSTEM)
         }
     }
 
@@ -82,6 +83,8 @@ class VolumeViewModel @Inject constructor(app: Application, model: BaseModel) :
     }
 
     private fun updateVolume(target: MutableLiveData<Volume>, expect: Volume) {
+        target.postValue(expect)
+        if (true) return
         target.takeIf { it.value?.type == expect.type }?.let {
             it.takeUnless { it.value == expect }?.let { liveData ->
                 liveData.value?.pos = expect.pos
@@ -116,6 +119,8 @@ class VolumeViewModel @Inject constructor(app: Application, model: BaseModel) :
     }
 
     private fun updateVolume(target: MutableLiveData<Volume>, value: Int) {
+        target.postValue(target.value)
+        if (true) return
         target.takeIf { it.value?.pos != value }?.let {
             it.value?.pos = value
             target.postValue(target.value)

@@ -61,7 +61,7 @@ class SeatViewModel @Inject constructor(app: Application, model: BaseModel) :
     private val _sillTemp: MutableLiveData<Volume> by lazy {
         val type = Progress.SEAT_ONSET_TEMPERATURE
         MutableLiveData<Volume>().apply {
-            value = manager.doGetVolume(type)?.deepCopy()
+            value = manager.doGetVolume(type)
         }
     }
 
@@ -122,6 +122,8 @@ class SeatViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private fun updateVolumeValue(liveData: MutableLiveData<Volume>, node: Progress, value: Int) {
         liveData.value?.let {
+            liveData.postValue(it)
+            if (true) return
             val isMin = it.min == node.min
             val isMax = it.max == node.max
             val isPos = it.pos == value

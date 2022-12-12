@@ -34,7 +34,6 @@ import com.chinatsp.settinglib.manager.lamp.BrightnessManager
 import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.settinglib.optios.Area
 import com.chinatsp.settinglib.optios.RadioNode
-import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import timber.log.Timber
 import java.util.*
@@ -148,10 +147,8 @@ class SettingManager private constructor() {
     private val cabinEventListener = object : CarCabinManager.CarCabinEventCallback {
         override fun onChangeEvent(property: CarPropertyValue<*>) {
             val id = property.propertyId
-            if (SwitchNode.ADAS_FCW.get.signal != id && SwitchNode.ADAS_AEB.get.signal != id) {
-                Timber.tag(Constant.VehicleSignal)
-                    .d("doActionSignal receive-cabin hex-id::${Integer.toHexString(id)}, dec-id:$id value:${property.value}, ${VcuUtils.V_N}")
-            }
+            Timber.tag(Constant.VehicleSignal)
+                .d("doActionSignal receive-cabin hex-id::${Integer.toHexString(id)}, dec-id:$id value:${property.value}, ${VcuUtils.V_N}")
             GlobalManager.instance.onDispatchSignal(property, Origin.CABIN)
         }
 
@@ -777,55 +774,24 @@ class SettingManager private constructor() {
         return trailer
     }
 
-    fun setTrailerRemind(value: Int): Boolean {
+    fun updateTrailer(swt: Int = 0, dist: Int = 0, level: Int = 0, serial: String) {
         AppExecutors.get()?.networkIO()?.execute {
             try {
-                val truckInformation = obtainTrailer("setSwitch")
-                if (null != truckInformation) {
-                    Timber.d("setTrailerRemind start $truckInformation")
-                    truckInformation.onOff = value
-                    mBoxManager?.truckInformation = truckInformation
-                    Timber.d("setTrailerRemind end $truckInformation")
+                val trailer = obtainTrailer(serial)
+                val isTrailer = null != trailer
+                val hasManager = null != mBoxManager
+                Timber.d("updateTrailer isTrailer $isTrailer, hasManager:$hasManager" +
+                        ", swt:$swt, dist:$dist, level:$level, serial:$serial")
+                if (isTrailer && hasManager) {
+                    trailer!!.dist = dist
+                    trailer!!.onOff = swt
+                    trailer!!.level = level
+                    mBoxManager!!.truckInformation = trailer
                 }
             } catch (e: Throwable) {
-                Timber.e("setTrailerRemind value:$value, exception:${e.message}")
+                e.printStackTrace()
             }
         }
-        return true
-    }
-
-    fun setTrailerDistance(value: Int): Boolean {
-        AppExecutors.get()?.networkIO()?.execute {
-            try {
-                val truckInformation = obtainTrailer("setDist")
-                if (null != truckInformation) {
-                    Timber.d("setTrailerDistance start $truckInformation")
-                    truckInformation.dist = value
-                    mBoxManager?.truckInformation = truckInformation
-                    Timber.d("setTrailerDistance end $truckInformation")
-                }
-            } catch (e: Throwable) {
-                Timber.e("setTrailerDistance value:$value, exception:${e.message}")
-            }
-        }
-        return true
-    }
-
-    fun setTrailerSensitivity(value: Int): Boolean {
-        AppExecutors.get()?.networkIO()?.execute {
-            try {
-                val truckInformation = obtainTrailer("setLevel")
-                if (null != truckInformation) {
-                    Timber.d("setTrailerSensitivity start $truckInformation")
-                    truckInformation.level = value
-                    mBoxManager?.truckInformation = truckInformation
-                    Timber.d("setTrailerSensitivity end $truckInformation")
-                }
-            } catch (e: Throwable) {
-                Timber.e("setTrailerSensitivity value:$value, exception:${e.message}")
-            }
-        }
-        return true
     }
 
     private val boxChangedListener = object : TboxChangedListener {

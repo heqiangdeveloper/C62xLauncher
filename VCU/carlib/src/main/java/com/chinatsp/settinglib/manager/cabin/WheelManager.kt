@@ -12,11 +12,10 @@ import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.constants.OffLine
+import com.chinatsp.settinglib.listener.INotifyListener
+import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.listener.sound.ISoundManager
-import com.chinatsp.settinglib.manager.BaseManager
-import com.chinatsp.settinglib.manager.ICmdExpress
-import com.chinatsp.settinglib.manager.ISignal
-import com.chinatsp.settinglib.manager.ShareHandler
+import com.chinatsp.settinglib.manager.*
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -38,7 +37,7 @@ import timber.log.Timber
  * @version: 1.0
  */
 
-class WheelManager private constructor() : BaseManager(), ISoundManager, ICmdExpress {
+class WheelManager private constructor() : BaseManager(), ISoundManager, ICmdExpress, INotify {
 
     private val swhFunction: SwitchState by lazy {
         val node = SwitchNode.DRIVE_WHEEL_AUTO_HEAT
@@ -72,10 +71,6 @@ class WheelManager private constructor() : BaseManager(), ISoundManager, ICmdExp
 
     private fun initVolume(type: Progress): Volume {
         val result = VcuUtils.getInt(key = Constant.STEERING_HEAT_TEMP, value = type.def)
-//        AppExecutors.get()?.singleIO()?.execute {
-//            val result = VcuUtils.getInt(key = Constant.STEERING_HEAT_TEMP, value = pos)
-//            doUpdateProgress(volume, result, true, instance::doProgressChanged)
-//        }
         return Volume(type, type.min, type.max, result)
     }
 
@@ -293,6 +288,21 @@ class WheelManager private constructor() : BaseManager(), ISoundManager, ICmdExp
                 command.message = "方向盘加热${if (isSend) "" else "已经"}${if (expect) "打开" else "关闭"}了"
             }
             callback?.onCmdHandleResult(command)
+        }
+    }
+
+    override fun doNotify(signal: Int, value: Any) {
+        val readLock = readWriteLock.readLock()
+        try {
+            readLock.lock()
+            listenerStore.forEach { (_, ref) ->
+                val listener = ref.get()
+                if (null != listener && listener is INotifyListener) {
+                    listener.onNotify(signal, value)
+                }
+            }
+        } finally {
+            readLock.unlock()
         }
     }
 }

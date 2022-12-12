@@ -1,5 +1,6 @@
 package com.common.xui.widget.picker;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -8,6 +9,7 @@ import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PaintFlagsDrawFilter;
 import android.graphics.Path;
@@ -92,6 +94,7 @@ public class VSeekBar extends View {
     private float mOutsideRangeLineStrokeWidth;
     private int mMax = DEFAULT_MAX;
     private int mMin = 0;
+    private int minShow = 0;
     private Bitmap mSliderIcon;
     private Bitmap mSliderIconFocus;
     private boolean mIsLineRound;
@@ -117,6 +120,15 @@ public class VSeekBar extends View {
     private final Xfermode xfermode = new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP);
     private final Path path = new Path();
     private final Path linePath = new Path();
+
+    private int mLineOffset = 0;
+
+    private int defRadius = 2;
+
+    private float pointRadius = 0;
+
+    private float circleRadius = 0;
+
 
     public VSeekBar(Context context) {
         this(context, null);
@@ -149,7 +161,6 @@ public class VSeekBar extends View {
             mSliderIcon = BitmapFactory.decodeResource(getResources(), array.getResourceId(R.styleable.XSeekBar_xsb_sliderIcon, R.drawable.xui_ic_slider_icon));
             mSliderIconFocus = BitmapFactory.decodeResource(getResources(), array.getResourceId(R.styleable.XSeekBar_xsb_sliderIconFocus, R.drawable.xui_ic_slider_icon));
             mIsLineRound = array.getBoolean(R.styleable.XSeekBar_xsb_isLineRound, true);
-
             //气泡
             mIsShowBubble = array.getBoolean(R.styleable.XSeekBar_xsb_isShowBubble, false);
             boolean isFitColor = array.getBoolean(R.styleable.XSeekBar_xsb_isFitColor, true);
@@ -180,10 +191,8 @@ public class VSeekBar extends View {
             mRulerDividerHeight = array.getDimensionPixelSize(R.styleable.XSeekBar_xsb_rulerDividerHeight, DensityUtils.dp2px(4));
             mRulerTextMarginTop = array.getDimensionPixelSize(R.styleable.XSeekBar_xsb_rulerTextMarginTop, DensityUtils.dp2px(4));
             mRulerInterval = array.getInt(R.styleable.XSeekBar_xsb_rulerInterval, 20);
-
             array.recycle();
         }
-
         mRange = mMax - mMin;
         initPaint();
     }
@@ -269,9 +278,14 @@ public class VSeekBar extends View {
         if (mIsFirstInit) {
             setSelectedValue(mSelectedNumber != -1 ? mSelectedNumber : mMax, false);
         }
-
         height += mVerticalPadding;
 
+        int offset = minShow - mMin;
+        if (offset > 0) {
+            mLineOffset = offset * mLineLength / (mMax - mMin);
+        } else {
+            mLineOffset = 0;
+        }
         setMeasuredDimension(width, height);
     }
 
@@ -306,8 +320,19 @@ public class VSeekBar extends View {
         drawSelectBorder(canvas);
     }
 
+    private Bitmap bitmap;
+
+    private float iconScale = 1.0f;
+
+
     private void drawIcon(Canvas canvas) {
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.luminance);
+        if (null == bitmap) {
+            Bitmap source = BitmapFactory.decodeResource(getResources(), R.drawable.luminance);
+            Matrix matrix = new Matrix();
+            matrix.postScale(1.25f, 1.25f);
+            bitmap = Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+            source.recycle();
+        }
         float xOffset = ((normalRectF.height() - bitmap.getWidth()) / 2);
         float yOffset = ((normalRectF.height() - bitmap.getHeight()) / 2);
         float left = normalRectF.left + xOffset;
@@ -315,8 +340,6 @@ public class VSeekBar extends View {
         // canvas.drawBitmap(bitmap, left, top, null);
         left = normalRectF.right - xOffset - bitmap.getWidth();
         canvas.drawBitmap(bitmap, left, top, null);
-
-
         drawSplitPoint(canvas);
     }
 
@@ -343,10 +366,16 @@ public class VSeekBar extends View {
         float locationX = normalRectF.left;
         float locationY = normalRectF.top + (normalRectF.height() / 2);
         float offset;
-
-        for (int index = 0; index < count - 1; index++) {
-            offset = (index + 1) * spare - 2;
-            canvas.drawCircle(locationX + offset, locationY, 2, paint);
+        if (circleRadius > 2.8f * defRadius) {
+            paint.setStyle(Paint.Style.STROKE);
+            canvas.drawCircle(locationX + normalRectF.height() / 2, locationY, circleRadius, paint);
+        }
+        if (0 != pointRadius) {
+            paint.setStyle(Paint.Style.FILL_AND_STROKE);
+            for (int index = 0; index < count - 1; index++) {
+                offset = (index + 1) * spare - pointRadius;
+                canvas.drawCircle(locationX + offset, locationY, pointRadius, paint);
+            }
         }
     }
 
@@ -366,14 +395,12 @@ public class VSeekBar extends View {
         canvas.drawRoundRect(normalRectF, normalRectF.height() / 2, normalRectF.height() / 2, mPaint);*/
 
         resetSelectRectF(normalRectF, mLineStartX, mMiddleY, mOutsideRangeLineStrokeWidth / 2, mLineEndX, mMiddleY);
-
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.luminance_bg_blue);
         rect.left = 0;
         rect.top = 0;
         rect.right = bitmap.getWidth();
         rect.bottom = bitmap.getHeight();
-        canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG
-                | Paint.FILTER_BITMAP_FLAG));
+        canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
         canvas.drawBitmap(bitmap, rect, normalRectF, mPaint);
         if (mIsLineRound) {
 //            mPaint.setColor(mInsideRangeColor);
@@ -477,12 +504,8 @@ public class VSeekBar extends View {
     }
 
     private void drawSelectedNumber(Canvas canvas) {
-
         String max = String.valueOf(getSelectedNumber());
-
         getTextBounds(max, mMaxTextRect);
-
-
         float yText;
         //bubble
         if (mIsShowBubble) {
@@ -605,32 +628,32 @@ public class VSeekBar extends View {
         //user has touched outside the target, lets jump to that position
         if (event.getX(index) > mMaxPosition && event.getX(index) <= mLineEndX) {
             mMaxPosition = (int) event.getX(index);
-//            invalidate();
             tryInvalidate();
             callMaxChangedCallbacks();
-        } else if (event.getX(index) < mMaxPosition && event.getX(index) >= mLineStartX) {
+
+        } else if (event.getX(index) < mMaxPosition && event.getX(index) >= mLineStartX + mLineOffset) {
             mMaxPosition = (int) event.getX(index);
-//            invalidate();
             tryInvalidate();
             callMaxChangedCallbacks();
         }
     }
 
     boolean isChanged = false;
+    ValueAnimator valueAnimator = ValueAnimator.ofFloat(1f, 0f);
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (!isEnabled()) {
             return false;
         }
-
         mIsFirstInit = false;
-
         final int actionIndex = event.getActionIndex();
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
+                valueAnimator.removeAllUpdateListeners();
+                valueAnimator.reverse();
                 updateTouchStatus(true);
-
 //                if (mLastTouchedMin) {
 //                    if (!checkTouchingMinTarget(actionIndex, event)
 //                            && !checkTouchingMaxTarget(actionIndex, event)) {
@@ -642,22 +665,26 @@ public class VSeekBar extends View {
 //                }
 //                Log.d("VSeekBar", "MotionEvent.ACTION_DOWN");
 //                invalidate();
+                pointRadius = defRadius;
+                circleRadius = 5 * pointRadius;
                 jumpToPosition(actionIndex, event);
+                updateScale();
+                invalidate();
                 break;
-
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
                 updateTouchStatus(false);
                 mTouchingMinTarget.remove(event.getPointerId(actionIndex));
                 mTouchingMaxTarget.remove(event.getPointerId(actionIndex));
-                Log.d("VSeekBar", "MotionEvent.ACTION_POINTER_UP");
-//                tryInvalidate();
                 updateValueNoEvent(getSelectedNumber());
+                updateScale();
+                valueAnimator.setDuration(1500);
+                valueAnimator.addUpdateListener(new AnimUpdateListener());
+                valueAnimator.start();
                 break;
 
             case MotionEvent.ACTION_MOVE:
                 updateTouchStatus(true);
-
 //                for (int i = 0; i < event.getPointerCount(); i++) {
 //                    if (mTouchingMinTarget.contains(event.getPointerId(i))) {
 //                        int touchX = (int) event.getX(i);
@@ -674,19 +701,20 @@ public class VSeekBar extends View {
 //                        callMaxChangedCallbacks();
 //                    }
                 int touchX = (int) event.getX();
-                touchX = clamp(touchX, mLineStartX, mLineEndX);
+                touchX = clamp(touchX, mLineStartX + mLineOffset, mLineEndX);
                 mMaxPosition = touchX;
                 isChanged = isChanged();
                 callMaxChangedCallbacks();
-                if (lastValue == mMin) mMaxPosition = mLineStartX;
-                if (lastValue == mMax) mMaxPosition = mLineEndX;
-                if (isChanged || lastValue == mMin || lastValue == mMax) //            invalidate();
-                    tryInvalidate();
+                if (lastValue <= minShow) mMaxPosition = mLineStartX + mLineOffset;
+                if (lastValue >= mMax) mMaxPosition = mLineEndX;
+//                if (isChanged || lastValue <= minShow || lastValue >= mMax) {
+//                    tryInvalidate();
+                updateScale();
+                invalidate();
 //                }
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
                 updateTouchStatus(true);
-
 //                for (int i = 0; i < event.getPointerCount(); i++) {
 //                    if (mLastTouchedMin) {
 //                        if (!checkTouchingMinTarget(i, event)
@@ -699,19 +727,17 @@ public class VSeekBar extends View {
 //                    }
 //                }
                 jumpToPosition(actionIndex, event);
+                updateScale();
                 Log.d("VSeekBar", "MotionEvent.ACTION_POINTER_DOWN");
                 break;
-
             case MotionEvent.ACTION_CANCEL:
                 updateTouchStatus(false);
-
 //                mTouchingMinTarget.clear();
 //                mTouchingMaxTarget.clear();
                 Log.d("VSeekBar", "MotionEvent.ACTION_CANCEL");
-
 //                invalidate();
                 jumpToPosition(actionIndex, event);
-
+                updateScale();
                 break;
 
             default:
@@ -775,13 +801,13 @@ public class VSeekBar extends View {
 
     private Boolean tryInvalidate() {
         int number = getSelectedNumber();
-        if (displayValue != number) {
-            mMaxPosition = Math.round(((number - mMin) / mConvertFactor) + mLineStartX);
-            invalidate();
-            displayValue = number;
-            return true;
-        }
-        return false;
+//        if (displayValue != number) {
+//            mMaxPosition = Math.round(((number - mMin) / mConvertFactor) + mLineStartX + mLineOffset);
+        invalidate();
+        displayValue = number;
+        return true;
+//        }
+//        return false;
     }
 
     private boolean isChanged() {
@@ -805,7 +831,18 @@ public class VSeekBar extends View {
     }
 
     public int getSelectedNumber() {
-        return Math.round((mMaxPosition - mLineStartX) * mConvertFactor + mMin);
+        int value = Math.round((mMaxPosition - mLineStartX) * mConvertFactor + mMin);
+        return Math.max(value, minShow);
+    }
+
+    private void updateScale() {
+//        float scale = (mMaxPosition - mLineStartX) / ((float) (3 * (mLineEndX - mLineStartX)));
+        float scale = displayValue / ((float) (3 * (mMax - mMin)));
+        if (scale >= 0f && scale <= 0.34f) {
+            iconScale = 1.0f + scale;
+        } else {
+            iconScale = 1.0f;
+        }
     }
 
     public void setDefaultValue(int value) {
@@ -817,6 +854,7 @@ public class VSeekBar extends View {
     public void setValueNoEvent(int value) {
         mSelectedNumber = value;
         setSelectedValue(value, false);
+        updateScale();
         tryInvalidate();
     }
 
@@ -846,7 +884,25 @@ public class VSeekBar extends View {
 
     public void setMin(int min) {
         mMin = min;
+        minShow = min;
         mRange = mMax - min;
+    }
+
+    public void updateRangeValue(int min, int max, int offset) {
+        mMin = min;
+        mMax = max;
+        setMinShow(min + offset);
+        mRange = mMax - min;
+    }
+
+    public void setMinShow(int minShow) {
+        if (minShow < mMin) {
+            this.minShow = mMin;
+        } else if (minShow > mMax) {
+            this.minShow = mMax;
+        } else {
+            this.minShow = minShow;
+        }
     }
 
     public int getMax() {
@@ -889,5 +945,17 @@ public class VSeekBar extends View {
     public boolean isTouching() {
         return mIsTouching;
     }
+
+    private final class AnimUpdateListener implements ValueAnimator.AnimatorUpdateListener {
+        @Override
+        public void onAnimationUpdate(ValueAnimator animation) {
+            Object animatedValue = animation.getAnimatedValue();
+            float scale = (float) animatedValue;
+            pointRadius = defRadius * scale;
+            circleRadius = 5 * pointRadius;
+            invalidate();
+        }
+    }
+
 
 }

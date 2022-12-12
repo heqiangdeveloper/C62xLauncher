@@ -43,24 +43,28 @@ class BrightnessViewModel @Inject constructor(app: Application, model: BaseModel
 
     val acScreenVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            value = manager.doGetVolume(Progress.CONDITIONER_SCREEN_BRIGHTNESS)?.deepCopy()
+            value = manager.doGetVolume(Progress.CONDITIONER_SCREEN_BRIGHTNESS)
         }
     }
 
     val hostScreenVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            value = manager.doGetVolume(Progress.HOST_SCREEN_BRIGHTNESS)?.deepCopy()
+            value = manager.doGetVolume(Progress.HOST_SCREEN_BRIGHTNESS)
         }
     }
 
     val meterScreenVolume: MutableLiveData<Volume> by lazy {
         MutableLiveData<Volume>().apply {
-            value = manager.doGetVolume(Progress.METER_SCREEN_BRIGHTNESS)?.deepCopy()
+            value = manager.doGetVolume(Progress.METER_SCREEN_BRIGHTNESS)
         }
     }
 
     private fun updateVolumeValue(liveData: MutableLiveData<Volume>, node: Progress, value: Int) {
+
         liveData.value?.let {
+            liveData.postValue(it)
+            Timber.e("BrightnessManager $node, v:${it.pos}, value:$value")
+            if (true) return
             val isMin = it.min == node.min
             val isMax = it.max == node.max
             val isPos = it.pos == value

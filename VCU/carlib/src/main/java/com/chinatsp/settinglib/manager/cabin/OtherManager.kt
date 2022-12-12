@@ -137,12 +137,9 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
                 writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
             SwitchNode.DRIVE_TRAILER_REMIND -> {
-                val result = SettingManager.instance.setTrailerRemind(node.value(status))
-                if (result) {
-                    trailerRemind.set(status)
-                    doSwitchChanged(node, trailerRemind)
-                }
-                result
+                val value = node.value(status)
+                SettingManager.instance.updateTrailer(swt = value, serial = "setSwitch")
+                false
             }
             else -> false
         }
@@ -159,20 +156,12 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
         val result = when (node) {
             RadioNode.DEVICE_TRAILER_DISTANCE -> {
-                val result = SettingManager.instance.setTrailerDistance(value)
-                if (result) {
-                    distance.set(value)
-                    doOptionChanged(node, distance)
-                }
-                result
+                SettingManager.instance.updateTrailer(dist = value, serial = "setDist")
+                false
             }
             RadioNode.DEVICE_TRAILER_SENSITIVITY -> {
-                val result = SettingManager.instance.setTrailerSensitivity(value)
-                if (result) {
-                    distance.set(value)
-                    doOptionChanged(node, distance)
-                }
-                result
+                SettingManager.instance.updateTrailer(level = value, serial = "setLevel")
+                false
             }
             else -> false
         }
@@ -297,6 +286,10 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
             RadioNode.DEVICE_TRAILER_SENSITIVITY, sensitivity, level, this::doOptionChanged)
         doUpdateRadioValue(
             RadioNode.DEVICE_TRAILER_DISTANCE, distance, dist, this::doOptionChanged)
+    }
+
+    fun requestTrailer() {
+        SettingManager.instance.updateTrailer(serial = "request")
     }
 
 

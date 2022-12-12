@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
+import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.vehicle.settings.bean.Result
 import com.common.library.frame.base.BaseModel
 import com.common.library.frame.base.DataViewModel
@@ -120,6 +121,8 @@ open class BaseViewModel @Inject constructor(application: Application, model: Ba
     }
 
     fun doUpdate(liveData: MutableLiveData<Int>, value: Int, valid: Boolean = true) {
+        Timber.d("AmbientLightingManager ${liveData.value}, value:$value")
+        liveData.postValue(value)
         if (!valid) {
             return
         }
@@ -130,5 +133,10 @@ open class BaseViewModel @Inject constructor(application: Application, model: Ba
         if (liveData.value!! != value) {
             liveData.postValue(value)
         }
+    }
+
+    fun doUpdateProgress(liveData: MutableLiveData<Volume>, value: Int, valid: Boolean = true) {
+        Timber.d("AmbientLightingManager---------- ${liveData.value?.pos}, value:$value")
+        liveData.postValue(liveData.value)
     }
 }
