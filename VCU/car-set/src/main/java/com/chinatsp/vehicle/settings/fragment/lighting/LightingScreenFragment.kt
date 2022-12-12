@@ -1,6 +1,8 @@
 package com.chinatsp.vehicle.settings.fragment.lighting
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.Volume
@@ -17,11 +19,30 @@ import dagger.hilt.android.AndroidEntryPoint
 class LightingScreenFragment : BaseFragment<BrightnessViewModel, LightingScreenFragmentBinding>(),
     VSeekBar.OnSeekBarListener {
 
+    private val AC_BRIGHTNESS = 0x33
+    private val METER_BRIGHTNESS = 0x44
+
     private val manager: BrightnessManager
         get() = BrightnessManager.instance
 
     override fun getLayoutId(): Int {
         return R.layout.lighting_screen_fragment
+    }
+
+    private val handler: Handler by lazy {
+        Handler(Looper.getMainLooper()
+        ) {
+            when (it.what) {
+                METER_BRIGHTNESS -> {
+                    updateSeekBarValue( binding.lightScreenMeterSeekbar, viewModel.meterScreenVolume.value!!)
+                }
+                AC_BRIGHTNESS -> {
+                    updateSeekBarValue( binding.lightScreenAcSeekbar, viewModel.acScreenVolume.value!!)
+                }
+                else -> {}
+            }
+            return@Handler true
+        }
     }
 
     override fun initData(savedInstanceState: Bundle?) {
@@ -59,10 +80,14 @@ class LightingScreenFragment : BaseFragment<BrightnessViewModel, LightingScreenF
             updateSeekBarValue(binding.lightScreenCarSeekbar, it)
         }
         viewModel.meterScreenVolume.observe(this) {
-            updateSeekBarValue(binding.lightScreenMeterSeekbar, it)
+//            updateSeekBarValue(binding.lightScreenMeterSeekbar, it)
+            handler.removeMessages(METER_BRIGHTNESS)
+            handler.sendEmptyMessageDelayed(METER_BRIGHTNESS, 200)
         }
         viewModel.acScreenVolume.observe(this) {
-            updateSeekBarValue(binding.lightScreenAcSeekbar, it)
+//            updateSeekBarValue(binding.lightScreenAcSeekbar, it)
+            handler.removeMessages(AC_BRIGHTNESS)
+            handler.sendEmptyMessageDelayed(AC_BRIGHTNESS, 200)
         }
     }
 
@@ -128,4 +153,11 @@ class LightingScreenFragment : BaseFragment<BrightnessViewModel, LightingScreenF
             VcuUtils.putInt(key = Constant.LIGHT_BRIGHTNESS_LEVEL, value = value)
         }
     }
+
+    override fun onDestroyView() {
+        handler.removeMessages(AC_BRIGHTNESS)
+        handler.removeMessages(METER_BRIGHTNESS)
+        super.onDestroyView()
+    }
+
 }

@@ -3,6 +3,8 @@ package com.chinatsp.vehicle.settings.fragment.lighting
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
@@ -31,6 +33,9 @@ class AmbientLightingFragment :
     BaseFragment<AmbientLightingViewModel, LightingAtmosphereFragmentBinding>(),
     ColorPickerView.OnColorPickerChangeListener, ISwitchAction {
 
+    private val COLOR_CHANGED = 0x11
+    private val LIGHT_CHANGED = 0x22
+
     private var modeFragment: DialogFragment? = null
     private var settingFragment: DialogFragment? = null
 
@@ -39,6 +44,24 @@ class AmbientLightingFragment :
 
     private val manager: AmbientLightingManager
         get() = AmbientLightingManager.instance
+
+    private val handler: Handler by lazy {
+        Handler(Looper.getMainLooper()
+        ) {
+            when (it.what) {
+                LIGHT_CHANGED -> {
+                    val value = viewModel.ambientBrightness.value!!.pos
+                    binding.ambientLightingBrightness.setValueNoEvent(value)
+                }
+                COLOR_CHANGED -> {
+                    val value = viewModel.ambientColor.value!!.pos
+                    binding.picker.setIndicatorIndex(value)
+                }
+                else -> {}
+            }
+            return@Handler true
+        }
+    }
 
     override fun getLayoutId(): Int {
         return R.layout.lighting_atmosphere_fragment
@@ -387,12 +410,16 @@ class AmbientLightingFragment :
 
     private fun addSeekBarLiveDataListener() {
         viewModel.ambientBrightness.observe(this) {
-            val value = it.pos
-            binding.ambientLightingBrightness.setValueNoEvent(value)
+//            val value = it.pos
+//            binding.ambientLightingBrightness.setValueNoEvent(value)
+            handler.removeMessages(LIGHT_CHANGED)
+            handler.sendEmptyMessageDelayed(LIGHT_CHANGED, 150)
         }
         viewModel.ambientColor.observe(this) {
-            val value = it.pos
-            binding.picker.setIndicatorIndex(value)
+//            val value = it.pos
+//            binding.picker.setIndicatorIndex(value)
+            handler.removeMessages(COLOR_CHANGED)
+            handler.sendEmptyMessageDelayed(COLOR_CHANGED, 100)
         }
     }
 
@@ -444,6 +471,13 @@ class AmbientLightingFragment :
         activity?.startService(intent)
         Timber.d("lighting intent json:$json")
     }
+
+    override fun onDestroyView() {
+        handler.removeMessages(LIGHT_CHANGED)
+        handler.removeMessages(COLOR_CHANGED)
+        super.onDestroyView()
+    }
+
 }
 
 

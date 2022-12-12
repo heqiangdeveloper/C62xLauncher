@@ -107,7 +107,7 @@ class AmbientLightingViewModel @Inject constructor(app: Application, model: Base
     }
 
     fun onAmbientColorChanged(value: Int) {
-//        val result = manager.doSetProgress(Progress.AMBIENT_LIGHT_COLOR, value)
+        val result = manager.doSetVolume(Progress.AMBIENT_LIGHT_COLOR, value)
 //        if (result) {
 //            doUpdate(_ambientColor, value)
 //        }
@@ -115,7 +115,7 @@ class AmbientLightingViewModel @Inject constructor(app: Application, model: Base
 
     fun doBrightnessChanged(node: Progress, value: Int) {
         val result = manager.doSetVolume(node, value)
-        if (result) _ambientBrightness.value?.pos = value
+//        if (result) _ambientBrightness.value?.pos = value
     }
 
 }

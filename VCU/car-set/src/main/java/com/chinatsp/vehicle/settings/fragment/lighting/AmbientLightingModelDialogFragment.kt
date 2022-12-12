@@ -29,7 +29,7 @@ class AmbientLightingModelDialogFragment :
     private val colorList: List<Color> = Applet.getLampSupportColor()
     private val manager: AmbientLightingManager
         get() = AmbientLightingManager.instance
-    var keypad: View? = null
+//    var keypad: View? = null
     override fun getLayoutId(): Int {
         return R.layout.lighting_model_dialog_fragment
     }
@@ -180,10 +180,11 @@ class AmbientLightingModelDialogFragment :
     }
 
     private fun doUpdateViewSelect(view: View, status: SwitchState, immediately: Boolean = false) {
-        view.isSelected = status.get()
-        keypad?.isEnabled = true
-        view.isEnabled = false
-        keypad = view
+        val selected = status.get()
+        view.isSelected = selected
+//        keypad?.isEnabled = !selected
+        view.isEnabled = !selected
+//        keypad = view
     }
 
     private fun setSwitchListener() {

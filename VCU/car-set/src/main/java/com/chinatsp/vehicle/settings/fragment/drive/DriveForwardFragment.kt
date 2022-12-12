@@ -123,9 +123,11 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
     private fun addSwitchLiveDataListener() {
         viewModel.fcwFunction.observe(this) {
             doUpdateSwitch(SwitchNode.ADAS_FCW, it)
+            executeFcwAnimation(it.get())
         }
         viewModel.aebFunction.observe(this) {
             doUpdateSwitch(SwitchNode.ADAS_AEB, it)
+            executeAebAnimation(it.get())
         }
     }
 
@@ -158,30 +160,19 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
     }
 
     override fun onPostChecked(button: SwitchButton, status: Boolean) {
-        dynamicEffect()
+//        dynamicEffect()
     }
 
     private fun setSwitchListener() {
         binding.adasForwardFcwSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
-                //binding.videoImage.visibility = View.GONE
-                val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_fcw
-                binding.video.setVideoURI(Uri.parse(uri))
-                binding.video.start()
-            } else {
-                dynamicEffect()
-            }
+            executeFcwAnimation(isChecked)
             doUpdateSwitchOption(SwitchNode.ADAS_FCW, buttonView, isChecked)
         }
         binding.adasForwardAebSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
-                //binding.videoImage.visibility = View.GONE
-                val url = "android.resource://" + activity?.packageName + "/" + R.raw.video_abe
-                binding.video.setVideoURI(Uri.parse(url))
-                binding.video.start()
+                executeAebAnimation(true)
                 doUpdateSwitchOption(SwitchNode.ADAS_AEB, buttonView, isChecked)
             } else {
-                //dynamicEffect()
                 val fragment = CloseBrakeDialogFragment()
                 activity?.supportFragmentManager?.let {
                     fragment.show(it, fragment.javaClass.simpleName)
@@ -191,42 +182,49 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
         }
     }
 
-    private fun dynamicEffect() {
-        binding.videoImage.visibility = View.VISIBLE
-        if (binding.adasForwardFcwSwitch.isChecked && binding.adasForwardAebSwitch.isChecked) {
-            binding.videoImage.setImageDrawable(activity?.let {
-                ContextCompat.getDrawable(
-                    it,
-                    R.drawable.ic_emergency_braking_1
-                )
-            })
-        } else if (!binding.adasForwardFcwSwitch.isChecked && binding.adasForwardAebSwitch.isChecked) {
-            binding.videoImage.setImageDrawable(activity?.let {
-                ContextCompat.getDrawable(
-                    it,
-                    R.drawable.ic_emergency_braking
-                )
-            })
-        } else if (binding.adasForwardFcwSwitch.isChecked && !binding.adasForwardAebSwitch.isChecked) {
-            binding.videoImage.setImageDrawable(activity?.let {
-                ContextCompat.getDrawable(
-                    it,
-                    R.drawable.ic_prior_collisio
-                )
-            })
-        } else if (!binding.adasForwardFcwSwitch.isChecked && !binding.adasForwardAebSwitch.isChecked) {
-            binding.videoImage.setImageDrawable(activity?.let {
-                ContextCompat.getDrawable(
-                    it,
-                    R.drawable.intelligent_cruise
-                )
-            })
+    private fun executeAebAnimation(status: Boolean) {
+        if (!status) {
+            dynamicEffect()
+        } else {
+            binding.video.pause()
+            val url = "android.resource://" + activity?.packageName + "/" + R.raw.video_abe
+            binding.video.setVideoURI(Uri.parse(url))
+            binding.video.start()
         }
     }
 
+    private fun executeFcwAnimation(status: Boolean) {
+        if (!status) {
+            dynamicEffect()
+        } else {
+            binding.video.pause()
+            val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_fcw
+            binding.video.setVideoURI(Uri.parse(uri))
+            binding.video.start()
+        }
+    }
+
+    private fun dynamicEffect() {
+        binding.videoImage.visibility = View.VISIBLE
+        val isFcw = binding.adasForwardFcwSwitch.isChecked
+        val isAeb = binding.adasForwardAebSwitch.isChecked
+        val source = if (isFcw && isAeb) {
+            R.drawable.ic_emergency_braking_1
+        } else if (!isFcw && isAeb) {
+            R.drawable.ic_emergency_braking
+        } else if (isFcw && !isAeb) {
+            R.drawable.ic_prior_collisio
+        } else {
+            R.drawable.intelligent_cruise
+        }
+        binding.videoImage.setImageDrawable(activity?.let { context ->
+            ContextCompat.getDrawable(context, source)
+        })
+    }
+
     override fun onDestroy() {
-        super.onDestroy()
         binding.video.pause()
         binding.video.stopPlayback()
+        super.onDestroy()
     }
 }

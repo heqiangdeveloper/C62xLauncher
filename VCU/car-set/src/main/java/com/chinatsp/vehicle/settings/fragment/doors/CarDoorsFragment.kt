@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
+import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.access.DoorManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
+import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.IOptionAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CarDoorsFragmentBinding
@@ -71,6 +73,11 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
              binding.wheelAutomaticHeating.visibility = View.VISIBLE
              binding.line3.visibility = View.VISIBLE
          }*/
+        //LEVEL3, LEVEL4 无NFC
+        if (VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4)) {
+            binding.carNfcDisable.visibility = View.GONE
+            binding.line4.visibility = View.GONE
+        }
     }
 
     private fun initDetailsClickListener() {
