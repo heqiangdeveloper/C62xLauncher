@@ -16,12 +16,15 @@ import launcher.base.service.AppServiceManager;
 public class VisualizerTool {
     private static final String TAG = "VisualizerTool";
     private Visualizer visualizer;
-    private static final int[] FREQUENCY_BAND_LIMITS = {
-            20, 63, 200, 630, 2000, 3150, 6300, 20000
-    };
     public static final int MSG_FFT = 100;
-    private static int[] fftResult;
+    private static int[] fftResult = new int[8];
     private static int mCount;
+    private static int frequencyCount;
+    private static int samplerateRange;
+    private static float[] frequenceIndex = new float[8];
+    private static final float[] PRE_DEFHZ = {
+            40f, 70f, 100f, 200f, 600f, 1000f, 1400f, 1800f
+    };
 
     private final Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -48,49 +51,20 @@ public class VisualizerTool {
         this.isPlaying = isPlay;
     }
 
-
-    /*
-     * 计算发送数组
-     *
-     * @param fft
-     *
-     * @return
-     */
-    private int[] calcLuminance(byte[] fft) {
-        float max = 0;
-        int currentFftPosition = 0;
-        int currentFrequencyBandLimitIndex = 0;
-        int[] result = new int[8];
-        for (int i = 0; i < fft.length; i++) {
-            int nextLimitAtPosition = Math.abs(fft[i]) * 2 +
-                    (int) Math.floor(FREQUENCY_BAND_LIMITS[currentFrequencyBandLimitIndex] / 20_000.0f * fft.length);
-            //Log.i(TAG, "nextLimitAtPosition =" + nextLimitAtPosition);
-            // 汉明窗口修正
-            int m = FREQUENCY_BAND_LIMITS.length >> 1;
-            float windowed =
-                    (float) (nextLimitAtPosition * (0.54f + 0.46f * Math.cos((currentFrequencyBandLimitIndex - m) * Math.PI / (m + 1))));
-
-            //Log.i("calcLuminance", "calcLuminance =" + windowed);
-            result[i] = (int) nextLimitAtPosition;
-            //Log.d(TAG, "currentFftPosition =" + currentFftPosition + ",max =" + max);
-            currentFrequencyBandLimitIndex++;
-        }
-        return result;
-    }
-
     /*
      * 初始化律动对象
      *
      * @param audioSessionId
      */
     public VisualizerTool(int audioSessionId/*,Visualizer.OnDataCaptureListener dataCaptureListener*/) {
-        Log.d(TAG,"init VisualizerTool");
+        Log.d(TAG, "init VisualizerTool");
         try {
             visualizer = new Visualizer(audioSessionId);
             int captureSize = Visualizer.getCaptureSizeRange()[1];
             int captureRate = Visualizer.getMaxCaptureRate() * 3 / 4;
-            //Log.d(TAG, "精度: :: " + captureSize);
-            //Log.d(TAG, "刷新频率: :: " + captureRate);
+            //byte[] fftdata = new byte[captureSize];
+            samplerateRange = visualizer.getSamplingRate() / 2000;
+            frequencyCount = visualizer.getCaptureSize() / 2;
 
             visualizer.setCaptureSize(captureSize);
             Visualizer.OnDataCaptureListener dataCaptureListener = new Visualizer.OnDataCaptureListener() {
@@ -101,10 +75,20 @@ public class VisualizerTool {
 
                 @Override
                 public void onFftDataCapture(Visualizer visualizer, final byte[] fft, int samplingRate) {
-                    byte[] results = Arrays.copyOfRange(fft, 0, 8);
-                    fftResult = calcLuminance(results);
                     if (!mHandler.hasMessages(MSG_FFT)) {
-                        mHandler.sendEmptyMessageDelayed(MSG_FFT, 1000);
+                        byte[] fftdata = Arrays.copyOfRange(fft, 0, captureSize);
+                        for (int i = 0; i < frequenceIndex.length; i++) {//512
+                            if (samplerateRange != 0) {
+                                frequenceIndex[i] = (PRE_DEFHZ[i] / samplerateRange) * frequencyCount;
+                            }
+                        }
+                        for (int k = 0; k < PRE_DEFHZ.length; k++) {
+                            int index = (int) frequenceIndex[k] * 2;
+                            byte rfv = fftdata[index];
+                            byte ifv = fftdata[index + 1];
+                            fftResult[k] = (int) (Math.hypot(rfv, ifv) /*/ MAX_NN*/);
+                        }
+                        mHandler.sendEmptyMessageDelayed(MSG_FFT, 100);
                     }
                 }
             };
@@ -121,7 +105,7 @@ public class VisualizerTool {
      *
      */
     public void releaseVisualizer() {
-        Log.d(TAG,"releaseVisualizer");
+        Log.d(TAG, "releaseVisualizer");
         if (visualizer != null) {
             visualizer.release();
             visualizer = null;
