@@ -35,7 +35,8 @@ public class RecentAppHelper {
     //不出现在常用推荐中的应用名单
     public static List<String> notInRecentAppListApps = Arrays.asList(
         AppLists.launcher,//launcher
-        AppLists.buryPoint//埋点
+        AppLists.buryPoint,//埋点
+        AppLists.ota
     );
 
     public static final int FROM_APPMANAGEMENT = 1;
