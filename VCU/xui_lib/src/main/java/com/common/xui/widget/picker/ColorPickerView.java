@@ -124,8 +124,9 @@ public class ColorPickerView extends View {
 
     {
         bitmapForColor = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
-        bitmapForIndicator = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
-
+        //bitmapForIndicator = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
+        //bitmapForIndicator = BitmapFactory.decodeResource(getResources(), R.drawable.img_yanse_blue);
+        bitmapForIndicator = BitmapFactory.decodeResource(getResources(), R.drawable.img_yanse_blue).copy(Bitmap.Config.ARGB_8888, true);
         //Android4.0（API14）之后硬件加速功能就被默认开启了,setShadowLayer 在开启硬件加速的情况下无效，需要关闭硬件加速
         this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
@@ -225,16 +226,16 @@ public class ColorPickerView extends View {
             }
         }
 
-        if (bitmapForIndicator != null) {
+       /* if (bitmapForIndicator != null) {
             if (!bitmapForIndicator.isRecycled()) {
                 bitmapForIndicator.recycle();
                 bitmapForIndicator = null;
             }
-        }
+        }*/
 
         bitmapForColor = Bitmap.createBitmap(wc, hc, Bitmap.Config.ARGB_8888);
-        bitmapForIndicator = Bitmap.createBitmap(wi, hi, Bitmap.Config.ARGB_8888);
-
+        //bitmapForIndicator = Bitmap.createBitmap(wi, hi, Bitmap.Config.ARGB_8888);
+        // bitmapForIndicator = BitmapFactory.decodeResource(getResources(), R.drawable.img_yanse_blue);
     }
 
     /**
@@ -356,26 +357,33 @@ public class ColorPickerView extends View {
         canvas.drawBitmap(bitmapForColor, null, rect, paint);
         paint.setAntiAlias(true);
         if (mIndicatorEnable) {
-            if (needReDrawIndicator) {
-                createIndicatorBitmap();
-            }
+            //if (needReDrawIndicator) {
+            //createIndicatorBitmap(canvas);
+            // }
             // 绘制指示点
             rectForIndicator.set(curX - mRadius, 105 - mRadius, curX + mRadius - 15, 52 + mRadius);
             canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG
                     | Paint.FILTER_BITMAP_FLAG));
+            paint.setAntiAlias(true);
+            paint.setFilterBitmap(true);
             canvas.drawBitmap(bitmapForIndicator, null, rectForIndicator, paint);
+
+            createIndicatorBitmap(canvas);
         }
     }
 
-    private void createIndicatorBitmap() {
-        Canvas c = new Canvas(bitmapForIndicator);
+    private void createIndicatorBitmap(Canvas c) {
+
+        //Canvas c = new Canvas();
         int radius = 55;
-        paintForIndicator.setColor(Color.WHITE);
-        c.drawRoundRect(new RectF(0, 0, bitmapForIndicator.getWidth(), bitmapForIndicator.getHeight()), 35, 66, paintForIndicator);
+        //paintForIndicator.setColor(Color.WHITE);
+        //c.drawRoundRect(new RectF(0, 0, bitmapForIndicator.getWidth(), bitmapForIndicator.getHeight()), 35, 66, paintForIndicator);
 
         paintForIndicator.setColor(mIndicatorColor);
         //paintForIndicator.setShadowLayer(20, 20, 20, Color.WHITE);
-        c.drawRoundRect(new RectF(4, 6.5f, bitmapForIndicator.getWidth() - 4, bitmapForIndicator.getHeight() - 6.5f), 35, radius, paintForIndicator);
+        c.drawRoundRect(new RectF(curX - mRadius + 5, 105 - mRadius + 5, curX + mRadius - 15 - 5, 52 + mRadius - 5), 35, (bitmapForIndicator.getHeight() / 2) + 10, paintForIndicator);
+        c.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG
+                | Paint.FILTER_BITMAP_FLAG));
         needReDrawIndicator = false;
     }
 

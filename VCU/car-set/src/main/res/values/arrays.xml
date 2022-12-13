@@ -95,10 +95,10 @@
         <item>3</item>
     </string-array>
     <string-array name="drive_intelligent_options">
+        <item>@string/recognize</item>
+        <item>@string/disappear</item>
+        <item>@string/recognize_disappear</item>
         <item>@string/close</item>
-        <item>@string/recognize_prompt</item>
-        <item>@string/disappear_prompt</item>
-        <item>@string/recognize_disappear_prompt_both</item>
     </string-array>
     <string-array name="adas_cruise_limber_leave_values">
         <item>4</item>

@@ -1,6 +1,5 @@
 package com.chinatsp.vehicle.settings.fragment.drive
 
-import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.media.AudioManager

@@ -66,7 +66,8 @@ public class AppLists {
             applet,
             WelcomeAnimate,
             NEW_PAL_SERVER,
-            Communication
+            Communication,
+            ota
     );
 
     //不可删除的应用名单，其他的应用根据是否是系统应用来判断
