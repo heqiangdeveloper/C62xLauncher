@@ -58,7 +58,7 @@
     <string name="cabin_safe_fortify_success_tone">设防成功提示音</string>
     <string name="cabin_safe_fortify_failure_tone">设防失败提示音</string>
     <string name="cabin_safe_video_safe_mode">视频安全模式</string>
-    <string name="cabin_safe_video_safe_mode_content">视频安全模式开启后，⻋速\n⼤于15km/h时，本地视频\n将⾃动关闭。</string>
+    <string name="cabin_safe_video_safe_mode_content">视频安全模式开启后，⻋速\n⼤于15km/h时，部分视频\n将⾃动关闭。</string>
 
     <string name="cabin_wheel_electronic_mode">电子助力转向模式</string>
     <string name="cabin_wheel_press_key">方向盘自定义按键</string>
