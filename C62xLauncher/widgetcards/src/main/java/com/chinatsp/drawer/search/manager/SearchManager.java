@@ -36,6 +36,7 @@ public class SearchManager {
     public static final String WelcomeAnimate = "com.android.welcome";//WelcomeAnimate
     public static final String NEW_PAL_SERVER = "com.tencent.tai.pal.server.app";//NEW_PAL_SERVER
     public static final String Communication = "com.uaes.iot";//Communication
+    public static final String ota = "com.hmi.beic62.pc";//BEIJING OS,OTA升级用
 
     private static class Holder {
         public static SearchManager manager = new SearchManager();
@@ -110,7 +111,8 @@ public class SearchManager {
             applet,
             WelcomeAnimate,
             NEW_PAL_SERVER,
-            Communication
+            Communication,
+            ota
     );
 
     /**

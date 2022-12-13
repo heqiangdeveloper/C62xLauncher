@@ -59,7 +59,7 @@
       "modelName": "系统设置",
       "chineseFunction": "系统语言",
       "chineseFunctionLevel": "通用",
-      "englishFunction": "languagen",
+      "englishFunction": "language",
       "englishFunctionLevel": "common",
       "intentAction": "com.chinatsp.settings.SETTINGS",
       "intentInterface": "open_language",
