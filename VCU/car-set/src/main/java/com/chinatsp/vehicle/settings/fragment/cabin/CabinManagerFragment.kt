@@ -92,6 +92,9 @@ class CabinManagerFragment : BaseTabFragment<BaseViewModel, CabinFragmentBinding
     private fun updateSelectTabOption(viewId: Int) {
         tabOptions.forEach { it.isSelected = false }
         updateDisplayFragment(viewId)
+        tabLocation.let {
+            tabOptions.first { it.id == uid }
+        }
     }
 
 

@@ -412,4 +412,7 @@ IACC会优先通过识别车道两侧清晰的车道线进行横向辅助控制�
     <string name="lane_departure_warning">车道偏离预警</string>
     <string name="lane_keeping_assistance">车道保持辅助</string>
     <string name="zero">0°</string>
+    <string name="recognize">识别</string>
+    <string name="disappear">消失</string>
+    <string name="recognize_disappear">识别消失</string>
 </resources>
