@@ -6,7 +6,7 @@ import launcher.base.utils.EasyLog;
 
 public abstract class DebounceTask {
     public static final int DEFAULT_INTERVAL_TIME = 1000;
-    private  String TAG = "DebounceTask";
+    protected   String TAG = "DebounceTask";
     private int mIntervalTime = DEFAULT_INTERVAL_TIME;
 
     public abstract void execute();
@@ -35,4 +35,5 @@ public abstract class DebounceTask {
     public DebounceTask(int intervalTime) {
         mIntervalTime = intervalTime;
     }
+
 }

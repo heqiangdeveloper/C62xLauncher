@@ -36,9 +36,9 @@ public class CardWrapperLayout extends ConstraintLayout {
     }
 
 
-    float lastX = 0f;
-    float lastY = 0f;
-    float moveYOnceTouch;
+//    float lastX = 0f;
+//    float lastY = 0f;
+//    float moveYOnceTouch;
 //    @Override
 //    public boolean dispatchTouchEvent(MotionEvent ev) {
 //        int mask = ev.getActionMasked();
@@ -72,40 +72,6 @@ public class CardWrapperLayout extends ConstraintLayout {
 //    }
 
     boolean mMorePoints = false;
-//    @Override
-//    public boolean dispatchTouchEvent(MotionEvent e) {
-//        final int action = e.getActionMasked();
-//        switch (action) {
-//            case MotionEvent.ACTION_MOVE:
-//                EasyLog.i(TAG, "dispatchTouchEvent ACTION_MOVE mMorePoints:"+mMorePoints);
-//                if (mMorePoints) {
-//                    return false;
-//                }
-//                break;
-//            case MotionEvent.ACTION_POINTER_DOWN:
-//                mMorePoints = true;
-//                EasyLog.i(TAG, "dispatchTouchEvent ACTION_POINTER_DOWN");
-//                if (mMorePoints) {
-//                    return false;
-//                }
-//                break;
-//            case MotionEvent.ACTION_POINTER_UP:
-//                EasyLog.i(TAG, "dispatchTouchEvent ACTION_POINTER_UP");
-//                if (mMorePoints) {
-//                    return false;
-//                }
-//                break;
-//            case MotionEvent.ACTION_UP:
-//            case MotionEvent.ACTION_CANCEL:
-//                EasyLog.i(TAG, "dispatchTouchEvent mMorePoints ACTION_UP or ACTION_CANCEL mMorePoints:"+mMorePoints);
-//                if (mMorePoints) {
-//                    mMorePoints = false;
-//                    return false;
-//                }
-//                break;
-//        }
-//        return super.dispatchTouchEvent(e);
-//    }
 
     private void goToSearchActivity() {
         ActivityBus.newInstance(getContext())
