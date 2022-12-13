@@ -19,4 +19,5 @@ public abstract class WeatherCardHolder {
     public abstract void updateWeather(WeatherInfo weatherInfo);
 
     public abstract void updateCityList(List<String> cityList);
+
 }

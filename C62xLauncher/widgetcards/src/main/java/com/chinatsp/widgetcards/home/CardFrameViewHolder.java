@@ -288,12 +288,6 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
         valueAnimator.start();
     }
 
-    private Events.SwipeEvent createSwipeEvent(LauncherCard cardEntity) {
-        Events.SwipeEvent swipeEvent = new Events.SwipeEvent();
-        swipeEvent.mBigLauncherCard = cardEntity;
-        swipeEvent.mBigInLeftSide = isCardInLeftSide();
-        return swipeEvent;
-    }
 
     private void runCollapseAnimation() {
         EasyLog.d(TAG, "runCollapseAnimation: " + mLauncherCard.getName());
@@ -494,7 +488,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
 
     private void doSwipe() {
         EasyLog.d(TAG, "do Swipe card." + mLauncherCard);
-        EventBus.getDefault().post(createSwipeEvent(mLauncherCard));
+        EventBus.getDefault().post(Events.createSwipeEvent(mLauncherCard, itemView));
     }
 
     public LauncherCard getLauncherCard() {

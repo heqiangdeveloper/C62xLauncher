@@ -20,12 +20,14 @@ import com.chinatsp.weaher.viewholder.WeatherBigCardHolder;
 import com.chinatsp.weaher.viewholder.WeatherSmallCardHolder;
 import com.chinatsp.weaher.viewstate.CardViewState;
 import com.chinatsp.weaher.viewstate.IOnChangeState;
+import com.chinatsp.weaher.viewstate.ScrollCallbackTask;
 import com.iflytek.autofly.weather.entity.WeatherInfo;
 
 import java.util.List;
 
 import card.service.ICardStyleChange;
 import launcher.base.utils.EasyLog;
+import launcher.base.utils.flowcontrol.DebounceTask;
 import launcher.base.utils.view.LayoutParamUtil;
 
 
@@ -172,11 +174,16 @@ public class WeatherCardView extends ConstraintLayout implements ICardStyleChang
     private IOnChangeState mOnChangeState = new IOnChangeState() {
         @Override
         public void onPageChange(int index) {
+            scrollCallbackTask.emit(index);
+        }
+    };
+    private final ScrollCallbackTask scrollCallbackTask = new ScrollCallbackTask() {
+        @Override
+        public void execute(int index) {
             if (mExpand) {
                 mBigCardHolder.scrollToPosition(index);
             } else {
                 mSmallCardHolder.scrollToPosition(index);
-
             }
         }
     };

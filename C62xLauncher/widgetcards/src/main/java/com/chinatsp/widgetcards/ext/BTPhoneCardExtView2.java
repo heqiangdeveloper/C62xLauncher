@@ -4,12 +4,22 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.chinatsp.phone.utils.AndroidToastUtil;
 import com.chinatsp.phone.widget.BTPhoneCardView;
+import com.chinatsp.widgetcards.manager.CardManager;
+import com.chinatsp.widgetcards.manager.Events;
+
+import org.greenrobot.eventbus.EventBus;
+
+import card.base.LauncherCard;
+import launcher.base.applists.AppLists;
+import launcher.base.utils.EasyLog;
+import launcher.base.utils.recent.RecentAppHelper;
 
 public class BTPhoneCardExtView2 extends BTPhoneCardView {
     public BTPhoneCardExtView2(@NonNull Context context) {
@@ -42,18 +52,20 @@ public class BTPhoneCardExtView2 extends BTPhoneCardView {
         );
         final Context context = getContext();
         if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
-            if (event.getPointerCount() >= 3) {
+            if (event.getPointerCount() >= 2) {
                 // TODO: 实现你的 三指滑屏 功能
-                AndroidToastUtil.INSTANCE.show(context, "三指滑屏");
+//                AndroidToastUtil.INSTANCE.show(context, "三指滑屏");
+                EventBus.getDefault().post(Events.createSwipeEvent(
+                        CardManager.getInstance().findByType(CardManager.CardType.PHONE), (View) getParent()));
                 /**
                  * 拦截
                  */
                 return true;
             } else {
                 float delta = Math.abs(getWidth() - event.getX());
-                if (event.getPointerCount() == 1 && delta <= 60.0f) {
-                    // TODO: 实现你的 点击电话边缘, 打开电话APP 功能
-                    AndroidToastUtil.INSTANCE.show(context, "点击电话边缘, 打开电话APP");
+                if (event.getPointerCount() == 1 && delta <= 100.0f) {
+//                    AndroidToastUtil.INSTANCE.show(context, "点击电话边缘, 打开电话APP");
+                    RecentAppHelper.launchApp(getContext(), AppLists.btPhone);
                     /**
                      * 拦截
                      */
@@ -63,9 +75,10 @@ public class BTPhoneCardExtView2 extends BTPhoneCardView {
                 }
             }
         } else {
-            // TODO: 没有拦截 把事件交给电话内部的实现
-            AndroidToastUtil.INSTANCE.show(context, "没有拦截");
+//             TODO: 没有拦截 把事件交给电话内部的实现
+//            AndroidToastUtil.INSTANCE.show(context, "没有拦截");
             return false;
         }
     }
+
 }

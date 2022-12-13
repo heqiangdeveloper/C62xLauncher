@@ -30,12 +30,13 @@ public class WeatherSmallCardHolder extends WeatherCardHolder {
     private final ImageView ivWeatherBg;
     private final ImageView ivCardWeatherRefresh;
 
-    private InnerVerticalRecyclerView rcvCityList;
+    private RecyclerView rcvCityList;
     private SmallCityListAdapter mCityListAdapter;
 
     private OnPageChangedListener mOnPageChangedListener;
     private ViewGroup mLayoutIndicator;
     private PointIndicator mIndicator;
+    private PagerSnapHelper mPagerSnapHelper;
 
     public void setOnPageChangedListener(OnPageChangedListener onPageChangedListener) {
         mOnPageChangedListener = onPageChangedListener;
@@ -62,15 +63,16 @@ public class WeatherSmallCardHolder extends WeatherCardHolder {
         rcvCityList.setAdapter(mCityListAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(rcvCityList.getContext());
         rcvCityList.setLayoutManager(layoutManager);
-        PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
-        pagerSnapHelper.attachToRecyclerView(rcvCityList);
+        mPagerSnapHelper = new PagerSnapHelper();
+        mPagerSnapHelper.attachToRecyclerView(rcvCityList);
 
         rcvCityList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+                EasyLog.d("updatePosition", "updatePosition newState:" + newState);
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    View snapView = pagerSnapHelper.findSnapView(recyclerView.getLayoutManager());
+                    View snapView = mPagerSnapHelper.findSnapView(recyclerView.getLayoutManager());
                     if (snapView != null) {
                         int pos = layoutManager.getPosition(snapView);
                         updatePosition(pos);
@@ -87,7 +89,6 @@ public class WeatherSmallCardHolder extends WeatherCardHolder {
             mOnPageChangedListener.onSelected(pos);
         }
         EasyLog.d("updatePosition", "updatePosition pos:"+pos);
-        updateRcvStatus(pos);
     }
 
     public void scrollToPosition(int pos) {
@@ -95,16 +96,6 @@ public class WeatherSmallCardHolder extends WeatherCardHolder {
         if (layoutManager != null) {
             layoutManager.scrollToPositionWithOffset(pos, 0);
             mIndicator.select(pos);
-            EasyLog.d("scrollToPosition", "scrollToPosition pos:"+pos);
-            updateRcvStatus(pos);
-        }
-    }
-
-    private void updateRcvStatus(int pos) {
-        if (pos > 0) {
-            rcvCityList.setScrollTop(false);
-        } else if (pos == 0) {
-            rcvCityList.setScrollTop(true);
         }
     }
 
@@ -132,7 +123,6 @@ public class WeatherSmallCardHolder extends WeatherCardHolder {
         showCityListRecyclerView();
         mCityListAdapter.setData(cityList);
         WeatherUtil.logI("WeatherSmallCardHolder updateCityList " + cityList);
-        rcvCityList.setScrollTop(true);
     }
 
 }
