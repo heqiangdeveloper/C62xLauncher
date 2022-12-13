@@ -244,6 +244,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
     private fun addRadioLiveDataListener() {
         viewModel.sternSmartEnter.observe(this) {
             doUpdateRadio(RadioNode.STERN_SMART_ENTER, it, false)
+            updateRadioEnable(RadioNode.STERN_SMART_ENTER)
         }
         viewModel.gearsFunction.observe(this) {
             updateOptionActive()

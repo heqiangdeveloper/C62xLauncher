@@ -131,7 +131,6 @@ public class AppCarService implements ICarService {
      */
     public boolean isAlcMusicOn() {
         int result = getIntProperty(CarCabinManager.ID_ALC_MUSIC_RHY_SW_RESPONSE);
-        EasyLog.d(TAG, "result = " + result);
         return result == 0x1;
     }
 
@@ -139,8 +138,7 @@ public class AppCarService implements ICarService {
         if (mCarCabinManager != null) {
             try {
                 int value = mCarCabinManager.getIntProperty(propertyId, VEHICLE_AREA_TYPE_GLOBAL);
-                EasyLog.d(TAG, "getIntProperty, propertyId = " + propertyId + "(0x"
-                        + Integer.toHexString(propertyId) + ")" + "value = " + value);
+                //EasyLog.d(TAG, "getIntProperty, propertyId = " + propertyId + "(0x" + Integer.toHexString(propertyId) + ")" + "value = " + value);
                 return value;
             } catch (Exception e) {
                 // CarUtil.getInstance(mContext).handleException(e);

@@ -1,4 +1,4 @@
-package com.chinatsp.settinglib.optios
+﻿package com.chinatsp.settinglib.optios
 
 import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.hvac.CarHvacManager

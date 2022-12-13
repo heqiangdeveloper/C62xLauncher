@@ -76,6 +76,12 @@ class DoorsViewModel @Inject constructor(app: Application, model: BaseModel) :
             SwitchNode.DOOR_SMART_ENTER -> {
                 doUpdate(_smartDoorAccess, status)
             }
+            SwitchNode.INNER_NFC -> {
+                doUpdate(_nfcInner, status)
+            }
+            SwitchNode.OUTER_NFC -> {
+                doUpdate(_nfcOuter, status)
+            }
             else -> {}
         }
     }
