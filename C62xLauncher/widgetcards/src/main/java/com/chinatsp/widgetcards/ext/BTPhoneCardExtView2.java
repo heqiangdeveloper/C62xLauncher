@@ -72,6 +72,7 @@ public class BTPhoneCardExtView2 extends BTPhoneCardView {
                 if (event.getPointerCount() >= FINGER_NUM_TRIGGER_SCREEN_SHOT) {
                     mPointsDistance = Math.abs(pointX - downX) + Math.abs(pointY - downY);
                 }
+
                 break;
             case MotionEvent.ACTION_UP:
                 if (mPointsDistance > 100
@@ -79,6 +80,7 @@ public class BTPhoneCardExtView2 extends BTPhoneCardView {
                         && ExpandStateManager.getInstance().getExpandState()
                         && mPointCounts >= FINGER_NUM_TRIGGER_SCREEN_SHOT) {
                     doSwipe();
+                    resetTouchEvent();
                     return true;
                 }
                 if (mPointCounts == 1 ) {
@@ -87,10 +89,11 @@ public class BTPhoneCardExtView2 extends BTPhoneCardView {
                     EasyLog.d("BTPhoneCardExtView2", "delta: "+delta);
                     if (delta < 100) {
                         RecentAppHelper.launchApp(getContext(), AppLists.btPhone);
+                        resetTouchEvent();
                         return true;
                     }
                 }
-                resetTouchEvent();
+
                 break;
             case MotionEvent.ACTION_CANCEL:
                 resetTouchEvent();
