@@ -10,7 +10,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.ISwitchManager
-import com.chinatsp.settinglib.manager.access.SternDoorManager
+import com.chinatsp.settinglib.manager.cabin.access.SternDoorManager
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -396,12 +396,14 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         }
         viewModel.lightAlarmFunction.observe(this) {
             doUpdateSwitch(SwitchNode.STERN_LIGHT_ALARM, it)
-            updateOptionActive()
+//            updateOptionActive()
+            updateSwitchEnable(SwitchNode.STERN_LIGHT_ALARM)
             doLightAlarmHint(it.get())
         }
         viewModel.audioAlarmFunction.observe(this) {
             doUpdateSwitch(SwitchNode.STERN_AUDIO_ALARM, it)
-            updateOptionActive()
+//            updateOptionActive()
+            updateSwitchEnable(SwitchNode.STERN_AUDIO_ALARM)
             doAudioAlarmHint(it.get())
         }
     }

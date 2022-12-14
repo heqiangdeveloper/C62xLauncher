@@ -1,4 +1,4 @@
-package com.chinatsp.settinglib.manager.access
+package com.chinatsp.settinglib.manager.cabin.access
 
 import android.car.hardware.CarPropertyValue
 import com.chinatsp.settinglib.ITabStore

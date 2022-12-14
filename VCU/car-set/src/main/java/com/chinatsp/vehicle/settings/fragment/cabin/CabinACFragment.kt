@@ -18,6 +18,7 @@ import com.common.xui.utils.ViewUtils
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
+import okhttp3.internal.wait
 
 /**
  * @author : luohong
@@ -45,6 +46,7 @@ class CabinACFragment : BaseFragment<CabinACViewModel, CabinAcFragmentBinding>()
         initRadioOption()
         addRadioLiveDataListener()
         setRadioListener()
+        updateRadioEnable(RadioNode.AC_COMFORT)
     }
 
     override fun onResume() {
@@ -122,6 +124,7 @@ class CabinACFragment : BaseFragment<CabinACViewModel, CabinAcFragmentBinding>()
     private fun addRadioLiveDataListener() {
         viewModel.comfortLiveData.observe(this) {
             doUpdateRadio(RadioNode.AC_COMFORT, it, false)
+            updateRadioEnable(RadioNode.AC_COMFORT)
         }
     }
 
@@ -130,6 +133,13 @@ class CabinACFragment : BaseFragment<CabinACViewModel, CabinAcFragmentBinding>()
             it.setOnTabSelectionChangedListener { _, value ->
                 doUpdateRadio(RadioNode.AC_COMFORT, value, viewModel.comfortLiveData, it)
             }
+        }
+    }
+
+    override fun obtainActiveByNode(node: RadioNode): Boolean {
+        return when (node) {
+            RadioNode.AC_COMFORT -> viewModel.comfortLiveData.value?.enable() ?: false
+            else -> super.obtainActiveByNode(node)
         }
     }
 

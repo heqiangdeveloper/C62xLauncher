@@ -61,6 +61,7 @@ interface IRadioManager : IManager {
         if (!isChanged) {
             Timber.e("doUpdateRadio node:$node,isValid:$isValid, invalid:$invalid," +
                     " value:$value, old_date:${atomic.get()}, old_enable:${atomic.enable}")
+            Timber.e("--------node:$node, values:${node.get.values}")
             return atomic
         }
         if (isValid) {

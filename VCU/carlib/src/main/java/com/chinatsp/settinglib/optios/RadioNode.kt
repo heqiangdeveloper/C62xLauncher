@@ -23,12 +23,19 @@ enum class RadioNode(
     val inactive: IntArray? = null,
 ) {
 
+    /**
+     * get -> 空调舒适性状态显示 0x0: Reserved 0x1: Gentle 0x2: Standard 0x3: Powerful 0x4~0x6: Reserved 0x7: Invalid
+     */
     AC_COMFORT(
         get = RNorm(values = intArrayOf(0x1, 0x2, 0x3), signal = CarCabinManager.ID_ACCMFTSTSDISP),
         set = RNorm(values = intArrayOf(0x1, 0x2, 0x3), origin = Origin.HVAC,
             signal = CarHvacManager.ID_HVAC_AVN_AC_AUTO_CMFT_SWT),
         def = 0x1
-    ),
+    ){
+        override fun isInvalid(value: Int): Boolean {
+            return 0x7 == value
+        }
+     },
 
     //-------------------车门车窗--开始-------------------
     /**
@@ -102,11 +109,11 @@ enum class RadioNode(
      */
     ADAS_LIMBER_LEAVE(
         get = RNorm(
-            values = intArrayOf(0x4, 0x1, 0x2, 0x3),
+            values = intArrayOf(0x1, 0x2, 0x3, 0x4),
             signal = CarCabinManager.ID_OBJ_DETECTION_RES
         ),
         set = RNorm(
-            values = intArrayOf(0x4, 0x1, 0x2, 0x3),
+            values = intArrayOf(0x1, 0x2, 0x3, 0x4),
             signal = CarCabinManager.ID_OBJ_DETECTION_SWT
         ),
 //        inactive = intArrayOf(0x0, 0x4, 0x5, 0x6, 0x7),
@@ -357,9 +364,6 @@ enum class RadioNode(
         def = 0x0
     ) {
         override fun isValid(value: Int, isGet: Boolean): Boolean {
-            if (VcuUtils.isAmplifier && value == 0) {
-                return false
-            }
             return if (isGet) {
                 get.isValid(value)
             } else {
@@ -464,9 +468,9 @@ enum class RadioNode(
      * 此信号走TBOX信号 而非走CAN信号， 所以需要特殊处理
      */
     DEVICE_TRAILER_DISTANCE(
-        get = RNorm(values = intArrayOf(200, 500, 1000, 2000), signal = -1),
-        set = RNorm(values = intArrayOf(200, 500, 1000, 2000), signal = -1),
-        def = 200
+        get = RNorm(values = intArrayOf(0x1, 0x2, 0x3, 0x4), signal = -1),
+        set = RNorm(values = intArrayOf(0x1, 0x2, 0x3, 0x4), signal = -1),
+        def = 0x1
     );
 
 //    open fun isValid(value: Int, isGet: Boolean = true): Boolean {

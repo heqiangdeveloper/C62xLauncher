@@ -1,4 +1,4 @@
-package com.chinatsp.settinglib.manager.access
+package com.chinatsp.settinglib.manager.cabin.access
 
 import android.car.VehicleAreaType
 import android.car.hardware.CarPropertyValue
@@ -79,7 +79,7 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
 
     private val stopPosition: Volume by lazy {
         val node = Progress.TRUNK_STOP_POSITION
-        Volume(node, node.min, node.max, node.min).apply {
+        Volume(node, node.min, node.max, node.def).apply {
             AppExecutors.get()?.singleIO()?.execute {
                 val value = readIntProperty(node.get.signal, node.get.origin)
                 doUpdateProgress(stopPosition, value, true, instance::doProgressChanged)
