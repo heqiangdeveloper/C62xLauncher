@@ -393,7 +393,6 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
                 case MotionEvent.ACTION_POINTER_DOWN:
                     EasyLog.i(TAG, "ACTION_POINTER_DOWN " + mLauncherCard.getName());
                     mLatestPointerPressTime = System.currentTimeMillis();
-                    // 副指针到来时，将副指针的数据记录下来，方便后续使用
                     mPointsDown.put(pointerId, pointerCoordinate);
                     mReadyLongPress = false;
                     break;
@@ -408,13 +407,6 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
 
                     if (event.getPointerCount() >= FINGER_NUM_TRIGGER_SCREEN_SHOT) {
                         mPointsDistance = Math.abs(pointX - downX) + Math.abs(pointY - downY);
-//                        for (int i = 0; i < event.getPointerCount(); i++) {
-//                            pointerId = event.getPointerId(i);
-//                            pointerDown = mPointsDown.get(pointerId);
-////                            EasyLog.d(TAG, "point:" + pointerId + " , " + Arrays.deepToString(pointerDown));
-//                            // move事件需要检测当前的滑动是否符合触发截屏的条件，例如你们业务是否允许反方向滑动/横滑等条件下触发三至截屏等
-//                            mFinalShouldTriggerScreenShot = true;
-//                        }
                     }
 
                     break;
@@ -425,10 +417,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
                         float deltaY = moveY - downY;
                         float deltaX = moveX - downX;
                         EasyLog.d(TAG, "check up deltaY:" + deltaY + " , deltaX:" + deltaX + " , mReadLongPress:" + mReadyLongPress + " ,  " + mLauncherCard.getName());
-//                        boolean checkAndGoSearchActivity = checkAndGoSearchActivity(deltaY, deltaX);
-//                        if (mReadyLongPress && !checkAndGoSearchActivity) {
-//                            checkAndPerformLongPress(deltaY, deltaX);
-//                        }
+
                         checkAndPerformClick(deltaY, deltaX);
                         mReadyLongPress = false;
                         resetTouchEvent();
