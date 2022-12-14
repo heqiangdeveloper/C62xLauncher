@@ -1,6 +1,7 @@
 package com.chinatsp.iquting.service;
 
 import android.content.Context;
+import android.media.AudioManager;
 import android.provider.Settings;
 import android.util.Log;
 
@@ -21,6 +22,7 @@ import com.tencent.wecarflow.contentsdk.ContentManager;
 import com.tencent.wecarflow.contentsdk.bean.AreaContentResponseBean;
 import com.tencent.wecarflow.contentsdk.bean.BaseSongItemBean;
 import com.tencent.wecarflow.contentsdk.callback.AreaContentResult;
+import com.tencent.wecarflow.controlsdk.AudioFocusChangeListener;
 import com.tencent.wecarflow.controlsdk.BindListener;
 import com.tencent.wecarflow.controlsdk.FlowPlayControl;
 import com.tencent.wecarflow.controlsdk.MediaChangeListener;
@@ -89,6 +91,7 @@ public class IqutingBindService {
             @Override
             public void onServiceConnected() {
                 Log.d(TAG,"onServiceConnected");
+                addAudioFocusChangeListener();
                 //采用系统音频策略，当重启前爱趣听在播放，重启后音乐会发送启动爱趣听播放的广播 "com.aiquting.play"
                 //LaunchConfig launchConfig = new LaunchConfig(true, false,true);
                 LaunchConfig launchConfig = new LaunchConfig(false,false);
@@ -106,6 +109,7 @@ public class IqutingBindService {
             public void onServiceDisconnected() {
                 Log.d(TAG,"onServiceDisconnected");
                 removePlayStateListener();
+                removeAudioFocusChangeListener();
             }
 
             @Override
@@ -407,6 +411,33 @@ public class IqutingBindService {
     //监听播放状态的变化
     private void addPlayStateListener(){
         FlowPlayControl.getInstance().addPlayStateListener(playStateListener);
+    }
+
+    AudioFocusChangeListener audioFocusChangeListener = new AudioFocusChangeListener() {
+        @Override
+        public void onAudioFocusChange(int focusState) {
+            switch (focusState){
+                case AudioManager.AUDIOFOCUS_GAIN:
+                    // 1:表示存在焦点，0表示不存在
+                    Log.d("iqutingfocus","AUDIOFOCUS_GAIN");
+                    Settings.System.putInt(mContext.getContentResolver(),"aqt_focus",1);
+                    break;
+                case AudioManager.AUDIOFOCUS_LOSS:
+                    Log.d("iqutingfocus","AUDIOFOCUS_LOSS");
+                    Settings.System.putInt(mContext.getContentResolver(),"aqt_focus",0);
+                    break;
+            }
+        }
+    };
+
+    //监听爱趣听音频焦点变化
+    private void addAudioFocusChangeListener(){
+        FlowPlayControl.getInstance().addAudioFocusChangeListener(audioFocusChangeListener);
+    }
+
+    //移除爱趣听音频焦点变化的监听
+    private void removeAudioFocusChangeListener(){
+        FlowPlayControl.getInstance().removeAudioFocusChangeListener(audioFocusChangeListener);
     }
 
     //移除媒体变化的监听
