@@ -6,7 +6,6 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import com.chinatsp.settinglib.Applet
-import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.manager.ISwitchManager
@@ -40,6 +39,7 @@ class AmbientLightingModelDialogFragment :
         initSwitchOption()
         addSwitchLiveDataListener()
         setSwitchListener()
+        addSeekBarLiveDataListener()
 
         initViewSelect()
         initViewSelectListener()
@@ -92,6 +92,14 @@ class AmbientLightingModelDialogFragment :
                 ContextCompat.getDrawable(it,
                     R.drawable.img_light_small_lv5)
             })
+        }
+    }
+
+    private fun addSeekBarLiveDataListener() {
+        viewModel.ambientColor.observe(this) {
+            val color = colorList[it.pos]
+            val colorId = Color.rgb(color.red().toInt(), color.green().toInt(), color.blue().toInt())
+            binding.lightingView.setBackgroundColor(colorId)
         }
     }
 

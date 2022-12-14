@@ -56,6 +56,9 @@ class AmbientLightingFragment :
                 COLOR_CHANGED -> {
                     val value = viewModel.ambientColor.value!!.pos
                     binding.picker.setIndicatorIndex(value)
+                    val color = colorList[value]
+                    val colorId = Color.rgb(color.red().toInt(), color.green().toInt(), color.blue().toInt())
+                    binding.lightingView.setBackgroundColor(colorId)
                 }
                 else -> {}
             }
@@ -107,7 +110,7 @@ class AmbientLightingFragment :
                     level1.cnode?.takeIf { child -> child.valid && child.uid == uid }
                         .let { level2 ->
                             level2?.cnode?.let { lv3Node ->
-                                map[lv3Node.uid]?.run { onViewClick(this, lv3Node.uid, true) }
+                                map[lv3Node.uid]?.run { onViewClick(this, lv3Node.uid) }
                             }
                         }
                 }
@@ -115,7 +118,7 @@ class AmbientLightingFragment :
         }
     }
 
-    private fun onViewClick(view: View, clickUid: Int, frank: Boolean) {
+    private fun onViewClick(view: View, clickUid: Int) {
         onViewClick(view)
         obtainRouter()?.resetLevelRouter(pid, uid, clickUid)
     }
@@ -433,8 +436,8 @@ class AmbientLightingFragment :
         Timber.d("onColorChanged color:%s, index:%s", color, index)
         viewModel.onAmbientColorChanged(index)
         picker?.setIndicatorColorIndex(index)
-        val color = colorList[index]
-        val colorId = Color.rgb(color.red().toInt(), color.green().toInt(), color.blue().toInt())
+        val colorIndexValue = colorList[index]
+        val colorId = Color.rgb(colorIndexValue.red().toInt(), colorIndexValue.green().toInt(), colorIndexValue.blue().toInt())
         binding.lightingView.setBackgroundColor(colorId)
     }
 
@@ -445,19 +448,6 @@ class AmbientLightingFragment :
     override fun onStopTrackingTouch(picker: ColorPickerView?) {
 
     }
-
-//    private fun checkDisableOtherDiv(status: Boolean, view: View) {
-//        if (view is ViewGroup) {
-//            view.isEnabled = status
-//            for (index in 0 until view.childCount) {
-//                val child = view.getChildAt(index)
-//                checkDisableOtherDiv(status, child)
-//            }
-//        } else {
-//            view.alpha = if (status) 1.0f else 0.6f
-//            view.isEnabled = status
-//        }
-//    }
 
 
     override fun onPause() {

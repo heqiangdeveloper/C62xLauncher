@@ -66,7 +66,7 @@ public class ColorPickerView extends View {
     /**
      * 指示点半径
      */
-    private int mRadius;
+    private int mRadius = 59;
 
     /**
      * 控件方向
@@ -662,11 +662,11 @@ public class ColorPickerView extends View {
         } else if (index > colorIndex) {
             index = colorIndex;
         }
-        int x = (index * (959 / colorIndex)) + (mLeft + mRadius + 70);
+        int x = (index * (959 / colorIndex)) + (getPaddingLeft() + mRadius + 70);
         if (x > 900) {
             curX = x - 60;
         } else {
-            curX = x + 30;
+            curX = x - 30;
         }
         boolean isSameIndex = pickerIndex == index;
         this.pickerIndex = index;

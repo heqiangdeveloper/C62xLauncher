@@ -4,9 +4,12 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.bean.SwitchState
+import com.chinatsp.settinglib.bean.Volume
+import com.chinatsp.settinglib.listener.IProgressListener
 import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.lamp.AmbientLightingManager
+import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.common.library.frame.base.BaseModel
@@ -15,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AmbientLightingSmartModeViewModel @Inject constructor(app: Application, model: BaseModel) :
-    BaseViewModel(app, model), ISwitchListener {
+    BaseViewModel(app, model), ISwitchListener, IProgressListener {
 
     private val manager: IOptionManager
         get() = AmbientLightingManager.instance
@@ -32,6 +35,17 @@ class AmbientLightingSmartModeViewModel @Inject constructor(app: Application, mo
     private val _colourBreathe: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.COLOUR_BREATHE
         MutableLiveData(manager.doGetSwitchOption(node))
+    }
+
+    val ambientColor: LiveData<Volume>
+        get() = _ambientColor
+
+    private val _ambientColor: MutableLiveData<Volume> by lazy {
+        val node = Progress.AMBIENT_LIGHT_COLOR
+        MutableLiveData<Volume>().apply {
+            val value = AmbientLightingManager.instance.doGetVolume(node)
+            this.value = value
+        }
     }
 
     val musicRhythm: LiveData<SwitchState>
@@ -104,6 +118,15 @@ class AmbientLightingSmartModeViewModel @Inject constructor(app: Application, mo
 //            liveData?.value = status
 //        }
         return result
+    }
+
+    override fun onProgressChanged(node: Progress, value: Int) {
+        when (node) {
+            Progress.AMBIENT_LIGHT_COLOR -> {
+                doUpdateProgress(_ambientColor, value)
+            }
+            else -> {}
+        }
     }
 
 }
