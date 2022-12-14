@@ -1114,6 +1114,15 @@ public class ClassifyView extends FrameLayout {
                         L.d("ACTION_DRAG_STARTED");
                         obtainVelocityTracker();
                         restoreDragView();
+
+                        //拖动选中时，需要隐藏删除按钮
+                        relativeLayout = (RelativeLayout) mSelected;
+                        insertAbleGridView = (InsertAbleGridView) relativeLayout.getChildAt(0);
+                        if(insertAbleGridView.getChildCount() == 1){//非文件夹
+                            ImageView iv = (ImageView) relativeLayout.getChildAt(2);
+                            iv.setVisibility(View.GONE);
+                        }
+
                         mDragView.setBackgroundDrawable(getDragDrawable(mSelected));
                         mDragView.setVisibility(VISIBLE);
                         mMainCallBack.setDragPosition(mSelectedPosition);
@@ -1427,6 +1436,15 @@ public class ClassifyView extends FrameLayout {
 
                         obtainVelocityTracker();
                         restoreDragView();
+
+                        //拖动选中时，需要隐藏删除按钮
+                        relativeLayout = (RelativeLayout) mSelected;
+                        insertAbleGridView = (InsertAbleGridView) relativeLayout.getChildAt(0);
+                        if(insertAbleGridView.getChildCount() == 1){//非文件夹
+                            ImageView iv = (ImageView) relativeLayout.getChildAt(2);
+                            iv.setVisibility(View.GONE);
+                        }
+
                         mDragView.setBackgroundDrawable(getDragDrawable(mSelected));
                         mDragView.setVisibility(VISIBLE);
                         mSubCallBack.setDragPosition(mSelectedPosition);
