@@ -260,9 +260,9 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
     WCM进入过温状态.WCM发送“WcmWSts：OX07信号
     HUM弹出的警告画面会有“无线充电温度过高，请移开手机”的文字
      * 0x8: WCM处于过功率状态
-     * 0x9:
+     * 0x9: 其他故障
      * 0xA:
-     * 0xB:
+     * 0xB:充满状态
      * @param state
      */
     private fun onWirelessChargingModeChanged(state: RadioState) {
@@ -270,7 +270,7 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
             /**无线充电正常*/
             0x2 -> VcuUtils.startDialogService(Hint.wirelessChargingNormal)
             /**无线充电异常*/
-            0x3, 0x4, 0x6 -> VcuUtils.startDialogService(Hint.wirelessChargingAbnormal)
+            0x3, 0x4, 0x6,0x8 -> VcuUtils.startDialogService(Hint.wirelessChargingAbnormal)
             /**检测到金属异物，请移开异物*/
             0x5 -> VcuUtils.startDialogService(Hint.wirelessChargingMetal)
             /**无线充电温度过高，请移开手机*/
