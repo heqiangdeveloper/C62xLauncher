@@ -1,4 +1,4 @@
-package com.chinatsp.settinglib.manager.cabin.access
+package com.chinatsp.settinglib.manager.access
 
 import android.car.VehicleAreaType
 import android.car.hardware.CarPropertyValue

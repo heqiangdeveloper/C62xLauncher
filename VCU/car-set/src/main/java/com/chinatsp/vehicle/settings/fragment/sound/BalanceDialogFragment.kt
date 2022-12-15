@@ -1,4 +1,4 @@
-package com.chinatsp.vehicle.settings.fragment.doors.dialog
+package com.chinatsp.vehicle.settings.fragment.sound
 
 import android.os.Bundle
 import com.chinatsp.settinglib.VcuUtils
@@ -11,7 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
-class VolumeDialogFragment :
+class BalanceDialogFragment :
     BaseDialogFragment<SoundEffectViewModel, VolumeDialogFragmentBinding>() {
 
     private var OFFSET = 1

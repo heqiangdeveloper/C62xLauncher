@@ -8,7 +8,7 @@ import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.manager.ISwitchManager
-import com.chinatsp.settinglib.manager.cabin.access.BackMirrorManager
+import com.chinatsp.settinglib.manager.access.BackMirrorManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.IRoute
@@ -16,7 +16,6 @@ import com.chinatsp.vehicle.settings.ISwitchAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.app.Toast
 import com.chinatsp.vehicle.settings.databinding.CarMirrorFragmentBinding
-import com.chinatsp.vehicle.settings.fragment.doors.dialog.AngleDialogFragment
 import com.chinatsp.vehicle.settings.vm.accress.MirrorViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton

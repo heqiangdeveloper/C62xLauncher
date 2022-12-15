@@ -5,9 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.listener.ISignalListener
-import com.chinatsp.settinglib.manager.cabin.access.DoorManager
-import com.chinatsp.settinglib.manager.cabin.access.SternDoorManager
-import com.chinatsp.settinglib.manager.cabin.access.WindowManager
+import com.chinatsp.settinglib.manager.access.DoorManager
+import com.chinatsp.settinglib.manager.access.SternDoorManager
+import com.chinatsp.settinglib.manager.access.WindowManager
 import com.chinatsp.settinglib.manager.lamp.LightManager
 import com.chinatsp.vehicle.controller.annotation.IPart
 import com.chinatsp.vehicle.controller.annotation.Model

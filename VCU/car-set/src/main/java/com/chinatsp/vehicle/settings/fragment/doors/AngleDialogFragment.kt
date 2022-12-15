@@ -1,11 +1,11 @@
-package com.chinatsp.vehicle.settings.fragment.doors.dialog
+package com.chinatsp.vehicle.settings.fragment.doors
 
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.manager.IMirrorAction
-import com.chinatsp.settinglib.manager.cabin.access.BackMirrorManager
+import com.chinatsp.settinglib.manager.access.BackMirrorManager
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.AngleDialogFragmentBinding
 import com.chinatsp.vehicle.settings.vm.sound.SoundEffectViewModel

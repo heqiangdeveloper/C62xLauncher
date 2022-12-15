@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.MutableLiveData
-import com.chinatsp.settinglib.manager.cabin.access.AccessManager
+import com.chinatsp.settinglib.manager.access.AccessManager
 import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel

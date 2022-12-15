@@ -5,13 +5,15 @@ import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.power.CarPowerManager
 import android.os.SystemThirdScreenBA
 import com.chinatsp.settinglib.*
+import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.manager.BaseManager
+import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.ISignal
-import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.optios.Area
 import com.chinatsp.settinglib.optios.Progress
+import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import timber.log.Timber
@@ -24,7 +26,7 @@ import kotlin.math.roundToInt
  * @desc   :
  * @version: 1.0
  */
-class BrightnessManager : BaseManager(), IProgressManager, ISwitchManager {
+class BrightnessManager : BaseManager(), IProgressManager, IOptionManager {
 
     //浅色模式（白天模式）
     private val isLight: Boolean
@@ -35,6 +37,8 @@ class BrightnessManager : BaseManager(), IProgressManager, ISwitchManager {
             Timber.d("get current topic mode signal：$signal， value:$result")
             return 1 != result
         }
+
+    private var isDark: Boolean = false
 
     private val isNewHardware: Boolean get() = true
 
@@ -87,10 +91,24 @@ class BrightnessManager : BaseManager(), IProgressManager, ISwitchManager {
         }
     }
 
-    private val darkLightMode: SwitchState by lazy {
-        val node = SwitchNode.DARK_LIGHT_MODE
+//    private val darkLightMode: SwitchState by lazy {
+//        val node = SwitchNode.DARK_LIGHT_MODE
+//        return@lazy createAtomicBoolean(node) { result, value ->
+//            doUpdateSwitch(node, result, value, this::doSwitchChanged)
+//        }
+//    }
+
+    private val headLines: SwitchState by lazy {
+        val node = SwitchNode.HEAD_LINES
         return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitch(node, result, value, this::doSwitchChanged)
+            doUpdateSwitch(node, result, value)
+        }
+    }
+
+    private val exeLampState: RadioState by lazy {
+        val node = RadioNode.EXE_LAMP_STATE
+        return@lazy createAtomicInteger(node) { result, value ->
+            doUpdateRadioValue(node, result, value)
         }
     }
 
@@ -118,10 +136,6 @@ class BrightnessManager : BaseManager(), IProgressManager, ISwitchManager {
         val value = if (result in type.min..type.max) result else type.def
         Timber.d("initVolume isNewHardware:$isNewHardware, type:$type, result:$result,, value:$value")
         return Volume(type, type.min, type.max, value)
-    }
-
-    fun isDarkModeActive(): Boolean {
-        return darkLightMode.get()
     }
 
     private fun getNearestPosition(array: IntArray, value: Int): Int {
@@ -203,13 +217,33 @@ class BrightnessManager : BaseManager(), IProgressManager, ISwitchManager {
             SwitchNode.LIGHT_AUTO_MODE.get.signal -> {
                 onSwitchChanged(SwitchNode.LIGHT_AUTO_MODE, lightAutoMode, property)
             }
-            SwitchNode.DARK_LIGHT_MODE.get.signal -> {
-                val last = darkLightMode.get()
-                onSwitchChanged(SwitchNode.DARK_LIGHT_MODE, darkLightMode, property)
-                val actual = darkLightMode.get()
-                if (last xor actual) doSwitchLightDarkMode(darkLightMode.get())
+            RadioNode.EXE_LAMP_STATE.get.signal -> {
+                val value = property.value as Int
+                doUpdateRadioValue(RadioNode.EXE_LAMP_STATE, exeLampState, value) { node, state ->
+                    tryChangeLightMode()
+                }
             }
+            SwitchNode.HEAD_LINES.get.signal -> {
+                val value = property.value as Int
+                doUpdateSwitch(SwitchNode.HEAD_LINES, headLines, value) { node, state ->
+                    tryChangeLightMode()
+                }
+            }
+//            SwitchNode.DARK_LIGHT_MODE.get.signal -> {
+//                val last = darkLightMode.get()
+//                onSwitchChanged(SwitchNode.DARK_LIGHT_MODE, darkLightMode, property)
+//                val actual = darkLightMode.get()
+//                if (last xor actual) doSwitchLightDarkMode(darkLightMode.get())
+//            }
             else -> {}
+        }
+    }
+
+    private fun tryChangeLightMode() {
+        val current = isDarkMode()
+        if (isDark xor current) {
+            doSwitchLightDarkMode(current)
+            isDark = current
         }
     }
 
@@ -220,10 +254,19 @@ class BrightnessManager : BaseManager(), IProgressManager, ISwitchManager {
                 add(Progress.METER_SCREEN_BRIGHTNESS.get.signal)
                 add(Progress.CONDITIONER_SCREEN_BRIGHTNESS.get.signal)
                 add(SwitchNode.LIGHT_AUTO_MODE.get.signal)
-                add(SwitchNode.DARK_LIGHT_MODE.get.signal)
+                add(SwitchNode.HEAD_LINES.get.signal)
+                add(RadioNode.EXE_LAMP_STATE.get.signal)
             }
             put(Origin.CABIN, cabinSet)
         }
+    }
+
+    override fun doGetRadioOption(node: RadioNode): RadioState? {
+        return if (RadioNode.EXE_LAMP_STATE == node) exeLampState else null
+    }
+
+    override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
+        return false
     }
 
     override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
@@ -266,8 +309,14 @@ class BrightnessManager : BaseManager(), IProgressManager, ISwitchManager {
     }
 
     fun initDarkLightMode() {
-        val darkActive = darkLightMode.get()
+        val darkActive = isDarkMode()
         doSwitchLightDarkMode(darkActive)
+    }
+
+    fun isDarkMode(): Boolean = when (exeLampState.get()) {
+        0x0 -> false
+        0x2, 0x3 -> true
+        else -> headLines.get()
     }
 
 }

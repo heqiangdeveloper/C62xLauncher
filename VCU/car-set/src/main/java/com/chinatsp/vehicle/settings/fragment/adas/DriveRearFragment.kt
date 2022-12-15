@@ -1,4 +1,4 @@
-package com.chinatsp.vehicle.settings.fragment.drive
+package com.chinatsp.vehicle.settings.fragment.adas
 
 import android.graphics.Color
 import android.media.AudioManager
@@ -20,7 +20,6 @@ import com.chinatsp.vehicle.settings.IOptionAction
 import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.DriveRearFragmentBinding
-import com.chinatsp.vehicle.settings.fragment.drive.dialog.DetailsDialogFragment
 import com.chinatsp.vehicle.settings.vm.adas.SideViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton

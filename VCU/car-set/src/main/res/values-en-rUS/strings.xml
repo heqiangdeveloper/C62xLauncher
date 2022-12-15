@@ -34,7 +34,7 @@
     <string name="car_trunk">Power tailgate</string>
     <string name="car_mirror">Exterior rear-view mirror</string>
     <string name="car_door_smart">Intelligent entry</string>
-    <string name="car_nfc_disable">Nfn card disable</string>
+    <string name="car_nfc_disable">NFC card disable</string>
     <string name="acc_off_auto_unlock">Fame-out automatic locked</string>
     <string name="drive_auto_lock">Driving automatic locked</string>
     <string name="unlock_fron">Unlock front door only</string>

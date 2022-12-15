@@ -5,7 +5,7 @@ import android.car.hardware.cabin.CarCabinManager
 import com.chinatsp.settinglib.Applet
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
-import com.chinatsp.settinglib.manager.cabin.access.AccessManager
+import com.chinatsp.settinglib.manager.access.AccessManager
 import com.chinatsp.settinglib.manager.adas.AdasManager
 import com.chinatsp.settinglib.manager.cabin.ACManager
 import com.chinatsp.settinglib.manager.cabin.CabinManager

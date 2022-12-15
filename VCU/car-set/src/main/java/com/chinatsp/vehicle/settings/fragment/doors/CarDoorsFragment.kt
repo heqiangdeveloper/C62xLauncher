@@ -8,7 +8,7 @@ import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.ISwitchManager
-import com.chinatsp.settinglib.manager.cabin.access.DoorManager
+import com.chinatsp.settinglib.manager.access.DoorManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level

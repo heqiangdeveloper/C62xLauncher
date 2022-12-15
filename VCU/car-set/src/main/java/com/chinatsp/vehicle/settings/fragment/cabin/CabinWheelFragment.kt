@@ -20,7 +20,7 @@ import com.chinatsp.vehicle.settings.databinding.CabinWhellFragmentBinding
 import com.chinatsp.vehicle.settings.fragment.cabin.dialog.ConversionDialogFragment
 import com.chinatsp.vehicle.settings.fragment.cabin.dialog.SteeringHeatDialogFragment
 import com.chinatsp.vehicle.settings.fragment.cabin.dialog.SteeringKeysDialogFragment
-import com.chinatsp.vehicle.settings.fragment.drive.dialog.SwitchoverFailureDialogFragment
+import com.chinatsp.vehicle.settings.fragment.adas.SwitchoverFailureDialogFragment
 import com.chinatsp.vehicle.settings.vm.cabin.SteeringViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.utils.ResUtils

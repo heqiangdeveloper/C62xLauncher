@@ -10,7 +10,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IRadioManager
 import com.chinatsp.settinglib.manager.ISwitchManager
-import com.chinatsp.settinglib.manager.cabin.access.SternDoorManager
+import com.chinatsp.settinglib.manager.access.SternDoorManager
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode

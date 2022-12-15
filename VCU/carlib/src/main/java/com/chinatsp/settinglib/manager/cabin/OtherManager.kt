@@ -270,7 +270,7 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
             /**无线充电正常*/
             0x2 -> VcuUtils.startDialogService(Hint.wirelessChargingNormal)
             /**无线充电异常*/
-            0x3, 0x4, 0x6,0x8 -> VcuUtils.startDialogService(Hint.wirelessChargingAbnormal)
+            0x3, 0x4, 0x6, 0x8 -> VcuUtils.startDialogService(Hint.wirelessChargingAbnormal)
             /**检测到金属异物，请移开异物*/
             0x5 -> VcuUtils.startDialogService(Hint.wirelessChargingMetal)
             /**无线充电温度过高，请移开手机*/

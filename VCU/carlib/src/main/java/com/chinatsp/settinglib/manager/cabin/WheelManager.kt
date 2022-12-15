@@ -13,7 +13,6 @@ import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.constants.OffLine
 import com.chinatsp.settinglib.listener.INotifyListener
-import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.listener.sound.ISoundManager
 import com.chinatsp.settinglib.manager.*
 import com.chinatsp.settinglib.optios.Progress

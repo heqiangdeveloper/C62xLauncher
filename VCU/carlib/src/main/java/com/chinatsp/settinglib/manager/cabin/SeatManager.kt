@@ -291,30 +291,42 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
     }
 
     private fun doControlKneadLevel(parcel: CommandParcel) {
-        val minLevel = 0x2
-        val maxLevel = 0x4
-        val offLevel = 0x5
+        val min = 0x2
+        val max = 0x4
+        val off = 0x5
         val callback = parcel.callback
         val command = parcel.command as CarCmd
-        val array = analyseActive(command, this::isKneadRunning, offLevel - 1, mark = false)
+        val array = analyseActive(command, this::isKneadRunning, off - 1, mark = false)
         val lfAct = array[0]
-        val lbAct = array[1]
+        var lbAct = array[1]
         val rfAct = array[2]
-        val rbAct = array[3]
+        var rbAct = array[3]
+        //LV3 不支持后排座椅按摩
+        if (VcuUtils.isCareLevel(Level.LEVEL3)) {
+            if (!lfAct && !rfAct && (lbAct or rbAct)) {
+                command.message = "您的爱车不支持后排座椅按摩功能！"
+                callback?.onCmdHandleResult(command)
+                return
+            }
+            if (lfAct or rfAct) {
+                lbAct = false
+                rbAct = false
+            }
+        }
         Timber.d("doControlKneadLevel lfAct:$lfAct, lbAct:$lbAct, rfAct:$rfAct, rbAct:$rbAct")
         if (IStatus.INIT == command.status) {
             var expect: Int
             parcel.retryCount = 2
             command.resetSent(IPart.L_F)
             if (Action.TURN_ON == command.action) {
-                expect = maxLevel
+                expect = min
                 if (lfAct) command.lfExpect = expect
                 if (lbAct) command.lbExpect = expect
                 if (rfAct) command.rfExpect = expect
                 if (rbAct) command.rbExpect = expect
             }
             if (Action.TURN_OFF == command.action) {
-                expect = offLevel
+                expect = off
                 if (lfAct) command.lfExpect = expect
                 if (lbAct) command.lbExpect = expect
                 if (rfAct) command.rfExpect = expect
@@ -323,57 +335,49 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
             if (Action.PLUS == command.action) {
                 val step = command.step
                 if (lfAct) {
-                    command.lfExpect =
-                        obtainKneadLevel(IPart.L_F, minLevel, maxLevel, offLevel, step)
+                    command.lfExpect = obtainKneadLevel(IPart.L_F, min, max, off, step)
                 }
                 if (lbAct) {
-                    command.lbExpect =
-                        obtainKneadLevel(IPart.L_B, minLevel, maxLevel, offLevel, step)
+                    command.lbExpect = obtainKneadLevel(IPart.L_B, min, max, off, step)
                 }
                 if (rfAct) {
-                    command.rfExpect =
-                        obtainKneadLevel(IPart.R_F, minLevel, maxLevel, offLevel, step)
+                    command.rfExpect = obtainKneadLevel(IPart.R_F, min, max, off, step)
                 }
                 if (rbAct) {
-                    command.rbExpect =
-                        obtainKneadLevel(IPart.R_B, minLevel, maxLevel, offLevel, step)
+                    command.rbExpect = obtainKneadLevel(IPart.R_B, min, max, off, step)
                 }
             }
             if (Action.MINUS == command.action) {
                 val step = command.step * -1
                 if (lfAct) {
-                    command.lfExpect =
-                        obtainKneadLevel(IPart.L_F, minLevel, maxLevel, offLevel, step)
+                    command.lfExpect = obtainKneadLevel(IPart.L_F, min, max, off, step)
                 }
                 if (lbAct) {
-                    command.lbExpect =
-                        obtainKneadLevel(IPart.L_B, minLevel, maxLevel, offLevel, step)
+                    command.lbExpect = obtainKneadLevel(IPart.L_B, min, max, off, step)
                 }
                 if (rfAct) {
-                    command.rfExpect =
-                        obtainKneadLevel(IPart.R_F, minLevel, maxLevel, offLevel, step)
+                    command.rfExpect = obtainKneadLevel(IPart.R_F, min, max, off, step)
                 }
                 if (rbAct) {
-                    command.rbExpect =
-                        obtainKneadLevel(IPart.R_B, minLevel, maxLevel, offLevel, step)
+                    command.rbExpect = obtainKneadLevel(IPart.R_B, min, max, off, step)
                 }
             }
             if (Action.MIN == command.action) {
-                expect = minLevel
+                expect = min
                 if (lfAct) command.lfExpect = expect
                 if (lbAct) command.lbExpect = expect
                 if (rfAct) command.rfExpect = expect
                 if (rbAct) command.rbExpect = expect
             }
             if (Action.MAX == command.action) {
-                expect = maxLevel
+                expect = max
                 if (lfAct) command.lfExpect = expect
                 if (lbAct) command.lbExpect = expect
                 if (rfAct) command.rfExpect = expect
                 if (rbAct) command.rbExpect = expect
             }
             if (Action.FIXED == command.action) {
-                expect = calibrationValue(command.value + 1, minLevel, maxLevel)
+                expect = calibrationValue(command.value + 1, min, max)
                 if (lfAct) command.lfExpect = expect
                 if (lbAct) command.lbExpect = expect
                 if (rfAct) command.rfExpect = expect
@@ -385,36 +389,36 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         val lbLevel = command.lbExpect
         val rbLevel = command.rbExpect
         val lfActual = if (lfAct) obtainKneadLevel(IPart.L_F) + 1 else lfLevel
-        val lBActual = if (lbAct) obtainKneadLevel(IPart.L_B) + 1 else lbLevel
+        val lbActual = if (lbAct) obtainKneadLevel(IPart.L_B) + 1 else lbLevel
         val rfActual = if (rfAct) obtainKneadLevel(IPart.R_F) + 1 else rfLevel
         val rbActual = if (rbAct) obtainKneadLevel(IPart.R_B) + 1 else rbLevel
         val values = mutableListOf(0x1, 0x1, 0x1, 0x1)
-        var isSend = false
+        var isNeedSend = false
         if (lfAct && lfLevel != lfActual) {
             values[0] = lfLevel
-            isSend = true
+            isNeedSend = true
         }
         if (rfAct && rfLevel != rfActual) {
             values[1] = rfLevel
-            isSend = true
+            isNeedSend = true
         }
-        if (lbAct && lbLevel != lBActual) {
+        if (lbAct && lbLevel != lbActual) {
             values[2] = lbLevel
-            isSend = true
+            isNeedSend = true
         }
         if (rbAct && rbLevel != rbActual) {
             values[3] = rbLevel
-            isSend = true
+            isNeedSend = true
         }
-        if (isSend && !command.isSent()) {
+        if (isNeedSend && !command.isSent()) {
             val signal = CarCabinManager.ID_HUM_SEATMASSLVL_RL_RR
             writeProperty(signal, values.toIntArray(), Origin.CABIN)
             command.sent()
         }
         command.status = IStatus.RUNNING
-        if (!parcel.isRetry() || !isSend) {
+        if (!parcel.isRetry() || !isNeedSend) {
             hint(lfAct, lbAct, rfAct, rbAct, lfLevel, rfLevel, lbLevel, rbLevel,
-                offLevel, minLevel, maxLevel, command, isSend, "按摩")
+                off, min, max, command, isNeedSend, "按摩")
             callback?.onCmdHandleResult(command)
         } else {
             ShareHandler.loopParcel(parcel, delayed = ShareHandler.MID_DELAY)
@@ -1220,7 +1224,11 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
     private fun hint(level: Int, off: Int, min: Int, max: Int, action: Int, send: Boolean): String {
         return when (level) {
             off -> "${if (send) "已经" else ""}关闭了"
-            min -> "${if (send) "已经" else ""}调整到最低了"
+            min -> if (Action.TURN_ON == action) {
+                "${if (send) "已经" else ""}打开了"
+            } else {
+                "${if (send) "已经" else ""}调整到最低了"
+            }
             max -> if (Action.TURN_ON == action) {
                 "${if (send) "已经" else ""}打开了"
             } else {

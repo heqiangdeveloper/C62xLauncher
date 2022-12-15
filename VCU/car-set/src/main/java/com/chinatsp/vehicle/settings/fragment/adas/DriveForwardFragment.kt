@@ -1,4 +1,4 @@
-package com.chinatsp.vehicle.settings.fragment.drive
+package com.chinatsp.vehicle.settings.fragment.adas
 
 import android.graphics.Color
 import android.graphics.PixelFormat
@@ -15,8 +15,6 @@ import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.ISwitchAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.DriveForwardFragmentBinding
-import com.chinatsp.vehicle.settings.fragment.drive.dialog.CloseBrakeDialogFragment
-import com.chinatsp.vehicle.settings.fragment.drive.dialog.DetailsDialogFragment
 import com.chinatsp.vehicle.settings.vm.adas.ForwardViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton

@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IOptionListener
-import com.chinatsp.settinglib.manager.cabin.access.DoorManager
+import com.chinatsp.settinglib.manager.access.DoorManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
