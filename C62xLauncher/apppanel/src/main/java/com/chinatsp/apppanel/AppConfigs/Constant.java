@@ -12,4 +12,8 @@ public class Constant {
     public static final String PAUSE_LABEL = "| |";
     public static final String FAIL_LABEL = "!";
     public static final int MAXVALUE = 100;
+
+    //跳转到ApppanelActivity需要携带的参数key
+    public static final String FROM = "from";
+
 }

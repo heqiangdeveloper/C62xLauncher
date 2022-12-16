@@ -94,7 +94,9 @@ public class CarLauncher extends AppCompatActivity implements OnGestureAction {
     }
 
     public void toApppanel(View view){
-        startActivity(new Intent(CarLauncher.this, ApppanelActivity.class));
+        Intent i = new Intent(CarLauncher.this, ApppanelActivity.class);
+        i.putExtra(Constant.FROM,"com.chinatsp.launcher");
+        startActivity(i);
     }
 
     private void registerAppInstallBroadcast(){
@@ -169,6 +171,8 @@ public class CarLauncher extends AppCompatActivity implements OnGestureAction {
 
     @Override
     public void goAppPanel() {
-        startActivity(new Intent(CarLauncher.this, ApppanelActivity.class));
+        Intent i = new Intent(CarLauncher.this, ApppanelActivity.class);
+        i.putExtra(Constant.FROM,"com.chinatsp.launcher");
+        startActivity(i);
     }
 }
