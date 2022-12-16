@@ -39,6 +39,8 @@ import com.anarchy.classifyview.listener.SoftKeyBoardListener;
 import com.anarchy.classifyview.util.L;
 import com.anarchy.classifyview.util.MyConfigs;
 import launcher.base.applists.AppLists;
+
+import com.chinatsp.apppanel.AppConfigs.Constant;
 import com.chinatsp.apppanel.AppConfigs.Priorities;
 import com.chinatsp.apppanel.R;
 import com.chinatsp.apppanel.adapter.AddAppAdapter;
@@ -53,6 +55,7 @@ import com.chinatsp.apppanel.event.NotRemindEvent;
 import com.chinatsp.apppanel.event.StartDownloadEvent;
 import com.chinatsp.apppanel.event.UninstallCommandEvent;
 import com.chinatsp.apppanel.event.UpdateEvent;
+import com.chinatsp.apppanel.utils.Utils;
 import com.huawei.appmarket.launcheragent.launcher.AppState;
 
 import org.greenrobot.eventbus.EventBus;
@@ -71,6 +74,7 @@ import java.util.stream.Collectors;
 import launcher.base.async.AsyncSchedule;
 import launcher.base.service.AppServiceManager;
 import launcher.base.service.car.ICarService;
+import launcher.base.utils.recent.RecentAppHelper;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -110,6 +114,7 @@ public class MyAppFragment extends Fragment {
     private PackageManager pm;
     private PackageInfo pi;
     private int subParentIndex = -1;//sub所在的主位置
+    private String fromPkg = "";
     public MyAppFragment() {
         // Required empty public constructor
     }
@@ -136,8 +141,7 @@ public class MyAppFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            fromPkg = getArguments().getString(Constant.FROM);
         }
         db = new MyAppDB(getContext());
         preferences = getContext().getSharedPreferences(MyConfigs.APPPANELSP, Context.MODE_PRIVATE);
@@ -209,6 +213,10 @@ public class MyAppFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    public void setFromPkg(String fromPkg){
+        this.fromPkg = fromPkg;
     }
 
     private List<String> getCanUninstallLists(){
@@ -875,9 +883,10 @@ public class MyAppFragment extends Fragment {
                 }
             }
         }else if(event instanceof JumpToCardEvent){
-            Intent intent = new Intent();
-            intent.setClassName("com.chinatsp.launcher","com.chinatsp.launcher.CarLauncher");
-            getContext().startActivity(intent);
+//            Intent intent = new Intent();
+//            intent.setClassName("com.chinatsp.launcher","com.chinatsp.launcher.CarLauncher");
+//            getContext().startActivity(intent);
+            jumpAction();
         }else if(event instanceof ChangeSubTitleEvent){
             boolean isSubShow = appInfoClassifyView.isSubContainerShow();
             String title = ((ChangeSubTitleEvent)event).getTitle();
@@ -886,6 +895,22 @@ public class MyAppFragment extends Fragment {
             if(isSubShow){
                 if(appInfoClassifyView.titleTv != null) appInfoClassifyView.titleTv.setText(title);
             }
+        }
+    }
+
+    /*
+    *  如果fromPkg还在后台运行，返回到fromPkg；否则回到主页;
+    *  部分游戏需要登录华为账号，华为账号页面是HMSCore服务中的一个插件页，通过com.huawei.hmsforcar.carappinit包名打不开，
+    *  也不会常驻后台，所以直接返回到主页，也符合要求
+     */
+    private void jumpAction(){
+        Log.d(TAG,"fromPkg: " + fromPkg);
+        if(TextUtils.isEmpty(fromPkg) || AppLists.launcher.equals(fromPkg) || !Utils.isAppRunning(getContext(),fromPkg)){
+            Intent intent = new Intent();
+            intent.setClassName("com.chinatsp.launcher","com.chinatsp.launcher.CarLauncher");
+            getContext().startActivity(intent);
+        }else {
+            RecentAppHelper.launchApp(getContext(),fromPkg);
         }
     }
 
