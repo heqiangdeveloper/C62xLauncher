@@ -504,7 +504,7 @@ public class VSeekBar extends View {
     }
 
     private void drawSelectedNumber(Canvas canvas) {
-        String max = String.valueOf(getSelectedNumber());
+        String max = String.valueOf(getSelectedNumber()) + "\u2103";
         getTextBounds(max, mMaxTextRect);
         float yText;
         //bubble
@@ -516,7 +516,13 @@ public class VSeekBar extends View {
             yText = mMiddleY - mSliderIcon.getHeight() / 2F - mNumberMarginBottom - 36;
         }
         //text
-        float maxX = mMaxPosition - mMaxTextRect.width() / 2F - 6;
+        float maxX;
+        if (getSelectedNumber() == 10) {
+            maxX = mMaxPosition - mMaxTextRect.width() / 2F - 20;
+        } else {
+            maxX = mMaxPosition - mMaxTextRect.width() / 2F + 6;
+        }
+
         mPaint.setTextSize(mNumberTextSize);
         mPaint.setColor(mNumberTextColor);
         canvas.drawText(max, maxX, yText, mPaint);

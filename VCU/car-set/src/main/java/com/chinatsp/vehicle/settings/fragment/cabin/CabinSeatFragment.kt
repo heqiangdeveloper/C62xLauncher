@@ -84,11 +84,11 @@ class CabinSeatFragment : BaseFragment<SeatViewModel, CabinSeatFragmentBinding>(
 
     private fun onViewClick(it: View) {
         when (it) {
-            binding.cabinSeatCopilotGuests -> {
+            /*binding.cabinSeatCopilotGuests -> {
                 activity?.supportFragmentManager?.let {
                     showDialogFragment(CopilotGuestsDialogFragment())
                 }
-            }
+            }*/
             binding.cabinSeatAutomaticHeating -> {
                 activity?.supportFragmentManager?.let {
                     showDialogFragment(SeatHeatingDialogFragment())
@@ -99,7 +99,7 @@ class CabinSeatFragment : BaseFragment<SeatViewModel, CabinSeatFragmentBinding>(
 
     private fun initSwitchOption() {
         initSwitchOption(SwitchNode.SEAT_MAIN_DRIVE_MEET, viewModel.mainMeet)
-        updateSwitchTextHint(binding.seatForkMeetTv, viewModel.forkMeet)
+        //updateSwitchTextHint(binding.seatForkMeetTv, viewModel.forkMeet)
         updateSwitchTextHint(binding.seatSeatHeatTv, viewModel.seatHeat)
     }
 
@@ -118,7 +118,7 @@ class CabinSeatFragment : BaseFragment<SeatViewModel, CabinSeatFragmentBinding>(
             doUpdateSwitch(binding.seatMainMeetSwitch, it)
         }
         viewModel.forkMeet.observe(this) {
-            updateSwitchTextHint(binding.seatForkMeetTv, viewModel.forkMeet)
+            //updateSwitchTextHint(binding.seatForkMeetTv, viewModel.forkMeet)
         }
         viewModel.seatHeat.observe(this) {
             updateSwitchTextHint(binding.seatSeatHeatTv, viewModel.seatHeat)
