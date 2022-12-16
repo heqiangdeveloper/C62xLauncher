@@ -41,14 +41,14 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
     }
 
     private val mainMeetFunction: SwitchState by lazy {
-        val node = SwitchNode.SEAT_MAIN_DRIVE_MEET
+        val node = SwitchNode.MAIN_SEAT_WELCOME
         return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
     }
 
     private val forkMeetFunction: SwitchState by lazy {
-        val node = SwitchNode.SEAT_FORK_DRIVE_MEET
+        val node = SwitchNode.FORK_SEAT_WELCOME
         return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
@@ -68,8 +68,8 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
     override val careSerials: Map<Origin, Set<Int>> by lazy {
         HashMap<Origin, Set<Int>>().apply {
             val cabinSet = HashSet<Int>().apply {
-                add(SwitchNode.SEAT_MAIN_DRIVE_MEET.get.signal)
-                add(SwitchNode.SEAT_FORK_DRIVE_MEET.get.signal)
+                add(SwitchNode.MAIN_SEAT_WELCOME.get.signal)
+                add(SwitchNode.FORK_SEAT_WELCOME.get.signal)
                 add(SwitchNode.SEAT_HEAT_ALL.get.signal)
                 add(Progress.SEAT_ONSET_TEMPERATURE.get.signal)
             }
@@ -85,11 +85,11 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
 
     override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
-            SwitchNode.SEAT_MAIN_DRIVE_MEET.get.signal -> {
-                onSwitchChanged(SwitchNode.SEAT_MAIN_DRIVE_MEET, mainMeetFunction, property)
+            SwitchNode.MAIN_SEAT_WELCOME.get.signal -> {
+                onSwitchChanged(SwitchNode.MAIN_SEAT_WELCOME, mainMeetFunction, property)
             }
-            SwitchNode.SEAT_FORK_DRIVE_MEET.get.signal -> {
-                onSwitchChanged(SwitchNode.SEAT_FORK_DRIVE_MEET, forkMeetFunction, property)
+            SwitchNode.FORK_SEAT_WELCOME.get.signal -> {
+                onSwitchChanged(SwitchNode.FORK_SEAT_WELCOME, forkMeetFunction, property)
             }
             SwitchNode.SEAT_HEAT_ALL.get.signal -> {
 //                onSwitchChanged(SwitchNode.SEAT_HEAT_ALL, seatHeatFunction, property)
@@ -108,8 +108,8 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
 
     override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.SEAT_MAIN_DRIVE_MEET -> mainMeetFunction.deepCopy()
-            SwitchNode.SEAT_FORK_DRIVE_MEET -> forkMeetFunction.deepCopy()
+            SwitchNode.MAIN_SEAT_WELCOME -> mainMeetFunction.deepCopy()
+            SwitchNode.FORK_SEAT_WELCOME -> forkMeetFunction.deepCopy()
             SwitchNode.SEAT_HEAT_ALL -> seatHeatFunction.deepCopy()
             else -> null
         }
@@ -117,10 +117,10 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
 
     override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
         return when (node) {
-            SwitchNode.SEAT_MAIN_DRIVE_MEET -> {
+            SwitchNode.MAIN_SEAT_WELCOME -> {
                 writeProperty(node, status, mainMeetFunction)
             }
-            SwitchNode.SEAT_FORK_DRIVE_MEET -> {
+            SwitchNode.FORK_SEAT_WELCOME -> {
                 writeProperty(node, status, forkMeetFunction)
             }
             SwitchNode.SEAT_HEAT_ALL -> {

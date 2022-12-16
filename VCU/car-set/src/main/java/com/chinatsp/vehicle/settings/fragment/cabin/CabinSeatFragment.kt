@@ -98,8 +98,8 @@ class CabinSeatFragment : BaseFragment<SeatViewModel, CabinSeatFragmentBinding>(
     }
 
     private fun initSwitchOption() {
-        initSwitchOption(SwitchNode.SEAT_MAIN_DRIVE_MEET, viewModel.mainMeet)
-        //updateSwitchTextHint(binding.seatForkMeetTv, viewModel.forkMeet)
+        initSwitchOption(SwitchNode.MAIN_SEAT_WELCOME, viewModel.mainMeet)
+        initSwitchOption(SwitchNode.FORK_SEAT_WELCOME, viewModel.forkMeet)
         updateSwitchTextHint(binding.seatSeatHeatTv, viewModel.seatHeat)
     }
 
@@ -118,7 +118,7 @@ class CabinSeatFragment : BaseFragment<SeatViewModel, CabinSeatFragmentBinding>(
             doUpdateSwitch(binding.seatMainMeetSwitch, it)
         }
         viewModel.forkMeet.observe(this) {
-            //updateSwitchTextHint(binding.seatForkMeetTv, viewModel.forkMeet)
+            doUpdateSwitch(binding.seatForkMeetSwitch, it)
         }
         viewModel.seatHeat.observe(this) {
             updateSwitchTextHint(binding.seatSeatHeatTv, viewModel.seatHeat)
@@ -127,7 +127,8 @@ class CabinSeatFragment : BaseFragment<SeatViewModel, CabinSeatFragmentBinding>(
 
     override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
         return when (node) {
-            SwitchNode.SEAT_MAIN_DRIVE_MEET -> binding.seatMainMeetSwitch
+            SwitchNode.MAIN_SEAT_WELCOME -> binding.seatMainMeetSwitch
+            SwitchNode.FORK_SEAT_WELCOME -> binding.seatForkMeetSwitch
             else -> null
         }
     }
@@ -138,9 +139,15 @@ class CabinSeatFragment : BaseFragment<SeatViewModel, CabinSeatFragmentBinding>(
 
     private fun setSwitchListener() {
         binding.seatMainMeetSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            doUpdateSwitchOption(SwitchNode.SEAT_MAIN_DRIVE_MEET, buttonView, isChecked)
+            doUpdateSwitchOption(SwitchNode.MAIN_SEAT_WELCOME, buttonView, isChecked)
             if (!isChecked) {
                 Toast.showToast(context, getString(R.string.cabin_seat_welcomes_guests_close), true)
+            }
+        }
+        binding.seatForkMeetSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            doUpdateSwitchOption(SwitchNode.FORK_SEAT_WELCOME, buttonView, isChecked)
+            if (!isChecked) {
+                Toast.showToast(context, getString(R.string.cabin_seat_fork_welcome_close), true)
             }
         }
     }

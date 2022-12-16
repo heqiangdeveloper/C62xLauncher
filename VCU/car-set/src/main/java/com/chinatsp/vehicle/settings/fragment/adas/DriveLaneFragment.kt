@@ -167,14 +167,18 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
 
 
     private fun initSwitchOption() {
-        initSwitchOption(SwitchNode.ADAS_LANE_ASSIST, viewModel.laneAssistFunction)
+        initSwitchOption(SwitchNode.ADAS_LANE_ASSIST, viewModel.laneAssist)
         updateSwitchEnable(SwitchNode.ADAS_LANE_ASSIST)
     }
 
     private fun addSwitchLiveDataListener() {
-        viewModel.laneAssistFunction.observe(this) {
+        viewModel.laneAssist.observe(this) {
             doUpdateSwitch(SwitchNode.ADAS_LANE_ASSIST, it)
             updateSwitchEnable(SwitchNode.ADAS_LANE_ASSIST)
+
+            updateRadioEnable(RadioNode.ADAS_LANE_ASSIST_MODE)
+            updateRadioEnable(RadioNode.ADAS_LDW_STYLE)
+            updateRadioEnable(RadioNode.ADAS_LDW_SENSITIVITY)
         }
     }
 
@@ -194,9 +198,13 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
         }
     }
 
+    override fun obtainDependByNode(node: RadioNode): Boolean {
+        return viewModel.laneAssist.value?.get() ?: false
+    }
+
     override fun obtainActiveByNode(node: SwitchNode): Boolean {
         return when (node) {
-            SwitchNode.ADAS_LANE_ASSIST -> viewModel.laneAssistFunction.value?.enable() ?: false
+            SwitchNode.ADAS_LANE_ASSIST -> viewModel.laneAssist.value?.enable() ?: false
             else -> super.obtainActiveByNode(node)
         }
     }

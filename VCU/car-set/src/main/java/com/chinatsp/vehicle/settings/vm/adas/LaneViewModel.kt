@@ -22,9 +22,9 @@ class LaneViewModel @Inject constructor(app: Application, model: BaseModel) :
     private val manager: LaneManager
         get() = LaneManager.instance
 
-    val laneAssistFunction: LiveData<SwitchState> by lazy { _laneAssistFunction }
+    val laneAssist: LiveData<SwitchState> by lazy { _laneAssist }
 
-    private val _laneAssistFunction: MutableLiveData<SwitchState> by lazy {
+    private val _laneAssist: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.ADAS_LANE_ASSIST
         MutableLiveData(manager.doGetSwitchOption(node))
     }
@@ -64,7 +64,7 @@ class LaneViewModel @Inject constructor(app: Application, model: BaseModel) :
     override fun onSwitchOptionChanged(status: SwitchState, node: SwitchNode) {
         when (node) {
             SwitchNode.ADAS_LANE_ASSIST -> {
-                doUpdate(_laneAssistFunction, status)
+                doUpdate(_laneAssist, status)
             }
             else -> {}
         }

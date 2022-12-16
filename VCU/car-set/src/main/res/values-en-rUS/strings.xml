@@ -73,6 +73,7 @@
 
     <string name="cabin_seat_welcomes_guests">Driver welcome</string>
     <string name="cabin_seat_welcomes_guests_close">主驾迎宾已关闭</string>
+    <string name="cabin_seat_fork_welcome_close">副驾迎宾已关闭</string>
     <string name="cabin_seat_close">Closed</string>
     <string name="cabin_seat_copilot_guests">Passenger welcome</string>
     <string name="cabin_seat_copilot_guests_position">Passenger welcome position</string>

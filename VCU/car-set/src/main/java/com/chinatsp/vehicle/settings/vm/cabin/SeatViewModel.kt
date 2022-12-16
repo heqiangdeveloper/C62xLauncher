@@ -32,18 +32,18 @@ class SeatViewModel @Inject constructor(app: Application, model: BaseModel) :
     private val manager: SeatManager by lazy { SeatManager.instance }
 
     val mainMeet: LiveData<SwitchState>
-        get() = _mainMeetFunction
+        get() = _mainMeet
 
-    private val _mainMeetFunction: MutableLiveData<SwitchState> by lazy {
-        val node = SwitchNode.SEAT_MAIN_DRIVE_MEET
+    private val _mainMeet: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.MAIN_SEAT_WELCOME
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
     val forkMeet: LiveData<SwitchState>
-        get() = _forkMeetFunction
+        get() = _forkMeet
 
-    private val _forkMeetFunction: MutableLiveData<SwitchState> by lazy {
-        val node = SwitchNode.SEAT_FORK_DRIVE_MEET
+    private val _forkMeet: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.FORK_SEAT_WELCOME
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
@@ -87,11 +87,11 @@ class SeatViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     override fun onSwitchOptionChanged(status: SwitchState, node: SwitchNode) {
         when (node) {
-            SwitchNode.SEAT_MAIN_DRIVE_MEET -> {
-                doUpdate(_mainMeetFunction, status)
+            SwitchNode.MAIN_SEAT_WELCOME -> {
+                doUpdate(_mainMeet, status)
             }
-            SwitchNode.SEAT_FORK_DRIVE_MEET -> {
-                doUpdate(_forkMeetFunction, status)
+            SwitchNode.FORK_SEAT_WELCOME -> {
+                doUpdate(_forkMeet, status)
             }
             SwitchNode.SEAT_HEAT_ALL -> {
                 doUpdate(_seatHeatFunction, status)
@@ -99,26 +99,6 @@ class SeatViewModel @Inject constructor(app: Application, model: BaseModel) :
             else -> {}
         }
     }
-
-//    override fun onSoundVolumeChanged(vararg array: Volume) {
-//        array.forEach {
-//            when (it.type) {
-//                Progress.SEAT_ONSET_TEMPERATURE -> {
-//                    updateVolume(_sillTemp, it)
-//                }
-//                else -> {}
-//            }
-//        }
-//    }
-//
-//    private fun updateVolume(target: MutableLiveData<Volume>, expect: Volume) {
-//        target.takeIf { it.value?.type == expect.type }?.let {
-//            it.takeUnless { it.value == expect }?.let { liveData ->
-//                liveData.value?.pos = expect.pos
-//                liveData.postValue(liveData.value)
-//            }
-//        }
-//    }
 
     private fun updateVolumeValue(liveData: MutableLiveData<Volume>, node: Progress, value: Int) {
         liveData.value?.let {

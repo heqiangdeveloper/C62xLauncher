@@ -99,23 +99,25 @@ enum class SwitchNode(
 
     /**
      * 座舱--座椅--主驾迎宾
-     * set ->int类型数据 座椅迎宾开关[0x1,0,0x0,0x3]
-     *       0x0: Inactive; 0x1: Enabled; 0x2: Disabled; 0x3: Reserved
+     * set -> int类型数据 座椅迎宾开关 0x0: Inactive; 0x1: Enabled; 0x2: Disabled; 0x3: Reserved
      * get -> 0x0：Disable 0x1：Enable
      */
-    SEAT_MAIN_DRIVE_MEET(
+    MAIN_SEAT_WELCOME(
         get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_SEAT_WELCOME_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HUM_SEAT_WELCOME_EN),
         default = true
     ),
 
     /**
-     * 座舱--座椅--副驾迎宾(no signal)
+     * 座舱--座椅--副驾迎宾
+     * get -> 0x0:disable; 0x1: Enable
+     * set -> HUM_PASS_SEAT_WELCOME_ENABLE 副驾迎宾软开关  0x0: Inactive; 0x1: Enable; 0x2: Disable; 0x3: Not used
      */
-    SEAT_FORK_DRIVE_MEET(
-        get = Norm(),
-        set = Norm(),
-        default = false
+    FORK_SEAT_WELCOME(
+//        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_PASS_SEAT_WELCOME_STS),
+        get = Norm(on = 0x1, off = 0x0, signal = -1),
+        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HUM_PASS_SEAT_WELCOME_ENABLE),
+        default = true
     ),
 
     /**
@@ -524,13 +526,26 @@ enum class SwitchNode(
      */
     ADAS_LANE_ASSIST( //无此开关项
 //        get = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_LANE_ASSIT_TYPE),
-//        set = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_LDW_RDP_LKS_FUNC_EN),
-        get = Norm(on = 0x2, off = 0x0, signal = -1),
-        set = Norm(on = 0x2, off = 0x0, signal = -1),
+        get = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_LDW_RDP_LKS_STATUS),
+        set = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_LDW_RDP_LKS_FUNC_EN),
         default = true,
-        careOn = false
-    ),
+    ){
+        //LDW/RDP/LKS status. MPC will save the status, while the AVN will not. 0x0:Off 0x1:Standby 0x2:Active 0x3:Temporary failure 0x4:Camera blocked 0x5:Permanent failure 0x6:Reserved 0x7:Reserved
+        override fun isOn(value: Int): Boolean {
+            return value == 0x1 || value == 0x2 || value == 0x3
+        }
 
+        override fun isValid(value: Int): Boolean {
+            return value == 0x0 || value == 0x1 || value == 0x2 || value == 0x3 || value == 0x4 || value == 0x5
+        }
+//        override fun isOn(value: Int): Boolean {
+//            return value == 0x1 || value == 0x2 || value == 0x3
+//        }
+//
+//        override fun isValid(value: Int): Boolean {
+//            return value == 0x0 || value == 0x1 || value == 0x2 || value == 0x3
+//        }
+     },
 
     /**
      * 驾驶辅助--交通标志--速度限制提醒 SLA

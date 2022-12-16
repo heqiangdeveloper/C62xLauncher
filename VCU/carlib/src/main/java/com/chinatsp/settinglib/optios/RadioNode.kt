@@ -475,6 +475,20 @@ enum class RadioNode(
         def = 0x1
     );
 
+//    /**
+//     * 车道辅助
+//     * 0x0: Initial
+//    0x1: LDW
+//    0x2: RDP
+//    0x3: LKS
+//     */
+//    LANE_ASSIST_TYPE(
+//        get = RNorm(values = intArrayOf(0x0, 0x1, 0x2, 0x3),
+//            signal = CarCabinManager.ID_LANE_ASSIT_TYPE),
+//        set = RNorm(values = intArrayOf(0x0, 0x1, 0x2, 0x3), signal = -1),
+//        def = 0x0
+//    );
+
 
 //    open fun isValid(value: Int, isGet: Boolean = true): Boolean {
 //        return if (isGet) {
