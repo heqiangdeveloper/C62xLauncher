@@ -197,14 +197,38 @@ class GlobalManager private constructor() : BaseManager() {
         if (vehicleMode !is Int) {
             return
         }
+
         when (vehicleMode) {
-            0x0 -> VcuUtils.startDialogService(Hint.default)
             /**正常模式*/
-            0x1 -> VcuUtils.startDialogService(Hint.transportMode)
+            0x0 -> VcuUtils.startDialogService(Hint.default)
             /**运输模式*/
-            0x2 -> VcuUtils.startDialogService(Hint.exhibitionMode)
-            /**展车模式*/
-//            0x4 -> startDialogService(HintType.exhibitionModeError)/**展车模式切换失败*/
+            0x1 -> VcuUtils.startDialogService(Hint.transportMode)
+            /**展厅模式*/
+            0x2 -> exhibitionHallMode()
+            //VcuUtils.startDialogService(Hint.exhibitionMode)
+            /**展车模式切换失败*/
+            //0x4 -> switchFailed()
+        }
+    }
+
+    private fun exhibitionHallMode() {
+        /**
+         * vehicle mode status feedback.车辆模式状态反馈
+        0x0: Vehicle Normal mode
+        0x1: Exhibition Mode
+        0x2~0x3: Reserved
+         */
+        val staticPower = readIntProperty(CarCabinManager.ID_EPBVEHMODSTS, Origin.CABIN)
+        if (staticPower == 0x0) {
+            /**展厅模式切换失败
+             * 收到BDC反馈的车辆模式状态信号为Exhibition Mode且收到ESP反馈的车辆模式状态信号为Normal mode
+             * */
+            VcuUtils.startDialogService(Hint.exhibitionModeError)
+        } else if (staticPower == 0x1) {
+            /**展厅模式切换成功
+             * 收到BDC和ESP反馈的车辆模式状态信号均为Exhibition Mode
+             * */
+            VcuUtils.startDialogService(Hint.exhibitionMode)
         }
     }
 
