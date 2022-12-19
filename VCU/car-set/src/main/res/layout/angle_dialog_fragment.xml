@@ -42,7 +42,7 @@
                     android:lineSpacingExtra="@dimen/x2"
                     android:padding="@dimen/x10"
                     android:text="@string/car_mirror_dialog_content"
-                    android:textSize="@dimen/text_15" />
+                    android:textSize="@dimen/txt_prompt_style_size" />
             </ScrollView>
 
             <LinearLayout
@@ -59,7 +59,7 @@
                     android:gravity="center"
                     android:text="@string/car_mirror_set"
                     android:textColor="@color/xui_config_color_white"
-                    android:textSize="@dimen/text_14" />
+                    android:textSize="@dimen/dialog_button_text_size" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/hint_cancel"
@@ -69,7 +69,7 @@
                     android:gravity="center"
                     android:text="@string/car_mirror_cancel"
                     android:textColor="@color/xui_config_color_white"
-                    android:textSize="@dimen/text_14"
+                    android:textSize="@dimen/dialog_button_text_size"
                     android:layout_marginStart="@dimen/x35" />
             </LinearLayout>
 
@@ -107,7 +107,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/car_mirror_pop_title"
                 android:textColor="#ffffff"
-                android:textSize="@dimen/text_15"
+                android:textSize="@dimen/dialog_title_text_size"
                 android:layout_marginTop="@dimen/x10" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -115,7 +115,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/car_mirror_pop_content"
                 android:textColor="#7C7C84"
-                android:textSize="@dimen/text_14"
+                android:textSize="@dimen/txt_prompt_style_size"
                 android:layout_marginTop="@dimen/x3"
                 android:layout_marginBottom="@dimen/x10" />
 
@@ -133,7 +133,7 @@
                     android:gravity="center"
                     android:text="@string/car_mirror_save_set"
                     android:textColor="@color/xui_config_color_white"
-                    android:textSize="@dimen/text_14" />
+                    android:textSize="@dimen/dialog_button_text_size" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/car_mirror_cancel_set"
@@ -143,7 +143,7 @@
                     android:gravity="center"
                     android:text="@string/car_mirror_cancel_set"
                     android:textColor="@color/xui_config_color_white"
-                    android:textSize="@dimen/text_14"
+                    android:textSize="@dimen/dialog_button_text_size"
                     android:layout_marginStart="@dimen/x35" />
             </LinearLayout>
         </androidx.appcompat.widget.LinearLayoutCompat>

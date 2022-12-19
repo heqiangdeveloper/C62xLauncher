@@ -5,16 +5,13 @@
     android:layout_height="wrap_content">
 
     <TextView
+        style="@style/window_pop"
         android:id="@+id/content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:lineSpacingExtra="4dp"
         android:paddingStart="@dimen/x25"
         android:paddingTop="@dimen/x23"
         android:paddingEnd="@dimen/x20"
         android:paddingBottom="@dimen/x20"
-        android:textColor="@color/pop_text"
-        android:textSize="@dimen/text_14"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:gravity="start" />

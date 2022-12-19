@@ -565,7 +565,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         var popWindow: PopWindow? = null
         if (view.id == binding.electricTailDetails.id) {
             popWindow = PopWindow(activity,
-                R.layout.pop_window,
+                R.layout.pop_window_electric_tail,
                 activity?.let {
                     AppCompatResources.getDrawable(it, R.drawable.popup_bg_qipao172)})
             popWindow.showDownLift(view, 30, -130)
@@ -574,7 +574,11 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
                 R.layout.pop_window,
                 activity?.let {
                     AppCompatResources.getDrawable(it, R.drawable.popup_bg_qipao776_298) })
-            popWindow.showDownLift(view, -270, -15)
+            if(VcuUtils.getLanguage()==1){
+                popWindow.showDownLift(view, -270, -15)
+            }else{
+                popWindow.showDownLift(view, -55, -15)
+            }
         }
         val text: TextView = popWindow?.findViewById(R.id.content) as TextView
         text.text = resources.getString(id)

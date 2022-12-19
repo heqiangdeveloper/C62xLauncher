@@ -43,9 +43,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/x3"
+                android:gravity="center"
                 android:text="@string/ac_close_window"
                 android:textColor="@drawable/ac_txt_color_selector"
-                android:textSize="@dimen/text_13" />
+                android:textSize="@dimen/access_window_size" />
         </LinearLayout>
 
         <LinearLayout
@@ -72,8 +73,9 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/x3"
                 android:text="@string/ac_open_window"
+                android:gravity="center"
                 android:textColor="@drawable/ac_txt_color_selector"
-                android:textSize="@dimen/text_13" />
+                android:textSize="@dimen/access_window_size" />
         </LinearLayout>
 
         <LinearLayout

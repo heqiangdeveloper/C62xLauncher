@@ -240,11 +240,11 @@ enum class RadioNode(
      */
     LIGHT_DELAYED_OUT(
         get = RNorm(
-            values = intArrayOf(0x1, 0x2, 0x3, 0x4, 0x5, 0x6),
+            values = intArrayOf(0x1,  0x3, 0x4, 0x5, 0x6),
             signal = CarCabinManager.ID_FOLLOW_ME_HOME_STATUE
         ),
         set = RNorm(
-            values = intArrayOf(0x1, 0x2, 0x3, 0x4, 0x5, 0x6),
+            values = intArrayOf(0x1,  0x3, 0x4, 0x5, 0x6),
             signal = CarCabinManager.ID_FOLLOW_ME_HOME_SET
         ),
 //        inactive = intArrayOf(0x0, 0x7),

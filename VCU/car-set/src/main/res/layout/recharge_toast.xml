@@ -27,7 +27,7 @@
             android:layout_gravity="center_vertical"
             android:text="@string/cabin_other_wireless_charging_working_properly"
             android:textColor="@color/tab_option_title_text_color"
-            android:textSize="@dimen/x12" />
+            android:textSize="@dimen/toast_text_size" />
     </LinearLayout>
 </RelativeLayout>
 

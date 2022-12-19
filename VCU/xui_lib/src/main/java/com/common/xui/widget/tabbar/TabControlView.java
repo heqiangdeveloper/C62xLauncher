@@ -12,6 +12,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -48,6 +49,10 @@ public class TabControlView extends RadioGroup implements HasTypeface {
      * 字体大小
      */
     private int mTextSize;
+    /**
+     * 多行字体大小
+     */
+    private int mTextSizeMany;
     /**
      * 边框宽度
      */
@@ -145,6 +150,7 @@ public class TabControlView extends RadioGroup implements HasTypeface {
         TypedArray attributes = context.getTheme().obtainStyledAttributes(attrs, R.styleable.TabControlView, 0, 0);
         try {
             mTextSize = attributes.getDimensionPixelSize(R.styleable.TabControlView_tcv_textSize, ResUtils.getDimensionPixelSize(R.dimen.default_tcv_text_size));
+            mTextSizeMany = attributes.getDimensionPixelSize(R.styleable.TabControlView_tcv_textSize_many, ResUtils.getDimensionPixelSize(R.dimen.default_tcv_text_size));
             mSelectedColor = attributes.getColor(R.styleable.TabControlView_tcv_selectedColor, ThemeUtils.getMainThemeColor(context));
             mUnselectedColor = attributes.getColor(R.styleable.TabControlView_tcv_unselectedColor, Color.TRANSPARENT);
             mSelectedTextColor = attributes.getColor(R.styleable.TabControlView_tcv_selectedTextColor, Color.WHITE);
@@ -237,21 +243,24 @@ public class TabControlView extends RadioGroup implements HasTypeface {
             rb.setLayoutParams(params);
             if (mItemPadding != -1) {
                 rb.setPadding(mItemPadding, mItemPadding, mItemPadding, mItemPadding);
+                Log.i("ttttttt", item.getKey());
             }
             if (mItemPaddingHorizontal != -1 && mItemPaddingVertical != -1) {
                 rb.setPadding(mItemPaddingHorizontal, mItemPaddingVertical, mItemPaddingHorizontal, mItemPaddingVertical);
+                Log.i("ttttttt", "第二  " + item.getKey());
             }
             rb.setMinWidth(mStrokeWidth * 10);
             rb.setGravity(Gravity.CENTER);
             rb.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize);
             rb.setTypeface(XUI.getDefaultTypeface());
             rb.setText(item.getKey());
-            //rb.setSingleLine(true);
+            rb.setSingleLine(true);
             textWidth = Math.max(rb.getPaint().measureText(item.getKey()), textWidth);
             if (textWidth > 190) {
-                rb.setTextSize(TypedValue.COMPLEX_UNIT_PX, ResUtils.getDimensionPixelSize(R.dimen.default_tcv_text_size_line));
+                rb.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSizeMany);
                 rb.setSingleLine(false);
                 rb.setPadding(mItemPaddingHorizontal, mItemPaddingVertical + 4, mItemPaddingHorizontal, 0);
+                textWidth = 0;
             } else {
                 rb.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize);
                 rb.setSingleLine(true);

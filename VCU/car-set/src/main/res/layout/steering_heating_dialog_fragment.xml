@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/cabin_wheel_starting_temperature"
                 android:textColor="@color/tab_option_title_text_color"
-                android:textSize="@dimen/text_14"
+                android:textSize="@dimen/dialog_text_size"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

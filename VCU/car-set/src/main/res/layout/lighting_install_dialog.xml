@@ -9,15 +9,15 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/x15"
+        android:paddingBottom="@dimen/x20"
         android:background="@drawable/bg_sound_popup_20">
 
         <RelativeLayout
             android:id="@+id/pop_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/x18"
-            android:paddingTop="@dimen/x15"
+            android:layout_marginBottom="@dimen/x15"
+            android:paddingTop="@dimen/x10"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -126,6 +126,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/lighting_related_topics"
             style="@style/install_dialog_layout"
+            android:layout_height="@dimen/x50"
+            android:layout_marginBottom="@dimen/x30"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lighting_rear_reminder">
 

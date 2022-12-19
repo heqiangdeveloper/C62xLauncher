@@ -70,7 +70,6 @@
     </string-array>
     <string-array name="lighting_go_home_options">
         <item>@string/btn_close</item>
-        <item>10s</item>
         <item>20s</item>
         <item>30s</item>
         <item>60s</item>

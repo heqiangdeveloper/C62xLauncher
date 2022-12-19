@@ -258,7 +258,7 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
                     AppCompatResources.getDrawable(it,
                         R.drawable.popup_bg_qipao451_424)
                 })
-            popWindow.showDownLift(view, 30, -175)
+            popWindow.showDownLift(view, 30, -200)
         } else {
             popWindow = PopWindow(activity, R.layout.pop_window,
                 activity?.let {

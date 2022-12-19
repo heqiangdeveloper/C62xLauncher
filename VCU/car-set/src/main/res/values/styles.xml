@@ -47,8 +47,15 @@
     <style name="switch_row_option_style">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_15</item>
+        <item name="android:textSize">@dimen/option_size</item>
         <item name="android:textColor">@color/tab_option_title_text_color</item>
+    </style>
+
+    <style name="window_pop">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/window_pop_text_size</item>
+        <item name="android:textColor">@color/pop_text</item>
     </style>
 
     <style name="txt_content_style">
@@ -61,7 +68,7 @@
     <style name="txt_prompt_style">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_14</item>
+        <item name="android:textSize">@dimen/txt_prompt_style_size</item>
         <item name="android:textColor">@color/tab_option_title_text_color</item>
     </style>
 
@@ -111,7 +118,7 @@
     <style name="txt_prompt">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_10</item>
+        <item name="android:textSize">@dimen/txt_prompt_size</item>
         <item name="android:textColor">@color/text_prompt_color</item>
         <item name="android:layout_marginTop">@dimen/x2</item>
     </style>
@@ -119,7 +126,7 @@
     <style name="pop_txt_prompt">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_10</item>
+        <item name="android:textSize">@dimen/dialog_text_prompt</item>
         <item name="android:textColor">@color/pop_text_prompt_color</item>
         <item name="android:layout_marginTop">@dimen/x2</item>
     </style>
@@ -153,7 +160,7 @@
         <item name="android:layout_height">@dimen/x37</item>
         <item name="android:background">@drawable/lighting_dialog_txt_bg</item>
         <item name="android:textColor">@color/xui_config_color_white</item>
-        <item name="android:textSize">@dimen/text_14</item>
+        <item name="android:textSize">@dimen/dialog_button_text_size</item>
         <item name="android:gravity">center</item>
     </style>
 
@@ -162,7 +169,7 @@
         <item name="android:layout_height">@dimen/x37</item>
         <item name="android:background">@drawable/normal_dialog_bg</item>
         <item name="android:textColor">@color/xui_config_color_white</item>
-        <item name="android:textSize">@dimen/text_14</item>
+        <item name="android:textSize">@dimen/dialog_button_text_size</item>
         <item name="android:gravity">center</item>
     </style>
 
@@ -170,7 +177,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/tab_option_title_text_color</item>
-        <item name="android:textSize">@dimen/text_18</item>
+        <item name="android:textSize">@dimen/dialog_title_text_size</item>
         <item name="android:layout_centerHorizontal">true</item>
     </style>
 

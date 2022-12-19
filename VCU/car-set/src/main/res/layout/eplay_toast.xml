@@ -10,6 +10,6 @@
     android:paddingBottom="@dimen/x15"
     android:singleLine="true"
     android:textColor="#FFFFFF"
-    android:textSize="@dimen/x12" />
+    android:textSize="@dimen/toast_text_size"  />
 
 

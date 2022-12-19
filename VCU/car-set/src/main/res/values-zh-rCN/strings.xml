@@ -126,10 +126,13 @@
     <string name="car_window_wiper">雨刮维修</string>
     <string name="car_window_lock_content">&#160;功能开启后，可通过钥匙遥\n
         控关闭/开启四门车窗</string>
-    <string name="car_window_rainy_content">&#160;功能开启后，车速首次大于\n
-        120km/h时，天窗自动关\n
-        闭，此时向后拨动天窗开关\n
-        可再次开启天窗。</string>
+    <string name="car_window_rainy_content">&#160;OFF档，雨量传感器检测下雨\n
+        且车窗/天窗打开时，自动关闭\n
+        车窗/天窗；在一个上电周期内\n
+        ，若人为控制打开车窗/天窗，\n
+        不再自动关闭车窗/天窗。功能\n
+        保留24小时。
+        </string>
     <string name="car_window_lock_car_content">&#160;功能开启后，锁门时，四门车\n
         窗、天窗和遮阳帘自动关闭</string>
     <string name="car_window_wiper_content">&#160;对⻛挡玻璃⾬刮器进⾏维护\n

@@ -21,25 +21,25 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="table0">Common</string>
-    <string name="table1">Door and Window</string>
-    <string name="table2">Light setting</string>
-    <string name="table3">Sound effect</string>
-    <string name="table4">Driver assistance</string>
-    <string name="table5">Driving</string>
+    <string name="table0">COMMON</string>
+    <string name="table1">DOOR AND \n WINDOW</string>
+    <string name="table2">LIGHT \n SETTING</string>
+    <string name="table3">SOUND \n EFFECT</string>
+    <string name="table4">DRIVER \n ASSISTANCE</string>
+    <string name="table5">DRIVING</string>
     <string name="table6">BEIJING OS</string>
     <string name="back_navigation">Return</string>
     <string name="car_door">Door</string>
     <string name="car_window">Window</string>
-    <string name="car_trunk">Power tailgate</string>
-    <string name="car_mirror">Exterior rear-view mirror</string>
+    <string name="car_trunk">&#160;Power \n tailgate</string>
+    <string name="car_mirror">&#160;Exterior \n rear-view \n mirror</string>
     <string name="car_door_smart">Intelligent entry</string>
     <string name="car_nfc_disable">NFC card disable</string>
     <string name="acc_off_auto_unlock">Fame-out automatic locked</string>
     <string name="drive_auto_lock">Driving automatic locked</string>
     <string name="unlock_fron">Unlock front door only</string>
     <string name="four_door_unlock">Four door unlock</string>
-    <string name="vcu_cabin_wheel">Steering wheel</string>
+    <string name="vcu_cabin_wheel">&#160;Steering \n wheel</string>
     <string name="vcu_cabin_seat">Seat</string>
     <string name="vcu_cabin_air_conditioner">AC</string>
     <string name="vcu_cabin_safety">Safety</string>
@@ -53,8 +53,8 @@
     <string name="cabin_ac_auto_comfort">Automatic AC Comfort</string>
 
     <string name="cabin_safe_fortify_tone">Set defense prompt</string>
-    <string name="cabin_safe_lock_car">锁车成功提示音</string>
-    <string name="cabin_safe_lock_car_error">锁车失败提示音</string>
+    <string name="cabin_safe_lock_car">Lock success prompt tone</string>
+    <string name="cabin_safe_lock_car_error">Lock failure prompt tone</string>
     <string name="cabin_safe_fortify_success_tone">Defense success prompt tone</string>
     <string name="cabin_safe_fortify_failure_tone">Defense failure prompt tone</string>
     <string name="cabin_safe_video_safe_mode">Video safe mode</string>
@@ -95,7 +95,7 @@
     <string name="cabin_other_battery_optimization_content">Monitor the vehicle electric energy consumption, and manage \n the comfort functions of the vehicle (air conditioner, large \n screen, etc.) in the low power state。</string>
     <string name="cabin_other_wireless_charging">Wireless charging</string>
     <string name="cabin_other_wireless_charging_abnormal_work">Wireless charging works abnormally</string>
-    <string name="cabin_other_maintenance">Please go to the official designated maintenance as soon as possible</string>
+    <string name="cabin_other_maintenance">Please go to the official designated \n maintenance as soon as possible</string>
     <string name="cabin_other_wireless_charging_lamp">Storage box lamp</string>
     <string name="cabin_other_sensor_sensitivity">Sensor sensitivity</string>
     <string name="cabin_other_trailer_remind_distance">Trailer remind distance</string>
@@ -103,7 +103,7 @@
     <string name="cabin_other_toast_content_open">Opened</string>
     <string name="cabin_other_wireless_charging_working_properly">Wireless charging works normally</string>
     <string name="cabin_other_foreign_matter">Foreign metal object detected, please remove</string>
-    <string name="cabin_other_temperatire">无线充电温度过高，请移开手机</string>
+    <string name="cabin_other_temperatire">Wireless charging temperature is too high, please remove the phone</string>
     <string name="cabin_other_determine">OK</string>
     <string name="cabin_other_wireless_charging_lamp_open">储物盒灯已打开</string>
     <string name="cabin_other_wireless_charging_lamp_close">储物盒灯已关闭</string>
@@ -124,15 +124,17 @@
     <string name="car_window_lock_car">Window self-closing after locking</string>
     <string name="car_window_rainy_day">The window closes automatically on rainy</string>
     <string name="car_window_wiper">Wiper maintenance</string>
-    <string name="car_window_lock_content">After the function is opened, the Windows of the \n
-        four doors can be closed/opened remotely by the key</string>
-    <string name="car_window_rainy_content">功能开启后，车速首次大于\n
-        120km/h时，天窗自动关\n
-        闭，此时向后拨动天窗开关\n
-        可再次开启天窗。</string>
-    <string name="car_window_lock_car_content">When the function is opened and the door is locked, the \n
-        four door windows, sunroof and sun blind automatically close</string>
-    <string name="car_window_wiper_content">When maintaining windshield wipers, be sure to turn on the \n
+    <string name="car_window_lock_content">&#160;After the function is opened, the \n Windows of the
+        four doors can be \n closed/opened remotely by the key</string>
+    <string name="car_window_rainy_content">&#160;雨天自动关窗：OFF档，雨量传感\n
+        器检测下雨且车窗/天窗打开时，自\n
+        动关闭车窗/天窗；在一个上电周期\n
+        内，若人为控制打开车窗/天窗，不\n
+        再自动关闭车窗/天窗。功能保留24\n
+        小时。</string>
+    <string name="car_window_lock_car_content">&#160;When the function is opened and the \n door is locked, the
+        four door windows, \n sunroof and sun blind automatically close</string>
+    <string name="car_window_wiper_content">&#160;When maintaining windshield wipers, be sure to turn on the \n
         wiper maintenance mode. Turn on the  wiper for maintenance \n
         and the wiper will automatically \n
         run to the maintenance position.</string>
@@ -155,19 +157,22 @@
     <string name="car_trunk_light_close">Light flashing alarm is off</string>
     <string name="car_trunk_round_trip_type">往返式</string>
     <string name="car_trunk_stay_mode">停留式</string>
-    <string name="car_trunk_content">往返式：Carry a legal smart key into the \n
-        trunk sensing area, exit the area, enter the \n
-        b area again, and the electric tailgate \n
-       will be opened \n
-        automatically；\n
-        停留式：Carry a legal smart key into the \n
-        trunk sensing area, stay in place \n
-        for more than 6s, and the electric tailgate \n
+    <string name="car_trunk_content">&#160;往返式：Carry a legal smart key \n
+        into the trunk sensing area, exit \n
+        the area, enter the b area again, \n
+        and the electric tailgate will be \n
+        opened automatically；\n
+        停留式：Carry a legal smart key \n
+        into the trunk sensing area,\n
+        stay in place for more than 6s, \n
+        and the electric tailgate \n
         will be opened automatically.</string>
-    <string name="car_trunk_height_content">Suggestions on electric tailgate hight adjustment：\n
-       for users with a height of less than 1.6 meters, it is recommended to open 80% of the height; \n
-       For users 1.6-1.7 meters tall, the recommended opening height is 90%; \n
-       For users with a height of more than 1.7 meters, 100% height is recommended.\n
+    <string name="car_trunk_height_content">&#160;Suggestions on electric tailgate hight adjustment：\n
+       for users with a height of less than 1.6 meters, \n
+        it is recommended to open 80% of the height; \n
+       For users 1.6-1.7 meters tall, the recommended \n
+        opening height is 90%; For users with a height \n
+        of more than 1.7 meters, 100% height is recommended.\n
        Relevant height adjustment suggestions are for reference only</string>
     <string name="car_mirror_automatic_folding">Rear view mirror folds automatically</string>
     <string name="car_mirror_automatic_folding_close">Rearview mirror autofold is off</string>
@@ -180,22 +185,24 @@
     <string name="car_mirror_cancel_set">Cancel Save</string>
     <string name="car_mirror_dialog_title">Reverse rearmirror angle settings</string>
     <string name="car_mirror_pop_title">Please adjust physical button on the door</string>
-    <string name="car_mirror_pop_content">Automatically save the current position after the 2 minutes countdown</string>
+    <string name="car_mirror_pop_content">&#160; Automatically save the current position after \n the 2 minutes countdown</string>
     <string name="car_mirror_dialog_btn">Save settings</string>
-    <string name="car_mirror_dialog_content">Please adjust the physical button on the door to complete \n
-        the setting within 2 minutes, and then save the \n
-        current position after the 2 minute countdown</string>
+    <string name="car_mirror_dialog_content">&#160;Please adjust the physical button on \n
+        the door to complete the setting \n
+        within 2 minutes, and then save \n
+        the current position after the 2  \n
+        minute countdown</string>
 
-    <string name="ac_open_window">One key open window</string>
-    <string name="ac_close_window">One key close window</string>
+    <string name="ac_open_window">One key \n open window</string>
+    <string name="ac_close_window">One key \n close window</string>
     <string name="ac_refresh_window">One button reset</string>
 
-    <string name="drive_tab_intelligent_cruise">Intelligent cruise</string>
-    <string name="drive_tab_forward_assist">Forward assist</string>
-    <string name="drive_tab_lane_assist">Lane assist</string>
-    <string name="drive_tab_rear_assist">Side-rear Assist</string>
-    <string name="drive_tab_lighting_assist">Light Assist</string>
-    <string name="drive_tab_traffic">Traffic sign</string>
+    <string name="drive_tab_intelligent_cruise">&#160;Intelligent \n cruise</string>
+    <string name="drive_tab_forward_assist">&#160;Forward \n assist</string>
+    <string name="drive_tab_lane_assist">&#160;Lane \n assist</string>
+    <string name="drive_tab_rear_assist">&#160;Side-rear \n Assist</string>
+    <string name="drive_tab_lighting_assist">&#160;Light \n Assist</string>
+    <string name="drive_tab_traffic">&#160;Traffic \n sign</string>
     <string name="drive_intelligent_cruise_assistant">Intelligent cruise assist IACC</string>
     <string name="drive_full_speed_range">Full speed range to provide the driver with vehicle control assistance</string>
     <string name="drive_open">Opened</string>
@@ -231,7 +238,9 @@
     <string name="drive_temperature_rhythm">Thermoregulation rhythm</string>
     <string name="drive_one_hundred_twenty">120</string>
     <string name="drive_close_brake">Turn off automatic emergency braking</string>
-    <string name="drive_close_brake_content">Turning off the automatic emergency braking function will also turn \n off the integrated cruise assist function. Are you sure do it?</string>
+    <string name="drive_close_brake_content">&#160;Turning off the automatic emergency braking \n
+        function will also turn  off the integrated \n
+        cruise assist function. Are you sure do it?</string>
     <string name="drive_agree">OK</string>
     <string name="drive_cancel">Cancel</string>
 
@@ -240,8 +249,8 @@
 
 
     <string name="lighting_title">light</string>
-    <string name="lighting_atmosphere_lamp">Ambient light</string>
-    <string name="lighting_screen">Screen brightness</string>
+    <string name="lighting_atmosphere_lamp">&#160;Ambient  \n light</string>
+    <string name="lighting_screen">&#160;Screen \n brightness</string>
     <string name="lighting_go_home_title">Follow me home</string>
     <string name="lighting_go_home_content">在下电后，近光灯会点亮一段\n时间再熄灭，为你照亮前方回\n家的路。</string>
     <string name="lighting_turn_signal_title">Number of turn signal flashing when lane change</string>
@@ -263,10 +272,10 @@
     <string name="lighting_brightness_breathing">Brightness breathing</string>
     <string name="lighting_rear_reminder">Door open warning to behind coming car</string>
     <string name="lighting_related_topics">Associated topics</string>
-    <string name="drive_related_topics_content">Save the setting items in the current theme, and synchronize the setting results when change theme</string>
+    <string name="drive_related_topics_content">&#160;Save the setting items in the current theme, and synchronize \n the setting results when change theme</string>
 
     <string name="sound_title">Sound</string>
-    <string name="sound_effect">sound effect</string>
+    <string name="sound_effect">&#160;sound \n effect</string>
     <string name="sound_volume_adjustment">Volume</string>
     <string name="sound_alarm_volume">Meter alarm volume</string>
     <string name="sound_navigation_mixing">Navigation mixing</string>

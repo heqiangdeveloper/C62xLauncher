@@ -4,7 +4,9 @@ import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.Constant
@@ -192,8 +194,11 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
             val values = obtainTabs()
             values.forEach {
                 val tab = binding.tabLayout.newTab()
+                val view = LayoutInflater.from(context).inflate(R.layout.main_tab_text, null)
+                tab.customView = view
                 //tab.text = it.desc
-                tab.text = resources.getString(it.desc)
+                val text = tab.customView as TextView
+                text.text = resources.getString(it.desc)
                 tab.tag = it
                 binding.tabLayout.addTab(tab)
                 tab.view.isLongClickable = false

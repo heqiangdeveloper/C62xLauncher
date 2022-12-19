@@ -71,18 +71,19 @@
 
     <style name="TabText.Explain">
         <item name="android:textColor">@color/selector_tab_text_color</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize" >20sp</item>
     </style>
 
     <style name="TabLayoutStyle" parent="Base.Widget.Design.TabLayout">
         <item name="tabIndicatorColor">#00000000</item>
         <item name="tabIndicatorHeight">@dimen/main_tab_height</item>
         <item name="tabPaddingStart">0dp</item>
-        <!--  <item name="tabPaddingEnd">0dp</item>-->
-        <item name="tabPaddingTop">@dimen/x10</item>
+        <item name="tabPaddingEnd">0dp</item>
+        <!-- <item name="tabPaddingTop">@dimen/x10</item>-->
         <item name="tabTextAppearance">@style/TabText</item>
         <item name="tabSelectedTextColor">@color/select_text_color</item>
         <item name="tabTextColor">@color/normal_text_color</item>
+        <item name="tabMode">fixed</item>
     </style>
 
     <style name="ScrollViewStyle">

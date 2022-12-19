@@ -1383,6 +1383,8 @@
     <declare-styleable name="TabControlView">
         <!--文字字体的大小，默认14sp-->
         <attr name="tcv_textSize" format="dimension" />
+        <!--多行文字字体的大小，默认14sp-->
+        <attr name="tcv_textSize_many" format="dimension" />
         <!--没选中的文字颜色，默认#299EE3-->
         <attr name="tcv_unselectedTextColor" format="reference" />
         <!--选中的文字颜色， 默认Color.WHITE-->

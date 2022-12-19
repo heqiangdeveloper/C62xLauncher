@@ -56,7 +56,8 @@
                     style="@style/switch_row_option_style"
                     android:text="@string/lighting_front_atmosphere"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
                 <com.common.xui.widget.button.switchbutton.SwitchButton
                     android:id="@+id/ambient_front_lighting_switch"
@@ -81,7 +82,8 @@
                     style="@style/switch_row_option_style"
                     android:text="@string/lighting_rear_atmosphere"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
                 <com.common.xui.widget.button.switchbutton.SwitchButton
                     android:id="@+id/ambient_back_lighting_switch"

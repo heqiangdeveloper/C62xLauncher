@@ -7,12 +7,13 @@
     <TextView
         style="@style/window_pop"
         android:id="@+id/content"
-        android:lineSpacingExtra="@dimen/x5"
+        android:lineSpacingExtra="4dp"
         android:paddingStart="@dimen/x25"
-        android:paddingTop="@dimen/x24"
+        android:paddingTop="@dimen/x23"
         android:paddingEnd="@dimen/x20"
         android:paddingBottom="@dimen/x20"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:gravity="start" />
+        android:gravity="start"
+        android:textSize="@dimen/window_electric_text_size"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

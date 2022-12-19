@@ -16,6 +16,7 @@ import com.chinatsp.settinglib.manager.Hint
 import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.annotation.Level
 import timber.log.Timber
+import java.util.*
 
 /**
  * @author : luohong
@@ -237,5 +238,14 @@ object VcuUtils {
         intent.putExtras(bundle)
         BaseApp.instance.startService(intent)
     }
-
+    fun getLanguage(): Int {
+        val type: Int
+        val lang = Locale.getDefault().language
+        type = if ("en" == lang) {
+            0 //英文
+        } else {
+            1 //中文
+        }
+        return type
+    }
 }
