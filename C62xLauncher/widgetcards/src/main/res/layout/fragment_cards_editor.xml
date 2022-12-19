@@ -43,7 +43,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="长按拖动卡片可以替换或编辑主页卡片"
+        android:text="@string/card_can_drag_tip"
         style="@style/CardLv2TextView"
         android:textSize="20px"
         android:textColor="@color/card_grey_default"
