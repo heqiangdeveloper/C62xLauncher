@@ -20,7 +20,6 @@ enum class SwitchNode(
     val default: Boolean = true,
     val careOn: Boolean = true,//当此值为true表示只有当值等于 get的on时才当为开，当此值为false表示只要值不等于get的off时就当为开
     val area: Area = Area.GLOBAL,
-    val inactive: IntArray? = null,
 ) {
 
     //-------------------座舱--开始-------------------
@@ -79,7 +78,6 @@ enum class SwitchNode(
             signal = CarHvacManager.ID_HAVC_AC_DIS_DEFROST),
         set = Norm(on = 0x1, off = 0x2, origin = Origin.HVAC,
             signal = CarHvacManager.ID_HVAC_AVN_KEY_DEFROST),
-        inactive = intArrayOf(0x3),
         default = false
     ) {
         override fun isInvalid(value: Int): Boolean {
@@ -101,23 +99,25 @@ enum class SwitchNode(
 
     /**
      * 座舱--座椅--主驾迎宾
-     * set ->int类型数据 座椅迎宾开关[0x1,0,0x0,0x3]
-     *       0x0: Inactive; 0x1: Enabled; 0x2: Disabled; 0x3: Reserved
+     * set -> int类型数据 座椅迎宾开关 0x0: Inactive; 0x1: Enabled; 0x2: Disabled; 0x3: Reserved
      * get -> 0x0：Disable 0x1：Enable
      */
-    SEAT_MAIN_DRIVE_MEET(
+    MAIN_SEAT_WELCOME(
         get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_SEAT_WELCOME_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HUM_SEAT_WELCOME_EN),
         default = true
     ),
 
     /**
-     * 座舱--座椅--副驾迎宾(no signal)
+     * 座舱--座椅--副驾迎宾
+     * get -> 0x0:disable; 0x1: Enable
+     * set -> HUM_PASS_SEAT_WELCOME_ENABLE 副驾迎宾软开关  0x0: Inactive; 0x1: Enable; 0x2: Disable; 0x3: Not used
      */
-    SEAT_FORK_DRIVE_MEET(
-        get = Norm(),
-        set = Norm(),
-        default = false
+    FORK_SEAT_WELCOME(
+//        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_PASS_SEAT_WELCOME_STS),
+        get = Norm(on = 0x1, off = 0x0, signal = -1),
+        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HUM_PASS_SEAT_WELCOME_ENABLE),
+        default = true
     ),
 
     /**
@@ -190,7 +190,6 @@ enum class SwitchNode(
     DRIVE_BATTERY_OPTIMIZE(
         get = Norm(on = 0x0, off = 0x4, signal = CarCabinManager.ID_LOU_PWR_MNGT_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_LOU_PWR_MNG_SWT),
-        inactive = intArrayOf(0x1, 0x2, 0x3),
         default = false
     ) {
         override fun isInvalid(value: Int): Boolean {
@@ -289,8 +288,6 @@ enum class SwitchNode(
             off = CarAudioManager.BEEP_VOLUME_LEVEL_CLOSE, origin = Origin.SPECIAL),
         set = Norm(on = CarAudioManager.BEEP_VOLUME_LEVEL_MIDDLE,
             off = CarAudioManager.BEEP_VOLUME_LEVEL_CLOSE, origin = Origin.SPECIAL),
-        inactive = intArrayOf(
-            CarAudioManager.BEEP_VOLUME_LEVEL_LOW, CarAudioManager.BEEP_VOLUME_LEVEL_HIGH),
         default = false,
         careOn = false
     ) {
@@ -328,7 +325,6 @@ enum class SwitchNode(
     WIN_REMOTE_CONTROL(
         get = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_REMOTE_WINDOW_RISE_FALL_STATES),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_REMOTE_WINDOW_RISE_FALL_SW),
-        inactive = intArrayOf(0x3),
         default = false
     ) {
         override fun isInvalid(value: Int): Boolean {
@@ -369,7 +365,6 @@ enum class SwitchNode(
         get = Norm(on = 0x1, off = 0x2,
             signal = CarCabinManager.ID_FRONT_WIPER_MAINTENNANCE_STATES),
         set = Norm(on = 0x2, off = 0x3, signal = CarCabinManager.ID_FRONT_WIPER_MAINTENNANCE_SW),
-        inactive = intArrayOf(0x0, 0x3),
         default = false
     ) {
         override fun isInvalid(value: Int): Boolean {
@@ -531,13 +526,26 @@ enum class SwitchNode(
      */
     ADAS_LANE_ASSIST( //无此开关项
 //        get = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_LANE_ASSIT_TYPE),
-//        set = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_LDW_RDP_LKS_FUNC_EN),
-        get = Norm(on = 0x2, off = 0x0, signal = -1),
-        set = Norm(on = 0x2, off = 0x0, signal = -1),
+        get = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_LDW_RDP_LKS_STATUS),
+        set = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_LDW_RDP_LKS_FUNC_EN),
         default = true,
-        careOn = false
-    ),
+    ){
+        //LDW/RDP/LKS status. MPC will save the status, while the AVN will not. 0x0:Off 0x1:Standby 0x2:Active 0x3:Temporary failure 0x4:Camera blocked 0x5:Permanent failure 0x6:Reserved 0x7:Reserved
+        override fun isOn(value: Int): Boolean {
+            return value == 0x1 || value == 0x2 || value == 0x3
+        }
 
+        override fun isValid(value: Int): Boolean {
+            return value == 0x0 || value == 0x1 || value == 0x2 || value == 0x3 || value == 0x4 || value == 0x5
+        }
+//        override fun isOn(value: Int): Boolean {
+//            return value == 0x1 || value == 0x2 || value == 0x3
+//        }
+//
+//        override fun isValid(value: Int): Boolean {
+//            return value == 0x0 || value == 0x1 || value == 0x2 || value == 0x3
+//        }
+     },
 
     /**
      * 驾驶辅助--交通标志--速度限制提醒 SLA
@@ -557,7 +565,6 @@ enum class SwitchNode(
     ADAS_TSR(
         get = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_TSR_OPERATING_STATUS),
         set = Norm(on = 0x2, off = 0x3, signal = CarCabinManager.ID_TSR_SWT),
-        inactive = intArrayOf(0x4, 0x5, 0x6, 0x7),
         default = true,
         careOn = false
     ) {
@@ -583,7 +590,6 @@ enum class SwitchNode(
     ADAS_HMA(
         get = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_HMA_STATUS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HMA_ON_OFF_SWT),
-        inactive = intArrayOf(0x3, 0x4, 0x5, 0x6, 0x7),
         default = false,
         careOn = false
     ) {
@@ -612,9 +618,7 @@ enum class SwitchNode(
      */
     ADAS_DOW(
         get = Norm(on = 0x3, off = 0x1, signal = CarCabinManager.ID_AVM_DOW_STS),
-//        get = Norm(on = 0x3, off = 0x1, signal = -1),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_APA_AVM_DOW_SWT),
-        inactive = intArrayOf(0x0, 0x4, 0x5, 0x6),
         default = true,
         careOn = false
     ) {
@@ -648,7 +652,6 @@ enum class SwitchNode(
     ADAS_BSD(
         get = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_AVM_BSD_SWT_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_APA_BSD_SWT),
-        inactive = intArrayOf(0x3),
         default = true
     ) {
         override fun isInvalid(value: Int): Boolean {
@@ -664,7 +667,6 @@ enum class SwitchNode(
     ADAS_BSC(
         get = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_AVM_BSD_DISP_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_APA_BSD_DISP_SWT),
-        inactive = intArrayOf(0x3),
         default = true
     ) {
         override fun isInvalid(value: Int): Boolean {
@@ -680,7 +682,6 @@ enum class SwitchNode(
     ADAS_MEB(
         get = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_MEB_SWT_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_APA_MEB_SWT),
-        inactive = intArrayOf(0x3),
         default = true
     ) {
         override fun isInvalid(value: Int): Boolean {
@@ -890,24 +891,34 @@ enum class SwitchNode(
     ),
 
     /**
+     * 前灯打开该位发出信号，指示在自动灯光模式下打开和关闭外部灯的命令，如果RLS_status状态不允许，请勿关闭前照灯。
+    0x0: off
+    0x1: on
+     */
+    HEAD_LINES(
+        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_RLS_HEADLINES_ON),
+        set = Norm(on = 0x1, off = 0x0, signal = -1),
+        default = false
+    ),
+
+    /**
      * 白天黑夜模式
      * get -> Status of exterior lamp switch  0x0: Off; 0x1: Auto; 0x2: Park; 0x3: Low Beam
      */
-    DARK_LIGHT_MODE(
-        get = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_EXTERIOR_LAMP_SWITCH),
-        set = Norm(on = 0x1, off = 0x2, signal = -1),
-        default = false
-    ) {
-        override fun isValid(value: Int): Boolean {
-//            return value in 0..3
-            return value == 0x0 || value == 0x2 || value == 0x3
-        }
-
-        override fun isOn(value: Int): Boolean {
-
-            return 0x2 == value || 0x3 == value
-        }
-    },
+//    DARK_LIGHT_MODE(
+//        get = Norm(on = 0x2, off = 0x0, signal = CarCabinManager.ID_EXTERIOR_LAMP_SWITCH),
+//        set = Norm(on = 0x1, off = 0x2, signal = -1),
+//        default = false
+//    ) {
+//        override fun isValid(value: Int): Boolean {
+//            return value == 0x0 || value == 0x2 || value == 0x3
+//        }
+//
+//        override fun isOn(value: Int): Boolean {
+//
+//            return 0x2 == value || 0x3 == value
+//        }
+//    },
 
     /**
      * get -> 0x0: Not forbidden; 0x1: Forbidden

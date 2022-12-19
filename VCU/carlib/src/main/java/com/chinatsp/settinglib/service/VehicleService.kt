@@ -5,7 +5,6 @@ import android.content.ComponentName
 import android.content.Intent
 import android.os.IBinder
 import android.text.TextUtils
-import com.chinatsp.settinglib.BaseApp
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.GlobalManager

@@ -3,7 +3,6 @@ package com.chinatsp.settinglib.optios
 import android.car.hardware.cabin.CarCabinManager
 import android.car.hardware.hvac.CarHvacManager
 import android.car.hardware.mcu.CarMcuManager
-import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.RNorm
 import com.chinatsp.settinglib.sign.Origin
 import timber.log.Timber
@@ -20,15 +19,21 @@ enum class RadioNode(
     val set: RNorm,
     val def: Int,
     val area: Area = Area.GLOBAL,
-    val inactive: IntArray? = null,
 ) {
 
+    /**
+     * get -> 空调舒适性状态显示 0x0: Reserved 0x1: Gentle 0x2: Standard 0x3: Powerful 0x4~0x6: Reserved 0x7: Invalid
+     */
     AC_COMFORT(
         get = RNorm(values = intArrayOf(0x1, 0x2, 0x3), signal = CarCabinManager.ID_ACCMFTSTSDISP),
         set = RNorm(values = intArrayOf(0x1, 0x2, 0x3), origin = Origin.HVAC,
             signal = CarHvacManager.ID_HVAC_AVN_AC_AUTO_CMFT_SWT),
         def = 0x1
-    ),
+    ) {
+        override fun isInvalid(value: Int): Boolean {
+            return 0x7 == value
+        }
+    },
 
     //-------------------车门车窗--开始-------------------
     /**
@@ -56,7 +61,6 @@ enum class RadioNode(
             signal = CarCabinManager.ID_CUTOFF_UNLOCK_DOORS_STATUE),
         set = RNorm(values = intArrayOf(0x1, 0x2),
             signal = CarCabinManager.ID_CUT_OFF_UNLOCK_DOORS),
-        inactive = intArrayOf(0x3),
         def = 0x1
     ) {
         override fun isInvalid(value: Int): Boolean {
@@ -74,8 +78,6 @@ enum class RadioNode(
             signal = CarCabinManager.ID_PTM_SMART_ENTRY_PTM_STS),
         set = RNorm(values = intArrayOf(0x1, 0x2, 0x3),
             signal = CarCabinManager.ID_PTM_SMT_ENTRY_SET),
-//        inactive = intArrayOf(0x0, 0x4, 0x5, 0x6, 0x7),
-        inactive = intArrayOf(0x7),
         def = 0x1
     ) {
         override fun isInvalid(value: Int): Boolean {
@@ -102,11 +104,11 @@ enum class RadioNode(
      */
     ADAS_LIMBER_LEAVE(
         get = RNorm(
-            values = intArrayOf(0x4, 0x1, 0x2, 0x3),
+            values = intArrayOf(0x1, 0x2, 0x3, 0x4),
             signal = CarCabinManager.ID_OBJ_DETECTION_RES
         ),
         set = RNorm(
-            values = intArrayOf(0x4, 0x1, 0x2, 0x3),
+            values = intArrayOf(0x1, 0x2, 0x3, 0x4),
             signal = CarCabinManager.ID_OBJ_DETECTION_SWT
         ),
 //        inactive = intArrayOf(0x0, 0x4, 0x5, 0x6, 0x7),
@@ -357,9 +359,6 @@ enum class RadioNode(
         def = 0x0
     ) {
         override fun isValid(value: Int, isGet: Boolean): Boolean {
-            if (VcuUtils.isAmplifier && value == 0) {
-                return false
-            }
             return if (isGet) {
                 get.isValid(value)
             } else {
@@ -459,15 +458,37 @@ enum class RadioNode(
         def = 0x0
     ),
 
+    EXE_LAMP_STATE(
+        get = RNorm(values = intArrayOf(0x1, 0x2, 0x3, 0x0),
+            signal = CarCabinManager.ID_EXTERIOR_LAMP_SWITCH),
+        set = RNorm(values = intArrayOf(0x1, 0x2, 0x3, 0x0), signal = -1),
+        def = 0x0
+    ),
+
     /**
      * 行车--拖车提醒--拖车提醒距离
      * 此信号走TBOX信号 而非走CAN信号， 所以需要特殊处理
      */
     DEVICE_TRAILER_DISTANCE(
-        get = RNorm(values = intArrayOf(200, 500, 1000, 2000), signal = -1),
-        set = RNorm(values = intArrayOf(200, 500, 1000, 2000), signal = -1),
-        def = 200
+        get = RNorm(values = intArrayOf(0x1, 0x2, 0x3, 0x4), signal = -1),
+        set = RNorm(values = intArrayOf(0x1, 0x2, 0x3, 0x4), signal = -1),
+        def = 0x1
     );
+
+//    /**
+//     * 车道辅助
+//     * 0x0: Initial
+//    0x1: LDW
+//    0x2: RDP
+//    0x3: LKS
+//     */
+//    LANE_ASSIST_TYPE(
+//        get = RNorm(values = intArrayOf(0x0, 0x1, 0x2, 0x3),
+//            signal = CarCabinManager.ID_LANE_ASSIT_TYPE),
+//        set = RNorm(values = intArrayOf(0x0, 0x1, 0x2, 0x3), signal = -1),
+//        def = 0x0
+//    );
+
 
 //    open fun isValid(value: Int, isGet: Boolean = true): Boolean {
 //        return if (isGet) {

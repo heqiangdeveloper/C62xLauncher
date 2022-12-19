@@ -1,4 +1,4 @@
-package com.chinatsp.vehicle.settings.fragment.drive.dialog
+package com.chinatsp.vehicle.settings.fragment.adas
 
 import android.os.Bundle
 import com.chinatsp.vehicle.settings.HintHold

@@ -1,6 +1,8 @@
 package com.chinatsp.apppanel;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -12,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.fragment.app.FragmentManager;
 
+import com.chinatsp.apppanel.AppConfigs.Constant;
 import com.chinatsp.apppanel.fragments.AppStoreFragment;
 import com.chinatsp.apppanel.fragments.MyAppFragment;
 
@@ -29,11 +32,24 @@ public class ApppanelActivity extends AppCompatActivity implements View.OnClickL
     private AppStoreFragment appStoreFragment;
     private FragmentManager fm = getSupportFragmentManager();
     private List<Fragment> fragmentList;
+    private String fromPkg = "";//记录从哪个应用跳转过来的
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.apppanel_layout);
+        fromPkg = getIntent().getStringExtra(Constant.FROM);
+        Log.d("ApppanelActivity","onCreate fromPkg: " + fromPkg);
         initView();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        fromPkg = intent.getStringExtra(Constant.FROM);
+        Log.d("ApppanelActivity","onNewIntent fromPkg: " + fromPkg);
+        if(myAppFragment != null){
+            myAppFragment.setFromPkg(fromPkg);
+        }
     }
 
     private void initView() {
@@ -53,6 +69,9 @@ public class ApppanelActivity extends AppCompatActivity implements View.OnClickL
     private void loadData(){
         myAppLine.setVisibility(View.VISIBLE);
         myAppFragment = new MyAppFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(Constant.FROM,fromPkg);
+        myAppFragment.setArguments(bundle);
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.fragment_container, myAppFragment);
         ft.commit();

@@ -58,7 +58,7 @@
     <string name="cabin_safe_fortify_success_tone">设防成功提示音</string>
     <string name="cabin_safe_fortify_failure_tone">设防失败提示音</string>
     <string name="cabin_safe_video_safe_mode">视频安全模式</string>
-    <string name="cabin_safe_video_safe_mode_content">视频安全模式开启后，⻋速\n⼤于15km/h时，本地视频\n将⾃动关闭。</string>
+    <string name="cabin_safe_video_safe_mode_content">视频安全模式开启后，⻋速\n⼤于15km/h时，部分视频\n将⾃动关闭。</string>
 
     <string name="cabin_wheel_electronic_mode">电子助力转向模式</string>
     <string name="cabin_wheel_press_key">方向盘自定义按键</string>
@@ -73,6 +73,7 @@
 
     <string name="cabin_seat_welcomes_guests">主驾迎宾</string>
     <string name="cabin_seat_welcomes_guests_close">主驾迎宾已关闭</string>
+    <string name="cabin_seat_fork_welcome_close">副驾迎宾已关闭</string>
     <string name="cabin_seat_close">已关闭</string>
     <string name="cabin_seat_copilot_guests">副驾迎宾</string>
     <string name="cabin_seat_copilot_guests_position">副驾迎宾位置</string>
@@ -161,7 +162,7 @@
         启；\n
         停留式：携带合法智能钥匙\n
         进⼊后备箱感应区域内，原\n
-        地站⽴4s以上，电动尾⻔⾃\n
+        地站⽴6s以上，电动尾⻔⾃\n
         动开启。</string>
     <string name="car_trunk_height_content">&#160;电动尾⻔⾼度调节建议：\n
        身⾼1.6⽶以下的⽤户使⽤，建议开启⾼度为80%；\n

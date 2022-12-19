@@ -1,4 +1,4 @@
-package com.chinatsp.vehicle.settings.fragment.drive.dialog
+package com.chinatsp.vehicle.settings.fragment.adas
 
 import android.os.Bundle
 import com.chinatsp.settinglib.manager.adas.ForwardManager

@@ -146,7 +146,7 @@ class LightingScreenFragment : BaseFragment<BrightnessViewModel, LightingScreenF
         val type = Progress.HOST_SCREEN_BRIGHTNESS
         if (value < type.min) value = type.min
         if (value > type.max) value = type.max
-        val darkActive = manager.isDarkModeActive()
+        val darkActive = manager.isDarkMode()
         if (darkActive) {
             VcuUtils.putInt(key = Constant.DARK_BRIGHTNESS_LEVEL, value = value)
         } else {

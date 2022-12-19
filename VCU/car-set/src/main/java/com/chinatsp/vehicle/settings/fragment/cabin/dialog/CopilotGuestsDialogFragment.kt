@@ -39,7 +39,7 @@ class CopilotGuestsDialogFragment :
     }
 
     private fun initSwitchOption() {
-        initSwitchOption(SwitchNode.SEAT_FORK_DRIVE_MEET, viewModel.forkMeet)
+        initSwitchOption(SwitchNode.FORK_SEAT_WELCOME, viewModel.forkMeet)
     }
 
     private fun addSwitchLiveDataListener() {
@@ -50,7 +50,7 @@ class CopilotGuestsDialogFragment :
 
     override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
         return when (node) {
-            SwitchNode.SEAT_FORK_DRIVE_MEET -> binding.seatCopilotGuestsSwitch
+            SwitchNode.FORK_SEAT_WELCOME -> binding.seatCopilotGuestsSwitch
             else -> null
         }
     }
@@ -61,7 +61,7 @@ class CopilotGuestsDialogFragment :
 
     private fun setSwitchListener() {
         binding.seatCopilotGuestsSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            doUpdateSwitchOption(SwitchNode.SEAT_FORK_DRIVE_MEET, buttonView, isChecked)
+            doUpdateSwitchOption(SwitchNode.FORK_SEAT_WELCOME, buttonView, isChecked)
         }
     }
 

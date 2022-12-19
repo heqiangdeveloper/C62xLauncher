@@ -1,8 +1,9 @@
-package com.chinatsp.vehicle.settings.fragment.doors.dialog
+package com.chinatsp.vehicle.settings.fragment.sound
 
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import com.chinatsp.settinglib.BaseApp
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.IRadioManager
@@ -36,12 +37,13 @@ class EqualizerDialogFragment :
     private lateinit var vList: List<Float>
     private var value by Delegates.notNull<Int>()
     private var mCollapseController: CollapseController? = null
+
     override fun getLayoutId(): Int {
         return R.layout.equalizer_dialog_fragmet
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-        initData()
+        initSmoothLineData()
         initRadioOption()
         addRadioLiveDataListener()
         setRadioListener()
@@ -54,28 +56,25 @@ class EqualizerDialogFragment :
         }
     }
 
-    private fun initData() {
-        if (VcuUtils.isAmplifier) {
-            xValue = listOf(
-                activity?.resources?.getString(R.string.bass),
-                activity?.resources?.getString(R.string.medium_bass),
-                activity?.resources?.getString(R.string.medium),
-                activity?.resources?.getString(R.string.medium_treble),
-                activity?.resources?.getString(R.string.treble)
-            ) as List<String>
-        } else {
-            xValue = listOf(
-                activity?.resources?.getString(R.string.sixty_five),
-                activity?.resources?.getString(R.string.two_hundred_fifty),
-                activity?.resources?.getString(R.string.seven_hundred_fifty),
-                activity?.resources?.getString(R.string.one_thousand_three_hundred),
-                activity?.resources?.getString(R.string.two_thousand_three_hundred),
-                activity?.resources?.getString(R.string.three_thousand_five_hundred),
-                activity?.resources?.getString(R.string.six_thousand_five_hundred),
-                activity?.resources?.getString(R.string.eight_thousand_five_hundred),
-                activity?.resources?.getString(R.string.eighteen_thousand)
-            ) as List<String>
-        }
+    private fun initSmoothLineData() {
+        val resources = BaseApp.instance.resources
+        xValue = if (VcuUtils.isAmplifier) listOf(
+            resources.getString(R.string.treble),
+            resources.getString(R.string.medium_treble),
+            resources.getString(R.string.medium),
+            resources.getString(R.string.medium_bass),
+            resources.getString(R.string.bass)
+        ) else listOf(
+            resources.getString(R.string.sixty_five),
+            resources.getString(R.string.two_hundred_fifty),
+            resources.getString(R.string.seven_hundred_fifty),
+            resources.getString(R.string.one_thousand_three_hundred),
+            resources.getString(R.string.two_thousand_three_hundred),
+            resources.getString(R.string.three_thousand_five_hundred),
+            resources.getString(R.string.six_thousand_five_hundred),
+            resources.getString(R.string.eight_thousand_five_hundred),
+            resources.getString(R.string.eighteen_thousand)
+        )
     }
 
     private fun registerController() {

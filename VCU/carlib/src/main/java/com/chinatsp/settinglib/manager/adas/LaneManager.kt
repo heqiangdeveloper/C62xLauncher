@@ -64,12 +64,8 @@ class LaneManager : BaseManager(), IOptionManager {
         }
     }
 
-    private val laneAssistFunction: SwitchState by lazy {
+    private val laneAssist: SwitchState by lazy {
         val node = SwitchNode.ADAS_LANE_ASSIST
-//        AtomicBoolean(node.default).apply {
-//            val value = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateSwitchValue(node, this, value)
-//        }
         return@lazy createAtomicBoolean(node) { result, value ->
             doUpdateSwitch(node, result, value, this::doSwitchChanged)
         }
@@ -108,7 +104,7 @@ class LaneManager : BaseManager(), IOptionManager {
                 onRadioChanged(RadioNode.ADAS_LDW_STYLE, ldwWarningStyle, property)
             }
             SwitchNode.ADAS_LANE_ASSIST.get.signal -> {
-                onSwitchChanged(SwitchNode.ADAS_LANE_ASSIST, laneAssistFunction, property)
+                onSwitchChanged(SwitchNode.ADAS_LANE_ASSIST, laneAssist, property)
             }
             else -> {}
         }
@@ -184,7 +180,7 @@ class LaneManager : BaseManager(), IOptionManager {
 
     override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
         return when (node) {
-            SwitchNode.ADAS_LANE_ASSIST -> laneAssistFunction.deepCopy()
+            SwitchNode.ADAS_LANE_ASSIST -> laneAssist.deepCopy()
             else -> null
         }
     }

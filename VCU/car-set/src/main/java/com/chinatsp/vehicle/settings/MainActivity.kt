@@ -22,7 +22,7 @@ import com.chinatsp.vehicle.settings.databinding.MainActivityTablayoutBinding
 import com.chinatsp.vehicle.settings.fragment.CommonlyFragment
 import com.chinatsp.vehicle.settings.fragment.cabin.CabinManagerFragment
 import com.chinatsp.vehicle.settings.fragment.doors.DoorsManageFragment
-import com.chinatsp.vehicle.settings.fragment.drive.DriveManageFragment
+import com.chinatsp.vehicle.settings.fragment.adas.DriveManageFragment
 import com.chinatsp.vehicle.settings.fragment.lighting.LightingManageFragment
 import com.chinatsp.vehicle.settings.fragment.sound.SoundManageFragment
 import com.chinatsp.vehicle.settings.vm.MainViewModel

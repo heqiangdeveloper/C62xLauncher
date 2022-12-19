@@ -6,6 +6,7 @@
         <activity
             android:name=".ApppanelActivity"
             android:windowSoftInputMode="adjustPan"
+            android:launchMode="singleInstance"
             android:exported="true">
             <intent-filter>
 

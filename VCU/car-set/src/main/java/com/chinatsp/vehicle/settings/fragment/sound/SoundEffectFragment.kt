@@ -22,8 +22,6 @@ import com.chinatsp.vehicle.settings.IOptionAction
 import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.SoundEffectFragmentBinding
-import com.chinatsp.vehicle.settings.fragment.doors.dialog.EqualizerDialogFragment
-import com.chinatsp.vehicle.settings.fragment.doors.dialog.VolumeDialogFragment
 import com.chinatsp.vehicle.settings.vm.sound.SoundEffectViewModel
 import com.chinatsp.vehicle.settings.widget.SoundFieldView
 import com.common.library.frame.base.BaseFragment
@@ -303,7 +301,7 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
 
     private fun showVolumeFragment() {
         if (!binding.soundEnvironmentalSw.isChecked) {
-            val fragment = VolumeDialogFragment()
+            val fragment = BalanceDialogFragment()
             activity?.supportFragmentManager?.let {
                 fragment.show(it, fragment.javaClass.simpleName)
             }

@@ -179,6 +179,7 @@ public class ClassifyView extends FrameLayout {
     private CountTimer countTimerView;
     private static final int EDGEWIDTH = 160;//左右边缘间距
     private static final int TOPBARHEIGHT = 30;//topbar的高度
+    private boolean isAtTop = false;
     public ClassifyView(Context context) {
         super(context);
         init(context, null, 0);
@@ -533,6 +534,13 @@ public class ClassifyView extends FrameLayout {
         mMainGestureDetector = new GestureDetectorCompat(context, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onDown(MotionEvent e) {
+                L.d("onDown");
+                if(mMainRecyclerView!= null && !mMainRecyclerView.canScrollVertically(-1)){
+                    isAtTop = true;
+                    L.d("onDown mMainRecyclerView at top");
+                }else {
+                    isAtTop = false;
+                }
                 return true;
             }
 
@@ -654,10 +662,10 @@ public class ClassifyView extends FrameLayout {
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
                 /*
-                *  热区：mMainRecyclerView左右两边160的区域
-                *  mMainRecyclerView滑动至顶部后，空白区域下滑超过200px，跳转至卡片页
+                *  热区：mMainRecyclerView左右两边160的区域   1215需求 整个页面包括列表都是热区
+                *  开始滑动前，mMainRecyclerView已经滑动至顶部，再往热区下滑超过200px，跳转至卡片页
                  */
-                if(mMainRecyclerView!= null && !mMainRecyclerView.canScrollVertically(-1)){//mMainRecyclerView已经到达顶部
+                if(isAtTop){//mMainRecyclerView已经到达顶部
                     //topBarIv.setVisibility(View.VISIBLE);
                     if(isNeedJumpCard(e1,e2)){
                         EventBus.getDefault().post(new JumpToCardEvent());
@@ -923,17 +931,17 @@ public class ClassifyView extends FrameLayout {
      */
     private boolean isNeedJumpCard(MotionEvent e1, MotionEvent e2) {
         float moveY = e2.getY() - e1.getY();
-        if(e1.getX() > EDGEWIDTH && e1.getX() < (SCREENWIDTH - EDGEWIDTH)){
-            return false;
-        }
-        if(e2.getX() > EDGEWIDTH && e2.getX() < (SCREENWIDTH - EDGEWIDTH)){
-            return false;
-        }
+//        if(e1.getX() > EDGEWIDTH && e1.getX() < (SCREENWIDTH - EDGEWIDTH)){
+//            return false;
+//        }
+//        if(e2.getX() > EDGEWIDTH && e2.getX() < (SCREENWIDTH - EDGEWIDTH)){
+//            return false;
+//        }
         if(moveY < 0){
             return false;
         }
-        //向下移动350时
-        if(moveY >= 350){
+        //向下移动200时
+        if(moveY >= 200){
             Log.d("onscroll", "isNeedJumpCard true");
             return true;
         }else {
@@ -1114,6 +1122,15 @@ public class ClassifyView extends FrameLayout {
                         L.d("ACTION_DRAG_STARTED");
                         obtainVelocityTracker();
                         restoreDragView();
+
+                        //拖动选中时，需要隐藏删除按钮
+                        relativeLayout = (RelativeLayout) mSelected;
+                        insertAbleGridView = (InsertAbleGridView) relativeLayout.getChildAt(0);
+                        if(insertAbleGridView.getChildCount() == 1){//非文件夹
+                            ImageView iv = (ImageView) relativeLayout.getChildAt(2);
+                            iv.setVisibility(View.GONE);
+                        }
+
                         mDragView.setBackgroundDrawable(getDragDrawable(mSelected));
                         mDragView.setVisibility(VISIBLE);
                         mMainCallBack.setDragPosition(mSelectedPosition);
@@ -1427,6 +1444,15 @@ public class ClassifyView extends FrameLayout {
 
                         obtainVelocityTracker();
                         restoreDragView();
+
+                        //拖动选中时，需要隐藏删除按钮
+                        relativeLayout = (RelativeLayout) mSelected;
+                        insertAbleGridView = (InsertAbleGridView) relativeLayout.getChildAt(0);
+                        if(insertAbleGridView.getChildCount() == 1){//非文件夹
+                            ImageView iv = (ImageView) relativeLayout.getChildAt(2);
+                            iv.setVisibility(View.GONE);
+                        }
+
                         mDragView.setBackgroundDrawable(getDragDrawable(mSelected));
                         mDragView.setVisibility(VISIBLE);
                         mSubCallBack.setDragPosition(mSelectedPosition);

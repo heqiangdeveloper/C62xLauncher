@@ -45,6 +45,7 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
     private val popupLiveData: MutableLiveData<String> by lazy { MutableLiveData("") }
 
     private var versionController: VersionController? = null
+
     override fun getLayoutId(): Int {
         return R.layout.main_activity_tablayout2
     }
@@ -61,16 +62,6 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
         }
     }
 
-    /*  override fun onResume() {
-          super.onResume()
-          initTabLayout()
-      }*/
-
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        window.setBackgroundDrawableResource(R.color.transparent);
-//        super.onCreate(savedInstanceState)
-//    }
-
     private fun observeLocation() {
         tabLocation.observe(this) { position ->
             manager.setTabSerial(position)
@@ -83,7 +74,7 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
 
     private fun registerController() {
         versionController = VersionController(this, mDrawerCollapseListener)
-        versionController!!.register()
+        versionController?.register()
     }
 
     override fun onStart() {
@@ -93,7 +84,7 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
             Constant.VERSION_LEVEL,
             Constant.STATUS_HIDE
         )
-        Timber.e("-------------------------Settings.System.getInt--value:$value")
+        Timber.d("-------------------------Settings.System.getInt--value:$value")
         if (value == Constant.STATUS_HIDE) {
             binding.redVersion.visibility = View.GONE
         } else {
@@ -142,12 +133,7 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
         }
     }
 
-    private fun doNavigation(
-        routeValue: Int,
-        route: String,
-        intentPath: String,
-        general: Boolean = false,
-    ) {
+    private fun doNavigation(value: Int, route: String, path: String, general: Boolean = false) {
         if (general) {
             val list = route.split("_")
             Timber.e("==================route:%s, size:%s", route, list.size)
@@ -156,6 +142,10 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
             }*/
             if (list.size == 3) {
                 val locations = list.map { it.toInt() }
+                if (1007 == locations[0]) {
+                    doRouteToDeviceUpgrade()
+                    return
+                }
                 val node1 = Node(uid = locations[0] - 1000)
                 val node2 = Node(uid = locations[1] - 2000)
                 val node3 = Node(uid = locations[2] - 3000)
@@ -164,12 +154,9 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
                 node3.pnode = node2
                 node2.pnode = node1
                 if (node1.valid && node1.uid in obtainTabs().map { tab -> tab.uid }.toSet()) {
-                    val position = if (VcuUtils.isCareLevel(
-                            Level.LEVEL3,
-                            expect = true
-                        )
-                    ) node1.uid - 1 else node1.uid
-                    Timber.e("doNavigation-------position:$position")
+                    val isLevel3 = VcuUtils.isCareLevel(Level.LEVEL3)
+                    val position = if (isLevel3) node1.uid - 1 else node1.uid
+                    Timber.d("doNavigation-------position:$position")
                     manager.setTabSerial(position)
                     updatePosition(position)
                     level1.postValue(node1)
@@ -341,8 +328,8 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
     }
 
     override fun onDestroy() {
+        versionController?.unRegister()
         super.onDestroy()
-        versionController!!.unRegister()
     }
 
 }

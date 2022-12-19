@@ -139,7 +139,7 @@ class TrailerRemindDialogFragment :
             doUpdateSwitchOption(SwitchNode.DRIVE_TRAILER_REMIND, buttonView, isChecked)
             updateRadioEnable(RadioNode.DEVICE_TRAILER_DISTANCE)
             updateRadioEnable(RadioNode.DEVICE_TRAILER_SENSITIVITY)
-            if (!buttonView.isChecked) {
+            if (!isChecked) {
                 Toast.showToast(context, getString(R.string.cabin_other_toast_content), true)
             }else{
                 Toast.showToast(context, getString(R.string.cabin_other_toast_content_open), true)

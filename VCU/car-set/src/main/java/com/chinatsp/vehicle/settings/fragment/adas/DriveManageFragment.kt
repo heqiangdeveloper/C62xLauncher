@@ -1,4 +1,4 @@
-package com.chinatsp.vehicle.settings.fragment.drive
+package com.chinatsp.vehicle.settings.fragment.adas
 
 import android.os.Bundle
 import android.view.View

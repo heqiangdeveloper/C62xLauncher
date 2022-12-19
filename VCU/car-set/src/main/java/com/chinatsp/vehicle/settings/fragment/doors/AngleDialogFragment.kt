@@ -1,4 +1,4 @@
-package com.chinatsp.vehicle.settings.fragment.doors.dialog
+package com.chinatsp.vehicle.settings.fragment.doors
 
 import android.annotation.SuppressLint
 import android.os.Bundle

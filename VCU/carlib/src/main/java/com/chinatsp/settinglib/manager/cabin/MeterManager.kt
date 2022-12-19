@@ -78,7 +78,9 @@ class MeterManager private constructor() : BaseManager(), IRadioManager {
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
         return when (node) {
             RadioNode.DRIVE_METER_SYSTEM -> {
-                node.isValid(value, isGet = false) && writeProperty(node, value, meterSystemRadioOption)
+                node.isValid(value, isGet = false) && writeProperty(node,
+                    value,
+                    meterSystemRadioOption)
             }
             else -> false
         }

@@ -396,12 +396,14 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         }
         viewModel.lightAlarmFunction.observe(this) {
             doUpdateSwitch(SwitchNode.STERN_LIGHT_ALARM, it)
-            updateOptionActive()
+//            updateOptionActive()
+            updateSwitchEnable(SwitchNode.STERN_LIGHT_ALARM)
             doLightAlarmHint(it.get())
         }
         viewModel.audioAlarmFunction.observe(this) {
             doUpdateSwitch(SwitchNode.STERN_AUDIO_ALARM, it)
-            updateOptionActive()
+//            updateOptionActive()
+            updateSwitchEnable(SwitchNode.STERN_AUDIO_ALARM)
             doAudioAlarmHint(it.get())
         }
     }
