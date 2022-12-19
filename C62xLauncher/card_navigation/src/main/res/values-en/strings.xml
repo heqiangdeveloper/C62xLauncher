@@ -32,7 +32,7 @@
     <string name="tbt_direct_keep_right">Keep right</string>
     <string name="card_navi_unknown_road_name">The unknown way</string>
 
-    <string name="tbt_info_distance_kilometer">公里</string>
+    <string name="tbt_info_distance_kilometer">km</string>
     <string name="tbt_info_distance_meter">meters</string>
     <string name="tbt_info_enter">enter</string>
 </resources>
