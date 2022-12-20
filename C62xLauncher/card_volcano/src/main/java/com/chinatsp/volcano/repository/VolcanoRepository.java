@@ -9,11 +9,14 @@ import com.chinatsp.volcano.api.VolcanoApi;
 import com.chinatsp.volcano.api.VolcanoApiParam;
 import com.chinatsp.volcano.api.response.VideoListData;
 import com.chinatsp.volcano.api.response.VolcanoResponse;
+import com.chinatsp.volcano.videos.VolcanoVideo;
 import com.oushang.radio.network.errorhandler.ExceptionHandler;
 import com.oushang.radio.network.observer.BaseObserver;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IllegalFormatCodePointException;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -60,14 +63,15 @@ public class VolcanoRepository {
         if (listener == null) {
             return;
         }
-        EasyLog.i(TAG, "registerCallbacks: "+listener);
+        EasyLog.i(TAG, "registerCallbacks: " + listener);
         mCardListeners.add(listener);
     }
+
     public void registerDrawerCallbacks(String tag, IVolcanoLoadListener listener) {
         if (tag == null) {
             return;
         }
-        EasyLog.i(TAG, "registerCallbacks: "+tag);
+        EasyLog.i(TAG, "registerCallbacks: " + tag);
         mDrawerListeners.put(tag, listener);
     }
 
@@ -75,20 +79,20 @@ public class VolcanoRepository {
         if (listener == null) {
             return;
         }
-        EasyLog.i(TAG, "unregisterCallbacks: "+listener);
+        EasyLog.i(TAG, "unregisterCallbacks: " + listener);
         mCardListeners.remove(listener);
     }
 
     public void notifySuccess(VideoListData data, String source) {
         for (IVolcanoLoadListener listener : mCardListeners) {
             if (listener != null) {
-                Log.d(TAG, "notifySuccess : "+listener);
+                Log.d(TAG, "notifySuccess : " + listener);
                 listener.onSuccess(data, source);
             }
         }
         for (IVolcanoLoadListener listener : mDrawerListeners.values()) {
             if (listener != null) {
-                Log.d(TAG, "notifySuccess : "+listener);
+                Log.d(TAG, "notifySuccess : " + listener);
                 listener.onSuccess(data, source);
             }
         }
@@ -112,6 +116,7 @@ public class VolcanoRepository {
     private final long MIN_INTERVAL = 1000;
 
     private static int loadCount = 0;
+
     public void loadFromServer(String source) {
         long nowTime = System.currentTimeMillis();
         long loadInterval = nowTime - lastLoadTime;
@@ -139,13 +144,21 @@ public class VolcanoRepository {
                 EasyLog.d(TAG, "loadFromServer loadCount :" + loadCount);
 //                if (loadCount == 1) {
 //                    String msg = volcanoResponse.getMsg();
-//                    notifyFail(msg);
-//                    return;
+//                    VideoListData data = volcanoResponse.getData();
+//                    List<VolcanoVideo> list = data.getList();
+//                    if (list != null) {
+//                        list.clear();
+//                    }
 //                }
                 if (volcanoResponse.getErrno() == VolcanoResponse.CODE_SUCCESS) {
                     VideoListData data = volcanoResponse.getData();
-                    saveList(data, source);
-                    notifySuccess(data, source);
+                    List<VolcanoVideo> list = data.getList();
+                    if (list == null || list.isEmpty()) {
+                        notifyFail("list is empty");
+                    } else {
+                        saveList(data, source);
+                        notifySuccess(data, source);
+                    }
                 } else {
                     String msg = volcanoResponse.getMsg();
                     notifyFail(msg);
@@ -161,10 +174,14 @@ public class VolcanoRepository {
         });
     }
 
+    private Map<String, Long> lastLoadFromServerTimes = new HashMap<>();
+    private final long CACHE_VALID_TIME = 1000 * 60 * 5L;
+
     private void saveList(VideoListData data, String source) {
         if (TextUtils.isEmpty(source)) {
             source = SOURCE_DOUYIN;
         }
+        lastLoadFromServerTimes.put(source, System.currentTimeMillis());
         EasyLog.d(TAG, "saveList , source:" + source);
         switch (source) {
             case SOURCE_DOUYIN:
@@ -180,7 +197,11 @@ public class VolcanoRepository {
     }
 
     public VideoListData getVideoList(String source) {
-        EasyLog.d(TAG, "getVideoList , source:" + source);
+        boolean cacheValid = checkCacheValid(source);
+        if (!cacheValid) {
+            return null;
+        }
+        EasyLog.d(TAG, "getVideoList from cache, source:" + source);
         VideoListData videoListData;
         switch (source) {
             case SOURCE_TOUTIAO:
@@ -194,5 +215,22 @@ public class VolcanoRepository {
                 videoListData = mDouyinList;
         }
         return videoListData;
+    }
+
+    private boolean checkCacheValid(String source) {
+        long now = System.currentTimeMillis();
+        if (source == null) {
+            return false;
+        }
+        Long aLong = lastLoadFromServerTimes.get(source);
+        long lastTime;
+        if (aLong == null) {
+            lastTime = 0;
+        } else {
+            lastTime = aLong;
+        }
+        long delta = now - lastTime;
+        EasyLog.d(TAG, "checkCacheValid : " + delta + "ms" + " source:" + source);
+        return delta < CACHE_VALID_TIME;
     }
 }
