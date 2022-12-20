@@ -4,12 +4,15 @@ import android.content.Context;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.chinatsp.driveinfo.callback.IReadDriveInfoListener;
 import com.chinatsp.driveinfo.callback.ILauncherWidgetCallback;
+import com.chinatsp.driveinfo.callback.IReadDriveInfoListener;
 import com.cihon.client.CihonManager;
 import com.cihon.client.ServiceConnectionListener;
 import com.cihon.client.SmallCardCallback;
 import com.cihon.client.WidgetCallback;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import launcher.base.async.AsyncSchedule;
 import launcher.base.utils.EasyLog;
@@ -23,10 +26,11 @@ public class DriveInfoRepository {
     private volatile boolean mServiceConnect;
     private DriveInfo mCacheDriveInfo;
 
-    private IReadDriveInfoListener mReadDriveInfoListener;
-    private IReadDriveInfoListener mDrawerReadDriveInfoListener;
+    private final Set<IReadDriveInfoListener> mReadDriveInfoListeners = new HashSet<>();
+    private final Set<IReadDriveInfoListener> mDrawerReadDriveInfoListener = new HashSet<>() ;
     private PollingTask mServiceConnectTask;
-    private SmallCardCallback mSmallCardCallback;
+    private final Set<SmallCardCallback> mSmallCardCallbacks = new HashSet<>();
+    private final Set<ILauncherWidgetCallback> mWidgetCallbacks = new HashSet<>();
 
     private DriveInfoRepository() {
         mCihonManager = CihonManager.getInstance();
@@ -54,6 +58,7 @@ public class DriveInfoRepository {
             }
         });
         mCihonManager.setSmallCardCallback(mOriginSmallCardCallback);
+        mCihonManager.setWidgetCallback(rootWidgetCallback);
     }
     public void bindService(Context context) {
         EasyLog.i(TAG, "start: bindService");
@@ -95,74 +100,106 @@ public class DriveInfoRepository {
 
 
     private void notifyReadOnBindService(DriveInfo cacheDriveInfo) {
-        if (mReadDriveInfoListener != null) {
-            mReadDriveInfoListener.onSuccess(cacheDriveInfo);
+        for (IReadDriveInfoListener readDriveInfoListener : mReadDriveInfoListeners) {
+            readDriveInfoListener.onSuccess(cacheDriveInfo);
         }
-        if (mDrawerReadDriveInfoListener != null) {
-            mDrawerReadDriveInfoListener.onSuccess(cacheDriveInfo);
+        for (IReadDriveInfoListener readDriveInfoListener : mDrawerReadDriveInfoListener) {
+            readDriveInfoListener.onSuccess(cacheDriveInfo);
+
         }
     }
 
     private SmallCardCallback mOriginSmallCardCallback = new SmallCardCallback() {
         @Override
         public void onOilChanged(float v) {
-            if (mSmallCardCallback != null) {
-                mSmallCardCallback.onOilChanged(v);
+            if (mSmallCardCallbacks != null) {
+                for (SmallCardCallback mSmallCardCallback : mSmallCardCallbacks) {
+                    mSmallCardCallback.onOilChanged(v);
+                }
             }
         }
 
         @Override
         public void onDrivingTimeChanged(int i) {
-            if (mSmallCardCallback != null) {
-                mSmallCardCallback.onDrivingTimeChanged(i);
+            if (mSmallCardCallbacks != null) {
+                for (SmallCardCallback mSmallCardCallback : mSmallCardCallbacks) {
+                    mSmallCardCallback.onDrivingTimeChanged(i);
+                }
             }
         }
 
         @Override
         public void onDrivingMileageChanged(float v) {
-            if (mSmallCardCallback != null) {
-                mSmallCardCallback.onDrivingMileageChanged(v);
+            if (mSmallCardCallbacks != null) {
+                for (SmallCardCallback mSmallCardCallback : mSmallCardCallbacks) {
+                    mSmallCardCallback.onDrivingMileageChanged(v);
+                }
             }
         }
     };
 
-    void setDriveInfoCallback(SmallCardCallback smallCardCallback) {
+    void addDriveInfoCallback(SmallCardCallback smallCardCallback) {
         EasyLog.i(TAG, "setDriveInfoCallback SmallCardCallback: " + smallCardCallback.hashCode());
-        this.mSmallCardCallback = smallCardCallback;
+        this.mSmallCardCallbacks.add(smallCardCallback);
+    }
+    void removeDriveInfoCallback(SmallCardCallback smallCardCallback) {
+        EasyLog.i(TAG, "setDriveInfoCallback SmallCardCallback: " + smallCardCallback.hashCode());
+        this.mSmallCardCallbacks.remove(smallCardCallback);
     }
 
-    public void setWidgetCallback(ILauncherWidgetCallback widgetCallback) {
-        mCihonManager.setWidgetCallback(new WidgetCallback() {
-            @Override
-            public void onHealthyLevelChanged(String s) {
-                if (widgetCallback != null) {
-                    widgetCallback.onHealthyLevelChanged(s);
-                }
+    private final WidgetCallback rootWidgetCallback = new WidgetCallback() {
+        @Override
+        public void onHealthyLevelChanged(String s) {
+            for (ILauncherWidgetCallback mWidgetCallback : mWidgetCallbacks) {
+                mWidgetCallback.onHealthyLevelChanged(s);
             }
+        }
 
-            @Override
-            public void onMaintenanceMileageChanged(int i) {
-                if (widgetCallback != null) {
-                    widgetCallback.onMaintenanceMileageChanged(i);
-                }
+        @Override
+        public void onMaintenanceMileageChanged(int i) {
+            for (ILauncherWidgetCallback mWidgetCallback : mWidgetCallbacks) {
+                mWidgetCallback.onMaintenanceMileageChanged(i);
             }
+        }
 
-            @Override
-            public void onRankingChanged(int i) {
-                if (widgetCallback != null) {
-                    widgetCallback.onRankingChanged(i);
-                }
+        @Override
+        public void onRankingChanged(int i) {
+            for (ILauncherWidgetCallback mWidgetCallback : mWidgetCallbacks) {
+                mWidgetCallback.onRankingChanged(i);
             }
-        });
+        }
+    };
+
+    public void addWidgetCallback(ILauncherWidgetCallback widgetCallback) {
+        if (widgetCallback != null) {
+            // 由于控件组并未使用自定义View, 而且是唯一的, 所以当添加一个观察者时, 就将之前的观察者删除,  避免内存泄漏.
+            this.mWidgetCallbacks.clear();
+            this.mWidgetCallbacks.add(widgetCallback);
+        }
+    }
+    public void deleteWidgetCallback(ILauncherWidgetCallback widgetCallback) {
+        if (widgetCallback != null) {
+            this.mWidgetCallbacks.remove(widgetCallback);
+        }
     }
 
-
-    public void setReadDriveInfoListener(IReadDriveInfoListener readDriveInfoListener) {
-        mReadDriveInfoListener = readDriveInfoListener;
+    public void addReadDriveInfoListener(IReadDriveInfoListener readDriveInfoListener) {
+        if (readDriveInfoListener != null) {
+            mReadDriveInfoListeners.add(readDriveInfoListener);
+        }
+    }
+    public void removeReadDriveInfoListener(IReadDriveInfoListener readDriveInfoListener) {
+        if (readDriveInfoListener != null) {
+            mReadDriveInfoListeners.remove(readDriveInfoListener);
+        }
     }
 
-    public void setDrawerReadDriveInfoListener(IReadDriveInfoListener drawerReadDriveInfoListener) {
-        mDrawerReadDriveInfoListener = drawerReadDriveInfoListener;
+    public void addDrawerReadDriveInfoListener(IReadDriveInfoListener drawerReadDriveInfoListener) {
+        if (drawerReadDriveInfoListener != null) {
+            // // 由于控件组并未使用自定义View, 而且是唯一的, 所以当添加一个观察者时, 就将之前的观察者删除,  避免内存泄漏.
+            mDrawerReadDriveInfoListener.clear();
+            mDrawerReadDriveInfoListener.add(drawerReadDriveInfoListener);
+        }
     }
 
     public DriveInfo readDriveInfo() {
