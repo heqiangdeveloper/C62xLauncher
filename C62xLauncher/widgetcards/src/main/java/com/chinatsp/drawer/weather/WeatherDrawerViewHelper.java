@@ -48,7 +48,7 @@ public class WeatherDrawerViewHelper {
 
     public void refreshDefault() {
         EasyLog.d(TAG, "refreshDefault");
-        mController.requestWeatherInfo();
+//        mController.requestWeatherInfo();
     }
 
     public void refreshData(WeatherInfo weatherInfo) {

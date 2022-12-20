@@ -23,8 +23,8 @@ class DriveInfoDrawerController {
         EasyLog.d(TAG, "DriveInfoDrawerController init" );
         mViewHolder = viewHolder;
         mDriveInfoRepository = DriveInfoRepository.getInstance();
-        mDriveInfoRepository.setDrawerReadDriveInfoListener(mReadDriveInfoListener);
-        mDriveInfoRepository.setWidgetCallback(mILauncherWidgetCallback);
+        mDriveInfoRepository.addDrawerReadDriveInfoListener(mReadDriveInfoListener);
+        mDriveInfoRepository.addWidgetCallback(mILauncherWidgetCallback);
         if (!mDriveInfoRepository.isServiceConnect()) {
             mDriveInfoRepository.bindServiceAsync(viewHolder.getContext().getApplicationContext());
         }
