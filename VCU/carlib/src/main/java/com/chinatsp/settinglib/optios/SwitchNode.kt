@@ -110,12 +110,11 @@ enum class SwitchNode(
 
     /**
      * 座舱--座椅--副驾迎宾
-     * get -> 0x0:disable; 0x1: Enable
+     * get -> 0x0：Disable 0x1：Enable
      * set -> HUM_PASS_SEAT_WELCOME_ENABLE 副驾迎宾软开关  0x0: Inactive; 0x1: Enable; 0x2: Disable; 0x3: Not used
      */
     FORK_SEAT_WELCOME(
-//        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_PASS_SEAT_WELCOME_STS),
-        get = Norm(on = 0x1, off = 0x0, signal = -1),
+        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_MCU_PASS_SEAT_WELCOME_STS),
         set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_HUM_PASS_SEAT_WELCOME_ENABLE),
         default = true
     ),
@@ -665,8 +664,10 @@ enum class SwitchNode(
      * set -> 盲区单侧影像显示开关 0x0: Inactive; 0x1: ON; 0x2: OFF; 0x3: Invalid
      */
     ADAS_BSC(
-        get = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_AVM_BSD_DISP_STS),
-        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_APA_BSD_DISP_SWT),
+//        get = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_AVM_BSD_DISP_STS),
+//        set = Norm(on = 0x1, off = 0x2, signal = CarCabinManager.ID_APA_BSD_DISP_SWT),
+        get = Norm(on = 0x1, off = 0x2, signal = -1),
+        set = Norm(on = 0x1, off = 0x2, signal = -1),
         default = true
     ) {
         override fun isInvalid(value: Int): Boolean {

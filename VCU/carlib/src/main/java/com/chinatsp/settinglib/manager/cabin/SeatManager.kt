@@ -3,6 +3,7 @@ package com.chinatsp.settinglib.manager.cabin
 import android.car.VehicleAreaSeat
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
+import android.car.hardware.mcu.CarMcuManager
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.CommandParcel
@@ -74,6 +75,10 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
                 add(Progress.SEAT_ONSET_TEMPERATURE.get.signal)
             }
             put(Origin.CABIN, cabinSet)
+            val mcuSet = HashSet<Int>().apply {
+                add(CarMcuManager.ID_VENDOR_MCU_POWER_MODE)
+            }
+            put(Origin.MCU, mcuSet)
         }
     }
 
@@ -95,6 +100,30 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
 //                onSwitchChanged(SwitchNode.SEAT_HEAT_ALL, seatHeatFunction, property)
             }
             else -> {}
+        }
+    }
+
+    override fun onMcuPropertyChanged(property: CarPropertyValue<*>) {
+        when (property.propertyId) {
+            CarMcuManager.ID_VENDOR_MCU_POWER_MODE -> {
+                (property.value as? Int)?.let {
+                    onPowerModeChanged(it)
+                }
+            }
+            else -> {}
+        }
+    }
+
+    private fun onPowerModeChanged(value: Int) {
+        Timber.d("onPowerModeChanged value:$value")
+        if (0x05 == value) {
+            val node = SwitchNode.SEAT_HEAT_ALL
+            val default = node.value(node.default)
+            val value = VcuUtils.getInt(key = Constant.SEAT_HEAT_SWITCH, value = default)
+            doSetSwitchOption(node, node.isOn(value))
+            val progress = Progress.SEAT_ONSET_TEMPERATURE
+            val tempValue = VcuUtils.getInt(key = Constant.SEAT_HEAT_TEMP, value = progress.def)
+            doSetVolume(progress, tempValue)
         }
     }
 

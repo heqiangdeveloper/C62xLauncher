@@ -429,7 +429,7 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
         val result = actual != expect
         if (result) {
             val signal = CarCabinManager.ID_AVN_PARK_LIGHT
-//            AVN request park light on or offreserved[0x1,0,0x0,0x3]
+//            AVN request park light on or off reserved[0x1,0,0x0,0x3]
 //            0x0: Inactive  0x1: On  0x2: Off   0x3: Not used
             val value = if (expect) 0x1 else 0x2
             writeProperty(signal, value, Origin.CABIN)
@@ -442,7 +442,7 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
         val result = actual != expect
         if (result) {
             val signal = CarCabinManager.ID_AVN_LOW_BEAM
-//            AVN request low beam on or offreserved[0x1,0,0x0,0x3]
+//            AVN request low beam on or off reserved[0x1,0,0x0,0x3]
 //            0x0: Inactive  0x1: On  0x2: Off   0x3: Not used
             val value = if (expect) 0x1 else 0x2
             writeProperty(signal, value, Origin.CABIN)
@@ -455,7 +455,7 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
         val result = actual != expect
         if (result) {
             val signal = CarCabinManager.ID_AVN_HIGH_BEAM
-//            AVN request high beam on or offreserved[0x1,0,0x0,0x3]
+//            AVN request high beam on or off reserved[0x1,0,0x0,0x3]
 //            0x0: Inactive  0x1: On  0x2: Off   0x3: Not used
             val value = if (expect) 0x1 else 0x2
             writeProperty(signal, value, Origin.CABIN)

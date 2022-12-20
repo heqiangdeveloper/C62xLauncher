@@ -79,13 +79,15 @@ class SideBackManager : BaseManager(), IOptionManager {
 
     private val bscValue: SwitchState by lazy {
         val node = SwitchNode.ADAS_BSC
-//        AtomicBoolean(node.default).apply {
-//            val result = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateSwitchValue(node, this, result)
-//        }
-        return@lazy createAtomicBoolean(node) { result, value ->
-            doUpdateSwitch(node, result, value, this::doSwitchChanged)
+        SwitchState(node.default).apply {
+            val default = if (node.default) "ON" else "OFF"
+            val value = VcuUtils.getConfigParameters(OffLine.BSC, default)
+            val result = node.value("ON" == value)
+            doUpdateSwitch(node, this, result)
         }
+//        return@lazy createAtomicBoolean(node) { result, value ->
+//            doUpdateSwitch(node, result, value, this::doSwitchChanged)
+//        }
     }
 
     private val mebValue: SwitchState by lazy {
@@ -100,7 +102,7 @@ class SideBackManager : BaseManager(), IOptionManager {
         SwitchState(node.default).apply {
             val default = if (node.default) "ON" else "OFF"
             val value = VcuUtils.getConfigParameters(OffLine.GUIDES, default)
-            val result = if ("ON" == value) node.value(true) else node.value(false)
+            val result = node.value("ON" == value)
             doUpdateSwitch(node, this, result)
         }
     }
@@ -111,7 +113,7 @@ class SideBackManager : BaseManager(), IOptionManager {
                 onSwitchChanged(SwitchNode.ADAS_DOW, dowValue, property)
             }
             SwitchNode.ADAS_BSC.get.signal -> {
-                onSwitchChanged(SwitchNode.ADAS_BSC, bscValue, property)
+//                onSwitchChanged(SwitchNode.ADAS_BSC, bscValue, property)
                 val value = if (bscValue.get()) "ON" else "OFF"
                 VcuUtils.setConfigParameters(OffLine.BSC, value)
             }
@@ -197,11 +199,16 @@ class SideBackManager : BaseManager(), IOptionManager {
             SwitchNode.ADAS_BSD -> {
                 doSetSwitchOption(node, status, bsdValue)
             }
-            SwitchNode.ADAS_BSC -> {
-                doSetSwitchOption(node, status, bscValue)
-            }
             SwitchNode.ADAS_MEB -> {
                 doSetSwitchOption(node, status, mebValue)
+            }
+            SwitchNode.ADAS_BSC -> {
+                val value = if (status) "ON" else "OFF"
+                val result = VcuUtils.setConfigParameters(OffLine.BSC, value)
+                if (result) {
+                    doUpdateSwitch(node, bscValue, status, this::doSwitchChanged)
+                }
+                result
             }
             SwitchNode.ADAS_GUIDES -> {
                 val value = if (status) "ON" else "OFF"

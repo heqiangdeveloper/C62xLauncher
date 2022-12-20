@@ -2,6 +2,7 @@ package com.chinatsp.settinglib.manager.cabin
 
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
+import android.car.hardware.mcu.CarMcuManager
 import android.content.ComponentName
 import android.content.Intent
 import com.chinatsp.settinglib.BaseApp
@@ -65,6 +66,10 @@ class WheelManager private constructor() : BaseManager(), ISoundManager, ICmdExp
                 add(CarCabinManager.ID_SWS_KEY_USER_DEFINED)
             }
             put(Origin.CABIN, cabinSet)
+            val mcuSet = HashSet<Int>().apply {
+                add(CarMcuManager.ID_VENDOR_MCU_POWER_MODE)
+            }
+            put(Origin.MCU, mcuSet)
         }
     }
 
@@ -159,6 +164,30 @@ class WheelManager private constructor() : BaseManager(), ISoundManager, ICmdExp
                 doHandleCustomKeyboard(property)
             }
             else -> {}
+        }
+    }
+
+    override fun onMcuPropertyChanged(property: CarPropertyValue<*>) {
+        when (property.propertyId) {
+            CarMcuManager.ID_VENDOR_MCU_POWER_MODE -> {
+                (property.value as? Int)?.let {
+                    onPowerModeChanged(it)
+                }
+            }
+            else -> {}
+        }
+    }
+
+    private fun onPowerModeChanged(value: Int) {
+        Timber.d("onPowerModeChanged value:$value")
+        if (0x05 == value) {
+            val node = SwitchNode.DRIVE_WHEEL_AUTO_HEAT
+            val default = node.value(node.default)
+            val value = VcuUtils.getInt(key = Constant.STEERING_HEAT_SWITCH, value = default)
+            doSetSwitchOption(node, node.isOn(value))
+            val progress = Progress.STEERING_ONSET_TEMPERATURE
+            val tempValue = VcuUtils.getInt(key = Constant.STEERING_HEAT_TEMP, value = progress.def)
+//            doSetVolume(progress, tempValue)
         }
     }
 

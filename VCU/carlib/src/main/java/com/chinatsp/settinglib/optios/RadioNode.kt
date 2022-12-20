@@ -111,7 +111,6 @@ enum class RadioNode(
             values = intArrayOf(0x1, 0x2, 0x3, 0x4),
             signal = CarCabinManager.ID_OBJ_DETECTION_SWT
         ),
-//        inactive = intArrayOf(0x0, 0x4, 0x5, 0x6, 0x7),
         def = 0x1
     ),
 
@@ -134,7 +133,6 @@ enum class RadioNode(
             values = intArrayOf(0x2, 0x1, 0x3),
             signal = CarCabinManager.ID_LDW_RDP_LKS_FUNC_EN
         ),
-//        inactive = intArrayOf(0x0),
         def = 0x1
     ),
 
@@ -158,7 +156,6 @@ enum class RadioNode(
             values = intArrayOf(0x1, 0x2),
             signal = CarCabinManager.ID_LDW_LKS_TJAICA_SWT
         ),
-//        inactive = intArrayOf(0x0, 0x3),
         def = 0x2
     ),
 
@@ -179,7 +176,6 @@ enum class RadioNode(
             values = intArrayOf(0x2, 0x1),
             signal = CarCabinManager.ID_LDW_LKS_SENSITIVITY_SWT
         ),
-//        inactive = intArrayOf(0x2),
         def = 0x1
     ),
 
@@ -227,7 +223,6 @@ enum class RadioNode(
     DRIVE_EPS_MODE(
         get = RNorm(values = intArrayOf(0x1, 0x3), signal = CarCabinManager.ID_STEERING_FEEL_STATE),
         set = RNorm(values = intArrayOf(0x1, 0x3), signal = CarCabinManager.ID_STEERING_FEEL_SET),
-//        inactive = intArrayOf(0x0, 0x4, 0x5, 0x6, 0x7),
         def = 0x1
     ),
 
@@ -240,14 +235,13 @@ enum class RadioNode(
      */
     LIGHT_DELAYED_OUT(
         get = RNorm(
-            values = intArrayOf(0x1,  0x3, 0x4, 0x5, 0x6),
+            values = intArrayOf(0x1, 0x3, 0x4, 0x5, 0x6),
             signal = CarCabinManager.ID_FOLLOW_ME_HOME_STATUE
         ),
         set = RNorm(
-            values = intArrayOf(0x1,  0x3, 0x4, 0x5, 0x6),
+            values = intArrayOf(0x1, 0x3, 0x4, 0x5, 0x6),
             signal = CarCabinManager.ID_FOLLOW_ME_HOME_SET
         ),
-//        inactive = intArrayOf(0x0, 0x7),
         def = 0x1
     ),
 
@@ -265,7 +259,6 @@ enum class RadioNode(
             values = intArrayOf(0x2, 0x3, 0x4),
             signal = CarCabinManager.ID_TURNLIGHT_FOR_LANE_CHANGE_SET
         ),
-//        inactive = intArrayOf(0x0, 0x1),
         def = 0x2
     ),
 
@@ -283,7 +276,6 @@ enum class RadioNode(
             values = intArrayOf(0x1, 0x2, 0x3),
             signal = CarCabinManager.ID_HUM_CERE_SENSE_SW_SET
         ),
-//        inactive = intArrayOf(0x0),
         def = 0x1
     ),
     //-------------------灯光设置--结束-------------------
@@ -382,7 +374,6 @@ enum class RadioNode(
             values = intArrayOf(0x1, 0x2, 0x3, 0x4),
             signal = CarCabinManager.ID_HUM_ATMOS_MOD_TYPE
         ),
-//        inactive = intArrayOf(0x0, 0x5, 0x6, 0x7),
         def = 0x1
     ),
 
@@ -407,7 +398,6 @@ enum class RadioNode(
         get = RNorm(values = intArrayOf(0x1, 0x2, 0x3, 0x4),
             signal = CarCabinManager.ID_TCU_SELECTED_GEAR),
         set = RNorm(values = intArrayOf(0x1, 0x2, 0x3, 0x4), signal = -1),
-//        inactive = intArrayOf(0x1),
         def = 0x1
     ),
 
