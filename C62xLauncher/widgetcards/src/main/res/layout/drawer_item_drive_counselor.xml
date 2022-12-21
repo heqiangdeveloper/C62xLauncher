@@ -8,6 +8,7 @@
         android:layout_width="@dimen/card_icon_size_lv3"
         android:layout_height="@dimen/card_icon_size_lv3"
         android:src="@drawable/card_icon_arrow_right_48"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -109,6 +110,7 @@
             android:layout_height="wrap_content"
             android:text="@string/tbt_info_distance_kilometer"
             android:textSize="22px"
+            android:textColor="#ABD3E1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvDrawerDriveDistance" />
