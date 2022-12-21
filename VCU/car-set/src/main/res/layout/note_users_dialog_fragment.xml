@@ -38,6 +38,7 @@
 
             <com.common.xui.widget.XUIWrapContentScrollView
                 android:layout_width="match_parent"
+                android:scrollbarThumbVertical="@color/scrollbar_vertical_color"
                 android:layout_height="wrap_content">
 
                 <LinearLayout

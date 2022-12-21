@@ -78,7 +78,7 @@ class BrightnessManager : BaseManager(), IProgressManager, IOptionManager {
 
             override fun onBrightnessChanged(value: Int) {
                 val position = (value / 10f).roundToInt()
-                Timber.d("DARK_LIGHT_MODE brightnessCallback onBrightnessChanged value:$value, position:$position")
+                Timber.d("brightnessCallback onBrightnessChanged value:$value, position:$position")
                 doUpdateProgress(carVolume, position, true, instance::doProgressChanged)
             }
         }, AppExecutors.get()?.singleIO())
@@ -192,6 +192,9 @@ class BrightnessManager : BaseManager(), IProgressManager, IOptionManager {
                     if (isLight) 1 else 0,
                     thirdScreenBrightness[value - 1]
                 )
+                if (null == manager) {
+                    Timber.e("doSetVolume type:$progress, position:$position, manager is null")
+                }
                 doUpdateProgress(carVolume, value, true, this::doProgressChanged)
                 true
             }

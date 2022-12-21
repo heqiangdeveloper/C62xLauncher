@@ -31,6 +31,7 @@
 
             <ScrollView
                 android:id="@+id/hint_content_scroll_view"
+                android:scrollbarThumbVertical="@color/scrollbar_vertical_color"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 

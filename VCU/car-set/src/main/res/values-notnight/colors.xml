@@ -22,6 +22,7 @@
 
     <color name="pop_text">#ffffff</color>
     <color name="pop_text_time">#B92B31</color>
+    <color name="scrollbar_vertical_color">#4C868686</color>
     <!--    <color name="picture_tab_color_false">#503331</color>-->
     <!--    <color name="normal_text_color">#FFABD3E1</color>-->
     <!--    <color name="select_text_color">#FFFFFFFF</color>-->
