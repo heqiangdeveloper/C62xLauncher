@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="首页卡片"
+        android:text="@string/card_tip_home_card"
         style="@style/CardLv2TextView"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -70,6 +70,7 @@
         android:id="@+id/btnCardEditorCancel"
         android:text="@string/btn_cancel"
         style="@style/CardLv3TextView"
+        android:textColor="@color/card_blue_default"
         android:layout_width="@dimen/card_edit_btn_width"
         android:layout_height="@dimen/card_edit_btn_height"
         android:textColor="@color/search_search_history_list"

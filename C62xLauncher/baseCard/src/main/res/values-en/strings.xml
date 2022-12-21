@@ -8,4 +8,5 @@
     <string name="card_edit_btn_cancel">Discard modification</string>
     <string name="card_edit_modification_warning">Currently card edit modification not saved, \nDo you want to save and exit?</string>
     <string name="card_can_drag_tip">Click and drag the card to replace or edit the home card</string>
+    <string name="card_tip_home_card">Home cards</string>
 </resources>
