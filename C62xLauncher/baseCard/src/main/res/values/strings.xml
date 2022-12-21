@@ -8,4 +8,5 @@
     <string name="card_edit_btn_cancel">放弃修改</string>
     <string name="card_edit_modification_warning">当前有卡片编辑修改尚未保存\n是否保存修改并退出</string>
     <string name="card_can_drag_tip">长按拖动卡片可以替换或编辑主页卡片</string>
+    <string name="card_tip_home_card">首页卡片</string>
 </resources>
