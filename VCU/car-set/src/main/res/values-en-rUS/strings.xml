@@ -58,7 +58,7 @@
     <string name="cabin_safe_fortify_success_tone">Defense success prompt tone</string>
     <string name="cabin_safe_fortify_failure_tone">Defense failure prompt tone</string>
     <string name="cabin_safe_video_safe_mode">Video safe mode</string>
-    <string name="cabin_safe_video_safe_mode_content">After the video safety mode is enabled, when the \n vehicle speed is more than 15km/h, the local video \n will be automatically closed。</string>
+    <string name="cabin_safe_video_safe_mode_content">When the video safety mode is enabled and the \n vehicle speed is more than 15km/h, some videos \n will be automatically turned off.</string>
 
     <string name="cabin_wheel_electronic_mode">Electronic power steering mode</string>
     <string name="cabin_wheel_press_key">Steering wheel customization button</string>
@@ -72,13 +72,13 @@
     <string name="cabin_wheel_starting_temperature">Starting temperature of automatic heating</string>
 
     <string name="cabin_seat_welcomes_guests">Driver welcome</string>
-    <string name="cabin_seat_welcomes_guests_close">主驾迎宾已关闭</string>
-    <string name="cabin_seat_fork_welcome_close">副驾迎宾已关闭</string>
+    <string name="cabin_seat_welcomes_guests_close">Driver welcome is off</string>
+    <string name="cabin_seat_fork_welcome_close">Passenger seat welcome closed</string>
     <string name="cabin_seat_close">Closed</string>
     <string name="cabin_seat_copilot_guests">Passenger welcome</string>
     <string name="cabin_seat_copilot_guests_position">Passenger welcome position</string>
     <string name="cabin_seat_automatic_heating">Seat self heating</string>
-    <string name="cabin_seat_automatic_heating_close">座椅自动加热已关闭</string>
+    <string name="cabin_seat_automatic_heating_close">Seat self-heating is off</string>
     <string name="cabin_seat_set_up">Please set the passenger\'s common position and welcome position first</string>
     <string name="cabin_seat_passenger_safety">After opening, please pay attention to the safety of the passengers in the rear row when the front passenger seat moves</string>
     <string name="cabin_seat_common_location">Common position</string>
@@ -105,10 +105,10 @@
     <string name="cabin_other_foreign_matter">Foreign metal object detected, please remove</string>
     <string name="cabin_other_temperatire">Wireless charging temperature is too high, please remove the phone</string>
     <string name="cabin_other_determine">OK</string>
-    <string name="cabin_other_wireless_charging_lamp_open">储物盒灯已打开</string>
-    <string name="cabin_other_wireless_charging_lamp_close">储物盒灯已关闭</string>
-    <string name="cabin_other_wireless_charging_open">无线充电已打开</string>
-    <string name="cabin_other_wireless_charging_close">无线充电已关闭</string>
+    <string name="cabin_other_wireless_charging_lamp_open">Storage box lamp is on</string>
+    <string name="cabin_other_wireless_charging_lamp_close">Storage box lamp is off</string>
+    <string name="cabin_other_wireless_charging_open">Wireless charging is on</string>
+    <string name="cabin_other_wireless_charging_close">Wireless charging is off</string>
 
     <string name="note_users_title">User Notice</string>
     <string name="note_users_content">In order to ensure the safety of the wireless charging function, you must read and fully understand the following precautions and only use the function according to the prompts：\n
@@ -138,13 +138,13 @@
         wiper maintenance mode. Turn on the  wiper for maintenance \n
         and the wiper will automatically \n
         run to the maintenance position.</string>
-    <string name="wheel_automatic_heating_content">&#160;携带智能钥匙靠近或离开车\n
-        辆一定距离时，车门将自动\n
-        解锁或闭锁。</string>
+    <string name="wheel_automatic_heating_content">&#160;When carrying the smart key close to or\n
+        away from the vehicle for a certain distance\n
+        , the door will automatically unlock or lock.</string>
 
     <string name="car_trunk_electric_function">Power tailgate electric function</string>
     <string name="car_trunk_intelligence_into">Electric tail door intelligent entry</string>
-    <string name="car_trunk_intelligence_into_explain">车门智能进入开关需打开</string>
+    <string name="car_trunk_intelligence_into_explain">The door smart entry switch needs to turn on</string>
     <string name="car_trunk_height_adjustment">Tailgate height adjustment</string>
     <string name="car_trunk_light_flashing">Light flashing alarm</string>
     <string name="car_trunk_buzzer_alarms">Buzzer alarm switch</string>
@@ -155,14 +155,14 @@
     <string name="car_trunk_buzzer_close">Buzzer alarm is off</string>
     <string name="car_trunk_light_open">Light flashing alarm is on</string>
     <string name="car_trunk_light_close">Light flashing alarm is off</string>
-    <string name="car_trunk_round_trip_type">往返式</string>
-    <string name="car_trunk_stay_mode">停留式</string>
-    <string name="car_trunk_content">&#160;往返式：Carry a legal smart key \n
+    <string name="car_trunk_round_trip_type">Trip type</string>
+    <string name="car_trunk_stay_mode">Stay type</string>
+    <string name="car_trunk_content">&#160;Trip type：Carry a legal smart key \n
         into the trunk sensing area, exit \n
         the area, enter the b area again, \n
         and the electric tailgate will be \n
         opened automatically；\n
-        停留式：Carry a legal smart key \n
+        Stay type：Carry a legal smart key \n
         into the trunk sensing area,\n
         stay in place for more than 6s, \n
         and the electric tailgate \n
@@ -252,7 +252,10 @@
     <string name="lighting_atmosphere_lamp">&#160;Ambient  \n light</string>
     <string name="lighting_screen">&#160;Screen \n brightness</string>
     <string name="lighting_go_home_title">Follow me home</string>
-    <string name="lighting_go_home_content">在下电后，近光灯会点亮一段\n时间再熄灭，为你照亮前方回\n家的路。</string>
+    <string name="lighting_go_home_content">&#160;After powering off, the low \n
+        beam lamp will light up for some  \n
+        time and then go out,Illuminate \n
+        the way home for you.</string>
     <string name="lighting_turn_signal_title">Number of turn signal flashing when lane change</string>
     <string name="lighting_turn_external_lighting">External lighting ritual sense</string>
     <string name="lighting_physical_switch_title">Turn on or off backlight brightness</string>
@@ -301,7 +304,7 @@
         \n 2.At a safe speed
         \n 3.Please read the vehicle manual for other conditions</string>
     <string name="vcu_eps_action_switching">Steering mode switching</string>
-    <string name="vcu_eps_action_switching_conversion">切换中...</string>
+    <string name="vcu_eps_action_switching_conversion">Switching...</string>
 
     <string name="iacc_details">&#160;The intelligent cruise assist system (IACC) provides the driver with longitudinal and
         transverse assistance of the vehicle in the full speed range (0~150km/h).The longitudinal assistance is realized by the
@@ -376,21 +379,37 @@
         of the vehicle through left and right rear three-way cameras when the vehicle is parked. Mobile
         objects in this area are detected and tracked, and different alarm modes are triggered according
         to the response of users, so as to avoid possible security accidents</string>
-    <string name="bsd_details">&#160;官区监测BSD在自车速度30km/h以上时，通过摄像头对侧后方盲区进行监测，当有行驶车辆时，对应侧外后视镜内的盲区
-监测指示灯将长亮，如此时驾驶员打开对应侧的转向灯，指示灯将闪烁，并且仪表发出警报提示驾驶员。
-需注意，该系统仅用于补充后视镜的不足，不属于驾驶安全系统，不能保证适用所有驾驶情况，且当摄像头被雨雪、泥浆
-等遮盖，或处于夜晚、雨雪、雾、阴影环境时，会出现漏报或误报。</string>
-    <string name="bsc_details">&#160;当驾驶员进行左（或右）变道或超车时，盲区摄像头可为驾驶员提供车辆左后方（或右后方）的盲区影像，辅助驾驶员进
-行安全驾驶。
-需注意，该系统仅用于补充后视镜的不足，不属于驾驶安全系统，不能保证适用所有驾驶情况，且当摄像头被雨雪、泥浆
-等遮盖，或处于夜晚、雨雪、雾、阴影环境时，该功能会不可用或性能下降。</string>
-    <string name="meb_details">&#160;低速紧急制动MEB通过后泊车雷达监测后方障碍物，当自车以0-9km/h速度倒车时，如雷达监测即将发生碰撞，会自动
-控制车辆紧急刹停。
-需注意，该系统是辅助功能，当雷达探测到栏杆、树木、斜坡，或外界存在与雷达工作频段接近的噪音时，系统可能会误
-触发。当雷达表面脏污时，系统可能会误触发或不触发。</string>
+    <string name="bsd_details">&#160;When the blind spot detection BSD monitors the blind area behind the side
+        through the camera when the self vehicle speed is more than 30km/h. When
+        there is a driving vehicle, the blind area monitoring indicator in
+        the corresponding side exterior rearview mirror will be on for a
+        long time. In this case, the driver turns on the turn signal on
+        the corresponding side, the indicator will flash, and the instrument
+        will give an alarm to the driver. It should be noted that this system
+        is only used to supplement the deficiencies of the rearview mirror.
+        It is not a driving safety system and cannot guarantee that it is
+        applicable to all driving situations. In addition, when the camera is
+        covered by rain, snow, mud, etc., or in the night, rain, snow, fog,
+        shadow environment, there will be missing or false alarms.
+        </string>
+    <string name="bsc_details">&#160;When the driver makes a left (or right) lane change or overtaking,
+        the blind spot camera can provide the driver with a blind spot image of the rear left(or  rear right)
+        of the vehicle to assist the driver in driving safely. It should be noted that this system is only
+        used to supplement the deficiencies of the rearview mirror, and it is not a driving safety system,
+        which cannot guarantee that it is applicable to all driving situations. In addition, when the
+        camera is covered by rain, snow, mud, etc., or in the night, rain, snow, fog, shadow environment,
+        this function will not be available or its performance will reduce.
+    </string>
+    <string name="meb_details">&#160;Low speed emergency braking MEB monitors the obstacles behind through
+        the rear parking radar. When the self owned vehicle is backing up at the speed of 0-9km/h, if a
+        collision is about to occur as monitored by the radar, it will automatically control the emergency
+        braking of the vehicle. It should be noted that this system is an auxiliary function. When the radar
+        detects railings, trees, slopes, or noises close to the radar operating frequency band, the system may
+        be triggered by mistake. When the radar surface is dirty, the system may be triggered by mistake or not.
+    </string>
 
-    <string name="hint_low_voltage">蓄电池电量低，将关闭部分舒适性功能</string>
-    <string name="hint_low_voltage_close_screen">蓄电池电量低，中控屏即将关闭</string>
+    <string name="hint_low_voltage">The battery is low, and some comfort functions will be turned off</string>
+    <string name="hint_low_voltage_close_screen">The battery is low, and the central control screen is about to close</string>
     <string name="global_txt_close">Your car will automatically shut down in 5 minutes</string>
     <string name="global_txt_engine">Please start the engine to avoid battery loss</string>
     <string name="global_txt_power_supply">Battery charge is too low, some comfort and entertainment functions will be turned off</string>
@@ -446,13 +465,16 @@
     <string name="low">low</string>
     <string name="left">left</string>
     <string name="right">right</string>
-    <string name="dow_error">开门预警DOW已置灰</string>
-    <string name="hma_error">智能远光灯辅助HMA信号有误</string>
-    <string name="lane_departure_assist">车道偏离辅助</string>
-    <string name="lane_departure_warning">车道偏离预警</string>
-    <string name="lane_keeping_assistance">车道保持辅助</string>
+    <string name="dow_error">The door opening alarm DOW is disable</string>
+    <string name="hma_error">Intelligent high beam auxiliary HMA signal error</string>
+    <string name="lane_departure_assist">Lane departure \n assistance</string>
+    <string name="lane_departure_warning">Lane departure \n warning</string>
+    <string name="lane_keeping_assistance">Lane keeping \n assistance</string>
     <string name="zero">0°</string>
-    <string name="recognize">Recognize</string>
+    <string name="recognize">Recognition</string>
     <string name="disappear">Disappear</string>
-    <string name="recognize_disappear">Recognize disappear</string>
+    <string name="recognize_disappear">Recognition disappears</string>
+    <string name="san_times">3 times</string>
+    <string name="wu_times">5 times</string>
+    <string name="qi_times">7 times</string>
 </resources>
