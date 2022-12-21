@@ -126,12 +126,13 @@
     <string name="car_window_wiper">Wiper maintenance</string>
     <string name="car_window_lock_content">&#160;After the function is opened, the \n Windows of the
         four doors can be \n closed/opened remotely by the key</string>
-    <string name="car_window_rainy_content">&#160;雨天自动关窗：OFF档，雨量传感\n
-        器检测下雨且车窗/天窗打开时，自\n
-        动关闭车窗/天窗；在一个上电周期\n
-        内，若人为控制打开车窗/天窗，不\n
-        再自动关闭车窗/天窗。功能保留24\n
-        小时。</string>
+    <string name="car_window_rainy_content">&#160;In OFF state, when the rain sensor detects rain \n
+        and the window/sunroof is open, the \n
+        window/sunroof is automatically closed; \n
+        If the window or sunroof is opened manually \n
+        within a power-on period, the window or \n
+        sunroof is not closed automatically.\n
+        Function is retained for 24 hours.</string>
     <string name="car_window_lock_car_content">&#160;When the function is opened and the \n door is locked, the
         four door windows, \n sunroof and sun blind automatically close</string>
     <string name="car_window_wiper_content">&#160;When maintaining windshield wipers, be sure to turn on the \n

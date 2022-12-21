@@ -18,7 +18,6 @@ import com.common.xui.utils.ViewUtils
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
-import okhttp3.internal.wait
 
 /**
  * @author : luohong

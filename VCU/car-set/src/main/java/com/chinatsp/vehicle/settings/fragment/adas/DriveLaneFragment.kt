@@ -67,7 +67,7 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
                     level1.cnode?.takeIf { child -> child.valid && child.uid == uid }
                         .let { level2 ->
                             level2?.cnode?.let { lv3Node ->
-                                map[lv3Node.uid]?.run { onViewClick(this, lv3Node.uid, true) }
+                                map[lv3Node.uid]?.run { onViewClick(this, lv3Node.uid) }
                             }
                         }
                 }
@@ -75,7 +75,7 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
         }
     }
 
-    private fun onViewClick(view: View, clickUid: Int, frank: Boolean) {
+    private fun onViewClick(view: View, clickUid: Int) {
         onViewClick(view)
         obtainRouter()?.resetLevelRouter(pid, uid, clickUid)
     }
@@ -236,7 +236,7 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
                 //binding.videoImage.visibility = View.GONE
                 val uri =
                     "android.resource://" + activity?.packageName + "/" + R.raw.video_auxiliary_system
-                binding.video.setVideoURI(Uri.parse(uri));
+                binding.video.setVideoURI(Uri.parse(uri))
                 binding.video.start()
             } else {
                 dynamicEffect()
@@ -267,7 +267,7 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
     private fun startVideo() {
         val uri =
             "android.resource://" + activity?.packageName + "/" + R.raw.video_auxiliary_system
-        binding.video.setVideoURI(Uri.parse(uri));
+        binding.video.setVideoURI(Uri.parse(uri))
         binding.video.start()
     }
 }

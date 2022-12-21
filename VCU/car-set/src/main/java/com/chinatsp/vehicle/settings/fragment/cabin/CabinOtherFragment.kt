@@ -16,8 +16,6 @@ import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.app.RechargeToast.showToast
 import com.chinatsp.vehicle.settings.app.Toast
 import com.chinatsp.vehicle.settings.databinding.CabinOtherFragmentBinding
-import com.chinatsp.vehicle.settings.fragment.cabin.dialog.AbnormalChargeDialogFragment
-import com.chinatsp.vehicle.settings.fragment.cabin.dialog.ForeignMatterDialogFragment
 import com.chinatsp.vehicle.settings.fragment.cabin.dialog.NoteUsersDialogFragment
 import com.chinatsp.vehicle.settings.fragment.cabin.dialog.TrailerRemindDialogFragment
 import com.chinatsp.vehicle.settings.vm.cabin.OtherViewModel
@@ -186,36 +184,40 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
 
     private fun showPopWindow(id: Int, view: View) {
         val popWindow: PopWindow
-        if (view.id == binding.cabinOtherTrailerRemindDetails.id) {
-            popWindow = PopWindow(activity,
-                R.layout.pop_window,
-                activity?.let {
-                    AppCompatResources.getDrawable(
-                        it,
-                        R.drawable.popup_bg_qipao172_7
-                    )
-                })
-            popWindow.showDownLift(view, 30, -80)
-        } else if (view.id == binding.cabinOtherBatteryOptimizationDetails.id) {
-            popWindow = PopWindow(activity,
-                R.layout.pop_window,
-                activity?.let {
-                    AppCompatResources.getDrawable(
-                        it,
-                        R.drawable.popup_bg_qipao172_8
-                    )
-                })
-            popWindow.showDownLift(view, 30, -80)
-        } else {
-            popWindow = PopWindow(activity,
-                R.layout.pop_window,
-                activity?.let {
-                    AppCompatResources.getDrawable(
-                        it,
-                        R.drawable.popup_bg_qipao172_1
-                    )
-                })
-            popWindow.showDown(view)
+        when (view.id) {
+            binding.cabinOtherTrailerRemindDetails.id -> {
+                popWindow = PopWindow(activity,
+                    R.layout.pop_window,
+                    activity?.let {
+                        AppCompatResources.getDrawable(
+                            it,
+                            R.drawable.popup_bg_qipao172_7
+                        )
+                    })
+                popWindow.showDownLift(view, 30, -80)
+            }
+            binding.cabinOtherBatteryOptimizationDetails.id -> {
+                popWindow = PopWindow(activity,
+                    R.layout.pop_window,
+                    activity?.let {
+                        AppCompatResources.getDrawable(
+                            it,
+                            R.drawable.popup_bg_qipao172_8
+                        )
+                    })
+                popWindow.showDownLift(view, 30, -80)
+            }
+            else -> {
+                popWindow = PopWindow(activity,
+                    R.layout.pop_window,
+                    activity?.let {
+                        AppCompatResources.getDrawable(
+                            it,
+                            R.drawable.popup_bg_qipao172_1
+                        )
+                    })
+                popWindow.showDown(view)
+            }
         }
         val text: TextView = popWindow.findViewById(R.id.content) as TextView
         text.text = resources.getString(id)

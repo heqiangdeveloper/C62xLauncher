@@ -15,7 +15,6 @@ import com.chinatsp.vehicle.settings.ISwitchAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.app.Toast
 import com.chinatsp.vehicle.settings.databinding.CabinSeatFragmentBinding
-import com.chinatsp.vehicle.settings.fragment.cabin.dialog.CopilotGuestsDialogFragment
 import com.chinatsp.vehicle.settings.fragment.cabin.dialog.SeatHeatingDialogFragment
 import com.chinatsp.vehicle.settings.vm.cabin.SeatViewModel
 import com.common.library.frame.base.BaseFragment

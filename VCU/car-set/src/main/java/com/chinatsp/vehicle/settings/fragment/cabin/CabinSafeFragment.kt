@@ -62,7 +62,7 @@ class CabinSafeFragment : BaseFragment<SafeViewModel, CabinSafeFragmentBinding>(
                     level1.cnode?.takeIf { child -> child.valid && child.uid == uid }
                         .let { level2 ->
                             level2?.cnode?.let { lv3Node ->
-                                map[lv3Node.uid]?.run { onViewClick(this, lv3Node.uid, true) }
+                                map[lv3Node.uid]?.run { onViewClick(this, lv3Node.uid) }
                             }
                         }
                 }
@@ -70,7 +70,7 @@ class CabinSafeFragment : BaseFragment<SafeViewModel, CabinSafeFragmentBinding>(
         }
     }
 
-    private fun onViewClick(view: View, clickUid: Int, frank: Boolean) {
+    private fun onViewClick(view: View, clickUid: Int) {
         onViewClick(view)
         obtainRouter()?.resetLevelRouter(pid, uid, clickUid)
     }

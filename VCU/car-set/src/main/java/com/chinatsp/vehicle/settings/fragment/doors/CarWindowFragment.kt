@@ -19,6 +19,7 @@ import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.popupwindow.PopWindow
 import dagger.hilt.android.AndroidEntryPoint
+
 @AndroidEntryPoint
 class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding>(), ISwitchAction {
 
@@ -241,29 +242,42 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
         if (view.id == binding.carWiperDetails.id) {
             popWindow = PopWindow(activity, R.layout.pop_window,
                 activity?.let {
-                    AppCompatResources.getDrawable(it,
-                        R.drawable.popup_bg_qipao451_424)
+                    AppCompatResources.getDrawable(
+                        it,
+                        R.drawable.popup_bg_qipao451_424
+                    )
                 })
             popWindow.showDownLift(view, 30, -170)
         } else if (view.id == binding.remoteRoseWindowDetails.id) {
             popWindow = PopWindow(activity, R.layout.pop_window,
                 activity?.let {
-                    AppCompatResources.getDrawable(it,
-                        R.drawable.popup_bg_qipao172_2)
+                    AppCompatResources.getDrawable(
+                        it,
+                        R.drawable.popup_bg_qipao172_2
+                    )
                 })
             popWindow.showDownLift(view, 30, -80)
         } else if (view.id == binding.carWindowRainyDetails.id) {
             popWindow = PopWindow(activity, R.layout.pop_window,
                 activity?.let {
-                    AppCompatResources.getDrawable(it,
-                        R.drawable.popup_bg_qipao451_424)
+                    AppCompatResources.getDrawable(
+                        it,
+                        R.drawable.popup_bg_qipao451_424
+                    )
                 })
-            popWindow.showDownLift(view, 30, -200)
+            if (VcuUtils.getLanguage() == 1) {
+                popWindow.showDownLift(view, 30, -200)
+            } else {
+                popWindow.showDownLift(view, 30, -180)
+            }
+
         } else {
             popWindow = PopWindow(activity, R.layout.pop_window,
                 activity?.let {
-                    AppCompatResources.getDrawable(it,
-                        R.drawable.popup_bg_qipao172_3)
+                    AppCompatResources.getDrawable(
+                        it,
+                        R.drawable.popup_bg_qipao172_3
+                    )
                 })
             popWindow.showDownLift(view, 30, -80)
         }
