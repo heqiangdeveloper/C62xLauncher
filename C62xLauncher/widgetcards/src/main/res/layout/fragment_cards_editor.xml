@@ -72,6 +72,7 @@
         style="@style/CardLv3TextView"
         android:layout_width="@dimen/card_edit_btn_width"
         android:layout_height="@dimen/card_edit_btn_height"
+        android:textColor="@color/search_search_history_list"
         android:background="@drawable/card_common_button_secondary_selector"
         app:layout_constraintStart_toEndOf="@id/btnCardEditorOk"
         app:layout_constraintBottom_toBottomOf="@id/btnCardEditorOk"
