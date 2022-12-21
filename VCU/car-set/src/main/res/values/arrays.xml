@@ -76,9 +76,9 @@
         <item>120s</item>
     </string-array>
     <string-array name="lighting_turn_signal_options">
-        <item>3次</item>
-        <item>5次</item>
-        <item>7次</item>
+        <item>@string/san_times</item>
+        <item>@string/wu_times</item>
+        <item>@string/qi_times</item>
     </string-array>
     <string-array name="lighting_external_lighting_options">
         <item>@string/mixed</item>

@@ -12,7 +12,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -243,11 +242,9 @@ public class TabControlView extends RadioGroup implements HasTypeface {
             rb.setLayoutParams(params);
             if (mItemPadding != -1) {
                 rb.setPadding(mItemPadding, mItemPadding, mItemPadding, mItemPadding);
-                Log.i("ttttttt", item.getKey());
             }
             if (mItemPaddingHorizontal != -1 && mItemPaddingVertical != -1) {
                 rb.setPadding(mItemPaddingHorizontal, mItemPaddingVertical, mItemPaddingHorizontal, mItemPaddingVertical);
-                Log.i("ttttttt", "第二  " + item.getKey());
             }
             rb.setMinWidth(mStrokeWidth * 10);
             rb.setGravity(Gravity.CENTER);

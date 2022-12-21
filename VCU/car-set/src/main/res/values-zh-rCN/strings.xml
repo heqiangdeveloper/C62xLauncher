@@ -419,4 +419,7 @@ IACC会优先通过识别车道两侧清晰的车道线进行横向辅助控制�
     <string name="recognize">识别</string>
     <string name="disappear">消失</string>
     <string name="recognize_disappear">识别消失</string>
+    <string name="san_times">3次</string>
+    <string name="wu_times">5次</string>
+    <string name="qi_times">7次</string>
 </resources>
