@@ -113,7 +113,7 @@ public class VolcanoRepository {
 
     private long lastLoadTime;
     private long lastTryTime;
-    private final long MIN_INTERVAL = 1000;
+    private final long MIN_INTERVAL = 2000;
 
     private static int loadCount = 0;
 
