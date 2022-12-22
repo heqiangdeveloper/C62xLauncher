@@ -129,7 +129,8 @@
             android:layout_height="@dimen/x50"
             android:layout_marginBottom="@dimen/x30"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lighting_rear_reminder">
+            app:layout_constraintTop_toBottomOf="@id/lighting_rear_reminder"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/lighting_related_topics_title"
