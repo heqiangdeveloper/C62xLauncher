@@ -2,25 +2,6 @@
     <string name="app_name">Vehicle setting</string>
     <string name="switch_turn_on">Opened</string>
     <string name="switch_turn_off">Closed</string>
-
-    <string name="author_">作者：</string>
-
-    <string name="result_failure">获取失败</string>
-
-    <string name="label_search_history">历史查询</string>
-    <string name="label_search_result">查询结果</string>
-
-    <string name="tips_search_content">输入的内容不能为空</string>
-
-    <string name="btn_close">Close</string>
-
-    <string name="oil_92h_">92号：</string>
-    <string name="oil_95h_">95号：</string>
-    <string name="oil_98h_">98号：</string>
-    <string name="oil_0h_">0号：</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <string name="table0">COMMON</string>
     <string name="table1">DOOR AND \n WINDOW</string>
     <string name="table2">LIGHT \n SETTING</string>
@@ -170,10 +151,10 @@
         will be opened automatically.</string>
     <string name="car_trunk_height_content">&#160;Suggestions on electric tailgate hight adjustment：\n
        for users with a height of less than 1.6 meters, \n
-        it is recommended to open 80% of the height; \n
+        it is recommended to open 80 degrees of the height; \n
        For users 1.6-1.7 meters tall, the recommended \n
-        opening height is 90%; For users with a height \n
-        of more than 1.7 meters, 100% height is recommended.\n
+        opening height is 90 degrees; For users with a height \n
+        of more than 1.7 meters, 100 degrees height is recommended.\n
        Relevant height adjustment suggestions are for reference only</string>
     <string name="car_mirror_automatic_folding">Rear view mirror folds automatically</string>
     <string name="car_mirror_automatic_folding_close">Rearview mirror autofold is off</string>

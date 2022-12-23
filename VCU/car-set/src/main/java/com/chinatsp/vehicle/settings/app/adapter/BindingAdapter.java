@@ -26,7 +26,7 @@ public class BindingAdapter<T> extends BaseRecyclerAdapter<T, BindingHolder<View
     @Override
     public void bindViewDatas(BindingHolder<ViewDataBinding> holder, T item, int position) {
         if (holder.mBinding != null) {
-            holder.mBinding.setVariable(BR.data, item);
+//            holder.mBinding.setVariable(BR.data, item);
             holder.mBinding.executePendingBindings();
         }
     }

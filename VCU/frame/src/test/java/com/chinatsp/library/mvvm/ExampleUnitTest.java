@@ -1,4 +1,4 @@
-package com.common.library.mvvm;
+package com.chinatsp.library.mvvm;
 
 import static org.junit.Assert.assertEquals;
 

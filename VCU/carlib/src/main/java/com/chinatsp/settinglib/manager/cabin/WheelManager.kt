@@ -16,6 +16,7 @@ import com.chinatsp.settinglib.constants.OffLine
 import com.chinatsp.settinglib.listener.INotifyListener
 import com.chinatsp.settinglib.listener.sound.ISoundManager
 import com.chinatsp.settinglib.manager.*
+import com.chinatsp.settinglib.manager.access.SternDoorManager
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -187,13 +188,17 @@ class WheelManager private constructor() : BaseManager(), ISoundManager, ICmdExp
             doSetSwitchOption(node, node.isOn(value))
             val progress = Progress.STEERING_ONSET_TEMPERATURE
             val tempValue = VcuUtils.getInt(key = Constant.STEERING_HEAT_TEMP, value = progress.def)
-//            doSetVolume(progress, tempValue)
+            doSetVolume(progress, tempValue)
         }
     }
 
     private fun doHandleCustomKeyboard(property: CarPropertyValue<*>) {
         val value = property.value
         if (value !is Int) {
+            return
+        }
+        if (VcuUtils.isCareGears(0x2)) {
+            Timber.d("receive keyboard value:$value, but Vehicle is reverse!!!")
             return
         }
         if (0x2 == value) {

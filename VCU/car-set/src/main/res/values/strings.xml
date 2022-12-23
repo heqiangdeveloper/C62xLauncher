@@ -2,25 +2,6 @@
     <string name="app_name">车辆设置</string>
     <string name="switch_turn_on">已开启</string>
     <string name="switch_turn_off">已关闭</string>
-
-    <string name="author_">作者：</string>
-
-    <string name="result_failure">获取失败</string>
-
-    <string name="label_search_history">历史查询</string>
-    <string name="label_search_result">查询结果</string>
-
-    <string name="tips_search_content">输入的内容不能为空</string>
-
-    <string name="btn_close">关闭</string>
-
-    <string name="oil_92h_">92号：</string>
-    <string name="oil_95h_">95号：</string>
-    <string name="oil_98h_">98号：</string>
-    <string name="oil_0h_">0号：</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <string name="table0">常用</string>
     <string name="table1">车门与车窗</string>
     <string name="table2">灯光设置</string>
@@ -168,9 +149,9 @@
         地站⽴6s以上，电动尾⻔⾃\n
         动开启。</string>
     <string name="car_trunk_height_content">&#160;电动尾⻔⾼度调节建议：\n
-       身⾼1.6⽶以下的⽤户使⽤，建议开启⾼度为80%；\n
-       身⾼1.6-1.7⽶的⽤户使⽤，建议开启⾼度为90%；\n
-       身⾼1.7⽶以上的⽤户使⽤，建议开启⾼度为100%。\n
+       身⾼1.6⽶以下的⽤户使⽤，建议开启⾼度为80度；\n
+       身⾼1.6-1.7⽶的⽤户使⽤，建议开启⾼度为90度；\n
+       身⾼1.7⽶以上的⽤户使⽤，建议开启⾼度为100度。\n
        相关⾼度调节建议，仅供参考</string>
     <string name="car_mirror_automatic_folding">外后视镜自动折叠</string>
     <string name="car_mirror_automatic_folding_close">后视镜自动折叠已关闭</string>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="drive_auto_lock_door_option_titles">
-        <item>@string/btn_close</item>
+        <item>@string/close</item>
         <item>5km/h</item>
         <item>10km/h</item>
         <item>15km/h</item>
@@ -48,7 +48,7 @@
     </string-array>
 
     <string-array name="electric_stern_door_option_titles">
-        <item>@string/btn_close</item>
+        <item>@string/close</item>
         <item>@string/car_trunk_round_trip_type</item>
         <item>@string/car_trunk_stay_mode</item>
     </string-array>
@@ -69,7 +69,7 @@
         <item>3</item>
     </string-array>
     <string-array name="lighting_go_home_options">
-        <item>@string/btn_close</item>
+        <item>@string/close</item>
         <item>20s</item>
         <item>30s</item>
         <item>60s</item>

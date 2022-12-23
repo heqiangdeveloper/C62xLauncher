@@ -13,6 +13,8 @@ import com.chinatsp.settinglib.constants.OffLine
 import com.chinatsp.settinglib.manager.BaseManager
 import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.Hint
+import com.chinatsp.settinglib.manager.access.SternDoorManager
+import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.annotation.Level
 import timber.log.Timber
@@ -238,14 +240,15 @@ object VcuUtils {
         intent.putExtras(bundle)
         BaseApp.instance.startService(intent)
     }
+
     fun getLanguage(): Int {
-        val type: Int
         val lang = Locale.getDefault().language
-        type = if ("en" == lang) {
-            0 //英文
-        } else {
-            1 //中文
-        }
-        return type
+        //0: 英文 1 :中文
+        return if ("en" == lang) 0 else 1
+    }
+
+    fun isCareGears(expect: Int): Boolean {
+        val radio = SternDoorManager.instance.doGetRadioOption(RadioNode.GEARS)
+        return expect == radio?.get()
     }
 }

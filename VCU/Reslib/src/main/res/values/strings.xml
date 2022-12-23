@@ -1,29 +1,29 @@
 <resources>
-    <string name="app_name">VCU-KOTLIN</string>
-    <string name="author_">作者：</string>
+<!--    <string name="app_name">VCU-KOTLIN</string>-->
+<!--    <string name="author_">作者：</string>-->
 
-    <string name="result_failure">获取失败</string>
+<!--    <string name="result_failure">获取失败</string>-->
 
-    <string name="label_search_history">历史查询</string>
-    <string name="label_search_result">查询结果</string>
+<!--    <string name="label_search_history">历史查询</string>-->
+<!--    <string name="label_search_result">查询结果</string>-->
 
-    <string name="tips_search_content">输入的内容不能为空</string>
+<!--    <string name="tips_search_content">输入的内容不能为空</string>-->
 
-    <string name="btn_close">关闭</string>
+<!--    <string name="btn_close">关闭</string>-->
 
-    <string name="oil_92h_">92号：</string>
-    <string name="oil_95h_">95号：</string>
-    <string name="oil_98h_">98号：</string>
-    <string name="oil_0h_">0号：</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+<!--    <string name="oil_92h_">92号：</string>-->
+<!--    <string name="oil_95h_">95号：</string>-->
+<!--    <string name="oil_98h_">98号：</string>-->
+<!--    <string name="oil_0h_">0号：</string>-->
+<!--    &lt;!&ndash; TODO: Remove or change this placeholder text &ndash;&gt;-->
+<!--    <string name="hello_blank_fragment">Hello blank fragment</string>-->
 
-    <string name="table0">常用</string>
-    <string name="table1">车门与车窗</string>
-    <string name="table2">灯光</string>
-    <string name="table3">车辆音效</string>
-    <string name="table4">驾驶辅助</string>
-    <string name="table5">座舱</string>
-    <string name="table6">BEIJING OS</string>
-    <string name="back_navigation">返回</string>
+<!--    <string name="table0">常用</string>-->
+<!--    <string name="table1">车门与车窗</string>-->
+<!--    <string name="table2">灯光</string>-->
+<!--    <string name="table3">车辆音效</string>-->
+<!--    <string name="table4">驾驶辅助</string>-->
+<!--    <string name="table5">座舱</string>-->
+<!--    <string name="table6">BEIJING OS</string>-->
+<!--    <string name="back_navigation">返回</string>-->
 </resources>
