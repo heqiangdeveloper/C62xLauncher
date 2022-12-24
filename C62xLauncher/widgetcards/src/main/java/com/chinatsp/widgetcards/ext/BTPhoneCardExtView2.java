@@ -118,9 +118,19 @@ public class BTPhoneCardExtView2 extends BTPhoneCardView {
                 // 用户跳转蓝牙电话的条件
                 if (mPointCounts == 1) {
                     float eventX = event.getX();
-                    float delta = Math.abs(getWidth() - eventX);
-                    EasyLog.d("BTPhoneCardExtView2", "delta: " + delta);
-                    if (delta < TOUCH_AREA_TO_OPEN_BT_PHONE) {
+                    float deltaLeft = Math.abs(eventX - 0);
+                    float deltaRight = Math.abs(getWidth() - eventX);
+                    float deltaTop = Math.abs(event.getY() - 0);
+                    EasyLog.d("BTPhoneCardExtView2", "deltaLeft=" + deltaLeft + ", deltaRight=" + deltaRight + ", deltaTop=" + deltaTop);
+                    // 左侧100px内可以点击
+                    final boolean canLeft = deltaLeft <= TOUCH_AREA_TO_OPEN_BT_PHONE;
+                    // 右侧100px内可以点击
+                    final boolean canRight = deltaRight <= TOUCH_AREA_TO_OPEN_BT_PHONE;
+                    // 左上角300x100的区域可以点击
+                    final boolean canLeftTop = deltaTop <= TOUCH_AREA_TO_OPEN_BT_PHONE && deltaRight <= 300;
+                    // 右上角300x100的区域可以点击
+                    final boolean canRightTop = deltaTop <= TOUCH_AREA_TO_OPEN_BT_PHONE && deltaLeft <= 300;
+                    if (canLeft || canRight || canLeftTop || canRightTop) {
                         RecentAppHelper.launchApp(getContext(), AppLists.btPhone);
                         resetTouchEvent();
                         return true;
