@@ -46,7 +46,8 @@ class AmbientLightingFragment :
         get() = AmbientLightingManager.instance
 
     private val handler: Handler by lazy {
-        Handler(Looper.getMainLooper()
+        Handler(
+            Looper.getMainLooper()
         ) {
             when (it.what) {
                 LIGHT_CHANGED -> {
@@ -54,10 +55,18 @@ class AmbientLightingFragment :
                     binding.ambientLightingBrightness.setValueNoEvent(value)
                 }
                 COLOR_CHANGED -> {
-                    val value = viewModel.ambientColor.value!!.pos
+                    var value = viewModel.ambientColor.value!!.pos
                     binding.picker.setIndicatorIndex(value)
+                    if (value <= 0) {
+                        value = 0
+                    } else if (value >= 64) {
+                        value = 63
+                    } else {
+                        value -= 1
+                    }
                     val color = colorList[value]
-                    val colorId = Color.rgb(color.red().toInt(), color.green().toInt(), color.blue().toInt())
+                    val colorId =
+                        Color.rgb(color.red().toInt(), color.green().toInt(), color.blue().toInt())
                     binding.lightingView.setBackgroundColor(colorId)
                 }
                 else -> {}
@@ -437,7 +446,11 @@ class AmbientLightingFragment :
         viewModel.onAmbientColorChanged(index)
         picker?.setIndicatorColorIndex(index)
         val colorIndexValue = colorList[index]
-        val colorId = Color.rgb(colorIndexValue.red().toInt(), colorIndexValue.green().toInt(), colorIndexValue.blue().toInt())
+        val colorId = Color.rgb(
+            colorIndexValue.red().toInt(),
+            colorIndexValue.green().toInt(),
+            colorIndexValue.blue().toInt()
+        )
         binding.lightingView.setBackgroundColor(colorId)
     }
 
