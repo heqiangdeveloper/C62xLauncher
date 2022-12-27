@@ -211,15 +211,6 @@ public class IqutingBindService {
                         mAreaContentResponseBeanRank = areaContentResponseBean;
                     }
                     iQueryMusicLists.onSuccess(areaContentResponseBean);
-                    List<BaseSongItemBean> songLists = areaContentResponseBean.getSonglist();
-                    if(songLists != null){
-                        for(BaseSongItemBean bean : songLists){
-                            Log.d(TAG_CONTENT,"" + bean.getSong_name() +
-                                    "," + bean.getSinger_name() + "," + bean.getVip() + ",Song_id = " + bean.getSong_id());
-                        }
-                    }else {
-                        Log.d(TAG_CONTENT,"getAreaContentData songLists is null");
-                    }
                 }
 
                 @Override
