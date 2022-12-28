@@ -35,7 +35,6 @@ interface IRadioAction : IAction {
     fun onPostSelected(tabView: TabControlView, value: Int) {}
 
     fun initRadioOption(node: RadioNode, liveData: LiveData<RadioState>) {
-//        val value = liveData.value?.get() ?: node.def
         liveData.value?.let {
             doUpdateRadio(node, it, isInit = true)
         }
@@ -58,10 +57,10 @@ interface IRadioAction : IAction {
         tabView: TabControlView,
     ) {
         val result = isCanToInt(value) && getRadioManager().doSetRadioOption(node, value.toInt())
-        Timber.tag("IRadioAction").d("doUpdateRadio value:$value, result:$result, node:$node")
-        tabView.takeIf { !result }?.let {
-            doUpdateRadio(it, node.obtainSelectValue(liveData.value!!.data))
+        if (!result) {
+            doUpdateRadio(tabView, node.obtainSelectValue(liveData.value!!.data))
         }
+        Timber.tag("IRadioAction").d("doUpdateRadio value:$value, result:$result, node:$node")
     }
 
     fun doUpdateRadio(
@@ -75,11 +74,14 @@ interface IRadioAction : IAction {
             bindRadioData(node, tabView, isInit)
             val result = node.obtainSelectValue(value.get())
             doUpdateRadio(it, result, timely)
-            onPostSelected(node, result)
         }
     }
 
-    private fun doUpdateRadio(tabView: TabControlView, value: Int, timely: Boolean = false) {
+    private fun doUpdateRadio(
+        tabView: TabControlView,
+        value: Int,
+        timely: Boolean = false,
+    ) {
         tabView.setSelection(value.toString(), true)
         onPostSelected(tabView, value)
     }

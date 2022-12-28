@@ -12,6 +12,7 @@ import com.chinatsp.vehicle.settings.vm.cabin.MeterViewModel
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 /**
  * @author : luohong
@@ -50,7 +51,7 @@ class CabinMeterFragment : BaseFragment<MeterViewModel, CabinMeterFragmentBindin
 
     private fun setRadioListener() {
         binding.cabinMeterSystemOptions.let {
-            it.setOnTabSelectionChangedListener { _, value ->
+            it.setOnTabSelectionChangedListener { title, value ->
                 doUpdateRadio(RadioNode.DRIVE_METER_SYSTEM, value, viewModel.systemRadioOption, it)
             }
         }

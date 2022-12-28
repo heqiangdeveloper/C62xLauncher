@@ -198,13 +198,12 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
     }
 
     private fun writeProperty(node: SwitchNode, status: Boolean, atomic: SwitchState): Boolean {
-        val success = writeProperty(node.set.signal, node.value(status), node.set.origin)
-        if (success && develop) {
-            doUpdateSwitch(node, atomic, status) { _node, _status ->
-                doSwitchChanged(_node, _status)
-            }
-        }
-        return success
+        //        if (success && develop) {
+//            doUpdateSwitch(node, atomic, status) { _node, _status ->
+//                doSwitchChanged(_node, _status)
+//            }
+//        }
+        return writeProperty(node.set.signal, node.value(status), node.set.origin)
     }
 
     private fun obtainHeatLevel(@IPart part: Int): Int {

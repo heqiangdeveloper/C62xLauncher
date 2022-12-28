@@ -301,24 +301,22 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
     }
 
     private fun writeProperty(node: RadioNode, value: Int, atomic: RadioState): Boolean {
-        val success = node.isValid(value, false)
-                && writeProperty(node.set.signal, value, node.set.origin)
-        if (success && develop) {
-            doUpdateRadioValue(node, atomic, value) { _node, _value ->
-                doOptionChanged(_node, _value)
-            }
-        }
-        return success
+        //        if (success && develop) {
+//            doUpdateRadioValue(node, atomic, value) { _node, _value ->
+//                doOptionChanged(_node, _value)
+//            }
+//        }
+        return (node.isValid(value, false)
+                && writeProperty(node.set.signal, value, node.set.origin))
     }
 
     private fun writeProperty(node: SwitchNode, value: Boolean, atomic: SwitchState): Boolean {
-        val success = writeProperty(node.set.signal, node.value(value), node.set.origin)
-        if (success && develop) {
-            doUpdateSwitch(node, atomic, value) { _node, _value ->
-                doSwitchChanged(_node, _value)
-            }
-        }
-        return success
+        //        if (success && develop) {
+//            doUpdateSwitch(node, atomic, value) { _node, _value ->
+//                doSwitchChanged(_node, _value)
+//            }
+//        }
+        return writeProperty(node.set.signal, node.value(value), node.set.origin)
     }
 
     override fun doCarControlCommand(command: CarCmd, callback: ICmdCallback?, fromUser: Boolean) {

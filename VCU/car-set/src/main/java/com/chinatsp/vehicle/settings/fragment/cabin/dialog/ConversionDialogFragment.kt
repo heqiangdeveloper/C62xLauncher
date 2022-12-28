@@ -11,7 +11,9 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ConversionDialogFragment :
     BaseDialogFragment<SeatViewModel, ConversionDialogFragmentBinding>() {
+
     private var animationloading: AnimationDrawable = AnimationDrawable()
+
     override fun getLayoutId(): Int {
         return R.layout.conversion_dialog_fragment
     }
@@ -24,6 +26,23 @@ class ConversionDialogFragment :
         return 480f / 1920f
     }
 
+    override fun onDestroy() {
+        try {
+            animationloading.stop()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        super.onDestroy()
+    }
+
+    private fun dismissLoading() {
+        try {
+            dismiss()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
 
     private fun initAnimation() {
         val cxt = activity
@@ -33,8 +52,11 @@ class ConversionDialogFragment :
             }
 
             override fun endAnimation() {
-                dismiss()
+                dismissLoading()
             }
         })
     }
+
+
+
 }
