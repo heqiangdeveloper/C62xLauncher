@@ -71,6 +71,10 @@ class GlobalManager private constructor() : BaseManager() {
                 onVehicleModeChanged(property.value)
                 return true
             }
+            if (CarCabinManager.ID_EPBVEHMODSTS == property.propertyId) {
+                emblemSTS(property.value)
+                return true
+            }
 //            /**无线充电状态*/
 //            if (CarCabinManager.ID_WCM_WORK_STATE == property.propertyId) {
 //                onWirelessChargingModeChanged(property.value)
@@ -225,6 +229,24 @@ class GlobalManager private constructor() : BaseManager() {
              * */
             VcuUtils.startDialogService(Hint.exhibitionModeError)
         } else if (staticPower == 0x1) {
+            /**展厅模式切换成功
+             * 收到BDC和ESP反馈的车辆模式状态信号均为Exhibition Mode
+             * */
+            VcuUtils.startDialogService(Hint.exhibitionMode)
+        }
+    }
+
+    private fun emblemSTS(vehicleMode: Any?) {
+        if (vehicleMode !is Int) {
+            return
+        }
+        val staticPower = readIntProperty(CarCabinManager.ID_BDC_VEHICLE_MODE, Origin.CABIN)
+        if (vehicleMode == 0x0 && staticPower == 0x2) {
+            /**展厅模式切换失败
+             * 收到BDC反馈的车辆模式状态信号为Exhibition Mode且收到ESP反馈的车辆模式状态信号为Normal mode
+             * */
+            VcuUtils.startDialogService(Hint.exhibitionModeError)
+        } else if (vehicleMode == 0x1 && staticPower == 0x2) {
             /**展厅模式切换成功
              * 收到BDC和ESP反馈的车辆模式状态信号均为Exhibition Mode
              * */
