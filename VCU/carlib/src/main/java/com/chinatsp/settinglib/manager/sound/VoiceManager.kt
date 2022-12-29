@@ -539,15 +539,14 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
     }
 
     private fun writeProperty(node: RadioNode, value: Int, atomic: RadioState): Boolean {
-        val success = node.isValid(value, false)
-                && writeProperty(node.set.signal, value, node.set.origin)
-        if (success && develop) {
-            val newValue = node.obtainSelectValue(value, false)
-            doUpdateRadioValue(node, atomic, newValue) { _node, _value ->
-                doOptionChanged(_node, _value)
-            }
-        }
-        return success
+        //        if (success && develop) {
+//            val newValue = node.obtainSelectValue(value, false)
+//            doUpdateRadioValue(node, atomic, newValue) { _node, _value ->
+//                doOptionChanged(_node, _value)
+//            }
+//        }
+        return (node.isValid(value, false)
+                && writeProperty(node.set.signal, value, node.set.origin))
     }
 
     private fun writeProperty(node: RadioNode, value: IntArray, atomic: RadioState): Boolean {
@@ -555,15 +554,14 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
     }
 
     private fun writeNaviMixing(node: RadioNode, value: Int, atomic: RadioState): Boolean {
-        val success = node.isValid(value, false)
-                && VcuUtils.setConfigParameters(OffLine.NAVI_MIXING, value)
-        if (success && develop) {
-            val newValue = node.obtainSelectValue(value, false)
-            doUpdateRadioValue(node, atomic, newValue) { _node, _value ->
-                doOptionChanged(_node, _value)
-            }
-        }
-        return success
+        //        if (success && develop) {
+//            val newValue = node.obtainSelectValue(value, false)
+//            doUpdateRadioValue(node, atomic, newValue) { _node, _value ->
+//                doOptionChanged(_node, _value)
+//            }
+//        }
+        return (node.isValid(value, false)
+                && VcuUtils.setConfigParameters(OffLine.NAVI_MIXING, value))
     }
 
     fun resetDeviceVolume() {

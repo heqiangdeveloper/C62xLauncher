@@ -126,7 +126,7 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
 
     private fun initVideoListener() {
         binding.video.setAudioFocusRequest(AudioManager.AUDIOFOCUS_NONE)
-        binding.video.setVideoURI(uri);
+        binding.video.setVideoURI(uri)
         binding.video.setOnCompletionListener {
             binding.video.seekTo(0)
             updateDriveLineDisplay(false)

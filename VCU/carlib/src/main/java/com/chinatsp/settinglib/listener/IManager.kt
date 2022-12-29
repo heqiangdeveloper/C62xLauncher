@@ -10,8 +10,8 @@ import com.chinatsp.settinglib.optios.SwitchNode
 
 interface IManager {
 
-    val develop: Boolean
-        get() = BuildConfig.develop
+//    val develop: Boolean
+//        get() = BuildConfig.develop
 
     /**
      * @param serial 注册时返回的序列号

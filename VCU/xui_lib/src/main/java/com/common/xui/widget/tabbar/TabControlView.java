@@ -618,7 +618,7 @@ public class TabControlView extends RadioGroup implements HasTypeface {
     @Override
     protected void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        update();
+//        update();
     }
 
     public void updateEnable(boolean isEnable) {

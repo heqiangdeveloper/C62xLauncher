@@ -16,7 +16,6 @@ import com.chinatsp.settinglib.constants.OffLine
 import com.chinatsp.settinglib.listener.INotifyListener
 import com.chinatsp.settinglib.listener.sound.ISoundManager
 import com.chinatsp.settinglib.manager.*
-import com.chinatsp.settinglib.manager.access.SternDoorManager
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -257,25 +256,23 @@ class WheelManager private constructor() : BaseManager(), ISoundManager, ICmdExp
     }
 
     private fun writeProperty(node: SwitchNode, status: Boolean, atomic: SwitchState): Boolean {
-        val success = writeProperty(node.set.signal, node.value(status), node.set.origin)
-        if (success && develop) {
-            doUpdateSwitch(node, atomic, status) { _node, _status ->
-                doSwitchChanged(_node, _status)
-            }
-        }
-        return success
+        //        if (success && develop) {
+//            doUpdateSwitch(node, atomic, status) { _node, _status ->
+//                doSwitchChanged(_node, _status)
+//            }
+//        }
+        return writeProperty(node.set.signal, node.value(status), node.set.origin)
     }
 
     private fun writeProperty(node: RadioNode, value: Int, atomic: RadioState): Boolean {
-        val success = node.isValid(value, false)
-                && writeProperty(node.set.signal, value, node.set.origin)
-//        if (success && develop) {
+        //        if (success && develop) {
 //            val newValue = node.obtainSelectValue(value, false)
 //            doUpdateRadioValue(node, atomic, newValue) { _node, _value ->
 //                doOptionChanged(_node, _value)
 //            }
 //        }
-        return success
+        return (node.isValid(value, false)
+                && writeProperty(node.set.signal, value, node.set.origin))
     }
 
     override fun doCarControlCommand(command: CarCmd, callback: ICmdCallback?, fromUser: Boolean) {

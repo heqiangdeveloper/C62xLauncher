@@ -44,6 +44,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+<!--        android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale|layoutDirection|density"-->
+
+
         <activity
             android:name="com.chinatsp.vehicle.settings.MainActivity2"
             android:configChanges="screenSize|keyboardHidden|orientation|keyboard"

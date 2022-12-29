@@ -367,13 +367,12 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
     }
 
     private fun writeProperty(node: SwitchNode, value: Boolean, atomic: SwitchState): Boolean {
-        val success = writeProperty(node.set.signal, node.value(value), node.set.origin)
-        if (success && develop) {
-            doUpdateSwitch(node, atomic, value) { _node, _value ->
-                doSwitchChanged(_node, _value)
-            }
-        }
-        return success
+        //        if (success && develop) {
+//            doUpdateSwitch(node, atomic, value) { _node, _value ->
+//                doSwitchChanged(_node, _value)
+//            }
+//        }
+        return writeProperty(node.set.signal, node.value(value), node.set.origin)
     }
 
     private fun interruptCommand(parcel: CommandParcel, coreEngine: Boolean = false): Boolean {

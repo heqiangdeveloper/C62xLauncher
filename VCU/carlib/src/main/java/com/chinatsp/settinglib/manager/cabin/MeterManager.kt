@@ -30,10 +30,6 @@ class MeterManager private constructor() : BaseManager(), IRadioManager {
 
     private val meterSystemRadioOption: RadioState by lazy {
         val node = RadioNode.DRIVE_METER_SYSTEM
-//        AtomicInteger(node.default).apply {
-//            val value = readIntProperty(node.get.signal, node.get.origin)
-//            doUpdateRadioValue(node, this, value)
-//        }
         return@lazy createAtomicInteger(node) { result, value ->
             doUpdateRadioValue(node, result, value, this::doOptionChanged)
         }
@@ -52,7 +48,6 @@ class MeterManager private constructor() : BaseManager(), IRadioManager {
 
     override fun onCabinPropertyChanged(property: CarPropertyValue<*>) {
         when (property.propertyId) {
-            //设防提示音
             RadioNode.DRIVE_METER_SYSTEM.get.signal -> {
                 onRadioChanged(RadioNode.DRIVE_METER_SYSTEM, meterSystemRadioOption, property)
             }
@@ -78,23 +73,20 @@ class MeterManager private constructor() : BaseManager(), IRadioManager {
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
         return when (node) {
             RadioNode.DRIVE_METER_SYSTEM -> {
-                node.isValid(value, isGet = false) && writeProperty(node,
-                    value,
-                    meterSystemRadioOption)
+                writeProperty(node, value, meterSystemRadioOption)
             }
             else -> false
         }
     }
 
     private fun writeProperty(node: RadioNode, value: Int, atomic: RadioState): Boolean {
-        val success = node.isValid(value, false)
-                && writeProperty(node.set.signal, value, node.set.origin)
-        if (success && develop) {
-            doUpdateRadioValue(node, atomic, value) { _node, _value ->
-                doOptionChanged(_node, _value)
-            }
-        }
-        return success
+        //        if (success && develop) {
+//            doUpdateRadioValue(node, atomic, value) { _node, _value ->
+//                doOptionChanged(_node, _value)
+//            }
+//        }
+        return (node.isValid(value, false)
+                && writeProperty(node.set.signal, value, node.set.origin))
     }
 
 }
