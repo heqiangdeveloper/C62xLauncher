@@ -42,6 +42,7 @@ class RegisterSignalManager private constructor() {
                     //***********车门信号 end***************
 
                     add(CarCabinManager.ID_BDC_VEHICLE_MODE)
+                    add(CarCabinManager.ID_EPBVEHMODSTS)
                     /**注册电源管理等级指令*/
                     add(ID_LOUPWRMNGTSTATLVL)
                     /**注册开关机状态指令*/
