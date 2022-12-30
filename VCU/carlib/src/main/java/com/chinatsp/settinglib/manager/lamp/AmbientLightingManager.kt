@@ -494,19 +494,22 @@ class AmbientLightingManager private constructor() : BaseManager(), IOptionManag
         var colorName = command.slots?.color ?: "随机"
         val colors = obtainSupportColor()
         var colorIndex: Int? = colors[colorName]
-        if (null == colorIndex) {
+        if (null == colorIndex && "随机" == colorName) {
             val randomIndex = Random.nextInt(colors.size)
             val colorList = colors.toList()
             val pair = colorList[randomIndex]
             colorIndex = pair.second
             colorName = pair.first
         }
-        if (Constant.INVALID == colorIndex) {
+        if (null == colorIndex || Constant.INVALID == colorIndex) {
             command.message = "${modelName}不支持该颜色"
         } else {
             val result = writeProperty(node.set.signal, colorIndex, node.set.origin)
-            command.message =
-                if (!result) Keywords.COMMAND_FAILED else "${modelName}颜色已设置为${colorName}了"
+            command.message = if (!result) {
+                Keywords.COMMAND_FAILED
+            } else {
+                "${modelName}颜色已设置为${colorName}了"
+            }
         }
         callback?.onCmdHandleResult(command)
     }
