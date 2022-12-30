@@ -61,7 +61,7 @@ public class WeatherRepository extends BaseRepository {
     public void loadDefaultWeather(IOnRequestListener onRequestListener) {
         List<WeatherInfo> mCacheDefaultWeather = mCache.getDefaultWeather();
         if (mCacheDefaultWeather != null) {
-            WeatherUtil.logD("WeatherRepository loadDefaultWeather success from cache.");
+            WeatherUtil.logD("WeatherRepository loadDefaultWeather success tong.");
             if (onRequestListener != null) {
                 onRequestListener.onSuccess(mCacheDefaultWeather);
             }

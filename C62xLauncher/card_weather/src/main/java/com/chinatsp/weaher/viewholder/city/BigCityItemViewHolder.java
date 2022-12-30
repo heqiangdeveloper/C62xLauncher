@@ -20,10 +20,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.chinatsp.weaher.R;
 import com.chinatsp.weaher.WeatherTypeRes;
 import com.chinatsp.weaher.WeatherUtil;
+import com.chinatsp.weaher.repository.WeatherBean;
 import com.chinatsp.weaher.repository.WeatherRepository;
 import com.chinatsp.weaher.weekday.WeekDayAdapter;
 import com.iflytek.autofly.weather.entity.WeatherInfo;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import launcher.base.ipc.IOnRequestListener;
@@ -119,15 +121,22 @@ public class BigCityItemViewHolder extends BaseViewHolder<String> {
     }
 
     private void updateDefault() {
-
+        WeatherUtil.logD("BigCityItemViewHolder updateWeather default");
+        WeatherTypeRes weatherTypeRes = new WeatherTypeRes(WeatherBean.TYPE_UNKNOWN);
+        ivCardWeatherIcon.setImageResource(weatherTypeRes.getIcon());
+        ivWeatherBg.setVisibility(View.INVISIBLE);
+        mWeekDayAdapter.setDayWeatherList(new LinkedList<>());
+        setTemp(tvCardWeatherTemperature, "");
+        tvCardWeatherTemperatureRange.setText("");
     }
 
     public void bindWeather(List<WeatherInfo> weatherInfoList) {
-        WeatherUtil.logI("WeatherBigCardHolder updateWeatherList : " + weatherInfoList);
+        WeatherUtil.logI("BigCityItemViewHolder updateWeatherList : " + weatherInfoList);
         mWeekDayAdapter.setDayWeatherList(weatherInfoList);
         if (weatherInfoList == null || weatherInfoList.isEmpty()) {
             return;
         }
+        ivWeatherBg.setVisibility(View.VISIBLE);
         updateWeather(weatherInfoList.get(0));
     }
 
