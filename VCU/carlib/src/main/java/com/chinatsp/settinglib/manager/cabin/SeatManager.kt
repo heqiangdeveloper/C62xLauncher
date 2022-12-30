@@ -800,6 +800,19 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         val rfAct = array[2]
         val rbAct = array[3]
         Timber.d("doControlVentilateLevel lfAct:$lfAct, lbAct:$lbAct, rfAct:$rfAct, rbAct:$rbAct")
+        if (!lfAct && !rfAct && !lbAct && !rbAct) {
+            val lbActive = IPart.L_B == (IPart.L_B and command.part)
+            val rbActive = IPart.R_B == (IPart.R_B and command.part)
+            if (lbActive && rbActive) {
+                command.message = "您的爱车暂不支持语音操作后排座椅通风"
+            } else if (lbActive && !rbActive) {
+                command.message = "您的爱车暂不支持语音操作后排左座椅通风"
+            } else if (!lbActive && rbActive) {
+                command.message = "您的爱车暂不支持语音操作后排右座椅通风"
+            }
+            parcel.callback?.onCmdHandleResult(command)
+            return
+        }
         if (IStatus.INIT == command.status) {
             parcel.retryCount = 2
             resetCommandSent(command)
@@ -933,6 +946,19 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         val rfAct = array[2]
         val rbAct = array[3]
         Timber.d("doControlHeatLevel lfAct:$lfAct, lbAct:$lbAct, rfAct:$rfAct, rbAct:$rbAct")
+        if (!lfAct && !rfAct && !lbAct && !rbAct) {
+            val lbActive = IPart.L_B == (IPart.L_B and command.part)
+            val rbActive = IPart.R_B == (IPart.R_B and command.part)
+            if (lbActive && rbActive) {
+                command.message = "您的爱车暂不支持语音操作后排座椅加热"
+            } else if (lbActive && !rbActive) {
+                command.message = "您的爱车暂不支持语音操作后排左座椅加热"
+            } else if (!lbActive && rbActive) {
+                command.message = "您的爱车暂不支持语音操作后排右座椅加热"
+            }
+            parcel.callback?.onCmdHandleResult(command)
+            return
+        }
         if (command.status == IStatus.INIT) {
             val expectLevel: Int
             if (Action.TURN_ON == command.action) {

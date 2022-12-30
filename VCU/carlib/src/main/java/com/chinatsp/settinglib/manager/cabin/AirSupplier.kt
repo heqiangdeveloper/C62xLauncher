@@ -250,18 +250,20 @@ class AirSupplier(private val airManager: ACManager) : IAirMaster, ICmdExpress {
                 ShareHandler.loopParcel(parcel, delayed)
             }
         } else {
-            status = airSetter.doSwitchAutoMode(expect)
-            if (status) {
-                command.message = if (isRetry) "${name}${onOff}中……" else "${name}${onOff}失败"
-            } else {
-                command.message = "${name}已${onOff}"
-            }
-            if (!status || !isRetry) {
-                parcel.callback?.onCmdHandleResult(parcel.command)
-            }
-            if (status && isRetry) {
-                ShareHandler.loopParcel(parcel, delayed)
-            }
+            command.message = "对不起！您的爱车空调不支持该操作！"
+            parcel.callback?.onCmdHandleResult(command)
+//            status = airSetter.doSwitchAutoMode(expect)
+//            if (status) {
+//                command.message = if (isRetry) "${name}${onOff}中……" else "${name}${onOff}失败"
+//            } else {
+//                command.message = "${name}已${onOff}"
+//            }
+//            if (!status || !isRetry) {
+//                parcel.callback?.onCmdHandleResult(parcel.command)
+//            }
+//            if (status && isRetry) {
+//                ShareHandler.loopParcel(parcel, delayed)
+//            }
         }
     }
 

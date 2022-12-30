@@ -10,10 +10,7 @@ import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IBaseListener
 import com.chinatsp.settinglib.listener.ISignalListener
-import com.chinatsp.settinglib.manager.BaseManager
-import com.chinatsp.settinglib.manager.ICmdExpress
-import com.chinatsp.settinglib.manager.IOptionManager
-import com.chinatsp.settinglib.manager.ISignal
+import com.chinatsp.settinglib.manager.*
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -21,6 +18,7 @@ import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.annotation.*
 import com.chinatsp.vehicle.controller.bean.CarCmd
+import com.chinatsp.vehicle.controller.utils.Keywords
 import timber.log.Timber
 import java.lang.ref.WeakReference
 import kotlin.math.abs
@@ -326,45 +324,68 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
 
     private fun doSwitchFogLight(parcel: CommandParcel) {
         val command = parcel.command
-        do {
-            val isHead = IPart.HEAD == IPart.HEAD and command.part
-            val isTail = IPart.TAIL == IPart.TAIL and command.part
-
-            val name = command.slots?.name ?: if (isHead && !isTail) {
-                "前雾灯"
+        val isHead = IPart.HEAD == IPart.HEAD and command.part
+        val isTail = IPart.TAIL == IPart.TAIL and command.part
+        val name = command.slots?.name ?: if (isHead && !isTail) {
+            "前雾灯"
+        } else if (!isHead && isTail) {
+            "后雾灯"
+        } else {
+            "雾灯"
+        }
+        val expect = when (command.action) {
+            Action.TURN_ON -> true
+            Action.TURN_OFF -> false
+            else -> false
+        }
+        if (command.status == IStatus.INIT) {
+            parcel.retryCount = 2
+            if (isHead) command.resetSent(IPart.L_F)
+            if (isTail) command.resetSent(IPart.L_B)
+        }
+        val fActual = if (isHead) isFogLight(IPart.HEAD) else expect
+        val tActual = if (isTail) isFogLight(IPart.TAIL) else expect
+        val isFNeedSent = fActual xor expect
+        val isTNeedSent = tActual xor expect
+        val isRetry = parcel.isRetry()
+        val actionName = if (expect) "打开" else "关闭"
+        if (!isRetry || (!isFNeedSent && !isTNeedSent)) {
+            if (isHead && isTail) {
+                if (isFNeedSent && isTNeedSent) {
+                    command.message = "${name}${actionName}没有成功"
+                } else if (isFNeedSent && !isTNeedSent) {
+                    command.message = "后雾灯${actionName}了，前雾灯${actionName}没有成功"
+                } else if (!isFNeedSent && isTNeedSent) {
+                    command.message = "前雾灯${actionName}了，后雾灯${actionName}没有成功"
+                } else {
+                    command.message = "${name}${actionName}了"
+                }
+            } else if (isHead && !isTail) {
+                if (isFNeedSent) {
+                    command.message = "${name}${actionName}没有成功"
+                } else {
+                    command.message = "${name}${actionName}了"
+                }
             } else if (!isHead && isTail) {
-                "后雾灯"
-            } else {
-                "雾灯"
+                if (isTNeedSent) {
+                    command.message = "${name}${actionName}没有成功"
+                } else {
+                    command.message = "${name}${actionName}了"
+                }
             }
-            if (Action.TURN_ON == command.action) {
-                var result = false
-                if (isHead) {
-                    val isWrite = updateFogLight(true, IPart.HEAD)
-                    result = result or isWrite
-                }
-                if (isTail) {
-                    val isWrite = updateFogLight(true, IPart.TAIL)
-                    result = result or isWrite
-                }
-                command.message = "${name}${if (!result) "已经" else ""}打开了"
-                break
+            parcel.callback?.onCmdHandleResult(command)
+        } else {
+            if (isFNeedSent && !command.isSent(IPart.L_F)) {
+                updateFogLight(expect, IPart.HEAD)
+                command.sent(IPart.L_F)
             }
-            if (Action.TURN_OFF == command.action) {
-                var result = false
-                if (isHead) {
-                    val isWrite = updateFogLight(false, IPart.HEAD)
-                    result = result or isWrite
-                }
-                if (isTail) {
-                    val isWrite = updateFogLight(false, IPart.TAIL)
-                    result = result or isWrite
-                }
-                command.message = "${name}${if (!result) "已经" else ""}关闭了"
-                break
+            if (isTNeedSent && !command.isSent(IPart.L_B)) {
+                updateFogLight(expect, IPart.TAIL)
+                command.sent(IPart.L_B)
             }
-        } while (false)
-        parcel.callback?.onCmdHandleResult(command)
+            command.status = IStatus.RUNNING
+            ShareHandler.loopParcel(parcel, ShareHandler.MID_DELAY)
+        }
     }
 
     private fun doSwitchSideLight(parcel: CommandParcel) {
@@ -462,24 +483,19 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
     }
 
     private fun updateFogLight(expect: Boolean, @IPart part: Int): Boolean {
-        val actual = isFogLight(part)
-        val result = actual != expect
-        if (result) {
-            val signal = if (IPart.HEAD == part) {
-                CarCabinManager.ID_AVN_FRONT_FOG_LIGHT
-            } else if (IPart.TAIL == part) {
-                CarCabinManager.ID_AVN_REAR_FOG_LIGHT
-            } else {
-                Constant.INVALID
-            }
-//            AVN  follow HMA_STATUS  0x0 to set  'off', follow  HMA_STATUS 0x1-0x2
-//            to set 'on'.Set state 'inactive'  when receive HMA_STATUS 0x3-0x7 or HMA_STATUS
-//            signal timeout.[0x1,0,0x0,0x3]
-//            0x0: Inactive  0x1: On  0x2: Off   0x3: Not used
-            val value = if (expect) 0x1 else 0x2
-            writeProperty(signal, value, Origin.CABIN)
+        val signal = if (IPart.HEAD == part) {
+            CarCabinManager.ID_AVN_FRONT_FOG_LIGHT
+        } else if (IPart.TAIL == part) {
+            CarCabinManager.ID_AVN_REAR_FOG_LIGHT
+        } else {
+            Constant.INVALID
         }
-        return result
+//        AVN  follow HMA_STATUS  0x0 to set  'off', follow  HMA_STATUS 0x1-0x2
+//        to set 'on'.Set state 'inactive'  when receive HMA_STATUS 0x3-0x7 or HMA_STATUS
+//        signal timeout.[0x1,0,0x0,0x3]
+//        0x0: Inactive  0x1: On  0x2: Off   0x3: Not used
+        val value = if (expect) 0x1 else 0x2
+        return writeProperty(signal, value, Origin.CABIN)
     }
 
     private fun isFogLight(@IPart part: Int): Boolean {
