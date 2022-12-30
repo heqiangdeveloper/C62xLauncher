@@ -61,6 +61,7 @@ public class SmallCityItemViewHolder extends BaseViewHolder<String> {
             @Override
             public void onClick(View v) {
 //                loadWeatherInfo(city);
+                showLoading();
                 WeatherRepository.getInstance().requestCityList();
             }
         });
@@ -83,7 +84,6 @@ public class SmallCityItemViewHolder extends BaseViewHolder<String> {
 
     private void loadWeatherInfo(String city) {
         WeatherUtil.logD("SmallCityItemViewHolder loadWeatherInfo");
-        showLoading();
         tvCardWeatherCity.setText(city);
         WeatherRepository.getInstance().loadWeatherByCity(new IOnRequestListener() {
             @Override
@@ -92,13 +92,11 @@ public class SmallCityItemViewHolder extends BaseViewHolder<String> {
                 if (mData != null && !mData.isEmpty()) {
                     mMainHandler.post(() -> bindWeather(mData.get(0)));
                 }
-                hideLoading();
             }
 
             @Override
             public void onFail(String msg) {
                 mMainHandler.post(() -> updateDefault());
-                hideLoading();
             }
         }, city);
     }
@@ -122,6 +120,7 @@ public class SmallCityItemViewHolder extends BaseViewHolder<String> {
         WeatherTypeRes weatherTypeRes = new WeatherTypeRes(WeatherBean.TYPE_UNKNOWN);
         ivCardWeatherIcon.setImageResource(weatherTypeRes.getIcon());
         ivWeatherBg.setVisibility(View.INVISIBLE);
+        tvCardWeatherTemperature.setText("");
     }
 
     private ObjectAnimator mObjectAnimator;
