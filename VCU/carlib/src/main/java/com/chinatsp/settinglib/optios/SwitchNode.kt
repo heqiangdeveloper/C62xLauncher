@@ -977,31 +977,31 @@ enum class SwitchNode(
         }
     },
 
-    NODE_VALID_33F(get = Norm(off = 0x0, on = 0x1), set = Norm(off = 0x0, on = 0x1), def = true),
-    NODE_VALID_362(get = Norm(off = 0x0, on = 0x1), set = Norm(off = 0x0, on = 0x1), def = true),
-    NODE_VALID_332(get = Norm(off = 0x0, on = 0x1), set = Norm(off = 0x0, on = 0x1), def = true),
-    NODE_VALID_591(get = Norm(off = 0x0, on = 0x1), set = Norm(off = 0x0, on = 0x1), def = true),
-    NODE_VALID_581(get = Norm(off = 0x0, on = 0x1), set = Norm(off = 0x0, on = 0x1), def = true),
+    NODE_VALID_33F(get = Norm(off = 0x1, on = 0x0), set = Norm(off = 0x1, on = 0x0), def = true),
+    NODE_VALID_362(get = Norm(off = 0x1, on = 0x0), set = Norm(off = 0x1, on = 0x0), def = true),
+    NODE_VALID_332(get = Norm(off = 0x1, on = 0x0), set = Norm(off = 0x1, on = 0x0), def = true),
+    NODE_VALID_591(get = Norm(off = 0x1, on = 0x0), set = Norm(off = 0x1, on = 0x0), def = true),
+    NODE_VALID_581(get = Norm(off = 0x1, on = 0x0), set = Norm(off = 0x1, on = 0x0), def = true),
 
-    NODE_VALID_582(get = Norm(off = 0x0, on = 0x1), set = Norm(off = 0x0, on = 0x1), def = true),
-    NODE_VALID_598(get = Norm(off = 0x0, on = 0x1), set = Norm(off = 0x0, on = 0x1), def = true),
-    NODE_VALID_580(get = Norm(off = 0x0, on = 0x1), set = Norm(off = 0x0, on = 0x1), def = true),
-    NODE_VALID_514(get = Norm(off = 0x0, on = 0x1), set = Norm(off = 0x0, on = 0x1), def = true),
-    NODE_VALID_5D4(get = Norm(off = 0x0, on = 0x1), set = Norm(off = 0x0, on = 0x1), def = true),
+    NODE_VALID_582(get = Norm(off = 0x1, on = 0x0), set = Norm(off = 0x1, on = 0x0), def = true),
+    NODE_VALID_598(get = Norm(off = 0x1, on = 0x0), set = Norm(off = 0x1, on = 0x0), def = true),
+    NODE_VALID_580(get = Norm(off = 0x1, on = 0x0), set = Norm(off = 0x1, on = 0x0), def = true),
+    NODE_VALID_514(get = Norm(off = 0x1, on = 0x0), set = Norm(off = 0x1, on = 0x0), def = true),
+    NODE_VALID_5D4(get = Norm(off = 0x1, on = 0x0), set = Norm(off = 0x1, on = 0x0), def = true),
 
-    NODE_VALID_513(get = Norm(off = 0x0, on = 0x1), set = Norm(off = 0x0, on = 0x1), def = true),
-    NODE_VALID_58F(get = Norm(off = 0x0, on = 0x1), set = Norm(off = 0x0, on = 0x1), def = true),
-    NODE_VALID_523(get = Norm(off = 0x0, on = 0x1), set = Norm(off = 0x0, on = 0x1), def = true),
-    NODE_VALID_5B3(get = Norm(off = 0x0, on = 0x1), set = Norm(off = 0x0, on = 0x1), def = true),
-    NODE_VALID_65A(get = Norm(off = 0x0, on = 0x1), set = Norm(off = 0x0, on = 0x1), def = true),
+    NODE_VALID_513(get = Norm(off = 0x1, on = 0x0), set = Norm(off = 0x1, on = 0x0), def = true),
+    NODE_VALID_58F(get = Norm(off = 0x1, on = 0x0), set = Norm(off = 0x1, on = 0x0), def = true),
+    NODE_VALID_523(get = Norm(off = 0x1, on = 0x0), set = Norm(off = 0x1, on = 0x0), def = true),
+    NODE_VALID_5B3(get = Norm(off = 0x1, on = 0x0), set = Norm(off = 0x1, on = 0x0), def = true),
+    NODE_VALID_65A(get = Norm(off = 0x1, on = 0x0), set = Norm(off = 0x1, on = 0x0), def = true),
 
-    NODE_VALID_621(get = Norm(off = 0x0, on = 0x1), set = Norm(off = 0x0, on = 0x1), def = true),
-    NODE_VALID_645(get = Norm(off = 0x0, on = 0x1), set = Norm(off = 0x0, on = 0x1), def = true),
-    NODE_VALID_654(get = Norm(off = 0x0, on = 0x1), set = Norm(off = 0x0, on = 0x1), def = true),
-    NODE_VALID_66F(get = Norm(off = 0x0, on = 0x1), set = Norm(off = 0x0, on = 0x1), def = true),
-    NODE_VALID_2E5(get = Norm(off = 0x0, on = 0x1), set = Norm(off = 0x0, on = 0x1), def = true),
+    NODE_VALID_621(get = Norm(off = 0x1, on = 0x0), set = Norm(off = 0x1, on = 0x0), def = true),
+    NODE_VALID_645(get = Norm(off = 0x1, on = 0x0), set = Norm(off = 0x1, on = 0x0), def = true),
+    NODE_VALID_654(get = Norm(off = 0x1, on = 0x0), set = Norm(off = 0x1, on = 0x0), def = true),
+    NODE_VALID_66F(get = Norm(off = 0x1, on = 0x0), set = Norm(off = 0x1, on = 0x0), def = true),
+    NODE_VALID_2E5(get = Norm(off = 0x1, on = 0x0), set = Norm(off = 0x1, on = 0x0), def = true),
 
-    NODE_VALID_NFC(get = Norm(off = 0x0, on = 0x1), set = Norm(off = 0x0, on = 0x1), def = true),
+    NODE_VALID_NFC(get = Norm(off = 0x1, on = 0x0), set = Norm(off = 0x1, on = 0x0), def = true),
 
 
     INVALID(

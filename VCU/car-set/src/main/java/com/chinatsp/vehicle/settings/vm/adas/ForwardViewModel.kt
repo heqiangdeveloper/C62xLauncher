@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.bean.SwitchState
+import com.chinatsp.settinglib.listener.IRadioListener
 import com.chinatsp.settinglib.listener.ISwitchListener
 import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.adas.ForwardManager
@@ -11,6 +12,7 @@ import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
 import com.common.library.frame.base.BaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,7 +43,7 @@ class ForwardViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _node33F: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.NODE_VALID_33F
-        MutableLiveData(manager.doGetSwitchOption(node))
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
     }
 
     override fun onCreate() {

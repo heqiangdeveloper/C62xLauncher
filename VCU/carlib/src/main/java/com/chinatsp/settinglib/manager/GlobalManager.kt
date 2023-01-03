@@ -224,12 +224,12 @@ class GlobalManager private constructor() : BaseManager(), ISwitchManager {
         if (null != values && values.size >= 35) {
             values.filterIndexed { index1, _ -> index1 >= 15 }
                 .forEachIndexed { index, value ->
-                    Timber.d("-------------luohong------$index---------$value")
                     val node = nodeValidList[index]
                     val state = nodeValidMap[node]
                     if (null != state) {
-                        val status = value == 0x1
+                        val status = node.isOn(value as Int)
                         if (state.get() xor status) {
+                            Timber.d("luohong index:$index, value:$value, node:$node, status:$status, state:$state")
                             state.set(status)
                             doSwitchChanged(node, state)
                         }

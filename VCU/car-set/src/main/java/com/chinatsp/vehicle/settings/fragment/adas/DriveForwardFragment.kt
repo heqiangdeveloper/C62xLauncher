@@ -165,6 +165,7 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
         }
     }
 
+
     override fun getSwitchManager(): ISwitchManager {
         return manager
     }
