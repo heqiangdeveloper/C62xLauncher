@@ -89,7 +89,7 @@ class VoiceManager private constructor() : BaseManager(), ISoundManager {
 
     private val touchTone: SwitchState by lazy {
         val node = SwitchNode.TOUCH_PROMPT_TONE
-        SwitchState(node.default).apply {
+        SwitchState(node.def).apply {
             val result = getPromptToneLevel(node)
             val status = node.isOn(result)
             Timber.d("initAtomicBoolean node:$node, status:$status, result:$result, current:${get()}")

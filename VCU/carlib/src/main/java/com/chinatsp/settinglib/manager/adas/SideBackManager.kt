@@ -79,8 +79,8 @@ class SideBackManager : BaseManager(), IOptionManager {
 
     private val bscValue: SwitchState by lazy {
         val node = SwitchNode.ADAS_BSC
-        SwitchState(node.default).apply {
-            val default = if (node.default) "ON" else "OFF"
+        SwitchState(node.def).apply {
+            val default = if (node.def) "ON" else "OFF"
             val value = VcuUtils.getConfigParameters(OffLine.BSC, default)
             val result = node.value("ON" == value)
             doUpdateSwitch(node, this, result)
@@ -99,8 +99,8 @@ class SideBackManager : BaseManager(), IOptionManager {
 
     private val guidesValue: SwitchState by lazy {
         val node = SwitchNode.ADAS_GUIDES
-        SwitchState(node.default).apply {
-            val default = if (node.default) "ON" else "OFF"
+        SwitchState(node.def).apply {
+            val default = if (node.def) "ON" else "OFF"
             val value = VcuUtils.getConfigParameters(OffLine.GUIDES, default)
             val result = node.value("ON" == value)
             doUpdateSwitch(node, this, result)

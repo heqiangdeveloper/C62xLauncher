@@ -167,7 +167,7 @@ class AmbientLightingModelDialogFragment :
     }
 
     private fun initViewSelect(node: SwitchNode, liveData: LiveData<SwitchState>) {
-        val status = liveData.value ?: node.default
+        val status = liveData.value ?: node.def
         liveData.value?.let {
             doUpdateViewSelect(node, it, true)
         }

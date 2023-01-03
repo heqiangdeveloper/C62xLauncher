@@ -33,9 +33,9 @@ class OtherManager private constructor() : BaseManager(), IOptionManager {
      */
     private val trailerRemind: SwitchState by lazy {
         val node = SwitchNode.DRIVE_TRAILER_REMIND
-        SwitchState(node.default).apply {
+        SwitchState(node.def).apply {
             val value = SettingManager.instance.getTrailerSwitch()
-            val result = if (null != value) node.isOn(value) else node.default
+            val result = if (null != value) node.isOn(value) else node.def
             doUpdateSwitch(node, this, result)
         }
     }

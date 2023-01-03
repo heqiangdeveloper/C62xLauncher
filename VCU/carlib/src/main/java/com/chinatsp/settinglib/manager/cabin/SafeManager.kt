@@ -49,10 +49,10 @@ class SafeManager private constructor() : BaseManager(), ISwitchManager {
 
     private val videoModeFunction: SwitchState by lazy {
         val node = SwitchNode.DRIVE_SAFE_VIDEO_PLAYING
-        SwitchState(node.default).apply {
+        SwitchState(node.def).apply {
             val result = VcuUtils.getInt(
                 key = Constant.DRIVE_VIDEO_PLAYING,
-                value = node.value(node.default)
+                value = node.value(node.def)
             )
             doUpdateSwitch(node, this, result)
         }
@@ -67,7 +67,7 @@ class SafeManager private constructor() : BaseManager(), ISwitchManager {
                 override fun onChange(selfChange: Boolean, uri: Uri?) {
                     val node = SwitchNode.DRIVE_SAFE_VIDEO_PLAYING
                     val value = VcuUtils.getInt(key = Constant.DRIVE_VIDEO_PLAYING,
-                        value = node.value(node.default))
+                        value = node.value(node.def))
                     Timber.d("observer onChange node:$node value:$value")
                     doUpdateSwitch(node,
                         videoModeFunction, node.isOn(value), instance::doSwitchChanged)
@@ -153,7 +153,6 @@ class SafeManager private constructor() : BaseManager(), ISwitchManager {
             }
             SwitchNode.DRIVE_SAFE_VIDEO_PLAYING -> {
                 VcuUtils.putInt(key = Constant.DRIVE_VIDEO_PLAYING, value = node.value(status))
-//                writeProperty(node.set.signal, node.value(status), node.set.origin)
             }
             else -> false
         }

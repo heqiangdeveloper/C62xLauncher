@@ -144,7 +144,7 @@ class MainActivity2 : BaseActivity<MainViewModel, MainActivityTablayout2Binding>
             }*/
             if (list.size == 3) {
                 val locations = list.map { it.toInt() }
-                if (1007 == locations[0]) {
+                if (1006 == locations[0]) {
                     doRouteToDeviceUpgrade()
                     return
                 }

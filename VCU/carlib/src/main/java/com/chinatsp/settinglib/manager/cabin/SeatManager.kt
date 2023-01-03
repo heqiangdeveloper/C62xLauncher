@@ -118,7 +118,7 @@ class SeatManager private constructor() : BaseManager(), ISoundManager, ICmdExpr
         Timber.d("onPowerModeChanged value:$value")
         if (0x05 == value) {
             val node = SwitchNode.SEAT_HEAT_ALL
-            val default = node.value(node.default)
+            val default = node.value(node.def)
             val value = VcuUtils.getInt(key = Constant.SEAT_HEAT_SWITCH, value = default)
             doSetSwitchOption(node, node.isOn(value))
             val progress = Progress.SEAT_ONSET_TEMPERATURE

@@ -66,7 +66,6 @@ class CabinManager private constructor() : BaseManager(), ITabStore {
                 add(OtherManager.instance)
             }
         }
-
     }
 
     override val careSerials: Map<Origin, Set<Int>> by lazy {

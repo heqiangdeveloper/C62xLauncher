@@ -44,7 +44,7 @@ abstract class BaseManager : IManager {
         node: SwitchNode,
         block: ((SwitchState, Int) -> Unit),
     ): SwitchState {
-        val result = SwitchState(node.default)
+        val result = SwitchState(node.def)
         readProperty(node.get.signal, node.get.origin, node.area) {
             block(result, it)
         }
@@ -56,9 +56,9 @@ abstract class BaseManager : IManager {
         key: String,
         block: ((SwitchState, Int) -> Unit),
     ): SwitchState {
-        val result = SwitchState(node.default)
+        val result = SwitchState(node.def)
         AppExecutors.get()?.singleIO()?.execute {
-            val resultValue = VcuUtils.getInt(key = key, value = node.value(node.default))
+            val resultValue = VcuUtils.getInt(key = key, value = node.value(node.def))
             block(result, resultValue)
         }
         return result

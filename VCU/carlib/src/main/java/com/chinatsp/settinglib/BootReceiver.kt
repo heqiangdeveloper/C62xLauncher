@@ -19,7 +19,7 @@ class BootReceiver : BroadcastReceiver() {
         Timber.d("receiver broadcast action:${intent?.action}")
         if ("chinatsp.intent.action.FACTORY_RESET" == intent?.action) {
             val node = SwitchNode.AUDIO_SOUND_LOUDNESS
-            VoiceManager.instance.doSetSwitchOption(node, node.default)
+            VoiceManager.instance.doSetSwitchOption(node, node.def)
         }
     }
 }

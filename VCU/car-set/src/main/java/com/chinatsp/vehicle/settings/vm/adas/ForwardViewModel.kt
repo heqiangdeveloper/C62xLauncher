@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.ISwitchListener
+import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.adas.ForwardManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
@@ -35,13 +36,23 @@ class ForwardViewModel @Inject constructor(app: Application, model: BaseModel) :
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
+    val node33F: LiveData<SwitchState>
+        get() = _node33F
+
+    private val _node33F: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_33F
+        MutableLiveData(manager.doGetSwitchOption(node))
+    }
+
     override fun onCreate() {
         super.onCreate()
         keySerial = manager.onRegisterVcuListener(listener = this)
+        GlobalManager.instance.onRegisterVcuListener(listener = this)
     }
 
     override fun onDestroy() {
         manager.unRegisterVcuListener(keySerial)
+        GlobalManager.instance.unRegisterVcuListener(keySerial)
         super.onDestroy()
     }
 
@@ -52,6 +63,9 @@ class ForwardViewModel @Inject constructor(app: Application, model: BaseModel) :
             }
             SwitchNode.ADAS_AEB -> {
                 doUpdate(_aebFunction, status)
+            }
+            SwitchNode.NODE_VALID_33F -> {
+                doUpdate(_node33F, status)
             }
             else -> {}
         }

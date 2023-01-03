@@ -182,7 +182,7 @@ class WheelManager private constructor() : BaseManager(), ISoundManager, ICmdExp
         Timber.d("onPowerModeChanged value:$value")
         if (0x05 == value) {
             val node = SwitchNode.DRIVE_WHEEL_AUTO_HEAT
-            val default = node.value(node.default)
+            val default = node.value(node.def)
             val value = VcuUtils.getInt(key = Constant.STEERING_HEAT_SWITCH, value = default)
             doSetSwitchOption(node, node.isOn(value))
             val progress = Progress.STEERING_ONSET_TEMPERATURE

@@ -124,6 +124,7 @@ class RegisterSignalManager private constructor() {
 //                    add(CarMcuManager.ID_VENDOR_LIGHT_NIGHT_MODE_STATE)
 //                    add(CarMcuManager.ID_NIGHT_MODE)
 //                    add(CarMcuManager.ID_VENDOR_PHOTO_REQ)
+                    add(CarMcuManager.ID_MCU_LOST_CANID)//CAN信号节点丢失
                     SwitchNode.values()
                         .filter { it.get.origin == Origin.MCU && it.get.signal != Constant.INVALID }
                         .forEach {

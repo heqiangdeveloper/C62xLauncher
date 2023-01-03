@@ -2,9 +2,11 @@ package com.chinatsp.settinglib.manager
 
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
+import android.car.hardware.mcu.CarMcuManager
 import com.chinatsp.settinglib.Applet
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
+import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.manager.access.AccessManager
 import com.chinatsp.settinglib.manager.adas.AdasManager
 import com.chinatsp.settinglib.manager.cabin.ACManager
@@ -12,6 +14,7 @@ import com.chinatsp.settinglib.manager.cabin.CabinManager
 import com.chinatsp.settinglib.manager.consumer.PanoramaCommandConsumer
 import com.chinatsp.settinglib.manager.lamp.LampManager
 import com.chinatsp.settinglib.manager.sound.AudioManager
+import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.annotation.IAct
@@ -31,7 +34,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * @desc   :
  * @version: 1.0
  */
-class GlobalManager private constructor() : BaseManager() {
+class GlobalManager private constructor() : BaseManager(), ISwitchManager {
 
     companion object {
         val TAG: String = GlobalManager::class.java.simpleName
@@ -43,6 +46,72 @@ class GlobalManager private constructor() : BaseManager() {
     private val tabSerial: AtomicInteger by lazy {
         val isLevel3 = VcuUtils.isCareLevel(Level.LEVEL3, expect = true)
         AtomicInteger(0)
+    }
+
+    private val nodeValid33F: SwitchState by lazy { SwitchState(true) }
+    private val nodeValid362: SwitchState by lazy { SwitchState(true) }
+    private val nodeValid332: SwitchState by lazy { SwitchState(true) }
+    private val nodeValid591: SwitchState by lazy { SwitchState(true) }
+    private val nodeValid581: SwitchState by lazy { SwitchState(true) }
+
+    private val nodeValid582: SwitchState by lazy { SwitchState(true) }
+    private val nodeValid598: SwitchState by lazy { SwitchState(true) }
+    private val nodeValid580: SwitchState by lazy { SwitchState(true) }
+    private val nodeValid514: SwitchState by lazy { SwitchState(true) }
+    private val nodeValid5D4: SwitchState by lazy { SwitchState(true) }
+
+    private val nodeValid513: SwitchState by lazy { SwitchState(true) }
+    private val nodeValid58F: SwitchState by lazy { SwitchState(true) }
+    private val nodeValid523: SwitchState by lazy { SwitchState(true) }
+    private val nodeValid5B3: SwitchState by lazy { SwitchState(true) }
+    private val nodeValid65A: SwitchState by lazy { SwitchState(true) }
+
+    private val nodeValid621: SwitchState by lazy { SwitchState(true) }
+    private val nodeValid645: SwitchState by lazy { SwitchState(true) }
+    private val nodeValid654: SwitchState by lazy { SwitchState(true) }
+    private val nodeValid66F: SwitchState by lazy { SwitchState(true) }
+    private val nodeValid2E5: SwitchState by lazy { SwitchState(true) }
+
+    private val nodeValidNFC: SwitchState by lazy { SwitchState(true) }
+
+    private val nodeValidList: Array<SwitchNode> by lazy {
+        arrayOf(
+            SwitchNode.NODE_VALID_33F, SwitchNode.NODE_VALID_362, SwitchNode.NODE_VALID_332, SwitchNode.NODE_VALID_591, SwitchNode.NODE_VALID_581,
+            SwitchNode.NODE_VALID_582, SwitchNode.NODE_VALID_598, SwitchNode.NODE_VALID_580, SwitchNode.NODE_VALID_514, SwitchNode.NODE_VALID_5D4,
+            SwitchNode.NODE_VALID_513, SwitchNode.NODE_VALID_58F, SwitchNode.NODE_VALID_523, SwitchNode.NODE_VALID_5B3, SwitchNode.NODE_VALID_65A,
+            SwitchNode.NODE_VALID_621, SwitchNode.NODE_VALID_645, SwitchNode.NODE_VALID_654, SwitchNode.NODE_VALID_66F, SwitchNode.NODE_VALID_2E5,
+            SwitchNode.NODE_VALID_NFC
+        )
+    }
+
+    private val nodeValidMap: Map<SwitchNode, SwitchState> by lazy {
+        val map = mutableMapOf<SwitchNode, SwitchState>()
+        map[SwitchNode.NODE_VALID_33F] = nodeValid33F
+        map[SwitchNode.NODE_VALID_362] = nodeValid362
+        map[SwitchNode.NODE_VALID_332] = nodeValid332
+        map[SwitchNode.NODE_VALID_591] = nodeValid591
+        map[SwitchNode.NODE_VALID_581] = nodeValid581
+
+        map[SwitchNode.NODE_VALID_582] = nodeValid582
+        map[SwitchNode.NODE_VALID_598] = nodeValid598
+        map[SwitchNode.NODE_VALID_580] = nodeValid580
+        map[SwitchNode.NODE_VALID_514] = nodeValid514
+        map[SwitchNode.NODE_VALID_5D4] = nodeValid5D4
+
+        map[SwitchNode.NODE_VALID_513] = nodeValid513
+        map[SwitchNode.NODE_VALID_58F] = nodeValid58F
+        map[SwitchNode.NODE_VALID_523] = nodeValid523
+        map[SwitchNode.NODE_VALID_5B3] = nodeValid5B3
+        map[SwitchNode.NODE_VALID_65A] = nodeValid65A
+
+        map[SwitchNode.NODE_VALID_621] = nodeValid621
+        map[SwitchNode.NODE_VALID_645] = nodeValid645
+        map[SwitchNode.NODE_VALID_654] = nodeValid654
+        map[SwitchNode.NODE_VALID_66F] = nodeValid66F
+        map[SwitchNode.NODE_VALID_2E5] = nodeValid2E5
+
+        map[SwitchNode.NODE_VALID_NFC] = nodeValidNFC
+        map
     }
 
     private val panoramaConsumer: PanoramaCommandConsumer by lazy {
@@ -96,10 +165,77 @@ class GlobalManager private constructor() : BaseManager() {
                 return true
             }
         }
+        if (Origin.MCU == origin) {
+            if (CarMcuManager.ID_MCU_LOST_CANID == property.propertyId) {
+                doCanNodeChanged(property.value)
+                return true
+            }
+        }
         managers.forEach {
             it.onDispatchSignal(property, origin)
         }
         return true
+    }
+
+    private fun doCanNodeChanged(any: Any?) {
+        /**
+         * CAN节点丢失 0x00-正常 0x01-丢失
+         * int32Values[0]: 空调
+         * int32Values[1]: 仪表
+         * int32Values[2]: IBCM
+         * int32Values[3]: PEPS
+         * int32Values[4]: 空调面板
+         * int32Values[5]: 倒车雷达
+         * int32Values[6]: AVM
+         * int32Values[7]: APA
+         * int32Values[8]: 人脸识别
+         * int32Values[9]: DSM
+         * int32Values[10]: GW
+         * int32Values[11]: 尾门
+         * int32Values[12]: VCU
+         * int32Values[13]: BSM
+         * int32Values[14]: EMS
+         *
+         * v0.69 新增
+         * int32Values[15]: 车辆设置33F
+         * int32Values[16]: 车辆设置362
+         * int32Values[17]: 车辆设置332
+         * int32Values[18]: 车辆设置591
+         * int32Values[19]: 车辆设置581
+         * int32Values[20]: 车辆设置盲区
+         * int32Values[21]: 车辆设置仪表亮度
+         * int32Values[22]: 车辆设置580
+         * int32Values[23]: 车辆设置514
+         * int32Values[24]: 车辆设置5D4
+         * int32Values[25]: 车辆设置空调舒适性
+         * int32Values[26]: 车辆设置58F
+         * int32Values[27]: 车辆设置523
+         * int32Values[28]: 车辆设置5B3
+         * int32Values[29]: 车辆设置65A
+         * int32Values[30]: 车辆设置621
+         * int32Values[31]: 车辆设置645
+         * int32Values[32]: 车辆设置654
+         * int32Values[33]: 车辆设置66F
+         * int32Values[34]: 车辆设置电源管家
+         * int32Values[35]: 车辆设置NFC
+         **/
+
+        val values = any as? Array<*>
+        if (null != values && values.size >= 35) {
+            values.filterIndexed { index1, _ -> index1 >= 15 }
+                .forEachIndexed { index, value ->
+                    Timber.d("-------------luohong------$index---------$value")
+                    val node = nodeValidList[index]
+                    val state = nodeValidMap[node]
+                    if (null != state) {
+                        val status = value == 0x1
+                        if (state.get() xor status) {
+                            state.set(status)
+                            doSwitchChanged(node, state)
+                        }
+                    }
+                }
+        }
     }
 
     private fun onPowerLevelChanged(voltageLevel: Any?) {
@@ -368,6 +504,14 @@ class GlobalManager private constructor() : BaseManager() {
 //        writeProperty(CarCabinManager.ID_FRNTLEWINPOSNSET, value, Origin.CABIN)
 //        writeProperty(CarCabinManager.ID_FRNTRIWINPOSNSET, value, Origin.CABIN)
         return true
+    }
+
+    override fun doGetSwitchOption(node: SwitchNode): SwitchState? {
+       return nodeValidMap[node]
+    }
+
+    override fun doSetSwitchOption(node: SwitchNode, status: Boolean): Boolean {
+        return false
     }
 
 }

@@ -100,10 +100,8 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
     }
 
     private fun initVideoListener() {
-//        val uri = "android.resource://" + activity?.packageName + "/" + R.raw.video_fcw
         binding.video.holder.setFormat(PixelFormat.TRANSPARENT)
         binding.video.setAudioFocusRequest(AudioManager.AUDIOFOCUS_NONE)
-//        binding.video.setVideoURI(Uri.parse(uri))
         binding.video.setOnCompletionListener {
             dynamicEffect()
         }
@@ -129,6 +127,10 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
             doUpdateSwitch(SwitchNode.ADAS_AEB, it)
             executeAebAnimation(it.get())
         }
+        viewModel.node33F.observe(this) {
+            updateSwitchEnable(SwitchNode.ADAS_FCW)
+            updateSwitchEnable(SwitchNode.ADAS_AEB)
+        }
     }
 
     private fun initSwitchOption() {
@@ -151,6 +153,14 @@ class DriveForwardFragment : BaseFragment<ForwardViewModel, DriveForwardFragment
         return when (node) {
             SwitchNode.ADAS_FCW -> viewModel.fcwFunction.value?.enable() ?: false
             SwitchNode.ADAS_AEB -> viewModel.aebFunction.value?.enable() ?: false
+            else -> super.obtainActiveByNode(node)
+        }
+    }
+
+    override fun obtainDependByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.ADAS_FCW -> viewModel.node33F.value?.get() ?: true
+            SwitchNode.ADAS_AEB -> viewModel.node33F.value?.get() ?: true
             else -> super.obtainActiveByNode(node)
         }
     }

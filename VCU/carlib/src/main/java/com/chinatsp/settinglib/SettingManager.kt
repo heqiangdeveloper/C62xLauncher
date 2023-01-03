@@ -161,7 +161,7 @@ class SettingManager private constructor() {
         override fun onChangeEvent(property: CarPropertyValue<*>) {
             val id = property.propertyId
             Timber.tag(Constant.VehicleSignal)
-                .d("doActionSignal receive-mcu hex-id::${Integer.toHexString(id)}, dec-id:$id value:${property.value}, ${VcuUtils.V_N}")
+                .d("doActionSignal receive-mcu hex-id::${Integer.toHexString(id)}, dec-id:$id, valueType:${property.value.javaClass}, value:${property.value}, ${VcuUtils.V_N}")
             GlobalManager.instance.onDispatchSignal(property, Origin.MCU)
         }
 
