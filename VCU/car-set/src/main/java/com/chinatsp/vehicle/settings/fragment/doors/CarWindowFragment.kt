@@ -7,6 +7,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.access.WindowManager
+import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.IRoute
@@ -167,6 +168,9 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
             updateSwitchEnable(SwitchNode.RAIN_WIPER_REPAIR)
             executeWiperAnimation(it.get())
         }
+        viewModel.node362.observe(this){
+            updateSwitchEnable(SwitchNode.WIN_CLOSE_FOLLOW_LOCK)
+        }
     }
 
     private fun executeWiperAnimation(status: Boolean) {
@@ -202,6 +206,13 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
             SwitchNode.WIN_CLOSE_WHILE_RAIN -> binding.carWindowRainyDaySwb
             SwitchNode.RAIN_WIPER_REPAIR -> binding.carWindowWiperSwb
             else -> null
+        }
+    }
+
+    override fun obtainDependByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.WIN_CLOSE_FOLLOW_LOCK -> viewModel.node362.value?.get() ?: true
+            else -> super.obtainActiveByNode(node)
         }
     }
 

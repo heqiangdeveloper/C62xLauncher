@@ -8,6 +8,7 @@ import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.listener.IProgressListener
+import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.lamp.LightManager
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
@@ -65,6 +66,14 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
         MutableLiveData(manager.doGetRadioOption(node))
     }
 
+    val node362: LiveData<SwitchState>
+        get() = _node362
+
+    private val _node362: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_362
+        MutableLiveData(manager.doGetSwitchOption(node))
+    }
+
     val ceremonySense: LiveData<RadioState>
         get() = _ceremonySense
 
@@ -88,10 +97,12 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
     override fun onCreate() {
         super.onCreate()
         keySerial = manager.onRegisterVcuListener(listener = this)
+        GlobalManager.instance.onRegisterVcuListener(listener = this)
     }
 
     override fun onDestroy() {
         manager.unRegisterVcuListener(keySerial)
+        GlobalManager.instance.unRegisterVcuListener(keySerial)
         super.onDestroy()
     }
 
@@ -121,6 +132,9 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
             }
             SwitchNode.LIGHT_CEREMONY_SENSE -> {
                 doUpdate(_ceremonySenseSwitch, status)
+            }
+            SwitchNode.NODE_VALID_362 ->{
+                doUpdate(_node362,status)
             }
             else -> {}
         }

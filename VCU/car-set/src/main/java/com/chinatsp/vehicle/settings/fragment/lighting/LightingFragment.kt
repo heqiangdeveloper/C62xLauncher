@@ -210,6 +210,9 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
             updateSwitchEnable(node)
             updateRadioEnable(RadioNode.LIGHT_CEREMONY_SENSE)
         }
+        viewModel.node362.observe(this){
+            updateRadioEnable(RadioNode.LIGHT_FLICKER)
+        }
     }
 
     override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
@@ -244,6 +247,7 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
         return when (node) {
             RadioNode.LIGHT_CEREMONY_SENSE -> obtainActiveByNode(RadioNode.LIGHT_CEREMONY_SENSE)
                     && binding.lightCeremonySenseSwitch.isChecked
+            RadioNode.LIGHT_FLICKER -> viewModel.node362.value?.get() ?: true
             else -> super.obtainActiveByNode(node)
         }
     }

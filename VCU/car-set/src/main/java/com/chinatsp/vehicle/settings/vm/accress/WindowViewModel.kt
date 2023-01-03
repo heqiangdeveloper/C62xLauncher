@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.ISwitchListener
+import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.access.WindowManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
@@ -35,6 +36,14 @@ class WindowViewModel @Inject constructor(app: Application, model: BaseModel) :
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
+    val node362: LiveData<SwitchState>
+        get() = _node362
+
+    private val _node362: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_362
+        MutableLiveData(manager.doGetSwitchOption(node))
+    }
+
     val winRemoteControl: LiveData<SwitchState>
         get() = _winRemoteControl
 
@@ -54,10 +63,12 @@ class WindowViewModel @Inject constructor(app: Application, model: BaseModel) :
     override fun onCreate() {
         super.onCreate()
         keySerial = manager.onRegisterVcuListener(listener = this)
+        GlobalManager.instance.onRegisterVcuListener(listener = this)
     }
 
     override fun onDestroy() {
         manager.unRegisterVcuListener(serial = keySerial)
+        GlobalManager.instance.unRegisterVcuListener(keySerial)
         super.onDestroy()
     }
 
@@ -79,6 +90,9 @@ class WindowViewModel @Inject constructor(app: Application, model: BaseModel) :
             }
             SwitchNode.RAIN_WIPER_REPAIR -> {
                 doUpdate(_rainWiperRepair, status)
+            }
+            SwitchNode.NODE_VALID_362->{
+                doUpdate(_node362,status)
             }
             else -> {}
         }

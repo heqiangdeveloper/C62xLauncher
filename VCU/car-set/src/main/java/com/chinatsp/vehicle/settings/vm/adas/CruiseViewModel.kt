@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IOptionListener
+import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.adas.CruiseManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -42,14 +43,23 @@ class CruiseViewModel @Inject constructor(app: Application, model: BaseModel) :
         val node = RadioNode.ADAS_LIMBER_LEAVE
         MutableLiveData(manager.doGetRadioOption(node))
     }
+    val node33F: LiveData<SwitchState>
+        get() = _node33F
+
+    private val _node33F: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_33F
+        MutableLiveData(manager.doGetSwitchOption(node))
+    }
 
     override fun onCreate() {
         super.onCreate()
         keySerial = manager.onRegisterVcuListener(0, this)
+        GlobalManager.instance.onRegisterVcuListener(listener = this)
     }
 
     override fun onDestroy() {
         manager.unRegisterVcuListener(keySerial, keySerial)
+        GlobalManager.instance.unRegisterVcuListener(keySerial)
         super.onDestroy()
     }
 
@@ -57,6 +67,7 @@ class CruiseViewModel @Inject constructor(app: Application, model: BaseModel) :
         when (node) {
             SwitchNode.ADAS_IACC -> doUpdate(_cruiseAssistFunction, status)
             SwitchNode.ADAS_LIMBER_LEAVE -> doUpdate(_limberLeaveFunction, status)
+            SwitchNode.NODE_VALID_33F -> doUpdate(_node33F, status)
             else -> {}
         }
     }

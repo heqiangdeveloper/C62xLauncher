@@ -174,6 +174,9 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
             doUpdateSwitch(SwitchNode.ADAS_LIMBER_LEAVE, it)
             updateSwitchEnable(SwitchNode.ADAS_LIMBER_LEAVE)
         }
+        viewModel.node33F.observe(this){
+            updateSwitchEnable(SwitchNode.ADAS_IACC)
+        }
     }
 
     override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
@@ -191,6 +194,13 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
                     && binding.accessCruiseCruiseAssist.isChecked
                     && (viewModel.limberLeaveFunction.value?.enable() ?: false)
             else -> super.obtainActiveByNode(node)
+        }
+    }
+
+    override fun obtainDependByNode(node: SwitchNode): Boolean {
+       return when (node) {
+            SwitchNode.ADAS_IACC -> viewModel.node33F.value?.get() ?: true
+            else -> super.obtainDependByNode(node)
         }
     }
 
