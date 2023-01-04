@@ -134,6 +134,15 @@ public class AppCarService implements ICarService {
         return result == 0x1;
     }
 
+    /*
+    *是否处于R档位  1  P  2  R  3 N  4  D
+     */
+    public boolean isReverseGear(){
+        int result = getIntProperty(CarCabinManager.ID_TCU_SELECTED_GEAR);
+        EasyLog.d(TAG, "isReverseGear result = " + result);
+        return result == 0x2;
+    }
+
     private int getIntProperty(int propertyId) {
         if (mCarCabinManager != null) {
             try {

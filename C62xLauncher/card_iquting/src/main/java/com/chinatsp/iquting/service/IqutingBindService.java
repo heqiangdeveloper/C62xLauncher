@@ -321,6 +321,7 @@ public class IqutingBindService {
             isPlaying = true;
             doMusicRhythm();//音乐律动
             Settings.System.putString(mContext.getContentResolver(), IqutingConfigs.SAVE_SOURCE, IqutingConfigs.AQT);//音源写入数据库
+            Settings.System.putInt(mContext.getContentResolver(), IqutingConfigs.AQT_PLAYING, 1);//爱趣听播放状态写入数据库
             playStateListenerList = playStateListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
             for(IqutingPlayStateListener listener : playStateListenerList){
                 listener.onStart();
@@ -332,6 +333,7 @@ public class IqutingBindService {
             Log.d(TAG,"onPause");
             isPlaying = false;
             doMusicRhythm();//音乐律动
+            Settings.System.putInt(mContext.getContentResolver(), IqutingConfigs.AQT_PLAYING, 0);//爱趣听播放状态写入数据库
             playStateListenerList = playStateListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
             for(IqutingPlayStateListener listener : playStateListenerList){
                 listener.onPause();
@@ -343,6 +345,7 @@ public class IqutingBindService {
             Log.d(TAG,"onStop");
             isPlaying = false;
             doMusicRhythm();//音乐律动
+            Settings.System.putInt(mContext.getContentResolver(), IqutingConfigs.AQT_PLAYING, 0);//爱趣听播放状态写入数据库
             playStateListenerList = playStateListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
             for(IqutingPlayStateListener listener : playStateListenerList){
                 listener.onStop();

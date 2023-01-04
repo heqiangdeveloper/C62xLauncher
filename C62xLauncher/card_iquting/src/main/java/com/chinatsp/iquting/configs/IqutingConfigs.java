@@ -10,4 +10,5 @@ public class IqutingConfigs {
     public static final String SAVE_SOURCE = "SAVE_SOURCE"; //保存音源值
     public static final String AQT_PARAM = "isOpen"; // true : 打开爱趣听 ，false :不打开爱趣听
     public static final String AQT = "AQT";
+    public static final String AQT_PLAYING = "aqt_playing"; //爱趣听是否在播放中，1是，0否
 }
