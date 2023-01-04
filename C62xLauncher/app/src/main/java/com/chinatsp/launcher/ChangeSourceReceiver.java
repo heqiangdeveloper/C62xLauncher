@@ -9,11 +9,14 @@ import android.widget.Toast;
 
 import com.chinatsp.apppanel.AppConfigs.Constant;
 import com.chinatsp.apppanel.window.AppManagementWindow;
+import com.chinatsp.carservice.AppCarService;
 import com.chinatsp.iquting.callback.IQueryIqutingLoginStatus;
 import com.chinatsp.iquting.configs.IqutingConfigs;
 import com.chinatsp.iquting.service.IqutingBindService;
 import com.tencent.wecarflow.controlsdk.FlowPlayControl;
 import com.tencent.wecarflow.controlsdk.QueryCallback;
+
+import launcher.base.service.AppServiceManager;
 
 public class ChangeSourceReceiver extends BroadcastReceiver {
     private static final String TAG = "ChangeSourceReceiver";
@@ -40,7 +43,10 @@ public class ChangeSourceReceiver extends BroadcastReceiver {
             String source = Settings.System.getString(context.getContentResolver(), IqutingConfigs.SAVE_SOURCE);
             Log.d(TAG, "KEY_code:" + code + " KEY_state:" + state + " source:" + source);
 
-            if (!IqutingConfigs.AQT.equals(source) || KEY_STATE_DOWN.equals(state)) {
+            AppCarService carService = (AppCarService) AppServiceManager.getService(AppServiceManager.SERVICE_CAR);
+            boolean isReverseGear = carService.isReverseGear();
+            Log.d(TAG,"isReverseGear = " + isReverseGear);
+            if (isReverseGear || !IqutingConfigs.AQT.equals(source) || KEY_STATE_DOWN.equals(state)) {
                 return;
             }
             if (code.equals(KEY_PRE)) {
