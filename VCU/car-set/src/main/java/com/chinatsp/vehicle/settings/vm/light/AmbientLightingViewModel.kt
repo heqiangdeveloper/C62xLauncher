@@ -7,6 +7,7 @@ import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IProgressListener
 import com.chinatsp.settinglib.listener.ISwitchListener
+import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.lamp.AmbientLightingManager
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -60,14 +61,23 @@ class AmbientLightingViewModel @Inject constructor(app: Application, model: Base
             this.value = value
         }
     }
+    val node362: LiveData<SwitchState>
+        get() = _node362
+
+    private val _node362: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_362
+        MutableLiveData(manager.doGetSwitchOption(node))
+    }
 
     override fun onCreate() {
         super.onCreate()
         keySerial = manager.onRegisterVcuListener(listener = this)
+        GlobalManager.instance.onRegisterVcuListener(listener = this)
     }
 
     override fun onDestroy() {
         manager.unRegisterVcuListener(keySerial)
+        GlobalManager.instance.unRegisterVcuListener(keySerial)
         super.onDestroy()
     }
 
@@ -89,6 +99,9 @@ class AmbientLightingViewModel @Inject constructor(app: Application, model: Base
             }
             SwitchNode.BACK_AMBIENT_LIGHTING -> {
                 doUpdate(_backLighting, status)
+            }
+            SwitchNode.NODE_VALID_362->{
+                doUpdate(_node362,status)
             }
             else -> {}
         }

@@ -102,6 +102,14 @@ class CabinACFragment : BaseFragment<CabinACViewModel, CabinAcFragmentBinding>()
         viewModel.windLiveData.observe(this) {
             doUpdateSwitch(SwitchNode.AC_ADVANCE_WIND, it)
         }
+        viewModel.node514.observe(this) {
+            updateSwitchEnable(SwitchNode.AC_ADVANCE_WIND)
+            updateSwitchEnable(SwitchNode.AC_AUTO_ARID)
+        }
+        viewModel.node513.observe(this) {
+            updateSwitchEnable(SwitchNode.AC_AUTO_DEMIST)
+            updateRadioEnable(RadioNode.AC_COMFORT)
+        }
     }
 
     private fun setSwitchListener() {
@@ -137,9 +145,24 @@ class CabinACFragment : BaseFragment<CabinACViewModel, CabinAcFragmentBinding>()
 
     override fun obtainActiveByNode(node: RadioNode): Boolean {
         return when (node) {
-            RadioNode.AC_COMFORT -> viewModel.comfortLiveData.value?.enable() ?: false
+            RadioNode.AC_COMFORT -> (viewModel.comfortLiveData.value?.enable() ?: false)
             else -> super.obtainActiveByNode(node)
         }
     }
 
+    override fun obtainDependByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.AC_ADVANCE_WIND -> viewModel.node514.value?.get() ?: true
+            SwitchNode.AC_AUTO_ARID -> viewModel.node514.value?.get() ?: true
+            SwitchNode.AC_AUTO_DEMIST -> viewModel.node513.value?.get() ?: true
+            else -> super.obtainActiveByNode(node)
+        }
+    }
+
+    override fun obtainDependByNode(node: RadioNode): Boolean {
+        return when (node) {
+            RadioNode.AC_COMFORT -> viewModel.node513.value?.get() ?: true
+            else -> super.obtainActiveByNode(node)
+        }
+    }
 }

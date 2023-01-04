@@ -8,6 +8,7 @@ import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.listener.IProgressListener
+import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.access.SternDoorManager
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
@@ -67,14 +68,23 @@ class SternDoorViewModel @Inject constructor(app: Application, model: BaseModel)
             this.value = manager.doGetVolume(node)
         }
     }
+    val node58F: LiveData<SwitchState>
+        get() = _node58F
+
+    private val _node58F: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_58F
+        MutableLiveData(manager.doGetSwitchOption(node))
+    }
 
     override fun onCreate() {
         super.onCreate()
         keySerial = manager.onRegisterVcuListener(listener = this)
+        GlobalManager.instance.onRegisterVcuListener(listener = this)
     }
 
     override fun onDestroy() {
         manager.unRegisterVcuListener(serial = keySerial)
+        GlobalManager.instance.unRegisterVcuListener(keySerial)
         super.onDestroy()
     }
 
@@ -88,6 +98,9 @@ class SternDoorViewModel @Inject constructor(app: Application, model: BaseModel)
             }
             SwitchNode.STERN_AUDIO_ALARM -> {
                 doUpdate(_audioAlarmFunction, status)
+            }
+            SwitchNode.NODE_VALID_58F->{
+                doUpdate(_node58F,status)
             }
             else -> {}
         }

@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IOptionListener
+import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.access.DoorManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -61,13 +62,22 @@ class DoorsViewModel @Inject constructor(app: Application, model: BaseModel) :
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
+    val node580: LiveData<SwitchState>
+        get() = _node580
+
+    private val _node580: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_580
+        MutableLiveData(manager.doGetSwitchOption(node))
+    }
     override fun onCreate() {
         super.onCreate()
         keySerial = manager.onRegisterVcuListener(listener = this)
+        GlobalManager.instance.onRegisterVcuListener(listener = this)
     }
 
     override fun onDestroy() {
         manager.unRegisterVcuListener(keySerial)
+        GlobalManager.instance.unRegisterVcuListener(keySerial)
         super.onDestroy()
     }
 
@@ -81,6 +91,9 @@ class DoorsViewModel @Inject constructor(app: Application, model: BaseModel) :
             }
             SwitchNode.OUTER_NFC -> {
                 doUpdate(_nfcOuter, status)
+            }
+            SwitchNode.NODE_VALID_580->{
+                doUpdate(_node580,status)
             }
             else -> {}
         }

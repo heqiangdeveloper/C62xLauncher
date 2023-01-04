@@ -170,6 +170,8 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
         }
         viewModel.node362.observe(this){
             updateSwitchEnable(SwitchNode.WIN_CLOSE_FOLLOW_LOCK)
+            updateSwitchEnable(SwitchNode.WIN_CLOSE_WHILE_RAIN)
+            updateSwitchEnable(SwitchNode.RAIN_WIPER_REPAIR)
         }
     }
 
@@ -212,6 +214,8 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
     override fun obtainDependByNode(node: SwitchNode): Boolean {
         return when (node) {
             SwitchNode.WIN_CLOSE_FOLLOW_LOCK -> viewModel.node362.value?.get() ?: true
+            SwitchNode.WIN_CLOSE_WHILE_RAIN -> viewModel.node362.value?.get() ?: true
+            SwitchNode.RAIN_WIPER_REPAIR -> viewModel.node362.value?.get() ?: true
             else -> super.obtainActiveByNode(node)
         }
     }

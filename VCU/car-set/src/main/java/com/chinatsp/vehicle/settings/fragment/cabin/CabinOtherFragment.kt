@@ -123,6 +123,9 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
                 updateSwitchTextHint(binding.otherTrailerRemindTextView, ld)
             }
         }
+        viewModel.node362.observe(this){
+            updateSwitchEnable(SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP)
+        }
     }
 
     override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
@@ -141,6 +144,13 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
                 ?: false
             SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP -> viewModel.wirelessChargingLamp.value?.enable()
                 ?: false
+            else -> super.obtainActiveByNode(node)
+        }
+    }
+
+    override fun obtainDependByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP -> viewModel.node362.value?.get() ?: true
             else -> super.obtainActiveByNode(node)
         }
     }

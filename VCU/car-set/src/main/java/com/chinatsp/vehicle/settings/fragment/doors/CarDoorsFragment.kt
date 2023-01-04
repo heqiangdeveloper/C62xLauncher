@@ -143,6 +143,9 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
         viewModel.nfcOuter.observe(this) {
             syncNfcDisplay(timely = true)
         }
+        viewModel.node580.observe(this){
+            updateSwitchEnable(SwitchNode.DOOR_SMART_ENTER)
+        }
     }
 
     override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
@@ -168,6 +171,13 @@ class CarDoorsFragment : BaseFragment<DoorsViewModel, CarDoorsFragmentBinding>()
         return when (node) {
             RadioNode.DOOR_DRIVE_LOCK -> viewModel.automaticDoorLock.value?.enable() ?: false
             RadioNode.DOOR_QUENCH_UNLOCK -> viewModel.autoDoorUnlock.value?.enable() ?: false
+            else -> super.obtainActiveByNode(node)
+        }
+    }
+
+    override fun obtainDependByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.DOOR_SMART_ENTER -> viewModel.node580.value?.get() ?: true
             else -> super.obtainActiveByNode(node)
         }
     }

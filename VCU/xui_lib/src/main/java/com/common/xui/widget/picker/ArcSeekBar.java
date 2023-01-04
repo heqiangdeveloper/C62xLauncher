@@ -250,6 +250,11 @@ public class ArcSeekBar extends View {
     private boolean isCanDrag = false;
 
     /**
+     * 是否可以滑动
+     */
+    public boolean isSlide = true;
+
+    /**
      * 是否启用拖拽改变进度
      */
     private boolean isEnabledDrag = true;
@@ -708,7 +713,7 @@ public class ArcSeekBar extends View {
                     checkCanDrag(event.getX(), event.getY());
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    if (isCanDrag) {
+                    if (isCanDrag && isSlide) {
                         updateDragThumb(event.getX(), event.getY(), false);
                     }
                     break;

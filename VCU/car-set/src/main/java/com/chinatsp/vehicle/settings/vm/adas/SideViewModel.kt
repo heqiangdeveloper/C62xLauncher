@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IOptionListener
+import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.adas.SideBackManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -61,13 +62,38 @@ class SideViewModel @Inject constructor(app: Application, model: BaseModel) :
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
+    val node591: LiveData<SwitchState>
+        get() = _node591
+
+    private val _node591: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_591
+        MutableLiveData(manager.doGetSwitchOption(node))
+    }
+    val node581: LiveData<SwitchState>
+        get() = _node581
+
+    private val _node581: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_581
+        MutableLiveData(manager.doGetSwitchOption(node))
+    }
+
+    val node582: LiveData<SwitchState>
+        get() = _node582
+
+    private val _node582: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_582
+        MutableLiveData(manager.doGetSwitchOption(node))
+    }
+
     override fun onCreate() {
         super.onCreate()
         keySerial = manager.onRegisterVcuListener(0, this)
+        GlobalManager.instance.onRegisterVcuListener(listener = this)
     }
 
     override fun onDestroy() {
         manager.unRegisterVcuListener(keySerial, keySerial)
+        GlobalManager.instance.unRegisterVcuListener(keySerial)
         super.onDestroy()
     }
 
@@ -87,6 +113,15 @@ class SideViewModel @Inject constructor(app: Application, model: BaseModel) :
             }
             SwitchNode.ADAS_MEB -> {
                 doUpdate(_mebValue, status)
+            }
+            SwitchNode.NODE_VALID_591->{
+                doUpdate(_node591,status)
+            }
+            SwitchNode.NODE_VALID_581->{
+                doUpdate(_node581,status)
+            }
+            SwitchNode.NODE_VALID_582->{
+                doUpdate(_node582,status)
             }
             else -> {}
         }

@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IOptionListener
+import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.cabin.ACManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -58,14 +59,31 @@ class CabinACViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     val comfortLiveData: LiveData<RadioState> by lazy { _comfortLiveData }
 
+    val node514: LiveData<SwitchState>
+        get() = _node514
+
+    private val _node514: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_514
+        MutableLiveData(manager.doGetSwitchOption(node))
+    }
+    val node513: LiveData<SwitchState>
+        get() = _node513
+
+    private val _node513: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_513
+        MutableLiveData(manager.doGetSwitchOption(node))
+    }
+
     override fun onCreate() {
         super.onCreate()
         keySerial = manager.onRegisterVcuListener(0, this)
+        GlobalManager.instance.onRegisterVcuListener(listener = this)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         manager.unRegisterVcuListener(keySerial, keySerial)
+        GlobalManager.instance.unRegisterVcuListener(keySerial)
     }
 
     override fun onSwitchOptionChanged(status: SwitchState, node: SwitchNode) {
@@ -73,6 +91,8 @@ class CabinACViewModel @Inject constructor(app: Application, model: BaseModel) :
             SwitchNode.AC_AUTO_ARID -> _aridLiveData
             SwitchNode.AC_AUTO_DEMIST -> _demistLiveData
             SwitchNode.AC_ADVANCE_WIND -> _windLiveData
+            SwitchNode.NODE_VALID_514 -> _node514
+            SwitchNode.NODE_VALID_513 -> _node513
             else -> null
         }
         liveData?.let {

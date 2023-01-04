@@ -8,6 +8,7 @@ import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.manager.lamp.BrightnessManager
 import com.chinatsp.settinglib.optios.Progress
+import com.chinatsp.vehicle.settings.IProgressAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.LightingScreenFragmentBinding
 import com.chinatsp.vehicle.settings.vm.light.BrightnessViewModel
@@ -17,7 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class LightingScreenFragment : BaseFragment<BrightnessViewModel, LightingScreenFragmentBinding>(),
-    VSeekBar.OnSeekBarListener {
+    VSeekBar.OnSeekBarListener, IProgressAction {
 
     private val AC_BRIGHTNESS = 0x33
     private val METER_BRIGHTNESS = 0x44
@@ -30,14 +31,21 @@ class LightingScreenFragment : BaseFragment<BrightnessViewModel, LightingScreenF
     }
 
     private val handler: Handler by lazy {
-        Handler(Looper.getMainLooper()
+        Handler(
+            Looper.getMainLooper()
         ) {
             when (it.what) {
                 METER_BRIGHTNESS -> {
-                    updateSeekBarValue( binding.lightScreenMeterSeekbar, viewModel.meterScreenVolume.value!!)
+                    updateSeekBarValue(
+                        binding.lightScreenMeterSeekbar,
+                        viewModel.meterScreenVolume.value!!
+                    )
                 }
                 AC_BRIGHTNESS -> {
-                    updateSeekBarValue( binding.lightScreenAcSeekbar, viewModel.acScreenVolume.value!!)
+                    updateSeekBarValue(
+                        binding.lightScreenAcSeekbar,
+                        viewModel.acScreenVolume.value!!
+                    )
                 }
                 else -> {}
             }
@@ -49,30 +57,38 @@ class LightingScreenFragment : BaseFragment<BrightnessViewModel, LightingScreenF
         initSeekBar()
         setSeekBarListener(this)
         initSeekLiveData()
+        addSwitchLiveDataListener()
 
-        initSwitchStatus()
+        updateBrightnessEnable()
         initSwitchStatusListener()
-    }
-
-    private fun initSwitchStatus() {
-        val status = viewModel.lightAutoMode.value?.get() ?: false
-        updateBrightnessEnable(!status)
     }
 
     private fun initSwitchStatusListener() {
         viewModel.lightAutoMode.observe(this) {
-            updateBrightnessEnable(!it.get())
+            updateBrightnessEnable()
         }
     }
 
-    private fun updateBrightnessEnable(enable: Boolean) {
+    private fun addSwitchLiveDataListener() {
+        viewModel.node598.observe(this) {
+            //updateMeterScreenBrightnessEnable(!it.get())
+            updateProgressEnable(Progress.METER_SCREEN_BRIGHTNESS)
+        }
+        viewModel.node5D4.observe(this){
+         updateProgressEnable(Progress.CONDITIONER_SCREEN_BRIGHTNESS)
+        }
+    }
+
+    private fun updateMeterScreenBrightnessEnable(enable: Boolean) {
         val alpha = if (enable) 1.0f else 0.6f
-        binding.lightScreenCarSeekbar.alpha = alpha
-        binding.lightScreenCarSeekbar.isEnabled = enable
         binding.lightScreenMeterSeekbar.alpha = alpha
         binding.lightScreenMeterSeekbar.isEnabled = enable
-        binding.lightScreenAcSeekbar.alpha = alpha
-        binding.lightScreenAcSeekbar.isEnabled = enable
+    }
+
+    private fun updateBrightnessEnable() {
+        updateProgressEnable(Progress.HOST_SCREEN_BRIGHTNESS)
+        updateProgressEnable(Progress.CONDITIONER_SCREEN_BRIGHTNESS)
+        updateProgressEnable(Progress.METER_SCREEN_BRIGHTNESS)
     }
 
     private fun initSeekLiveData() {
@@ -138,6 +154,27 @@ class LightingScreenFragment : BaseFragment<BrightnessViewModel, LightingScreenF
                 }
                 else -> {}
             }
+        }
+    }
+
+    override fun findProgressByNode(node: Progress): VSeekBar? {
+        return when (node) {
+            Progress.HOST_SCREEN_BRIGHTNESS -> binding.lightScreenCarSeekbar
+            Progress.CONDITIONER_SCREEN_BRIGHTNESS -> binding.lightScreenAcSeekbar
+            Progress.METER_SCREEN_BRIGHTNESS -> binding.lightScreenMeterSeekbar
+            else -> null
+        }
+    }
+
+    override fun obtainActiveByNode(node: Progress): Boolean {
+        return !(viewModel.lightAutoMode.value?.get() ?: false)
+    }
+
+    override fun obtainDependByNode(node: Progress): Boolean {
+        return when (node) {
+            Progress.METER_SCREEN_BRIGHTNESS -> viewModel.node598.value?.get() ?: true
+            Progress.CONDITIONER_SCREEN_BRIGHTNESS -> viewModel.node5D4.value?.get() ?: true
+            else -> super.obtainActiveByNode(node)
         }
     }
 

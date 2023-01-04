@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IOptionListener
+import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.adas.CombineManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -35,13 +36,23 @@ class CombineViewModel @Inject constructor(app: Application, model: BaseModel) :
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
+    val node332: LiveData<SwitchState>
+        get() = _node332
+
+    private val _node332: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_332
+        MutableLiveData(manager.doGetSwitchOption(node))
+    }
+
     override fun onCreate() {
         super.onCreate()
         keySerial = manager.onRegisterVcuListener(listener = this)
+        GlobalManager.instance.onRegisterVcuListener(listener = this)
     }
 
     override fun onDestroy() {
         manager.unRegisterVcuListener(keySerial)
+        GlobalManager.instance.unRegisterVcuListener(keySerial)
         super.onDestroy()
     }
 
@@ -53,6 +64,9 @@ class CombineViewModel @Inject constructor(app: Application, model: BaseModel) :
             }
             SwitchNode.ADAS_TSR -> {
                 doUpdate(_slaValue, status)
+            }
+            SwitchNode.NODE_VALID_332 -> {
+                doUpdate(_node332, status)
             }
             else -> {}
         }

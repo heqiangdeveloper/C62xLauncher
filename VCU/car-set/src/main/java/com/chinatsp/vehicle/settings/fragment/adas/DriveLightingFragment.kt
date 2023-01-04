@@ -130,6 +130,9 @@ class DriveLightingFragment : BaseFragment<CombineViewModel, DriveLightingFragme
             //目前还没有置灰弹窗功能，当UE有的时候在放开此功能
             //startWidowServer(SwitchNode.ADAS_HMA.isPopWindow(it.enableStatus),R.string.hma_error)
         }
+        viewModel.node332.observe(this){
+            updateSwitchEnable(SwitchNode.ADAS_HMA)
+        }
     }
 
     override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
@@ -142,6 +145,13 @@ class DriveLightingFragment : BaseFragment<CombineViewModel, DriveLightingFragme
     override fun obtainActiveByNode(node: SwitchNode): Boolean {
         return when (node) {
             SwitchNode.ADAS_HMA -> viewModel.hmaValue.value?.enable() ?: false
+            else -> super.obtainActiveByNode(node)
+        }
+    }
+
+    override fun obtainDependByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.ADAS_HMA -> viewModel.node332.value?.get() ?: true
             else -> super.obtainActiveByNode(node)
         }
     }

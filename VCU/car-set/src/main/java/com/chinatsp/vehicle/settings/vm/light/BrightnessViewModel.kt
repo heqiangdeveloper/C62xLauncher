@@ -7,6 +7,7 @@ import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IProgressListener
 import com.chinatsp.settinglib.listener.ISwitchListener
+import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.lamp.BrightnessManager
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -27,10 +28,12 @@ class BrightnessViewModel @Inject constructor(app: Application, model: BaseModel
     override fun onCreate() {
         super.onCreate()
         keySerial = manager.onRegisterVcuListener(listener = this)
+        GlobalManager.instance.onRegisterVcuListener(listener = this)
     }
 
     override fun onDestroy() {
         manager.unRegisterVcuListener(serial = keySerial)
+        GlobalManager.instance.unRegisterVcuListener(keySerial)
         super.onDestroy()
     }
 
@@ -38,6 +41,22 @@ class BrightnessViewModel @Inject constructor(app: Application, model: BaseModel
 
     private val _lightAutoMode: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.LIGHT_AUTO_MODE
+        MutableLiveData(manager.doGetSwitchOption(node))
+    }
+
+    val node598: LiveData<SwitchState>
+        get() = _node598
+
+    private val _node598: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_598
+        MutableLiveData(manager.doGetSwitchOption(node))
+    }
+
+    val node5D4: LiveData<SwitchState>
+        get() = _node5D4
+
+    private val _node5D4: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_5D4
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
@@ -104,6 +123,12 @@ class BrightnessViewModel @Inject constructor(app: Application, model: BaseModel
         when (node) {
             SwitchNode.LIGHT_AUTO_MODE -> {
                 doUpdate(_lightAutoMode, status)
+            }
+            SwitchNode.NODE_VALID_598->{
+                doUpdate(_node598,status)
+            }
+            SwitchNode.NODE_VALID_5D4->{
+                doUpdate(_node5D4,status)
             }
             else -> {
 

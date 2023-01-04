@@ -237,6 +237,10 @@ class AmbientLightingFragment :
             resetDisplay()
             initViewLight()
         }
+        viewModel.node362.observe(this){
+            updateSwitchEnable(SwitchNode.BACK_AMBIENT_LIGHTING)
+            updateSwitchEnable(SwitchNode.FRONT_AMBIENT_LIGHTING)
+        }
     }
 
     override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
@@ -251,6 +255,14 @@ class AmbientLightingFragment :
         return when (node) {
             SwitchNode.FRONT_AMBIENT_LIGHTING -> viewModel.frontLighting.value?.enable() ?: false
             SwitchNode.BACK_AMBIENT_LIGHTING -> viewModel.backLighting.value?.enable() ?: false
+            else -> super.obtainActiveByNode(node)
+        }
+    }
+
+    override fun obtainDependByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.BACK_AMBIENT_LIGHTING -> viewModel.node362.value?.get() ?: true
+            SwitchNode.FRONT_AMBIENT_LIGHTING -> viewModel.node362.value?.get() ?: true
             else -> super.obtainActiveByNode(node)
         }
     }

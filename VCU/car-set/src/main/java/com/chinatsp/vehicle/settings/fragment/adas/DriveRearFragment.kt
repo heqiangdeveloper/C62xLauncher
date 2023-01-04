@@ -94,10 +94,14 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
         when (it) {
             binding.dowDetails -> updateHintMessage(R.string.drive_dow_title, R.string.dow_details)
             binding.mebDetails -> updateHintMessage(R.string.adas_meb_title, R.string.meb_details)
-            binding.driveBsdDetails -> updateHintMessage(R.string.drive_bsd_title,
-                R.string.bsd_details)
-            binding.driveBsdCameraDetails -> updateHintMessage(R.string.drive_bsd_camera_title,
-                R.string.bsc_details)
+            binding.driveBsdDetails -> updateHintMessage(
+                R.string.drive_bsd_title,
+                R.string.bsd_details
+            )
+            binding.driveBsdCameraDetails -> updateHintMessage(
+                R.string.drive_bsd_camera_title,
+                R.string.bsc_details
+            )
         }
     }
 
@@ -217,6 +221,15 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
 //            val value = if (binding.adasSideGuidesSwitch.isChecked) "ON" else "OFF"
 //            setSwitchConfigParameters(OffLine.GUIDES, value)
         }
+        viewModel.node591.observe(this) {
+            updateSwitchEnable(SwitchNode.ADAS_DOW)
+        }
+        viewModel.node581.observe(this) {
+            updateSwitchEnable(SwitchNode.ADAS_MEB)
+        }
+        viewModel.node582.observe(this) {
+            updateSwitchEnable(SwitchNode.ADAS_BSD)
+        }
     }
 
     override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
@@ -246,6 +259,9 @@ class DriveRearFragment : BaseFragment<SideViewModel, DriveRearFragmentBinding>(
             SwitchNode.ADAS_GUIDES -> binding.adasSideBscSwitch.isChecked
                     && obtainActiveByNode(SwitchNode.ADAS_BSC)
                     && (viewModel.guidesValue.value?.enable() ?: false)
+            SwitchNode.ADAS_DOW -> viewModel.node591.value?.get() ?: true
+            SwitchNode.ADAS_MEB -> viewModel.node581.value?.get() ?: true
+            SwitchNode.ADAS_BSD -> viewModel.node582.value?.get() ?: true
             else -> super.obtainActiveByNode(node)
         }
     }

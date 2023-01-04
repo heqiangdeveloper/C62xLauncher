@@ -16,6 +16,7 @@ import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.IOptionAction
+import com.chinatsp.vehicle.settings.IProgressAction
 import com.chinatsp.vehicle.settings.IRoute
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.CarTrunkFragmentBinding
@@ -24,6 +25,7 @@ import com.chinatsp.vehicle.settings.widget.AnimationDrawable
 import com.common.library.frame.base.BaseFragment
 import com.common.xui.widget.button.switchbutton.SwitchButton
 import com.common.xui.widget.picker.ArcSeekBar
+import com.common.xui.widget.picker.VSeekBar
 import com.common.xui.widget.popupwindow.PopWindow
 import com.common.xui.widget.tabbar.TabControlView
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,7 +34,7 @@ import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBinding>(),
-    ArcSeekBar.OnChangeListener, IOptionAction {
+    ArcSeekBar.OnChangeListener, IOptionAction, IProgressAction {
 
     private var firstTrunk = true
 
@@ -134,7 +136,7 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         updateSwitchEnable(SwitchNode.STERN_LIGHT_ALARM)
         updateSwitchEnable(SwitchNode.STERN_AUDIO_ALARM)
         updateRadioEnable(RadioNode.STERN_SMART_ENTER)
-        updateSeekBarEnable()
+        //updateSeekBarEnable()
     }
 
     private fun initRouteListener() {
@@ -165,11 +167,12 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         }
     }
 
-    private fun updateSeekBarEnable() {
-        val isPark = isPark()
+    private fun updateSeekBarEnable(isPark: Boolean) {
+       // val isPark = isPark()
         val alpha = if (isPark) 1.0f else 0.6f
         binding.arcSeekBar.alpha = alpha
         binding.arcSeekBar.isEnabled = isPark
+        binding.arcSeekBar.isSlide = isPark
     }
 
 
@@ -327,13 +330,13 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         binding.accessSternLightAlarmSw.let {
             it.setOnCheckedChangeListener { buttonView, isChecked ->
                 doUpdateSwitchOption(SwitchNode.STERN_LIGHT_ALARM, buttonView, isChecked)
-                if(isChecked) doLightBlinkFollowing(it.isChecked)
+                if (isChecked) doLightBlinkFollowing(it.isChecked)
             }
         }
         binding.accessSternAudioAlarmSw.let {
             it.setOnCheckedChangeListener { buttonView, isChecked ->
                 doUpdateSwitchOption(SwitchNode.STERN_AUDIO_ALARM, buttonView, isChecked)
-                if(isChecked) doBuzzerFollowing(it.isChecked)
+                if (isChecked) doBuzzerFollowing(it.isChecked)
             }
         }
     }
@@ -405,6 +408,11 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
 //            updateOptionActive()
             updateSwitchEnable(SwitchNode.STERN_AUDIO_ALARM)
             doAudioAlarmHint(it.get())
+        }
+        viewModel.node58F.observe(this) {
+            //updateProgressEnable(Progress.TRUNK_STOP_POSITION)
+            val dependActive = obtainDependByNode(Progress.TRUNK_STOP_POSITION)
+            updateSeekBarEnable(dependActive)
         }
     }
 
@@ -514,6 +522,13 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         }
     }
 
+    override fun obtainDependByNode(node: Progress): Boolean {
+        return when (node) {
+            Progress.TRUNK_STOP_POSITION -> viewModel.node58F.value?.get() ?: true
+            else -> super<IProgressAction>.obtainActiveByNode(node)
+        }
+    }
+
     override fun getSwitchManager(): ISwitchManager {
         return manager
     }
@@ -532,6 +547,10 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
 
     override fun getRadioManager(): IRadioManager {
         return manager
+    }
+
+    override fun findProgressByNode(node: Progress): VSeekBar? {
+        return null
     }
 
     override fun onStartTrackingTouch(isCanDrag: Boolean) {
@@ -567,16 +586,18 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
             popWindow = PopWindow(activity,
                 R.layout.pop_window_electric_tail,
                 activity?.let {
-                    AppCompatResources.getDrawable(it, R.drawable.popup_bg_qipao172)})
+                    AppCompatResources.getDrawable(it, R.drawable.popup_bg_qipao172)
+                })
             popWindow.showDownLift(view, 30, -130)
         } else if (view.id == binding.carTrunkDoorHeight.id) {
             popWindow = PopWindow(activity,
                 R.layout.pop_window,
                 activity?.let {
-                    AppCompatResources.getDrawable(it, R.drawable.popup_bg_qipao776_298) })
-            if(VcuUtils.getLanguage()==1){
+                    AppCompatResources.getDrawable(it, R.drawable.popup_bg_qipao776_298)
+                })
+            if (VcuUtils.getLanguage() == 1) {
                 popWindow.showDownLift(view, -270, -15)
-            }else{
+            } else {
                 popWindow.showDownLift(view, -55, -15)
             }
         }

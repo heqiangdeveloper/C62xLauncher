@@ -180,6 +180,10 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
             updateRadioEnable(RadioNode.ADAS_LDW_STYLE)
             updateRadioEnable(RadioNode.ADAS_LDW_SENSITIVITY)
         }
+        viewModel.node332.observe(this){
+            updateRadioEnable(RadioNode.ADAS_LDW_SENSITIVITY)
+            updateRadioEnable(RadioNode.ADAS_LANE_ASSIST_MODE)
+        }
     }
 
     override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
@@ -199,7 +203,11 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
     }
 
     override fun obtainDependByNode(node: RadioNode): Boolean {
-        return viewModel.laneAssist.value?.get() ?: false
+        return when (node) {
+            RadioNode.ADAS_LDW_SENSITIVITY -> (viewModel.node332.value?.get() ?: true) && (viewModel.laneAssist.value?.get() ?: false)
+            RadioNode.ADAS_LANE_ASSIST_MODE -> (viewModel.node332.value?.get() ?: true) && (viewModel.laneAssist.value?.get() ?: false)
+            else -> viewModel.laneAssist.value?.get() ?: false
+        }
     }
 
     override fun obtainActiveByNode(node: SwitchNode): Boolean {

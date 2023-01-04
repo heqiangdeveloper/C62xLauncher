@@ -8,6 +8,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import com.chinatsp.settinglib.manager.ISwitchManager
 import com.chinatsp.settinglib.manager.adas.CombineManager
+import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.HintHold
 import com.chinatsp.vehicle.settings.IRoute
@@ -125,6 +126,9 @@ class DriveTrafficFragment : BaseFragment<CombineViewModel, DriveTrafficFragment
             doUpdateSwitch(SwitchNode.ADAS_TSR, it)
             updateSwitchEnable(SwitchNode.ADAS_TSR)
         }
+        viewModel.node332.observe(this){
+            updateSwitchEnable(SwitchNode.ADAS_TSR)
+        }
     }
 
     override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
@@ -137,6 +141,13 @@ class DriveTrafficFragment : BaseFragment<CombineViewModel, DriveTrafficFragment
     override fun obtainActiveByNode(node: SwitchNode): Boolean {
         return when (node) {
             SwitchNode.ADAS_TSR -> viewModel.slaValue.value?.enable() ?: false
+            else -> super.obtainActiveByNode(node)
+        }
+    }
+
+    override fun obtainDependByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.ADAS_TSR -> viewModel.node332.value?.get() ?: true
             else -> super.obtainActiveByNode(node)
         }
     }
