@@ -160,8 +160,8 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
     private String name = "";
     private String iconUrl = "";
     public static String itemUUID = "";
-    private long currentDuration = 0l;
-    private long totalDuration = 1l;
+    private long currentDuration = 0l;//单位毫秒
+    private long totalDuration = 1l;//单位毫秒
     private boolean isLogin = false;
 
     private boolean isServiceConnected = false;
@@ -388,28 +388,32 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                 name = mediaInfo.getMediaName();
                 iconUrl = mediaInfo.getMediaImage();
                 itemUUID = mediaInfo.getItemUUID();
+                currentDuration = mediaInfo.getCurrentDuration();
+                totalDuration = mediaInfo.getTotalTime();
                 Log.d(TAG,"onMediaChange " + name + "," + artist +
-                        "," + mediaInfo.getMediaType() + "," + itemUUID + "," + iconUrl);
+                        "," + mediaInfo.getMediaType() + "," + itemUUID + "," + totalDuration);
                 if(mExpand){//中卡
+                    mCircleProgressView.setMax(totalDuration / 1000);
+                    mCircleProgressView.setCurrent(currentDuration / 1000);
                     mTvIQuTingMediaNameBig.setText(name);
                     mTvIQuTingArtistBig.setText(artist);
                     if(!isDestroy((Activity) context)){
                         GlideHelper.loadUrlImage(context,mIvIQuTingCoverBig,iconUrl);
                     }
 
-                    mCircleProgressView.setCurrent(0);
                     if(mediaInfo.getMediaType() != null){
                         showFavor(false,mIvIQuTingLikeBtnBig,mediaInfo.getMediaType().trim(),mediaInfo.isFavored());
                     }
                 }else {
+                    mTvIQuTingPlayPosition.setText(ToolUtils.formatTime(currentDuration / 1000));
+                    mTvIQuTingPlayDuration.setText(ToolUtils.formatTime(totalDuration / 1000));
+                    mProgressHorizontalIQuTing.setMaxValue(totalDuration / 1000);
+                    mProgressHorizontalIQuTing.updateProgress(currentDuration / 1000);
                     mTvIQuTingMediaName.setText(name + "-" + artist);
                     if(!isDestroy((Activity) context)){
                         GlideHelper.loadUrlAlbumCoverRadius(context,mIvCover,iconUrl,RADIUS);
                     }
 
-                    mProgressHorizontalIQuTing.updateProgress(0);
-                    mTvIQuTingPlayPosition.setText(ToolUtils.formatTime(0));
-                    mTvIQuTingPlayDuration.setText(ToolUtils.formatTime(mediaInfo.getDuration()));
                     if(mediaInfo.getMediaType() != null){
                         showFavor(false,mIvIQuTingLike,mediaInfo.getMediaType().trim(),mediaInfo.isFavored());
                     }
@@ -572,15 +576,16 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
             //Log.d(TAG,"onProgress " + s + "," +l + "," +l1);
             isPlaying = true;
             currentDuration = l;
-            totalDuration = l1;
+            //由于VIP歌曲，这里总时长l1显示的是实际可以试听的时长1:00,故不用，还是按照queryCurrent拿到的mediaInfo.getTotalTime()显示总时长
+            //totalDuration = l1;
             if(mExpand){
-                mCircleProgressView.setMax(l1);
-                mCircleProgressView.setCurrent(l);
+                mCircleProgressView.setMax(totalDuration / 1000);
+                mCircleProgressView.setCurrent(currentDuration / 1000);
             }else {
-                mTvIQuTingPlayPosition.setText(ToolUtils.formatTime(l / 1000));
-                mTvIQuTingPlayDuration.setText(ToolUtils.formatTime(l1 / 1000));
-                mProgressHorizontalIQuTing.setMaxValue(l1);
-                mProgressHorizontalIQuTing.updateProgress(l);
+                mTvIQuTingPlayPosition.setText(ToolUtils.formatTime(currentDuration / 1000));
+                mTvIQuTingPlayDuration.setText(ToolUtils.formatTime(totalDuration / 1000));
+                mProgressHorizontalIQuTing.setMaxValue(totalDuration / 1000);
+                mProgressHorizontalIQuTing.updateProgress(currentDuration / 1000);
             }
         }
 
@@ -726,14 +731,16 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                     name = mediaInfo.getMediaName();
                     iconUrl = mediaInfo.getMediaImage();
                     itemUUID = mediaInfo.getItemUUID();
+                    currentDuration = mediaInfo.getCurrentDuration();
+                    totalDuration = mediaInfo.getTotalTime();
                     Log.d(TAG,"getCurrentMediaInfo onSuccess " + name + "," + artist +
                             "," + mediaInfo.getMediaType() + "," + itemUUID + "," + iconUrl);
                     if(mExpand){//中卡
                         mTvIQuTingMediaNameBig.setText(name);
                         mTvIQuTingArtistBig.setText(artist);
 
-                        mCircleProgressView.setMax(mediaInfo.getDuration());
-                        mCircleProgressView.setCurrent(mediaInfo.getCurrentDuration() / 1000);
+                        mCircleProgressView.setMax(totalDuration / 1000);
+                        mCircleProgressView.setCurrent(currentDuration / 1000);
                         if(!TextUtils.isEmpty(iconUrl)){
                             GlideHelper.loadUrlImage(context,mIvIQuTingCoverBig,iconUrl);
                         }else {
@@ -743,11 +750,11 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                     }else {
                         mTvIQuTingMediaName.setText(name + "-" + artist);
 
-                        mTvIQuTingPlayPosition.setText(ToolUtils.formatTime(mediaInfo.getCurrentDuration() / 1000));
-                        mTvIQuTingPlayDuration.setText(ToolUtils.formatTime(mediaInfo.getDuration()));
+                        mTvIQuTingPlayPosition.setText(ToolUtils.formatTime(currentDuration / 1000));
+                        mTvIQuTingPlayDuration.setText(ToolUtils.formatTime(totalDuration / 1000));
 
-                        mProgressHorizontalIQuTing.setMaxValue(mediaInfo.getDuration());
-                        mProgressHorizontalIQuTing.updateProgress(mediaInfo.getCurrentDuration() / 1000);
+                        mProgressHorizontalIQuTing.setMaxValue(totalDuration / 1000);
+                        mProgressHorizontalIQuTing.updateProgress(currentDuration / 1000);
                         if(!TextUtils.isEmpty(iconUrl)){
                             GlideHelper.loadUrlAlbumCoverRadius(context,mIvCover,iconUrl,RADIUS);
                         }else {
@@ -1048,8 +1055,8 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
             }
             mTvIQuTingPlayPosition.setText(ToolUtils.formatTime(currentDuration / 1000));
             mTvIQuTingPlayDuration.setText(ToolUtils.formatTime(totalDuration / 1000));
-            mProgressHorizontalIQuTing.setMaxValue(totalDuration);
-            mProgressHorizontalIQuTing.updateProgress(currentDuration);
+            mProgressHorizontalIQuTing.setMaxValue(totalDuration / 1000);
+            mProgressHorizontalIQuTing.updateProgress(currentDuration / 1000);
         }
 
         //addPlayContentListener(IQuTingCardView.this);
