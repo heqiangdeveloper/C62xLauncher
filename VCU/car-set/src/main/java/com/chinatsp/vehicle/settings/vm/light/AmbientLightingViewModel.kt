@@ -66,7 +66,15 @@ class AmbientLightingViewModel @Inject constructor(app: Application, model: Base
 
     private val _node362: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.NODE_VALID_362
-        MutableLiveData(manager.doGetSwitchOption(node))
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
+    }
+
+    val node65A: LiveData<SwitchState>
+        get() = _node65A
+
+    private val _node65A: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_65A
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
     }
 
     override fun onCreate() {
@@ -102,6 +110,9 @@ class AmbientLightingViewModel @Inject constructor(app: Application, model: Base
             }
             SwitchNode.NODE_VALID_362->{
                 doUpdate(_node362,status)
+            }
+            SwitchNode.NODE_VALID_65A->{
+                doUpdate(_node65A,status)
             }
             else -> {}
         }

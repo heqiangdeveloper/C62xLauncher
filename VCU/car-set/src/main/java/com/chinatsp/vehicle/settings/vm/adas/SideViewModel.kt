@@ -67,14 +67,14 @@ class SideViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _node591: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.NODE_VALID_591
-        MutableLiveData(manager.doGetSwitchOption(node))
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
     }
     val node581: LiveData<SwitchState>
         get() = _node581
 
     private val _node581: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.NODE_VALID_581
-        MutableLiveData(manager.doGetSwitchOption(node))
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
     }
 
     val node582: LiveData<SwitchState>
@@ -82,7 +82,7 @@ class SideViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _node582: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.NODE_VALID_582
-        MutableLiveData(manager.doGetSwitchOption(node))
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
     }
 
     override fun onCreate() {

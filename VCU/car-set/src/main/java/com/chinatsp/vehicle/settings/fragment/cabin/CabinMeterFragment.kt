@@ -47,6 +47,9 @@ class CabinMeterFragment : BaseFragment<MeterViewModel, CabinMeterFragmentBindin
             doUpdateRadio(RadioNode.DRIVE_METER_SYSTEM, it, false)
             updateRadioEnable(RadioNode.DRIVE_METER_SYSTEM)
         }
+        viewModel.node621.observe(this){
+            updateRadioEnable(RadioNode.DRIVE_METER_SYSTEM)
+        }
     }
 
     private fun setRadioListener() {
@@ -96,6 +99,13 @@ class CabinMeterFragment : BaseFragment<MeterViewModel, CabinMeterFragmentBindin
             binding.ivMeasurement.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(it, R.drawable.company_mph)
             })
+        }
+    }
+
+    override fun obtainDependByNode(node: RadioNode): Boolean {
+        return when (node) {
+            RadioNode.DRIVE_METER_SYSTEM -> viewModel.node621.value?.get() ?: true
+            else -> super.obtainDependByNode(node)
         }
     }
 

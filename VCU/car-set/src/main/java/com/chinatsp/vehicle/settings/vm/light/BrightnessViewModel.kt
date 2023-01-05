@@ -49,7 +49,7 @@ class BrightnessViewModel @Inject constructor(app: Application, model: BaseModel
 
     private val _node598: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.NODE_VALID_598
-        MutableLiveData(manager.doGetSwitchOption(node))
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
     }
 
     val node5D4: LiveData<SwitchState>
@@ -57,7 +57,7 @@ class BrightnessViewModel @Inject constructor(app: Application, model: BaseModel
 
     private val _node5D4: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.NODE_VALID_5D4
-        MutableLiveData(manager.doGetSwitchOption(node))
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
     }
 
     val acScreenVolume: MutableLiveData<Volume> by lazy {

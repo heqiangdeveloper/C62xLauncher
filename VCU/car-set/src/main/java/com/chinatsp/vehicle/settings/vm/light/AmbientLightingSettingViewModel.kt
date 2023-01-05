@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.ISwitchListener
+import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.lamp.AmbientLightingManager
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -59,14 +60,22 @@ class AmbientLightingSettingViewModel @Inject constructor(app: Application, mode
         val node = SwitchNode.ALC_RELATED_TOPICS
         MutableLiveData(manager.doGetSwitchOption(node))
     }
+    val node65A: LiveData<SwitchState>
+        get() = _node65A
 
+    private val _node65A: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_65A
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
+    }
     override fun onCreate() {
         super.onCreate()
         keySerial = manager.onRegisterVcuListener(listener = this)
+        GlobalManager.instance.onRegisterVcuListener(listener = this)
     }
 
     override fun onDestroy() {
         manager.unRegisterVcuListener(keySerial)
+        GlobalManager.instance.unRegisterVcuListener(keySerial)
         super.onDestroy()
     }
 
@@ -102,6 +111,9 @@ class AmbientLightingSettingViewModel @Inject constructor(app: Application, mode
             }
             SwitchNode.ALC_RELATED_TOPICS -> {
                 doUpdate(_alcRelatedTopics, status)
+            }
+            SwitchNode.NODE_VALID_65A->{
+                doUpdate(_node65A,status)
             }
             else -> {}
         }

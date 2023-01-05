@@ -66,14 +66,6 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
         MutableLiveData(manager.doGetRadioOption(node))
     }
 
-    val node362: LiveData<SwitchState>
-        get() = _node362
-
-    private val _node362: MutableLiveData<SwitchState> by lazy {
-        val node = SwitchNode.NODE_VALID_362
-        MutableLiveData(manager.doGetSwitchOption(node))
-    }
-
     val ceremonySense: LiveData<RadioState>
         get() = _ceremonySense
 
@@ -92,7 +84,21 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
             value = manager.doGetVolume(node)
         }
     }
+    val node5B3: LiveData<SwitchState>
+        get() = _node5B3
 
+    private val _node5B3: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_5B3
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
+    }
+
+    val node362: LiveData<SwitchState>
+        get() = _node362
+
+    private val _node362: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_362
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -135,6 +141,9 @@ class LightingViewModel @Inject constructor(app: Application, model: BaseModel) 
             }
             SwitchNode.NODE_VALID_362 ->{
                 doUpdate(_node362,status)
+            }
+            SwitchNode.NODE_VALID_5B3 ->{
+                doUpdate(_node5B3,status)
             }
             else -> {}
         }

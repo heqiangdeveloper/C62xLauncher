@@ -151,6 +151,9 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
             updateSwitchEnable(SwitchNode.BACK_MIRROR_DOWN)
             updateEnable(binding.backMirrorDownAngle, true, isAngle)
         }
+        viewModel.node654.observe(this){
+            updateSwitchEnable(SwitchNode.BACK_MIRROR_DOWN)
+        }
     }
 
     private fun initSwitchOption() {
@@ -177,7 +180,7 @@ class CarMirrorFragment : BaseFragment<MirrorViewModel, CarMirrorFragmentBinding
     override fun obtainDependByNode(node: SwitchNode): Boolean {
         return when (node) {
             SwitchNode.BACK_MIRROR_FOLD -> true
-            SwitchNode.BACK_MIRROR_DOWN -> (viewModel.mirrorFoldFunction.value?.enable() ?: false)
+            SwitchNode.BACK_MIRROR_DOWN -> (viewModel.mirrorFoldFunction.value?.enable() ?: false)&&(viewModel.node654.value?.get() ?: true)
             else -> super.obtainDependByNode(node)
         }
     }

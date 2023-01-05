@@ -64,14 +64,14 @@ class CabinACViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _node514: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.NODE_VALID_514
-        MutableLiveData(manager.doGetSwitchOption(node))
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
     }
     val node513: LiveData<SwitchState>
         get() = _node513
 
     private val _node513: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.NODE_VALID_513
-        MutableLiveData(manager.doGetSwitchOption(node))
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
     }
 
     override fun onCreate() {

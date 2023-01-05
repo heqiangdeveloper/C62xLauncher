@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.ISwitchListener
+import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.access.BackMirrorManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
@@ -41,13 +42,23 @@ class MirrorViewModel @Inject constructor(app: Application, model: BaseModel) :
         MutableLiveData(Constant.DEFAULT)
     }
 
+    val node654: LiveData<SwitchState>
+        get() = _node654
+
+    private val _node654: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_654
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
+    }
+
     override fun onCreate() {
         super.onCreate()
         keySerial = manager.onRegisterVcuListener(listener = this)
+        GlobalManager.instance.onRegisterVcuListener(listener = this)
     }
 
     override fun onDestroy() {
         manager.unRegisterVcuListener(keySerial)
+        GlobalManager.instance.unRegisterVcuListener(keySerial)
         super.onDestroy()
     }
 
@@ -59,6 +70,9 @@ class MirrorViewModel @Inject constructor(app: Application, model: BaseModel) :
             }
             SwitchNode.BACK_MIRROR_DOWN -> {
                 doUpdate(_mirrorDownFunction, status)
+            }
+            SwitchNode.NODE_VALID_654 -> {
+                doUpdate(_node654, status)
             }
             else -> {
 

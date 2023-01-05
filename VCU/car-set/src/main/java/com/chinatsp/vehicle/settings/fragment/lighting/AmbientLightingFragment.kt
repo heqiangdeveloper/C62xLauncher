@@ -16,10 +16,7 @@ import com.chinatsp.settinglib.manager.lamp.AmbientLightingManager
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
-import com.chinatsp.vehicle.settings.HintHold
-import com.chinatsp.vehicle.settings.IRoute
-import com.chinatsp.vehicle.settings.ISwitchAction
-import com.chinatsp.vehicle.settings.R
+import com.chinatsp.vehicle.settings.*
 import com.chinatsp.vehicle.settings.databinding.LightingAtmosphereFragmentBinding
 import com.chinatsp.vehicle.settings.vm.light.AmbientLightingViewModel
 import com.common.library.frame.base.BaseFragment
@@ -31,7 +28,7 @@ import timber.log.Timber
 @AndroidEntryPoint
 class AmbientLightingFragment :
     BaseFragment<AmbientLightingViewModel, LightingAtmosphereFragmentBinding>(),
-    ColorPickerView.OnColorPickerChangeListener, ISwitchAction {
+    ColorPickerView.OnColorPickerChangeListener, ISwitchAction, IProgressAction {
 
     private val COLOR_CHANGED = 0x11
     private val LIGHT_CHANGED = 0x22
@@ -237,9 +234,15 @@ class AmbientLightingFragment :
             resetDisplay()
             initViewLight()
         }
-        viewModel.node362.observe(this){
+        viewModel.node362.observe(this) {
             updateSwitchEnable(SwitchNode.BACK_AMBIENT_LIGHTING)
             updateSwitchEnable(SwitchNode.FRONT_AMBIENT_LIGHTING)
+        }
+        viewModel.node65A.observe(this) {
+            updateProgressEnable(Progress.AMBIENT_LIGHT_BRIGHTNESS)
+            updateProgressEnable(Progress.AMBIENT_LIGHT_COLOR)
+            val dependActive = obtainDependByNode(Progress.AMBIENT_LIGHT_COLOR)
+            binding.picker.isSlide = dependActive
         }
     }
 
@@ -255,7 +258,7 @@ class AmbientLightingFragment :
         return when (node) {
             SwitchNode.FRONT_AMBIENT_LIGHTING -> viewModel.frontLighting.value?.enable() ?: false
             SwitchNode.BACK_AMBIENT_LIGHTING -> viewModel.backLighting.value?.enable() ?: false
-            else -> super.obtainActiveByNode(node)
+            else -> super<ISwitchAction>.obtainActiveByNode(node)
         }
     }
 
@@ -263,7 +266,16 @@ class AmbientLightingFragment :
         return when (node) {
             SwitchNode.BACK_AMBIENT_LIGHTING -> viewModel.node362.value?.get() ?: true
             SwitchNode.FRONT_AMBIENT_LIGHTING -> viewModel.node362.value?.get() ?: true
-            else -> super.obtainActiveByNode(node)
+            else -> super<ISwitchAction>.obtainActiveByNode(node)
+        }
+    }
+
+
+    override fun obtainDependByNode(node: Progress): Boolean {
+        return when (node) {
+            Progress.AMBIENT_LIGHT_BRIGHTNESS -> viewModel.node65A.value?.get() ?: true
+            Progress.AMBIENT_LIGHT_COLOR -> viewModel.node65A.value?.get() ?: true
+            else -> super<IProgressAction>.obtainActiveByNode(node)
         }
     }
 
@@ -491,6 +503,14 @@ class AmbientLightingFragment :
         handler.removeMessages(LIGHT_CHANGED)
         handler.removeMessages(COLOR_CHANGED)
         super.onDestroyView()
+    }
+
+    override fun findProgressByNode(node: Progress): View? {
+        return when (node) {
+            Progress.AMBIENT_LIGHT_BRIGHTNESS -> binding.ambientLightingBrightness
+            Progress.AMBIENT_LIGHT_COLOR -> binding.picker
+            else -> null
+        }
     }
 
 }

@@ -8,6 +8,7 @@ import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IProgressListener
 import com.chinatsp.settinglib.listener.ISwitchListener
+import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.cabin.SeatManager
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
@@ -73,14 +74,23 @@ class SeatViewModel @Inject constructor(app: Application, model: BaseModel) :
         MutableLiveData(manager.doGetRadioOption(node))
     }
 
+    val node654: LiveData<SwitchState>
+        get() = _node654
+
+    private val _node654: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_654
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
+    }
 
     override fun onCreate() {
         super.onCreate()
         keySerial = manager.onRegisterVcuListener(listener = this)
+        GlobalManager.instance.onRegisterVcuListener(listener = this)
     }
 
     override fun onDestroy() {
         manager.unRegisterVcuListener(keySerial, keySerial)
+        GlobalManager.instance.unRegisterVcuListener(keySerial)
         super.onDestroy()
     }
 
@@ -95,6 +105,9 @@ class SeatViewModel @Inject constructor(app: Application, model: BaseModel) :
             }
             SwitchNode.SEAT_HEAT_ALL -> {
                 doUpdate(_seatHeatFunction, status)
+            }
+            SwitchNode.NODE_VALID_654 -> {
+                doUpdate(_node654, status)
             }
             else -> {}
         }

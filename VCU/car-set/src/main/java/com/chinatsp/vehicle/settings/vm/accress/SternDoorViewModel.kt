@@ -73,7 +73,15 @@ class SternDoorViewModel @Inject constructor(app: Application, model: BaseModel)
 
     private val _node58F: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.NODE_VALID_58F
-        MutableLiveData(manager.doGetSwitchOption(node))
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
+    }
+
+    val node523: LiveData<SwitchState>
+        get() = _node523
+
+    private val _node523: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_523
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
     }
 
     override fun onCreate() {
@@ -101,6 +109,9 @@ class SternDoorViewModel @Inject constructor(app: Application, model: BaseModel)
             }
             SwitchNode.NODE_VALID_58F->{
                 doUpdate(_node58F,status)
+            }
+            SwitchNode.NODE_VALID_523->{
+                doUpdate(_node523,status)
             }
             else -> {}
         }

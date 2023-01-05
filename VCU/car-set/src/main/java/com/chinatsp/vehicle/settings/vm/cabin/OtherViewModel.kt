@@ -72,7 +72,22 @@ class OtherViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _node362: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.NODE_VALID_362
-        MutableLiveData(manager.doGetSwitchOption(node))
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
+    }
+
+    val node66F: LiveData<SwitchState>
+        get() = _node66F
+
+    private val _node66F: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_66F
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
+    }
+    val node2E5: LiveData<SwitchState>
+        get() = _node2E5
+
+    private val _node2E5: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_2E5
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
     }
 
     override fun onCreate() {
@@ -104,6 +119,12 @@ class OtherViewModel @Inject constructor(app: Application, model: BaseModel) :
             }
             SwitchNode.NODE_VALID_362->{
                 doUpdate(_node362,status)
+            }
+            SwitchNode.NODE_VALID_66F->{
+                doUpdate(_node66F,status)
+            }
+            SwitchNode.NODE_VALID_2E5->{
+                doUpdate(_node2E5,status)
             }
             else -> {}
         }

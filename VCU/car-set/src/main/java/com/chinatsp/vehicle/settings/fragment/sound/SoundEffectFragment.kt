@@ -193,6 +193,12 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
         viewModel.audioLoudness.observe(this) {
             doUpdateSwitch(SwitchNode.AUDIO_SOUND_LOUDNESS, it)
         }
+        viewModel.node645.observe(this) {
+            updateSwitchEnable(SwitchNode.AUDIO_ENVI_AUDIO)
+            updateSwitchEnable(SwitchNode.AUDIO_SOUND_LOUDNESS)
+            updateRadioEnable(RadioNode.AUDIO_ENVI_AUDIO)
+            updateRadioEnable(RadioNode.SYSTEM_SOUND_EFFECT)
+        }
     }
 
     override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
@@ -212,7 +218,8 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
 
     override fun obtainDependByNode(node: RadioNode): Boolean {
         return when (node) {
-            RadioNode.AUDIO_ENVI_AUDIO -> binding.soundEnvironmentalSw.isChecked
+            RadioNode.AUDIO_ENVI_AUDIO -> (binding.soundEnvironmentalSw.isChecked) && viewModel.node645.value?.get() ?: true
+            RadioNode.SYSTEM_SOUND_EFFECT ->  viewModel.node645.value?.get() ?: true
             else -> super.obtainActiveByNode(node)
         }
     }
@@ -226,10 +233,13 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
 
     override fun obtainDependByNode(node: SwitchNode): Boolean {
         return when (node) {
-            SwitchNode.AUDIO_SOUND_LOUDNESS -> binding.soundEnvironmentalSw.isChecked
+           // SwitchNode.AUDIO_SOUND_LOUDNESS -> (binding.soundEnvironmentalSw.isChecked) && (viewModel.node645.value?.get() ?: true)
+            SwitchNode.AUDIO_ENVI_AUDIO -> viewModel.node645.value?.get() ?: true
+            SwitchNode.AUDIO_SOUND_LOUDNESS -> viewModel.node645.value?.get() ?: true
             else -> super.obtainActiveByNode(node)
         }
     }
+
 
     override fun getSwitchManager(): ISwitchManager {
         return EffectManager.instance

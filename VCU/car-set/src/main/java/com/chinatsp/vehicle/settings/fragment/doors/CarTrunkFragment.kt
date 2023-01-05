@@ -411,8 +411,12 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
         }
         viewModel.node58F.observe(this) {
             //updateProgressEnable(Progress.TRUNK_STOP_POSITION)
+            updateOptionActive()
             val dependActive = obtainDependByNode(Progress.TRUNK_STOP_POSITION)
             updateSeekBarEnable(dependActive)
+        }
+        viewModel.node523.observe(this) {
+            updateOptionActive()
         }
     }
 
@@ -501,9 +505,12 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
 
     override fun obtainDependByNode(node: SwitchNode): Boolean {
         return when (node) {
-            SwitchNode.AS_STERN_ELECTRIC -> isPark()
-            SwitchNode.STERN_LIGHT_ALARM -> isPark() && binding.sternElectricSwitch.isChecked
-            SwitchNode.STERN_AUDIO_ALARM -> isPark() && binding.sternElectricSwitch.isChecked
+            //SwitchNode.AS_STERN_ELECTRIC -> isPark()
+            //SwitchNode.STERN_LIGHT_ALARM -> isPark() && binding.sternElectricSwitch.isChecked
+            //SwitchNode.STERN_AUDIO_ALARM -> isPark() && binding.sternElectricSwitch.isChecked
+            SwitchNode.AS_STERN_ELECTRIC -> viewModel.node58F.value?.get() ?: true
+            SwitchNode.STERN_AUDIO_ALARM -> viewModel.node58F.value?.get() ?: true && isPark() && binding.sternElectricSwitch.isChecked
+            SwitchNode.STERN_LIGHT_ALARM -> viewModel.node58F.value?.get() ?: true && isPark() && binding.sternElectricSwitch.isChecked
             else -> false
         }
     }
@@ -517,7 +524,8 @@ class CarTrunkFragment : BaseFragment<SternDoorViewModel, CarTrunkFragmentBindin
 
     override fun obtainDependByNode(node: RadioNode): Boolean {
         return when (node) {
-            RadioNode.STERN_SMART_ENTER -> isPark() && binding.sternElectricSwitch.isChecked
+           // RadioNode.STERN_SMART_ENTER -> isPark() && binding.sternElectricSwitch.isChecked
+            RadioNode.STERN_SMART_ENTER -> viewModel.node523.value?.get() ?: true && isPark() && binding.sternElectricSwitch.isChecked
             else -> false
         }
     }

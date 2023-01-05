@@ -29,25 +29,33 @@
                 android:text="@string/sound_equalizer" />
         </RelativeLayout>
 
-        <com.common.xui.widget.smooth.SmoothLineChartView
-            android:id="@+id/smoothChartView"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/x160"
-            android:layout_marginStart="@dimen/x5"
-            android:layout_marginEnd="@dimen/x30"
+            android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pop_title" />
+            app:layout_constraintTop_toBottomOf="@+id/pop_title">
 
-        <com.common.xui.widget.tabbar.TabControlView
-            android:id="@+id/sound_effect_radio"
-            style="@style/tdv_common_style"
-            android:layout_marginStart="@dimen/x30"
-            android:layout_marginTop="@dimen/x17"
-            android:layout_marginEnd="@dimen/x30"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/smoothChartView"
-            app:tcv_defaultSelection="1"
-            app:tcv_items="@array/sound_equalizer_option" />
+            <com.common.xui.widget.smooth.SmoothLineChartView
+                android:id="@+id/smoothChartView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/x160"
+                android:layout_marginStart="@dimen/x5"
+                android:layout_marginEnd="@dimen/x30"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
+
+            <com.common.xui.widget.tabbar.TabControlView
+                android:id="@+id/sound_effect_radio"
+                style="@style/tdv_common_style"
+                android:layout_marginStart="@dimen/x30"
+                android:layout_marginTop="@dimen/x17"
+                android:layout_marginEnd="@dimen/x30"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/smoothChartView"
+                app:tcv_defaultSelection="1"
+                app:tcv_items="@array/sound_equalizer_option" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

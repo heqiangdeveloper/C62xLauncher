@@ -89,7 +89,7 @@ enum class RadioNode(
 
 
     /**
-     * 驾驶辅助-智能巡航-前车驶离提示
+     * 驾驶辅助-智能巡航-目标提示音
      * get -> Response for OBJ_DETECTION
      *        0x0: Inactive
      *        0x1: Detect warning

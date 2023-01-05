@@ -7,6 +7,7 @@ import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IOptionListener
+import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.sound.EffectManager
 import com.chinatsp.settinglib.manager.sound.VoiceManager
 import com.chinatsp.settinglib.optios.RadioNode
@@ -89,16 +90,25 @@ class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
         val node = SwitchNode.SPEED_VOLUME_OFFSET
         MutableLiveData(manager.doGetSwitchOption(node))
     }
+    val node645: LiveData<SwitchState>
+        get() = _node645
+
+    private val _node645: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_645
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
+    }
 
     override fun onCreate() {
         super.onCreate()
         keySerial = VoiceManager.instance.onRegisterVcuListener(0, this)
         EffectManager.instance.onRegisterVcuListener(0, this)
+        GlobalManager.instance.onRegisterVcuListener(listener = this)
     }
 
     override fun onDestroy() {
         VoiceManager.instance.unRegisterVcuListener(keySerial)
         EffectManager.instance.unRegisterVcuListener(keySerial)
+        GlobalManager.instance.unRegisterVcuListener(keySerial)
         super.onDestroy()
     }
 
@@ -115,6 +125,9 @@ class SoundViewModel @Inject constructor(app: Application, model: BaseModel) :
             }
             SwitchNode.TOUCH_PROMPT_TONE -> {
                 doUpdate(_touchToneStatus, status)
+            }
+            SwitchNode.NODE_VALID_645 -> {
+                doUpdate(_node645, status)
             }
             else -> {}
         }

@@ -165,6 +165,10 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
         viewModel.speedVolumeOffset.observe(this) {
             doUpdateSwitch(manager.volumeSpeedSwitch, it)
         }
+        viewModel.node645.observe(this) {
+            updateSwitchEnable(SwitchNode.AUDIO_SOUND_LOUDNESS)
+            updateSwitchEnable(SwitchNode.SPEED_VOLUME_OFFSET)
+        }
     }
 
     override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
@@ -188,6 +192,13 @@ class SoundFragment : BaseLazyFragment<SoundViewModel, SoundFragmentBinding>(), 
             RadioNode.NAVI_AUDIO_MIXING -> binding.soundNaviMixingRadio
             RadioNode.SPEED_VOLUME_OFFSET -> binding.soundSpeedOffsetRadio
             else -> null
+        }
+    }
+    override fun obtainDependByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.AUDIO_SOUND_LOUDNESS -> viewModel.node645.value?.get() ?: true
+            SwitchNode.SPEED_VOLUME_OFFSET -> viewModel.node645.value?.get() ?: true
+            else -> super.obtainActiveByNode(node)
         }
     }
 

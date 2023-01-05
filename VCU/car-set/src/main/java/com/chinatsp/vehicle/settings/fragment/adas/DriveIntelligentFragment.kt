@@ -177,6 +177,10 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
         viewModel.node33F.observe(this){
             updateSwitchEnable(SwitchNode.ADAS_IACC)
         }
+        viewModel.node621.observe(this){
+            updateSwitchEnable(SwitchNode.ADAS_LIMBER_LEAVE)
+            updateRadioEnable(RadioNode.ADAS_LIMBER_LEAVE)
+        }
     }
 
     override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
@@ -200,6 +204,14 @@ class DriveIntelligentFragment : BaseFragment<CruiseViewModel, DriveIntelligentF
     override fun obtainDependByNode(node: SwitchNode): Boolean {
        return when (node) {
             SwitchNode.ADAS_IACC -> viewModel.node33F.value?.get() ?: true
+            SwitchNode.ADAS_LIMBER_LEAVE -> viewModel.node621.value?.get() ?: true
+            else -> super.obtainDependByNode(node)
+        }
+    }
+
+    override fun obtainDependByNode(node: RadioNode): Boolean {
+        return when (node) {
+            RadioNode.ADAS_LIMBER_LEAVE -> viewModel.node621.value?.get() ?: true
             else -> super.obtainDependByNode(node)
         }
     }

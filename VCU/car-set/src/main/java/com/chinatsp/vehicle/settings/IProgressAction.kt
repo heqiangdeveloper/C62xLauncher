@@ -1,11 +1,11 @@
 package com.chinatsp.vehicle.settings
 
+import android.view.View
 import com.chinatsp.settinglib.optios.Progress
-import com.common.xui.widget.picker.VSeekBar
 import timber.log.Timber
 
 interface IProgressAction : IAction {
-    fun findProgressByNode(node: Progress): VSeekBar?
+    fun findProgressByNode(node: Progress): View?
 
     fun obtainDependByNode(node: Progress): Boolean {
         return true

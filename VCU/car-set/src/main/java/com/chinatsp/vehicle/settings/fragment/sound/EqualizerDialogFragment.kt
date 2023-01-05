@@ -98,6 +98,9 @@ class EqualizerDialogFragment :
             doUpdateRadio(RadioNode.SYSTEM_SOUND_EFFECT, it, false)
             binding.smoothChartView.setEnableView(it.data == 6)
         }
+        viewModel.node645.observe(this){
+            updateRadioEnable(RadioNode.SYSTEM_SOUND_EFFECT,true)
+        }
     }
 
     private fun setRadioListener() {
@@ -113,6 +116,13 @@ class EqualizerDialogFragment :
         return when (node) {
             RadioNode.SYSTEM_SOUND_EFFECT -> binding.soundEffectRadio
             else -> null
+        }
+    }
+
+    override fun obtainDependByNode(node: RadioNode): Boolean {
+        return when (node) {
+            RadioNode.SYSTEM_SOUND_EFFECT ->  viewModel.node645.value?.get() ?: true
+            else -> super.obtainActiveByNode(node)
         }
     }
 

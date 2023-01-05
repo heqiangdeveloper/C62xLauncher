@@ -12,12 +12,14 @@ import android.view.ViewGroup
  */
 interface IAction {
 
-    fun updateEnable(view: View, isActive: Boolean, depend: Boolean) {
+    fun updateEnable(view: View, isActive: Boolean, depend: Boolean, isAlpha: Boolean = true) {
         val enable = isActive && depend
         val parent = view.parent as ViewGroup
-        val alpha = if (enable) 1.0f else 0.6f
-        if (parent.alpha != alpha) {
-            parent.alpha = alpha
+        if (isAlpha) {
+            val alpha = if (enable) 1.0f else 0.6f
+            if (parent.alpha != alpha) {
+                parent.alpha = alpha
+            }
         }
         updateEnable(parent, enable)
     }

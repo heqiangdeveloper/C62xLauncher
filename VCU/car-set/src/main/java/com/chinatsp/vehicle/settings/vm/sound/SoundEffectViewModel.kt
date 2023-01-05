@@ -7,6 +7,7 @@ import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.bean.RadioState
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.IOptionListener
+import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.sound.EffectManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
@@ -57,13 +58,23 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
         MutableLiveData(EffectManager.instance.doGetSwitchOption(node))
     }
 
+    val node645: LiveData<SwitchState>
+        get() = _node645
+
+    private val _node645: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_645
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
+    }
+
     override fun onCreate() {
         super.onCreate()
         keySerial = EffectManager.instance.onRegisterVcuListener(listener = this)
+        GlobalManager.instance.onRegisterVcuListener(listener = this)
     }
 
     override fun onDestroy() {
         EffectManager.instance.unRegisterVcuListener(keySerial)
+        GlobalManager.instance.unRegisterVcuListener(keySerial)
         super.onDestroy()
     }
 
@@ -99,6 +110,9 @@ class SoundEffectViewModel @Inject constructor(app: Application, model: BaseMode
             }
             SwitchNode.AUDIO_SOUND_LOUDNESS -> {
                 doUpdate(_audioLoudness, status)
+            }
+            SwitchNode.NODE_VALID_645 -> {
+                doUpdate(_node645, status)
             }
             else -> {}
         }

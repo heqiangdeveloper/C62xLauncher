@@ -56,7 +56,15 @@ class LaneViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _node332: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.NODE_VALID_332
-        MutableLiveData(manager.doGetSwitchOption(node))
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
+    }
+
+    val node621: LiveData<SwitchState>
+        get() = _node621
+
+    private val _node621: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_621
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
     }
 
     override fun onCreate() {
@@ -79,6 +87,9 @@ class LaneViewModel @Inject constructor(app: Application, model: BaseModel) :
             }
             SwitchNode.NODE_VALID_332 -> {
                 doUpdate(_node332, status)
+            }
+            SwitchNode.NODE_VALID_621 -> {
+                doUpdate(_node621, status)
             }
             else -> {}
         }

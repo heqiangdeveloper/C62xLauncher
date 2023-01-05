@@ -48,7 +48,15 @@ class CruiseViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _node33F: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.NODE_VALID_33F
-        MutableLiveData(manager.doGetSwitchOption(node))
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
+    }
+
+    val node621: LiveData<SwitchState>
+        get() = _node621
+
+    private val _node621: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_621
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
     }
 
     override fun onCreate() {
@@ -68,6 +76,7 @@ class CruiseViewModel @Inject constructor(app: Application, model: BaseModel) :
             SwitchNode.ADAS_IACC -> doUpdate(_cruiseAssistFunction, status)
             SwitchNode.ADAS_LIMBER_LEAVE -> doUpdate(_limberLeaveFunction, status)
             SwitchNode.NODE_VALID_33F -> doUpdate(_node33F, status)
+            SwitchNode.NODE_VALID_621 -> doUpdate(_node621, status)
             else -> {}
         }
     }

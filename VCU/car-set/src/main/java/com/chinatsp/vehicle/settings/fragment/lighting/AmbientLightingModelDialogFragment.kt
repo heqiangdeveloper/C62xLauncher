@@ -124,6 +124,20 @@ class AmbientLightingModelDialogFragment :
         viewModel.speedRhythm.observe(this) {
             doUpdateViewSelect(SwitchNode.SPEED_RHYTHM, it)
         }
+        viewModel.node65A.observe(this){
+            updateSwitchEnable(SwitchNode.ALC_SMART_MODE)
+            updateSwitchEnable(SwitchNode.MUSIC_RHYTHM)
+            updateSwitchEnable(SwitchNode.COLOUR_BREATHE)
+            updateSwitchEnable(SwitchNode.SPEED_RHYTHM)
+            val dependActive = obtainDependByNode(SwitchNode.ALC_SMART_MODE)
+            val musicDependActive = obtainDependByNode(SwitchNode.MUSIC_RHYTHM)
+            val colorDependActive = obtainDependByNode(SwitchNode.COLOUR_BREATHE)
+            val speedDependActive = obtainDependByNode(SwitchNode.SPEED_RHYTHM)
+            updateEnable(binding.speedRhythm, true, dependActive)
+            updateEnable(binding.musicRhythm, true, musicDependActive)
+            updateEnable(binding.colourBreathe, true, colorDependActive)
+            updateEnable(binding.speedRhythm, true, speedDependActive)
+        }
     }
 
     override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
@@ -193,6 +207,15 @@ class AmbientLightingModelDialogFragment :
 //        keypad?.isEnabled = !selected
         view.isEnabled = !selected
 //        keypad = view
+    }
+    override fun obtainDependByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.ALC_SMART_MODE -> viewModel.node65A.value?.get() ?: true
+            SwitchNode.MUSIC_RHYTHM -> viewModel.node65A.value?.get() ?: true
+            SwitchNode.COLOUR_BREATHE -> viewModel.node65A.value?.get() ?: true
+            SwitchNode.SPEED_RHYTHM -> viewModel.node65A.value?.get() ?: true
+            else -> super.obtainActiveByNode(node)
+        }
     }
 
     private fun setSwitchListener() {

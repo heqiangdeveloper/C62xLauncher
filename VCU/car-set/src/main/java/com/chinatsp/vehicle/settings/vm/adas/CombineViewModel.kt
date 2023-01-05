@@ -41,7 +41,7 @@ class CombineViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _node332: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.NODE_VALID_332
-        MutableLiveData(manager.doGetSwitchOption(node))
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
     }
 
     override fun onCreate() {

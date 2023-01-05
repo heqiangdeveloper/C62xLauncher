@@ -99,8 +99,14 @@ interface IRadioAction : IAction {
     }
 
     fun updateRadioEnable(node: RadioNode) {
-        findRadioByNode(node)?.let {
+        /*findRadioByNode(node)?.let {
             updateEnable(it, obtainActiveByNode(node), obtainDependByNode(node))
+        }*/
+        updateRadioEnable(node,true)
+    }
+    fun updateRadioEnable(node: RadioNode,isAlpha: Boolean) {
+        findRadioByNode(node)?.let {
+            updateEnable(it, obtainActiveByNode(node), obtainDependByNode(node),isAlpha)
         }
     }
 }

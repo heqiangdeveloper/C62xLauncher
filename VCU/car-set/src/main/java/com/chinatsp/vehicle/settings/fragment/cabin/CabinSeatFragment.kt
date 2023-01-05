@@ -122,6 +122,18 @@ class CabinSeatFragment : BaseFragment<SeatViewModel, CabinSeatFragmentBinding>(
         viewModel.seatHeat.observe(this) {
             updateSwitchTextHint(binding.seatSeatHeatTv, viewModel.seatHeat)
         }
+        viewModel.node654.observe(this){
+            updateSwitchEnable(SwitchNode.MAIN_SEAT_WELCOME)
+            updateSwitchEnable(SwitchNode.FORK_SEAT_WELCOME)
+        }
+    }
+
+    override fun obtainDependByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.MAIN_SEAT_WELCOME -> viewModel.node654.value?.get() ?: true
+            SwitchNode.FORK_SEAT_WELCOME -> viewModel.node654.value?.get() ?: true
+            else -> super.obtainActiveByNode(node)
+        }
     }
 
     override fun findSwitchByNode(node: SwitchNode): SwitchButton? {

@@ -126,6 +126,12 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
         viewModel.node362.observe(this){
             updateSwitchEnable(SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP)
         }
+        viewModel.node66F.observe(this){
+            updateSwitchEnable(SwitchNode.DRIVE_WIRELESS_CHARGING)
+        }
+        viewModel.node2E5.observe(this){
+            updateSwitchEnable(SwitchNode.DRIVE_BATTERY_OPTIMIZE)
+        }
     }
 
     override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
@@ -151,6 +157,8 @@ class CabinOtherFragment : BaseFragment<OtherViewModel, CabinOtherFragmentBindin
     override fun obtainDependByNode(node: SwitchNode): Boolean {
         return when (node) {
             SwitchNode.DRIVE_WIRELESS_CHARGING_LAMP -> viewModel.node362.value?.get() ?: true
+            SwitchNode.DRIVE_WIRELESS_CHARGING -> viewModel.node66F.value?.get() ?: true
+            SwitchNode.DRIVE_BATTERY_OPTIMIZE -> viewModel.node2E5.value?.get() ?: true
             else -> super.obtainActiveByNode(node)
         }
     }

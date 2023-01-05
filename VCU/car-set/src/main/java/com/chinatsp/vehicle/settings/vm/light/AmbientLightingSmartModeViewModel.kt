@@ -7,6 +7,7 @@ import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.IProgressListener
 import com.chinatsp.settinglib.listener.ISwitchListener
+import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.IOptionManager
 import com.chinatsp.settinglib.manager.lamp.AmbientLightingManager
 import com.chinatsp.settinglib.optios.Progress
@@ -62,13 +63,23 @@ class AmbientLightingSmartModeViewModel @Inject constructor(app: Application, mo
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
+    val node65A: LiveData<SwitchState>
+        get() = _node65A
+
+    private val _node65A: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_65A
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
+    }
+
     override fun onCreate() {
         super.onCreate()
         keySerial = manager.onRegisterVcuListener(listener = this)
+        GlobalManager.instance.onRegisterVcuListener(listener = this)
     }
 
     override fun onDestroy() {
         manager.unRegisterVcuListener(keySerial)
+        GlobalManager.instance.unRegisterVcuListener(keySerial)
         super.onDestroy()
     }
 
@@ -101,6 +112,9 @@ class AmbientLightingSmartModeViewModel @Inject constructor(app: Application, mo
             }
             SwitchNode.COLOUR_BREATHE -> {
                 doUpdate(_colourBreathe, status)
+            }
+            SwitchNode.NODE_VALID_65A->{
+                doUpdate(_node65A,status)
             }
             else -> {}
         }

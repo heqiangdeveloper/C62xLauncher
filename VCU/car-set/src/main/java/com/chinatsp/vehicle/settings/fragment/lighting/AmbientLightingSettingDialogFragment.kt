@@ -63,6 +63,13 @@ class AmbientLightingSettingDialogFragment :
         liveData.observe(this) {
             doUpdateSwitch(node, it)
         }
+        viewModel.node65A.observe(this){
+            updateSwitchEnable(SwitchNode.ALC_BREATHE_HINT)
+            updateSwitchEnable(SwitchNode.ALC_LOCK_HINT)
+            updateSwitchEnable(SwitchNode.ALC_DOOR_HINT)
+            updateSwitchEnable(SwitchNode.ALC_RELATED_TOPICS)
+            updateSwitchEnable(SwitchNode.ALC_COMING_HINT)
+        }
     }
 
     override fun findSwitchByNode(node: SwitchNode): SwitchButton? {
@@ -85,5 +92,14 @@ class AmbientLightingSettingDialogFragment :
             doUpdateSwitchOption(node, buttonView!!, isChecked)
         }
     }
-
+    override fun obtainDependByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.ALC_BREATHE_HINT -> viewModel.node65A.value?.get() ?: true
+            SwitchNode.ALC_LOCK_HINT -> viewModel.node65A.value?.get() ?: true
+            SwitchNode.ALC_DOOR_HINT -> viewModel.node65A.value?.get() ?: true
+            SwitchNode.ALC_RELATED_TOPICS -> viewModel.node65A.value?.get() ?: true
+            SwitchNode.ALC_COMING_HINT -> viewModel.node65A.value?.get() ?: true
+            else -> super.obtainActiveByNode(node)
+        }
+    }
 }

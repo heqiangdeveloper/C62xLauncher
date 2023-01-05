@@ -107,6 +107,7 @@ public class ColorPickerView extends View {
     private boolean isTouchEvent = false;//是否是按下还是抬起
 
     private long touchTime = 0;
+    public boolean isSlide = true;//是否可以滑动
 
     /**
      * 控件方向
@@ -425,11 +426,12 @@ public class ColorPickerView extends View {
     public boolean onTouchEvent(MotionEvent event) {
         int ex = (int) event.getX();
         int ey = (int) event.getY();
-
+        if(!isSlide){
+            return false;
+        }
         if (!inBoundOfColorTable(ex, ey)) {
             return true;
         }
-
         if (orientation == Orientation.HORIZONTAL) {
             curX = ex;
             curY = getHeight() / 2;

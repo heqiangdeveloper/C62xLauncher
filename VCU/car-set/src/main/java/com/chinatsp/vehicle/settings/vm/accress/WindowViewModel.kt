@@ -41,7 +41,7 @@ class WindowViewModel @Inject constructor(app: Application, model: BaseModel) :
 
     private val _node362: MutableLiveData<SwitchState> by lazy {
         val node = SwitchNode.NODE_VALID_362
-        MutableLiveData(manager.doGetSwitchOption(node))
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
     }
 
     val winRemoteControl: LiveData<SwitchState>
