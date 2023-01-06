@@ -79,7 +79,7 @@
         <item name="tabIndicatorHeight">@dimen/main_tab_height</item>
         <item name="tabPaddingStart">0dp</item>
         <!--  <item name="tabPaddingEnd">0dp</item>-->
-        <item name="tabPaddingTop">@dimen/x10</item>
+       <!-- <item name="tabPaddingTop">@dimen/x10</item>-->
         <item name="tabTextAppearance">@style/TabText</item>
         <item name="tabSelectedTextColor">@color/select_text_color</item>
         <item name="tabTextColor">@color/normal_text_color</item>
