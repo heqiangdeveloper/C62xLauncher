@@ -226,13 +226,10 @@ class GlobalManager private constructor() : BaseManager(), ISwitchManager {
                 .forEachIndexed { index, value ->
                     val node = nodeValidList[index]
                     val state = nodeValidMap[node]
-                    Timber.d("luohong 11111111 index:$index, value:$value, node:$node, state:$state")
-
                     if (null != state) {
-                        //val status = node.isOn(value as Int)
-                        val status = true
+                        val status = node.isOn(value as Int)
                         if (state.get() xor status) {
-                            Timber.d("luohong index:$index, value:$value, node:$node, status:$status, state:$state")
+                            Timber.d("node valid changed index:$index, value:$value, node:$node, status:$status, state:$state")
                             state.set(status)
                             doSwitchChanged(node, state)
                         }

@@ -64,7 +64,8 @@ class AmbientLightingFragment :
                     val color = colorList[value]
                     val colorId =
                         Color.rgb(color.red().toInt(), color.green().toInt(), color.blue().toInt())
-                    binding.lightingView.setBackgroundColor(colorId)
+//                    binding.lightingView.setBackgroundColor(colorId)
+                    updateLightingColor(isLightingActive(), colorId)
                 }
                 else -> {}
             }
@@ -141,15 +142,16 @@ class AmbientLightingFragment :
     }
 
     private val isFront: Boolean
-        get() = binding.ambientFrontLightingSwitch.isChecked && (viewModel.frontLighting.value?.enable()
-            ?: false)
+        get() = binding.ambientFrontLightingSwitch.isChecked
+                && (viewModel.frontLighting.value?.enable() ?: false)
 
     private val isBack: Boolean
-        get() = (!hasNotBackLamp) && binding.ambientBackLightingSwitch.isChecked && (viewModel.backLighting.value?.enable()
-            ?: false)
+        get() = hasBack && binding.ambientBackLightingSwitch.isChecked
+                && (viewModel.backLighting.value?.enable() ?: false)
 
-    private val hasNotBackLamp: Boolean =
-        VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4, expect = true)
+    private val hasBack: Boolean by lazy {
+        !VcuUtils.isCareLevel(Level.LEVEL3, Level.LEVEL4)
+    }
 
     private fun updateOptionActive() {
         updateSwitchEnable(SwitchNode.FRONT_AMBIENT_LIGHTING)
@@ -159,52 +161,42 @@ class AmbientLightingFragment :
 
     private fun initViewsDisplay() {
         binding.lightingFrontLayout.visibility = View.VISIBLE
-        binding.lightingBackLayout.visibility = if (hasNotBackLamp) View.GONE else View.VISIBLE
+        binding.lightingBackLayout.visibility = if (hasBack) View.GONE else View.VISIBLE
     }
 
     private fun initViewLight() {
         val color = colorList[binding.picker.pickerIndex - 1]
         val colorId = Color.rgb(color.red().toInt(), color.green().toInt(), color.blue().toInt())
-        if (VcuUtils.isCareLevel(Level.LEVEL3, expect = true)) {
+        if (VcuUtils.isCareLevel(Level.LEVEL3)) {
             binding.lightingImage.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(it, R.drawable.img_light_lv3)
             })
-            if (isFront) {
-                binding.lightingView.setBackgroundColor(colorId)
-            } else {
-                activity?.let { binding.lightingView.setBackgroundColor(it.getColor(R.color.lighting_bg)) }
-            }
-        } else if (VcuUtils.isCareLevel(Level.LEVEL4, expect = true)) {
+            updateLightingColor(isLightingActive(), colorId)
+        } else if (VcuUtils.isCareLevel(Level.LEVEL4)) {
             binding.lightingImage.setImageDrawable(activity?.let {
                 ContextCompat.getDrawable(it, R.drawable.img_light_lv4)
             })
-            if (isFront) {
-                binding.lightingView.setBackgroundColor(colorId)
-            } else {
-                activity?.let { binding.lightingView.setBackgroundColor(it.getColor(R.color.lighting_bg)) }
-            }
-        } else if (VcuUtils.isCareLevel(Level.LEVEL5, expect = true)) {
+            updateLightingColor(isLightingActive(), colorId)
+        } else if (VcuUtils.isCareLevel(Level.LEVEL5)) {
+            val sourceId: Int
+            val isLampValid: Boolean
             if (isFront && isBack) {
-                binding.lightingView.setBackgroundColor(colorId)
-                binding.lightingImage.setImageDrawable(activity?.let {
-                    ContextCompat.getDrawable(it, R.drawable.img_light_lv5)
-                })
+                isLampValid = true
+                sourceId = R.drawable.img_light_lv5
             } else if (!isFront && isBack) {
-                binding.lightingView.setBackgroundColor(colorId)
-                binding.lightingImage.setImageDrawable(activity?.let {
-                    ContextCompat.getDrawable(it, R.drawable.img_light_lv5_1)
-                })
+                isLampValid = true
+                sourceId = R.drawable.img_light_lv5_1
             } else if (isFront && !isBack) {
-                binding.lightingView.setBackgroundColor(colorId)
-                binding.lightingImage.setImageDrawable(activity?.let {
-                    ContextCompat.getDrawable(it, R.drawable.img_light_lv4)
-                })
-            } else if (!isFront && !isBack) {
-                binding.lightingImage.setImageDrawable(activity?.let {
-                    ContextCompat.getDrawable(it, R.drawable.img_light_lv5_1)
-                })
-                activity?.let { binding.lightingView.setBackgroundColor(it.getColor(R.color.lighting_bg)) }
+                isLampValid = true
+                sourceId = R.drawable.img_light_lv4
+            } else {
+                isLampValid = false
+                sourceId = R.drawable.img_light_lv5_1
             }
+            binding.lightingImage.setImageDrawable(activity?.let {
+                ContextCompat.getDrawable(it, sourceId)
+            })
+            updateLightingColor(isLampValid, colorId)
         }
 
     }
@@ -465,6 +457,14 @@ class AmbientLightingFragment :
         binding.picker.setOnColorPickerChangeListener(this)
     }
 
+    private fun updateLightingColor(isShowColor: Boolean, color: Int) {
+        if (isShowColor) {
+            binding.lightingView.setBackgroundColor(color)
+        } else {
+            activity?.let { binding.lightingView.setBackgroundColor(it.getColor(R.color.lighting_bg)) }
+        }
+    }
+
     override fun onColorChanged(picker: ColorPickerView?, color: Int, index: Int) {
         Timber.d("onColorChanged color:%s, index:%s", color, index)
         viewModel.onAmbientColorChanged(index)
@@ -475,7 +475,7 @@ class AmbientLightingFragment :
             colorIndexValue.green().toInt(),
             colorIndexValue.blue().toInt()
         )
-        binding.lightingView.setBackgroundColor(colorId)
+        updateLightingColor(isLightingActive(), colorId)
     }
 
     override fun onStartTrackingTouch(picker: ColorPickerView?) {
@@ -512,8 +512,8 @@ class AmbientLightingFragment :
             else -> null
         }
     }
-
 }
+
 
 
 

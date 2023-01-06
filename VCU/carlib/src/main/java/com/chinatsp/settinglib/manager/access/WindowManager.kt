@@ -736,7 +736,7 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager,
         }
         if (IStatus.INIT == command.status) {
             ShareHandler.dumpParcel(windowParcel)
-            parcel.retryCount = 20
+            parcel.retryCount = 30
             command.resetSent(IPart.VAGUE)
             val expect = if (status) 100 else 0
             command.lfExpect = if (lfAct) expect else lfWindow.getValue()

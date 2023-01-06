@@ -18,7 +18,6 @@ import com.chinatsp.settinglib.sign.Origin
 import com.chinatsp.vehicle.controller.ICmdCallback
 import com.chinatsp.vehicle.controller.annotation.*
 import com.chinatsp.vehicle.controller.bean.CarCmd
-import com.chinatsp.vehicle.controller.utils.Keywords
 import timber.log.Timber
 import java.lang.ref.WeakReference
 import kotlin.math.abs
@@ -164,13 +163,13 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
     override fun doSetRadioOption(node: RadioNode, value: Int): Boolean {
         return when (node) {
             RadioNode.LIGHT_DELAYED_OUT -> {
-                node.isValid(value, isGet = false) && writeProperty(node, value, lightDelayOut)
+                writeProperty(node, value, lightDelayOut)
             }
             RadioNode.LIGHT_FLICKER -> {
-                node.isValid(value, isGet = false) && writeProperty(node, value, lightFlicker)
+                writeProperty(node, value, lightFlicker)
             }
             RadioNode.LIGHT_CEREMONY_SENSE -> {
-                node.isValid(value, isGet = false) && writeProperty(node, value, lightCeremonySense)
+                writeProperty(node, value, lightCeremonySense)
             }
             else -> false
         }

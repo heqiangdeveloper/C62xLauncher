@@ -89,10 +89,7 @@ object AirController : IController {
         model: VoiceModel,
     ): Boolean {
         val slots: Slots = model.slots
-        var command: AirCmd? = null
-        if (null == command) {
-            command = attemptCreateSwitchCmd(slots)
-        }
+        var command: AirCmd? = attemptCreateSwitchCmd(slots)
         if (null == command) {
             command = attemptCreateWindCmd(slots)
         }
