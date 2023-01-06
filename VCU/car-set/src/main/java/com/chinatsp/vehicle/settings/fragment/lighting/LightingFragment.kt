@@ -60,7 +60,7 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
         initSeekLiveData()
 
         initViewDisplay()
-
+        initAnimationDisplay()
         updateOptionActive()
     }
 
@@ -83,6 +83,7 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
             showPopWindow(R.string.lighting_go_home_content, it)
         }
     }
+
 
     private fun initRadioOption() {
         initRadioOption(RadioNode.LIGHT_DELAYED_OUT, viewModel.lightOutDelayed)
@@ -121,6 +122,20 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
             R.drawable.turn_signal_animation_2,
             binding.turnSignalIv2
         )
+    }
+
+    /**
+     * 进入灯光界面显示伴我回家动画
+     */
+    private fun initAnimationDisplay(){
+        val node = RadioNode.LIGHT_DELAYED_OUT
+        //doAnimationFollowHomeRadio(node, binding.lightDelayBlackOutRadio.checked)
+        val value = binding.lightDelayBlackOutRadio.checked
+        val isOn = value.toInt() != node.set.values[0]
+        if (isOn) {
+            binding.homeOpenIv.visibility = View.VISIBLE
+            animationHomeOpen.start(false, 50, null)
+        }
     }
 
     private fun addRadioLiveDataListener() {

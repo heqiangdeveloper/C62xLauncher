@@ -39,17 +39,17 @@
                 app:tabMinWidth="@dimen/main_tab_width"
                 app:tabRippleColor="@color/transparent" />
 
-            <com.common.xui.widget.alpha.XUIAlphaTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/device_upgrade"
-                style="@style/TabText"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:paddingStart="30px"
+                android:paddingStart="@dimen/text_15"
                 android:paddingTop="@dimen/x10"
-                android:paddingEnd="30px"
+                android:paddingEnd="@dimen/text_15"
                 android:text="@string/table6"
-                android:textColor="@color/tab_text_color_selector" />
+                android:textColor="@color/tab_text_color_selector"
+                android:textSize="@dimen/tab_txt_size"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

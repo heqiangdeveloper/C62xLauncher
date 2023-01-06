@@ -229,7 +229,8 @@ class GlobalManager private constructor() : BaseManager(), ISwitchManager {
                     Timber.d("luohong 11111111 index:$index, value:$value, node:$node, state:$state")
 
                     if (null != state) {
-                        val status = node.isOn(value as Int)
+                        //val status = node.isOn(value as Int)
+                        val status = true
                         if (state.get() xor status) {
                             Timber.d("luohong index:$index, value:$value, node:$node, status:$status, state:$state")
                             state.set(status)
