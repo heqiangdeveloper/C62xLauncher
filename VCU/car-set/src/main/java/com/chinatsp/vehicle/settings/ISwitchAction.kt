@@ -91,7 +91,7 @@ interface ISwitchAction : IAction {
             val selfActive = obtainActiveByNode(node)
             val dependActive = obtainDependByNode(node)
             Timber.d("updateSwitchEnable $node, selfActive:$selfActive, dependActive:$dependActive")
-            updateEnable(it, obtainActiveByNode(node), obtainDependByNode(node))
+            updateEnable(it, selfActive, dependActive)
         }
     }
 

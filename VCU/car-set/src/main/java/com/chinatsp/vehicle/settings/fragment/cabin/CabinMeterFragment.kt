@@ -74,6 +74,7 @@ class CabinMeterFragment : BaseFragment<MeterViewModel, CabinMeterFragmentBindin
         }
     }
 
+
     override fun getRadioManager(): IRadioManager {
         return manager
     }

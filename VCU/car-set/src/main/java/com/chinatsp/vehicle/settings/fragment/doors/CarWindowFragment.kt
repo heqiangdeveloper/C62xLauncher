@@ -172,6 +172,7 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
             updateSwitchEnable(SwitchNode.WIN_CLOSE_FOLLOW_LOCK)
             updateSwitchEnable(SwitchNode.WIN_CLOSE_WHILE_RAIN)
             updateSwitchEnable(SwitchNode.RAIN_WIPER_REPAIR)
+            updateSwitchEnable(SwitchNode.WIN_REMOTE_CONTROL)
         }
     }
 
@@ -216,6 +217,7 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
             SwitchNode.WIN_CLOSE_FOLLOW_LOCK -> viewModel.node362.value?.get() ?: true
             SwitchNode.WIN_CLOSE_WHILE_RAIN -> viewModel.node362.value?.get() ?: true
             SwitchNode.RAIN_WIPER_REPAIR -> viewModel.node362.value?.get() ?: true
+            SwitchNode.WIN_REMOTE_CONTROL -> viewModel.node362.value?.get() ?: true
             else -> super.obtainActiveByNode(node)
         }
     }

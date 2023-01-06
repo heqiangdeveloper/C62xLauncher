@@ -48,10 +48,7 @@ object CarController : IController {
         model: VoiceModel,
     ): Boolean {
         val slots: Slots = model.slots
-        var command: CarCmd? = null
-        if (null == command) {
-            command = accessProducer.attemptCreateCommand(slots)
-        }
+        var command: CarCmd? = accessProducer.attemptCreateCommand(slots)
         if (null == command) {
             command = seatProducer.attemptCreateCommand(slots)
         }

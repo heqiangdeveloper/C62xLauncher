@@ -78,6 +78,14 @@ class DoorsViewModel @Inject constructor(app: Application, model: BaseModel) :
         MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
     }
 
+    val node362: LiveData<SwitchState>
+        get() = _node362
+
+    private val _node362: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_362
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
+    }
+
     override fun onCreate() {
         super.onCreate()
         keySerial = manager.onRegisterVcuListener(listener = this)
@@ -101,11 +109,14 @@ class DoorsViewModel @Inject constructor(app: Application, model: BaseModel) :
             SwitchNode.OUTER_NFC -> {
                 doUpdate(_nfcOuter, status)
             }
-            SwitchNode.NODE_VALID_580->{
-                doUpdate(_node580,status)
+            SwitchNode.NODE_VALID_580 -> {
+                doUpdate(_node580, status)
             }
-            SwitchNode.NODE_VALID_NFC->{
-                doUpdate(_nodeNFC,status)
+            SwitchNode.NODE_VALID_NFC -> {
+                doUpdate(_nodeNFC, status)
+            }
+            SwitchNode.NODE_VALID_362 -> {
+                doUpdate(_node362, status)
             }
             else -> {}
         }

@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chinatsp.settinglib.bean.SwitchState
 import com.chinatsp.settinglib.listener.ISwitchListener
+import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.cabin.SafeManager
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.settings.app.base.BaseViewModel
@@ -49,6 +50,14 @@ class SafeViewModel @Inject constructor(app: Application, model: BaseModel) :
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
+    val node362: LiveData<SwitchState>
+        get() = _node362
+
+    private val _node362: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_362
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
+    }
+
 //    val fortifyHint: LiveData<SwitchState>
 //        get() = _fortifyHint
 //
@@ -69,10 +78,12 @@ class SafeViewModel @Inject constructor(app: Application, model: BaseModel) :
     override fun onCreate() {
         super.onCreate()
         keySerial = manager.onRegisterVcuListener(0, this)
+        GlobalManager.instance.onRegisterVcuListener(listener = this)
     }
 
     override fun onDestroy() {
         manager.unRegisterVcuListener(keySerial, keySerial)
+        GlobalManager.instance.unRegisterVcuListener(keySerial)
         super.onDestroy()
     }
 
@@ -83,6 +94,7 @@ class SafeViewModel @Inject constructor(app: Application, model: BaseModel) :
             SwitchNode.DRIVE_SAFE_VIDEO_PLAYING -> doUpdate(_videoModeFunction, status)
             SwitchNode.LOCK_FAILED_AUDIO_HINT -> doUpdate(_lockFailedHint, status)
             SwitchNode.LOCK_SUCCESS_AUDIO_HINT -> doUpdate(_lockSuccessHint, status)
+            SwitchNode.NODE_VALID_362 -> doUpdate(_node362, status)
             else -> {}
         }
     }

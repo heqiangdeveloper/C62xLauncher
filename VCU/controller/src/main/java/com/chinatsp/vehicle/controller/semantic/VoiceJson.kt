@@ -24,25 +24,20 @@ data class VoiceJson(
     val version: String?,
 ) {
 
-    val user: String = ""
-    val presetUser: String = ""
+    val user: String? = ""
+    val presetUser: String? = ""
 
     fun convert(): VoiceModel {
-        val nlpVoiceModel = VoiceModel()
-        nlpVoiceModel.service = service ?: "default"
-        nlpVoiceModel.operation = operation
-        nlpVoiceModel.text = text
-        if (semantic?.slots != null) {
-            nlpVoiceModel.slots = semantic.slots
-        } else {
-            nlpVoiceModel.slots = Slots(UUID.randomUUID().toString())
-        }
-        nlpVoiceModel.slots.text = text ?: ""
-        nlpVoiceModel.slots.operation = operation ?: ""
-        nlpVoiceModel.response = this.toString()
-        nlpVoiceModel.slots.user = user
-
-        nlpVoiceModel.slots.presetUser = presetUser
-        return nlpVoiceModel
+        val voiceModel = VoiceModel()
+        voiceModel.service = service ?: "default"
+        voiceModel.operation = operation ?: ""
+        voiceModel.text = text ?: ""
+        voiceModel.slots = semantic?.slots ?: Slots(UUID.randomUUID().toString())
+        voiceModel.slots.text = text ?: ""
+        voiceModel.slots.operation = operation ?: ""
+        voiceModel.response = this.toString()
+        voiceModel.slots.user = user ?: ""
+        voiceModel.slots.presetUser = presetUser ?: ""
+        return voiceModel
     }
 }

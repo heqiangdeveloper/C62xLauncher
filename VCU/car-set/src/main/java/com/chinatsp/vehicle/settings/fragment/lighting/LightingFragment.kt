@@ -14,6 +14,7 @@ import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
 import com.chinatsp.vehicle.settings.IOptionAction
+import com.chinatsp.vehicle.settings.IProgressAction
 import com.chinatsp.vehicle.settings.R
 import com.chinatsp.vehicle.settings.databinding.LightingFragmentBinding
 import com.chinatsp.vehicle.settings.vm.light.LightingViewModel
@@ -28,7 +29,7 @@ import timber.log.Timber
 
 @AndroidEntryPoint
 class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding>(),
-    VSeekBar.OnSeekBarListener, IOptionAction {
+    VSeekBar.OnSeekBarListener, IOptionAction, IProgressAction {
 
     private var animationHomeOpen: AnimationDrawable = AnimationDrawable()
     private var animationHomeClose: AnimationDrawable = AnimationDrawable()
@@ -210,10 +211,12 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
             updateSwitchEnable(node)
             updateRadioEnable(RadioNode.LIGHT_CEREMONY_SENSE)
         }
-        viewModel.node362.observe(this){
+        viewModel.node362.observe(this) {
             updateRadioEnable(RadioNode.LIGHT_FLICKER)
+            updateProgressEnable(Progress.SWITCH_BACKLIGHT_BRIGHTNESS)
+            updateSwitchEnable(SwitchNode.LIGHT_CEREMONY_SENSE)
         }
-        viewModel.node5B3.observe(this){
+        viewModel.node5B3.observe(this) {
             updateRadioEnable(RadioNode.LIGHT_CEREMONY_SENSE)
         }
     }
@@ -233,7 +236,14 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
             SwitchNode.LIGHT_INSIDE_MEET -> viewModel.insideLightMeet.value?.enable() ?: false
             SwitchNode.LIGHT_CEREMONY_SENSE -> viewModel.ceremonySenseSwitch.value?.enable()
                 ?: false
-            else -> super.obtainActiveByNode(node)
+            else -> true
+        }
+    }
+
+    override fun obtainDependByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.LIGHT_CEREMONY_SENSE -> viewModel.node362.value?.get() ?: true
+            else -> true
         }
     }
 
@@ -242,19 +252,20 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
             RadioNode.LIGHT_DELAYED_OUT -> viewModel.lightOutDelayed.value?.enable() ?: false
             RadioNode.LIGHT_FLICKER -> viewModel.lightFlicker.value?.enable() ?: false
             RadioNode.LIGHT_CEREMONY_SENSE -> viewModel.ceremonySense.value?.enable() ?: false
-            else -> super.obtainActiveByNode(node)
+            else -> true
         }
     }
 
     override fun obtainDependByNode(node: RadioNode): Boolean {
         return when (node) {
             //RadioNode.LIGHT_CEREMONY_SENSE -> obtainActiveByNode(RadioNode.LIGHT_CEREMONY_SENSE)
-                   // && binding.lightCeremonySenseSwitch.isChecked
+            // && binding.lightCeremonySenseSwitch.isChecked
+            RadioNode.LIGHT_DELAYED_OUT -> viewModel.node362.value?.get() ?: true
             RadioNode.LIGHT_FLICKER -> viewModel.node362.value?.get() ?: true
             RadioNode.LIGHT_CEREMONY_SENSE -> (viewModel.node5B3.value?.get() ?: true)
                     && (obtainActiveByNode(RadioNode.LIGHT_CEREMONY_SENSE))
                     && (binding.lightCeremonySenseSwitch.isChecked)
-            else -> super.obtainActiveByNode(node)
+            else -> true
         }
     }
 
@@ -390,4 +401,19 @@ class LightingFragment : BaseFragment<LightingViewModel, LightingFragmentBinding
         val text: TextView = popWindow?.findViewById(R.id.content) as TextView
         text.text = resources.getString(id)
     }
+
+    override fun findProgressByNode(node: Progress): View? {
+        return when (node) {
+            Progress.SWITCH_BACKLIGHT_BRIGHTNESS -> binding.lightSwitchBacklightSeekBar
+            else -> null
+        }
+    }
+
+    override fun obtainDependByNode(node: Progress): Boolean {
+        return when (node) {
+            Progress.SWITCH_BACKLIGHT_BRIGHTNESS -> viewModel.node362.value?.get() ?: true
+            else -> true
+        }
+    }
+
 }

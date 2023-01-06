@@ -53,9 +53,9 @@ class MeterViewModel @Inject constructor(app: Application, model: BaseModel) :
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         manager.unRegisterVcuListener(keySerial, keySerial)
         GlobalManager.instance.unRegisterVcuListener(keySerial)
+        super.onDestroy()
     }
 
     override fun onRadioOptionChanged(node: RadioNode, value: RadioState) {

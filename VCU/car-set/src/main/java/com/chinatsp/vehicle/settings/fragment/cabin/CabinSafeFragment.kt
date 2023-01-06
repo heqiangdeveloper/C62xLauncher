@@ -97,6 +97,11 @@ class CabinSafeFragment : BaseFragment<SafeViewModel, CabinSafeFragmentBinding>(
         viewModel.videoModeFunction.observe(this) {
             doUpdateSwitch(SwitchNode.DRIVE_SAFE_VIDEO_PLAYING, it)
         }
+
+        viewModel.node362.observe(this) {
+            updateSwitchEnable(SwitchNode.LOCK_SUCCESS_AUDIO_HINT)
+            updateSwitchEnable(SwitchNode.LOCK_FAILED_AUDIO_HINT)
+        }
     }
 
     private fun initDetailsClickListener() {
@@ -130,6 +135,14 @@ class CabinSafeFragment : BaseFragment<SafeViewModel, CabinSafeFragmentBinding>(
             SwitchNode.LOCK_FAILED_AUDIO_HINT -> viewModel.lockFailedHint.value?.enable() ?: false
             SwitchNode.LOCK_SUCCESS_AUDIO_HINT -> viewModel.lockSuccessHint.value?.enable() ?: false
             SwitchNode.DRIVE_SAFE_VIDEO_PLAYING -> true
+            else -> super.obtainActiveByNode(node)
+        }
+    }
+
+    override fun obtainDependByNode(node: SwitchNode): Boolean {
+        return when (node) {
+            SwitchNode.LOCK_FAILED_AUDIO_HINT -> viewModel.node362.value?.get() ?: true
+            SwitchNode.LOCK_SUCCESS_AUDIO_HINT -> viewModel.node362.value?.get() ?: true
             else -> super.obtainActiveByNode(node)
         }
     }

@@ -575,15 +575,19 @@ class LightManager private constructor() : BaseManager(), IOptionManager, IProgr
     override fun doCommandExpress(parcel: CommandParcel, fromUser: Boolean) {
         val command = parcel.command as CarCmd
         if ((Model.LIGHT_COMMON == command.model) && (ICar.LAMPS == command.car)) {
-            if (IAct.DISTANT_LIGHT == command.act) {
-                doSwitchDistantLight(parcel)
-            } else if (IAct.DIPPED_LIGHT == command.act) {
-                doSwitchDippedLight(parcel)
-            } else if (IAct.SIDE_LIGHT == command.act) {
-                doSwitchSideLight(parcel)
-            } else if (IAct.FOG_LIGHT == command.act) {
-                doSwitchFogLight(parcel)
+            parcel.callback?.run {
+                command.message = "小北暂时还不会这个操作"
+                onCmdHandleResult(command)
             }
+//            if (IAct.DISTANT_LIGHT == command.act) {
+//                doSwitchDistantLight(parcel)
+//            } else if (IAct.DIPPED_LIGHT == command.act) {
+//                doSwitchDippedLight(parcel)
+//            } else if (IAct.SIDE_LIGHT == command.act) {
+//                doSwitchSideLight(parcel)
+//            } else if (IAct.FOG_LIGHT == command.act) {
+//                doSwitchFogLight(parcel)
+//            }
         }
     }
 

@@ -226,6 +226,8 @@ class GlobalManager private constructor() : BaseManager(), ISwitchManager {
                 .forEachIndexed { index, value ->
                     val node = nodeValidList[index]
                     val state = nodeValidMap[node]
+                    Timber.d("luohong 11111111 index:$index, value:$value, node:$node, state:$state")
+
                     if (null != state) {
                         val status = node.isOn(value as Int)
                         if (state.get() xor status) {
