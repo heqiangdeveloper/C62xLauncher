@@ -251,4 +251,5 @@ object VcuUtils {
         val radio = SternDoorManager.instance.doGetRadioOption(RadioNode.GEARS)
         return expect == radio?.get()
     }
+
 }

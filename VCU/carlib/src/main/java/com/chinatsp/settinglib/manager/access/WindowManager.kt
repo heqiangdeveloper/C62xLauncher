@@ -75,6 +75,13 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager,
         }
     }
 
+    private val hoodState: SwitchState by lazy {
+        val node = SwitchNode.HOOD_STATUS
+        return@lazy createAtomicBoolean(node) { result, value ->
+            doUpdateSwitch(node, result, value, this::doSwitchChanged)
+        }
+    }
+
     private val lfWindow: ValueBean by lazy {
         val valueBean = ValueBean()
         val value = obtainWindowDegree(IPart.L_F)
@@ -125,6 +132,7 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager,
                 add(SwitchNode.WIN_CLOSE_FOLLOW_LOCK.get.signal)
                 add(SwitchNode.WIN_REMOTE_CONTROL.get.signal)
                 add(SwitchNode.RAIN_WIPER_REPAIR.get.signal)
+                add(SwitchNode.HOOD_STATUS.get.signal)
 
                 //================增加车窗位置信号监听 开始================
                 add(CarCabinManager.ID_BCM_POS_VIT_FL)
@@ -153,6 +161,7 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager,
             SwitchNode.WIN_CLOSE_FOLLOW_LOCK -> autoCloseWinAtLock.deepCopy()
             SwitchNode.WIN_REMOTE_CONTROL -> winRemoteControl.deepCopy()
             SwitchNode.RAIN_WIPER_REPAIR -> rainWiperRepair.deepCopy()
+            SwitchNode.HOOD_STATUS -> hoodState
             else -> null
         }
     }
@@ -205,6 +214,9 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager,
             }
             SwitchNode.RAIN_WIPER_REPAIR.get.signal -> {
                 onSwitchChanged(SwitchNode.RAIN_WIPER_REPAIR, rainWiperRepair, p)
+            }
+            SwitchNode.HOOD_STATUS.get.signal -> {
+                onSwitchChanged(SwitchNode.HOOD_STATUS, hoodState, p)
             }
             //================增加车窗位置信号监听 开始================
             CarCabinManager.ID_BCM_POS_VIT_FL -> {

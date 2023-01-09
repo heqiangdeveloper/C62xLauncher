@@ -60,6 +60,14 @@ class WindowViewModel @Inject constructor(app: Application, model: BaseModel) :
         MutableLiveData(manager.doGetSwitchOption(node))
     }
 
+    val hoodState: LiveData<SwitchState>
+        get() = _hoodState
+
+    private val _hoodState: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.HOOD_STATUS
+        MutableLiveData(manager.doGetSwitchOption(node))
+    }
+
     override fun onCreate() {
         super.onCreate()
         keySerial = manager.onRegisterVcuListener(listener = this)
@@ -91,8 +99,11 @@ class WindowViewModel @Inject constructor(app: Application, model: BaseModel) :
             SwitchNode.RAIN_WIPER_REPAIR -> {
                 doUpdate(_rainWiperRepair, status)
             }
-            SwitchNode.NODE_VALID_362->{
-                doUpdate(_node362,status)
+            SwitchNode.NODE_VALID_362 -> {
+                doUpdate(_node362, status)
+            }
+            SwitchNode.HOOD_STATUS -> {
+                doUpdate(_hoodState, status)
             }
             else -> {}
         }

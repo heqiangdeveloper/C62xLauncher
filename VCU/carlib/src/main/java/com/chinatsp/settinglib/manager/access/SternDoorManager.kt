@@ -70,6 +70,13 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
         }
     }
 
+//    private val hoodState: SwitchState by lazy {
+//        val node = SwitchNode.HOOD_STATUS
+//        return@lazy createAtomicBoolean(node) { result, value ->
+//            doUpdateSwitch(node, result, value, this::doSwitchChanged)
+//        }
+//    }
+
     private val sternSmartEnter: RadioState by lazy {
         val node = RadioNode.STERN_SMART_ENTER
         return@lazy createAtomicInteger(node) { result, value ->
@@ -207,6 +214,7 @@ class SternDoorManager private constructor() : BaseManager(), IOptionManager, IP
             }
             CarCabinManager.ID_HOOD_LID_OPEN -> {
                 onSignalChanged(IPart.HEAD, Model.ACCESS_STERN, p.propertyId, p.value as Int)
+//                onSwitchChanged(SwitchNode.HOOD_STATUS, hoodState, p)
             }
             CarCabinManager.ID_TRUNK_LID_OPEN -> {
                 onSignalChanged(IPart.TAIL, Model.ACCESS_STERN, p.propertyId, p.value as Int)
