@@ -5,22 +5,17 @@ import android.media.AudioManager;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.chinatsp.iquting.R;
 import com.chinatsp.iquting.callback.INetworkChangeListener;
 import com.chinatsp.iquting.callback.IQueryIqutingLoginStatus;
 import com.chinatsp.iquting.callback.IQueryMusicLists;
 import com.chinatsp.iquting.callback.ITabClickCallback;
 import com.chinatsp.iquting.configs.IqutingConfigs;
-import com.chinatsp.iquting.event.ContentConnectEvent;
-import com.chinatsp.iquting.event.PlayConnectEvent;
 import com.chinatsp.iquting.ipc.IqutingMediaChangeListener;
 import com.chinatsp.iquting.ipc.IqutingPlayStateListener;
-import com.chinatsp.iquting.utils.ToolUtils;
 import com.chinatsp.iquting.utils.VisualizerTool;
 import com.tencent.wecarflow.contentsdk.ConnectionListener;
 import com.tencent.wecarflow.contentsdk.ContentManager;
 import com.tencent.wecarflow.contentsdk.bean.AreaContentResponseBean;
-import com.tencent.wecarflow.contentsdk.bean.BaseSongItemBean;
 import com.tencent.wecarflow.contentsdk.callback.AreaContentResult;
 import com.tencent.wecarflow.controlsdk.AudioFocusChangeListener;
 import com.tencent.wecarflow.controlsdk.BindListener;
@@ -33,11 +28,10 @@ import com.tencent.wecarflow.controlsdk.data.LaunchConfig;
 import com.tencent.wecarflow.controlsdk.data.NavigationInfo;
 import com.tencent.wecarflow.controlsdk.data.UserInfo;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import launcher.base.network.NetworkObserver;
 import launcher.base.network.NetworkStateReceiver;
@@ -55,8 +49,8 @@ public class IqutingBindService {
     public static final int TYPE_DAILYSONGS = 1;
     public static final int TYPE_RANKSONGS = 2;
     private ITabClickCallback iTabClickCallback;
-    private List<IqutingPlayStateListener> playStateListenerList = new ArrayList<>();
-    private List<IqutingMediaChangeListener> mediaChangeListenerList = new ArrayList<>();
+    private Set<IqutingPlayStateListener> playStateListenerSets = new HashSet<>();
+    private Set<IqutingMediaChangeListener> mediaChangeListenerSets = new HashSet<>();
     private volatile boolean isPlaying = false;
     private VisualizerTool visualizerTool;
     private int currentSessionId = -1;//当前的sessonid值
@@ -264,9 +258,8 @@ public class IqutingBindService {
     MediaChangeListener mediaChangeListener = new MediaChangeListener() {
         @Override
         public void onMediaChange(MediaInfo mediaInfo) {
-            Log.d(TAG,"onMediaChange");
-            mediaChangeListenerList = mediaChangeListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
-            for(IqutingMediaChangeListener listener : mediaChangeListenerList){
+            Log.d(TAG,"onMediaChange mediaChangeListenerSets size = " + mediaChangeListenerSets.size());
+            for(IqutingMediaChangeListener listener : mediaChangeListenerSets){
                 listener.onMediaChange(mediaInfo);
             }
         }
@@ -274,8 +267,8 @@ public class IqutingBindService {
         @Override
         public void onMediaChange(MediaInfo mediaInfo, NavigationInfo navigationInfo) {
             Log.d(TAG,"onMediaChange with navigationInfo");
-            mediaChangeListenerList = mediaChangeListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
-            for(IqutingMediaChangeListener listener : mediaChangeListenerList){
+            //mediaChangeListenerList = mediaChangeListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
+            for(IqutingMediaChangeListener listener : mediaChangeListenerSets){
                 listener.onMediaChange(mediaInfo,navigationInfo);
             }
         }
@@ -284,8 +277,8 @@ public class IqutingBindService {
         public void onFavorChange(boolean b, String s) {
             //b true收藏成功，false收藏失败  s 表示itemUUID
             Log.d(TAG,"onFavorChange: b = " + b + ",s = " + s);
-            mediaChangeListenerList = mediaChangeListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
-            for(IqutingMediaChangeListener listener : mediaChangeListenerList){
+            //mediaChangeListenerList = mediaChangeListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
+            for(IqutingMediaChangeListener listener : mediaChangeListenerSets){
                 listener.onFavorChange(b,s);
             }
         }
@@ -293,8 +286,8 @@ public class IqutingBindService {
         @Override
         public void onModeChange(int i) {
             Log.d(TAG,"onModeChange: " + i);
-            mediaChangeListenerList = mediaChangeListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
-            for(IqutingMediaChangeListener listener : mediaChangeListenerList){
+            //mediaChangeListenerList = mediaChangeListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
+            for(IqutingMediaChangeListener listener : mediaChangeListenerSets){
                 listener.onModeChange(i);
             }
         }
@@ -302,8 +295,8 @@ public class IqutingBindService {
         @Override
         public void onPlayListChange() {
             Log.d(TAG,"onPlayListChange");
-            mediaChangeListenerList = mediaChangeListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
-            for(IqutingMediaChangeListener listener : mediaChangeListenerList){
+            //mediaChangeListenerList = mediaChangeListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
+            for(IqutingMediaChangeListener listener : mediaChangeListenerSets){
                 listener.onPlayListChange();
             }
         }
@@ -322,8 +315,9 @@ public class IqutingBindService {
             doMusicRhythm();//音乐律动
             Settings.System.putString(mContext.getContentResolver(), IqutingConfigs.SAVE_SOURCE, IqutingConfigs.AQT);//音源写入数据库
             Settings.System.putInt(mContext.getContentResolver(), IqutingConfigs.AQT_PLAYING, 1);//爱趣听播放状态写入数据库
-            playStateListenerList = playStateListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
-            for(IqutingPlayStateListener listener : playStateListenerList){
+            //playStateListenerList = playStateListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
+            Log.d(TAG,"onStart playStateListenerSets size = " + playStateListenerSets.size());
+            for(IqutingPlayStateListener listener : playStateListenerSets){
                 listener.onStart();
             }
         }
@@ -334,8 +328,8 @@ public class IqutingBindService {
             isPlaying = false;
             doMusicRhythm();//音乐律动
             Settings.System.putInt(mContext.getContentResolver(), IqutingConfigs.AQT_PLAYING, 0);//爱趣听播放状态写入数据库
-            playStateListenerList = playStateListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
-            for(IqutingPlayStateListener listener : playStateListenerList){
+            //playStateListenerList = playStateListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
+            for(IqutingPlayStateListener listener : playStateListenerSets){
                 listener.onPause();
             }
         }
@@ -346,8 +340,8 @@ public class IqutingBindService {
             isPlaying = false;
             doMusicRhythm();//音乐律动
             Settings.System.putInt(mContext.getContentResolver(), IqutingConfigs.AQT_PLAYING, 0);//爱趣听播放状态写入数据库
-            playStateListenerList = playStateListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
-            for(IqutingPlayStateListener listener : playStateListenerList){
+            //playStateListenerList = playStateListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
+            for(IqutingPlayStateListener listener : playStateListenerSets){
                 listener.onStop();
             }
         }
@@ -356,8 +350,8 @@ public class IqutingBindService {
         public void onProgress(String s, long l, long l1) {//s 类型，l 当前进度， l1总进度
             //播放进度，如果是音乐，新闻，电台类音频，按毫秒为单位，如果是有声书，按字数为单位。
             //Log.d(TAG,"onProgress " + s + "," +l + "," +l1);
-            playStateListenerList = playStateListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
-            for(IqutingPlayStateListener listener : playStateListenerList){
+            //playStateListenerList = playStateListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
+            for(IqutingPlayStateListener listener : playStateListenerSets){
                 listener.onProgress(s,l,l1);
             }
         }
@@ -366,8 +360,8 @@ public class IqutingBindService {
         public void onBufferingStart() {
             Log.d(TAG,"onBufferingStart");
             currentSessionId = -1;//重置currentSessionId，由于暂停后点击继续播放会再调用onMediaChange,因此不放在onMediaChange中
-            playStateListenerList = playStateListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
-            for(IqutingPlayStateListener listener : playStateListenerList){
+            //playStateListenerList = playStateListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
+            for(IqutingPlayStateListener listener : playStateListenerSets){
                 listener.onBufferingStart();
             }
         }
@@ -375,8 +369,8 @@ public class IqutingBindService {
         @Override
         public void onBufferingEnd() {
             Log.d(TAG,"onBufferingEnd");
-            playStateListenerList = playStateListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
-            for(IqutingPlayStateListener listener : playStateListenerList){
+            //playStateListenerList = playStateListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
+            for(IqutingPlayStateListener listener : playStateListenerSets){
                 listener.onBufferingEnd();
             }
         }
@@ -384,8 +378,8 @@ public class IqutingBindService {
         @Override
         public void onPlayError(int i, String s) {
             Log.d(TAG,"onPlayError: i = " + i + ",s = " + s);
-            playStateListenerList = playStateListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
-            for(IqutingPlayStateListener listener : playStateListenerList){
+            //playStateListenerList = playStateListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
+            for(IqutingPlayStateListener listener : playStateListenerSets){
                 listener.onPlayError(i,s);
             }
         }
@@ -395,8 +389,8 @@ public class IqutingBindService {
             Log.d(TAG,"onAudioSessionId: " + i);
             currentSessionId = i;
             doMusicRhythm();//音乐律动
-            playStateListenerList = playStateListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
-            for(IqutingPlayStateListener listener : playStateListenerList){
+            //playStateListenerList = playStateListenerList.stream().distinct().collect(Collectors.toList());//去掉重复的
+            for(IqutingPlayStateListener listener : playStateListenerSets){
                 listener.onAudioSessionId(i);
             }
         }
@@ -446,26 +440,41 @@ public class IqutingBindService {
 
     //给各个模块注册媒体变化监听器
     public void registerMediaChangeListener(IqutingMediaChangeListener listener){
-        if(listener != null && !mediaChangeListenerList.contains(listener)){
-            mediaChangeListenerList.add(listener);
+        if(listener != null && !mediaChangeListenerSets.contains(listener)){
+            Log.d("mediaChangeListenerSets","mediaChangeListenerSets add Sets size =" + listener);
+            mediaChangeListenerSets.add(listener);
         }
     }
 
     //给各个模块注册播放状态监听器
     public void registerPlayStateListener(IqutingPlayStateListener listener){
-        if(listener != null && !playStateListenerList.contains(listener)){
-            playStateListenerList.add(listener);
+        if(listener != null && !playStateListenerSets.contains(listener)){
+            Log.d("playStateListenerSets","playStateListenerSets add Sets size =" + listener);
+            playStateListenerSets.add(listener);
         }
     }
 
     //给各个模块移除播放状态监听器
     public void removeRegistedPlayStateListener(IqutingPlayStateListener listener){
-        playStateListenerList.remove(listener);
+        playStateListenerSets.remove(listener);
     }
 
     //给各个模块移除媒体变化监听器
     public void removeRegistedMediaChangeListener(IqutingMediaChangeListener listener){
-        mediaChangeListenerList.remove(listener);
+        mediaChangeListenerSets.remove(listener);
+    }
+
+    //移除所有的media和play观察者
+    public void removeMediaAndPlayListener(){
+        playStateListenerSets.clear();
+        mediaChangeListenerSets.clear();
+    }
+
+    //通知所有的卡片对象，同步刷新当前的媒体信息
+    public void notifyCurrentMediaInfo(MediaInfo mediaInfo){
+        for(IqutingMediaChangeListener listener : mediaChangeListenerSets){
+            listener.onMediaChange(mediaInfo);
+        }
     }
 
     public boolean isAccountLogin(){

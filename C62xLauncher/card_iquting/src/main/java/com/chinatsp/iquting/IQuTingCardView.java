@@ -13,8 +13,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,7 +53,6 @@ import com.tencent.wecarflow.controlsdk.MediaChangeListener;
 import com.tencent.wecarflow.controlsdk.MediaInfo;
 import com.tencent.wecarflow.controlsdk.PlayStateListener;
 import com.tencent.wecarflow.controlsdk.QueryCallback;
-import com.tencent.wecarflow.controlsdk.data.LaunchConfig;
 import com.tencent.wecarflow.controlsdk.data.NavigationInfo;
 
 import org.greenrobot.eventbus.EventBus;
@@ -228,6 +225,8 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
         //注册网络动态监听
         NetworkStateReceiver.getInstance().registerObserver(networkObserver);
         //入口
+        addIqutingMediaChangeListener2();//监听爱趣听媒体的变化
+        addIqutingPlayStateListener2();//监听爱趣听播放状态变化
         addPlayContentListener(IQuTingCardView.this);
     }
 
@@ -309,8 +308,8 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
             if(isPlaying){
                 FlowPlayControl.getInstance().doPause();
             }
-            removePlayStateListener();
-            removeMediaChangeListener();
+//            removePlayStateListener();
+//            removeMediaChangeListener();
             mState = new NetWorkDisconnectState();
             mState.updateViewState(IQuTingCardView.this, mExpand);
         }else {
@@ -324,9 +323,6 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                         Log.d(TAG,"addPlayContentListener checkLoginStatus: " + mIsLogin);
                         if(mIsLogin){
                             isLogin = true;
-                            //因为在onWindowVisibilityChanged窗口不可见时，移除了监听
-                            addIqutingMediaChangeListener2();//监听爱趣听媒体的变化
-                            addIqutingPlayStateListener2();//监听爱趣听播放状态变化
                             //if(mState == null || mState instanceof UnLoginState || mState instanceof NetWorkDisconnectState){
                                 mState = new NormalState();
                                 mState.updateViewState(view, mExpand);
@@ -341,8 +337,8 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                             }
                         }else {
                             isLogin = false;
-                            removePlayStateListener();
-                            removeMediaChangeListener();
+//                            removePlayStateListener();
+//                            removeMediaChangeListener();
                             mState = new UnLoginState();
                             mState.updateViewState(IQuTingCardView.this, mExpand);
                         }
@@ -351,8 +347,8 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
             }else {
                 isServiceConnected = false;
                 isLogin = false;
-                removePlayStateListener();
-                removeMediaChangeListener();
+//                removePlayStateListener();
+//                removeMediaChangeListener();
                 mState = new UnLoginState();
                 mState.updateViewState(IQuTingCardView.this, mExpand);
 
@@ -397,7 +393,8 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                     mCircleProgressView.setCurrent(currentDuration / 1000);
                     mTvIQuTingMediaNameBig.setText(name);
                     mTvIQuTingArtistBig.setText(artist);
-                    if(!isDestroy((Activity) context)){
+                    mIvIQuTingCoverBig = findViewById(R.id.ivIQuTingCoverBig);
+                    if(!isDestroy((Activity) context) && (mIvIQuTingCoverBig != null)){
                         GlideHelper.loadUrlImage(context,mIvIQuTingCoverBig,iconUrl);
                     }
 
@@ -410,7 +407,9 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
                     mProgressHorizontalIQuTing.setMaxValue(totalDuration / 1000);
                     mProgressHorizontalIQuTing.updateProgress(currentDuration / 1000);
                     mTvIQuTingMediaName.setText(name + "-" + artist);
-                    if(!isDestroy((Activity) context)){
+
+                    mIvCover = findViewById(R.id.ivIQuTingCover);
+                    if(!isDestroy((Activity) context)  && (mIvCover != null)){
                         GlideHelper.loadUrlAlbumCoverRadius(context,mIvCover,iconUrl,RADIUS);
                     }
 
@@ -724,6 +723,8 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
 
             @Override
             public void onSuccess(MediaInfo mediaInfo) {
+                //通知所有的卡片对象，同步刷新
+                IqutingBindService.getInstance().notifyCurrentMediaInfo(mediaInfo);
                 if(mediaInfo != null){
                     isHasMediaPlay = true;
                     currentMediaInfo = mediaInfo;
@@ -1193,8 +1194,8 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
             mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME);
         } else if (visibility == GONE || visibility == INVISIBLE) {
             Log.d(TAG,"onWindowVisibilityChanged INVISIBLE");
-            removeMediaChangeListener();
-            removePlayStateListener();
+//            removeMediaChangeListener();
+//            removePlayStateListener();
             removeEventBus();
             mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE);
             mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP);
@@ -1203,12 +1204,12 @@ public class IQuTingCardView extends ConstraintLayout implements ICardStyleChang
 
     private void removeMediaChangeListener(){
         //FlowPlayControl.getInstance().removeMediaChangeListener(mediaChangeListener);
-        IqutingBindService.getInstance().removeRegistedMediaChangeListener(iqutingMediaChangeListener);
+        //IqutingBindService.getInstance().removeRegistedMediaChangeListener(iqutingMediaChangeListener);
     }
 
     private void removePlayStateListener(){
         //FlowPlayControl.getInstance().removePlayStateListener(playStateListener);
-        IqutingBindService.getInstance().removeRegistedPlayStateListener(iqutingPlayStateListener);
+        //IqutingBindService.getInstance().removeRegistedPlayStateListener(iqutingPlayStateListener);
     }
 
     private void addEventBus(){
