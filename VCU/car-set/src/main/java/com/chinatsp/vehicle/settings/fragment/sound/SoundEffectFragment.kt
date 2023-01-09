@@ -219,7 +219,7 @@ class SoundEffectFragment : BaseFragment<SoundEffectViewModel, SoundEffectFragme
     override fun obtainDependByNode(node: RadioNode): Boolean {
         return when (node) {
             RadioNode.AUDIO_ENVI_AUDIO -> (binding.soundEnvironmentalSw.isChecked) && viewModel.node645.value?.get() ?: true
-            RadioNode.SYSTEM_SOUND_EFFECT ->  viewModel.node645.value?.get() ?: true
+            RadioNode.SYSTEM_SOUND_EFFECT -> VcuUtils.isAmplifier || viewModel.node645.value?.get() ?: true
             else -> super.obtainActiveByNode(node)
         }
     }
