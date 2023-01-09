@@ -203,8 +203,8 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
                                 }
                             }
                         } else {
-                            removePlayStateListener();
-                            removeMediaChangeListener();
+//                            removePlayStateListener();
+//                            removeMediaChangeListener();
                             showUI(TYPE_NO_LOGIN);
                         }
                     }
@@ -212,8 +212,8 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
             } else {
                 Log.d(TAG, "PlayContentService disConnected");
                 isServiceConnected = false;
-                removePlayStateListener();
-                removeMediaChangeListener();
+//                removePlayStateListener();
+//                removeMediaChangeListener();
                 showUI(TYPE_NO_LOGIN);
                 if (mServiceConnectTask != null && !mExecuteTask) {
                     mExecuteTask = true;
@@ -457,10 +457,10 @@ public class DrawerIqutingHolder extends BaseViewHolder<DrawerEntity> {
     }
 
     private void removeMediaChangeListener() {
-        IqutingBindService.getInstance().removeRegistedMediaChangeListener(iqutingMediaChangeListener);
+        //IqutingBindService.getInstance().removeRegistedMediaChangeListener(iqutingMediaChangeListener);
     }
 
     private void removePlayStateListener() {
-        IqutingBindService.getInstance().removeRegistedPlayStateListener(iqutingPlayStateListener);
+        //IqutingBindService.getInstance().removeRegistedPlayStateListener(iqutingPlayStateListener);
     }
 }

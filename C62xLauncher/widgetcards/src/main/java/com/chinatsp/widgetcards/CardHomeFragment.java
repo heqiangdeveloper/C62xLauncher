@@ -15,6 +15,7 @@ import android.view.View;
 
 import com.chinatsp.drawer.CollapseController;
 import com.chinatsp.drawer.ICollapseListener;
+import com.chinatsp.iquting.service.IqutingBindService;
 import com.chinatsp.widgetcards.home.CardIndicator;
 import com.chinatsp.widgetcards.home.CardScrollUtil;
 import com.chinatsp.widgetcards.home.ExpandStateManager;
@@ -342,6 +343,8 @@ public class CardHomeFragment extends BaseFragment {
         super.onDestroy();
         mRcvCards.removeOnScrollListener(mOnScrollListener);
         releaseObservers();
+        //移除爱趣听的所有监听器
+        IqutingBindService.getInstance().removeMediaAndPlayListener();
         EventBus.getDefault().unregister(this);
     }
 }
