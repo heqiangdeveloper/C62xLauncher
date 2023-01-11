@@ -977,6 +977,16 @@ enum class SwitchNode(
         }
     },
 
+    /**
+     * 引擎盖状态
+     * get -> Status of hood switch 0x0: Closed; 0x1: Open
+     */
+    HOOD_STATUS(
+        get = Norm(on = 0x1, off = 0x0, signal = CarCabinManager.ID_HOOD_LID_OPEN),
+        set = Norm(on = 0x1, off = 0x0, signal = -1),
+        def = false
+    ),
+
     NODE_VALID_33F(get = Norm(off = 0x1, on = 0x0), set = Norm(off = 0x1, on = 0x0), def = true),
     NODE_VALID_362(get = Norm(off = 0x1, on = 0x0), set = Norm(off = 0x1, on = 0x0), def = true),
     NODE_VALID_332(get = Norm(off = 0x1, on = 0x0), set = Norm(off = 0x1, on = 0x0), def = true),

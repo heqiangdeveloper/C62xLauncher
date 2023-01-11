@@ -174,6 +174,10 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
             updateSwitchEnable(SwitchNode.RAIN_WIPER_REPAIR)
             updateSwitchEnable(SwitchNode.WIN_REMOTE_CONTROL)
         }
+
+        viewModel.hoodState.observe(this){
+            updateSwitchEnable(SwitchNode.RAIN_WIPER_REPAIR)
+        }
     }
 
     private fun executeWiperAnimation(status: Boolean) {
@@ -216,8 +220,9 @@ class CarWindowFragment : BaseFragment<WindowViewModel, CarWindowFragmentBinding
         return when (node) {
             SwitchNode.WIN_CLOSE_FOLLOW_LOCK -> viewModel.node362.value?.get() ?: true
             SwitchNode.WIN_CLOSE_WHILE_RAIN -> viewModel.node362.value?.get() ?: true
-            SwitchNode.RAIN_WIPER_REPAIR -> viewModel.node362.value?.get() ?: true
             SwitchNode.WIN_REMOTE_CONTROL -> viewModel.node362.value?.get() ?: true
+            SwitchNode.RAIN_WIPER_REPAIR -> (viewModel.node362.value?.get() ?: true)
+                    && (!(viewModel.hoodState.value?.get() ?: false))
             else -> super.obtainActiveByNode(node)
         }
     }

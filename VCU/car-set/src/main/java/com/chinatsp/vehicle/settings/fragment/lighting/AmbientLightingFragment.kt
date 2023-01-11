@@ -161,7 +161,7 @@ class AmbientLightingFragment :
 
     private fun initViewsDisplay() {
         binding.lightingFrontLayout.visibility = View.VISIBLE
-        binding.lightingBackLayout.visibility = if (hasBack) View.GONE else View.VISIBLE
+        binding.lightingBackLayout.visibility = if (hasBack) View.VISIBLE else View.GONE
     }
 
     private fun initViewLight() {

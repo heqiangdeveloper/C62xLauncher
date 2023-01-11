@@ -27,6 +27,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="chinatsp.intent.action.FACTORY_RESET" />
+                <action android:name="android.intent.action.SCREEN_ON"/>
             </intent-filter>
         </receiver>
     </application>

@@ -26,7 +26,8 @@ object Applet {
 //        val signal = CarCabinManager.ID_VCS_KEY_AVM
         val value = GlobalManager.instance.readIntProperty(signal, Origin.CABIN)
         val valueBean = ValueBean()
-        updateAvmDisplay(value, valueBean)
+        valueBean.setValue(value)
+        notifyPanoramaStatus(VcuUtils.isAvmEngine(value), "byLazy")
         valueBean
     }
 
@@ -35,25 +36,20 @@ object Applet {
         val next = VcuUtils.isAvmEngine(value)
         valueBean.setValue(value);
         if (last xor next) {
-            AppExecutors.get()?.networkIO()?.execute {
-//                val map = HashMap<String, String>()
-//                map["activeStatus"] = if (next) "fg" else "bg"
-//                map["default"] = "360"
-//                map["scene"] = "carControl"
-//                map["service"] = "carControl"
-//                map["sceneStatus"] = "default"
-//                val data = GsonUtil.objectToString(map)
-//                val appState = AppState(activeStatus = if (next) "fg" else "bg")
-//                val data = GsonUtil.objectToString(appState)
-                val data =
-                    "{\"data\": {},\"activeStatus\": \"${if (next) "fg" else "bg"}\",\"sceneStatus\":\"default\",\"service\": \"carControl\",\"scene\": \"carControl\",\"default\": \"360\"}"
-                Timber.d("uploadStatus send 360 state json:$data")
-                val intent: Intent = Intent()
-                    .setAction("com.iflytek.autofly.business.response")
-                    .setPackage("com.iflytek.autofly.voicecoreservice")
-                intent.putExtra("data", data)
-                context.startService(intent)
-            }
+            notifyPanoramaStatus(next, "update")
+        }
+    }
+
+    private fun notifyPanoramaStatus(status: Boolean, serial: String) {
+        AppExecutors.get()?.networkIO()?.execute {
+            val data =
+                "{\"data\": {},\"activeStatus\": \"${if (status) "fg" else "bg"}\",\"sceneStatus\":\"default\",\"service\": \"carControl\",\"scene\": \"carControl\",\"default\": \"360\"}"
+            Timber.d("send 360 state serial: $serial, json:$data")
+            val intent: Intent = Intent()
+                .setAction("com.iflytek.autofly.business.response")
+                .setPackage("com.iflytek.autofly.voicecoreservice")
+            intent.putExtra("data", data)
+            context.startService(intent)
         }
     }
 
