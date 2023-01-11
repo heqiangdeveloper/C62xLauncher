@@ -125,11 +125,11 @@ public class NaviBigCardHolder extends NaviCardHolder {
         layoutCardNaviStatus.setVisibility(View.INVISIBLE);
         layoutCardNaviCruise.setVisibility(View.VISIBLE);
         if (mNoLocation) {
-            surfaceViewNavi.setVisibility(View.INVISIBLE);
-            layoutCardNaviNoLocation.setVisibility(View.VISIBLE);
+            showUnknownLocationUI();
         } else {
             surfaceViewNavi.setVisibility(View.VISIBLE);
             layoutCardNaviNoLocation.setVisibility(View.INVISIBLE);
+            ivCardNaviBigDefaultMap.setVisibility(View.INVISIBLE);
         }
     }
 
