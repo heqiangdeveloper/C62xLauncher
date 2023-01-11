@@ -2,6 +2,7 @@ package com.chinatsp.settinglib.manager.access
 
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.cabin.CarCabinManager
+import com.chinatsp.settinglib.Applet
 import com.chinatsp.settinglib.Constant
 import com.chinatsp.settinglib.VcuUtils
 import com.chinatsp.settinglib.bean.CommandParcel
@@ -414,6 +415,11 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager,
         val part = parcel.command.part
         val signal = CarCabinManager.ID_AVN_BCM_COM_REQ_RCM
         if (IStatus.INIT == parcel.command.status) {
+            if (status && (IPart.TOP == part) && !Applet.isBelowCareSpeed(120f)){
+                parcel.command.message = "车速太快了，小北建议您不要打开天窗"
+                parcel.callback?.onCmdHandleResult(parcel.command)
+                return
+            }
             parcel.retryCount = 20
             parcel.command.lfCount = 1
             writeProperty(signal, 0x5, Origin.CABIN)
@@ -965,6 +971,11 @@ class WindowManager private constructor() : BaseManager(), ISwitchManager,
         val status = Action.TURN_ON == command.action
         val signal = CarCabinManager.ID_AVN_BCM_COM_REQ_RCM
         if (IStatus.INIT == command.status) {
+            if (status && !Applet.isBelowCareSpeed(120f)){
+                command.message = "车速太快了，小北建议您不要翘起天窗"
+                parcel.callback?.onCmdHandleResult(command)
+                return
+            }
             command.lfCount = 1
             parcel.retryCount = 4
         }

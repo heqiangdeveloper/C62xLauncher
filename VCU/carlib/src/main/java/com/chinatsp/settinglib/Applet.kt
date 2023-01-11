@@ -81,10 +81,10 @@ object Applet {
         VcuUtils.getConfigParameters(OffLine.VOICE_CONTROL_WIN_SUPPORT, 0x0)
     }
 
-    fun isCanSwitchEps(consult: Float): Boolean {
+    fun isBelowCareSpeed(consult: Float): Boolean {
         val speed = speedValue()
         val result = speed < consult
-        Timber.d("Applet isCanSwitchEps speed:$speed, consult:$consult, result:$result")
+        Timber.d("Applet isBelowSafeSpeed speed:$speed, consult:$consult, result:$result")
         return result
     }
 

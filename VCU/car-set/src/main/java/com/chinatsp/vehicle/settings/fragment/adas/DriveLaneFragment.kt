@@ -209,7 +209,7 @@ class DriveLaneFragment : BaseFragment<LaneViewModel, DriveLaneFragmentBinding>(
         return when (node) {
             RadioNode.ADAS_LDW_SENSITIVITY -> (viewModel.node332.value?.get() ?: true) && (viewModel.laneAssist.value?.get() ?: false)
             RadioNode.ADAS_LANE_ASSIST_MODE -> (viewModel.node332.value?.get() ?: true) && (viewModel.laneAssist.value?.get() ?: false)
-            RadioNode.ADAS_LDW_STYLE -> viewModel.node621.value?.get() ?: true
+            RadioNode.ADAS_LDW_STYLE -> (viewModel.node621.value?.get() ?: true) && (viewModel.laneAssist.value?.get() ?: false)
             else -> viewModel.laneAssist.value?.get() ?: false
         }
     }

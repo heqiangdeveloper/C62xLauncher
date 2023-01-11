@@ -30,29 +30,24 @@ class BalanceDialogFragment :
         binding.closeDialog.setOnClickListener {
             this.dismiss()
         }
-        if (VcuUtils.isAmplifier) {// 1 外置 1-11  ||  0 内置 ——》1-19
+//         目前内外置都为 1-19
+//        if (VcuUtils.isAmplifier) {// 1 外置 1-11  ||  0 内置 ——》1-19
             SoundFieldView.BALANCE_MAX = 18.0
             SoundFieldView.FADE_MAX = 18.0
             Timber.d("getAmpType OFFSET=${OFFSET} BALANCE_MAX= ${SoundFieldView.BALANCE_MAX}   FADE_MAX =${SoundFieldView.FADE_MAX}")
-        }
-
+//        }
         DEFALUT_BALANCE = (SoundFieldView.BALANCE_MAX / 2).toInt()
         DEFALUT_FADE = (SoundFieldView.FADE_MAX / 2).toInt()
-
-
-
         binding?.apply {
-
 //            soundField.onValueChangedListener =
 //                SoundFieldView.OnValueChangedListener { balance, fade, x, y ->
 //                    Timber.d("onValueChange balance:$balance fade:$fade")
 ////                    viewModel?.setAudioBalance(balance - OFFSET, -(fade - OFFSET))
 //                    viewModel?.setAudioBalance(balance+OFFSET, fade+OFFSET)
 //                }
-
             soundField.onValueChangedListener = object : SoundFieldView.OnValueChangedListener {
                 override fun onValueChange(balance: Int, fade: Int, x: Float, y: Float) {
-                    Timber.d("onValueChange balance:$balance fade:$fade")
+                    Timber.d("onValueChange callback balance:$balance fade:$fade")
                     viewModel?.setAudioBalance(balance + OFFSET, fade + OFFSET)
                 }
 

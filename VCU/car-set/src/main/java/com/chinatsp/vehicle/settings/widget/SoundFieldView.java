@@ -127,7 +127,7 @@ public class SoundFieldView extends LinearLayout {
                 float yy = event.getY() - beforeY;
                 beforeX = event.getX();
                 beforeY = event.getY();
-                if ((mCurTime - mLastTime < 500) && Math.abs(xx) <= 5.0f && Math.abs(yy) <= 5.0f) {
+                if ((mCurTime - mLastTime < 500) && Math.abs(xx) <= 10.0f && Math.abs(yy) <= 10.0f) {
                     mDoubleClick = true;
                     Log.d(TAG, "这就是传说中的双击事件 mDoubleClick=" + mDoubleClick + " xx=" + xx + " yy=" + yy);
                     if (mOnValueChangedListener != null) {
