@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:text="@string/cabin_other_temperatire"
             android:textColor="@color/tab_option_title_text_color"
-            android:textSize="@dimen/x15"
+            android:textSize="@dimen/txt_prompt_style_size"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/warning"

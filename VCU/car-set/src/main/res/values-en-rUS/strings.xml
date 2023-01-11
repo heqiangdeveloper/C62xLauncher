@@ -84,7 +84,7 @@
     <string name="cabin_other_toast_content_open">Opened</string>
     <string name="cabin_other_wireless_charging_working_properly">Wireless charging works normally</string>
     <string name="cabin_other_foreign_matter">Foreign metal object detected, please remove</string>
-    <string name="cabin_other_temperatire">Wireless charging temperature is too high, please remove the phone</string>
+    <string name="cabin_other_temperatire">Wireless charging temperature is too \n high, please remove the phone</string>
     <string name="cabin_other_determine">OK</string>
     <string name="cabin_other_wireless_charging_lamp_open">Storage box lamp is on</string>
     <string name="cabin_other_wireless_charging_lamp_close">Storage box lamp is off</string>
