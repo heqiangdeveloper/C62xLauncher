@@ -11,6 +11,7 @@ import com.chinatsp.settinglib.bean.Volume
 import com.chinatsp.settinglib.listener.INotifyListener
 import com.chinatsp.settinglib.listener.IOptionListener
 import com.chinatsp.settinglib.listener.IProgressListener
+import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.cabin.WheelManager
 import com.chinatsp.settinglib.optios.Progress
 import com.chinatsp.settinglib.optios.RadioNode
@@ -69,16 +70,24 @@ class SteeringViewModel @Inject constructor(app: Application, model: BaseModel) 
         val value = VcuUtils.getInt(key = Constant.CUSTOM_KEYPAD, value = Constant.PRIVACY_MODE)
         MutableLiveData(value)
     }
+    val node322: LiveData<SwitchState>
+        get() = _node322
 
+    private val _node322: MutableLiveData<SwitchState> by lazy {
+        val node = SwitchNode.NODE_VALID_654
+        MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
+    }
 
 
     override fun onCreate() {
         super.onCreate()
         keySerial = manager.onRegisterVcuListener(listener = this)
+        GlobalManager.instance.onRegisterVcuListener(listener = this)
     }
 
     override fun onDestroy() {
         manager.unRegisterVcuListener(keySerial, keySerial)
+        GlobalManager.instance.unRegisterVcuListener(keySerial)
         super.onDestroy()
     }
 
@@ -87,6 +96,9 @@ class SteeringViewModel @Inject constructor(app: Application, model: BaseModel) 
         when (node) {
             SwitchNode.DRIVE_WHEEL_AUTO_HEAT -> {
                 doUpdate(_swhFunction, status)
+            }
+            SwitchNode.NODE_VALID_322 -> {
+                doUpdate(_node322, status)
             }
             else -> {}
         }

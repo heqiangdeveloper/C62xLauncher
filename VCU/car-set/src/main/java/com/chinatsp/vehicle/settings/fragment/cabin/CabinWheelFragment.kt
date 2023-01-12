@@ -12,10 +12,7 @@ import com.chinatsp.settinglib.manager.cabin.WheelManager
 import com.chinatsp.settinglib.optios.RadioNode
 import com.chinatsp.settinglib.optios.SwitchNode
 import com.chinatsp.vehicle.controller.annotation.Level
-import com.chinatsp.vehicle.settings.HintHold
-import com.chinatsp.vehicle.settings.IOptionAction
-import com.chinatsp.vehicle.settings.IRoute
-import com.chinatsp.vehicle.settings.R
+import com.chinatsp.vehicle.settings.*
 import com.chinatsp.vehicle.settings.databinding.CabinWhellFragmentBinding
 import com.chinatsp.vehicle.settings.fragment.cabin.dialog.ConversionDialogFragment
 import com.chinatsp.vehicle.settings.fragment.cabin.dialog.SteeringHeatDialogFragment
@@ -146,6 +143,9 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
             val hintId = if (it.get()) R.string.switch_turn_on else R.string.switch_turn_off
             binding.wheelAutomaticHeatingTv.text = ResUtils.getString(hintId)
         }
+        viewModel.node322.observe(this) {
+            updateRadioEnable(RadioNode.DRIVE_EPS_MODE)
+        }
     }
 
     private fun initRadioOption() {
@@ -174,7 +174,8 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
                 } else {
                     showHintDialog(
                         R.string.vcu_action_switch_failed,
-                        R.string.vcu_eps_action_switch_check, retract = false)
+                        R.string.vcu_eps_action_switch_check, retract = false
+                    )
                 }
             }
         }
@@ -199,6 +200,13 @@ class CabinWheelFragment : BaseFragment<SteeringViewModel, CabinWhellFragmentBin
     override fun obtainActiveByNode(node: RadioNode): Boolean {
         return when (node) {
             RadioNode.DRIVE_EPS_MODE -> viewModel.epsMode.value?.enable() ?: false
+            else -> super.obtainActiveByNode(node)
+        }
+    }
+
+    override fun obtainDependByNode(node: RadioNode): Boolean {
+        return when (node) {
+            RadioNode.DRIVE_EPS_MODE -> viewModel.node322.value?.get() ?: true
             else -> super.obtainActiveByNode(node)
         }
     }

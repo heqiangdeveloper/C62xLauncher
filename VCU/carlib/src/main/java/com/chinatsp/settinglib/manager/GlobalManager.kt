@@ -74,13 +74,15 @@ class GlobalManager private constructor() : BaseManager(), ISwitchManager {
 
     private val nodeValidNFC: SwitchState by lazy { SwitchState(true) }
 
+    private val nodeValid322: SwitchState by lazy { SwitchState(true) }
+
     private val nodeValidList: Array<SwitchNode> by lazy {
         arrayOf(
             SwitchNode.NODE_VALID_33F, SwitchNode.NODE_VALID_362, SwitchNode.NODE_VALID_332, SwitchNode.NODE_VALID_591, SwitchNode.NODE_VALID_581,
             SwitchNode.NODE_VALID_582, SwitchNode.NODE_VALID_598, SwitchNode.NODE_VALID_580, SwitchNode.NODE_VALID_514, SwitchNode.NODE_VALID_5D4,
             SwitchNode.NODE_VALID_513, SwitchNode.NODE_VALID_58F, SwitchNode.NODE_VALID_523, SwitchNode.NODE_VALID_5B3, SwitchNode.NODE_VALID_65A,
             SwitchNode.NODE_VALID_621, SwitchNode.NODE_VALID_645, SwitchNode.NODE_VALID_654, SwitchNode.NODE_VALID_66F, SwitchNode.NODE_VALID_2E5,
-            SwitchNode.NODE_VALID_NFC
+            SwitchNode.NODE_VALID_NFC,SwitchNode.NODE_VALID_322
         )
     }
 
@@ -111,6 +113,8 @@ class GlobalManager private constructor() : BaseManager(), ISwitchManager {
         map[SwitchNode.NODE_VALID_2E5] = nodeValid2E5
 
         map[SwitchNode.NODE_VALID_NFC] = nodeValidNFC
+
+        map[SwitchNode.NODE_VALID_322] = nodeValid322
         map
     }
 

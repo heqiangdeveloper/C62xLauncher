@@ -1013,6 +1013,8 @@ enum class SwitchNode(
 
     NODE_VALID_NFC(get = Norm(off = 0x1, on = 0x0), set = Norm(off = 0x1, on = 0x0), def = true),
 
+    NODE_VALID_322(get = Norm(off = 0x1, on = 0x0), set = Norm(off = 0x1, on = 0x0), def = true),
+
 
     INVALID(
         get = Norm(on = 0x1, off = 0x0, signal = -1),
