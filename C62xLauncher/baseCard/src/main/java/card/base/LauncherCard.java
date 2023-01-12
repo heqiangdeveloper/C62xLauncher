@@ -10,10 +10,8 @@ import androidx.room.PrimaryKey;
 
 import launcher.base.service.card.ICard;
 
-@Entity
+@Entity(primaryKeys="type")
 public class LauncherCard implements ICard {
-    @PrimaryKey(autoGenerate = true)
-    private int id;
     private int position;
     private boolean inHome;
     private String name;
@@ -86,13 +84,13 @@ public class LauncherCard implements ICard {
         this.type = type;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
+//    public int getId() {
+//        return id;
+//    }
+//
+//    public void setId(int id) {
+//        this.id = id;
+//    }
 
 
     public String getSelectBgResName() {
