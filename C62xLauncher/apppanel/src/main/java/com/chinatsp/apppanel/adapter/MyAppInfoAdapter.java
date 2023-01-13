@@ -33,6 +33,10 @@ import com.anarchy.classifyview.simple.SimpleAdapter;
 import com.anarchy.classifyview.simple.widget.InsertAbleGridView;
 import com.anarchy.classifyview.util.MyConfigs;
 import launcher.base.applists.AppLists;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.chinatsp.apppanel.AppConfigs.Constant;
 import com.chinatsp.apppanel.R;
 import com.chinatsp.apppanel.bean.InfoBean;
@@ -57,6 +61,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import launcher.base.utils.glide.GlideCommonRequestOption;
+import launcher.base.utils.glide.RoundBitmapTransformation;
+import launcher.base.utils.glide.RoundCornerImage;
 import launcher.base.utils.property.PropertyUtils;
 import launcher.base.utils.recent.RecentAppHelper;
 import launcher.base.utils.view.CircleProgressView;
@@ -602,7 +609,11 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
                     byte[] b = mData.get(mainPosition).get(subPosition).getImgByte();
                     iconIv.setImageDrawable(new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length)));
                 }else {
-                    iconIv.setImageDrawable(mData.get(mainPosition).get(subPosition).getImgDrawable());
+                    if(!AppLists.isSystemApplication(context,mData.get(mainPosition).get(subPosition).getPackageName())){
+                        RoundCornerImage.crop(context,mData.get(mainPosition).get(subPosition).getImgDrawable(),iconIv);
+                    }else {
+                        iconIv.setImageDrawable(mData.get(mainPosition).get(subPosition).getImgDrawable());
+                    }
                 }
             }
         }

@@ -18,6 +18,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import launcher.base.applists.AppLists;
+import launcher.base.utils.glide.RoundCornerImage;
 import launcher.base.utils.recent.RecentAppHelper;
 
 public class DrawerRecentAppsAdapter extends RecyclerView.Adapter<DrawerRecentAppsAdapter.ViewHolder>{
@@ -43,7 +45,11 @@ public class DrawerRecentAppsAdapter extends RecyclerView.Adapter<DrawerRecentAp
         String packageName = (String) recentAppInfos.get(position).get("packageName");
         String appName = (String) recentAppInfos.get(position).get("title");
         holder.appNameTv.setText(appName);
-        holder.appIconIv.setImageDrawable((Drawable) recentAppInfos.get(position).get("icon"));
+        if(!AppLists.isSystemApplication(context,packageName)){
+            RoundCornerImage.crop(context,(Drawable) recentAppInfos.get(position).get("icon"), holder.appIconIv);
+        }else {
+            holder.appIconIv.setImageDrawable((Drawable) recentAppInfos.get(position).get("icon"));
+        }
         holder.appIconIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
