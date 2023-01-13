@@ -339,7 +339,7 @@ public class CardFrameViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-    private static final int FINGER_NUM_TRIGGER_SCREEN_SHOT = 2;
+    private static final int FINGER_NUM_TRIGGER_SCREEN_SHOT = 3;
     private boolean mShouldTriggerScreenShot = true;
     private boolean mFinalShouldTriggerScreenShot = false;
     //    private int mTouchSlop = ViewConfiguration.get().getScaledTouchSlop();

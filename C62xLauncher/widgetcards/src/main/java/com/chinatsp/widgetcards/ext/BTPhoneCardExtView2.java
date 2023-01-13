@@ -65,8 +65,9 @@ public class BTPhoneCardExtView2 extends BTPhoneCardView {
     private float downX, downY;
     /**
      * 三指滑屏的最小个数, 我也不懂为什么三指滑屏的最小个数是2.
+     * STEVEN: 我也不懂. 之前的UE是这么说的. 不过现在UE改成3指了.
      */
-    private static final int FINGER_NUM_TRIGGER_SCREEN_SHOT = 2;
+    private static final int FINGER_NUM_TRIGGER_SCREEN_SHOT = 3;
     /**
      * 用户的点击区域, 我们仅设置右侧100px的区域可以点击跳转到蓝牙电话.
      * TODO: 当然, 可以扩展到left, top, bottom, 计算和右侧计算类似, 但是要注意参数要用对.
