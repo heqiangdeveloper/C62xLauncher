@@ -10,6 +10,7 @@ import com.chinatsp.settinglib.manager.GlobalManager
 import com.chinatsp.settinglib.manager.cabin.WheelManager
 import com.chinatsp.settinglib.sign.Origin
 import timber.log.Timber
+import kotlin.math.roundToInt
 
 
 /**
@@ -70,7 +71,7 @@ object Applet {
             actual
         }
         Timber.d("Applet speed actual:$actual, speed:$speed")
-        return speed
+        return speed.roundToInt().toFloat()
     }
 
     //    语音控制车窗

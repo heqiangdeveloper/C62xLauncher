@@ -74,7 +74,7 @@ class SteeringViewModel @Inject constructor(app: Application, model: BaseModel) 
         get() = _node322
 
     private val _node322: MutableLiveData<SwitchState> by lazy {
-        val node = SwitchNode.NODE_VALID_654
+        val node = SwitchNode.NODE_VALID_322
         MutableLiveData(GlobalManager.instance.doGetSwitchOption(node))
     }
 

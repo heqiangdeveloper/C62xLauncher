@@ -82,7 +82,7 @@ class GlobalManager private constructor() : BaseManager(), ISwitchManager {
             SwitchNode.NODE_VALID_582, SwitchNode.NODE_VALID_598, SwitchNode.NODE_VALID_580, SwitchNode.NODE_VALID_514, SwitchNode.NODE_VALID_5D4,
             SwitchNode.NODE_VALID_513, SwitchNode.NODE_VALID_58F, SwitchNode.NODE_VALID_523, SwitchNode.NODE_VALID_5B3, SwitchNode.NODE_VALID_65A,
             SwitchNode.NODE_VALID_621, SwitchNode.NODE_VALID_645, SwitchNode.NODE_VALID_654, SwitchNode.NODE_VALID_66F, SwitchNode.NODE_VALID_2E5,
-            SwitchNode.NODE_VALID_NFC,SwitchNode.NODE_VALID_322
+            SwitchNode.NODE_VALID_NFC, SwitchNode.NODE_VALID_322
         )
     }
 
