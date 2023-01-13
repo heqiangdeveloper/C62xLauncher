@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import launcher.base.applists.AppLists;
+import launcher.base.utils.glide.RoundCornerImage;
 
 public class AppManageAdapter extends RecyclerView.Adapter<AppManageAdapter.ViewHolder> {
     private Context context;
@@ -50,7 +51,11 @@ public class AppManageAdapter extends RecyclerView.Adapter<AppManageAdapter.View
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String packageName = (String) infos.get(position).get("packageName");
 
-        holder.iconIv.setImageDrawable((Drawable) infos.get(position).get("icon"));
+        if(!AppLists.isSystemApplication(context,packageName)){
+            RoundCornerImage.crop(context,(Drawable) infos.get(position).get("icon"), holder.iconIv);
+        }else {
+            holder.iconIv.setImageDrawable((Drawable) infos.get(position).get("icon"));
+        }
         holder.nameTv.setText((String) infos.get(position).get("title"));
         holder.deleteIv.setOnClickListener(new View.OnClickListener() {
             @Override
