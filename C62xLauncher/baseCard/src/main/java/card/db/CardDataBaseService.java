@@ -1,6 +1,8 @@
 package card.db;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteConstraintException;
+import android.database.sqlite.SQLiteException;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -19,7 +21,7 @@ import launcher.base.async.AsyncSchedule;
 import launcher.base.utils.EasyLog;
 
 public class CardDataBaseService {
-    private final String TAG = "CardDataBaseService";
+    private static final String TAG = "CardDataBaseService";
     private AppDataBase mDataBase;
     private Context mContext;
     private static final String TABLE_NAME = "LauncherCard";
@@ -43,22 +45,57 @@ public class CardDataBaseService {
     static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
-            database.execSQL("create table temp_table " +
-                    "( 'position' INTEGER NOT NULL, 'inHome' INTEGER NOT NULL, 'name' TEXT, 'type' INTEGER PRIMARY KEY NOT NULL, 'canExpand' INTEGER NOT NULL, " +
-                    "'mSelectBgResName' TEXT, 'mUnselectBgResName' TEXT)");
-            database.execSQL("insert into temp_table (position, inHome, name ,type ,canExpand ,mSelectBgResName, mUnselectBgResName)" +
-                    " select position, inHome, name ,type ,canExpand ,mSelectBgResName, mUnselectBgResName from " + TABLE_NAME);
-            database.execSQL("drop table " + TABLE_NAME);
-            database.execSQL("alter table temp_table rename to " + TABLE_NAME);
+            EasyLog.i(TAG, "MIGRATION_1_2 migrate. " + Thread.currentThread().getName());
+            try {
+                moveTable(database);
+            } catch (Exception e) {
+                EasyLog.w(TAG, "MIGRATION_1_2 migrate exception, an empty table should be created soon.");
+                e.printStackTrace();
+                createNewTable(database);
+            }
         }
     };
 
+    private static void createNewTable(SupportSQLiteDatabase database) {
+        EasyLog.d(TAG, "moveTable");
+        String tempTableName = "temp_table";
+        database.execSQL("drop table if exists " + TABLE_NAME);
+        database.execSQL("drop table if exists " + tempTableName);
+        database.execSQL("create table " + TABLE_NAME +
+                " ( 'position' INTEGER NOT NULL, 'inHome' INTEGER NOT NULL, 'name' TEXT, 'type' INTEGER PRIMARY KEY NOT NULL, 'canExpand' INTEGER NOT NULL, " +
+                "'mSelectBgResName' TEXT, 'mUnselectBgResName' TEXT)");
+    }
+
+    private static void moveTable(SupportSQLiteDatabase database) {
+        EasyLog.d(TAG, "moveTable");
+        String tempTableName = "temp_table";
+        database.execSQL("create table " + tempTableName +
+                " ( 'position' INTEGER NOT NULL, 'inHome' INTEGER NOT NULL, 'name' TEXT, 'type' INTEGER PRIMARY KEY NOT NULL, 'canExpand' INTEGER NOT NULL, " +
+                "'mSelectBgResName' TEXT, 'mUnselectBgResName' TEXT)");
+        // 此处发生过type唯一主键约束失败异常, 因此从insert 改为replace
+        database.execSQL("replace into temp_table (position, inHome, name ,type ,canExpand ,mSelectBgResName, mUnselectBgResName)" +
+                " select position, inHome, name ,type ,canExpand ,mSelectBgResName, mUnselectBgResName from " + TABLE_NAME);
+        database.execSQL("drop table  if exists " + TABLE_NAME);
+        database.execSQL("alter table " + tempTableName + " rename to " + TABLE_NAME);
+    }
+
+
     private List<LauncherCard> getAllCardsSync() {
+        EasyLog.d(TAG, "getAllCardsSync , mDataBase:" + mDataBase);
         if (mDataBase == null) {
             createDataBase(mContext);
         }
-        CardDao dao = mDataBase.cardDao();
-        return dao.getAll();
+        try {
+            CardDao dao = mDataBase.cardDao();
+            List<LauncherCard> all = dao.getAll();
+            EasyLog.d(TAG, "getAllCardsSync , finish :" + all);
+            return all;
+        } catch (Exception e) {
+            EasyLog.w(TAG, "getAllCardsSync fail:");
+            e.printStackTrace();
+            // 发生过Migrate时,  insert 失败的异常: 唯一主键约束失败
+            return new LinkedList<>();
+        }
     }
 
 
