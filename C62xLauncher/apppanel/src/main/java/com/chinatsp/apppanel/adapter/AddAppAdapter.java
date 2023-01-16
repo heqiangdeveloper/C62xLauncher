@@ -3,6 +3,7 @@ package com.chinatsp.apppanel.adapter;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,9 @@ import com.chinatsp.apppanel.event.SelectedCallback;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import launcher.base.applists.AppLists;
+import launcher.base.utils.glide.RoundCornerImage;
 
 public class AddAppAdapter extends RecyclerView.Adapter<AddAppAdapter.ViewHolder> {
     private Context context;
@@ -51,11 +55,22 @@ public class AddAppAdapter extends RecyclerView.Adapter<AddAppAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Drawable drawable;
         if(null == infos.get(position).getImgDrawable()){
             byte[] b = infos.get(position).getImgByte();
-            holder.iconIv.setImageDrawable(new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length)));
+            drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length));
         }else {
-            holder.iconIv.setImageDrawable(infos.get(position).getImgDrawable());
+            drawable = infos.get(position).getImgDrawable();
+        }
+        if(drawable != null){
+            if(!AppLists.isSystemApplication(context,infos.get(position).getPackageName())){
+                RoundCornerImage.crop(context,drawable,holder.iconIv);
+            }else {
+                holder.iconIv.setImageDrawable(drawable);
+            }
+        }else {
+            drawable = context.getDrawable(R.drawable.ic_launcher);
+            holder.iconIv.setImageDrawable(drawable);
         }
         holder.nameTv.setText(infos.get(position).getName());
         if(selectdItems.contains(infos.get(position))){

@@ -605,15 +605,22 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
             if(mData.get(mainPosition).get(subPosition) == null){
                 iconIv.setImageResource(R.drawable.add_app_icon_new);
             }else{
+                Drawable drawable;
                 if(null == mData.get(mainPosition).get(subPosition).getImgDrawable()){
                     byte[] b = mData.get(mainPosition).get(subPosition).getImgByte();
-                    iconIv.setImageDrawable(new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length)));
+                    drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length));
                 }else {
+                    drawable = mData.get(mainPosition).get(subPosition).getImgDrawable();
+                }
+                if(drawable != null){
                     if(!AppLists.isSystemApplication(context,mData.get(mainPosition).get(subPosition).getPackageName())){
-                        RoundCornerImage.crop(context,mData.get(mainPosition).get(subPosition).getImgDrawable(),iconIv);
+                        RoundCornerImage.crop(context,drawable,iconIv);
                     }else {
-                        iconIv.setImageDrawable(mData.get(mainPosition).get(subPosition).getImgDrawable());
+                        iconIv.setImageDrawable(drawable);
                     }
+                }else {
+                    drawable = context.getDrawable(R.drawable.ic_launcher);
+                    iconIv.setImageDrawable(drawable);
                 }
             }
         }
