@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -36,6 +37,7 @@ import com.chinatsp.appstore.state.AppStoreDataErrorState;
 import com.chinatsp.appstore.state.AppStoreErrorNetWorkState;
 import com.chinatsp.appstore.state.AppStoreNormalState;
 import com.chinatsp.appstore.state.AppStoreState;
+import com.chinatsp.appstore.utils.AppStoreUtils;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
@@ -130,7 +132,12 @@ public class AppStoreCardView extends ConstraintLayout implements ICardStyleChan
         mLargeWidth = (int) getResources().getDimension(R.dimen.card_width_large);
         mIvAppStoreRefresh.setOnClickListener(this);
         mIvAppIconTop.setOnClickListener(this);
+        mTvAppNameTop.setOnClickListener(this);
+        mTvAppDescTop.setOnClickListener(this);
         mIvAppIconBottom.setOnClickListener(this);
+        mTvAppNameBottom.setOnClickListener(this);
+        mTvAppDescBottom.setOnClickListener(this);
+
         //点击空白处跳转至应用商城
 //        setOnClickListener(this);
 
@@ -165,7 +172,7 @@ public class AppStoreCardView extends ConstraintLayout implements ICardStyleChan
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.ivAppIconTop){
+        if(v.getId() == R.id.ivAppIconTop || v.getId() == R.id.tvAppNameTop || v.getId() == R.id.tvAppDescTop){
             //如果该应用已经安装就打开它，否则跳转到下载详情
             String pkgName = infos.get(0).getPackageName();
             boolean isPkgInstalled = PropertyUtils.checkPkgInstalled(v.getContext(),pkgName);
@@ -174,7 +181,7 @@ public class AppStoreCardView extends ConstraintLayout implements ICardStyleChan
             }else {
                 AppStoreJump.jumpAppMarket(pkgName, v.getContext());
             }
-        }else if(v.getId() == R.id.ivAppIconBottom){
+        }else if(v.getId() == R.id.ivAppIconBottom || v.getId() == R.id.tvAppNameBottom || v.getId() == R.id.tvAppDescBottom){
             //如果该应用已经安装就打开它，否则跳转到下载详情
             String pkgName = infos.get(1).getPackageName();
             boolean isPkgInstalled = PropertyUtils.checkPkgInstalled(v.getContext(),pkgName);
@@ -517,6 +524,14 @@ public class AppStoreCardView extends ConstraintLayout implements ICardStyleChan
 //                return false;
 //            }
 //        });
+        rcvCardIQuTingSongList.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                RecentAppHelper.launchApp(getContext(),APPSTOREPKG);
+                return false;
+            }
+        });
+
         mNormalBigCardViewHolder.setAppsAdapter(adapter);
     }
 
