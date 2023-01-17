@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import com.chinatsp.appstore.AppStoreJump;
 import com.chinatsp.appstore.R;
 import com.chinatsp.appstore.bean.AppInfo;
+import com.chinatsp.appstore.utils.AppStoreUtils;
 
 import launcher.base.recyclerview.BaseViewHolder;
 import launcher.base.utils.glide.GlideHelper;
@@ -56,16 +57,23 @@ public class AppStoreAppsViewHolder extends BaseViewHolder<AppInfo> {
         String finalPackageName = packageName;
         mIvAppItemIcon.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                boolean isPkgInstalled = PropertyUtils.checkPkgInstalled(v.getContext(),finalPackageName);
-                Log.d(TAG,"onClick: " + finalPackageName + ",isPkgInstalled: " + isPkgInstalled);
-                //如果该应用已经安装就打开它，否则跳转到下载详情
-                if(isPkgInstalled){
-                    RecentAppHelper.launchApp(v.getContext(), finalPackageName);
-                }else {
-                    AppStoreJump.jumpAppMarket(finalPackageName, v.getContext());
-                }
+            public void onClick(View view) {
+                AppStoreUtils.jump(view.getContext(),finalPackageName);
+            }
+        });
+        mTvAppItemName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AppStoreUtils.jump(view.getContext(),finalPackageName);
+            }
+        });
+        mTvAppItemDesc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AppStoreUtils.jump(view.getContext(),finalPackageName);
             }
         });
     }
+
+
 }
