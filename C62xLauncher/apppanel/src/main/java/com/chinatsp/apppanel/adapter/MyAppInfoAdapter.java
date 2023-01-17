@@ -619,10 +619,14 @@ public class MyAppInfoAdapter extends SimpleAdapter<LocationBean, MyAppInfoAdapt
                         iconIv.setImageDrawable(drawable);
                     }
                 }else {
+                    Log.d(TAG,"set default ic_launcher,pkg: " + mData.get(mainPosition).get(subPosition).getPackageName());
                     drawable = context.getDrawable(R.drawable.ic_launcher);
                     iconIv.setImageDrawable(drawable);
                 }
             }
+        }else {
+            Log.d(TAG,"index error,set default ic_launcher");
+            iconIv.setImageDrawable(context.getDrawable(R.drawable.ic_launcher));
         }
 
         return view;
